@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Has, HasAll, HasAny, Or
+from rule_builder import True_, False_, And, Has, HasAll, HasAny, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -620,15 +620,12 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                     'if_true': {   'conditions': [   {   'count': {'type': 'constant', 'value': 1},
                                                                          'item': 'Egg Capacity Upgrade',
                                                                          'type': 'item_check'},
-                                                                     {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
-                                                                                                                               'name': 'bandit_bonus',
+                                                                     {   'if_false': {   'if_false': {   'conditions': [   {   'name': 'bandit_bonus',
                                                                                                                                'type': 'helper'},
-                                                                                                                           {   'args': [   ],
-                                                                                                                               'name': 'item_bonus',
+                                                                                                                           {   'name': 'item_bonus',
                                                                                                                                'type': 'helper'}],
                                                                                                          'type': 'or'},
-                                                                                         'if_true': {   'args': [],
-                                                                                                        'name': 'item_bonus',
+                                                                                         'if_true': {   'name': 'item_bonus',
                                                                                                         'type': 'helper'},
                                                                                          'test': {   'left': {   'type': 'constant',
                                                                                                                  'value': 'Easy'},
@@ -652,15 +649,12 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                     'if_true': {   'conditions': [   {   'count': {'type': 'constant', 'value': 3},
                                                          'item': 'Egg Capacity Upgrade',
                                                          'type': 'item_check'},
-                                                     {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
-                                                                                                               'name': 'bandit_bonus',
+                                                     {   'if_false': {   'if_false': {   'conditions': [   {   'name': 'bandit_bonus',
                                                                                                                'type': 'helper'},
-                                                                                                           {   'args': [   ],
-                                                                                                               'name': 'item_bonus',
+                                                                                                           {   'name': 'item_bonus',
                                                                                                                'type': 'helper'}],
                                                                                          'type': 'or'},
-                                                                         'if_true': {   'args': [],
-                                                                                        'name': 'item_bonus',
+                                                                         'if_true': {   'name': 'item_bonus',
                                                                                         'type': 'helper'},
                                                                          'test': {   'left': {   'type': 'constant',
                                                                                                  'value': 'Easy'},
@@ -762,15 +756,12 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                             'value': 1},
                                                                                'item': 'Egg Capacity Upgrade',
                                                                                'type': 'item_check'},
-                                                                           {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
-                                                                                                                                     'name': 'bandit_bonus',
+                                                                           {   'if_false': {   'if_false': {   'conditions': [   {   'name': 'bandit_bonus',
                                                                                                                                      'type': 'helper'},
-                                                                                                                                 {   'args': [   ],
-                                                                                                                                     'name': 'item_bonus',
+                                                                                                                                 {   'name': 'item_bonus',
                                                                                                                                      'type': 'helper'}],
                                                                                                                'type': 'or'},
-                                                                                               'if_true': {   'args': [   ],
-                                                                                                              'name': 'item_bonus',
+                                                                                               'if_true': {   'name': 'item_bonus',
                                                                                                               'type': 'helper'},
                                                                                                'test': {   'left': {   'type': 'constant',
                                                                                                                        'value': 'Easy'},
@@ -1104,15 +1095,12 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                 'item': 'Egg Capacity '
                                                                                                         'Upgrade',
                                                                                                 'type': 'item_check'},
-                                                                                            {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
-                                                                                                                                                      'name': 'bandit_bonus',
+                                                                                            {   'if_false': {   'if_false': {   'conditions': [   {   'name': 'bandit_bonus',
                                                                                                                                                       'type': 'helper'},
-                                                                                                                                                  {   'args': [   ],
-                                                                                                                                                      'name': 'item_bonus',
+                                                                                                                                                  {   'name': 'item_bonus',
                                                                                                                                                       'type': 'helper'}],
                                                                                                                                 'type': 'or'},
-                                                                                                                'if_true': {   'args': [   ],
-                                                                                                                               'name': 'item_bonus',
+                                                                                                                'if_true': {   'name': 'item_bonus',
                                                                                                                                'type': 'helper'},
                                                                                                                 'test': {   'left': {   'type': 'constant',
                                                                                                                                         'value': 'Easy'},
@@ -1146,15 +1134,12 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                'item': 'Egg Capacity '
                                                                                                        'Upgrade',
                                                                                                'type': 'item_check'},
-                                                                                           {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
-                                                                                                                                                     'name': 'bandit_bonus',
+                                                                                           {   'if_false': {   'if_false': {   'conditions': [   {   'name': 'bandit_bonus',
                                                                                                                                                      'type': 'helper'},
-                                                                                                                                                 {   'args': [   ],
-                                                                                                                                                     'name': 'item_bonus',
+                                                                                                                                                 {   'name': 'item_bonus',
                                                                                                                                                      'type': 'helper'}],
                                                                                                                                'type': 'or'},
-                                                                                                               'if_true': {   'args': [   ],
-                                                                                                                              'name': 'item_bonus',
+                                                                                                               'if_true': {   'name': 'item_bonus',
                                                                                                                               'type': 'helper'},
                                                                                                                'test': {   'left': {   'type': 'constant',
                                                                                                                                        'value': 'Easy'},
@@ -1192,15 +1177,12 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                             'value': 3},
                                                                                'item': 'Egg Capacity Upgrade',
                                                                                'type': 'item_check'},
-                                                                           {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
-                                                                                                                                     'name': 'bandit_bonus',
+                                                                           {   'if_false': {   'if_false': {   'conditions': [   {   'name': 'bandit_bonus',
                                                                                                                                      'type': 'helper'},
-                                                                                                                                 {   'args': [   ],
-                                                                                                                                     'name': 'item_bonus',
+                                                                                                                                 {   'name': 'item_bonus',
                                                                                                                                      'type': 'helper'}],
                                                                                                                'type': 'or'},
-                                                                                               'if_true': {   'args': [   ],
-                                                                                                              'name': 'item_bonus',
+                                                                                               'if_true': {   'name': 'item_bonus',
                                                                                                               'type': 'helper'},
                                                                                                'test': {   'left': {   'type': 'constant',
                                                                                                                        'value': 'Easy'},
@@ -1232,14 +1214,11 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                           'method': 'has_all',
                                                                           'type': 'state_method'},
                                                                       {   'if_false': {   'if_false': {   'if_false': {   'if_false': {   'if_false': {   'if_false': None,
-                                                                                                                                                          'if_true': {   'conditions': [   {   'args': [   ],
-                                                                                                                                                                                               'name': 'bowserdoor_1',
+                                                                                                                                                          'if_true': {   'conditions': [   {   'name': 'bowserdoor_1',
                                                                                                                                                                                                'type': 'helper'},
-                                                                                                                                                                                           {   'args': [   ],
-                                                                                                                                                                                               'name': 'bowserdoor_2',
+                                                                                                                                                                                           {   'name': 'bowserdoor_2',
                                                                                                                                                                                                'type': 'helper'},
-                                                                                                                                                                                           {   'args': [   ],
-                                                                                                                                                                                               'name': 'bowserdoor_3',
+                                                                                                                                                                                           {   'name': 'bowserdoor_3',
                                                                                                                                                                                                'type': 'helper'}],
                                                                                                                                                                          'type': 'and'},
                                                                                                                                                           'test': {   'left': {   'type': 'constant',
@@ -1267,8 +1246,7 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                                                                    'value': 3},
                                                                                                                                       'type': 'compare'},
                                                                                                                           'type': 'conditional'},
-                                                                                                          'if_true': {   'args': [   ],
-                                                                                                                         'name': 'bowserdoor_2',
+                                                                                                          'if_true': {   'name': 'bowserdoor_2',
                                                                                                                          'type': 'helper'},
                                                                                                           'test': {   'left': {   'type': 'constant',
                                                                                                                                   'value': 0},
@@ -1277,8 +1255,7 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                                                    'value': 2},
                                                                                                                       'type': 'compare'},
                                                                                                           'type': 'conditional'},
-                                                                                          'if_true': {   'args': [],
-                                                                                                         'name': 'bowserdoor_1',
+                                                                                          'if_true': {   'name': 'bowserdoor_1',
                                                                                                          'type': 'helper'},
                                                                                           'test': {   'left': {   'type': 'constant',
                                                                                                                   'value': 0},
@@ -1310,14 +1287,11 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                          'method': 'has_all',
                                                                          'type': 'state_method'},
                                                                      {   'if_false': {   'if_false': {   'if_false': {   'if_false': {   'if_false': {   'if_false': None,
-                                                                                                                                                         'if_true': {   'conditions': [   {   'args': [   ],
-                                                                                                                                                                                              'name': 'bowserdoor_1',
+                                                                                                                                                         'if_true': {   'conditions': [   {   'name': 'bowserdoor_1',
                                                                                                                                                                                               'type': 'helper'},
-                                                                                                                                                                                          {   'args': [   ],
-                                                                                                                                                                                              'name': 'bowserdoor_2',
+                                                                                                                                                                                          {   'name': 'bowserdoor_2',
                                                                                                                                                                                               'type': 'helper'},
-                                                                                                                                                                                          {   'args': [   ],
-                                                                                                                                                                                              'name': 'bowserdoor_3',
+                                                                                                                                                                                          {   'name': 'bowserdoor_3',
                                                                                                                                                                                               'type': 'helper'}],
                                                                                                                                                                         'type': 'and'},
                                                                                                                                                          'test': {   'left': {   'type': 'constant',
@@ -1345,8 +1319,7 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                                                                   'value': 3},
                                                                                                                                      'type': 'compare'},
                                                                                                                          'type': 'conditional'},
-                                                                                                         'if_true': {   'args': [   ],
-                                                                                                                        'name': 'bowserdoor_2',
+                                                                                                         'if_true': {   'name': 'bowserdoor_2',
                                                                                                                         'type': 'helper'},
                                                                                                          'test': {   'left': {   'type': 'constant',
                                                                                                                                  'value': 0},
@@ -1355,8 +1328,7 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                                                   'value': 2},
                                                                                                                      'type': 'compare'},
                                                                                                          'type': 'conditional'},
-                                                                                         'if_true': {   'args': [],
-                                                                                                        'name': 'bowserdoor_1',
+                                                                                         'if_true': {   'name': 'bowserdoor_1',
                                                                                                         'type': 'helper'},
                                                                                          'test': {   'left': {   'type': 'constant',
                                                                                                                  'value': 0},
@@ -1390,14 +1362,11 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                          'method': 'has_all',
                                                          'type': 'state_method'},
                                                      {   'if_false': {   'if_false': {   'if_false': {   'if_false': {   'if_false': {   'if_false': None,
-                                                                                                                                         'if_true': {   'conditions': [   {   'args': [   ],
-                                                                                                                                                                              'name': 'bowserdoor_1',
+                                                                                                                                         'if_true': {   'conditions': [   {   'name': 'bowserdoor_1',
                                                                                                                                                                               'type': 'helper'},
-                                                                                                                                                                          {   'args': [   ],
-                                                                                                                                                                              'name': 'bowserdoor_2',
+                                                                                                                                                                          {   'name': 'bowserdoor_2',
                                                                                                                                                                               'type': 'helper'},
-                                                                                                                                                                          {   'args': [   ],
-                                                                                                                                                                              'name': 'bowserdoor_3',
+                                                                                                                                                                          {   'name': 'bowserdoor_3',
                                                                                                                                                                               'type': 'helper'}],
                                                                                                                                                         'type': 'and'},
                                                                                                                                          'test': {   'left': {   'type': 'constant',
@@ -1425,8 +1394,7 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                                                   'value': 3},
                                                                                                                      'type': 'compare'},
                                                                                                          'type': 'conditional'},
-                                                                                         'if_true': {   'args': [],
-                                                                                                        'name': 'bowserdoor_2',
+                                                                                         'if_true': {   'name': 'bowserdoor_2',
                                                                                                         'type': 'helper'},
                                                                                          'test': {   'left': {   'type': 'constant',
                                                                                                                  'value': 0},
@@ -1435,8 +1403,7 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                                   'value': 2},
                                                                                                      'type': 'compare'},
                                                                                          'type': 'conditional'},
-                                                                         'if_true': {   'args': [],
-                                                                                        'name': 'bowserdoor_1',
+                                                                         'if_true': {   'name': 'bowserdoor_1',
                                                                                         'type': 'helper'},
                                                                          'test': {   'left': {   'type': 'constant',
                                                                                                  'value': 0},
@@ -1536,8 +1503,7 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                                                                                                         'Plant',
                                                                                                                                                                                 'type': 'item_check'}],
                                                                                                                                                           'type': 'and'},
-                                                                                                                                                      {   'args': [   ],
-                                                                                                                                                          'name': 'combat_item',
+                                                                                                                                                      {   'name': 'combat_item',
                                                                                                                                                           'type': 'helper'}],
                                                                                                                                     'type': 'or'},
                                                                                                                                 {   'item': 'Key',
@@ -1553,8 +1519,7 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                                                                                                        'Plant',
                                                                                                                                                                                'type': 'item_check'}],
                                                                                                                                                          'type': 'and'},
-                                                                                                                                                     {   'args': [   ],
-                                                                                                                                                         'name': 'combat_item',
+                                                                                                                                                     {   'name': 'combat_item',
                                                                                                                                                          'type': 'helper'}],
                                                                                                                                    'type': 'or'},
                                                                                                                                {   'item': 'Key',
@@ -1577,8 +1542,7 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                                                                                        'Plant',
                                                                                                                                                                'type': 'item_check'}],
                                                                                                                                          'type': 'and'},
-                                                                                                                                     {   'args': [   ],
-                                                                                                                                         'name': 'combat_item',
+                                                                                                                                     {   'name': 'combat_item',
                                                                                                                                          'type': 'helper'}],
                                                                                                                    'type': 'or'},
                                                                                                                {   'item': 'Key',
@@ -1702,8 +1666,7 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                                                                                                                                                                    'Plant',
                                                                                                                                                                                                                                            'type': 'item_check'}],
                                                                                                                                                                                                                      'type': 'and'},
-                                                                                                                                                                                                                 {   'args': [   ],
-                                                                                                                                                                                                                     'name': 'combat_item',
+                                                                                                                                                                                                                 {   'name': 'combat_item',
                                                                                                                                                                                                                      'type': 'helper'}],
                                                                                                                                                                                                'type': 'or'},
                                                                                                                                                                                            {   'item': 'Key',
@@ -1719,8 +1682,7 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                                                                                                                                                                   'Plant',
                                                                                                                                                                                                                                           'type': 'item_check'}],
                                                                                                                                                                                                                     'type': 'and'},
-                                                                                                                                                                                                                {   'args': [   ],
-                                                                                                                                                                                                                    'name': 'combat_item',
+                                                                                                                                                                                                                {   'name': 'combat_item',
                                                                                                                                                                                                                     'type': 'helper'}],
                                                                                                                                                                                               'type': 'or'},
                                                                                                                                                                                           {   'item': 'Key',
@@ -1743,8 +1705,7 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                                                                                                                                                   'Plant',
                                                                                                                                                                                                                           'type': 'item_check'}],
                                                                                                                                                                                                     'type': 'and'},
-                                                                                                                                                                                                {   'args': [   ],
-                                                                                                                                                                                                    'name': 'combat_item',
+                                                                                                                                                                                                {   'name': 'combat_item',
                                                                                                                                                                                                     'type': 'helper'}],
                                                                                                                                                                               'type': 'or'},
                                                                                                                                                                           {   'item': 'Key',
@@ -1812,8 +1773,7 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                                                                                              'Plant',
                                                                                                                                                                      'type': 'item_check'}],
                                                                                                                                                'type': 'and'},
-                                                                                                                                           {   'args': [   ],
-                                                                                                                                               'name': 'combat_item',
+                                                                                                                                           {   'name': 'combat_item',
                                                                                                                                                'type': 'helper'}],
                                                                                                                          'type': 'or'},
                                                                                                                      {   'item': 'Key',
@@ -1829,8 +1789,7 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                                                                                             'Plant',
                                                                                                                                                                     'type': 'item_check'}],
                                                                                                                                               'type': 'and'},
-                                                                                                                                          {   'args': [   ],
-                                                                                                                                              'name': 'combat_item',
+                                                                                                                                          {   'name': 'combat_item',
                                                                                                                                               'type': 'helper'}],
                                                                                                                         'type': 'or'},
                                                                                                                     {   'item': 'Key',
@@ -1853,8 +1812,7 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                                                                             'Plant',
                                                                                                                                                     'type': 'item_check'}],
                                                                                                                               'type': 'and'},
-                                                                                                                          {   'args': [   ],
-                                                                                                                              'name': 'combat_item',
+                                                                                                                          {   'name': 'combat_item',
                                                                                                                               'type': 'helper'}],
                                                                                                         'type': 'or'},
                                                                                                     {   'item': 'Key',
@@ -1961,15 +1919,12 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                                                   'Plant',
                                                                                                                           'type': 'item_check'}],
                                                                                                     'type': 'and'},
-                                                                                                {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
-                                                                                                                                                          'name': 'bandit_bonus',
+                                                                                                {   'if_false': {   'if_false': {   'conditions': [   {   'name': 'bandit_bonus',
                                                                                                                                                           'type': 'helper'},
-                                                                                                                                                      {   'args': [   ],
-                                                                                                                                                          'name': 'item_bonus',
+                                                                                                                                                      {   'name': 'item_bonus',
                                                                                                                                                           'type': 'helper'}],
                                                                                                                                     'type': 'or'},
-                                                                                                                    'if_true': {   'args': [   ],
-                                                                                                                                   'name': 'item_bonus',
+                                                                                                                    'if_true': {   'name': 'item_bonus',
                                                                                                                                    'type': 'helper'},
                                                                                                                     'test': {   'left': {   'type': 'constant',
                                                                                                                                             'value': 'Easy'},
@@ -1997,15 +1952,12 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                                                  'Plant',
                                                                                                                          'type': 'item_check'}],
                                                                                                    'type': 'and'},
-                                                                                               {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
-                                                                                                                                                         'name': 'bandit_bonus',
+                                                                                               {   'if_false': {   'if_false': {   'conditions': [   {   'name': 'bandit_bonus',
                                                                                                                                                          'type': 'helper'},
-                                                                                                                                                     {   'args': [   ],
-                                                                                                                                                         'name': 'item_bonus',
+                                                                                                                                                     {   'name': 'item_bonus',
                                                                                                                                                          'type': 'helper'}],
                                                                                                                                    'type': 'or'},
-                                                                                                                   'if_true': {   'args': [   ],
-                                                                                                                                  'name': 'item_bonus',
+                                                                                                                   'if_true': {   'name': 'item_bonus',
                                                                                                                                   'type': 'helper'},
                                                                                                                    'test': {   'left': {   'type': 'constant',
                                                                                                                                            'value': 'Easy'},
@@ -2038,15 +1990,12 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                                                                                                                  'Plant',
                                                                                                          'type': 'item_check'}],
                                                                                    'type': 'and'},
-                                                                               {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
-                                                                                                                                         'name': 'bandit_bonus',
+                                                                               {   'if_false': {   'if_false': {   'conditions': [   {   'name': 'bandit_bonus',
                                                                                                                                          'type': 'helper'},
-                                                                                                                                     {   'args': [   ],
-                                                                                                                                         'name': 'item_bonus',
+                                                                                                                                     {   'name': 'item_bonus',
                                                                                                                                          'type': 'helper'}],
                                                                                                                    'type': 'or'},
-                                                                                                   'if_true': {   'args': [   ],
-                                                                                                                  'name': 'item_bonus',
+                                                                                                   'if_true': {   'name': 'item_bonus',
                                                                                                                   'type': 'helper'},
                                                                                                    'test': {   'left': {   'type': 'constant',
                                                                                                                            'value': 'Easy'},
@@ -2084,15 +2033,12 @@ _HELPER_DEFINITIONS = {   '_14Boss': {   'if_false': {   'if_false': {   'condit
                         'type': 'conditional'},
     'cansee_clouds': {   'if_false': {   'conditions': [   {'type': 'constant', 'value': False},
                                                            {'item': 'Secret Lens', 'type': 'item_check'},
-                                                           {   'if_false': {   'if_false': {   'conditions': [   {   'args': [   ],
-                                                                                                                     'name': 'bandit_bonus',
+                                                           {   'if_false': {   'if_false': {   'conditions': [   {   'name': 'bandit_bonus',
                                                                                                                      'type': 'helper'},
-                                                                                                                 {   'args': [   ],
-                                                                                                                     'name': 'item_bonus',
+                                                                                                                 {   'name': 'item_bonus',
                                                                                                                      'type': 'helper'}],
                                                                                                'type': 'or'},
-                                                                               'if_true': {   'args': [],
-                                                                                              'name': 'item_bonus',
+                                                                               'if_true': {   'name': 'item_bonus',
                                                                                               'type': 'helper'},
                                                                                'test': {   'left': {   'type': 'constant',
                                                                                                        'value': 'Easy'},
@@ -2198,82 +2144,82 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("World 6 -> 6-8", player),
-        True_()
+        HelperCall(helper_func=_yoshisislandworldgen_castle_access, helper_name="castle_access")
     )
 
     world.set_rule(
         multiworld.get_entrance("1-4 -> Burt The Bashful's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_14Clear, helper_name="_14Clear")
     )
 
     world.set_rule(
         multiworld.get_entrance("1-8 -> Salvo The Slime's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_18Clear, helper_name="_18Clear")
     )
 
     world.set_rule(
         multiworld.get_entrance("2-4 -> Bigger Boo's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_24Clear, helper_name="_24Clear")
     )
 
     world.set_rule(
         multiworld.get_entrance("2-8 -> Roger The Ghost's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_28Clear, helper_name="_28Clear")
     )
 
     world.set_rule(
         multiworld.get_entrance("3-4 -> Prince Froggy's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_34Clear, helper_name="_34Clear")
     )
 
     world.set_rule(
         multiworld.get_entrance("3-8 -> Naval Piranha's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_38Clear, helper_name="_38Clear")
     )
 
     world.set_rule(
         multiworld.get_entrance("4-4 -> Marching Milde's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_44Clear, helper_name="_44Clear")
     )
 
     world.set_rule(
         multiworld.get_entrance("4-8 -> Hookbill The Koopa's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_48Clear, helper_name="_48Clear")
     )
 
     world.set_rule(
         multiworld.get_entrance("5-4 -> Sluggy The Unshaven's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_54Clear, helper_name="_54Clear")
     )
 
     world.set_rule(
         multiworld.get_entrance("5-8 -> Raphael The Raven's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_58Clear, helper_name="_58Clear")
     )
 
     world.set_rule(
         multiworld.get_entrance("6-4 -> Tap-Tap The Red Nose's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_64Clear, helper_name="_64Clear")
     )
 
     world.set_rule(
         multiworld.get_entrance("6-8 -> Bowser's Room", player),
-        True_()
+        HelperCall(helper_func=_yoshisislandworldgen_castle_clear, helper_name="castle_clear")
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Make Eggs, Throw Eggs: Red Coins", player),
-        HasAll(['Beanstalk', 'Dashed Stairs'])
+        HasAll('Beanstalk', 'Dashed Stairs')
     )
 
     world.set_rule(
         multiworld.get_location("Make Eggs, Throw Eggs: Flowers", player),
-        HasAll(['Beanstalk', 'Dashed Stairs'])
+        HasAll('Beanstalk', 'Dashed Stairs')
     )
 
     world.set_rule(
         multiworld.get_location("Make Eggs, Throw Eggs: Stars", player),
-        HasAll(['Beanstalk', 'Dashed Stairs', 'Tulip'])
+        HasAll('Beanstalk', 'Dashed Stairs', 'Tulip')
     )
 
     world.set_rule(
@@ -2283,17 +2229,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Watch Out Below!: Red Coins", player),
-        HasAll(['Helicopter Morph', 'Large Spring Ball'])
+        HasAll('Helicopter Morph', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Watch Out Below!: Flowers", player),
-        HasAll(['Helicopter Morph', 'Large Spring Ball'])
+        HasAll('Helicopter Morph', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Watch Out Below!: Stars", player),
-        And(True_(), Has('Large Spring Ball'))
+        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Large Spring Ball'))
     )
 
     world.set_rule(
@@ -2318,32 +2264,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Burt The Bashful's Fort: Flowers", player),
-        And(Or(True_(), Has('Egg Capacity Upgrade', 3)), HasAll(['Key', 'Spring Ball']))
+        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3)), HasAll('Key', 'Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Burt The Bashful's Fort: Stars", player),
-        And(Or(True_(), Has('Key')), Has('Spring Ball'))
+        And(Or(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Key')), Has('Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Burt The Bashful's Fort: Level Clear", player),
-        True_()
+        HelperCall(helper_func=_14CanFightBoss, helper_name="_14CanFightBoss")
     )
 
     world.set_rule(
         multiworld.get_location("Burt The Bashful's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_14Boss, helper_name="_14Boss")
     )
 
     world.set_rule(
         multiworld.get_location("Hop! Hop! Donut Lifts: Stars", player),
-        Or(True_(), True_())
+        Or(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"))
     )
 
     world.set_rule(
         multiworld.get_location("Shy-Guys On Stilts: Red Coins", player),
-        HasAll(['! Switch', 'Flashing Eggs', 'Large Spring Ball', 'Mole Tank Morph'])
+        HasAll('! Switch', 'Flashing Eggs', 'Large Spring Ball', 'Mole Tank Morph')
     )
 
     world.set_rule(
@@ -2353,27 +2299,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Shy-Guys On Stilts: Stars", player),
-        And(Or(And(True_(), Has('Beanstalk')), And(True_(), Has('Tulip'))), Has('Large Spring Ball'))
+        And(Or(And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Beanstalk')), And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Tulip'))), Has('Large Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Shy-Guys On Stilts: Level Clear", player),
-        HasAll(['Beanstalk', 'Large Spring Ball'])
+        HasAll('Beanstalk', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Touch Fuzzy Get Dizzy: Red Coins", player),
-        HasAll(['Beanstalk', 'Chomp Rock', 'Flashing Eggs', 'Spring Ball'])
+        HasAll('Beanstalk', 'Chomp Rock', 'Flashing Eggs', 'Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Touch Fuzzy Get Dizzy: Stars", player),
-        Or(And(True_(), HasAll(['Beanstalk', 'Chomp Rock', 'Spring Ball'])), True_())
+        Or(And(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), HasAll('Beanstalk', 'Chomp Rock', 'Spring Ball')), HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"))
     )
 
     world.set_rule(
         multiworld.get_location("Touch Fuzzy Get Dizzy: Gather Coins", player),
-        True_()
+        HelperCall(helper_func=_17Game, helper_name="_17Game")
     )
 
     world.set_rule(
@@ -2388,32 +2334,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Salvo The Slime's Castle: Stars", player),
-        And(True_(), Or(HasAll(['Arrow Wheel', 'Key']), Has('Platform Ghost')))
+        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Or(HasAll('Arrow Wheel', 'Key'), Has('Platform Ghost')))
     )
 
     world.set_rule(
         multiworld.get_location("Salvo The Slime's Castle: Level Clear", player),
-        True_()
+        HelperCall(helper_func=_18CanFightBoss, helper_name="_18CanFightBoss")
     )
 
     world.set_rule(
         multiworld.get_location("Salvo The Slime's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_18Boss, helper_name="_18Boss")
     )
 
     world.set_rule(
         multiworld.get_location("Visit Koopa And Para-Koopa: Red Coins", player),
-        HasAll(['Large Spring Ball', 'Poochy', 'Spring Ball'])
+        HasAll('Large Spring Ball', 'Poochy', 'Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Visit Koopa And Para-Koopa: Flowers", player),
-        HasAll(['Large Spring Ball', 'Super Star'])
+        HasAll('Large Spring Ball', 'Super Star')
     )
 
     world.set_rule(
         multiworld.get_location("Visit Koopa And Para-Koopa: Stars", player),
-        And(True_(), Has('Large Spring Ball'))
+        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Large Spring Ball'))
     )
 
     world.set_rule(
@@ -2423,22 +2369,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Baseball Boys: Red Coins", player),
-        HasAll(['Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Mole Tank Morph', 'Super Star'])
+        HasAll('Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Mole Tank Morph', 'Super Star')
     )
 
     world.set_rule(
         multiworld.get_location("The Baseball Boys: Flowers", player),
-        HasAll(['Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Spring Ball', 'Super Star'])
+        HasAll('Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Spring Ball', 'Super Star')
     )
 
     world.set_rule(
         multiworld.get_location("The Baseball Boys: Stars", player),
-        And(And(True_(), Has('Tulip')), HasAll(['Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Super Star']))
+        And(And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Tulip')), HasAll('Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Super Star'))
     )
 
     world.set_rule(
         multiworld.get_location("The Baseball Boys: Level Clear", player),
-        HasAll(['Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Super Star'])
+        HasAll('Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Super Star')
     )
 
     world.set_rule(
@@ -2448,37 +2394,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("What's Gusty Taste Like?: Flowers", player),
-        HasAny(['Large Spring Ball', 'Super Star'])
+        HasAny('Large Spring Ball', 'Super Star')
     )
 
     world.set_rule(
         multiworld.get_location("What's Gusty Taste Like?: Level Clear", player),
-        HasAny(['Large Spring Ball', 'Super Star'])
+        HasAny('Large Spring Ball', 'Super Star')
     )
 
     world.set_rule(
         multiworld.get_location("Bigger Boo's Fort: Red Coins", player),
-        HasAll(['! Switch', 'Dashed Stairs', 'Key'])
+        HasAll('! Switch', 'Dashed Stairs', 'Key')
     )
 
     world.set_rule(
         multiworld.get_location("Bigger Boo's Fort: Flowers", player),
-        HasAll(['! Switch', 'Dashed Stairs', 'Key'])
+        HasAll('! Switch', 'Dashed Stairs', 'Key')
     )
 
     world.set_rule(
         multiworld.get_location("Bigger Boo's Fort: Stars", player),
-        And(True_(), HasAll(['! Switch', 'Dashed Stairs', 'Key']))
+        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), HasAll('! Switch', 'Dashed Stairs', 'Key'))
     )
 
     world.set_rule(
         multiworld.get_location("Bigger Boo's Fort: Level Clear", player),
-        True_()
+        HelperCall(helper_func=_24CanFightBoss, helper_name="_24CanFightBoss")
     )
 
     world.set_rule(
         multiworld.get_location("Bigger Boo's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_24Boss, helper_name="_24Boss")
     )
 
     world.set_rule(
@@ -2488,7 +2434,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Watch Out For Lakitu: Flowers", player),
-        HasAll(['Chomp Rock', 'Key', 'Train Morph'])
+        HasAll('Chomp Rock', 'Key', 'Train Morph')
     )
 
     world.set_rule(
@@ -2503,12 +2449,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Mystery Maze: Flowers", player),
-        HasAll(['Egg Launcher', 'Large Spring Ball'])
+        HasAll('Egg Launcher', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Mystery Maze: Stars", player),
-        And(True_(), Has('Large Spring Ball'))
+        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Large Spring Ball'))
     )
 
     world.set_rule(
@@ -2518,102 +2464,102 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Cave Of the Mystery Maze: Seed Spitting Contest", player),
-        True_()
+        HelperCall(helper_func=_26Game, helper_name="_26Game")
     )
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Red Coins", player),
-        And(Or(True_(), HasAny(['Dashed Platform', 'Giant Eggs'])), Has('Large Spring Ball'))
+        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), HasAny('Dashed Platform', 'Giant Eggs')), Has('Large Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Flowers", player),
-        And(Or(True_(), Has('Giant Eggs')), HasAll(['! Switch', 'Large Spring Ball']))
+        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Giant Eggs')), HasAll('! Switch', 'Large Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Stars", player),
-        And(True_(), Has('Giant Eggs'))
+        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Giant Eggs'))
     )
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Level Clear", player),
-        HasAll(['Car Morph', 'Large Spring Ball'])
+        HasAll('Car Morph', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Gather Coins", player),
-        True_()
+        HelperCall(helper_func=_27Game, helper_name="_27Game")
     )
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Red Coins", player),
-        And(HasAll(['Arrow Wheel', 'Key']), Has('Egg Capacity Upgrade'))
+        And(HasAll('Arrow Wheel', 'Key'), Has('Egg Capacity Upgrade'))
     )
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Flowers", player),
-        And(HasAll(['Arrow Wheel', 'Key', 'Train Morph']), Has('Egg Capacity Upgrade'))
+        And(HasAll('Arrow Wheel', 'Key', 'Train Morph'), Has('Egg Capacity Upgrade'))
     )
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Stars", player),
-        And(True_(), HasAll(['Arrow Wheel', 'Key']), Has('Egg Capacity Upgrade'))
+        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), HasAll('Arrow Wheel', 'Key'), Has('Egg Capacity Upgrade'))
     )
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Level Clear", player),
-        True_()
+        HelperCall(helper_func=_28CanFightBoss, helper_name="_28CanFightBoss")
     )
 
     world.set_rule(
         multiworld.get_location("Roger The Ghost's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_28Boss, helper_name="_28Boss")
     )
 
     world.set_rule(
         multiworld.get_location("Welcome To Monkey World!: Stars", player),
-        True_()
+        HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring")
     )
 
     world.set_rule(
         multiworld.get_location("Jungle Rhythm...: Red Coins", player),
-        HasAll(['Dashed Stairs', 'Spring Ball'])
+        HasAll('Dashed Stairs', 'Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Jungle Rhythm...: Flowers", player),
-        HasAll(['Dashed Stairs', 'Spring Ball'])
+        HasAll('Dashed Stairs', 'Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Jungle Rhythm...: Stars", player),
-        And(True_(), Has('Tulip'))
+        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Tulip'))
     )
 
     world.set_rule(
         multiworld.get_location("Jungle Rhythm...: Level Clear", player),
-        HasAll(['Dashed Stairs', 'Spring Ball'])
+        HasAll('Dashed Stairs', 'Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Nep-Enuts' Domain: Red Coins", player),
-        HasAll(['Helicopter Morph', 'Submarine Morph'])
+        HasAll('Helicopter Morph', 'Submarine Morph')
     )
 
     world.set_rule(
         multiworld.get_location("Nep-Enuts' Domain: Flowers", player),
-        HasAll(['Helicopter Morph', 'Submarine Morph'])
+        HasAll('Helicopter Morph', 'Submarine Morph')
     )
 
     world.set_rule(
         multiworld.get_location("Nep-Enuts' Domain: Stars", player),
-        Or(True_(), HasAll(['Helicopter Morph', 'Submarine Morph']))
+        Or(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), HasAll('Helicopter Morph', 'Submarine Morph'))
     )
 
     world.set_rule(
         multiworld.get_location("Nep-Enuts' Domain: Level Clear", player),
-        HasAll(['Helicopter Morph', 'Submarine Morph'])
+        HasAll('Helicopter Morph', 'Submarine Morph')
     )
 
     world.set_rule(
@@ -2623,62 +2569,62 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Prince Froggy's Fort: Flowers", player),
-        And(Or(True_(), Has('Egg Capacity Upgrade', 5)), Has('Dashed Platform'))
+        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 5)), Has('Dashed Platform'))
     )
 
     world.set_rule(
         multiworld.get_location("Prince Froggy's Fort: Stars", player),
-        True_()
+        HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring")
     )
 
     world.set_rule(
         multiworld.get_location("Prince Froggy's Fort: Level Clear", player),
-        True_()
+        HelperCall(helper_func=_34CanFightBoss, helper_name="_34CanFightBoss")
     )
 
     world.set_rule(
         multiworld.get_location("Prince Froggy's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_34Boss, helper_name="_34Boss")
     )
 
     world.set_rule(
         multiworld.get_location("Jammin' Through The Trees: Flowers", player),
-        Or(True_(), Has('Watermelon'))
+        Or(HelperCall(helper_func=_yoshisislandworldgen_melon_item, helper_name="melon_item"), Has('Watermelon'))
     )
 
     world.set_rule(
         multiworld.get_location("Jammin' Through The Trees: Stars", player),
-        Or(And(True_(), Or(True_(), Has('Tulip'))), And(True_(), Has('Tulip')))
+        Or(And(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), Or(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Tulip'))), And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Tulip')))
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of Harry Hedgehog: Red Coins", player),
-        HasAll(['Beanstalk', 'Chomp Rock', 'Large Spring Ball', 'Mole Tank Morph'])
+        HasAll('Beanstalk', 'Chomp Rock', 'Large Spring Ball', 'Mole Tank Morph')
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of Harry Hedgehog: Flowers", player),
-        HasAll(['! Switch', 'Beanstalk', 'Chomp Rock', 'Large Spring Ball', 'Mole Tank Morph'])
+        HasAll('! Switch', 'Beanstalk', 'Chomp Rock', 'Large Spring Ball', 'Mole Tank Morph')
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of Harry Hedgehog: Stars", player),
-        And(True_(), HasAll(['Beanstalk', 'Chomp Rock', 'Dashed Stairs', 'Large Spring Ball', 'Mole Tank Morph', 'Tulip']))
+        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), HasAll('Beanstalk', 'Chomp Rock', 'Dashed Stairs', 'Large Spring Ball', 'Mole Tank Morph', 'Tulip'))
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of Harry Hedgehog: Level Clear", player),
-        HasAll(['Chomp Rock', 'Key', 'Large Spring Ball'])
+        HasAll('Chomp Rock', 'Key', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Monkeys' Favorite Lake: Red Coins", player),
-        HasAll(['! Switch', 'Beanstalk', 'Large Spring Ball', 'Submarine Morph'])
+        HasAll('! Switch', 'Beanstalk', 'Large Spring Ball', 'Submarine Morph')
     )
 
     world.set_rule(
         multiworld.get_location("Monkeys' Favorite Lake: Flowers", player),
-        HasAll(['Beanstalk', 'Large Spring Ball'])
+        HasAll('Beanstalk', 'Large Spring Ball')
     )
 
     world.set_rule(
@@ -2693,27 +2639,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Naval Piranha's Castle: Red Coins", player),
-        Or(True_(), Has('Egg Capacity Upgrade', 3))
+        Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Naval Piranha's Castle: Flowers", player),
-        Or(True_(), Has('Egg Capacity Upgrade', 3))
+        Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Naval Piranha's Castle: Stars", player),
-        And(True_(), Has('Tulip'))
+        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Tulip'))
     )
 
     world.set_rule(
         multiworld.get_location("Naval Piranha's Castle: Level Clear", player),
-        True_()
+        HelperCall(helper_func=_38CanFightBoss, helper_name="_38CanFightBoss")
     )
 
     world.set_rule(
         multiworld.get_location("Naval Piranha's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_38Boss, helper_name="_38Boss")
     )
 
     world.set_rule(
@@ -2728,7 +2674,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("GO! GO! MARIO!!: Stars", player),
-        Or(And(True_(), Has('Tulip')), True_())
+        Or(And(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), Has('Tulip')), HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"))
     )
 
     world.set_rule(
@@ -2738,17 +2684,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Lakitus: Red Coins", player),
-        HasAll(['! Switch', 'Egg Launcher', 'Large Spring Ball'])
+        HasAll('! Switch', 'Egg Launcher', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Lakitus: Flowers", player),
-        HasAll(['Egg Launcher', 'Large Spring Ball'])
+        HasAll('Egg Launcher', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Lakitus: Stars", player),
-        HasAll(['Large Spring Ball', 'Spring Ball'])
+        HasAll('Large Spring Ball', 'Spring Ball')
     )
 
     world.set_rule(
@@ -2758,17 +2704,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Don't Look Back!: Red Coins", player),
-        HasAll(['! Switch', 'Helicopter Morph', 'Large Spring Ball'])
+        HasAll('! Switch', 'Helicopter Morph', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Don't Look Back!: Flowers", player),
-        HasAll(['! Switch', 'Large Spring Ball'])
+        HasAll('! Switch', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Don't Look Back!: Stars", player),
-        And(And(True_(), Has('Tulip')), Has('! Switch'))
+        And(And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Tulip')), Has('! Switch'))
     )
 
     world.set_rule(
@@ -2778,62 +2724,62 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Marching Milde's Fort: Red Coins", player),
-        And(Or(True_(), Has('Egg Capacity Upgrade')), HasAll(['Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel']))
+        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade')), HasAll('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'))
     )
 
     world.set_rule(
         multiworld.get_location("Marching Milde's Fort: Flowers", player),
-        And(Or(True_(), Has('Egg Capacity Upgrade')), HasAll(['Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Vanishing Arrow Wheel']))
+        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade')), HasAll('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Vanishing Arrow Wheel'))
     )
 
     world.set_rule(
         multiworld.get_location("Marching Milde's Fort: Stars", player),
-        And(Or(True_(), True_(), Has('Vanishing Arrow Wheel')), Has('Dashed Stairs'))
+        And(Or(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Vanishing Arrow Wheel')), Has('Dashed Stairs'))
     )
 
     world.set_rule(
         multiworld.get_location("Marching Milde's Fort: Level Clear", player),
-        True_()
+        HelperCall(helper_func=_44CanFightBoss, helper_name="_44CanFightBoss")
     )
 
     world.set_rule(
         multiworld.get_location("Marching Milde's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_44Boss, helper_name="_44Boss")
     )
 
     world.set_rule(
         multiworld.get_location("Chomp Rock Zone: Red Coins", player),
-        HasAll(['Chomp Rock', 'Large Spring Ball'])
+        HasAll('Chomp Rock', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Chomp Rock Zone: Flowers", player),
-        HasAll(['! Switch', 'Chomp Rock', 'Dashed Platform', 'Spring Ball'])
+        HasAll('! Switch', 'Chomp Rock', 'Dashed Platform', 'Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Chomp Rock Zone: Stars", player),
-        HasAll(['! Switch', 'Chomp Rock', 'Dashed Platform', 'Spring Ball'])
+        HasAll('! Switch', 'Chomp Rock', 'Dashed Platform', 'Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Lake Shore Paradise: Red Coins", player),
-        And(Or(True_(), Has('Egg Plant')), HasAny(['Large Spring Ball', 'Spring Ball']))
+        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Plant')), HasAny('Large Spring Ball', 'Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Lake Shore Paradise: Flowers", player),
-        And(Or(True_(), Has('Egg Plant')), HasAny(['Large Spring Ball', 'Spring Ball']))
+        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Plant')), HasAny('Large Spring Ball', 'Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Lake Shore Paradise: Stars", player),
-        And(Or(And(True_(), Has('Tulip')), True_()), Or(True_(), Has('Egg Plant')))
+        And(Or(And(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), Has('Tulip')), HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring")), Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Plant')))
     )
 
     world.set_rule(
         multiworld.get_location("Lake Shore Paradise: Level Clear", player),
-        Or(True_(), Has('Egg Plant'))
+        Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Plant'))
     )
 
     world.set_rule(
@@ -2848,7 +2794,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ride Like The Wind: Stars", player),
-        And(And(True_(), Has('Helicopter Morph')), Has('Large Spring Ball'))
+        And(And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Helicopter Morph')), Has('Large Spring Ball'))
     )
 
     world.set_rule(
@@ -2858,177 +2804,177 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ride Like The Wind: Gather Coins", player),
-        True_()
+        HelperCall(helper_func=_47Game, helper_name="_47Game")
     )
 
     world.set_rule(
         multiworld.get_location("Hookbill The Koopa's Castle: Red Coins", player),
-        HasAll(['Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'])
+        HasAll('Dashed Stairs', 'Key', 'Vanishing Arrow Wheel')
     )
 
     world.set_rule(
         multiworld.get_location("Hookbill The Koopa's Castle: Flowers", player),
-        HasAll(['Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'])
+        HasAll('Dashed Stairs', 'Key', 'Vanishing Arrow Wheel')
     )
 
     world.set_rule(
         multiworld.get_location("Hookbill The Koopa's Castle: Stars", player),
-        And(True_(), HasAny(['Dashed Stairs', 'Vanishing Arrow Wheel']))
+        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), HasAny('Dashed Stairs', 'Vanishing Arrow Wheel'))
     )
 
     world.set_rule(
         multiworld.get_location("Hookbill The Koopa's Castle: Level Clear", player),
-        True_()
+        HelperCall(helper_func=_48CanFightBoss, helper_name="_48CanFightBoss")
     )
 
     world.set_rule(
         multiworld.get_location("Hookbill The Koopa's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_48Boss, helper_name="_48Boss")
     )
 
     world.set_rule(
         multiworld.get_location("BLIZZARD!!!: Red Coins", player),
-        HasAll(['Dashed Stairs', 'Helicopter Morph'])
+        HasAll('Dashed Stairs', 'Helicopter Morph')
     )
 
     world.set_rule(
         multiworld.get_location("BLIZZARD!!!: Stars", player),
-        Or(True_(), Or(And(True_(), Has('Dashed Stairs')), Has('Tulip')))
+        Or(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), Or(And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Dashed Stairs')), Has('Tulip')))
     )
 
     world.set_rule(
         multiworld.get_location("Ride The Ski Lifts: Stars", player),
-        Or(True_(), Has('Super Star'))
+        Or(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Super Star'))
     )
 
     world.set_rule(
         multiworld.get_location("Danger - Icy Conditions Ahead: Red Coins", player),
-        And(Or(True_(), Has('Fire Melon')), HasAll(['Bucket', 'Dashed Platform', 'Skis', 'Spring Ball', 'Super Star']))
+        And(Or(HelperCall(helper_func=_yoshisislandworldgen_melon_item, helper_name="melon_item"), Has('Fire Melon')), HasAll('Bucket', 'Dashed Platform', 'Skis', 'Spring Ball', 'Super Star'))
     )
 
     world.set_rule(
         multiworld.get_location("Danger - Icy Conditions Ahead: Flowers", player),
-        And(Or(True_(), Has('Fire Melon')), HasAll(['Dashed Platform', 'Skis', 'Spring Ball']))
+        And(Or(HelperCall(helper_func=_yoshisislandworldgen_melon_item, helper_name="melon_item"), Has('Fire Melon')), HasAll('Dashed Platform', 'Skis', 'Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Danger - Icy Conditions Ahead: Stars", player),
-        And(And(True_(), Or(True_(), Has('Fire Melon'))), Has('Spring Ball'))
+        And(And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Or(HelperCall(helper_func=_yoshisislandworldgen_melon_item, helper_name="melon_item"), Has('Fire Melon'))), Has('Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Danger - Icy Conditions Ahead: Level Clear", player),
-        HasAll(['Dashed Platform', 'Skis', 'Spring Ball'])
+        HasAll('Dashed Platform', 'Skis', 'Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Fort: Red Coins", player),
-        HasAll(['Dashed Platform', 'Dashed Stairs', 'Platform Ghost'])
+        HasAll('Dashed Platform', 'Dashed Stairs', 'Platform Ghost')
     )
 
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Fort: Flowers", player),
-        HasAll(['Dashed Platform', 'Dashed Stairs', 'Platform Ghost'])
+        HasAll('Dashed Platform', 'Dashed Stairs', 'Platform Ghost')
     )
 
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Fort: Stars", player),
-        Or(And(True_(), Has('Dashed Platform'), Has('Dashed Stairs')), And(True_(), HasAll(['Dashed Stairs', 'Platform Ghost'])))
+        Or(And(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), Has('Dashed Platform'), Has('Dashed Stairs')), And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), HasAll('Dashed Stairs', 'Platform Ghost')))
     )
 
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Fort: Level Clear", player),
-        True_()
+        HelperCall(helper_func=_54CanFightBoss, helper_name="_54CanFightBoss")
     )
 
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_54Boss, helper_name="_54Boss")
     )
 
     world.set_rule(
         multiworld.get_location("Goonie Rides!: Red Coins", player),
-        HasAll(['! Switch', 'Helicopter Morph'])
+        HasAll('! Switch', 'Helicopter Morph')
     )
 
     world.set_rule(
         multiworld.get_location("Goonie Rides!: Flowers", player),
-        HasAll(['! Switch', 'Helicopter Morph'])
+        HasAll('! Switch', 'Helicopter Morph')
     )
 
     world.set_rule(
         multiworld.get_location("Goonie Rides!: Stars", player),
-        True_()
+        HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring")
     )
 
     world.set_rule(
         multiworld.get_location("Goonie Rides!: Level Clear", player),
-        HasAll(['! Switch', 'Helicopter Morph'])
+        HasAll('! Switch', 'Helicopter Morph')
     )
 
     world.set_rule(
         multiworld.get_location("Welcome To Cloud World: Stars", player),
-        Or(True_(), Has('Tulip'))
+        Or(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Tulip'))
     )
 
     world.set_rule(
         multiworld.get_location("Shifting Platforms Ahead: Red Coins", player),
-        Or(True_(), Has('Egg Capacity Upgrade'))
+        Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade'))
     )
 
     world.set_rule(
         multiworld.get_location("Shifting Platforms Ahead: Flowers", player),
-        Or(True_(), Has('Egg Capacity Upgrade'))
+        Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade'))
     )
 
     world.set_rule(
         multiworld.get_location("Shifting Platforms Ahead: Stars", player),
-        True_()
+        HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring")
     )
 
     world.set_rule(
         multiworld.get_location("Raphael The Raven's Castle: Red Coins", player),
-        HasAll(['Arrow Wheel', 'Train Morph'])
+        HasAll('Arrow Wheel', 'Train Morph')
     )
 
     world.set_rule(
         multiworld.get_location("Raphael The Raven's Castle: Flowers", player),
-        HasAll(['Arrow Wheel', 'Train Morph'])
+        HasAll('Arrow Wheel', 'Train Morph')
     )
 
     world.set_rule(
         multiworld.get_location("Raphael The Raven's Castle: Stars", player),
-        And(True_(), Has('Arrow Wheel'))
+        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Arrow Wheel'))
     )
 
     world.set_rule(
         multiworld.get_location("Raphael The Raven's Castle: Level Clear", player),
-        True_()
+        HelperCall(helper_func=_58CanFightBoss, helper_name="_58CanFightBoss")
     )
 
     world.set_rule(
         multiworld.get_location("Raphael The Raven's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_58Boss, helper_name="_58Boss")
     )
 
     world.set_rule(
         multiworld.get_location("Scary Skeleton Goonies!: Red Coins", player),
-        HasAll(['Dashed Platform', 'Large Spring Ball'])
+        HasAll('Dashed Platform', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Scary Skeleton Goonies!: Flowers", player),
-        HasAll(['Dashed Platform', 'Large Spring Ball'])
+        HasAll('Dashed Platform', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("Scary Skeleton Goonies!: Stars", player),
-        And(True_(), Has('Dashed Platform'))
+        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Has('Dashed Platform'))
     )
 
     world.set_rule(
         multiworld.get_location("Scary Skeleton Goonies!: Level Clear", player),
-        HasAll(['Dashed Platform', 'Large Spring Ball'])
+        HasAll('Dashed Platform', 'Large Spring Ball')
     )
 
     world.set_rule(
@@ -3043,7 +2989,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Bandits: Stars", player),
-        Or(True_(), True_())
+        Or(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"))
     )
 
     world.set_rule(
@@ -3053,67 +2999,67 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Fort: Red Coins", player),
-        And(Or(True_(), Has('Egg Capacity Upgrade', 3)), HasAll(['Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball']))
+        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3)), HasAll('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Fort: Flowers", player),
-        And(Or(True_(), Has('Egg Capacity Upgrade', 3)), HasAll(['Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball']))
+        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3)), HasAll('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Fort: Stars", player),
-        And(True_(), HasAll(['Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball']))
+        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), HasAll('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'))
     )
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Fort: Level Clear", player),
-        True_()
+        HelperCall(helper_func=_64CanFightBoss, helper_name="_64CanFightBoss")
     )
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Boss Room", player),
-        True_()
+        HelperCall(helper_func=_64Boss, helper_name="_64Boss")
     )
 
     world.set_rule(
         multiworld.get_location("The Very Loooooong Cave: Red Coins", player),
-        And(Or(True_(), Has('Egg Capacity Upgrade', 3)), Has('Chomp Rock'))
+        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3)), Has('Chomp Rock'))
     )
 
     world.set_rule(
         multiworld.get_location("The Very Loooooong Cave: Flowers", player),
-        And(Or(True_(), Has('Egg Capacity Upgrade', 3)), Has('Chomp Rock'))
+        And(Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3)), Has('Chomp Rock'))
     )
 
     world.set_rule(
         multiworld.get_location("The Very Loooooong Cave: Stars", player),
-        And(True_(), Or(True_(), Has('Egg Capacity Upgrade', 3)), Has('Chomp Rock'))
+        And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade', 3)), Has('Chomp Rock'))
     )
 
     world.set_rule(
         multiworld.get_location("The Deep, Underground Maze: Red Coins", player),
-        HasAll(['Chomp Rock', 'Key', 'Large Spring Ball'])
+        HasAll('Chomp Rock', 'Key', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("The Deep, Underground Maze: Flowers", player),
-        HasAll(['Chomp Rock', 'Key', 'Large Spring Ball'])
+        HasAll('Chomp Rock', 'Key', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("The Deep, Underground Maze: Stars", player),
-        Or(And(True_(), HasAll(['Chomp Rock', 'Key', 'Large Spring Ball'])), HasAll(['Chomp Rock', 'Key', 'Tulip']))
+        Or(And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), HasAll('Chomp Rock', 'Key', 'Large Spring Ball')), HasAll('Chomp Rock', 'Key', 'Tulip'))
     )
 
     world.set_rule(
         multiworld.get_location("The Deep, Underground Maze: Level Clear", player),
-        HasAll(['Chomp Rock', 'Dashed Platform', 'Key', 'Large Spring Ball'])
+        HasAll('Chomp Rock', 'Dashed Platform', 'Key', 'Large Spring Ball')
     )
 
     world.set_rule(
         multiworld.get_location("KEEP MOVING!!!!: Red Coins", player),
-        Or(True_(), Has('Egg Capacity Upgrade'))
+        Or(HelperCall(helper_func=_yoshisislandworldgen_combat_item, helper_name="combat_item"), Has('Egg Capacity Upgrade'))
     )
 
     world.set_rule(
@@ -3123,25 +3069,25 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("KEEP MOVING!!!!: Stars", player),
-        True_()
+        HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring")
     )
 
     world.set_rule(
         multiworld.get_location("King Bowser's Castle: Red Coins", player),
-        And(True_(), HasAll(['Egg Plant', 'Helicopter Morph']))
+        And(HelperCall(helper_func=_68CollectibleRoute, helper_name="_68CollectibleRoute"), HasAll('Egg Plant', 'Helicopter Morph'))
     )
 
     world.set_rule(
         multiworld.get_location("King Bowser's Castle: Flowers", player),
-        And(True_(), HasAll(['Egg Plant', 'Helicopter Morph']))
+        And(HelperCall(helper_func=_68CollectibleRoute, helper_name="_68CollectibleRoute"), HasAll('Egg Plant', 'Helicopter Morph'))
     )
 
     world.set_rule(
         multiworld.get_location("King Bowser's Castle: Stars", player),
-        And(True_(), HasAll(['Egg Plant', 'Helicopter Morph']))
+        And(HelperCall(helper_func=_68Route, helper_name="_68Route"), HasAll('Egg Plant', 'Helicopter Morph'))
     )
 
     world.set_rule(
         multiworld.get_location("King Bowser's Castle: Level Clear", player),
-        True_()
+        HelperCall(helper_func=_68Clear, helper_name="_68Clear")
     )

@@ -19,36 +19,71 @@
             "name": "Placing belts",
             "connected_region": "Shape transportation",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Belt",
+                "count": 1
+              }
             }
           },
           {
             "name": "Extracting shapes from patches",
             "connected_region": "Shape extraction",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Chaining Extractor",
+                  "Extractor"
+                ]
+              }
             }
           },
           {
             "name": "Using the wires layer",
             "connected_region": "Achievements with wires",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Wires",
+                "count": 1
+              }
             }
           },
           {
             "name": "Placing any building",
             "connected_region": "Achievements with any placeable building",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Balancer",
+                  "Belt",
+                  "Belt Reader",
+                  "Chaining Extractor",
+                  "Color Mixer",
+                  "Compact Merger",
+                  "Compact Splitter",
+                  "Cutter",
+                  "Display",
+                  "Double Painter",
+                  "Extractor",
+                  "Item Filter",
+                  "Painter",
+                  "Quad Cutter",
+                  "Quad Painter",
+                  "Rotator",
+                  "Rotator (180\u00b0)",
+                  "Rotator (CCW)",
+                  "Stacker",
+                  "Storage",
+                  "Switch",
+                  "Trash",
+                  "Tunnel",
+                  "Tunnel Tier II",
+                  "Wires"
+                ]
+              }
             }
           }
         ],
@@ -57,9 +92,7 @@
             "name": "My eyes no longer hurt",
             "id": 20013205,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Switch",
@@ -73,9 +106,7 @@
             "name": "Getting into it",
             "id": 20013229,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Quad Painter",
@@ -89,9 +120,7 @@
             "name": "GPS",
             "id": 20013249,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Processors Upgrade",
@@ -111,9 +140,7 @@
             "name": "I need trains",
             "id": 20013247,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Processors Upgrade",
@@ -132,54 +159,63 @@
             "name": "Transporting shapes over the canvas",
             "connected_region": "Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Belt",
+                  "Compact Merger",
+                  "Compact Splitter"
+                ]
+              }
             }
           },
           {
             "name": "Cutting with half cutter",
             "connected_region": "Achievements with half cutter",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_cut_half",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Rotating clockwise",
             "connected_region": "Achievements with clockwise rotator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Rotator",
+                "count": 1
+              }
             }
           },
           {
             "name": "Stacking shapes",
             "connected_region": "Achievements with stacker",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_stack",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Storing shapes",
             "connected_region": "Achievements with storage",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Storage",
+                "count": 1
+              }
             }
           },
           {
             "name": "Trashing shapes",
             "connected_region": "Achievements with trash",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Trash",
+                "count": 1
+              }
             }
           }
         ],
@@ -192,144 +228,297 @@
             "name": "Painting with (double) painter",
             "connected_region": "Achievements with (double) painter",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Double Painter",
+                  "Painter"
+                ]
+              }
             }
           },
           {
             "name": "Copying and placing blueprints",
             "connected_region": "Achievements with blueprints",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_make_stitched_shape",
+                  "_original_ast_type": "helper",
+                  "args": [
+                    null
+                  ]
+                },
+                {
+                  "rule": "can_mix_colors",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "can_paint",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Blueprints",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Building a MAM",
             "connected_region": "Achievements needing a MAM",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_build_mam",
+              "_original_ast_type": "helper",
+              "args": [
+                null
+              ]
             }
           },
           {
             "name": "Using all main buildings",
             "connected_region": "Achievements with all main buildings",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_make_stitched_shape",
+                  "_original_ast_type": "helper",
+                  "args": [
+                    null
+                  ]
+                },
+                {
+                  "rule": "can_mix_colors",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "can_paint",
+                  "_original_ast_type": "helper"
+                }
+              ]
             }
           },
           {
             "name": "Using first level building",
             "connected_region": "Levels with 1 building",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer",
+                  "Stacker"
+                ],
+                0,
+                null,
+                null
+              ]
             }
           },
           {
             "name": "Using first upgrade building",
             "connected_region": "Upgrades with 1 building",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Stacker",
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer"
+                ],
+                0,
+                null,
+                null
+              ]
             }
           },
           {
             "name": "Delivering unprocessed",
             "connected_region": "Shapesanity Full Uncolored",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Cutting in single half",
             "connected_region": "Shapesanity Half Uncolored",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_make_half_shape",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Cutting in single piece",
             "connected_region": "Shapesanity Piece Uncolored",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "can_cut_half",
+                      "_original_ast_type": "helper"
+                    },
+                    {
+                      "rule": "can_rotate_90",
+                      "_original_ast_type": "helper"
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Quad Cutter",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Cutting and stacking into two halves",
             "connected_region": "Shapesanity Half-Half Uncolored",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_make_half_half_shape",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Stitching complex shapes",
             "connected_region": "Shapesanity Stitched Uncolored",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_make_stitched_shape",
+              "_original_ast_type": "helper",
+              "args": [
+                null
+              ]
             }
           },
           {
             "name": "Rotating and stitching a single windmill half",
             "connected_region": "Shapesanity East Windmill Uncolored",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_make_east_windmill",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Painting with a quad painter or stitching",
             "connected_region": "Shapesanity Colorful Full Uncolored",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "can_make_stitched_shape",
+                  "_original_ast_type": "helper",
+                  "args": [
+                    null
+                  ]
+                },
+                {
+                  "rule": "can_use_quad_painter",
+                  "_original_ast_type": "helper"
+                }
+              ]
             }
           },
           {
             "name": "Why windmill, why?",
             "connected_region": "Shapesanity Colorful East Windmill Uncolored",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "can_make_east_windmill",
+                      "_original_ast_type": "helper"
+                    },
+                    {
+                      "rule": "can_use_quad_painter",
+                      "_original_ast_type": "helper"
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_make_stitched_shape",
+                  "_original_ast_type": "helper",
+                  "args": [
+                    null
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Quad painting a half-half shape",
             "connected_region": "Shapesanity Colorful Half-Half Uncolored",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "can_make_half_half_shape",
+                      "_original_ast_type": "helper"
+                    },
+                    {
+                      "rule": "can_use_quad_painter",
+                      "_original_ast_type": "helper"
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_make_stitched_shape",
+                  "_original_ast_type": "helper",
+                  "args": [
+                    null
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Quad painting a half shape",
             "connected_region": "Shapesanity Colorful Half Uncolored",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "can_make_half_shape",
+                      "_original_ast_type": "helper"
+                    },
+                    {
+                      "rule": "can_use_quad_painter",
+                      "_original_ast_type": "helper"
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_make_stitched_shape",
+                  "_original_ast_type": "helper",
+                  "args": [
+                    null
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -338,9 +527,7 @@
             "name": "Level 1",
             "id": 20010710,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Balancer",
@@ -355,9 +542,7 @@
             "name": "Level 1 Additional",
             "id": 20010707,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Storage",
@@ -372,9 +557,7 @@
             "name": "Level 2",
             "id": 20010711,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Painting Upgrade",
@@ -388,9 +571,7 @@
             "name": "Level 3",
             "id": 20010712,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Belt Upgrade",
@@ -404,9 +585,7 @@
             "name": "Belt Upgrade Tier II",
             "id": 20011209,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Miner Upgrade",
@@ -420,9 +599,7 @@
             "name": "Miner Upgrade Tier II",
             "id": 20011708,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Blueprint Shapes Bundle",
@@ -436,9 +613,7 @@
             "name": "Processors Upgrade Tier II",
             "id": 20012207,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wires",
@@ -452,9 +627,7 @@
             "name": "Painting Upgrade Tier II",
             "id": 20012706,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Level Shapes Bundle",
@@ -468,9 +641,7 @@
             "name": "It's a mess",
             "id": 20013221,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Virtual Processing",
@@ -484,9 +655,7 @@
             "name": "Oops",
             "id": 20013243,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Item Filter",
@@ -505,9 +674,20 @@
             "name": "Using second level building",
             "connected_region": "Levels with 2 buildings",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer",
+                  "Stacker"
+                ],
+                1,
+                null,
+                null
+              ]
             }
           }
         ],
@@ -516,9 +696,7 @@
             "name": "Level 4",
             "id": 20010713,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Miner Upgrade",
@@ -532,9 +710,7 @@
             "name": "Level 5",
             "id": 20010714,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Processors Upgrade",
@@ -548,9 +724,7 @@
             "name": "Level 6",
             "id": 20010715,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Belt Upgrade",
@@ -564,9 +738,7 @@
             "name": "Level 7",
             "id": 20010716,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Processors Upgrade",
@@ -585,9 +757,20 @@
             "name": "Using third level building",
             "connected_region": "Levels with 3 buildings",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer",
+                  "Stacker"
+                ],
+                2,
+                null,
+                null
+              ]
             }
           }
         ],
@@ -596,9 +779,7 @@
             "name": "Level 8",
             "id": 20010717,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Upgrade Shapes Bundle",
@@ -612,9 +793,7 @@
             "name": "Level 9",
             "id": 20010718,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Miner Upgrade",
@@ -628,9 +807,7 @@
             "name": "Level 10",
             "id": 20010719,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Stacker",
@@ -644,9 +821,7 @@
             "name": "Level 11",
             "id": 20010720,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Painting Upgrade",
@@ -665,9 +840,20 @@
             "name": "Using fourth level building",
             "connected_region": "Levels with 4 buildings",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer",
+                  "Stacker"
+                ],
+                3,
+                null,
+                null
+              ]
             }
           }
         ],
@@ -676,9 +862,7 @@
             "name": "Level 12",
             "id": 20010721,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Level Shapes Bundle",
@@ -692,9 +876,7 @@
             "name": "Level 13",
             "id": 20010722,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Belt Upgrade",
@@ -708,9 +890,7 @@
             "name": "Level 14",
             "id": 20010723,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Level Shapes Bundle",
@@ -724,9 +904,7 @@
             "name": "Level 15",
             "id": 20010724,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Painting Upgrade",
@@ -745,9 +923,20 @@
             "name": "Using fifth level building",
             "connected_region": "Levels with 5 buildings",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer",
+                  "Stacker"
+                ],
+                4,
+                null,
+                null
+              ]
             }
           }
         ],
@@ -756,9 +945,7 @@
             "name": "Level 16",
             "id": 20010725,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Processors Upgrade",
@@ -772,9 +959,7 @@
             "name": "Level 17",
             "id": 20010726,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Painting Upgrade",
@@ -788,9 +973,7 @@
             "name": "Level 18",
             "id": 20010727,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Belt Upgrade",
@@ -804,9 +987,7 @@
             "name": "Level 19",
             "id": 20010728,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Miner Upgrade",
@@ -826,9 +1007,7 @@
             "name": "Level 20 Additional",
             "id": 20010708,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Belt Upgrade",
@@ -842,9 +1021,7 @@
             "name": "Level 20 Additional 2",
             "id": 20010709,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Tunnel Tier II",
@@ -858,9 +1035,7 @@
             "name": "Level 20",
             "id": 20010729,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Processors Upgrade",
@@ -874,9 +1049,7 @@
             "name": "Level 21",
             "id": 20010730,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Processors Upgrade",
@@ -890,9 +1063,7 @@
             "name": "Level 22",
             "id": 20010731,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Belt Upgrade",
@@ -906,9 +1077,7 @@
             "name": "Level 23",
             "id": 20010732,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Painting Upgrade",
@@ -922,9 +1091,7 @@
             "name": "Level 24",
             "id": 20010733,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Miner Upgrade",
@@ -938,9 +1105,7 @@
             "name": "Level 25",
             "id": 20010734,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Belt Upgrade",
@@ -954,9 +1119,7 @@
             "name": "Wires",
             "id": 20013210,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Belt Upgrade",
@@ -970,9 +1133,7 @@
             "name": "Goal",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Goal",
@@ -991,9 +1152,20 @@
             "name": "Using second upgrade building",
             "connected_region": "Upgrades with 2 buildings",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Stacker",
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer"
+                ],
+                1,
+                null,
+                null
+              ]
             }
           }
         ],
@@ -1002,9 +1174,7 @@
             "name": "Belt Upgrade Tier III",
             "id": 20011210,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Belt Upgrade",
@@ -1018,9 +1188,7 @@
             "name": "Miner Upgrade Tier III",
             "id": 20011709,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Miner Upgrade",
@@ -1034,9 +1202,7 @@
             "name": "Processors Upgrade Tier III",
             "id": 20012208,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Processors Upgrade",
@@ -1050,9 +1216,7 @@
             "name": "Painting Upgrade Tier III",
             "id": 20012707,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Blueprint Shapes Bundle",
@@ -1071,9 +1235,20 @@
             "name": "Using third upgrade building",
             "connected_region": "Upgrades with 3 buildings",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Stacker",
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer"
+                ],
+                2,
+                null,
+                null
+              ]
             }
           }
         ],
@@ -1082,9 +1257,7 @@
             "name": "Belt Upgrade Tier IV",
             "id": 20011211,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Blueprint Shapes Bundle",
@@ -1098,9 +1271,7 @@
             "name": "Miner Upgrade Tier IV",
             "id": 20011710,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Upgrade Shapes Bundle",
@@ -1114,9 +1285,7 @@
             "name": "Processors Upgrade Tier IV",
             "id": 20012209,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Level Shapes Bundle",
@@ -1130,9 +1299,7 @@
             "name": "Painting Upgrade Tier IV",
             "id": 20012708,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Processors Upgrade",
@@ -1151,9 +1318,20 @@
             "name": "Using fourth upgrade building",
             "connected_region": "Upgrades with 4 buildings",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Stacker",
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer"
+                ],
+                3,
+                null,
+                null
+              ]
             }
           }
         ],
@@ -1162,9 +1340,7 @@
             "name": "Belt Upgrade Tier V",
             "id": 20011212,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Processors Upgrade",
@@ -1178,9 +1354,7 @@
             "name": "Miner Upgrade Tier V",
             "id": 20011711,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Blueprint Shapes Bundle",
@@ -1194,9 +1368,7 @@
             "name": "Processors Upgrade Tier V",
             "id": 20012210,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Compact Merger",
@@ -1210,9 +1382,7 @@
             "name": "Painting Upgrade Tier V",
             "id": 20012709,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Processors Upgrade",
@@ -1226,9 +1396,7 @@
             "name": "Faster",
             "id": 20013222,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Miner Upgrade",
@@ -1247,9 +1415,20 @@
             "name": "Using fifth upgrade building",
             "connected_region": "Upgrades with 5 buildings",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Stacker",
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer"
+                ],
+                4,
+                null,
+                null
+              ]
             }
           }
         ],
@@ -1258,9 +1437,7 @@
             "name": "Belt Upgrade Tier VI",
             "id": 20011213,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Miner Upgrade",
@@ -1274,9 +1451,7 @@
             "name": "Miner Upgrade Tier VI",
             "id": 20011712,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Belt Upgrade",
@@ -1290,9 +1465,7 @@
             "name": "Processors Upgrade Tier VI",
             "id": 20012211,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Upgrade Shapes Bundle",
@@ -1306,9 +1479,7 @@
             "name": "Painting Upgrade Tier VI",
             "id": 20012710,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Painter",
@@ -1328,9 +1499,7 @@
             "name": "Belt Upgrade Tier VII",
             "id": 20011214,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Processors Upgrade",
@@ -1344,9 +1513,7 @@
             "name": "Miner Upgrade Tier VII",
             "id": 20011713,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Level Shapes Bundle",
@@ -1360,9 +1527,7 @@
             "name": "Processors Upgrade Tier VII",
             "id": 20012212,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Chaining Extractor",
@@ -1376,9 +1541,7 @@
             "name": "Painting Upgrade Tier VII",
             "id": 20012711,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Blueprint Shapes Bundle",
@@ -1392,9 +1555,7 @@
             "name": "Belt Upgrade Tier VIII",
             "id": 20011215,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Painting Upgrade",
@@ -1408,9 +1569,7 @@
             "name": "Miner Upgrade Tier VIII",
             "id": 20011714,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rotator (180\u00b0)",
@@ -1424,9 +1583,7 @@
             "name": "Processors Upgrade Tier VIII",
             "id": 20012213,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Blueprints",
@@ -1440,9 +1597,7 @@
             "name": "Painting Upgrade Tier VIII",
             "id": 20012712,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Processors Upgrade",
@@ -1456,9 +1611,7 @@
             "name": "Even faster",
             "id": 20013223,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Processors Upgrade",
@@ -1478,9 +1631,7 @@
             "name": "Painter",
             "id": 20013206,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Blueprint Shapes Bundle",
@@ -1500,9 +1651,7 @@
             "name": "Cutter",
             "id": 20013207,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Belt Upgrade",
@@ -1522,9 +1671,7 @@
             "name": "Rotater",
             "id": 20013208,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Painting Upgrade",
@@ -1544,9 +1691,7 @@
             "name": "Wait, they stack?",
             "id": 20013209,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Miner Upgrade",
@@ -1560,9 +1705,7 @@
             "name": "Stack overflow",
             "id": 20013220,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Level Shapes Bundle",
@@ -1582,9 +1725,7 @@
             "name": "Storage",
             "id": 20013211,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Belt Upgrade",
@@ -1604,9 +1745,7 @@
             "name": "Get rid of them",
             "id": 20013224,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Painting Upgrade",
@@ -1626,9 +1765,7 @@
             "name": "Now it's easy",
             "id": 20013230,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Miner Upgrade",
@@ -1642,9 +1779,7 @@
             "name": "Copy-Pasta",
             "id": 20013244,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Painting Upgrade",
@@ -1664,9 +1799,7 @@
             "name": "Computer Guy",
             "id": 20013231,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Color Mixer",
@@ -1680,9 +1813,7 @@
             "name": "The next dimension",
             "id": 20013242,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Miner Upgrade",
@@ -1702,9 +1833,7 @@
             "name": "Perfectionist",
             "id": 20013241,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Miner Upgrade",
@@ -1723,9 +1852,11 @@
             "name": "Delivering per second with 1.6x belt speed",
             "connected_region": "Achievements with x1.6 belt speed",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "has_x_belt_multiplier",
+              "_original_ast_type": "helper",
+              "args": [
+                1.6
+              ]
             }
           }
         ],
@@ -1734,9 +1865,7 @@
             "name": "The logo!",
             "id": 20013213,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Miner Upgrade",
@@ -1750,9 +1879,7 @@
             "name": "To the moon",
             "id": 20013214,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Processors Upgrade",
@@ -1766,9 +1893,7 @@
             "name": "It's piling up",
             "id": 20013215,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Miner Upgrade",
@@ -1782,9 +1907,7 @@
             "name": "I'll use it later",
             "id": 20013216,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Constant Signal",
@@ -1798,9 +1921,7 @@
             "name": "I've seen that before ...",
             "id": 20013245,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Double Painter",
@@ -1814,9 +1935,7 @@
             "name": "Memories from the past",
             "id": 20013246,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Tunnel",
@@ -1830,9 +1949,7 @@
             "name": "Preparing to launch",
             "id": 20013218,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Belt Upgrade",
@@ -1846,9 +1963,7 @@
             "name": "SpaceY",
             "id": 20013219,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Processors Upgrade",
@@ -1862,9 +1977,7 @@
             "name": "Efficiency 1",
             "id": 20013217,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Painting Upgrade",
@@ -1878,9 +1991,7 @@
             "name": "Branding specialist 1",
             "id": 20013236,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Blueprint Shapes Bundle",
@@ -1900,9 +2011,7 @@
             "name": "Efficiency 2",
             "id": 20013235,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Upgrade Shapes Bundle",
@@ -1916,9 +2025,7 @@
             "name": "Branding specialist 2",
             "id": 20013237,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Compact Splitter",
@@ -1937,9 +2044,8 @@
             "name": "Painting a full shape",
             "connected_region": "Shapesanity Full Painted",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_paint",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -1948,9 +2054,7 @@
             "name": "Shapesanity 1",
             "id": 20013250,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Miner Upgrade",
@@ -1964,9 +2068,7 @@
             "name": "Shapesanity 2",
             "id": 20013251,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Belt Upgrade",
@@ -1980,9 +2082,7 @@
             "name": "Shapesanity 3",
             "id": 20013252,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Blueprint Shapes Bundle",
@@ -2001,9 +2101,8 @@
             "name": "Mixing colors for a full shape",
             "connected_region": "Shapesanity Full Mixed",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2012,9 +2111,7 @@
             "name": "Shapesanity 22",
             "id": 20013271,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Cutter",
@@ -2034,9 +2131,7 @@
             "name": "Shapesanity 25",
             "id": 20013274,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Belt Upgrade",
@@ -2055,9 +2150,8 @@
             "name": "Painting a half shape",
             "connected_region": "Shapesanity Half Painted",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_paint",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2070,9 +2164,8 @@
             "name": "Mixing colors for a half shape",
             "connected_region": "Shapesanity Half Mixed",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2081,9 +2174,7 @@
             "name": "Shapesanity 10",
             "id": 20013259,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Belt Upgrade",
@@ -2097,9 +2188,7 @@
             "name": "Shapesanity 17",
             "id": 20013266,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Painting Upgrade",
@@ -2119,9 +2208,7 @@
             "name": "Shapesanity 7",
             "id": 20013256,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Painting Upgrade",
@@ -2135,9 +2222,7 @@
             "name": "Shapesanity 20",
             "id": 20013269,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Logic Gates",
@@ -2156,9 +2241,8 @@
             "name": "Painting a piece shape",
             "connected_region": "Shapesanity Piece Painted",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_paint",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2171,9 +2255,8 @@
             "name": "Mixing colors for a piece shape",
             "connected_region": "Shapesanity Piece Mixed",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2182,9 +2265,7 @@
             "name": "Shapesanity 13",
             "id": 20013262,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Quad Cutter",
@@ -2198,9 +2279,7 @@
             "name": "Shapesanity 14",
             "id": 20013263,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Upgrade Shapes Bundle",
@@ -2214,9 +2293,7 @@
             "name": "Shapesanity 24",
             "id": 20013273,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Upgrade Shapes Bundle",
@@ -2236,9 +2313,7 @@
             "name": "Shapesanity 8",
             "id": 20013257,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Miner Upgrade",
@@ -2252,9 +2327,7 @@
             "name": "Shapesanity 9",
             "id": 20013258,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Belt Upgrade",
@@ -2268,9 +2341,7 @@
             "name": "Shapesanity 18",
             "id": 20013267,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Painting Upgrade",
@@ -2289,9 +2360,8 @@
             "name": "Painting a stitched shape",
             "connected_region": "Shapesanity Stitched Painted",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_paint",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2300,9 +2370,7 @@
             "name": "Shapesanity 36",
             "id": 20013285,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Blueprint Shapes Bundle",
@@ -2321,9 +2389,8 @@
             "name": "Mixing colors for a stitched shape",
             "connected_region": "Shapesanity Stitched Mixed",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2332,9 +2399,7 @@
             "name": "Shapesanity 11",
             "id": 20013260,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Miner Upgrade",
@@ -2348,9 +2413,7 @@
             "name": "Shapesanity 12",
             "id": 20013261,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Display",
@@ -2364,9 +2427,7 @@
             "name": "Shapesanity 19",
             "id": 20013268,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Miner Upgrade",
@@ -2380,9 +2441,7 @@
             "name": "Shapesanity 21",
             "id": 20013270,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Miner Upgrade",
@@ -2396,9 +2455,7 @@
             "name": "Shapesanity 23",
             "id": 20013272,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Belt Upgrade",
@@ -2412,9 +2469,7 @@
             "name": "Shapesanity 29",
             "id": 20013278,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Miner Upgrade",
@@ -2428,9 +2483,7 @@
             "name": "Shapesanity 31",
             "id": 20013280,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Processors Upgrade",
@@ -2444,9 +2497,7 @@
             "name": "Shapesanity 32",
             "id": 20013281,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Processors Upgrade",
@@ -2466,9 +2517,7 @@
             "name": "Shapesanity 6",
             "id": 20013255,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Upgrade Shapes Bundle",
@@ -2482,9 +2531,7 @@
             "name": "Shapesanity 15",
             "id": 20013264,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Miner Upgrade",
@@ -2498,9 +2545,7 @@
             "name": "Shapesanity 27",
             "id": 20013276,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Processors Upgrade",
@@ -2514,9 +2559,7 @@
             "name": "Shapesanity 30",
             "id": 20013279,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Miner Upgrade",
@@ -2530,9 +2573,7 @@
             "name": "Shapesanity 33",
             "id": 20013282,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Painting Upgrade",
@@ -2546,9 +2587,7 @@
             "name": "Shapesanity 34",
             "id": 20013283,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Belt Reader",
@@ -2562,9 +2601,7 @@
             "name": "Shapesanity 35",
             "id": 20013284,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rotator",
@@ -2578,9 +2615,7 @@
             "name": "Shapesanity 38",
             "id": 20013287,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Level Shapes Bundle",
@@ -2594,9 +2629,7 @@
             "name": "Shapesanity 40",
             "id": 20013289,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Belt Upgrade",
@@ -2610,9 +2643,7 @@
             "name": "Shapesanity 41",
             "id": 20013290,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Miner Upgrade",
@@ -2626,9 +2657,7 @@
             "name": "Shapesanity 42",
             "id": 20013291,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Belt Upgrade",
@@ -2642,9 +2671,7 @@
             "name": "Shapesanity 43",
             "id": 20013292,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Processors Upgrade",
@@ -2658,9 +2685,7 @@
             "name": "Shapesanity 44",
             "id": 20013293,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trash",
@@ -2674,9 +2699,7 @@
             "name": "Shapesanity 45",
             "id": 20013294,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Level Shapes Bundle",
@@ -2690,9 +2713,7 @@
             "name": "Shapesanity 46",
             "id": 20013295,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Miner Upgrade",
@@ -2706,9 +2727,7 @@
             "name": "Shapesanity 47",
             "id": 20013296,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Painting Upgrade",
@@ -2722,9 +2741,7 @@
             "name": "Shapesanity 48",
             "id": 20013297,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Painting Upgrade",
@@ -2743,9 +2760,8 @@
             "name": "Painting a east windmill shape",
             "connected_region": "Shapesanity East Windmill Painted",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_paint",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2754,9 +2770,7 @@
             "name": "Shapesanity 4",
             "id": 20013253,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Belt Upgrade",
@@ -2775,9 +2789,8 @@
             "name": "Mixing colors for a east windmill shape",
             "connected_region": "Shapesanity East Windmill Mixed",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2786,9 +2799,7 @@
             "name": "Shapesanity 16",
             "id": 20013265,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Processors Upgrade",
@@ -2808,9 +2819,7 @@
             "name": "Shapesanity 5",
             "id": 20013254,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Processors Upgrade",
@@ -2829,9 +2838,8 @@
             "name": "Painting a half-half shape",
             "connected_region": "Shapesanity Half-Half Painted",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_paint",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2844,9 +2852,8 @@
             "name": "Mixing colors for a half-half shape",
             "connected_region": "Shapesanity Half-Half Mixed",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2860,9 +2867,7 @@
             "name": "Shapesanity 37",
             "id": 20013286,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Upgrade Shapes Bundle",
@@ -2881,9 +2886,8 @@
             "name": "Painting a colorful east windmill shape",
             "connected_region": "Shapesanity Colorful East Windmill Painted",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_paint",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2896,9 +2900,8 @@
             "name": "Mixing colors for a colorful east windmill shape",
             "connected_region": "Shapesanity Colorful East Windmill Mixed",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2911,9 +2914,8 @@
             "name": "Painting a colorful half-half shape",
             "connected_region": "Shapesanity Colorful Half-Half Painted",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_paint",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2926,9 +2928,8 @@
             "name": "Mixing colors for a colorful half-half shape",
             "connected_region": "Shapesanity Colorful Half-Half Mixed",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2942,9 +2943,7 @@
             "name": "Shapesanity 49",
             "id": 20013298,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Miner Upgrade",
@@ -2958,9 +2957,7 @@
             "name": "Shapesanity 50",
             "id": 20013299,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Painting Upgrade",
@@ -2979,9 +2976,8 @@
             "name": "Painting a colorful full shape",
             "connected_region": "Shapesanity Colorful Full Painted",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_paint",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2994,9 +2990,8 @@
             "name": "Mixing colors for a colorful full shape",
             "connected_region": "Shapesanity Colorful Full Mixed",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -3010,9 +3005,7 @@
             "name": "Shapesanity 26",
             "id": 20013275,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Blueprint Shapes Bundle",
@@ -3026,9 +3019,7 @@
             "name": "Shapesanity 28",
             "id": 20013277,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Belt Upgrade",
@@ -3042,9 +3033,7 @@
             "name": "Shapesanity 39",
             "id": 20013288,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rotator (CCW)",
@@ -3063,9 +3052,8 @@
             "name": "Painting a colorful half shape",
             "connected_region": "Shapesanity Colorful Half Painted",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_paint",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -3078,12 +3066,16 @@
             "name": "Mixing colors for a colorful half shape",
             "connected_region": "Shapesanity Colorful Half Mixed",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper"
             }
           }
         ],
+        "locations": []
+      },
+      "Shapesanity Colorful Half Mixed": {
+        "name": "Shapesanity Colorful Half Mixed",
+        "exits": [],
         "locations": []
       },
       "Achievements needing a MAM": {
@@ -3093,11 +3085,6 @@
       },
       "Shapesanity Colorful East Windmill Mixed": {
         "name": "Shapesanity Colorful East Windmill Mixed",
-        "exits": [],
-        "locations": []
-      },
-      "Shapesanity Colorful Half Mixed": {
-        "name": "Shapesanity Colorful Half Mixed",
         "exits": [],
         "locations": []
       }
@@ -4218,7 +4205,7 @@
         "start_inventory": {},
         "start_location_hints": []
       },
-      "world_directory": "shapez_worldgen"
+      "world_directory": "shapez"
     }
   },
   "game_info": {
@@ -4369,7 +4356,6 @@
             {
               "conditions": [
                 {
-                  "args": [],
                   "name": "can_stack",
                   "type": "helper"
                 },
@@ -4394,12 +4380,10 @@
                     {
                       "conditions": [
                         {
-                          "args": [],
                           "name": "can_cut_half",
                           "type": "helper"
                         },
                         {
-                          "args": [],
                           "name": "can_rotate_90",
                           "type": "helper"
                         }
@@ -4428,7 +4412,6 @@
                   "type": "state_method"
                 },
                 {
-                  "args": [],
                   "name": "can_use_quad_painter",
                   "type": "helper"
                 }
@@ -4842,7 +4825,6 @@
                         "type": "state_method"
                       },
                       {
-                        "args": [],
                         "name": "can_use_quad_painter",
                         "type": "helper"
                       }

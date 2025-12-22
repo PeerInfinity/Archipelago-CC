@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachRegion, Has, HasAll, Or
+from rule_builder import True_, False_, And, CanReachRegion, Has, HasAll, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -602,30 +602,25 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                                           'Hookshot']}],
                                                                                                                              'method': 'has_any',
                                                                                                                              'type': 'state_method'},
-                                                                                                                         {   'args': [   ],
-                                                                                                                             'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                                                         {   'name': 'can_fly_with_deku_leaf_indoors',
                                                                                                                              'type': 'helper'},
-                                                                                                                         {   'args': [   ],
-                                                                                                                             'name': 'has_ice_arrows',
+                                                                                                                         {   'name': 'has_ice_arrows',
                                                                                                                              'type': 'helper'}],
                                                                                                        'type': 'or'}],
                                                                                  'type': 'and'},
                                                                              {   'item': 'DRC Big Key',
                                                                                  'type': 'item_check'}],
                                                            'type': 'and'},
-    'can_access_boss_entrance_in_earth_temple': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                                'name': 'can_reach_earth_temple_third_crypt',
+    'can_access_boss_entrance_in_earth_temple': {   'conditions': [   {   'conditions': [   {   'name': 'can_reach_earth_temple_third_crypt',
                                                                                                 'type': 'helper'},
-                                                                                            {   'args': [],
-                                                                                                'name': 'can_play_earth_gods_lyric',
+                                                                                            {   'name': 'can_play_earth_gods_lyric',
                                                                                                 'type': 'helper'}],
                                                                           'type': 'and'},
                                                                       {'item': 'ET Big Key', 'type': 'item_check'}],
                                                     'type': 'and'},
     'can_access_boss_entrance_in_forbidden_woods': {   'conditions': [   {   'conditions': [   {   'item': 'Deku Leaf',
                                                                                                    'type': 'item_check'},
-                                                                                               {   'args': [],
-                                                                                                   'name': 'has_magic_meter',
+                                                                                               {   'name': 'has_magic_meter',
                                                                                                    'type': 'helper'}],
                                                                              'type': 'and'},
                                                                          {   'conditions': [   {   'args': [   {   'type': 'constant',
@@ -636,14 +631,11 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                 'Hammer']}],
                                                                                                    'method': 'has_any',
                                                                                                    'type': 'state_method'},
-                                                                                               {   'args': [],
-                                                                                                   'name': 'has_heros_sword',
+                                                                                               {   'name': 'has_heros_sword',
                                                                                                    'type': 'helper'},
-                                                                                               {   'args': [],
-                                                                                                   'name': 'has_heros_bow',
+                                                                                               {   'name': 'has_heros_bow',
                                                                                                    'type': 'helper'},
-                                                                                               {   'conditions': [   {   'args': [   ],
-                                                                                                                         'name': 'can_fan_with_deku_leaf',
+                                                                                               {   'conditions': [   {   'name': 'can_fan_with_deku_leaf',
                                                                                                                          'type': 'helper'},
                                                                                                                      {   'item': 'Grappling '
                                                                                                                                  'Hook',
@@ -656,8 +648,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                                       'Hookshot']}],
                                                                                                                          'method': 'has_any',
                                                                                                                          'type': 'state_method'},
-                                                                                                                     {   'args': [   ],
-                                                                                                                         'name': 'has_heros_bow',
+                                                                                                                     {   'name': 'has_heros_bow',
                                                                                                                          'type': 'helper'}],
                                                                                                    'type': 'or'},
                                                                                                {   'item': 'Grappling '
@@ -670,17 +661,14 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                 'Hammer']}],
                                                                                                    'method': 'has_any',
                                                                                                    'type': 'state_method'},
-                                                                                               {   'args': [],
-                                                                                                   'name': 'has_heros_sword',
+                                                                                               {   'name': 'has_heros_sword',
                                                                                                    'type': 'helper'},
-                                                                                               {   'args': [],
-                                                                                                   'name': 'has_heros_bow',
+                                                                                               {   'name': 'has_heros_bow',
                                                                                                    'type': 'helper'}],
                                                                              'type': 'or'},
                                                                          {'item': 'FW Big Key', 'type': 'item_check'}],
                                                        'type': 'and'},
-    'can_access_boss_entrance_in_forsaken_fortress': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                                     'name': 'can_get_past_forsaken_fortress_gate',
+    'can_access_boss_entrance_in_forsaken_fortress': {   'conditions': [   {   'conditions': [   {   'name': 'can_get_past_forsaken_fortress_gate',
                                                                                                      'type': 'helper'},
                                                                                                  {   'item': 'Skull '
                                                                                                              'Hammer',
@@ -691,8 +679,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                            {   'conditions': [   {   'conditions': [   {   'item': 'Deku '
                                                                                                                                    'Leaf',
                                                                                                                            'type': 'item_check'},
-                                                                                                                       {   'args': [   ],
-                                                                                                                           'name': 'has_magic_meter',
+                                                                                                                       {   'name': 'has_magic_meter',
                                                                                                                            'type': 'helper'}],
                                                                                                      'type': 'and'},
                                                                                                  {   'item': 'Hookshot',
@@ -709,21 +696,17 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                                         'Hammer']}],
                                                                                                                            'method': 'has_any',
                                                                                                                            'type': 'state_method'},
-                                                                                                                       {   'args': [   ],
-                                                                                                                           'name': 'has_heros_sword',
+                                                                                                                       {   'name': 'has_heros_sword',
                                                                                                                            'type': 'helper'},
-                                                                                                                       {   'args': [   ],
-                                                                                                                           'name': 'has_heros_bow',
+                                                                                                                       {   'name': 'has_heros_bow',
                                                                                                                            'type': 'helper'}],
                                                                                                      'type': 'or'},
                                                                                                  {   'conditions': [   {   'item': 'Deku '
                                                                                                                                    'Leaf',
                                                                                                                            'type': 'item_check'},
-                                                                                                                       {   'args': [   ],
-                                                                                                                           'name': 'has_magic_meter',
+                                                                                                                       {   'name': 'has_magic_meter',
                                                                                                                            'type': 'helper'},
-                                                                                                                       {   'args': [   ],
-                                                                                                                           'name': 'can_play_winds_requiem',
+                                                                                                                       {   'name': 'can_play_winds_requiem',
                                                                                                                            'type': 'helper'}],
                                                                                                      'type': 'and'},
                                                                                                  {   'item': 'Grappling '
@@ -731,14 +714,11 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                      'type': 'item_check'}],
                                                                                'type': 'or'}],
                                                          'type': 'and'},
-    'can_access_boss_entrance_in_tower_of_the_gods': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                                     'name': 'can_reach_tower_of_the_gods_second_floor',
+    'can_access_boss_entrance_in_tower_of_the_gods': {   'conditions': [   {   'conditions': [   {   'name': 'can_reach_tower_of_the_gods_second_floor',
                                                                                                      'type': 'helper'},
-                                                                                                 {   'args': [],
-                                                                                                     'name': 'can_bring_west_servant_of_the_tower',
+                                                                                                 {   'name': 'can_bring_west_servant_of_the_tower',
                                                                                                      'type': 'helper'},
-                                                                                                 {   'args': [],
-                                                                                                     'name': 'can_bring_north_servant_of_the_tower',
+                                                                                                 {   'name': 'can_bring_north_servant_of_the_tower',
                                                                                                      'type': 'helper'},
                                                                                                  {   'item': 'Wind '
                                                                                                              'Waker',
@@ -751,21 +731,17 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                   'Hammer']}],
                                                                                                      'method': 'has_any',
                                                                                                      'type': 'state_method'},
-                                                                                                 {   'args': [],
-                                                                                                     'name': 'has_heros_sword',
+                                                                                                 {   'name': 'has_heros_sword',
                                                                                                      'type': 'helper'},
-                                                                                                 {   'args': [],
-                                                                                                     'name': 'has_heros_bow',
+                                                                                                 {   'name': 'has_heros_bow',
                                                                                                      'type': 'helper'}],
                                                                                'type': 'or'},
                                                                            {   'item': 'TotG Big Key',
                                                                                'type': 'item_check'}],
                                                          'type': 'and'},
-    'can_access_boss_entrance_in_wind_temple': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                               'name': 'can_open_wind_temple_upper_giant_grate',
+    'can_access_boss_entrance_in_wind_temple': {   'conditions': [   {   'conditions': [   {   'name': 'can_open_wind_temple_upper_giant_grate',
                                                                                                'type': 'helper'},
-                                                                                           {   'args': [],
-                                                                                               'name': 'can_open_wind_temple_lower_giant_grate',
+                                                                                           {   'name': 'can_open_wind_temple_lower_giant_grate',
                                                                                                'type': 'helper'},
                                                                                            {   'count': {   'type': 'constant',
                                                                                                             'value': 2},
@@ -792,8 +768,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
     'can_access_dungeon_entrance_in_forest_haven_sector': {   'conditions': [   {   'conditions': [   {   'item': 'Grappling '
                                                                                                                   'Hook',
                                                                                                           'type': 'item_check'},
-                                                                                                      {   'args': [],
-                                                                                                          'name': 'can_fly_with_deku_leaf_outdoors',
+                                                                                                      {   'name': 'can_fly_with_deku_leaf_outdoors',
                                                                                                           'type': 'helper'}],
                                                                                     'type': 'or'},
                                                                                 {   'conditions': [   {   'item': 'Grappling '
@@ -802,18 +777,15 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                       {   'conditions': [   {   'conditions': [   {   'item': 'Deku '
                                                                                                                                                               'Leaf',
                                                                                                                                                       'type': 'item_check'},
-                                                                                                                                                  {   'args': [   ],
-                                                                                                                                                      'name': 'has_magic_meter',
+                                                                                                                                                  {   'name': 'has_magic_meter',
                                                                                                                                                       'type': 'helper'}],
                                                                                                                                 'type': 'and'},
                                                                                                                             {   'conditions': [   {   'item': 'Deku '
                                                                                                                                                               'Leaf',
                                                                                                                                                       'type': 'item_check'},
-                                                                                                                                                  {   'args': [   ],
-                                                                                                                                                      'name': 'has_magic_meter',
+                                                                                                                                                  {   'name': 'has_magic_meter',
                                                                                                                                                       'type': 'helper'},
-                                                                                                                                                  {   'args': [   ],
-                                                                                                                                                      'name': 'can_play_winds_requiem',
+                                                                                                                                                  {   'name': 'can_play_winds_requiem',
                                                                                                                                                       'type': 'helper'}],
                                                                                                                                 'type': 'and'},
                                                                                                                             {   'type': 'constant',
@@ -825,11 +797,9 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                 {   'conditions': [   {   'item': 'Deku '
                                                                                                                   'Leaf',
                                                                                                           'type': 'item_check'},
-                                                                                                      {   'args': [],
-                                                                                                          'name': 'has_magic_meter',
+                                                                                                      {   'name': 'has_magic_meter',
                                                                                                           'type': 'helper'},
-                                                                                                      {   'args': [],
-                                                                                                          'name': 'can_play_winds_requiem',
+                                                                                                      {   'name': 'can_play_winds_requiem',
                                                                                                           'type': 'helper'}],
                                                                                     'type': 'and'},
                                                                                 {   'conditions': [   {   'conditions': [   {   'args': [   {   'type': 'constant',
@@ -839,8 +809,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                                              'Hammer']}],
                                                                                                                                 'method': 'has_any',
                                                                                                                                 'type': 'state_method'},
-                                                                                                                            {   'args': [   ],
-                                                                                                                                'name': 'has_heros_sword',
+                                                                                                                            {   'name': 'has_heros_sword',
                                                                                                                                 'type': 'helper'}],
                                                                                                           'type': 'or'},
                                                                                                       {   'count': {   'type': 'constant',
@@ -867,11 +836,9 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                       'method': 'has_any',
                                                                       'type': 'state_method'},
     'can_access_fairy_fountain_entrance_on_northern_fairy_island': {'type': 'constant', 'value': True},
-    'can_access_fairy_fountain_entrance_on_outset_island': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                                           'name': 'can_reach_outset_island_upper_level',
+    'can_access_fairy_fountain_entrance_on_outset_island': {   'conditions': [   {   'conditions': [   {   'name': 'can_reach_outset_island_upper_level',
                                                                                                            'type': 'helper'},
-                                                                                                       {   'args': [],
-                                                                                                           'name': 'can_fly_with_deku_leaf_outdoors',
+                                                                                                       {   'name': 'can_fly_with_deku_leaf_outdoors',
                                                                                                            'type': 'helper'}],
                                                                                      'type': 'and'},
                                                                                  {   'args': [   {   'type': 'constant',
@@ -888,8 +855,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                    'item': 'Progressive '
                                                                                                                            'Bow',
                                                                                                                    'type': 'item_check'},
-                                                                                                               {   'args': [   ],
-                                                                                                                   'name': 'has_magic_meter',
+                                                                                                               {   'name': 'has_magic_meter',
                                                                                                                    'type': 'helper'}],
                                                                                              'type': 'and'}],
                                                                        'type': 'or'},
@@ -897,19 +863,15 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
     'can_access_fairy_fountain_entrance_on_western_fairy_island': {'item': 'Skull Hammer', 'type': 'item_check'},
     'can_access_forest_haven': {   'conditions': [   {'item': 'Grappling Hook', 'type': 'item_check'},
                                                      {   'conditions': [   {'item': 'Deku Leaf', 'type': 'item_check'},
-                                                                           {   'args': [],
-                                                                               'name': 'has_magic_meter',
+                                                                           {   'name': 'has_magic_meter',
                                                                                'type': 'helper'},
-                                                                           {   'args': [],
-                                                                               'name': 'can_play_winds_requiem',
+                                                                           {   'name': 'can_play_winds_requiem',
                                                                                'type': 'helper'}],
                                                          'type': 'and'}],
                                    'type': 'or'},
-    'can_access_forest_of_fairies': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                    'name': 'can_cut_down_outset_trees',
+    'can_access_forest_of_fairies': {   'conditions': [   {   'conditions': [   {   'name': 'can_cut_down_outset_trees',
                                                                                     'type': 'helper'},
-                                                                                {   'conditions': [   {   'args': [],
-                                                                                                          'name': 'can_fly_with_deku_leaf_outdoors',
+                                                                                {   'conditions': [   {   'name': 'can_fly_with_deku_leaf_outdoors',
                                                                                                           'type': 'helper'},
                                                                                                       {   'type': 'constant',
                                                                                                           'value': False}],
@@ -917,19 +879,15 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                               'type': 'or'},
                                                           {   'conditions': [   {   'item': 'Deku Leaf',
                                                                                     'type': 'item_check'},
-                                                                                {   'args': [],
-                                                                                    'name': 'has_magic_meter',
+                                                                                {   'name': 'has_magic_meter',
                                                                                     'type': 'helper'},
-                                                                                {   'args': [],
-                                                                                    'name': 'can_play_winds_requiem',
+                                                                                {   'name': 'can_play_winds_requiem',
                                                                                     'type': 'helper'}],
                                                               'type': 'and'}],
                                         'type': 'and'},
-    'can_access_ganons_tower': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                               'name': 'can_access_hyrule',
+    'can_access_ganons_tower': {   'conditions': [   {   'conditions': [   {   'name': 'can_access_hyrule',
                                                                                'type': 'helper'},
-                                                                           {   'conditions': [   {   'args': [],
-                                                                                                     'name': 'has_full_power_master_sword',
+                                                                           {   'conditions': [   {   'name': 'has_full_power_master_sword',
                                                                                                      'type': 'helper'},
                                                                                                  {   'type': 'constant',
                                                                                                      'value': False}],
@@ -939,8 +897,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                            {   'conditions': [   {   'item': 'Deku '
                                                                                                              'Leaf',
                                                                                                      'type': 'item_check'},
-                                                                                                 {   'args': [],
-                                                                                                     'name': 'has_magic_meter',
+                                                                                                 {   'name': 'has_magic_meter',
                                                                                                      'type': 'helper'}],
                                                                                'type': 'and'}],
                                                          'type': 'or'}],
@@ -956,14 +913,11 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                                  'Hammer']}],
                                                                                                                     'method': 'has_any',
                                                                                                                     'type': 'state_method'},
-                                                                                                                {   'args': [   ],
-                                                                                                                    'name': 'has_heros_sword',
+                                                                                                                {   'name': 'has_heros_sword',
                                                                                                                     'type': 'helper'},
-                                                                                                                {   'args': [   ],
-                                                                                                                    'name': 'has_heros_bow',
+                                                                                                                {   'name': 'has_heros_bow',
                                                                                                                     'type': 'helper'},
-                                                                                                                {   'conditions': [   {   'args': [   ],
-                                                                                                                                          'name': 'can_fan_with_deku_leaf',
+                                                                                                                {   'conditions': [   {   'name': 'can_fan_with_deku_leaf',
                                                                                                                                           'type': 'helper'},
                                                                                                                                       {   'item': 'Grappling '
                                                                                                                                                   'Hook',
@@ -973,29 +927,23 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                           {   'conditions': [   {   'item': 'Deku '
                                                                                                                             'Leaf',
                                                                                                                     'type': 'item_check'},
-                                                                                                                {   'args': [   ],
-                                                                                                                    'name': 'has_magic_meter',
+                                                                                                                {   'name': 'has_magic_meter',
                                                                                                                     'type': 'helper'}],
                                                                                               'type': 'and'}],
                                                                         'type': 'and'},
     'can_access_inner_entrance_in_ice_ring_isle_secret_cave': {'item': 'Iron Boots', 'type': 'item_check'},
-    'can_access_miniboss_entrance_in_earth_temple': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                                    'name': 'can_reach_earth_temple_left_path',
+    'can_access_miniboss_entrance_in_earth_temple': {   'conditions': [   {   'conditions': [   {   'name': 'can_reach_earth_temple_left_path',
                                                                                                     'type': 'helper'},
-                                                                                                {   'args': [],
-                                                                                                    'name': 'has_fire_arrows',
+                                                                                                {   'name': 'has_fire_arrows',
                                                                                                     'type': 'helper'},
                                                                                                 {   'item': 'Power '
                                                                                                             'Bracelets',
                                                                                                     'type': 'item_check'},
-                                                                                                {   'args': [],
-                                                                                                    'name': 'can_defeat_floormasters',
+                                                                                                {   'name': 'can_defeat_floormasters',
                                                                                                     'type': 'helper'},
-                                                                                                {   'conditions': [   {   'args': [   ],
-                                                                                                                          'name': 'can_play_command_melody',
+                                                                                                {   'conditions': [   {   'name': 'can_play_command_melody',
                                                                                                                           'type': 'helper'},
-                                                                                                                      {   'args': [   ],
-                                                                                                                          'name': 'has_mirror_shield',
+                                                                                                                      {   'name': 'has_mirror_shield',
                                                                                                                           'type': 'helper'}],
                                                                                                     'type': 'or'}],
                                                                               'type': 'and'},
@@ -1006,8 +954,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
     'can_access_miniboss_entrance_in_forbidden_woods': {   'conditions': [   {   'conditions': [   {   'item': 'Deku '
                                                                                                                'Leaf',
                                                                                                        'type': 'item_check'},
-                                                                                                   {   'args': [],
-                                                                                                       'name': 'has_magic_meter',
+                                                                                                   {   'name': 'has_magic_meter',
                                                                                                        'type': 'helper'}],
                                                                                  'type': 'and'},
                                                                              {   'conditions': [   {   'args': [   {   'type': 'constant',
@@ -1018,14 +965,11 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                     'Hammer']}],
                                                                                                        'method': 'has_any',
                                                                                                        'type': 'state_method'},
-                                                                                                   {   'args': [],
-                                                                                                       'name': 'has_heros_sword',
+                                                                                                   {   'name': 'has_heros_sword',
                                                                                                        'type': 'helper'},
-                                                                                                   {   'args': [],
-                                                                                                       'name': 'has_heros_bow',
+                                                                                                   {   'name': 'has_heros_bow',
                                                                                                        'type': 'helper'},
-                                                                                                   {   'conditions': [   {   'args': [   ],
-                                                                                                                             'name': 'can_fan_with_deku_leaf',
+                                                                                                   {   'conditions': [   {   'name': 'can_fan_with_deku_leaf',
                                                                                                                              'type': 'helper'},
                                                                                                                          {   'item': 'Grappling '
                                                                                                                                      'Hook',
@@ -1041,9 +985,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                  'method': 'has_all',
                                                                                  'type': 'state_method'}],
                                                            'type': 'and'},
-    'can_access_miniboss_entrance_in_hyrule_castle': {   'args': [],
-                                                         'name': 'has_all_8_triforce_shards',
-                                                         'type': 'helper'},
+    'can_access_miniboss_entrance_in_hyrule_castle': {'name': 'has_all_8_triforce_shards', 'type': 'helper'},
     'can_access_miniboss_entrance_in_tower_of_the_gods': {   'conditions': [   {   'conditions': [   {   'args': [   {   'type': 'constant',
                                                                                                                          'value': [   'Bombs',
                                                                                                                                       'TotG '
@@ -1051,8 +993,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                       'Key']}],
                                                                                                          'method': 'has_all',
                                                                                                          'type': 'state_method'},
-                                                                                                     {   'args': [],
-                                                                                                         'name': 'can_defeat_yellow_chuchus',
+                                                                                                     {   'name': 'can_defeat_yellow_chuchus',
                                                                                                          'type': 'helper'}],
                                                                                    'type': 'and'},
                                                                                {   'conditions': [   {   'item': 'Grappling '
@@ -1061,8 +1002,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                      {   'conditions': [   {   'item': 'Deku '
                                                                                                                                        'Leaf',
                                                                                                                                'type': 'item_check'},
-                                                                                                                           {   'args': [   ],
-                                                                                                                               'name': 'has_magic_meter',
+                                                                                                                           {   'name': 'has_magic_meter',
                                                                                                                                'type': 'helper'}],
                                                                                                          'type': 'and'}],
                                                                                    'type': 'or'},
@@ -1080,8 +1020,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                          'type': 'item_check'}],
                                                                                    'type': 'or'}],
                                                              'type': 'and'},
-    'can_access_miniboss_entrance_in_wind_temple': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                                   'name': 'can_reach_end_of_wind_temple_many_cyclones_room',
+    'can_access_miniboss_entrance_in_wind_temple': {   'conditions': [   {   'conditions': [   {   'name': 'can_reach_end_of_wind_temple_many_cyclones_room',
                                                                                                    'type': 'helper'},
                                                                                                {   'item': 'Iron Boots',
                                                                                                    'type': 'item_check'}],
@@ -1093,11 +1032,9 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
     'can_access_secret_cave_entrance_on_angular_isles': {   'conditions': [   {   'conditions': [   {   'item': 'Deku '
                                                                                                                 'Leaf',
                                                                                                         'type': 'item_check'},
-                                                                                                    {   'args': [],
-                                                                                                        'name': 'has_magic_meter',
+                                                                                                    {   'name': 'has_magic_meter',
                                                                                                         'type': 'helper'},
-                                                                                                    {   'args': [],
-                                                                                                        'name': 'can_play_winds_requiem',
+                                                                                                    {   'name': 'can_play_winds_requiem',
                                                                                                         'type': 'helper'}],
                                                                                   'type': 'and'},
                                                                               {   'item': 'Hookshot',
@@ -1107,11 +1044,9 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
     'can_access_secret_cave_entrance_on_boating_course': {   'conditions': [   {   'conditions': [   {   'item': 'Deku '
                                                                                                                  'Leaf',
                                                                                                          'type': 'item_check'},
-                                                                                                     {   'args': [],
-                                                                                                         'name': 'has_magic_meter',
+                                                                                                     {   'name': 'has_magic_meter',
                                                                                                          'type': 'helper'},
-                                                                                                     {   'args': [],
-                                                                                                         'name': 'can_play_winds_requiem',
+                                                                                                     {   'name': 'can_play_winds_requiem',
                                                                                                          'type': 'helper'}],
                                                                                    'type': 'and'},
                                                                                {   'item': 'Hookshot',
@@ -1132,8 +1067,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                'value': 2},
                                                                                   'item': 'Progressive Bow',
                                                                                   'type': 'item_check'},
-                                                                              {   'args': [],
-                                                                                  'name': 'has_magic_meter',
+                                                                              {   'name': 'has_magic_meter',
                                                                                   'type': 'helper'}],
                                                             'type': 'and'},
     'can_access_secret_cave_entrance_on_horseshoe_island': {'item': 'Deku Leaf', 'type': 'item_check'},
@@ -1141,23 +1075,19 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                'value': 2},
                                                                                   'item': 'Progressive Bow',
                                                                                   'type': 'item_check'},
-                                                                              {   'args': [],
-                                                                                  'name': 'has_magic_meter',
+                                                                              {   'name': 'has_magic_meter',
                                                                                   'type': 'helper'}],
                                                             'type': 'and'},
     'can_access_secret_cave_entrance_on_needle_rock_isle': {   'conditions': [   {   'count': {   'type': 'constant',
                                                                                                   'value': 2},
                                                                                      'item': 'Progressive Bow',
                                                                                      'type': 'item_check'},
-                                                                                 {   'args': [],
-                                                                                     'name': 'has_magic_meter',
+                                                                                 {   'name': 'has_magic_meter',
                                                                                      'type': 'helper'}],
                                                                'type': 'and'},
-    'can_access_secret_cave_entrance_on_outset_island': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'args': [   ],
-                                                                                                                                                    'name': 'can_cut_down_outset_trees',
+    'can_access_secret_cave_entrance_on_outset_island': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'name': 'can_cut_down_outset_trees',
                                                                                                                                                     'type': 'helper'},
-                                                                                                                                                {   'conditions': [   {   'args': [   ],
-                                                                                                                                                                          'name': 'can_fly_with_deku_leaf_outdoors',
+                                                                                                                                                {   'conditions': [   {   'name': 'can_fly_with_deku_leaf_outdoors',
                                                                                                                                                                           'type': 'helper'},
                                                                                                                                                                       {   'type': 'constant',
                                                                                                                                                                           'value': False}],
@@ -1166,11 +1096,9 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                           {   'conditions': [   {   'item': 'Deku '
                                                                                                                                                             'Leaf',
                                                                                                                                                     'type': 'item_check'},
-                                                                                                                                                {   'args': [   ],
-                                                                                                                                                    'name': 'has_magic_meter',
+                                                                                                                                                {   'name': 'has_magic_meter',
                                                                                                                                                     'type': 'helper'},
-                                                                                                                                                {   'args': [   ],
-                                                                                                                                                    'name': 'can_play_winds_requiem',
+                                                                                                                                                {   'name': 'can_play_winds_requiem',
                                                                                                                                                     'type': 'helper'}],
                                                                                                                               'type': 'and'}],
                                                                                                         'type': 'and'},
@@ -1199,8 +1127,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                           'method': 'has_any',
                                                           'type': 'state_method'},
     'can_access_secret_cave_entrance_on_stone_watcher_island': {'item': 'Power Bracelets', 'type': 'item_check'},
-    'can_activate_wind_temple_giant_fan': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                          'name': 'can_reach_end_of_wind_temple_many_cyclones_room',
+    'can_activate_wind_temple_giant_fan': {   'conditions': [   {   'conditions': [   {   'name': 'can_reach_end_of_wind_temple_many_cyclones_room',
                                                                                           'type': 'helper'},
                                                                                       {   'item': 'Iron Boots',
                                                                                           'type': 'item_check'}],
@@ -1238,8 +1165,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                   {   'conditions': [   {   'conditions': [   {   'item': 'Deku '
                                                                                                                           'Leaf',
                                                                                                                   'type': 'item_check'},
-                                                                                                              {   'args': [   ],
-                                                                                                                  'name': 'has_magic_meter',
+                                                                                                              {   'name': 'has_magic_meter',
                                                                                                                   'type': 'helper'}],
                                                                                             'type': 'and'},
                                                                                         {   'type': 'constant',
@@ -1256,8 +1182,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                        {   'conditions': [   {   'item': 'Deku '
                                                                                                                          'Leaf',
                                                                                                                  'type': 'item_check'},
-                                                                                                             {   'args': [   ],
-                                                                                                                 'name': 'has_magic_meter',
+                                                                                                             {   'name': 'has_magic_meter',
                                                                                                                  'type': 'helper'}],
                                                                                            'type': 'and'}],
                                                                      'type': 'or'},
@@ -1273,31 +1198,23 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
     'can_complete_all_memory_dungeons_and_bosses': {   'conditions': [   {   'conditions': [   {   'item': 'Grappling '
                                                                                                            'Hook',
                                                                                                    'type': 'item_check'},
-                                                                                               {   'args': [],
-                                                                                                   'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                               {   'name': 'can_fly_with_deku_leaf_indoors',
                                                                                                    'type': 'helper'},
-                                                                                               {   'args': [],
-                                                                                                   'name': 'can_defeat_gohma',
+                                                                                               {   'name': 'can_defeat_gohma',
                                                                                                    'type': 'helper'}],
                                                                              'type': 'and'},
-                                                                         {   'conditions': [   {   'args': [],
-                                                                                                   'name': 'can_fan_with_deku_leaf',
+                                                                         {   'conditions': [   {   'name': 'can_fan_with_deku_leaf',
                                                                                                    'type': 'helper'},
-                                                                                               {   'args': [],
-                                                                                                   'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                               {   'name': 'can_fly_with_deku_leaf_indoors',
                                                                                                    'type': 'helper'},
-                                                                                               {   'args': [],
-                                                                                                   'name': 'can_defeat_kalle_demos',
+                                                                                               {   'name': 'can_defeat_kalle_demos',
                                                                                                    'type': 'helper'}],
                                                                              'type': 'and'},
-                                                                         {   'args': [],
-                                                                             'name': 'can_defeat_jalhalla',
+                                                                         {   'name': 'can_defeat_jalhalla',
                                                                              'type': 'helper'},
-                                                                         {   'conditions': [   {   'args': [],
-                                                                                                   'name': 'can_fly_with_deku_leaf_indoors',
+                                                                         {   'conditions': [   {   'name': 'can_fly_with_deku_leaf_indoors',
                                                                                                    'type': 'helper'},
-                                                                                               {   'args': [],
-                                                                                                   'name': 'can_defeat_molgera',
+                                                                                               {   'name': 'can_defeat_molgera',
                                                                                                    'type': 'helper'}],
                                                                              'type': 'and'}],
                                                        'type': 'and'},
@@ -1306,24 +1223,20 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                {   'conditions': [   {   'item': 'Deku '
                                                                                                                  'Leaf',
                                                                                                          'type': 'item_check'},
-                                                                                                     {   'args': [],
-                                                                                                         'name': 'has_magic_meter',
+                                                                                                     {   'name': 'has_magic_meter',
                                                                                                          'type': 'helper'}],
                                                                                    'type': 'and'},
                                                                                {   'item': 'Grappling Hook',
                                                                                    'type': 'item_check'}],
                                                              'type': 'and'},
-    'can_complete_memory_earth_temple_and_jalhalla': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                                     'name': 'can_aim_mirror_shield',
+    'can_complete_memory_earth_temple_and_jalhalla': {   'conditions': [   {   'conditions': [   {   'name': 'can_aim_mirror_shield',
                                                                                                      'type': 'helper'},
-                                                                                                 {   'args': [],
-                                                                                                     'name': 'has_light_arrows',
+                                                                                                 {   'name': 'has_light_arrows',
                                                                                                      'type': 'helper'}],
                                                                                'type': 'or'},
                                                                            {   'item': 'Power Bracelets',
                                                                                'type': 'item_check'},
-                                                                           {   'args': [],
-                                                                               'name': 'can_defeat_jalhalla_poes',
+                                                                           {   'name': 'can_defeat_jalhalla_poes',
                                                                                'type': 'helper'}],
                                                          'type': 'and'},
     'can_complete_memory_forbidden_woods_and_kalle_demos': {   'conditions': [   {   'item': 'Deku Leaf',
@@ -1331,8 +1244,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                  {   'conditions': [   {   'item': 'Deku '
                                                                                                                    'Leaf',
                                                                                                            'type': 'item_check'},
-                                                                                                       {   'args': [],
-                                                                                                           'name': 'has_magic_meter',
+                                                                                                       {   'name': 'has_magic_meter',
                                                                                                            'type': 'helper'}],
                                                                                      'type': 'and'},
                                                                                  {   'item': 'Boomerang',
@@ -1340,8 +1252,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                'type': 'and'},
     'can_complete_memory_wind_temple_and_molgera': {   'conditions': [   {   'conditions': [   {   'item': 'Deku Leaf',
                                                                                                    'type': 'item_check'},
-                                                                                               {   'args': [],
-                                                                                                   'name': 'has_magic_meter',
+                                                                                               {   'name': 'has_magic_meter',
                                                                                                    'type': 'helper'}],
                                                                              'type': 'and'},
                                                                          {   'conditions': [   {   'item': 'Hookshot',
@@ -1355,11 +1266,9 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                                       'Hammer']}],
                                                                                                                          'method': 'has_any',
                                                                                                                          'type': 'state_method'},
-                                                                                                                     {   'args': [   ],
-                                                                                                                         'name': 'has_heros_sword',
+                                                                                                                     {   'name': 'has_heros_sword',
                                                                                                                          'type': 'helper'},
-                                                                                                                     {   'args': [   ],
-                                                                                                                         'name': 'has_heros_bow',
+                                                                                                                     {   'name': 'has_heros_bow',
                                                                                                                          'type': 'helper'}],
                                                                                                    'type': 'or'}],
                                                                              'type': 'and'}],
@@ -1420,8 +1329,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                             'value': 2},
                                                                                'item': 'Progressive Bow',
                                                                                'type': 'item_check'},
-                                                                           {   'args': [],
-                                                                               'name': 'has_magic_meter',
+                                                                           {   'name': 'has_magic_meter',
                                                                                'type': 'helper'}],
                                                          'type': 'and'},
                                                      {'item': 'Bombs', 'type': 'item_check'},
@@ -1486,9 +1394,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                  {   'conditions': [   {   'count': {'type': 'constant', 'value': 3},
                                                                            'item': 'Progressive Bow',
                                                                            'type': 'item_check'},
-                                                                       {   'args': [],
-                                                                           'name': 'has_magic_meter',
-                                                                           'type': 'helper'}],
+                                                                       {'name': 'has_magic_meter', 'type': 'helper'}],
                                                      'type': 'and'},
                                                  {'item': 'Skull Hammer', 'type': 'item_check'}],
                                'type': 'or'},
@@ -1499,8 +1405,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                'value': 3},
                                                                                   'item': 'Progressive Bow',
                                                                                   'type': 'item_check'},
-                                                                              {   'args': [],
-                                                                                  'name': 'has_magic_meter',
+                                                                              {   'name': 'has_magic_meter',
                                                                                   'type': 'helper'}],
                                                             'type': 'and'}],
                                       'type': 'or'},
@@ -1557,12 +1462,11 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                           'value': ['Bombs', 'Skull Hammer']}],
                                                           'method': 'has_any',
                                                           'type': 'state_method'},
-                                                      {'args': [], 'name': 'has_heros_sword', 'type': 'helper'},
-                                                      {'args': [], 'name': 'has_heros_bow', 'type': 'helper'}],
+                                                      {'name': 'has_heros_sword', 'type': 'helper'},
+                                                      {'name': 'has_heros_bow', 'type': 'helper'}],
                                     'type': 'or'},
     'can_defeat_helmaroc_king': {'item': 'Skull Hammer', 'type': 'item_check'},
-    'can_defeat_jalhalla': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                                 'name': 'has_mirror_shield',
+    'can_defeat_jalhalla': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'name': 'has_mirror_shield',
                                                                                                  'type': 'helper'},
                                                                                              {   'conditions': [   {   'args': [   {   'type': 'constant',
                                                                                                                                        'value': [   'Boomerang',
@@ -1575,11 +1479,9 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                                     'Waker']}],
                                                                                                                        'method': 'has_any',
                                                                                                                        'type': 'state_method'},
-                                                                                                                   {   'args': [   ],
-                                                                                                                       'name': 'has_heros_sword',
+                                                                                                                   {   'name': 'has_heros_sword',
                                                                                                                        'type': 'helper'},
-                                                                                                                   {   'args': [   ],
-                                                                                                                       'name': 'has_heros_bow',
+                                                                                                                   {   'name': 'has_heros_bow',
                                                                                                                        'type': 'helper'}],
                                                                                                  'type': 'or'}],
                                                                            'type': 'and'},
@@ -1588,8 +1490,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                  'item': 'Progressive '
                                                                                                          'Bow',
                                                                                                  'type': 'item_check'},
-                                                                                             {   'args': [],
-                                                                                                 'name': 'has_magic_meter',
+                                                                                             {   'name': 'has_magic_meter',
                                                                                                  'type': 'helper'}],
                                                                            'type': 'and'}],
                                                      'type': 'or'},
@@ -1600,12 +1501,8 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                         'Hammer']}],
                                                                            'method': 'has_any',
                                                                            'type': 'state_method'},
-                                                                       {   'args': [],
-                                                                           'name': 'has_heros_sword',
-                                                                           'type': 'helper'},
-                                                                       {   'args': [],
-                                                                           'name': 'has_heros_bow',
-                                                                           'type': 'helper'}],
+                                                                       {'name': 'has_heros_sword', 'type': 'helper'},
+                                                                       {'name': 'has_heros_bow', 'type': 'helper'}],
                                                      'type': 'or'}],
                                'type': 'and'},
     'can_defeat_jalhalla_poes': {   'conditions': [   {   'args': [   {   'type': 'constant',
@@ -1620,11 +1517,9 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                           'type': 'item_check'}],
                                     'type': 'or'},
     'can_defeat_kalle_demos': {'item': 'Boomerang', 'type': 'item_check'},
-    'can_defeat_mighty_darknuts': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                  'name': 'has_heros_sword',
+    'can_defeat_mighty_darknuts': {   'conditions': [   {   'conditions': [   {   'name': 'has_heros_sword',
                                                                                   'type': 'helper'},
-                                                                              {   'args': [],
-                                                                                  'name': 'has_light_arrows',
+                                                                              {   'name': 'has_light_arrows',
                                                                                   'type': 'helper'}],
                                                             'type': 'or'},
                                                         {   'conditions': [   {   'item': 'Skull Hammer',
@@ -1714,8 +1609,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                             'value': 3},
                                                                                'item': 'Progressive Bow',
                                                                                'type': 'item_check'},
-                                                                           {   'args': [],
-                                                                               'name': 'has_magic_meter',
+                                                                           {   'name': 'has_magic_meter',
                                                                                'type': 'helper'}],
                                                          'type': 'and'},
                                                      {   'conditions': [   {'item': 'Boomerang', 'type': 'item_check'},
@@ -1761,9 +1655,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                 {   'conditions': [   {   'count': {'type': 'constant', 'value': 3},
                                                                           'item': 'Progressive Bow',
                                                                           'type': 'item_check'},
-                                                                      {   'args': [],
-                                                                          'name': 'has_magic_meter',
-                                                                          'type': 'helper'}],
+                                                                      {'name': 'has_magic_meter', 'type': 'helper'}],
                                                     'type': 'and'}],
                               'type': 'or'},
     'can_defeat_winged_mothulas': {   'conditions': [   {   'args': [   {   'type': 'constant',
@@ -1852,8 +1744,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                           {   'type': 'constant',
                                                                                                               'value': False}],
                                                                                         'type': 'and'},
-                                                                                    {   'conditions': [   {   'args': [   ],
-                                                                                                              'name': 'can_open_ganons_tower_dark_portal',
+                                                                                    {   'conditions': [   {   'name': 'can_open_ganons_tower_dark_portal',
                                                                                                               'type': 'helper'},
                                                                                                           {   'type': 'constant',
                                                                                                               'value': False}],
@@ -1867,8 +1758,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                        {   'type': 'constant',
                                                                                            'value': False}],
                                                                      'type': 'and'},
-                                                                 {   'conditions': [   {   'conditions': [   {   'args': [   ],
-                                                                                                                 'name': 'can_reach_ganons_tower_phantom_ganon_room',
+                                                                 {   'conditions': [   {   'conditions': [   {   'name': 'can_reach_ganons_tower_phantom_ganon_room',
                                                                                                                  'type': 'helper'},
                                                                                                              {   'item': 'Boomerang',
                                                                                                                  'type': 'item_check'}],
@@ -1877,9 +1767,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                            'value': False}],
                                                                      'type': 'and'}],
                                                'type': 'or'},
-    'can_get_past_hyrule_barrier': {   'conditions': [   {   'args': [],
-                                                             'name': 'has_all_8_triforce_shards',
-                                                             'type': 'helper'},
+    'can_get_past_hyrule_barrier': {   'conditions': [   {'name': 'has_all_8_triforce_shards', 'type': 'helper'},
                                                          {   'conditions': [   {   'count': {   'type': 'constant',
                                                                                                 'value': 4},
                                                                                    'item': 'Progressive Sword',
@@ -1890,32 +1778,26 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
     'can_move_boulders': {   'args': [{'type': 'constant', 'value': ['Bombs', 'Power Bracelets']}],
                              'method': 'has_any',
                              'type': 'state_method'},
-    'can_open_ganons_tower_dark_portal': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                         'name': 'can_access_ganons_tower',
+    'can_open_ganons_tower_dark_portal': {   'conditions': [   {   'conditions': [   {   'name': 'can_access_ganons_tower',
                                                                                          'type': 'helper'},
-                                                                                     {   'args': [],
-                                                                                         'name': 'can_unlock_ganons_tower_four_boss_door',
+                                                                                     {   'name': 'can_unlock_ganons_tower_four_boss_door',
                                                                                          'type': 'helper'}],
                                                                    'type': 'and'},
                                                                {'item': 'Boomerang', 'type': 'item_check'}],
                                              'type': 'and'},
-    'can_open_wind_temple_lower_giant_grate': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                              'name': 'can_play_command_melody',
+    'can_open_wind_temple_lower_giant_grate': {   'conditions': [   {   'conditions': [   {   'name': 'can_play_command_melody',
                                                                                               'type': 'helper'},
                                                                                           {   'item': 'Iron Boots',
                                                                                               'type': 'item_check'},
-                                                                                          {   'args': [],
-                                                                                              'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                          {   'name': 'can_fly_with_deku_leaf_indoors',
                                                                                               'type': 'helper'}],
                                                                         'type': 'and'},
                                                                     {'item': 'Hookshot', 'type': 'item_check'},
-                                                                    {   'conditions': [   {   'args': [],
-                                                                                              'name': 'has_ice_arrows',
+                                                                    {   'conditions': [   {   'name': 'has_ice_arrows',
                                                                                               'type': 'helper'},
                                                                                           {   'item': 'Bombs',
                                                                                               'type': 'item_check'},
-                                                                                          {   'conditions': [   {   'conditions': [   {   'args': [   ],
-                                                                                                                                          'name': 'can_fan_with_deku_leaf',
+                                                                                          {   'conditions': [   {   'conditions': [   {   'name': 'can_fan_with_deku_leaf',
                                                                                                                                           'type': 'helper'},
                                                                                                                                       {   'item': 'Hookshot',
                                                                                                                                           'type': 'item_check'}],
@@ -1927,45 +1809,36 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                                                        'Hammer']}],
                                                                                                                                           'method': 'has_any',
                                                                                                                                           'type': 'state_method'},
-                                                                                                                                      {   'args': [   ],
-                                                                                                                                          'name': 'has_heros_sword',
+                                                                                                                                      {   'name': 'has_heros_sword',
                                                                                                                                           'type': 'helper'},
-                                                                                                                                      {   'args': [   ],
-                                                                                                                                          'name': 'has_heros_bow',
+                                                                                                                                      {   'name': 'has_heros_bow',
                                                                                                                                           'type': 'helper'}],
                                                                                                                     'type': 'or'}],
                                                                                               'type': 'and'}],
                                                                         'type': 'or'}],
                                                   'type': 'and'},
-    'can_open_wind_temple_upper_giant_grate': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                              'name': 'can_reach_wind_temple_kidnapping_room',
+    'can_open_wind_temple_upper_giant_grate': {   'conditions': [   {   'conditions': [   {   'name': 'can_reach_wind_temple_kidnapping_room',
                                                                                               'type': 'helper'},
                                                                                           {   'conditions': [   {   'conditions': [   {   'item': 'Iron '
                                                                                                                                                   'Boots',
                                                                                                                                           'type': 'item_check'},
-                                                                                                                                      {   'args': [   ],
-                                                                                                                                          'name': 'can_fan_with_deku_leaf',
+                                                                                                                                      {   'name': 'can_fan_with_deku_leaf',
                                                                                                                                           'type': 'helper'},
-                                                                                                                                      {   'args': [   ],
-                                                                                                                                          'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                                                                      {   'name': 'can_fly_with_deku_leaf_indoors',
                                                                                                                                           'type': 'helper'},
-                                                                                                                                      {   'args': [   ],
-                                                                                                                                          'name': 'can_cut_grass',
+                                                                                                                                      {   'name': 'can_cut_grass',
                                                                                                                                           'type': 'helper'}],
                                                                                                                     'type': 'and'},
                                                                                                                 {   'conditions': [   {   'item': 'Hookshot',
                                                                                                                                           'type': 'item_check'},
-                                                                                                                                      {   'args': [   ],
-                                                                                                                                          'name': 'can_defeat_blue_bubbles',
+                                                                                                                                      {   'name': 'can_defeat_blue_bubbles',
                                                                                                                                           'type': 'helper'},
-                                                                                                                                      {   'args': [   ],
-                                                                                                                                          'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                                                                      {   'name': 'can_fly_with_deku_leaf_indoors',
                                                                                                                                           'type': 'helper'}],
                                                                                                                     'type': 'and'},
                                                                                                                 {   'conditions': [   {   'item': 'Hookshot',
                                                                                                                                           'type': 'item_check'},
-                                                                                                                                      {   'args': [   ],
-                                                                                                                                          'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                                                                      {   'name': 'can_fly_with_deku_leaf_indoors',
                                                                                                                                           'type': 'helper'},
                                                                                                                                       {   'type': 'constant',
                                                                                                                                           'value': False},
@@ -1988,17 +1861,13 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
     'can_play_winds_requiem': {   'args': [{'type': 'constant', 'value': ['Wind Waker', "Wind's Requiem"]}],
                                   'method': 'has_all',
                                   'type': 'state_method'},
-    'can_reach_and_defeat_ganondorf': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                      'name': 'can_reach_ganons_tower_phantom_ganon_room',
+    'can_reach_and_defeat_ganondorf': {   'conditions': [   {   'conditions': [   {   'name': 'can_reach_ganons_tower_phantom_ganon_room',
                                                                                       'type': 'helper'},
-                                                                                  {   'args': [],
-                                                                                      'name': 'has_light_arrows',
+                                                                                  {   'name': 'has_light_arrows',
                                                                                       'type': 'helper'},
-                                                                                  {   'args': [],
-                                                                                      'name': 'can_unlock_puppet_ganon_door',
+                                                                                  {   'name': 'can_unlock_puppet_ganon_door',
                                                                                       'type': 'helper'},
-                                                                                  {   'args': [],
-                                                                                      'name': 'can_defeat_puppet_ganon',
+                                                                                  {   'name': 'can_defeat_puppet_ganon',
                                                                                       'type': 'helper'}],
                                                                 'type': 'and'},
                                                             {   'args': [   {   'type': 'constant',
@@ -2006,14 +1875,12 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                              'Hookshot']}],
                                                                 'method': 'has_all',
                                                                 'type': 'state_method'},
-                                                            {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                                            'name': 'has_heros_sword',
+                                                            {   'conditions': [   {   'conditions': [   {   'name': 'has_heros_sword',
                                                                                                             'type': 'helper'},
                                                                                                         {   'type': 'constant',
                                                                                                             'value': False}],
                                                                                       'type': 'or'},
-                                                                                  {   'conditions': [   {   'args': [],
-                                                                                                            'name': 'has_heros_shield',
+                                                                                  {   'conditions': [   {   'name': 'has_heros_shield',
                                                                                                             'type': 'helper'},
                                                                                                         {   'conditions': [   {   'item': 'Skull '
                                                                                                                                           'Hammer',
@@ -2031,8 +1898,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                             {   'type': 'constant',
                                                                                                                 'value': False}],
                                                                                           'type': 'and'},
-                                                                                      {   'conditions': [   {   'args': [   ],
-                                                                                                                'name': 'can_open_ganons_tower_dark_portal',
+                                                                                      {   'conditions': [   {   'name': 'can_open_ganons_tower_dark_portal',
                                                                                                                 'type': 'helper'},
                                                                                                             {   'type': 'constant',
                                                                                                                 'value': False}],
@@ -2041,8 +1907,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                 {   'conditions': [   {   'conditions': [   {   'operand': {   'type': 'constant',
                                                                                                                                'value': False},
                                                                                                                 'type': 'not'},
-                                                                                                            {   'args': [   ],
-                                                                                                                'name': 'has_any_master_sword',
+                                                                                                            {   'name': 'has_any_master_sword',
                                                                                                                 'type': 'helper'}],
                                                                                           'type': 'and'},
                                                                                       {   'conditions': [   {   'type': 'constant',
@@ -2053,26 +1918,21 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                           'type': 'and'}],
                                                                     'type': 'or'}],
                                               'type': 'and'},
-    'can_reach_and_defeat_puppet_ganon': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                         'name': 'can_access_ganons_tower',
+    'can_reach_and_defeat_puppet_ganon': {   'conditions': [   {   'conditions': [   {   'name': 'can_access_ganons_tower',
                                                                                          'type': 'helper'},
-                                                                                     {   'args': [],
-                                                                                         'name': 'can_unlock_ganons_tower_four_boss_door',
+                                                                                     {   'name': 'can_unlock_ganons_tower_four_boss_door',
                                                                                          'type': 'helper'}],
                                                                    'type': 'and'},
                                                                {   'conditions': [   {   'count': {   'type': 'constant',
                                                                                                       'value': 3},
                                                                                          'item': 'Progressive Bow',
                                                                                          'type': 'item_check'},
-                                                                                     {   'args': [],
-                                                                                         'name': 'has_magic_meter',
+                                                                                     {   'name': 'has_magic_meter',
                                                                                          'type': 'helper'}],
                                                                    'type': 'and'},
-                                                               {   'conditions': [   {   'args': [],
-                                                                                         'name': 'can_defeat_moblins',
+                                                               {   'conditions': [   {   'name': 'can_defeat_moblins',
                                                                                          'type': 'helper'},
-                                                                                     {   'args': [],
-                                                                                         'name': 'can_defeat_mighty_darknuts',
+                                                                                     {   'name': 'can_defeat_mighty_darknuts',
                                                                                          'type': 'helper'},
                                                                                      {   'conditions': [   {   'operand': {   'type': 'constant',
                                                                                                                               'value': False},
@@ -2084,8 +1944,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                'type': 'and'}],
                                                                                          'type': 'or'}],
                                                                    'type': 'and'},
-                                                               {   'conditions': [   {   'args': [],
-                                                                                         'name': 'has_light_arrows',
+                                                               {   'conditions': [   {   'name': 'has_light_arrows',
                                                                                          'type': 'helper'},
                                                                                      {   'conditions': [   {   'item': 'Boomerang',
                                                                                                                'type': 'item_check'},
@@ -2106,8 +1965,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                              {   'conditions': [   {   'item': 'Deku '
                                                                                                                                'Leaf',
                                                                                                                        'type': 'item_check'},
-                                                                                                                   {   'args': [   ],
-                                                                                                                       'name': 'has_magic_meter',
+                                                                                                                   {   'name': 'has_magic_meter',
                                                                                                                        'type': 'helper'}],
                                                                                                  'type': 'and'},
                                                                                              {   'conditions': [   {   'count': {   'type': 'constant',
@@ -2115,8 +1973,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                        'item': 'Progressive '
                                                                                                                                'Bow',
                                                                                                                        'type': 'item_check'},
-                                                                                                                   {   'args': [   ],
-                                                                                                                       'name': 'has_magic_meter',
+                                                                                                                   {   'name': 'has_magic_meter',
                                                                                                                        'type': 'helper'}],
                                                                                                  'type': 'and'}],
                                                                            'type': 'or'}],
@@ -2136,11 +1993,9 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                                                          'Hammer']}],
                                                                                                                                             'method': 'has_any',
                                                                                                                                             'type': 'state_method'},
-                                                                                                                                        {   'args': [   ],
-                                                                                                                                            'name': 'has_heros_sword',
+                                                                                                                                        {   'name': 'has_heros_sword',
                                                                                                                                             'type': 'helper'},
-                                                                                                                                        {   'args': [   ],
-                                                                                                                                            'name': 'has_heros_bow',
+                                                                                                                                        {   'name': 'has_heros_bow',
                                                                                                                                             'type': 'helper'},
                                                                                                                                         {   'conditions': [   {   'item': 'Hookshot',
                                                                                                                                                                   'type': 'item_check'},
@@ -2158,8 +2013,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                             {   'conditions': [   {   'conditions': [   {   'item': 'Deku '
                                                                                                                                                     'Leaf',
                                                                                                                                             'type': 'item_check'},
-                                                                                                                                        {   'args': [   ],
-                                                                                                                                            'name': 'has_magic_meter',
+                                                                                                                                        {   'name': 'has_magic_meter',
                                                                                                                                             'type': 'helper'}],
                                                                                                                       'type': 'and'},
                                                                                                                   {   'type': 'constant',
@@ -2170,8 +2024,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                             'item': 'Progressive '
                                                                                                                                                     'Bow',
                                                                                                                                             'type': 'item_check'},
-                                                                                                                                        {   'args': [   ],
-                                                                                                                                            'name': 'has_magic_meter',
+                                                                                                                                        {   'name': 'has_magic_meter',
                                                                                                                                             'type': 'helper'}],
                                                                                                                       'type': 'and'},
                                                                                                                   {   'type': 'constant',
@@ -2181,14 +2034,11 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                 'type': 'and'}],
                                                                           'type': 'or'}],
                                                     'type': 'and'},
-    'can_reach_earth_temple_basement': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                       'name': 'can_play_command_melody',
+    'can_reach_earth_temple_basement': {   'conditions': [   {   'conditions': [   {   'name': 'can_play_command_melody',
                                                                                        'type': 'helper'},
-                                                                                   {   'args': [],
-                                                                                       'name': 'can_defeat_red_chuchus',
+                                                                                   {   'name': 'can_defeat_red_chuchus',
                                                                                        'type': 'helper'},
-                                                                                   {   'args': [],
-                                                                                       'name': 'can_defeat_green_chuchus',
+                                                                                   {   'name': 'can_defeat_green_chuchus',
                                                                                        'type': 'helper'}],
                                                                  'type': 'and'},
                                                              {   'args': [   {   'type': 'constant',
@@ -2196,8 +2046,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                               'Wind Waker']}],
                                                                  'method': 'has_all',
                                                                  'type': 'state_method'},
-                                                             {   'conditions': [   {   'args': [],
-                                                                                       'name': 'has_mirror_shield',
+                                                             {   'conditions': [   {   'name': 'has_mirror_shield',
                                                                                        'type': 'helper'},
                                                                                    {   'conditions': [   {   'args': [   {   'type': 'constant',
                                                                                                                              'value': [   'Boomerang',
@@ -2210,38 +2059,30 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                           'Waker']}],
                                                                                                              'method': 'has_any',
                                                                                                              'type': 'state_method'},
-                                                                                                         {   'args': [],
-                                                                                                             'name': 'has_heros_sword',
+                                                                                                         {   'name': 'has_heros_sword',
                                                                                                              'type': 'helper'},
-                                                                                                         {   'args': [],
-                                                                                                             'name': 'has_heros_bow',
+                                                                                                         {   'name': 'has_heros_bow',
                                                                                                              'type': 'helper'}],
                                                                                        'type': 'or'}],
                                                                  'type': 'and'}],
                                            'type': 'and'},
-    'can_reach_earth_temple_left_path': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                        'name': 'can_play_command_melody',
+    'can_reach_earth_temple_left_path': {   'conditions': [   {   'conditions': [   {   'name': 'can_play_command_melody',
                                                                                         'type': 'helper'},
-                                                                                    {   'args': [],
-                                                                                        'name': 'can_defeat_red_chuchus',
+                                                                                    {   'name': 'can_defeat_red_chuchus',
                                                                                         'type': 'helper'},
-                                                                                    {   'args': [],
-                                                                                        'name': 'can_defeat_green_chuchus',
+                                                                                    {   'name': 'can_defeat_green_chuchus',
                                                                                         'type': 'helper'}],
                                                                   'type': 'and'},
                                                               {   'count': {'type': 'constant', 'value': 2},
                                                                   'item': 'ET Small Key',
                                                                   'type': 'item_check'}],
                                             'type': 'and'},
-    'can_reach_earth_temple_many_mirrors_room': {   'conditions': [   {   'args': [],
-                                                                          'name': 'can_reach_earth_temple_third_crypt',
+    'can_reach_earth_temple_many_mirrors_room': {   'conditions': [   {   'name': 'can_reach_earth_temple_third_crypt',
                                                                           'type': 'helper'},
-                                                                      {   'args': [],
-                                                                          'name': 'can_play_earth_gods_lyric',
+                                                                      {   'name': 'can_play_earth_gods_lyric',
                                                                           'type': 'helper'}],
                                                     'type': 'and'},
-    'can_reach_earth_temple_moblins_and_poes_room': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                                    'name': 'can_reach_earth_temple_sun_statue_room',
+    'can_reach_earth_temple_moblins_and_poes_room': {   'conditions': [   {   'conditions': [   {   'name': 'can_reach_earth_temple_sun_statue_room',
                                                                                                     'type': 'helper'},
                                                                                                 {   'count': {   'type': 'constant',
                                                                                                                  'value': 2},
@@ -2254,17 +2095,14 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                     'item': 'Progressive '
                                                                                                             'Bow',
                                                                                                     'type': 'item_check'},
-                                                                                                {   'args': [],
-                                                                                                    'name': 'has_magic_meter',
+                                                                                                {   'name': 'has_magic_meter',
                                                                                                     'type': 'helper'}],
                                                                               'type': 'and'},
                                                                           {   'item': 'Power Bracelets',
                                                                               'type': 'item_check'},
-                                                                          {   'conditions': [   {   'args': [],
-                                                                                                    'name': 'has_heros_sword',
+                                                                          {   'conditions': [   {   'name': 'has_heros_sword',
                                                                                                     'type': 'helper'},
-                                                                                                {   'args': [],
-                                                                                                    'name': 'has_heros_bow',
+                                                                                                {   'name': 'has_heros_bow',
                                                                                                     'type': 'helper'},
                                                                                                 {   'conditions': [   {   'item': 'Skull '
                                                                                                                                   'Hammer',
@@ -2287,14 +2125,11 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                     'type': 'item_check'}],
                                                                               'type': 'or'}],
                                                         'type': 'and'},
-    'can_reach_earth_temple_redead_hub_room': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                              'name': 'can_reach_earth_temple_sun_statue_room',
+    'can_reach_earth_temple_redead_hub_room': {   'conditions': [   {   'conditions': [   {   'name': 'can_reach_earth_temple_sun_statue_room',
                                                                                               'type': 'helper'},
-                                                                                          {   'args': [],
-                                                                                              'name': 'can_play_command_melody',
+                                                                                          {   'name': 'can_play_command_melody',
                                                                                               'type': 'helper'},
-                                                                                          {   'args': [],
-                                                                                              'name': 'can_aim_mirror_shield',
+                                                                                          {   'name': 'can_aim_mirror_shield',
                                                                                               'type': 'helper'}],
                                                                         'type': 'and'},
                                                                     {   'args': [   {   'type': 'constant',
@@ -2304,14 +2139,11 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                         'method': 'has_all',
                                                                         'type': 'state_method'}],
                                                   'type': 'and'},
-    'can_reach_earth_temple_right_path': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                         'name': 'can_play_command_melody',
+    'can_reach_earth_temple_right_path': {   'conditions': [   {   'conditions': [   {   'name': 'can_play_command_melody',
                                                                                          'type': 'helper'},
-                                                                                     {   'args': [],
-                                                                                         'name': 'can_defeat_red_chuchus',
+                                                                                     {   'name': 'can_defeat_red_chuchus',
                                                                                          'type': 'helper'},
-                                                                                     {   'args': [],
-                                                                                         'name': 'can_defeat_green_chuchus',
+                                                                                     {   'name': 'can_defeat_green_chuchus',
                                                                                          'type': 'helper'}],
                                                                    'type': 'and'},
                                                                {   'args': [   {   'type': 'constant',
@@ -2332,25 +2164,19 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                            'Hammer']}],
                                                                                               'method': 'has_any',
                                                                                               'type': 'state_method'},
-                                                                                          {   'args': [],
-                                                                                              'name': 'has_heros_sword',
+                                                                                          {   'name': 'has_heros_sword',
                                                                                               'type': 'helper'},
-                                                                                          {   'args': [],
-                                                                                              'name': 'has_heros_bow',
+                                                                                          {   'name': 'has_heros_bow',
                                                                                               'type': 'helper'}],
                                                                         'type': 'or'},
-                                                                    {   'args': [],
-                                                                        'name': 'can_defeat_red_chuchus',
+                                                                    {   'name': 'can_defeat_red_chuchus',
                                                                         'type': 'helper'}],
                                                   'type': 'and'},
-    'can_reach_earth_temple_tall_vine_room': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                             'name': 'can_reach_earth_temple_redead_hub_room',
+    'can_reach_earth_temple_tall_vine_room': {   'conditions': [   {   'conditions': [   {   'name': 'can_reach_earth_temple_redead_hub_room',
                                                                                              'type': 'helper'},
-                                                                                         {   'conditions': [   {   'args': [   ],
-                                                                                                                   'name': 'can_play_command_melody',
+                                                                                         {   'conditions': [   {   'name': 'can_play_command_melody',
                                                                                                                    'type': 'helper'},
-                                                                                                               {   'args': [   ],
-                                                                                                                   'name': 'can_aim_mirror_shield',
+                                                                                                               {   'name': 'can_aim_mirror_shield',
                                                                                                                    'type': 'helper'}],
                                                                                              'type': 'or'},
                                                                                          {   'args': [   {   'type': 'constant',
@@ -2359,17 +2185,14 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                           'Skull Hammer': 1}}],
                                                                                              'method': 'has_all_counts',
                                                                                              'type': 'state_method'},
-                                                                                         {   'conditions': [   {   'args': [   ],
-                                                                                                                   'name': 'can_defeat_red_bubbles',
+                                                                                         {   'conditions': [   {   'name': 'can_defeat_red_bubbles',
                                                                                                                    'type': 'helper'},
                                                                                                                {   'type': 'constant',
                                                                                                                    'value': False}],
                                                                                              'type': 'or'},
-                                                                                         {   'args': [],
-                                                                                             'name': 'can_play_command_melody',
+                                                                                         {   'name': 'can_play_command_melody',
                                                                                              'type': 'helper'},
-                                                                                         {   'args': [],
-                                                                                             'name': 'can_aim_mirror_shield',
+                                                                                         {   'name': 'can_aim_mirror_shield',
                                                                                              'type': 'helper'}],
                                                                        'type': 'and'},
                                                                    {   'args': [   {   'type': 'constant',
@@ -2378,11 +2201,9 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                        'method': 'has_all',
                                                                        'type': 'state_method'}],
                                                  'type': 'and'},
-    'can_reach_earth_temple_third_crypt': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                          'name': 'can_reach_earth_temple_basement',
+    'can_reach_earth_temple_third_crypt': {   'conditions': [   {   'conditions': [   {   'name': 'can_reach_earth_temple_basement',
                                                                                           'type': 'helper'},
-                                                                                      {   'args': [],
-                                                                                          'name': 'can_play_earth_gods_lyric',
+                                                                                      {   'name': 'can_play_earth_gods_lyric',
                                                                                           'type': 'helper'}],
                                                                     'type': 'and'},
                                                                 {   'conditions': [   {   'args': [   {   'type': 'constant',
@@ -2392,8 +2213,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                        'Waker']}],
                                                                                           'method': 'has_all',
                                                                                           'type': 'state_method'},
-                                                                                      {   'conditions': [   {   'args': [   ],
-                                                                                                                'name': 'has_mirror_shield',
+                                                                                      {   'conditions': [   {   'name': 'has_mirror_shield',
                                                                                                                 'type': 'helper'},
                                                                                                             {   'conditions': [   {   'args': [   {   'type': 'constant',
                                                                                                                                                       'value': [   'Boomerang',
@@ -2406,11 +2226,9 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                                                    'Waker']}],
                                                                                                                                       'method': 'has_any',
                                                                                                                                       'type': 'state_method'},
-                                                                                                                                  {   'args': [   ],
-                                                                                                                                      'name': 'has_heros_sword',
+                                                                                                                                  {   'name': 'has_heros_sword',
                                                                                                                                       'type': 'helper'},
-                                                                                                                                  {   'args': [   ],
-                                                                                                                                      'name': 'has_heros_bow',
+                                                                                                                                  {   'name': 'has_heros_bow',
                                                                                                                                       'type': 'helper'}],
                                                                                                                 'type': 'or'}],
                                                                                           'type': 'and'}],
@@ -2427,14 +2245,11 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                              'Hammer']}],
                                                                                                                 'method': 'has_any',
                                                                                                                 'type': 'state_method'},
-                                                                                                            {   'args': [   ],
-                                                                                                                'name': 'has_heros_sword',
+                                                                                                            {   'name': 'has_heros_sword',
                                                                                                                 'type': 'helper'},
-                                                                                                            {   'args': [   ],
-                                                                                                                'name': 'has_heros_bow',
+                                                                                                            {   'name': 'has_heros_bow',
                                                                                                                 'type': 'helper'},
-                                                                                                            {   'conditions': [   {   'conditions': [   {   'args': [   ],
-                                                                                                                                                            'name': 'can_fan_with_deku_leaf',
+                                                                                                            {   'conditions': [   {   'conditions': [   {   'name': 'can_fan_with_deku_leaf',
                                                                                                                                                             'type': 'helper'},
                                                                                                                                                         {   'item': 'Hookshot',
                                                                                                                                                             'type': 'item_check'}],
@@ -2452,8 +2267,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                  'Wind Waker']}],
                                                                     'method': 'has_all',
                                                                     'type': 'state_method'},
-                                                                {   'conditions': [   {   'args': [],
-                                                                                          'name': 'has_mirror_shield',
+                                                                {   'conditions': [   {   'name': 'has_mirror_shield',
                                                                                           'type': 'helper'},
                                                                                       {   'conditions': [   {   'args': [   {   'type': 'constant',
                                                                                                                                 'value': [   'Boomerang',
@@ -2466,23 +2280,19 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                              'Waker']}],
                                                                                                                 'method': 'has_any',
                                                                                                                 'type': 'state_method'},
-                                                                                                            {   'args': [   ],
-                                                                                                                'name': 'has_heros_sword',
+                                                                                                            {   'name': 'has_heros_sword',
                                                                                                                 'type': 'helper'},
-                                                                                                            {   'args': [   ],
-                                                                                                                'name': 'has_heros_bow',
+                                                                                                            {   'name': 'has_heros_bow',
                                                                                                                 'type': 'helper'}],
                                                                                           'type': 'or'}],
                                                                     'type': 'and'}],
                                               'type': 'and'},
-    'can_reach_end_of_wind_temple_many_cyclones_room': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                                       'name': 'can_play_command_melody',
+    'can_reach_end_of_wind_temple_many_cyclones_room': {   'conditions': [   {   'conditions': [   {   'name': 'can_play_command_melody',
                                                                                                        'type': 'helper'},
                                                                                                    {   'item': 'Iron '
                                                                                                                'Boots',
                                                                                                        'type': 'item_check'},
-                                                                                                   {   'args': [],
-                                                                                                       'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                                   {   'name': 'can_fly_with_deku_leaf_indoors',
                                                                                                        'type': 'helper'}],
                                                                                  'type': 'and'},
                                                                              {   'conditions': [   {   'conditions': [   {   'item': 'Iron '
@@ -2494,8 +2304,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                          {   'conditions': [   {   'item': 'Deku '
                                                                                                                                                            'Leaf',
                                                                                                                                                    'type': 'item_check'},
-                                                                                                                                               {   'args': [   ],
-                                                                                                                                                   'name': 'has_magic_meter',
+                                                                                                                                               {   'name': 'has_magic_meter',
                                                                                                                                                    'type': 'helper'}],
                                                                                                                              'type': 'and'},
                                                                                                                          {   'conditions': [   {   'args': [   {   'type': 'constant',
@@ -2505,20 +2314,17 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                                                                 'Hammer']}],
                                                                                                                                                    'method': 'has_any',
                                                                                                                                                    'type': 'state_method'},
-                                                                                                                                               {   'args': [   ],
-                                                                                                                                                   'name': 'has_heros_sword',
+                                                                                                                                               {   'name': 'has_heros_sword',
                                                                                                                                                    'type': 'helper'}],
                                                                                                                              'type': 'or'}],
                                                                                                        'type': 'and'},
                                                                                                    {   'conditions': [   {   'item': 'Hookshot',
                                                                                                                              'type': 'item_check'},
-                                                                                                                         {   'conditions': [   {   'args': [   ],
-                                                                                                                                                   'name': 'has_ice_arrows',
+                                                                                                                         {   'conditions': [   {   'name': 'has_ice_arrows',
                                                                                                                                                    'type': 'helper'},
                                                                                                                                                {   'item': 'Bombs',
                                                                                                                                                    'type': 'item_check'},
-                                                                                                                                               {   'conditions': [   {   'conditions': [   {   'args': [   ],
-                                                                                                                                                                                               'name': 'can_fan_with_deku_leaf',
+                                                                                                                                               {   'conditions': [   {   'conditions': [   {   'name': 'can_fan_with_deku_leaf',
                                                                                                                                                                                                'type': 'helper'},
                                                                                                                                                                                            {   'item': 'Hookshot',
                                                                                                                                                                                                'type': 'item_check'}],
@@ -2530,11 +2336,9 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                                                                                                                             'Hammer']}],
                                                                                                                                                                                                'method': 'has_any',
                                                                                                                                                                                                'type': 'state_method'},
-                                                                                                                                                                                           {   'args': [   ],
-                                                                                                                                                                                               'name': 'has_heros_sword',
+                                                                                                                                                                                           {   'name': 'has_heros_sword',
                                                                                                                                                                                                'type': 'helper'},
-                                                                                                                                                                                           {   'args': [   ],
-                                                                                                                                                                                               'name': 'has_heros_bow',
+                                                                                                                                                                                           {   'name': 'has_heros_bow',
                                                                                                                                                                                                'type': 'helper'}],
                                                                                                                                                                          'type': 'or'}],
                                                                                                                                                    'type': 'and'}],
@@ -2542,8 +2346,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                          {   'conditions': [   {   'item': 'Deku '
                                                                                                                                                            'Leaf',
                                                                                                                                                    'type': 'item_check'},
-                                                                                                                                               {   'args': [   ],
-                                                                                                                                                   'name': 'has_magic_meter',
+                                                                                                                                               {   'name': 'has_magic_meter',
                                                                                                                                                    'type': 'helper'}],
                                                                                                                              'type': 'and'}],
                                                                                                        'type': 'and'},
@@ -2552,8 +2355,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                          {   'conditions': [   {   'item': 'Deku '
                                                                                                                                                            'Leaf',
                                                                                                                                                    'type': 'item_check'},
-                                                                                                                                               {   'args': [   ],
-                                                                                                                                                   'name': 'has_magic_meter',
+                                                                                                                                               {   'name': 'has_magic_meter',
                                                                                                                                                    'type': 'helper'}],
                                                                                                                              'type': 'and'},
                                                                                                                          {   'type': 'constant',
@@ -2563,18 +2365,15 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                        'type': 'and'}],
                                                                                  'type': 'or'}],
                                                            'type': 'and'},
-    'can_reach_ganons_tower_phantom_ganon_room': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                                 'name': 'can_get_past_hyrule_barrier',
+    'can_reach_ganons_tower_phantom_ganon_room': {   'conditions': [   {   'conditions': [   {   'name': 'can_get_past_hyrule_barrier',
                                                                                                  'type': 'helper'},
                                                                                              {   'conditions': [   {   'item': 'Hookshot',
                                                                                                                        'type': 'item_check'},
-                                                                                                                   {   'args': [   ],
-                                                                                                                       'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                                                   {   'name': 'can_fly_with_deku_leaf_indoors',
                                                                                                                        'type': 'helper'}],
                                                                                                  'type': 'or'}],
                                                                            'type': 'and'},
-                                                                       {   'conditions': [   {   'args': [],
-                                                                                                 'name': 'can_complete_all_memory_dungeons_and_bosses',
+                                                                       {   'conditions': [   {   'name': 'can_complete_all_memory_dungeons_and_bosses',
                                                                                                  'type': 'helper'},
                                                                                              {   'type': 'constant',
                                                                                                  'value': True}],
@@ -2586,8 +2385,7 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                         'Hammer']}],
                                                                                            'method': 'has_any',
                                                                                            'type': 'state_method'},
-                                                                                       {   'args': [],
-                                                                                           'name': 'has_heros_sword',
+                                                                                       {   'name': 'has_heros_sword',
                                                                                            'type': 'helper'},
                                                                                        {   'conditions': [   {   'item': 'Power '
                                                                                                                          'Bracelets',
@@ -2599,11 +2397,9 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                  {   'conditions': [   {   'conditions': [   {   'item': 'Deku '
                                                                                                                          'Leaf',
                                                                                                                  'type': 'item_check'},
-                                                                                                             {   'args': [   ],
-                                                                                                                 'name': 'has_magic_meter',
+                                                                                                             {   'name': 'has_magic_meter',
                                                                                                                  'type': 'helper'},
-                                                                                                             {   'args': [   ],
-                                                                                                                 'name': 'can_play_winds_requiem',
+                                                                                                             {   'name': 'can_play_winds_requiem',
                                                                                                                  'type': 'helper'}],
                                                                                            'type': 'and'},
                                                                                        {   'type': 'constant',
@@ -2624,25 +2420,20 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                 'type': 'state_method'},
                                                                                             {   'conditions': [   {   'item': 'Boomerang',
                                                                                                                       'type': 'item_check'},
-                                                                                                                  {   'args': [   ],
-                                                                                                                      'name': 'has_heros_sword',
+                                                                                                                  {   'name': 'has_heros_sword',
                                                                                                                       'type': 'helper'}],
                                                                                                 'type': 'and'},
-                                                                                            {   'args': [],
-                                                                                                'name': 'has_heros_bow',
+                                                                                            {   'name': 'has_heros_bow',
                                                                                                 'type': 'helper'},
-                                                                                            {   'conditions': [   {   'args': [   ],
-                                                                                                                      'name': 'can_fan_with_deku_leaf',
+                                                                                            {   'conditions': [   {   'name': 'can_fan_with_deku_leaf',
                                                                                                                       'type': 'helper'},
-                                                                                                                  {   'args': [   ],
-                                                                                                                      'name': 'has_heros_sword',
+                                                                                                                  {   'name': 'has_heros_sword',
                                                                                                                       'type': 'helper'}],
                                                                                                 'type': 'and'},
                                                                                             {   'conditions': [   {   'item': 'Grappling '
                                                                                                                               'Hook',
                                                                                                                       'type': 'item_check'},
-                                                                                                                  {   'args': [   ],
-                                                                                                                      'name': 'has_heros_sword',
+                                                                                                                  {   'name': 'has_heros_sword',
                                                                                                                       'type': 'helper'},
                                                                                                                   {   'type': 'constant',
                                                                                                                       'value': False},
@@ -2658,36 +2449,30 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                             'Key']}],
                                                                                                'method': 'has_all',
                                                                                                'type': 'state_method'},
-                                                                                           {   'args': [],
-                                                                                               'name': 'can_defeat_yellow_chuchus',
+                                                                                           {   'name': 'can_defeat_yellow_chuchus',
                                                                                                'type': 'helper'}],
                                                                          'type': 'and'},
                                                                      {   'conditions': [   {   'conditions': [   {   'item': 'Grappling '
                                                                                                                              'Hook',
                                                                                                                      'type': 'item_check'},
-                                                                                                                 {   'args': [   ],
-                                                                                                                     'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                                                 {   'name': 'can_fly_with_deku_leaf_indoors',
                                                                                                                      'type': 'helper'}],
                                                                                                'type': 'or'},
-                                                                                           {   'args': [],
-                                                                                               'name': 'can_play_command_melody',
+                                                                                           {   'name': 'can_play_command_melody',
                                                                                                'type': 'helper'},
-                                                                                           {   'args': [],
-                                                                                               'name': 'has_heros_bow',
+                                                                                           {   'name': 'has_heros_bow',
                                                                                                'type': 'helper'}],
                                                                          'type': 'and'},
                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
                                                                                                             'value': 2},
                                                                                                'item': 'TotG Small Key',
                                                                                                'type': 'item_check'},
-                                                                                           {   'conditions': [   {   'args': [   ],
-                                                                                                                     'name': 'can_fly_with_deku_leaf_indoors',
+                                                                                           {   'conditions': [   {   'name': 'can_fly_with_deku_leaf_indoors',
                                                                                                                      'type': 'helper'},
                                                                                                                  {   'type': 'constant',
                                                                                                                      'value': False}],
                                                                                                'type': 'or'},
-                                                                                           {   'args': [],
-                                                                                               'name': 'can_play_command_melody',
+                                                                                           {   'name': 'can_play_command_melody',
                                                                                                'type': 'helper'}],
                                                                          'type': 'and'},
                                                                      {'item': 'Wind Waker', 'type': 'item_check'}],
@@ -2700,24 +2485,20 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                    {'item': 'Iron Boots', 'type': 'item_check'},
                                                                    {   'conditions': [   {   'item': 'Deku Leaf',
                                                                                              'type': 'item_check'},
-                                                                                         {   'args': [],
-                                                                                             'name': 'has_magic_meter',
+                                                                                         {   'name': 'has_magic_meter',
                                                                                              'type': 'helper'}],
                                                                        'type': 'and'}],
                                                  'type': 'and'},
-    'can_reach_wind_temple_tall_basement_room': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                                'name': 'can_reach_end_of_wind_temple_many_cyclones_room',
+    'can_reach_wind_temple_tall_basement_room': {   'conditions': [   {   'conditions': [   {   'name': 'can_reach_end_of_wind_temple_many_cyclones_room',
                                                                                                 'type': 'helper'},
                                                                                             {   'item': 'Iron Boots',
                                                                                                 'type': 'item_check'}],
                                                                           'type': 'and'},
-                                                                      {   'conditions': [   {   'args': [],
-                                                                                                'name': 'can_reach_wind_temple_kidnapping_room',
+                                                                      {   'conditions': [   {   'name': 'can_reach_wind_temple_kidnapping_room',
                                                                                                 'type': 'helper'},
                                                                                             {   'item': 'Hookshot',
                                                                                                 'type': 'item_check'},
-                                                                                            {   'args': [],
-                                                                                                'name': 'can_defeat_blue_bubbles',
+                                                                                            {   'name': 'can_defeat_blue_bubbles',
                                                                                                 'type': 'helper'}],
                                                                           'type': 'and'},
                                                                       {   'count': {'type': 'constant', 'value': 2},
@@ -2751,17 +2532,13 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                    'item': 'Progressive Bow',
                                                    'type': 'item_check'}],
                              'type': 'or'},
-    'can_unlock_ganons_tower_four_boss_door': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                              'name': 'can_complete_memory_dragon_roost_cavern_and_gohma',
+    'can_unlock_ganons_tower_four_boss_door': {   'conditions': [   {   'conditions': [   {   'name': 'can_complete_memory_dragon_roost_cavern_and_gohma',
                                                                                               'type': 'helper'},
-                                                                                          {   'args': [],
-                                                                                              'name': 'can_complete_memory_forbidden_woods_and_kalle_demos',
+                                                                                          {   'name': 'can_complete_memory_forbidden_woods_and_kalle_demos',
                                                                                               'type': 'helper'},
-                                                                                          {   'args': [],
-                                                                                              'name': 'can_complete_memory_earth_temple_and_jalhalla',
+                                                                                          {   'name': 'can_complete_memory_earth_temple_and_jalhalla',
                                                                                               'type': 'helper'},
-                                                                                          {   'args': [],
-                                                                                              'name': 'can_complete_memory_wind_temple_and_molgera',
+                                                                                          {   'name': 'can_complete_memory_wind_temple_and_molgera',
                                                                                               'type': 'helper'}],
                                                                         'type': 'and'},
                                                                     {'type': 'constant', 'value': True}],
@@ -2772,15 +2549,12 @@ _HELPER_DEFINITIONS = {   'can_access_boss_entrance_in_dragon_roost_cavern': {  
                                                                                                                  'Hammer']}],
                                                                                     'method': 'has_any',
                                                                                     'type': 'state_method'},
-                                                                                {   'args': [],
-                                                                                    'name': 'has_heros_sword',
+                                                                                {   'name': 'has_heros_sword',
                                                                                     'type': 'helper'},
-                                                                                {   'args': [],
-                                                                                    'name': 'has_heros_bow',
+                                                                                {   'name': 'has_heros_bow',
                                                                                     'type': 'helper'}],
                                                               'type': 'or'},
-                                                          {   'conditions': [   {   'args': [],
-                                                                                    'name': 'can_defeat_darknuts_easily',
+                                                          {   'conditions': [   {   'name': 'can_defeat_darknuts_easily',
                                                                                     'type': 'helper'},
                                                                                 {   'conditions': [   {   'item': 'Skull '
                                                                                                                   'Hammer',
@@ -2860,257 +2634,257 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance on Dragon Roost Island -> Dragon Roost Cavern", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_dungeon_entrance_on_dragon_roost_island, helper_name="can_access_dungeon_entrance_on_dragon_roost_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance in Forest Haven Sector -> Forbidden Woods", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_dungeon_entrance_in_forest_haven_sector, helper_name="can_access_dungeon_entrance_in_forest_haven_sector")
     )
 
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance in Tower of the Gods Sector -> Tower of the Gods", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_dungeon_entrance_in_tower_of_the_gods_sector, helper_name="can_access_dungeon_entrance_in_tower_of_the_gods_sector")
     )
 
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance on Headstone Island -> Earth Temple", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_dungeon_entrance_on_headstone_island, helper_name="can_access_dungeon_entrance_on_headstone_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance on Gale Isle -> Wind Temple", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_dungeon_entrance_on_gale_isle, helper_name="can_access_dungeon_entrance_on_gale_isle")
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Hyrule Castle -> Master Sword Chamber", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_miniboss_entrance_in_hyrule_castle, helper_name="can_access_miniboss_entrance_in_hyrule_castle")
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Forsaken Fortress -> Helmaroc King Boss Arena", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_boss_entrance_in_forsaken_fortress, helper_name="can_access_boss_entrance_in_forsaken_fortress")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Outset Island -> Savage Labyrinth", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_outset_island, helper_name="can_access_secret_cave_entrance_on_outset_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Dragon Roost Island -> Dragon Roost Island Secret Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_dragon_roost_island, helper_name="can_access_secret_cave_entrance_on_dragon_roost_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Fire Mountain -> Fire Mountain Secret Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_fire_mountain, helper_name="can_access_secret_cave_entrance_on_fire_mountain")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Ice Ring Isle -> Ice Ring Isle Secret Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_ice_ring_isle, helper_name="can_access_secret_cave_entrance_on_ice_ring_isle")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Private Oasis -> Cabana Labyrinth", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_private_oasis, helper_name="can_access_secret_cave_entrance_on_private_oasis")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Needle Rock Isle -> Needle Rock Isle Secret Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_needle_rock_isle, helper_name="can_access_secret_cave_entrance_on_needle_rock_isle")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Angular Isles -> Angular Isles Secret Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_angular_isles, helper_name="can_access_secret_cave_entrance_on_angular_isles")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Boating Course -> Boating Course Secret Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_boating_course, helper_name="can_access_secret_cave_entrance_on_boating_course")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Stone Watcher Island -> Stone Watcher Island Secret Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_stone_watcher_island, helper_name="can_access_secret_cave_entrance_on_stone_watcher_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Overlook Island -> Overlook Island Secret Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_overlook_island, helper_name="can_access_secret_cave_entrance_on_overlook_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Bird's Peak Rock -> Bird's Peak Rock Secret Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_birds_peak_rock, helper_name="can_access_secret_cave_entrance_on_birds_peak_rock")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Pawprint Isle -> Pawprint Isle Chuchu Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_pawprint_isle, helper_name="can_access_secret_cave_entrance_on_pawprint_isle")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Pawprint Isle Side Isle -> Pawprint Isle Wizzrobe Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_pawprint_isle_side_isle, helper_name="can_access_secret_cave_entrance_on_pawprint_isle_side_isle")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Diamond Steppe Island -> Diamond Steppe Island Warp Maze Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_diamond_steppe_island, helper_name="can_access_secret_cave_entrance_on_diamond_steppe_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Bomb Island -> Bomb Island Secret Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_bomb_island, helper_name="can_access_secret_cave_entrance_on_bomb_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Rock Spire Isle -> Rock Spire Isle Secret Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_rock_spire_isle, helper_name="can_access_secret_cave_entrance_on_rock_spire_isle")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Shark Island -> Shark Island Secret Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_shark_island, helper_name="can_access_secret_cave_entrance_on_shark_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Cliff Plateau Isles -> Cliff Plateau Isles Secret Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_cliff_plateau_isles, helper_name="can_access_secret_cave_entrance_on_cliff_plateau_isles")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Horseshoe Island -> Horseshoe Island Secret Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_horseshoe_island, helper_name="can_access_secret_cave_entrance_on_horseshoe_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Star Island -> Star Island Secret Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_secret_cave_entrance_on_star_island, helper_name="can_access_secret_cave_entrance_on_star_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Outset Island -> Outset Fairy Fountain", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_fairy_fountain_entrance_on_outset_island, helper_name="can_access_fairy_fountain_entrance_on_outset_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Thorned Fairy Island -> Thorned Fairy Fountain", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_fairy_fountain_entrance_on_thorned_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_thorned_fairy_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Eastern Fairy Island -> Eastern Fairy Fountain", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_fairy_fountain_entrance_on_eastern_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_eastern_fairy_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Western Fairy Island -> Western Fairy Fountain", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_fairy_fountain_entrance_on_western_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_western_fairy_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Southern Fairy Island -> Southern Fairy Fountain", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_fairy_fountain_entrance_on_southern_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_southern_fairy_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Northern Fairy Island -> Northern Fairy Fountain", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_fairy_fountain_entrance_on_northern_fairy_island, helper_name="can_access_fairy_fountain_entrance_on_northern_fairy_island")
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Dragon Roost Cavern -> Gohma Boss Arena", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_boss_entrance_in_dragon_roost_cavern, helper_name="can_access_boss_entrance_in_dragon_roost_cavern")
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Forbidden Woods -> Forbidden Woods Miniboss Arena", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_miniboss_entrance_in_forbidden_woods, helper_name="can_access_miniboss_entrance_in_forbidden_woods")
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Forbidden Woods -> Kalle Demos Boss Arena", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_boss_entrance_in_forbidden_woods, helper_name="can_access_boss_entrance_in_forbidden_woods")
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Tower of the Gods -> Tower of the Gods Miniboss Arena", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_miniboss_entrance_in_tower_of_the_gods, helper_name="can_access_miniboss_entrance_in_tower_of_the_gods")
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Tower of the Gods -> Gohdan Boss Arena", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_boss_entrance_in_tower_of_the_gods, helper_name="can_access_boss_entrance_in_tower_of_the_gods")
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Earth Temple -> Earth Temple Miniboss Arena", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_miniboss_entrance_in_earth_temple, helper_name="can_access_miniboss_entrance_in_earth_temple")
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Earth Temple -> Jalhalla Boss Arena", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_boss_entrance_in_earth_temple, helper_name="can_access_boss_entrance_in_earth_temple")
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Wind Temple -> Wind Temple Miniboss Arena", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_miniboss_entrance_in_wind_temple, helper_name="can_access_miniboss_entrance_in_wind_temple")
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Wind Temple -> Molgera Boss Arena", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_boss_entrance_in_wind_temple, helper_name="can_access_boss_entrance_in_wind_temple")
     )
 
     world.set_rule(
         multiworld.get_entrance("Inner Entrance in Ice Ring Isle Secret Cave -> Ice Ring Isle Inner Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_inner_entrance_in_ice_ring_isle_secret_cave, helper_name="can_access_inner_entrance_in_ice_ring_isle_secret_cave")
     )
 
     world.set_rule(
         multiworld.get_entrance("Inner Entrance in Cliff Plateau Isles Secret Cave -> Cliff Plateau Isles Inner Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_access_inner_entrance_in_cliff_plateau_isles_secret_cave, helper_name="can_access_inner_entrance_in_cliff_plateau_isles_secret_cave")
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Defeat Ganondorf", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_reach_and_defeat_ganondorf, helper_name="can_reach_and_defeat_ganondorf")
     )
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Chest Guarded By Bokoblin", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_get_inside_forsaken_fortress, helper_name="can_get_inside_forsaken_fortress")
     )
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Chest Inside Lower Jail Cell", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_get_inside_forsaken_fortress, helper_name="can_get_inside_forsaken_fortress")
     )
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Chest Outside Upper Jail Cell", player),
-        And(True_(), Or(True_(), True_(), Has('Hookshot')))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_get_inside_forsaken_fortress, helper_name="can_get_inside_forsaken_fortress"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), True_(), Has('Hookshot')))
     )
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Chest on Bed", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_get_inside_forsaken_fortress, helper_name="can_get_inside_forsaken_fortress")
     )
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Phantom Ganon", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_reach_and_defeat_phantom_ganon, helper_name="can_reach_and_defeat_phantom_ganon")
     )
 
     world.set_rule(
         multiworld.get_location("Ganon's Tower - Maze Chest", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_phantom_ganon, helper_name="can_defeat_phantom_ganon"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_ganons_tower_phantom_ganon_room, helper_name="can_reach_ganons_tower_phantom_ganon_room"))
     )
 
     world.set_rule(
@@ -3120,17 +2894,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_has_any_wallet_upgrade, helper_name="has_any_wallet_upgrade")
     )
 
     world.set_rule(
         multiworld.get_location("Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_has_any_wallet_upgrade, helper_name="has_any_wallet_upgrade")
     )
 
     world.set_rule(
         multiworld.get_location("Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_has_any_wallet_upgrade, helper_name="has_any_wallet_upgrade")
     )
 
     world.set_rule(
@@ -3145,7 +2919,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Big Key Chest", player),
-        And(True_(), True_(), Has('Grappling Hook'))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_dragon_roost_cavern_gaping_maw, helper_name="can_reach_dragon_roost_cavern_gaping_maw"), HelperCall(helper_func=_thewindwakerworldgen_can_stun_magtails, helper_name="can_stun_magtails"), Has('Grappling Hook'))
     )
 
     world.set_rule(
@@ -3160,17 +2934,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Boss Stairs Left Chest", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_reach_dragon_roost_cavern_boss_stairs, helper_name="can_reach_dragon_roost_cavern_boss_stairs")
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Boss Stairs Right Chest", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_reach_dragon_roost_cavern_boss_stairs, helper_name="can_reach_dragon_roost_cavern_boss_stairs")
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Chest Across Lava Pit", player),
-        And(Or(And(True_(), Has('Hookshot')), True_(), Has('Grappling Hook')), Has('DRC Small Key', 2))
+        And(Or(And(True_(), Has('Hookshot')), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Grappling Hook')), Has('DRC Small Key', 2))
     )
 
     world.set_rule(
@@ -3200,72 +2974,72 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Under Rope Bridge", player),
-        And(Or(True_(), Has('Grappling Hook')), Has('DRC Small Key', 4))
+        And(Or(HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_outdoors, helper_name="can_fly_with_deku_leaf_outdoors"), Has('Grappling Hook')), Has('DRC Small Key', 4))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Big Key Chest", player),
-        And(True_(), True_(), HasAll(['Boomerang', 'Grappling Hook']))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), HasAll('Boomerang', 'Grappling Hook'))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Chest Across Red Hanging Flower", player),
-        And(True_(), True_(), HasAll(['Boomerang', 'Grappling Hook']))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), HasAll('Boomerang', 'Grappling Hook'))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Chest in Locked Tree Trunk", player),
-        And(True_(), True_(), HasAll(['Boomerang', 'Grappling Hook']))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), HasAll('Boomerang', 'Grappling Hook'))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Climb to Top Using Boko Baba Bulbs", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_door_flowers, helper_name="can_defeat_door_flowers"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Double Mothula Room", player),
-        And(True_(), True_(), True_(), Or(True_(), Has('Grappling Hook')))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_defeat_mothulas, helper_name="can_defeat_mothulas"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_door_flowers, helper_name="can_defeat_door_flowers"), Has('Grappling Hook')))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Hole in Tree", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Inside Hollow Tree's Mouth", player),
-        Or(True_(), True_())
+        Or(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_defeat_door_flowers, helper_name="can_defeat_door_flowers"))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Morth Pit", player),
-        And(True_(), True_(), Has('Grappling Hook'))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Grappling Hook'))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Past Seeds Hanging by Vines", player),
-        And(True_(), True_(), True_(), Or(True_(), True_()), HasAll(['FW Small Key', 'Grappling Hook']))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_defeat_door_flowers, helper_name="can_defeat_door_flowers"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_destroy_seeds_hanging_by_vines, helper_name="can_destroy_seeds_hanging_by_vines"), True_()), HasAll('FW Small Key', 'Grappling Hook'))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Tall Room Before Miniboss", player),
-        And(True_(), True_(), Or(True_(), True_()), HasAll(['FW Small Key', 'Grappling Hook']))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_peahats, helper_name="can_defeat_peahats"), True_()), HasAll('FW Small Key', 'Grappling Hook'))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Vine Maze Left Chest", player),
-        And(True_(), True_(), Has('Grappling Hook'))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Grappling Hook'))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Vine Maze Right Chest", player),
-        And(True_(), True_(), Has('Grappling Hook'))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Grappling Hook'))
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Big Key Chest", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_reach_tower_of_the_gods_third_floor, helper_name="can_reach_tower_of_the_gods_third_floor")
     )
 
     world.set_rule(
@@ -3275,12 +3049,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - First Chest Guarded by Armos Knights", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), HelperCall(helper_func=_thewindwakerworldgen_has_heros_bow, helper_name="has_heros_bow"))
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Floating Platforms Room", player),
-        And(True_(), Or(And(True_(), True_()), And(True_(), Has('Hookshot')), True_()))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), Or(And(HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), True_()), And(True_(), Has('Hookshot')), HelperCall(helper_func=_thewindwakerworldgen_has_heros_bow, helper_name="has_heros_bow")))
     )
 
     world.set_rule(
@@ -3290,12 +3064,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Second Chest Guarded by Armos Knights", player),
-        And(True_(), True_(), Has('Bombs'))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_play_winds_requiem, helper_name="can_play_winds_requiem"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), Has('Bombs'))
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Shoot Eye Above Skulls Room Chest", player),
-        And(True_(), Has('Bombs'))
+        And(HelperCall(helper_func=_thewindwakerworldgen_has_heros_bow, helper_name="has_heros_bow"), Has('Bombs'))
     )
 
     world.set_rule(
@@ -3305,187 +3079,187 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Stone Tablet", player),
-        And(True_(), Has('Wind Waker'))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), Has('Wind Waker'))
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Top of Floating Platforms Room", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), HelperCall(helper_func=_thewindwakerworldgen_has_heros_bow, helper_name="has_heros_bow"))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Big Key Chest", player),
-        And(True_(), True_(), True_(), True_(), Or(And(True_(), True_()), And(Or(True_(), True_(), Has('Skull Hammer')), True_(), True_()), True_()), Has('Power Bracelets'))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=_thewindwakerworldgen_can_defeat_darknuts, helper_name="can_defeat_darknuts"), HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"), Or(And(HelperCall(helper_func=_thewindwakerworldgen_has_heros_bow, helper_name="has_heros_bow"), True_()), And(Or(HelperCall(helper_func=_thewindwakerworldgen_has_any_master_sword, helper_name="has_any_master_sword"), HelperCall(helper_func=_thewindwakerworldgen_has_heros_sword, helper_name="has_heros_sword"), Has('Skull Hammer')), True_(), True_()), HelperCall(helper_func=_thewindwakerworldgen_can_defeat_blue_bubbles, helper_name="can_defeat_blue_bubbles")), Has('Power Bracelets'))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Casket in Second Crypt", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_moblins_and_poes_room, helper_name="can_reach_earth_temple_moblins_and_poes_room")
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest Behind Destructible Walls", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_right_path, helper_name="can_reach_earth_temple_right_path"), HelperCall(helper_func=_thewindwakerworldgen_has_mirror_shield, helper_name="has_mirror_shield"))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest Behind Statues", player),
-        And(True_(), Or(True_(), True_()))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_moblins_and_poes_room, helper_name="can_reach_earth_temple_moblins_and_poes_room"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody")))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest In Three Blocks Room", player),
-        And(True_(), True_(), True_(), Or(True_(), True_()), Has('Power Bracelets'))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_floormasters, helper_name="can_defeat_floormasters"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_left_path, helper_name="can_reach_earth_temple_left_path"), HelperCall(helper_func=_thewindwakerworldgen_has_fire_arrows, helper_name="has_fire_arrows"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody")), Has('Power Bracelets'))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest in Third Crypt", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_third_crypt, helper_name="can_reach_earth_temple_third_crypt")
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - End of Foggy Room With Floormasters", player),
-        And(True_(), Or(True_(), True_()))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_redead_hub_room, helper_name="can_reach_earth_temple_redead_hub_room"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody")))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Kill All Floormasters in Foggy Room", player),
-        And(True_(), True_(), Or(True_(), True_()))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_floormasters, helper_name="can_defeat_floormasters"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_redead_hub_room, helper_name="can_reach_earth_temple_redead_hub_room"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody")))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Many Mirrors Room Left Chest", player),
-        And(True_(), True_(), True_(), Has('Power Bracelets'))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"), Has('Power Bracelets'))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Many Mirrors Room Right Chest", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Stalfos Crypt Room", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_stalfos, helper_name="can_defeat_stalfos"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Transparent Chest In Warp Pot Room", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody")
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Transparent Chest in First Crypt", player),
-        And(True_(), Or(True_(), True_()), Has('Power Bracelets'))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_earth_temple_right_path, helper_name="can_reach_earth_temple_right_path"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody"), HelperCall(helper_func=_thewindwakerworldgen_has_mirror_shield, helper_name="has_mirror_shield")), Has('Power Bracelets'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Big Key Chest", player),
-        And(True_(), True_(), True_(), True_(), Has('Iron Boots'))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_darknuts, helper_name="can_defeat_darknuts"), HelperCall(helper_func=_thewindwakerworldgen_can_fan_with_deku_leaf, helper_name="can_fan_with_deku_leaf"), HelperCall(helper_func=_thewindwakerworldgen_can_play_wind_gods_aria, helper_name="can_play_wind_gods_aria"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room"), Has('Iron Boots'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest Behind Seven Armos", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_activate_wind_temple_giant_fan, helper_name="can_activate_wind_temple_giant_fan"), HelperCall(helper_func=_thewindwakerworldgen_can_defeat_armos, helper_name="can_defeat_armos"))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest Behind Stone Head", player),
-        And(True_(), HasAll(['Hookshot', 'Iron Boots']))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room"), HasAll('Hookshot', 'Iron Boots'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest Between Two Dirt Patches", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_play_command_melody, helper_name="can_play_command_melody")
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest In Many Cyclones Room", player),
-        And(True_(), Or(And(True_(), True_(), Has('Hookshot')), And(True_(), True_(), Or(True_(), True_()), Has('Iron Boots')), And(True_(), True_(), True_(), Has('Hookshot'))))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room"), Or(And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_blue_bubbles, helper_name="can_defeat_blue_bubbles"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Hookshot')), And(HelperCall(helper_func=_thewindwakerworldgen_can_fan_with_deku_leaf, helper_name="can_fan_with_deku_leaf"), HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_cut_grass, helper_name="can_cut_grass"), HelperCall(helper_func=_thewindwakerworldgen_has_magic_meter_upgrade, helper_name="has_magic_meter_upgrade")), Has('Iron Boots')), And(HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), True_(), True_(), Has('Hookshot'))))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest In Middle Of Hub Room", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_open_wind_temple_upper_giant_grate, helper_name="can_open_wind_temple_upper_giant_grate")
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest at Top of Hub Room", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_activate_wind_temple_giant_fan, helper_name="can_activate_wind_temple_giant_fan")
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest in Left Alcove", player),
-        And(True_(), True_(), Has('Iron Boots'))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_fan_with_deku_leaf, helper_name="can_fan_with_deku_leaf"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room"), Has('Iron Boots'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Kill All Enemies in Tall Basement Room", player),
-        And(True_(), True_(), True_(), True_())
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_morths, helper_name="can_defeat_morths"), HelperCall(helper_func=_thewindwakerworldgen_can_defeat_stalfos, helper_name="can_defeat_stalfos"), HelperCall(helper_func=_thewindwakerworldgen_can_defeat_wizzrobes, helper_name="can_defeat_wizzrobes"), HelperCall(helper_func=_thewindwakerworldgen_can_reach_wind_temple_tall_basement_room, helper_name="can_reach_wind_temple_tall_basement_room"))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Spike Wall Room - Destroy All Cracked Floors", player),
-        And(True_(), Has('Iron Boots'))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_open_wind_temple_upper_giant_grate, helper_name="can_open_wind_temple_upper_giant_grate"), Has('Iron Boots'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Spike Wall Room - First Chest", player),
-        And(True_(), Has('Iron Boots'))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_open_wind_temple_upper_giant_grate, helper_name="can_open_wind_temple_upper_giant_grate"), Has('Iron Boots'))
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Mothula Miniboss Room", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_winged_mothulas, helper_name="can_defeat_winged_mothulas")
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Darknut Miniboss Room", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_darknuts, helper_name="can_defeat_darknuts")
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Stalfos Miniboss Room", player),
-        Or(True_(), Has('Hookshot'))
+        Or(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_stalfos, helper_name="can_defeat_stalfos"), Has('Hookshot'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Wizzrobe Miniboss Room", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_defeat_darknuts, helper_name="can_defeat_darknuts"), HelperCall(helper_func=_thewindwakerworldgen_can_remove_peahat_armor, helper_name="can_remove_peahat_armor"))
     )
 
     world.set_rule(
         multiworld.get_location("Hyrule - Master Sword Chamber", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_mighty_darknuts, helper_name="can_defeat_mighty_darknuts")
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Gohma Heart Container", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_gohma, helper_name="can_defeat_gohma")
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Woods - Kalle Demos Heart Container", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_kalle_demos, helper_name="can_defeat_kalle_demos")
     )
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Gohdan Heart Container", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_gohdan, helper_name="can_defeat_gohdan")
     )
 
     world.set_rule(
         multiworld.get_location("Forsaken Fortress - Helmaroc King Heart Container", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_helmaroc_king, helper_name="can_defeat_helmaroc_king")
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Jalhalla Heart Container", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_jalhalla, helper_name="can_defeat_jalhalla")
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Molgera Heart Container", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_defeat_molgera, helper_name="can_defeat_molgera")
     )
 
     world.set_rule(
@@ -3495,32 +3269,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Private Oasis - Cabana Labyrinth - Upper Floor Chest", player),
-        And(True_(), Has('Skull Hammer'))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_play_winds_requiem, helper_name="can_play_winds_requiem"), Has('Skull Hammer'))
     )
 
     world.set_rule(
         multiworld.get_location("Needle Rock Isle - Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_has_fire_arrows, helper_name="has_fire_arrows")
     )
 
     world.set_rule(
         multiworld.get_location("Angular Isles - Cave", player),
-        And(True_(), Or(True_(), Has('Hookshot')))
+        And(HelperCall(helper_func=_thewindwakerworldgen_can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), Or(HelperCall(helper_func=_thewindwakerworldgen_can_fly_with_deku_leaf_indoors, helper_name="can_fly_with_deku_leaf_indoors"), Has('Hookshot')))
     )
 
     world.set_rule(
         multiworld.get_location("Bird's Peak Rock - Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_play_winds_requiem, helper_name="can_play_winds_requiem")
     )
 
     world.set_rule(
         multiworld.get_location("Pawprint Isle - Chuchu Cave - Behind Left Boulder", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_move_boulders, helper_name="can_move_boulders")
     )
 
     world.set_rule(
         multiworld.get_location("Pawprint Isle - Chuchu Cave - Behind Right Boulder", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_move_boulders, helper_name="can_move_boulders")
     )
 
     world.set_rule(
@@ -3530,10 +3304,10 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Bomb Island - Cave", player),
-        True_()
+        HelperCall(helper_func=_thewindwakerworldgen_can_stun_magtails, helper_name="can_stun_magtails")
     )
 
     world.set_rule(
         multiworld.get_location("Cliff Plateau Isles - Cave", player),
-        Or(And(True_(), True_(), Has('Grappling Hook')), True_())
+        Or(And(True_(), True_(), Has('Grappling Hook')), HelperCall(helper_func=_thewindwakerworldgen_can_defeat_boko_babas, helper_name="can_defeat_boko_babas"))
     )

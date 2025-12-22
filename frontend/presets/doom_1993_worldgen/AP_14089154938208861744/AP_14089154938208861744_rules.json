@@ -19,9 +19,7 @@
             "name": "Menu -> Hub",
             "connected_region": "Hub",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -35,7 +33,6 @@
             "connected_region": "Hangar (E1M1) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hangar (E1M1)",
                 "count": 1
@@ -47,11 +44,9 @@
             "connected_region": "Nuclear Plant (E1M2) Main",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Chaingun",
@@ -61,7 +56,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Nuclear Plant (E1M2)",
                     "count": 1
@@ -75,7 +69,6 @@
             "connected_region": "Toxin Refinery (E1M3) Start",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Toxin Refinery (E1M3)",
                 "count": 1
@@ -87,7 +80,6 @@
             "connected_region": "Command Control (E1M4) Start",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Command Control (E1M4)",
                 "count": 1
@@ -99,7 +91,6 @@
             "connected_region": "Phobos Lab (E1M5) Main",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Chaingun",
@@ -114,7 +105,6 @@
             "connected_region": "Central Processing (E1M6) Main",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Central Processing (E1M6)",
@@ -130,7 +120,6 @@
             "connected_region": "Computer Station (E1M7) Start",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Computer Station (E1M7)",
                 "count": 1
@@ -142,11 +131,9 @@
             "connected_region": "Phobos Anomaly (E1M8) Start",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "BFG9000",
@@ -157,7 +144,6 @@
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Chaingun",
@@ -174,7 +160,6 @@
             "connected_region": "Military Base (E1M9) Main",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Chaingun",
@@ -189,7 +174,6 @@
             "connected_region": "Deimos Anomaly (E2M1) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Deimos Anomaly (E2M1)",
                 "count": 1
@@ -201,11 +185,9 @@
             "connected_region": "Containment Area (E2M2) Main",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Chaingun",
@@ -215,7 +197,6 @@
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Containment Area (E2M2)",
@@ -231,11 +212,9 @@
             "connected_region": "Refinery (E2M3) Main",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Chaingun",
@@ -245,7 +224,6 @@
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Refinery (E2M3)",
@@ -261,7 +239,6 @@
             "connected_region": "Deimos Lab (E2M4) Start",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Deimos Lab (E2M4)",
                 "count": 1
@@ -273,7 +250,6 @@
             "connected_region": "Command Center (E2M5) Main",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Chaingun",
@@ -289,7 +265,6 @@
             "connected_region": "Halls of the Damned (E2M6) Main",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Chaingun",
@@ -305,7 +280,6 @@
             "connected_region": "Spawning Vats (E2M7) Main",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Chaingun",
@@ -322,7 +296,6 @@
             "connected_region": "Tower of Babel (E2M8) Start",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tower of Babel (E2M8)",
                 "count": 1
@@ -334,11 +307,9 @@
             "connected_region": "Fortress of Mystery (E2M9) Main",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "BFG9000",
@@ -349,7 +320,6 @@
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Chaingun",
@@ -366,7 +336,6 @@
             "connected_region": "Hell Keep (E3M1) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hell Keep (E3M1)",
                 "count": 1
@@ -378,11 +347,9 @@
             "connected_region": "Slough of Despair (E3M2) Main",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Chaingun",
@@ -392,7 +359,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Slough of Despair (E3M2)",
                     "count": 1
@@ -406,11 +372,9 @@
             "connected_region": "Pandemonium (E3M3) Main",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "BFG9000",
@@ -421,7 +385,6 @@
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Chaingun",
@@ -438,11 +401,9 @@
             "connected_region": "House of Pain (E3M4) Main",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "BFG9000",
@@ -453,7 +414,6 @@
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Chaingun",
@@ -470,7 +430,6 @@
             "connected_region": "Unholy Cathedral (E3M5) Start",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Unholy Cathedral (E3M5)",
                 "count": 1
@@ -482,7 +441,6 @@
             "connected_region": "Mt. Erebus (E3M6) Main",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Chaingun",
@@ -497,11 +455,9 @@
             "connected_region": "Limbo (E3M7) Main",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "BFG9000",
@@ -512,7 +468,6 @@
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Chaingun",
@@ -529,11 +484,9 @@
             "connected_region": "Dis (E3M8) Main",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "BFG9000",
@@ -544,7 +497,6 @@
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Chaingun",
@@ -561,11 +513,9 @@
             "connected_region": "Warrens (E3M9) Main",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "BFG9000",
@@ -575,7 +525,6 @@
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Chaingun",
@@ -599,9 +548,7 @@
             "name": "Hangar (E1M1) - Mega Armor",
             "id": 351000,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -615,9 +562,7 @@
             "name": "Hangar (E1M1) - Armor",
             "id": 351001,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -631,9 +576,7 @@
             "name": "Hangar (E1M1) - Shotgun",
             "id": 351002,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -647,9 +590,7 @@
             "name": "Hangar (E1M1) - Exit",
             "id": 351331,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hangar (E1M1) - Complete",
@@ -669,7 +610,6 @@
             "connected_region": "Nuclear Plant (E1M2) Red",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Nuclear Plant (E1M2) - Red keycard",
                 "count": 1
@@ -682,9 +622,7 @@
             "name": "Nuclear Plant (E1M2) - Shotgun",
             "id": 351004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Computer Station (E1M7) - Yellow keycard",
@@ -698,9 +636,7 @@
             "name": "Nuclear Plant (E1M2) - Armor",
             "id": 351005,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spawning Vats (E2M7) - Computer area map",
@@ -714,9 +650,7 @@
             "name": "Nuclear Plant (E1M2) - Supercharge",
             "id": 351006,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rocket launcher",
@@ -730,9 +664,7 @@
             "name": "Nuclear Plant (E1M2) - Chaingun",
             "id": 351007,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of rockets",
@@ -746,9 +678,7 @@
             "name": "Nuclear Plant (E1M2) - Red keycard",
             "id": 351008,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -762,9 +692,7 @@
             "name": "Nuclear Plant (E1M2) - Armor 2",
             "id": 351009,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Deimos Anomaly (E2M1) - Computer area map",
@@ -778,9 +706,7 @@
             "name": "Nuclear Plant (E1M2) - Backpack",
             "id": 351012,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -800,7 +726,6 @@
             "connected_region": "Nuclear Plant (E1M2) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Nuclear Plant (E1M2) - Red keycard",
                 "count": 1
@@ -813,9 +738,7 @@
             "name": "Nuclear Plant (E1M2) - Chainsaw",
             "id": 351003,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of rockets",
@@ -829,9 +752,7 @@
             "name": "Nuclear Plant (E1M2) - Mega Armor",
             "id": 351010,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Plasma gun",
@@ -845,9 +766,7 @@
             "name": "Nuclear Plant (E1M2) - Armor 3",
             "id": 351011,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Partial invisibility",
@@ -861,9 +780,7 @@
             "name": "Nuclear Plant (E1M2) - Backpack 2",
             "id": 351013,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spawning Vats (E2M7) - Red keycard",
@@ -877,9 +794,7 @@
             "name": "Nuclear Plant (E1M2) - Exit",
             "id": 351337,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Nuclear Plant (E1M2) - Complete",
@@ -899,7 +814,6 @@
             "connected_region": "Toxin Refinery (E1M3) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Toxin Refinery (E1M3) - Blue keycard",
                 "count": 1
@@ -910,9 +824,7 @@
             "name": "Toxin Refinery (E1M3) Main -> Toxin Refinery (E1M3) Start",
             "connected_region": "Toxin Refinery (E1M3) Start",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -921,9 +833,7 @@
             "name": "Toxin Refinery (E1M3) - Armor",
             "id": 351014,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Nuclear Plant (E1M2) - Computer area map",
@@ -937,9 +847,7 @@
             "name": "Toxin Refinery (E1M3) - Supercharge",
             "id": 351015,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -953,9 +861,7 @@
             "name": "Toxin Refinery (E1M3) - Yellow keycard",
             "id": 351016,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -969,9 +875,7 @@
             "name": "Toxin Refinery (E1M3) - Blue keycard",
             "id": 351017,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Slough of Despair (E3M2) - Computer area map",
@@ -985,9 +889,7 @@
             "name": "Toxin Refinery (E1M3) - Shotgun 2",
             "id": 351019,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Partial invisibility",
@@ -1001,9 +903,7 @@
             "name": "Toxin Refinery (E1M3) - Armor 2",
             "id": 351020,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fortress of Mystery (E2M9) - Blue skull key",
@@ -1017,9 +917,7 @@
             "name": "Toxin Refinery (E1M3) - Rocket launcher",
             "id": 351021,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Phobos Lab (E1M5)",
@@ -1033,9 +931,7 @@
             "name": "Toxin Refinery (E1M3) - Chaingun",
             "id": 351022,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Chaingun",
@@ -1049,9 +945,7 @@
             "name": "Toxin Refinery (E1M3) - Backpack",
             "id": 351023,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -1071,7 +965,6 @@
             "connected_region": "Toxin Refinery (E1M3) Yellow",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Toxin Refinery (E1M3) - Yellow keycard",
                 "count": 1
@@ -1083,7 +976,6 @@
             "connected_region": "Toxin Refinery (E1M3) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Toxin Refinery (E1M3) - Blue keycard",
                 "count": 1
@@ -1096,9 +988,7 @@
             "name": "Toxin Refinery (E1M3) - Chainsaw",
             "id": 351026,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -1112,9 +1002,7 @@
             "name": "Toxin Refinery (E1M3) - Armor 3",
             "id": 351028,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Central Processing (E1M6) - Computer area map",
@@ -1128,9 +1016,7 @@
             "name": "Toxin Refinery (E1M3) - Exit",
             "id": 351345,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Toxin Refinery (E1M3) - Complete",
@@ -1150,7 +1036,6 @@
             "connected_region": "Toxin Refinery (E1M3) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Toxin Refinery (E1M3) - Yellow keycard",
                 "count": 1
@@ -1163,9 +1048,7 @@
             "name": "Toxin Refinery (E1M3) - Supercharge 2",
             "id": 351024,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -1179,9 +1062,7 @@
             "name": "Toxin Refinery (E1M3) - Partial invisibility",
             "id": 351025,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Partial invisibility",
@@ -1195,9 +1076,7 @@
             "name": "Toxin Refinery (E1M3) - Mega Armor",
             "id": 351027,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Energy cell pack",
@@ -1217,7 +1096,6 @@
             "connected_region": "Toxin Refinery (E1M3) Main",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Chaingun",
@@ -1232,9 +1110,7 @@
             "name": "Toxin Refinery (E1M3) - Shotgun",
             "id": 351018,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Energy cell pack",
@@ -1254,7 +1130,6 @@
             "connected_region": "Command Control (E1M4) Blue",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Command Control (E1M4) - Blue keycard",
@@ -1268,7 +1143,6 @@
             "connected_region": "Command Control (E1M4) Yellow",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Command Control (E1M4) - Blue keycard",
@@ -1281,9 +1155,7 @@
             "name": "Command Control (E1M4) Main -> Command Control (E1M4) Start",
             "connected_region": "Command Control (E1M4) Start",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1292,9 +1164,7 @@
             "name": "Command Control (E1M4) - Chaingun",
             "id": 351029,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -1308,9 +1178,7 @@
             "name": "Command Control (E1M4) - Blue keycard",
             "id": 351032,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mt. Erebus (E3M6)",
@@ -1324,9 +1192,7 @@
             "name": "Command Control (E1M4) - Supercharge",
             "id": 351033,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Berserk",
@@ -1341,9 +1207,7 @@
             "name": "Command Control (E1M4) - Rocket launcher",
             "id": 351034,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Energy cell pack",
@@ -1357,9 +1221,7 @@
             "name": "Command Control (E1M4) - Mega Armor",
             "id": 351035,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Berserk",
@@ -1374,9 +1236,7 @@
             "name": "Command Control (E1M4) - Shotgun",
             "id": 351037,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Energy cell pack",
@@ -1395,9 +1255,7 @@
             "name": "Command Control (E1M4) Blue -> Command Control (E1M4) Ledge",
             "connected_region": "Command Control (E1M4) Ledge",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1405,7 +1263,6 @@
             "connected_region": "Command Control (E1M4) Main",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Command Control (E1M4) - Blue keycard",
@@ -1420,9 +1277,7 @@
             "name": "Command Control (E1M4) - Armor",
             "id": 351030,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -1436,9 +1291,7 @@
             "name": "Command Control (E1M4) - Yellow keycard",
             "id": 351031,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of bullets",
@@ -1457,9 +1310,7 @@
             "name": "Command Control (E1M4) Yellow -> Command Control (E1M4) Main",
             "connected_region": "Command Control (E1M4) Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1468,9 +1319,7 @@
             "name": "Command Control (E1M4) - Exit",
             "id": 351323,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Command Control (E1M4) - Complete",
@@ -1489,27 +1338,21 @@
             "name": "Command Control (E1M4) Ledge -> Command Control (E1M4) Main",
             "connected_region": "Command Control (E1M4) Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Command Control (E1M4) Ledge -> Command Control (E1M4) Blue",
             "connected_region": "Command Control (E1M4) Blue",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Command Control (E1M4) Ledge -> Command Control (E1M4) Yellow",
             "connected_region": "Command Control (E1M4) Yellow",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1523,7 +1366,6 @@
             "connected_region": "Command Control (E1M4) Main",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Chaingun",
@@ -1538,9 +1380,7 @@
             "name": "Command Control (E1M4) - Backpack",
             "id": 351036,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fortress of Mystery (E2M9) - Computer area map",
@@ -1560,7 +1400,6 @@
             "connected_region": "Phobos Lab (E1M5) Yellow",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Phobos Lab (E1M5) - Yellow keycard",
                 "count": 1
@@ -1573,9 +1412,7 @@
             "name": "Phobos Lab (E1M5) - Yellow keycard",
             "id": 351039,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -1589,9 +1426,7 @@
             "name": "Phobos Lab (E1M5) - Mega Armor",
             "id": 351040,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Refinery (E2M3)",
@@ -1605,9 +1440,7 @@
             "name": "Phobos Lab (E1M5) - Rocket launcher",
             "id": 351041,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -1621,9 +1454,7 @@
             "name": "Phobos Lab (E1M5) - Shotgun",
             "id": 351042,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -1637,9 +1468,7 @@
             "name": "Phobos Lab (E1M5) - Shotgun 2",
             "id": 351043,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Command Center (E2M5)",
@@ -1653,9 +1482,7 @@
             "name": "Phobos Lab (E1M5) - Shotgun 3",
             "id": 351050,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -1669,9 +1496,7 @@
             "name": "Phobos Lab (E1M5) - Armor",
             "id": 351051,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -1690,9 +1515,7 @@
             "name": "Phobos Lab (E1M5) Yellow -> Phobos Lab (E1M5) Main",
             "connected_region": "Phobos Lab (E1M5) Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1700,7 +1523,6 @@
             "connected_region": "Phobos Lab (E1M5) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Phobos Lab (E1M5) - Blue keycard",
                 "count": 1
@@ -1711,9 +1533,7 @@
             "name": "Phobos Lab (E1M5) Yellow -> Phobos Lab (E1M5) Green",
             "connected_region": "Phobos Lab (E1M5) Green",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1722,9 +1542,7 @@
             "name": "Phobos Lab (E1M5) - Chainsaw",
             "id": 351044,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of bullets",
@@ -1738,9 +1556,7 @@
             "name": "Phobos Lab (E1M5) - Supercharge",
             "id": 351045,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -1754,9 +1570,7 @@
             "name": "Phobos Lab (E1M5) - Mega Armor 2",
             "id": 351049,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -1770,9 +1584,7 @@
             "name": "Phobos Lab (E1M5) - Partial invisibility",
             "id": 351053,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of rockets",
@@ -1792,7 +1604,6 @@
             "connected_region": "Phobos Lab (E1M5) Green",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Phobos Lab (E1M5) - Blue keycard",
                 "count": 1
@@ -1803,9 +1614,7 @@
             "name": "Phobos Lab (E1M5) Blue -> Phobos Lab (E1M5) Yellow",
             "connected_region": "Phobos Lab (E1M5) Yellow",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1814,9 +1623,7 @@
             "name": "Phobos Lab (E1M5) - Exit",
             "id": 351340,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Phobos Lab (E1M5) - Complete",
@@ -1835,9 +1642,7 @@
             "name": "Phobos Lab (E1M5) Green -> Phobos Lab (E1M5) Main",
             "connected_region": "Phobos Lab (E1M5) Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1845,7 +1650,6 @@
             "connected_region": "Phobos Lab (E1M5) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Phobos Lab (E1M5) - Blue keycard",
                 "count": 1
@@ -1858,9 +1662,7 @@
             "name": "Phobos Lab (E1M5) - Blue keycard",
             "id": 351038,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of rockets",
@@ -1874,9 +1676,7 @@
             "name": "Phobos Lab (E1M5) - Chaingun",
             "id": 351046,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fortress of Mystery (E2M9) - Yellow skull key",
@@ -1890,9 +1690,7 @@
             "name": "Phobos Lab (E1M5) - Backpack",
             "id": 351047,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of bullets",
@@ -1906,9 +1704,7 @@
             "name": "Phobos Lab (E1M5) - Computer area map",
             "id": 351048,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Military Base (E1M9) - Blue keycard",
@@ -1922,9 +1718,7 @@
             "name": "Phobos Lab (E1M5) - Armor 2",
             "id": 351052,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Berserk",
@@ -1944,7 +1738,6 @@
             "connected_region": "Central Processing (E1M6) Yellow",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Central Processing (E1M6) - Yellow keycard",
                 "count": 1
@@ -1956,7 +1749,6 @@
             "connected_region": "Central Processing (E1M6) Red",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Central Processing (E1M6) - Red keycard",
                 "count": 1
@@ -1968,7 +1760,6 @@
             "connected_region": "Central Processing (E1M6) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Central Processing (E1M6) - Blue keycard",
                 "count": 1
@@ -1980,7 +1771,6 @@
             "connected_region": "Central Processing (E1M6) Nukage",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Central Processing (E1M6) - Blue keycard",
                 "count": 1
@@ -1993,9 +1783,7 @@
             "name": "Central Processing (E1M6) - Red keycard",
             "id": 351056,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Phobos Lab (E1M5) - Computer area map",
@@ -2009,9 +1797,7 @@
             "name": "Central Processing (E1M6) - Partial invisibility",
             "id": 351058,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Deimos Anomaly (E2M1) - Blue keycard",
@@ -2025,9 +1811,7 @@
             "name": "Central Processing (E1M6) - Chaingun",
             "id": 351059,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -2041,9 +1825,7 @@
             "name": "Central Processing (E1M6) - Backpack",
             "id": 351060,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -2057,9 +1839,7 @@
             "name": "Central Processing (E1M6) - Rocket launcher",
             "id": 351061,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of bullets",
@@ -2073,9 +1853,7 @@
             "name": "Central Processing (E1M6) - Shotgun",
             "id": 351062,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of bullets",
@@ -2089,9 +1867,7 @@
             "name": "Central Processing (E1M6) - Armor",
             "id": 351064,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Berserk",
@@ -2105,9 +1881,7 @@
             "name": "Central Processing (E1M6) - Armor 4",
             "id": 351070,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Warrens (E3M9) - Blue skull key",
@@ -2126,9 +1900,7 @@
             "name": "Central Processing (E1M6) Red -> Central Processing (E1M6) Main",
             "connected_region": "Central Processing (E1M6) Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2137,9 +1909,7 @@
             "name": "Central Processing (E1M6) - Supercharge",
             "id": 351054,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -2153,9 +1923,7 @@
             "name": "Central Processing (E1M6) - Blue keycard",
             "id": 351055,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of rockets",
@@ -2169,9 +1937,7 @@
             "name": "Central Processing (E1M6) - Mega Armor",
             "id": 351063,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -2185,9 +1951,7 @@
             "name": "Central Processing (E1M6) - Partial invisibility 2",
             "id": 351067,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Unholy Cathedral (E3M5) - Computer area map",
@@ -2206,9 +1970,7 @@
             "name": "Central Processing (E1M6) Blue -> Central Processing (E1M6) Main",
             "connected_region": "Central Processing (E1M6) Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2217,9 +1979,7 @@
             "name": "Central Processing (E1M6) - Yellow keycard",
             "id": 351057,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -2233,9 +1993,7 @@
             "name": "Central Processing (E1M6) - Backpack 2",
             "id": 351065,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -2249,9 +2007,7 @@
             "name": "Central Processing (E1M6) - Computer area map",
             "id": 351066,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of rockets",
@@ -2265,9 +2021,7 @@
             "name": "Central Processing (E1M6) - Armor 2",
             "id": 351068,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Limbo (E3M7) - Red skull key",
@@ -2287,7 +2041,6 @@
             "connected_region": "Central Processing (E1M6) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Central Processing (E1M6) - Yellow keycard",
                 "count": 1
@@ -2300,9 +2053,7 @@
             "name": "Central Processing (E1M6) - Armor 3",
             "id": 351069,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Deimos Lab (E2M4) - Computer area map",
@@ -2316,9 +2067,7 @@
             "name": "Central Processing (E1M6) - Exit",
             "id": 351321,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Central Processing (E1M6) - Complete",
@@ -2337,9 +2086,7 @@
             "name": "Central Processing (E1M6) Nukage -> Central Processing (E1M6) Yellow",
             "connected_region": "Central Processing (E1M6) Yellow",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2348,9 +2095,7 @@
             "name": "Central Processing (E1M6) - Supercharge 2",
             "id": 351071,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -2364,9 +2109,7 @@
             "name": "Central Processing (E1M6) - Backpack 3",
             "id": 351072,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Partial invisibility",
@@ -2386,7 +2129,6 @@
             "connected_region": "Computer Station (E1M7) Red",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Computer Station (E1M7) - Red keycard",
                 "count": 1
@@ -2398,7 +2140,6 @@
             "connected_region": "Computer Station (E1M7) Yellow",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Computer Station (E1M7) - Yellow keycard",
                 "count": 1
@@ -2409,9 +2150,7 @@
             "name": "Computer Station (E1M7) Main -> Computer Station (E1M7) Start",
             "connected_region": "Computer Station (E1M7) Start",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2420,9 +2159,7 @@
             "name": "Computer Station (E1M7) - Yellow keycard",
             "id": 351076,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -2436,9 +2173,7 @@
             "name": "Computer Station (E1M7) - Armor",
             "id": 351083,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Containment Area (E2M2) - Yellow keycard",
@@ -2458,7 +2193,6 @@
             "connected_region": "Computer Station (E1M7) Yellow",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Computer Station (E1M7) - Blue keycard",
                 "count": 1
@@ -2471,9 +2205,7 @@
             "name": "Computer Station (E1M7) - Shotgun",
             "id": 351080,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -2487,9 +2219,7 @@
             "name": "Computer Station (E1M7) - Exit",
             "id": 351324,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Computer Station (E1M7) - Complete",
@@ -2509,7 +2239,6 @@
             "connected_region": "Computer Station (E1M7) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Computer Station (E1M7) - Red keycard",
                 "count": 1
@@ -2522,9 +2251,7 @@
             "name": "Computer Station (E1M7) - Blue keycard",
             "id": 351077,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -2544,7 +2271,6 @@
             "connected_region": "Computer Station (E1M7) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Computer Station (E1M7) - Blue keycard",
                 "count": 1
@@ -2556,7 +2282,6 @@
             "connected_region": "Computer Station (E1M7) Courtyard",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Computer Station (E1M7) - Red keycard",
@@ -2569,9 +2294,7 @@
             "name": "Computer Station (E1M7) Yellow -> Computer Station (E1M7) Main",
             "connected_region": "Computer Station (E1M7) Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2580,9 +2303,7 @@
             "name": "Computer Station (E1M7) - Chaingun",
             "id": 351073,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -2596,9 +2317,7 @@
             "name": "Computer Station (E1M7) - Computer area map",
             "id": 351074,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Command Control (E1M4)",
@@ -2612,9 +2331,7 @@
             "name": "Computer Station (E1M7) - Supercharge",
             "id": 351075,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Energy cell pack",
@@ -2628,9 +2345,7 @@
             "name": "Computer Station (E1M7) - Red keycard",
             "id": 351078,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -2644,9 +2359,7 @@
             "name": "Computer Station (E1M7) - Chainsaw",
             "id": 351079,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Invulnerability",
@@ -2660,9 +2373,7 @@
             "name": "Computer Station (E1M7) - Rocket launcher",
             "id": 351082,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -2676,9 +2387,7 @@
             "name": "Computer Station (E1M7) - Armor 2",
             "id": 351084,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Deimos Lab (E2M4) - Blue keycard",
@@ -2692,9 +2401,7 @@
             "name": "Computer Station (E1M7) - Mega Armor",
             "id": 351085,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Pandemonium (E3M3) - Blue skull key",
@@ -2708,9 +2415,7 @@
             "name": "Computer Station (E1M7) - Backpack",
             "id": 351086,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -2730,7 +2435,6 @@
             "connected_region": "Computer Station (E1M7) Yellow",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Computer Station (E1M7) - Yellow keycard",
                 "count": 1
@@ -2743,9 +2447,7 @@
             "name": "Computer Station (E1M7) - Partial invisibility",
             "id": 351087,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Partial invisibility",
@@ -2765,7 +2467,6 @@
             "connected_region": "Computer Station (E1M7) Main",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Chaingun",
@@ -2781,9 +2482,7 @@
             "name": "Computer Station (E1M7) - Shotgun 2",
             "id": 351081,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Unholy Cathedral (E3M5) - Blue skull key",
@@ -2803,9 +2502,7 @@
             "name": "Phobos Anomaly (E1M8) - Supercharge",
             "id": 351088,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -2819,9 +2516,7 @@
             "name": "Phobos Anomaly (E1M8) - Shotgun",
             "id": 351089,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Computer Station (E1M7) - Blue keycard",
@@ -2835,9 +2530,7 @@
             "name": "Phobos Anomaly (E1M8) - Shotgun 2",
             "id": 351090,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -2851,9 +2544,7 @@
             "name": "Phobos Anomaly (E1M8) - Armor",
             "id": 351091,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -2867,9 +2558,7 @@
             "name": "Phobos Anomaly (E1M8) - Chaingun",
             "id": 351092,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Containment Area (E2M2)",
@@ -2883,9 +2572,7 @@
             "name": "Phobos Anomaly (E1M8) - Partial invisibility",
             "id": 351093,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Berserk",
@@ -2899,9 +2586,7 @@
             "name": "Phobos Anomaly (E1M8) - Computer area map",
             "id": 351094,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Warrens (E3M9) - Computer area map",
@@ -2915,9 +2600,7 @@
             "name": "Phobos Anomaly (E1M8) - Exit",
             "id": 351339,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Phobos Anomaly (E1M8) - Complete",
@@ -2936,9 +2619,7 @@
             "name": "Phobos Anomaly (E1M8) Start -> Phobos Anomaly (E1M8) Main",
             "connected_region": "Phobos Anomaly (E1M8) Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2952,7 +2633,6 @@
             "connected_region": "Military Base (E1M9) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Military Base (E1M9) - Blue keycard",
                 "count": 1
@@ -2964,7 +2644,6 @@
             "connected_region": "Military Base (E1M9) Yellow",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Military Base (E1M9) - Yellow keycard",
                 "count": 1
@@ -2976,7 +2655,6 @@
             "connected_region": "Military Base (E1M9) Red",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Military Base (E1M9) - Red keycard",
                 "count": 1
@@ -2989,9 +2667,7 @@
             "name": "Military Base (E1M9) - Yellow keycard",
             "id": 351095,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "House of Pain (E3M4)",
@@ -3005,9 +2681,7 @@
             "name": "Military Base (E1M9) - Chaingun",
             "id": 351097,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Limbo (E3M7) - Computer area map",
@@ -3021,9 +2695,7 @@
             "name": "Military Base (E1M9) - Armor",
             "id": 351098,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dis (E3M8)",
@@ -3037,9 +2709,7 @@
             "name": "Military Base (E1M9) - Rocket launcher",
             "id": 351099,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Berserk",
@@ -3059,7 +2729,6 @@
             "connected_region": "Military Base (E1M9) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Military Base (E1M9) - Blue keycard",
                 "count": 1
@@ -3072,9 +2741,7 @@
             "name": "Military Base (E1M9) - Backpack",
             "id": 351101,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -3088,9 +2755,7 @@
             "name": "Military Base (E1M9) - Shotgun",
             "id": 351102,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -3104,9 +2769,7 @@
             "name": "Military Base (E1M9) - Chainsaw",
             "id": 351103,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Energy cell pack",
@@ -3120,9 +2783,7 @@
             "name": "Military Base (E1M9) - Exit",
             "id": 351335,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Military Base (E1M9) - Complete",
@@ -3141,9 +2802,7 @@
             "name": "Military Base (E1M9) Red -> Military Base (E1M9) Main",
             "connected_region": "Military Base (E1M9) Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3152,9 +2811,7 @@
             "name": "Military Base (E1M9) - Blue keycard",
             "id": 351100,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Berserk",
@@ -3174,7 +2831,6 @@
             "connected_region": "Military Base (E1M9) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Military Base (E1M9) - Yellow keycard",
                 "count": 1
@@ -3187,9 +2843,7 @@
             "name": "Military Base (E1M9) - Red keycard",
             "id": 351096,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Deimos Anomaly (E2M1) - Red keycard",
@@ -3209,7 +2863,6 @@
             "connected_region": "Deimos Anomaly (E2M1) Red",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Deimos Anomaly (E2M1) - Red keycard",
                 "count": 1
@@ -3221,7 +2874,6 @@
             "connected_region": "Deimos Anomaly (E2M1) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Deimos Anomaly (E2M1) - Blue keycard",
                 "count": 1
@@ -3234,9 +2886,7 @@
             "name": "Deimos Anomaly (E2M1) - Plasma gun",
             "id": 351104,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -3250,9 +2900,7 @@
             "name": "Deimos Anomaly (E2M1) - Blue keycard",
             "id": 351105,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Shotgun",
@@ -3266,9 +2914,7 @@
             "name": "Deimos Anomaly (E2M1) - Shotgun",
             "id": 351106,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -3282,9 +2928,7 @@
             "name": "Deimos Anomaly (E2M1) - Armor",
             "id": 351107,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of bullets",
@@ -3298,9 +2942,7 @@
             "name": "Deimos Anomaly (E2M1) - Red keycard",
             "id": 351108,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Tower of Babel (E2M8)",
@@ -3314,9 +2956,7 @@
             "name": "Deimos Anomaly (E2M1) - Shotgun 2",
             "id": 351111,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -3336,7 +2976,6 @@
             "connected_region": "Deimos Anomaly (E2M1) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Deimos Anomaly (E2M1) - Blue keycard",
                 "count": 1
@@ -3349,9 +2988,7 @@
             "name": "Deimos Anomaly (E2M1) - Exit",
             "id": 351326,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Deimos Anomaly (E2M1) - Complete",
@@ -3371,7 +3008,6 @@
             "connected_region": "Deimos Anomaly (E2M1) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Deimos Anomaly (E2M1) - Red keycard",
                 "count": 1
@@ -3384,9 +3020,7 @@
             "name": "Deimos Anomaly (E2M1) - Computer area map",
             "id": 351109,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of bullets",
@@ -3400,9 +3034,7 @@
             "name": "Deimos Anomaly (E2M1) - Mega Armor",
             "id": 351110,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Berserk",
@@ -3422,7 +3054,6 @@
             "connected_region": "Containment Area (E2M2) Yellow",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Containment Area (E2M2) - Yellow keycard",
                 "count": 1
@@ -3434,7 +3065,6 @@
             "connected_region": "Containment Area (E2M2) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Containment Area (E2M2) - Blue keycard",
                 "count": 1
@@ -3446,7 +3076,6 @@
             "connected_region": "Containment Area (E2M2) Red",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Containment Area (E2M2) - Red keycard",
                 "count": 1
@@ -3459,9 +3088,7 @@
             "name": "Containment Area (E2M2) - Armor",
             "id": 351113,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -3475,9 +3102,7 @@
             "name": "Containment Area (E2M2) - Armor 2",
             "id": 351114,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Partial invisibility",
@@ -3491,9 +3116,7 @@
             "name": "Containment Area (E2M2) - Backpack",
             "id": 351115,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Berserk",
@@ -3507,9 +3130,7 @@
             "name": "Containment Area (E2M2) - Supercharge",
             "id": 351116,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hell Keep (E3M1) - Computer area map",
@@ -3524,9 +3145,7 @@
             "name": "Containment Area (E2M2) - Chainsaw",
             "id": 351117,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -3540,9 +3159,7 @@
             "name": "Containment Area (E2M2) - Armor 3",
             "id": 351118,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -3556,9 +3173,7 @@
             "name": "Containment Area (E2M2) - Computer area map",
             "id": 351119,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Unholy Cathedral (E3M5)",
@@ -3572,9 +3187,7 @@
             "name": "Containment Area (E2M2) - Mega Armor",
             "id": 351120,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Partial invisibility",
@@ -3588,9 +3201,7 @@
             "name": "Containment Area (E2M2) - Plasma gun",
             "id": 351121,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -3605,9 +3216,7 @@
             "name": "Containment Area (E2M2) - Blue keycard",
             "id": 351123,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -3621,9 +3230,7 @@
             "name": "Containment Area (E2M2) - Yellow keycard",
             "id": 351124,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mt. Erebus (E3M6) - Blue skull key",
@@ -3637,9 +3244,7 @@
             "name": "Containment Area (E2M2) - Shotgun",
             "id": 351126,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Partial invisibility",
@@ -3653,9 +3258,7 @@
             "name": "Containment Area (E2M2) - Shotgun 2",
             "id": 351127,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of rockets",
@@ -3669,9 +3272,7 @@
             "name": "Containment Area (E2M2) - Armor 4",
             "id": 351128,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Tower of Babel (E2M8) - Computer area map",
@@ -3685,9 +3286,7 @@
             "name": "Containment Area (E2M2) - Berserk",
             "id": 351129,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Slough of Despair (E3M2)",
@@ -3707,7 +3306,6 @@
             "connected_region": "Containment Area (E2M2) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Containment Area (E2M2) - Blue keycard",
                 "count": 1
@@ -3720,9 +3318,7 @@
             "name": "Containment Area (E2M2) - Red keycard",
             "id": 351125,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Command Control (E1M4) - Computer area map",
@@ -3742,7 +3338,6 @@
             "connected_region": "Containment Area (E2M2) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Containment Area (E2M2) - Red keycard",
                 "count": 1
@@ -3753,9 +3348,7 @@
             "name": "Containment Area (E2M2) Red -> Containment Area (E2M2) Red Exit",
             "connected_region": "Containment Area (E2M2) Red Exit",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3768,9 +3361,7 @@
             "name": "Containment Area (E2M2) Yellow -> Containment Area (E2M2) Main",
             "connected_region": "Containment Area (E2M2) Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3779,9 +3370,7 @@
             "name": "Containment Area (E2M2) - Chaingun",
             "id": 351112,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Limbo (E3M7)",
@@ -3795,9 +3384,7 @@
             "name": "Containment Area (E2M2) - Rocket launcher",
             "id": 351122,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fortress of Mystery (E2M9)",
@@ -3811,9 +3398,7 @@
             "name": "Containment Area (E2M2) - Backpack 2",
             "id": 351130,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -3833,9 +3418,7 @@
             "name": "Containment Area (E2M2) - Exit",
             "id": 351325,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Containment Area (E2M2) - Complete",
@@ -3855,7 +3438,6 @@
             "connected_region": "Refinery (E2M3) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Refinery (E2M3) - Blue keycard",
                 "count": 1
@@ -3868,9 +3450,7 @@
             "name": "Refinery (E2M3) - Plasma gun",
             "id": 351131,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Phobos Lab (E1M5) - Yellow keycard",
@@ -3884,9 +3464,7 @@
             "name": "Refinery (E2M3) - Backpack",
             "id": 351132,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Energy cell pack",
@@ -3900,9 +3478,7 @@
             "name": "Refinery (E2M3) - Mega Armor",
             "id": 351133,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Containment Area (E2M2) - Red keycard",
@@ -3916,9 +3492,7 @@
             "name": "Refinery (E2M3) - Armor",
             "id": 351134,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Refinery (E2M3) - Blue keycard",
@@ -3932,9 +3506,7 @@
             "name": "Refinery (E2M3) - Blue keycard",
             "id": 351137,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BFG9000",
@@ -3948,9 +3520,7 @@
             "name": "Refinery (E2M3) - Partial invisibility 2",
             "id": 351138,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Halls of the Damned (E2M6) - Computer area map",
@@ -3964,9 +3534,7 @@
             "name": "Refinery (E2M3) - Shotgun",
             "id": 351139,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -3980,9 +3548,7 @@
             "name": "Refinery (E2M3) - Berserk",
             "id": 351140,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -3996,9 +3562,7 @@
             "name": "Refinery (E2M3) - Chaingun",
             "id": 351141,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Unholy Cathedral (E3M5) - Yellow skull key",
@@ -4018,7 +3582,6 @@
             "connected_region": "Refinery (E2M3) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Refinery (E2M3) - Blue keycard",
                 "count": 1
@@ -4031,9 +3594,7 @@
             "name": "Refinery (E2M3) - Partial invisibility",
             "id": 351135,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dis (E3M8) - Computer area map",
@@ -4047,9 +3608,7 @@
             "name": "Refinery (E2M3) - Supercharge",
             "id": 351136,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Invulnerability",
@@ -4063,9 +3622,7 @@
             "name": "Refinery (E2M3) - Exit",
             "id": 351341,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Refinery (E2M3) - Complete",
@@ -4085,7 +3642,6 @@
             "connected_region": "Deimos Lab (E2M4) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Deimos Lab (E2M4) - Blue keycard",
                 "count": 1
@@ -4096,9 +3652,7 @@
             "name": "Deimos Lab (E2M4) Main -> Deimos Lab (E2M4) Start",
             "connected_region": "Deimos Lab (E2M4) Start",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4107,9 +3661,7 @@
             "name": "Deimos Lab (E2M4) - Armor",
             "id": 351142,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Central Processing (E1M6) - Red keycard",
@@ -4123,9 +3675,7 @@
             "name": "Deimos Lab (E2M4) - Partial invisibility",
             "id": 351143,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Toxin Refinery (E1M3) - Blue keycard",
@@ -4139,9 +3689,7 @@
             "name": "Deimos Lab (E2M4) - Computer area map",
             "id": 351144,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Partial invisibility",
@@ -4155,9 +3703,7 @@
             "name": "Deimos Lab (E2M4) - Armor 2",
             "id": 351145,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -4171,9 +3717,7 @@
             "name": "Deimos Lab (E2M4) - Blue keycard",
             "id": 351146,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -4187,9 +3731,7 @@
             "name": "Deimos Lab (E2M4) - Backpack",
             "id": 351152,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -4203,9 +3745,7 @@
             "name": "Deimos Lab (E2M4) - Berserk",
             "id": 351153,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Central Processing (E1M6) - Yellow keycard",
@@ -4219,9 +3759,7 @@
             "name": "Deimos Lab (E2M4) - Partial invisibility 2",
             "id": 351154,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -4235,9 +3773,7 @@
             "name": "Deimos Lab (E2M4) - Armor 3",
             "id": 351155,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -4251,9 +3787,7 @@
             "name": "Deimos Lab (E2M4) - Chaingun",
             "id": 351156,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -4267,9 +3801,7 @@
             "name": "Deimos Lab (E2M4) - Supercharge 2",
             "id": 351157,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Invulnerability",
@@ -4288,9 +3820,7 @@
             "name": "Deimos Lab (E2M4) Blue -> Deimos Lab (E2M4) Main",
             "connected_region": "Deimos Lab (E2M4) Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -4298,7 +3828,6 @@
             "connected_region": "Deimos Lab (E2M4) Yellow",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Deimos Lab (E2M4) - Yellow keycard",
                 "count": 1
@@ -4311,9 +3840,7 @@
             "name": "Deimos Lab (E2M4) - Yellow keycard",
             "id": 351147,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Command Control (E1M4) - Blue keycard",
@@ -4332,9 +3859,7 @@
             "name": "Deimos Lab (E2M4) Yellow -> Deimos Lab (E2M4) Blue",
             "connected_region": "Deimos Lab (E2M4) Blue",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4343,9 +3868,7 @@
             "name": "Deimos Lab (E2M4) - Supercharge",
             "id": 351148,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Energy cell pack",
@@ -4359,9 +3882,7 @@
             "name": "Deimos Lab (E2M4) - Mega Armor",
             "id": 351150,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -4375,9 +3896,7 @@
             "name": "Deimos Lab (E2M4) - Plasma gun",
             "id": 351151,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hangar (E1M1) - Computer area map",
@@ -4391,9 +3910,7 @@
             "name": "Deimos Lab (E2M4) - Exit",
             "id": 351327,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Deimos Lab (E2M4) - Complete",
@@ -4413,7 +3930,6 @@
             "connected_region": "Deimos Lab (E2M4) Main",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Chaingun",
@@ -4429,9 +3945,7 @@
             "name": "Deimos Lab (E2M4) - Shotgun",
             "id": 351149,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -4451,9 +3965,7 @@
             "name": "Command Center (E2M5) - Backpack",
             "id": 351158,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -4467,9 +3979,7 @@
             "name": "Command Center (E2M5) - Mega Armor",
             "id": 351159,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -4483,9 +3993,7 @@
             "name": "Command Center (E2M5) - Berserk",
             "id": 351160,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Central Processing (E1M6) - Blue keycard",
@@ -4499,9 +4007,7 @@
             "name": "Command Center (E2M5) - Chaingun",
             "id": 351161,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Pandemonium (E3M3)",
@@ -4515,9 +4021,7 @@
             "name": "Command Center (E2M5) - Chainsaw",
             "id": 351162,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -4531,9 +4035,7 @@
             "name": "Command Center (E2M5) - Plasma gun",
             "id": 351163,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Energy cell pack",
@@ -4547,9 +4049,7 @@
             "name": "Command Center (E2M5) - Computer area map",
             "id": 351164,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -4563,9 +4063,7 @@
             "name": "Command Center (E2M5) - Armor",
             "id": 351165,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Energy cell pack",
@@ -4579,9 +4077,7 @@
             "name": "Command Center (E2M5) - Armor 2",
             "id": 351166,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Halls of the Damned (E2M6) - Blue skull key",
@@ -4595,9 +4091,7 @@
             "name": "Command Center (E2M5) - Partial invisibility",
             "id": 351167,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -4611,9 +4105,7 @@
             "name": "Command Center (E2M5) - Exit",
             "id": 351322,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Command Center (E2M5) - Complete",
@@ -4633,7 +4125,6 @@
             "connected_region": "Halls of the Damned (E2M6) Blue Yellow Red",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Halls of the Damned (E2M6) - Blue skull key",
@@ -4648,7 +4139,6 @@
             "connected_region": "Halls of the Damned (E2M6) Yellow",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Halls of the Damned (E2M6) - Yellow skull key",
                 "count": 1
@@ -4660,7 +4150,6 @@
             "connected_region": "Halls of the Damned (E2M6) One way Yellow",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Halls of the Damned (E2M6) - Yellow skull key",
                 "count": 1
@@ -4673,9 +4162,7 @@
             "name": "Halls of the Damned (E2M6) - Berserk",
             "id": 351168,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Partial invisibility",
@@ -4689,9 +4176,7 @@
             "name": "Halls of the Damned (E2M6) - Blue skull key",
             "id": 351169,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -4705,9 +4190,7 @@
             "name": "Halls of the Damned (E2M6) - Backpack",
             "id": 351170,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -4721,9 +4204,7 @@
             "name": "Halls of the Damned (E2M6) - Mega Armor",
             "id": 351171,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -4737,9 +4218,7 @@
             "name": "Halls of the Damned (E2M6) - Armor",
             "id": 351173,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Deimos Lab (E2M4) - Yellow keycard",
@@ -4753,9 +4232,7 @@
             "name": "Halls of the Damned (E2M6) - Partial invisibility",
             "id": 351174,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Limbo (E3M7) - Yellow skull key",
@@ -4769,9 +4246,7 @@
             "name": "Halls of the Damned (E2M6) - Chaingun",
             "id": 351177,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -4785,9 +4260,7 @@
             "name": "Halls of the Damned (E2M6) - Plasma gun",
             "id": 351178,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Partial invisibility",
@@ -4801,9 +4274,7 @@
             "name": "Halls of the Damned (E2M6) - Red skull key",
             "id": 351180,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -4817,9 +4288,7 @@
             "name": "Halls of the Damned (E2M6) - Shotgun",
             "id": 351181,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -4833,9 +4302,7 @@
             "name": "Halls of the Damned (E2M6) - Rocket launcher",
             "id": 351182,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -4849,9 +4316,7 @@
             "name": "Halls of the Damned (E2M6) - Chainsaw",
             "id": 351183,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -4865,9 +4330,7 @@
             "name": "Halls of the Damned (E2M6) - Partial invisibility 3",
             "id": 351184,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -4886,9 +4349,7 @@
             "name": "Halls of the Damned (E2M6) Yellow -> Halls of the Damned (E2M6) Main",
             "connected_region": "Halls of the Damned (E2M6) Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4897,9 +4358,7 @@
             "name": "Halls of the Damned (E2M6) - Computer area map",
             "id": 351172,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of bullets",
@@ -4913,9 +4372,7 @@
             "name": "Halls of the Damned (E2M6) - Supercharge",
             "id": 351176,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Invulnerability",
@@ -4935,7 +4392,6 @@
             "connected_region": "Halls of the Damned (E2M6) Main",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Halls of the Damned (E2M6) - Blue skull key",
@@ -4951,9 +4407,7 @@
             "name": "Halls of the Damned (E2M6) - Exit",
             "id": 351330,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Halls of the Damned (E2M6) - Complete",
@@ -4973,7 +4427,6 @@
             "connected_region": "Halls of the Damned (E2M6) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Halls of the Damned (E2M6) - Yellow skull key",
                 "count": 1
@@ -4986,9 +4439,7 @@
             "name": "Halls of the Damned (E2M6) - Yellow skull key",
             "id": 351175,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Invulnerability",
@@ -5002,9 +4453,7 @@
             "name": "Halls of the Damned (E2M6) - Partial invisibility 2",
             "id": 351179,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Command Control (E1M4) - Yellow keycard",
@@ -5024,7 +4473,6 @@
             "connected_region": "Spawning Vats (E2M7) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Spawning Vats (E2M7) - Blue keycard",
                 "count": 1
@@ -5036,7 +4484,6 @@
             "connected_region": "Spawning Vats (E2M7) Entrance Secret",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Spawning Vats (E2M7) - Blue keycard",
@@ -5050,7 +4497,6 @@
             "connected_region": "Spawning Vats (E2M7) Red",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Spawning Vats (E2M7) - Red keycard",
                 "count": 1
@@ -5062,7 +4508,6 @@
             "connected_region": "Spawning Vats (E2M7) Yellow",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Spawning Vats (E2M7) - Yellow keycard",
                 "count": 1
@@ -5075,9 +4520,7 @@
             "name": "Spawning Vats (E2M7) - Rocket launcher",
             "id": 351185,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spawning Vats (E2M7) - Yellow keycard",
@@ -5091,9 +4534,7 @@
             "name": "Spawning Vats (E2M7) - Partial invisibility",
             "id": 351187,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -5107,9 +4548,7 @@
             "name": "Spawning Vats (E2M7) - Mega Armor",
             "id": 351188,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -5123,9 +4562,7 @@
             "name": "Spawning Vats (E2M7) - Armor",
             "id": 351190,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -5139,9 +4576,7 @@
             "name": "Spawning Vats (E2M7) - Blue keycard",
             "id": 351193,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Halls of the Damned (E2M6) - Red skull key",
@@ -5155,9 +4590,7 @@
             "name": "Spawning Vats (E2M7) - Invulnerability",
             "id": 351194,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Berserk",
@@ -5171,9 +4604,7 @@
             "name": "Spawning Vats (E2M7) - Berserk",
             "id": 351195,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -5187,9 +4618,7 @@
             "name": "Spawning Vats (E2M7) - Chainsaw",
             "id": 351196,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -5203,9 +4632,7 @@
             "name": "Spawning Vats (E2M7) - Invulnerability 2",
             "id": 351198,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -5219,9 +4646,7 @@
             "name": "Spawning Vats (E2M7) - Computer area map",
             "id": 351199,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -5235,9 +4660,7 @@
             "name": "Spawning Vats (E2M7) - Plasma gun",
             "id": 351200,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Deimos Lab (E2M4)",
@@ -5256,9 +4679,7 @@
             "name": "Spawning Vats (E2M7) Blue -> Spawning Vats (E2M7) Main",
             "connected_region": "Spawning Vats (E2M7) Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5267,9 +4688,7 @@
             "name": "Spawning Vats (E2M7) - Backpack",
             "id": 351186,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Partial invisibility",
@@ -5283,9 +4702,7 @@
             "name": "Spawning Vats (E2M7) - Chaingun",
             "id": 351189,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Containment Area (E2M2) - Blue keycard",
@@ -5299,9 +4716,7 @@
             "name": "Spawning Vats (E2M7) - Yellow keycard",
             "id": 351192,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of rockets",
@@ -5321,7 +4736,6 @@
             "connected_region": "Spawning Vats (E2M7) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Spawning Vats (E2M7) - Yellow keycard",
                 "count": 1
@@ -5334,9 +4748,7 @@
             "name": "Spawning Vats (E2M7) - Red keycard",
             "id": 351191,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "House of Pain (E3M4) - Computer area map",
@@ -5356,7 +4768,6 @@
             "connected_region": "Spawning Vats (E2M7) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Spawning Vats (E2M7) - Red keycard",
                 "count": 1
@@ -5367,9 +4778,7 @@
             "name": "Spawning Vats (E2M7) Red -> Spawning Vats (E2M7) Red Exit",
             "connected_region": "Spawning Vats (E2M7) Red Exit",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5378,9 +4787,7 @@
             "name": "Spawning Vats (E2M7) - Exit",
             "id": 351343,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spawning Vats (E2M7) - Complete",
@@ -5400,7 +4807,6 @@
             "connected_region": "Spawning Vats (E2M7) Main",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Spawning Vats (E2M7) - Blue keycard",
@@ -5415,9 +4821,7 @@
             "name": "Spawning Vats (E2M7) - Supercharge",
             "id": 351197,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Invulnerability",
@@ -5441,9 +4845,7 @@
             "name": "Tower of Babel (E2M8) Main -> Tower of Babel (E2M8) Start",
             "connected_region": "Tower of Babel (E2M8) Start",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5452,9 +4854,7 @@
             "name": "Tower of Babel (E2M8) - Rocket launcher",
             "id": 351201,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fortress of Mystery (E2M9) - Red skull key",
@@ -5468,9 +4868,7 @@
             "name": "Tower of Babel (E2M8) - Supercharge",
             "id": 351202,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Nuclear Plant (E1M2)",
@@ -5484,9 +4882,7 @@
             "name": "Tower of Babel (E2M8) - Supercharge 2",
             "id": 351203,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -5500,9 +4896,7 @@
             "name": "Tower of Babel (E2M8) - Exit",
             "id": 351344,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Tower of Babel (E2M8) - Complete",
@@ -5522,11 +4916,9 @@
             "connected_region": "Tower of Babel (E2M8) Main",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "BFG9000",
@@ -5537,7 +4929,6 @@
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Chaingun",
@@ -5554,9 +4945,7 @@
             "name": "Tower of Babel (E2M8) - Mega Armor",
             "id": 351204,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Toxin Refinery (E1M3)",
@@ -5576,7 +4965,6 @@
             "connected_region": "Fortress of Mystery (E2M9) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Fortress of Mystery (E2M9) - Blue skull key",
                 "count": 1
@@ -5588,7 +4976,6 @@
             "connected_region": "Fortress of Mystery (E2M9) Red",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Fortress of Mystery (E2M9) - Red skull key",
                 "count": 1
@@ -5600,7 +4987,6 @@
             "connected_region": "Fortress of Mystery (E2M9) Yellow",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Fortress of Mystery (E2M9) - Yellow skull key",
                 "count": 1
@@ -5613,9 +4999,7 @@
             "name": "Fortress of Mystery (E2M9) - Supercharge",
             "id": 351205,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Partial invisibility",
@@ -5629,9 +5013,7 @@
             "name": "Fortress of Mystery (E2M9) - Blue skull key",
             "id": 351206,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -5645,9 +5027,7 @@
             "name": "Fortress of Mystery (E2M9) - Backpack",
             "id": 351209,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -5661,9 +5041,7 @@
             "name": "Fortress of Mystery (E2M9) - Chaingun",
             "id": 351210,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Partial invisibility",
@@ -5677,9 +5055,7 @@
             "name": "Fortress of Mystery (E2M9) - Plasma gun",
             "id": 351211,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -5693,9 +5069,7 @@
             "name": "Fortress of Mystery (E2M9) - Rocket launcher",
             "id": 351212,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of rockets",
@@ -5709,9 +5083,7 @@
             "name": "Fortress of Mystery (E2M9) - Shotgun",
             "id": 351213,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Phobos Lab (E1M5) - Blue keycard",
@@ -5725,9 +5097,7 @@
             "name": "Fortress of Mystery (E2M9) - Chainsaw",
             "id": 351214,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -5741,9 +5111,7 @@
             "name": "Fortress of Mystery (E2M9) - Computer area map",
             "id": 351215,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -5757,9 +5125,7 @@
             "name": "Fortress of Mystery (E2M9) - Mega Armor",
             "id": 351216,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Energy cell pack",
@@ -5779,7 +5145,6 @@
             "connected_region": "Fortress of Mystery (E2M9) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Fortress of Mystery (E2M9) - Blue skull key",
                 "count": 1
@@ -5792,9 +5157,7 @@
             "name": "Fortress of Mystery (E2M9) - Red skull key",
             "id": 351207,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of rockets",
@@ -5814,7 +5177,6 @@
             "connected_region": "Fortress of Mystery (E2M9) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Fortress of Mystery (E2M9) - Red skull key",
                 "count": 1
@@ -5827,9 +5189,7 @@
             "name": "Fortress of Mystery (E2M9) - Yellow skull key",
             "id": 351208,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -5849,7 +5209,6 @@
             "connected_region": "Fortress of Mystery (E2M9) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Fortress of Mystery (E2M9) - Yellow skull key",
                 "count": 1
@@ -5862,9 +5221,7 @@
             "name": "Fortress of Mystery (E2M9) - Exit",
             "id": 351329,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fortress of Mystery (E2M9) - Complete",
@@ -5884,7 +5241,6 @@
             "connected_region": "Hell Keep (E3M1) Narrow",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Chaingun",
@@ -5899,9 +5255,7 @@
             "name": "Hell Keep (E3M1) - Shotgun",
             "id": 351217,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of rockets",
@@ -5920,9 +5274,7 @@
             "name": "Hell Keep (E3M1) Narrow -> Hell Keep (E3M1) Main",
             "connected_region": "Hell Keep (E3M1) Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5931,9 +5283,7 @@
             "name": "Hell Keep (E3M1) - Rocket launcher",
             "id": 351218,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Computer Station (E1M7)",
@@ -5947,9 +5297,7 @@
             "name": "Hell Keep (E3M1) - Exit",
             "id": 351332,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hell Keep (E3M1) - Complete",
@@ -5969,7 +5317,6 @@
             "connected_region": "Slough of Despair (E3M2) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Slough of Despair (E3M2) - Blue skull key",
                 "count": 1
@@ -5982,9 +5329,7 @@
             "name": "Slough of Despair (E3M2) - Chaingun",
             "id": 351219,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -5998,9 +5343,7 @@
             "name": "Slough of Despair (E3M2) - Berserk",
             "id": 351220,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Computer Station (E1M7) - Computer area map",
@@ -6014,9 +5357,7 @@
             "name": "Slough of Despair (E3M2) - Mega Armor",
             "id": 351221,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -6030,9 +5371,7 @@
             "name": "Slough of Despair (E3M2) - Armor",
             "id": 351222,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -6046,9 +5385,7 @@
             "name": "Slough of Despair (E3M2) - Rocket launcher",
             "id": 351223,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Computer Station (E1M7) - Red keycard",
@@ -6062,9 +5399,7 @@
             "name": "Slough of Despair (E3M2) - Plasma gun",
             "id": 351224,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "House of Pain (E3M4) - Yellow skull key",
@@ -6078,9 +5413,7 @@
             "name": "Slough of Despair (E3M2) - Computer area map",
             "id": 351225,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Partial invisibility",
@@ -6094,9 +5427,7 @@
             "name": "Slough of Despair (E3M2) - Blue skull key",
             "id": 351226,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "House of Pain (E3M4) - Red skull key",
@@ -6110,9 +5441,7 @@
             "name": "Slough of Despair (E3M2) - Supercharge",
             "id": 351227,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Backpack",
@@ -6132,7 +5461,6 @@
             "connected_region": "Slough of Despair (E3M2) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Slough of Despair (E3M2) - Blue skull key",
                 "count": 1
@@ -6145,9 +5473,7 @@
             "name": "Slough of Despair (E3M2) - Exit",
             "id": 351342,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Slough of Despair (E3M2) - Complete",
@@ -6167,7 +5493,6 @@
             "connected_region": "Pandemonium (E3M3) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Pandemonium (E3M3) - Blue skull key",
                 "count": 1
@@ -6180,9 +5505,7 @@
             "name": "Pandemonium (E3M3) - Berserk",
             "id": 351228,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "House of Pain (E3M4) - Blue skull key",
@@ -6196,9 +5519,7 @@
             "name": "Pandemonium (E3M3) - Chaingun",
             "id": 351229,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -6212,9 +5533,7 @@
             "name": "Pandemonium (E3M3) - BFG9000",
             "id": 351230,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Slough of Despair (E3M2) - Blue skull key",
@@ -6228,9 +5547,7 @@
             "name": "Pandemonium (E3M3) - Supercharge",
             "id": 351231,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -6244,9 +5561,7 @@
             "name": "Pandemonium (E3M3) - Invulnerability",
             "id": 351232,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Phobos Anomaly (E1M8)",
@@ -6260,9 +5575,7 @@
             "name": "Pandemonium (E3M3) - Blue skull key",
             "id": 351233,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -6276,9 +5589,7 @@
             "name": "Pandemonium (E3M3) - Mega Armor",
             "id": 351234,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Command Center (E2M5) - Computer area map",
@@ -6293,9 +5604,7 @@
             "name": "Pandemonium (E3M3) - Shotgun",
             "id": 351235,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Warrens (E3M9)",
@@ -6309,9 +5618,7 @@
             "name": "Pandemonium (E3M3) - Armor",
             "id": 351236,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Central Processing (E1M6)",
@@ -6325,9 +5632,7 @@
             "name": "Pandemonium (E3M3) - Backpack",
             "id": 351237,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Partial invisibility",
@@ -6341,9 +5646,7 @@
             "name": "Pandemonium (E3M3) - Computer area map",
             "id": 351238,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -6357,9 +5660,7 @@
             "name": "Pandemonium (E3M3) - Mega Armor 2",
             "id": 351239,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -6373,9 +5674,7 @@
             "name": "Pandemonium (E3M3) - Shotgun 2",
             "id": 351240,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -6389,9 +5688,7 @@
             "name": "Pandemonium (E3M3) - Rocket launcher",
             "id": 351241,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of rockets",
@@ -6411,7 +5708,6 @@
             "connected_region": "Pandemonium (E3M3) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Pandemonium (E3M3) - Blue skull key",
                 "count": 1
@@ -6424,9 +5720,7 @@
             "name": "Pandemonium (E3M3) - Exit",
             "id": 351338,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Pandemonium (E3M3) - Complete",
@@ -6446,7 +5740,6 @@
             "connected_region": "House of Pain (E3M4) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "House of Pain (E3M4) - Blue skull key",
                 "count": 1
@@ -6459,9 +5752,7 @@
             "name": "House of Pain (E3M4) - Shotgun",
             "id": 351242,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -6475,9 +5766,7 @@
             "name": "House of Pain (E3M4) - Berserk",
             "id": 351243,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -6491,9 +5780,7 @@
             "name": "House of Pain (E3M4) - Mega Armor",
             "id": 351244,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -6507,9 +5794,7 @@
             "name": "House of Pain (E3M4) - Chaingun",
             "id": 351245,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -6524,9 +5809,7 @@
             "name": "House of Pain (E3M4) - Invulnerability",
             "id": 351246,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -6541,9 +5824,7 @@
             "name": "House of Pain (E3M4) - Blue skull key",
             "id": 351247,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -6557,9 +5838,7 @@
             "name": "House of Pain (E3M4) - Armor",
             "id": 351248,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Halls of the Damned (E2M6) - Yellow skull key",
@@ -6573,9 +5852,7 @@
             "name": "House of Pain (E3M4) - Armor 2",
             "id": 351257,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -6589,9 +5866,7 @@
             "name": "House of Pain (E3M4) - Rocket launcher",
             "id": 351258,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -6611,7 +5886,6 @@
             "connected_region": "House of Pain (E3M4) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "House of Pain (E3M4) - Blue skull key",
                 "count": 1
@@ -6623,7 +5897,6 @@
             "connected_region": "House of Pain (E3M4) Yellow",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "House of Pain (E3M4) - Yellow skull key",
                 "count": 1
@@ -6635,7 +5908,6 @@
             "connected_region": "House of Pain (E3M4) Red",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "House of Pain (E3M4) - Red skull key",
                 "count": 1
@@ -6648,9 +5920,7 @@
             "name": "House of Pain (E3M4) - Yellow skull key",
             "id": 351249,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -6664,9 +5934,7 @@
             "name": "House of Pain (E3M4) - Invulnerability 2",
             "id": 351250,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Energy cell pack",
@@ -6680,9 +5948,7 @@
             "name": "House of Pain (E3M4) - Partial invisibility",
             "id": 351254,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -6696,9 +5962,7 @@
             "name": "House of Pain (E3M4) - BFG9000",
             "id": 351255,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Berserk",
@@ -6712,9 +5976,7 @@
             "name": "House of Pain (E3M4) - Supercharge",
             "id": 351256,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -6728,9 +5990,7 @@
             "name": "House of Pain (E3M4) - Armor 3",
             "id": 351259,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Invulnerability",
@@ -6750,7 +6010,6 @@
             "connected_region": "House of Pain (E3M4) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "House of Pain (E3M4) - Red skull key",
                 "count": 1
@@ -6763,9 +6022,7 @@
             "name": "House of Pain (E3M4) - Backpack",
             "id": 351252,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Energy cell pack",
@@ -6779,9 +6036,7 @@
             "name": "House of Pain (E3M4) - Mega Armor 2",
             "id": 351253,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Berserk",
@@ -6795,9 +6050,7 @@
             "name": "House of Pain (E3M4) - Exit",
             "id": 351333,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "House of Pain (E3M4) - Complete",
@@ -6817,7 +6070,6 @@
             "connected_region": "House of Pain (E3M4) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "House of Pain (E3M4) - Yellow skull key",
                 "count": 1
@@ -6830,9 +6082,7 @@
             "name": "House of Pain (E3M4) - Red skull key",
             "id": 351251,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of bullets",
@@ -6852,7 +6102,6 @@
             "connected_region": "Unholy Cathedral (E3M5) Yellow",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Unholy Cathedral (E3M5) - Yellow skull key",
                 "count": 1
@@ -6864,7 +6113,6 @@
             "connected_region": "Unholy Cathedral (E3M5) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Unholy Cathedral (E3M5) - Blue skull key",
                 "count": 1
@@ -6875,9 +6123,7 @@
             "name": "Unholy Cathedral (E3M5) Main -> Unholy Cathedral (E3M5) Start",
             "connected_region": "Unholy Cathedral (E3M5) Start",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -6886,9 +6132,7 @@
             "name": "Unholy Cathedral (E3M5) - Blue skull key",
             "id": 351260,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -6902,9 +6146,7 @@
             "name": "Unholy Cathedral (E3M5) - Chaingun",
             "id": 351261,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Military Base (E1M9) - Yellow keycard",
@@ -6918,9 +6160,7 @@
             "name": "Unholy Cathedral (E3M5) - Plasma gun",
             "id": 351262,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Military Base (E1M9)",
@@ -6934,9 +6174,7 @@
             "name": "Unholy Cathedral (E3M5) - Supercharge",
             "id": 351263,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -6950,9 +6188,7 @@
             "name": "Unholy Cathedral (E3M5) - Yellow skull key",
             "id": 351264,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -6966,9 +6202,7 @@
             "name": "Unholy Cathedral (E3M5) - Invulnerability",
             "id": 351265,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -6982,9 +6216,7 @@
             "name": "Unholy Cathedral (E3M5) - Berserk",
             "id": 351266,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -6998,9 +6230,7 @@
             "name": "Unholy Cathedral (E3M5) - Partial invisibility",
             "id": 351267,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -7014,9 +6244,7 @@
             "name": "Unholy Cathedral (E3M5) - Shotgun 2",
             "id": 351271,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of bullets",
@@ -7030,9 +6258,7 @@
             "name": "Unholy Cathedral (E3M5) - Rocket launcher",
             "id": 351272,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Warrens (E3M9) - Red skull key",
@@ -7052,7 +6278,6 @@
             "connected_region": "Unholy Cathedral (E3M5) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Unholy Cathedral (E3M5) - Blue skull key",
                 "count": 1
@@ -7065,9 +6290,7 @@
             "name": "Unholy Cathedral (E3M5) - BFG9000",
             "id": 351269,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Invulnerability",
@@ -7082,9 +6305,7 @@
             "name": "Unholy Cathedral (E3M5) - Exit",
             "id": 351346,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Unholy Cathedral (E3M5) - Complete",
@@ -7104,7 +6325,6 @@
             "connected_region": "Unholy Cathedral (E3M5) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Unholy Cathedral (E3M5) - Yellow skull key",
                 "count": 1
@@ -7117,9 +6337,7 @@
             "name": "Unholy Cathedral (E3M5) - Chainsaw",
             "id": 351268,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Energy cell pack",
@@ -7133,9 +6351,7 @@
             "name": "Unholy Cathedral (E3M5) - Supercharge 2",
             "id": 351273,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -7155,11 +6371,9 @@
             "connected_region": "Unholy Cathedral (E3M5) Main",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "BFG9000",
@@ -7170,7 +6384,6 @@
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Chaingun",
@@ -7187,9 +6400,7 @@
             "name": "Unholy Cathedral (E3M5) - Shotgun",
             "id": 351270,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -7209,7 +6420,6 @@
             "connected_region": "Mt. Erebus (E3M6) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Mt. Erebus (E3M6) - Blue skull key",
                 "count": 1
@@ -7222,9 +6432,7 @@
             "name": "Mt. Erebus (E3M6) - Mega Armor",
             "id": 351274,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -7238,9 +6446,7 @@
             "name": "Mt. Erebus (E3M6) - Armor",
             "id": 351275,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Nuclear Plant (E1M2) - Red keycard",
@@ -7254,9 +6460,7 @@
             "name": "Mt. Erebus (E3M6) - Backpack",
             "id": 351276,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -7270,9 +6474,7 @@
             "name": "Mt. Erebus (E3M6) - Invulnerability",
             "id": 351277,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -7286,9 +6488,7 @@
             "name": "Mt. Erebus (E3M6) - Chaingun",
             "id": 351278,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -7302,9 +6502,7 @@
             "name": "Mt. Erebus (E3M6) - Shotgun",
             "id": 351279,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Phobos Anomaly (E1M8) - Computer area map",
@@ -7318,9 +6516,7 @@
             "name": "Mt. Erebus (E3M6) - Rocket launcher",
             "id": 351280,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of rockets",
@@ -7334,9 +6530,7 @@
             "name": "Mt. Erebus (E3M6) - Plasma gun",
             "id": 351281,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Limbo (E3M7) - Blue skull key",
@@ -7350,9 +6544,7 @@
             "name": "Mt. Erebus (E3M6) - Armor 2",
             "id": 351282,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -7366,9 +6558,7 @@
             "name": "Mt. Erebus (E3M6) - Berserk",
             "id": 351283,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -7382,9 +6572,7 @@
             "name": "Mt. Erebus (E3M6) - Invulnerability 2",
             "id": 351284,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -7398,9 +6586,7 @@
             "name": "Mt. Erebus (E3M6) - Supercharge",
             "id": 351285,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Refinery (E2M3) - Computer area map",
@@ -7414,9 +6600,7 @@
             "name": "Mt. Erebus (E3M6) - Blue skull key",
             "id": 351286,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spawning Vats (E2M7)",
@@ -7430,9 +6614,7 @@
             "name": "Mt. Erebus (E3M6) - Blue skull key 2",
             "id": 351287,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Partial invisibility",
@@ -7446,9 +6628,7 @@
             "name": "Mt. Erebus (E3M6) - Computer area map",
             "id": 351288,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Invulnerability",
@@ -7462,9 +6642,7 @@
             "name": "Mt. Erebus (E3M6) - Chainsaw",
             "id": 351289,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -7479,9 +6657,7 @@
             "name": "Mt. Erebus (E3M6) - Supercharge 2",
             "id": 351290,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Toxin Refinery (E1M3) - Yellow keycard",
@@ -7501,7 +6677,6 @@
             "connected_region": "Mt. Erebus (E3M6) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Mt. Erebus (E3M6) - Blue skull key",
                 "count": 1
@@ -7514,9 +6689,7 @@
             "name": "Mt. Erebus (E3M6) - Exit",
             "id": 351336,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mt. Erebus (E3M6) - Complete",
@@ -7536,7 +6709,6 @@
             "connected_region": "Limbo (E3M7) Red",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Limbo (E3M7) - Red skull key",
                 "count": 1
@@ -7548,7 +6720,6 @@
             "connected_region": "Limbo (E3M7) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Limbo (E3M7) - Blue skull key",
                 "count": 1
@@ -7560,7 +6731,6 @@
             "connected_region": "Limbo (E3M7) Pink",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Limbo (E3M7) - Blue skull key",
                 "count": 1
@@ -7573,9 +6743,7 @@
             "name": "Limbo (E3M7) - Blue skull key",
             "id": 351291,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -7589,9 +6757,7 @@
             "name": "Limbo (E3M7) - Supercharge",
             "id": 351292,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spawning Vats (E2M7) - Blue keycard",
@@ -7605,9 +6771,7 @@
             "name": "Limbo (E3M7) - Rocket launcher",
             "id": 351293,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mt. Erebus (E3M6) - Computer area map",
@@ -7621,9 +6785,7 @@
             "name": "Limbo (E3M7) - Backpack",
             "id": 351295,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -7637,9 +6799,7 @@
             "name": "Limbo (E3M7) - Armor 2",
             "id": 351299,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of bullets",
@@ -7653,9 +6813,7 @@
             "name": "Limbo (E3M7) - Mega Armor",
             "id": 351300,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Military Base (E1M9) - Red keycard",
@@ -7674,9 +6832,7 @@
             "name": "Limbo (E3M7) Blue -> Limbo (E3M7) Main",
             "connected_region": "Limbo (E3M7) Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -7685,9 +6841,7 @@
             "name": "Limbo (E3M7) - Red skull key",
             "id": 351294,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Invulnerability",
@@ -7701,9 +6855,7 @@
             "name": "Limbo (E3M7) - BFG9000",
             "id": 351301,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Pandemonium (E3M3) - Computer area map",
@@ -7722,9 +6874,7 @@
             "name": "Limbo (E3M7) Red -> Limbo (E3M7) Main",
             "connected_region": "Limbo (E3M7) Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -7732,7 +6882,6 @@
             "connected_region": "Limbo (E3M7) Yellow",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Limbo (E3M7) - Yellow skull key",
                 "count": 1
@@ -7743,9 +6892,7 @@
             "name": "Limbo (E3M7) Red -> Limbo (E3M7) Green",
             "connected_region": "Limbo (E3M7) Green",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -7754,9 +6901,7 @@
             "name": "Limbo (E3M7) - Yellow skull key",
             "id": 351298,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -7775,9 +6920,7 @@
             "name": "Limbo (E3M7) Yellow -> Limbo (E3M7) Red",
             "connected_region": "Limbo (E3M7) Red",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -7786,9 +6929,7 @@
             "name": "Limbo (E3M7) - Exit",
             "id": 351334,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Limbo (E3M7) - Complete",
@@ -7808,7 +6949,6 @@
             "connected_region": "Limbo (E3M7) Green",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Limbo (E3M7) - Red skull key",
                 "count": 1
@@ -7819,9 +6959,7 @@
             "name": "Limbo (E3M7) Pink -> Limbo (E3M7) Main",
             "connected_region": "Limbo (E3M7) Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -7834,18 +6972,14 @@
             "name": "Limbo (E3M7) Green -> Limbo (E3M7) Pink",
             "connected_region": "Limbo (E3M7) Pink",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Limbo (E3M7) Green -> Limbo (E3M7) Red",
             "connected_region": "Limbo (E3M7) Red",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -7854,9 +6988,7 @@
             "name": "Limbo (E3M7) - Plasma gun",
             "id": 351296,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Chainsaw",
@@ -7870,9 +7002,7 @@
             "name": "Limbo (E3M7) - Armor",
             "id": 351297,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -7892,9 +7022,7 @@
             "name": "Dis (E3M8) - Rocket launcher",
             "id": 351302,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -7908,9 +7036,7 @@
             "name": "Dis (E3M8) - Plasma gun",
             "id": 351303,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Toxin Refinery (E1M3) - Computer area map",
@@ -7924,9 +7050,7 @@
             "name": "Dis (E3M8) - Mega Armor",
             "id": 351304,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Military Base (E1M9) - Computer area map",
@@ -7940,9 +7064,7 @@
             "name": "Dis (E3M8) - Exit",
             "id": 351328,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dis (E3M8) - Complete",
@@ -7962,7 +7084,6 @@
             "connected_region": "Warrens (E3M9) Blue",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Warrens (E3M9) - Blue skull key",
                 "count": 1
@@ -7974,7 +7095,6 @@
             "connected_region": "Warrens (E3M9) Blue trigger",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Warrens (E3M9) - Blue skull key",
                 "count": 1
@@ -7987,9 +7107,7 @@
             "name": "Warrens (E3M9) - Shotgun",
             "id": 351305,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -8009,9 +7127,7 @@
             "name": "Warrens (E3M9) - Exit",
             "id": 351347,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Warrens (E3M9) - Complete",
@@ -8031,7 +7147,6 @@
             "connected_region": "Warrens (E3M9) Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Warrens (E3M9) - Blue skull key",
                 "count": 1
@@ -8043,7 +7158,6 @@
             "connected_region": "Warrens (E3M9) Red",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Warrens (E3M9) - Red skull key",
                 "count": 1
@@ -8056,9 +7170,7 @@
             "name": "Warrens (E3M9) - Rocket launcher",
             "id": 351306,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of shotgun shells",
@@ -8072,9 +7184,7 @@
             "name": "Warrens (E3M9) - Rocket launcher 2",
             "id": 351307,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -8088,9 +7198,7 @@
             "name": "Warrens (E3M9) - Supercharge",
             "id": 351308,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Supercharge",
@@ -8104,9 +7212,7 @@
             "name": "Warrens (E3M9) - Blue skull key",
             "id": 351309,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -8120,9 +7226,7 @@
             "name": "Warrens (E3M9) - Berserk",
             "id": 351310,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Partial invisibility",
@@ -8136,9 +7240,7 @@
             "name": "Warrens (E3M9) - Invulnerability",
             "id": 351311,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Medikit",
@@ -8152,9 +7254,7 @@
             "name": "Warrens (E3M9) - Partial invisibility",
             "id": 351312,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Energy cell pack",
@@ -8168,9 +7268,7 @@
             "name": "Warrens (E3M9) - Chaingun",
             "id": 351313,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Halls of the Damned (E2M6)",
@@ -8190,9 +7288,7 @@
             "name": "Warrens (E3M9) - Plasma gun",
             "id": 351314,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Box of bullets",
@@ -8206,9 +7302,7 @@
             "name": "Warrens (E3M9) - Invulnerability 2",
             "id": 351315,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -8222,9 +7316,7 @@
             "name": "Warrens (E3M9) - Armor",
             "id": 351316,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Containment Area (E2M2) - Computer area map",
@@ -8238,9 +7330,7 @@
             "name": "Warrens (E3M9) - Chainsaw",
             "id": 351317,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -8254,9 +7344,7 @@
             "name": "Warrens (E3M9) - BFG9000",
             "id": 351318,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armor",
@@ -8270,9 +7358,7 @@
             "name": "Warrens (E3M9) - Red skull key",
             "id": 351319,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -8286,9 +7372,7 @@
             "name": "Warrens (E3M9) - Supercharge 2",
             "id": 351320,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mega Armor",
@@ -11253,7 +10337,7 @@
         "start_inventory": {},
         "start_location_hints": []
       },
-      "world_directory": "doom_1993_worldgen"
+      "world_directory": "doom_1993"
     }
   },
   "game_info": {

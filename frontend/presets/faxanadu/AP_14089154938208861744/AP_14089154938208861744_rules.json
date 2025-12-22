@@ -19,9 +19,7 @@
             "name": "Menu -> Eolis",
             "connected_region": "Eolis",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -35,7 +33,6 @@
             "connected_region": "Path to Apolune",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Key Jack",
@@ -50,9 +47,7 @@
             "name": "Eolis Guru",
             "id": 400100,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Sword",
@@ -67,8 +62,6 @@
             "id": 400101,
             "access_rule": {
               "rule": "can_buy_in_eolis",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -85,8 +78,6 @@
             "id": 400102,
             "access_rule": {
               "rule": "can_buy_in_eolis",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -103,8 +94,6 @@
             "id": 400103,
             "access_rule": {
               "rule": "can_buy_in_eolis",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -121,8 +110,6 @@
             "id": 400104,
             "access_rule": {
               "rule": "can_buy_in_eolis",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -139,8 +126,6 @@
             "id": 400105,
             "access_rule": {
               "rule": "can_buy_in_eolis",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -161,9 +146,7 @@
             "name": "Path to Apolune -> Apolune",
             "connected_region": "Apolune",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -173,7 +156,6 @@
             "id": 400106,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Key King"
               }
@@ -191,7 +173,6 @@
             "id": 400107,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Key Ace"
               }
@@ -214,7 +195,6 @@
             "connected_region": "Tower of Trunk",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Key Jack"
               }
@@ -225,7 +205,6 @@
             "connected_region": "Path to Forepaw",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Mattock"
               }
@@ -237,9 +216,7 @@
             "name": "Apolune Small Shield",
             "id": 400108,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hourglass",
@@ -253,9 +230,7 @@
             "name": "Apolune Hand Dagger",
             "id": 400109,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -269,9 +244,7 @@
             "name": "Apolune Deluge",
             "id": 400110,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -285,9 +258,7 @@
             "name": "Apolune Red Potion",
             "id": 400111,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Ointment",
@@ -302,7 +273,6 @@
             "id": 400112,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Unlock Wingboots"
               }
@@ -326,18 +296,15 @@
             "id": 400113,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Deluge"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Progressive Sword",
                     "count": 2
@@ -357,9 +324,7 @@
             "name": "Tower of Trunk Hidden Hourglass",
             "id": 400114,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Poison",
@@ -373,9 +338,7 @@
             "name": "Tower of Trunk Boss Mattock",
             "id": 400115,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mattock",
@@ -394,9 +357,7 @@
             "name": "Path to Forepaw -> Forepaw",
             "connected_region": "Forepaw",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -405,9 +366,7 @@
             "name": "Path to Forepaw Hidden Red Potion",
             "id": 400116,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Poison",
@@ -422,7 +381,6 @@
             "id": 400117,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Deluge",
@@ -447,9 +405,7 @@
             "name": "Forepaw -> Trunk",
             "connected_region": "Trunk",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -458,9 +414,7 @@
             "name": "Forepaw Long Sword",
             "id": 400118,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Ring of Ruby",
@@ -474,9 +428,7 @@
             "name": "Forepaw Studded Mail",
             "id": 400119,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -490,9 +442,7 @@
             "name": "Forepaw Small Shield",
             "id": 400120,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Key Queen",
@@ -506,9 +456,7 @@
             "name": "Forepaw Red Potion",
             "id": 400121,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -522,9 +470,7 @@
             "name": "Forepaw Wingboots",
             "id": 400122,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -538,9 +484,7 @@
             "name": "Forepaw Key Jack",
             "id": 400123,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -554,9 +498,7 @@
             "name": "Forepaw Key Queen",
             "id": 400124,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -576,7 +518,6 @@
             "connected_region": "Joker Spring",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Key Joker"
               }
@@ -587,7 +528,6 @@
             "connected_region": "Tower of Fortress",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Key Jack"
               }
@@ -598,11 +538,9 @@
             "connected_region": "Path to Mascon",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Joker Spring Flow",
@@ -615,7 +553,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Progressive Sword",
                     "count": 2
@@ -630,9 +567,7 @@
             "name": "Trunk Hidden Ointment",
             "id": 400125,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -646,9 +581,7 @@
             "name": "Trunk Hidden Red Potion",
             "id": 400126,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -663,7 +596,6 @@
             "id": 400127,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Unlock Wingboots"
               }
@@ -681,7 +613,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Unlock Wingboots"
               }
@@ -704,9 +635,7 @@
             "name": "Joker Spring Ruby Ring",
             "id": 400128,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Elixir",
@@ -720,9 +649,7 @@
             "name": "Joker Spring",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Joker Spring Flow",
@@ -742,9 +669,7 @@
             "name": "Tower of Fortress Poison 1",
             "id": 400129,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Key Joker",
@@ -758,9 +683,7 @@
             "name": "Tower of Fortress Poison 2",
             "id": 400130,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spring Elixir",
@@ -774,9 +697,7 @@
             "name": "Tower of Fortress Hidden Wingboots",
             "id": 400131,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hourglass",
@@ -790,9 +711,7 @@
             "name": "Tower of Fortress Ointment",
             "id": 400132,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Ointment",
@@ -806,9 +725,7 @@
             "name": "Tower of Fortress Boss Wingboots",
             "id": 400133,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Glove",
@@ -822,9 +739,7 @@
             "name": "Tower of Fortress Elixir",
             "id": 400134,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -839,7 +754,6 @@
             "id": 400135,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Spring Flow"
               }
@@ -857,7 +771,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Spring Elixir"
               }
@@ -880,18 +793,15 @@
             "connected_region": "Tower of Red Potion",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Key Queen"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Red Potion",
                     "count": 4
@@ -904,9 +814,7 @@
             "name": "Path to Mascon -> Mascon",
             "connected_region": "Mascon",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -915,9 +823,7 @@
             "name": "Path to Mascon Hidden Wingboots",
             "id": 400136,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Poison",
@@ -937,9 +843,7 @@
             "name": "Tower of Red Potion",
             "id": 400137,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Ring of Dworf",
@@ -958,9 +862,7 @@
             "name": "Mascon -> Path to Victim",
             "connected_region": "Path to Victim",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -969,9 +871,7 @@
             "name": "Mascon Large Shield",
             "id": 400138,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -985,9 +885,7 @@
             "name": "Mascon Thunder",
             "id": 400139,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hourglass",
@@ -1001,9 +899,7 @@
             "name": "Mascon Mattock",
             "id": 400140,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -1017,9 +913,7 @@
             "name": "Mascon Red Potion",
             "id": 400141,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hourglass",
@@ -1033,9 +927,7 @@
             "name": "Mascon Key Jack",
             "id": 400142,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Key Ace",
@@ -1049,9 +941,7 @@
             "name": "Mascon Key Queen",
             "id": 400143,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hourglass",
@@ -1071,7 +961,6 @@
             "connected_region": "Tower of Suffer",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Key Queen"
               }
@@ -1082,7 +971,6 @@
             "connected_region": "Victim",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Unlock Wingboots"
               }
@@ -1095,7 +983,6 @@
             "id": 400144,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Unlock Wingboots"
               }
@@ -1112,9 +999,7 @@
             "name": "Misty Shop Hourglass",
             "id": 400145,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Death",
@@ -1128,9 +1013,7 @@
             "name": "Misty Shop Elixir",
             "id": 400146,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Shield",
@@ -1144,9 +1027,7 @@
             "name": "Misty Shop Red Potion",
             "id": 400147,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hourglass",
@@ -1161,8 +1042,6 @@
             "id": 400148,
             "access_rule": {
               "rule": "has_any_magic",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1185,18 +1064,15 @@
             "id": 400149,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Deluge"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Progressive Sword",
                     "count": 2
@@ -1216,9 +1092,7 @@
             "name": "Tower of Suffer Hidden Hourglass",
             "id": 400150,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Poison",
@@ -1232,9 +1106,7 @@
             "name": "Tower of Suffer Pendant",
             "id": 400151,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -1253,9 +1125,7 @@
             "name": "Victim -> Mist",
             "connected_region": "Mist",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1264,9 +1134,7 @@
             "name": "Victim Full Plate",
             "id": 400152,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -1281,7 +1149,6 @@
             "id": 400153,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Unlock Wingboots"
               }
@@ -1298,9 +1165,7 @@
             "name": "Victim Red Potion",
             "id": 400154,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -1314,9 +1179,7 @@
             "name": "Victim Key King",
             "id": 400155,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hourglass",
@@ -1330,9 +1193,7 @@
             "name": "Victim Key Queen",
             "id": 400156,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Armor",
@@ -1352,7 +1213,6 @@
             "connected_region": "Useless Tower",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Key King",
@@ -1366,7 +1226,6 @@
             "connected_region": "Tower of Mist",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Key King"
               }
@@ -1377,7 +1236,6 @@
             "connected_region": "Path to Conflate",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Key Ace"
               }
@@ -1389,9 +1247,7 @@
             "name": "Victim Tavern",
             "id": 400157,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -1405,9 +1261,7 @@
             "name": "Mist Hidden Poison 1",
             "id": 400158,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -1421,9 +1275,7 @@
             "name": "Mist Hidden Poison 2",
             "id": 400159,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -1437,9 +1289,7 @@
             "name": "Mist Hidden Wingboots",
             "id": 400160,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Poison",
@@ -1453,9 +1303,7 @@
             "name": "Misty Magic Hall",
             "id": 400161,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Ointment",
@@ -1470,7 +1318,6 @@
             "id": 400162,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Black Onyx"
               }
@@ -1493,9 +1340,7 @@
             "name": "Useless Tower",
             "id": 400163,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -1515,9 +1360,7 @@
             "name": "Tower of Mist Hidden Ointment",
             "id": 400164,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -1531,9 +1374,7 @@
             "name": "Tower of Mist Elixir",
             "id": 400165,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -1547,9 +1388,7 @@
             "name": "Tower of Mist Black Onyx",
             "id": 400166,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -1569,7 +1408,6 @@
             "connected_region": "Helm Branch",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Key King"
               }
@@ -1579,9 +1417,7 @@
             "name": "Path to Conflate -> Conflate",
             "connected_region": "Conflate",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1589,7 +1425,6 @@
             "connected_region": "Branches",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Key King"
               }
@@ -1601,9 +1436,7 @@
             "name": "Path to Conflate Hidden Ointment",
             "id": 400167,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hourglass",
@@ -1617,9 +1450,7 @@
             "name": "Path to Conflate Poison",
             "id": 400168,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Poison",
@@ -1639,9 +1470,7 @@
             "name": "Helm Branch Hidden Glove",
             "id": 400169,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Poison",
@@ -1655,9 +1484,7 @@
             "name": "Helm Branch Battle Helmet",
             "id": 400170,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Glove",
@@ -1677,9 +1504,7 @@
             "name": "Conflate Giant Blade",
             "id": 400171,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -1693,9 +1518,7 @@
             "name": "Conflate Magic Shield",
             "id": 400172,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Sword",
@@ -1709,9 +1532,7 @@
             "name": "Conflate Wingboots",
             "id": 400173,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hourglass",
@@ -1725,9 +1546,7 @@
             "name": "Conflate Red Potion",
             "id": 400174,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -1742,7 +1561,6 @@
             "id": 400175,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Armor",
                 "count": 3
@@ -1765,9 +1583,7 @@
             "name": "Branches -> Path to Daybreak",
             "connected_region": "Path to Daybreak",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1776,9 +1592,7 @@
             "name": "Branches Hidden Ointment",
             "id": 400176,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -1792,9 +1606,7 @@
             "name": "Branches Poison",
             "id": 400177,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -1809,7 +1621,6 @@
             "id": 400178,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Unlock Wingboots"
               }
@@ -1826,9 +1637,7 @@
             "name": "Branches Hidden Hourglass",
             "id": 400179,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Deluge",
@@ -1847,9 +1656,7 @@
             "name": "Path to Daybreak -> Daybreak",
             "connected_region": "Daybreak",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1858,9 +1665,7 @@
             "name": "Path to Daybreak Hidden Wingboots 1",
             "id": 400180,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -1874,9 +1679,7 @@
             "name": "Path to Daybreak Magical Rod",
             "id": 400181,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Poison",
@@ -1890,9 +1693,7 @@
             "name": "Path to Daybreak Hidden Wingboots 2",
             "id": 400182,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Poison",
@@ -1906,9 +1707,7 @@
             "name": "Path to Daybreak Poison",
             "id": 400183,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Ointment",
@@ -1923,7 +1722,6 @@
             "id": 400184,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Unlock Wingboots"
               }
@@ -1940,9 +1738,7 @@
             "name": "Path to Daybreak Battle Suit",
             "id": 400185,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Elixir",
@@ -1962,7 +1758,6 @@
             "connected_region": "Dartmoor Castle",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Ring of Dworf"
               }
@@ -1974,9 +1769,7 @@
             "name": "Daybreak Tilte",
             "id": 400186,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Shield",
@@ -1990,9 +1783,7 @@
             "name": "Daybreak Giant Blade",
             "id": 400187,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -2006,9 +1797,7 @@
             "name": "Daybreak Red Potion",
             "id": 400188,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -2022,9 +1811,7 @@
             "name": "Daybreak Key King",
             "id": 400189,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Ointment",
@@ -2038,9 +1825,7 @@
             "name": "Daybreak Key Queen",
             "id": 400190,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Demons Ring",
@@ -2059,18 +1844,14 @@
             "name": "Dartmoor Castle -> Dartmoor",
             "connected_region": "Dartmoor",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Dartmoor Castle -> Fraternal Castle",
             "connected_region": "Fraternal Castle",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2078,7 +1859,6 @@
             "connected_region": "Evil Fortress",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Demons Ring"
               }
@@ -2091,7 +1871,6 @@
             "id": 400191,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Unlock Wingboots"
               }
@@ -2109,8 +1888,6 @@
             "id": 400192,
             "access_rule": {
               "rule": "has_any_magic",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2132,9 +1909,7 @@
             "name": "Dartmoor Giant Blade",
             "id": 400193,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Ointment",
@@ -2148,9 +1923,7 @@
             "name": "Dartmoor Red Potion",
             "id": 400194,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fire",
@@ -2164,9 +1937,7 @@
             "name": "Dartmoor Key King",
             "id": 400195,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Magical Rod",
@@ -2186,9 +1957,7 @@
             "name": "Fraternal Castle Hidden Ointment",
             "id": 400196,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Elixir",
@@ -2203,8 +1972,6 @@
             "id": 400197,
             "access_rule": {
               "rule": "has_any_magic",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2220,9 +1987,7 @@
             "name": "Fraternal Castle Poison 1",
             "id": 400198,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -2236,9 +2001,7 @@
             "name": "Fraternal Castle Poison 2",
             "id": 400199,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Poison",
@@ -2252,9 +2015,7 @@
             "name": "Fraternal Castle Poison 3",
             "id": 400200,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Poison",
@@ -2268,9 +2029,7 @@
             "name": "Fraternal Castle Hidden Hourglass",
             "id": 400202,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Thunder",
@@ -2284,9 +2043,7 @@
             "name": "Fraternal Castle Dragon Slayer",
             "id": 400203,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Poison",
@@ -2301,7 +2058,6 @@
             "id": 400204,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Sword",
                 "count": 4
@@ -2325,9 +2081,7 @@
             "name": "Evil Fortress Ointment",
             "id": 400205,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Ointment",
@@ -2341,9 +2095,7 @@
             "name": "Evil Fortress Poison 1",
             "id": 400206,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Poison",
@@ -2357,9 +2109,7 @@
             "name": "Evil Fortress Glove",
             "id": 400207,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Poison",
@@ -2373,9 +2123,7 @@
             "name": "Evil Fortress Poison 2",
             "id": 400208,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Potion",
@@ -2389,9 +2137,7 @@
             "name": "Evil Fortress Poison 3",
             "id": 400209,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Armor",
@@ -2405,9 +2151,7 @@
             "name": "Evil Fortress Hidden Glove",
             "id": 400210,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Poison",
@@ -2421,9 +2165,7 @@
             "name": "Evil One",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Killed Evil One",

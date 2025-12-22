@@ -19,9 +19,7 @@
             "name": "New Board",
             "connected_region": "Board",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -35,9 +33,7 @@
             "name": "Tile 1",
             "id": 81000,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Map Bombs",
@@ -51,9 +47,7 @@
             "name": "Tile 2",
             "id": 81001,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Map Width",
@@ -67,9 +61,7 @@
             "name": "Tile 3",
             "id": 81002,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Map Width",
@@ -83,9 +75,7 @@
             "name": "Tile 4",
             "id": 81003,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Map Width",
@@ -99,9 +89,7 @@
             "name": "Tile 5",
             "id": 81004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Map Height",
@@ -116,7 +104,6 @@
             "id": 81005,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -139,7 +126,6 @@
             "id": 81006,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -162,7 +148,6 @@
             "id": 81007,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -185,7 +170,6 @@
             "id": 81008,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -208,7 +192,6 @@
             "id": 81009,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -231,7 +214,6 @@
             "id": 81010,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -254,7 +236,6 @@
             "id": 81011,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -277,7 +258,6 @@
             "id": 81012,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -300,7 +280,6 @@
             "id": 81013,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -323,7 +302,6 @@
             "id": 81014,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -346,7 +324,6 @@
             "id": 81015,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -369,7 +346,6 @@
             "id": 81016,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -392,7 +368,6 @@
             "id": 81017,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -415,7 +390,6 @@
             "id": 81018,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -438,7 +412,6 @@
             "id": 81019,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -461,7 +434,6 @@
             "id": 81020,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -484,7 +456,6 @@
             "id": 81021,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -507,7 +478,6 @@
             "id": 81022,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -530,7 +500,6 @@
             "id": 81023,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",
@@ -553,7 +522,6 @@
             "id": 81024,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "Map Width",

@@ -57,11 +57,11 @@
             "id": null,
             "access_rule": {
               "rule": "has_n_from_list",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": [
                       "Guide",
@@ -106,15 +106,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 2
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             },
             "item": {
               "name": "Traveling Merchant",
@@ -129,7 +126,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Traveling Merchant"
               }
@@ -147,15 +143,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -164,7 +157,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Wire"
                       }
@@ -173,7 +165,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Traveling Merchant"
                   }
@@ -193,7 +184,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Traveling Merchant"
               }
@@ -307,11 +297,9 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Name",
-                  "options": [],
                   "args": {
                     "name": "calamity",
                     "_original_ast_type": "name"
@@ -320,7 +308,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Merchant"
                   }
@@ -352,11 +339,11 @@
             "id": null,
             "access_rule": {
               "rule": "has_n_from_list",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": [
                       "Guide",
@@ -401,15 +388,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 4
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             },
             "item": {
               "name": "Dye Trader",
@@ -424,7 +408,6 @@
             "id": 8257732,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Dye Trader"
               }
@@ -442,7 +425,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Merchant"
               }
@@ -592,7 +574,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Zoologist"
               }
@@ -610,18 +591,15 @@
             "id": 8257739,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Cat"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Dog"
                   }
@@ -641,7 +619,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Zoologist"
               }
@@ -659,11 +636,11 @@
             "id": null,
             "access_rule": {
               "rule": "has_n_from_list",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": [
                       "Guide",
@@ -708,15 +685,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 8
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             },
             "item": {
               "name": "Painter",
@@ -755,18 +729,15 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Angler"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Weather Radio"
                   }
@@ -786,18 +757,15 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Angler"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Sextant"
                   }
@@ -817,18 +785,15 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Angler"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Fisherman's Pocket Guide"
                   }
@@ -1028,7 +993,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Merchant"
               }
@@ -1046,7 +1010,6 @@
             "id": 8257757,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Nurse"
               }
@@ -1064,7 +1027,6 @@
             "id": 8257758,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Bug Net"
               }
@@ -1226,7 +1188,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Obsidian"
               }
@@ -1268,7 +1229,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Demonite Ore"
               }
@@ -1286,7 +1246,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Demonite Bar"
               }
@@ -1340,11 +1299,11 @@
             "id": null,
             "access_rule": {
               "rule": "has_n_from_list",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": [
                       "Guide",
@@ -1389,15 +1348,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 14
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             },
             "item": {
               "name": "Party Girl",
@@ -1412,7 +1368,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Party Girl"
               }
@@ -1490,25 +1445,21 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Jungle Spores"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Stinger"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Vine"
                   }
@@ -1648,18 +1599,15 @@
             "id": 8257772,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Arms Dealer"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Nurse"
                   }
@@ -1679,7 +1627,6 @@
             "id": 8257773,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Arms Dealer"
               }
@@ -1697,18 +1644,15 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Arms Dealer"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Flamethrower"
                   }
@@ -1751,9 +1695,7 @@
             "name": "Solidifier",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Solidifier",
@@ -1767,9 +1709,7 @@
             "name": "Nerdy Slime",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Nerdy Slime",
@@ -1784,15 +1724,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Not",
-                  "options": [],
                   "args": {
                     "condition": {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -1805,7 +1742,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Post-Desert Scourge"
                   }
@@ -1873,25 +1809,21 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Post-Evil Boss"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Post-Eye of Cthulhu"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Post-Skeletron"
                   }
@@ -1911,7 +1843,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Dryad"
               }
@@ -1929,18 +1860,15 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Cactus"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Pumpkin Seeds"
                   }
@@ -1960,19 +1888,15 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Not",
-                      "options": [],
                       "args": {
                         "condition": {
                           "rule": "Name",
-                          "options": [],
                           "args": {
                             "name": "getfixedboi",
                             "_original_ast_type": "name"
@@ -1985,7 +1909,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Dryad"
                       }
@@ -1994,7 +1917,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Evil Powder"
                   }
@@ -2014,7 +1936,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Purification Powder"
               }
@@ -2043,9 +1964,7 @@
             "name": "Evil Boss Part",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Evil Boss Part",
@@ -2060,7 +1979,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Evil Boss Part"
               }
@@ -2078,18 +1996,15 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Evil Boss Part"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Obsidian"
                   }
@@ -2109,7 +2024,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Post-Evil Boss"
               }
@@ -2127,7 +2041,6 @@
             "id": 8257787,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tavernkeep"
               }
@@ -2145,15 +2058,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -2162,7 +2072,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Astral Infection"
                       }
@@ -2170,20 +2079,16 @@
                   ]
                 },
                 {
-                  "rule": "True_",
-                  "options": [],
-                  "args": {}
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Meteorite Bar"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Post-Evil Boss"
                   }
@@ -2203,15 +2108,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -2220,7 +2122,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Astral Infection"
                       }
@@ -2229,14 +2130,12 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Meteor Staff"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Meteorite"
                   }
@@ -2256,7 +2155,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Meteorite Bar"
               }
@@ -2274,151 +2172,129 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Adamantite Pickaxe"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Astral Pickaxe"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Beastial Pickaxe"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Blossom Pickaxe"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Chlorophyte Pickaxe"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Cobalt Pickaxe"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Crystyl Crusher"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Evil Pickaxe"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Gelpick"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Genesis Pickaxe"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Laser Drill"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Luminite Pickaxe"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Molten Pickaxe"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Mythril Pickaxe"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Pickaxe Axe"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Picksaw"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Seismic Hampick"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Shardlight Pickaxe"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Shroomite Digging Claw"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Skyfringe Pickaxe"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Spectre Pickaxe"
                   }
@@ -2438,155 +2314,132 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Adamantite Pickaxe"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Astral Pickaxe"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Beastial Pickaxe"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Blossom Pickaxe"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Chlorophyte Pickaxe"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Cobalt Pickaxe"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Crystyl Crusher"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Evil Pickaxe"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Gelpick"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Genesis Pickaxe"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Laser Drill"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Luminite Pickaxe"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Molten Pickaxe"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Mythril Pickaxe"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Pickaxe Axe"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Picksaw"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Seismic Hampick"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Shardlight Pickaxe"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Shroomite Digging Claw"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Skyfringe Pickaxe"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Spectre Pickaxe"
                       }
@@ -2595,14 +2448,12 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hellstone Bar"
                   }
@@ -2622,7 +2473,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hellstone"
               }
@@ -2640,7 +2490,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hellstone Bar"
               }
@@ -2658,7 +2507,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hellstone Bar"
               }
@@ -2676,7 +2524,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hellstone Bar"
               }
@@ -2694,7 +2541,6 @@
             "id": 8257788,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Molten Pickaxe"
               }
@@ -2712,15 +2558,12 @@
             "id": 8257789,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -2729,7 +2572,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Bug Net"
                       }
@@ -2738,7 +2580,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hellstone Bar"
                   }
@@ -2770,7 +2611,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Post-Goblin Army"
               }
@@ -2788,7 +2628,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Goblin Tinkerer"
               }
@@ -2806,22 +2645,18 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Nature's Gift"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Tinkerer's Workshop"
                       }
@@ -2830,11 +2665,9 @@
                 },
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -2843,7 +2676,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Ethereal Talisman"
                       }
@@ -2865,7 +2697,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Goblin Tinkerer"
               }
@@ -2883,25 +2714,21 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hermes Boots"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Rocket Boots"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
@@ -2921,32 +2748,27 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Aglet"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Anklet of the Wind"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Spectre Boots"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
@@ -2966,25 +2788,21 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Ice Skates"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Lightning Boots"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
@@ -3004,39 +2822,33 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Lava Charm"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Obsidian Rose"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Obsidian Skull"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Water Walking Boots"
                   }
@@ -3056,25 +2868,21 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Frostspark Boots"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Lava Waders"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
@@ -3094,32 +2902,27 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Compass"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Depth Meter"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Gold Watch"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
@@ -3139,32 +2942,27 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "DPS Meter"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Metal Detector"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Stopwatch"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
@@ -3184,32 +2982,27 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Fisherman's Pocket Guide"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Sextant"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Weather Radio"
                   }
@@ -3229,7 +3022,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tinkerer's Workshop"
               }
@@ -3270,9 +3062,7 @@
             "name": "Bee Keeper",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bee Keeper",
@@ -3286,9 +3076,7 @@
             "name": "Bee Wax",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bee Wax",
@@ -3303,7 +3091,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Bee Wax"
               }
@@ -3321,16 +3108,12 @@
             "id": 8257794,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
-                  "rule": "True_",
-                  "options": [],
-                  "args": {}
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Bee Armor"
                   }
@@ -3350,7 +3133,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Post-Queen Bee"
               }
@@ -3368,15 +3150,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -3385,7 +3164,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Statis' Blessing"
                       }
@@ -3394,7 +3172,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Witch Doctor"
                   }
@@ -3426,7 +3203,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Post-Skeletron"
               }
@@ -3444,7 +3220,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Post-Skeletron"
               }
@@ -3462,7 +3237,6 @@
             "id": 8257798,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Dungeon"
               }
@@ -3480,15 +3254,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -3497,33 +3268,27 @@
                     },
                     {
                       "rule": "Or",
-                      "options": [],
                       "children": [
                         {
                           "rule": "And",
-                          "options": [],
                           "children": [
                             {
                               "rule": "And",
-                              "options": [],
                               "children": [
                                 {
                                   "rule": "Has",
-                                  "options": [],
                                   "args": {
                                     "item_name": "Hardmode Anvil"
                                   }
                                 },
                                 {
                                   "rule": "Has",
-                                  "options": [],
                                   "args": {
                                     "item_name": "Lihzahrd Brick"
                                   }
                                 },
                                 {
                                   "rule": "Has",
-                                  "options": [],
                                   "args": {
                                     "item_name": "Lihzahrd Temple"
                                   }
@@ -3532,7 +3297,6 @@
                             },
                             {
                               "rule": "Name",
-                              "options": [],
                               "args": {
                                 "name": "getfixedboi",
                                 "_original_ast_type": "name"
@@ -3542,13 +3306,10 @@
                           ]
                         },
                         {
-                          "rule": "True_",
-                          "options": [],
-                          "args": {}
+                          "rule": "True_"
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Mirage Mirror"
                           }
@@ -3559,7 +3320,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Dungeon"
                   }
@@ -3579,7 +3339,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Dungeon"
               }
@@ -3597,32 +3356,27 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Lifeform Analyzer"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Radar"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tally Counter"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
@@ -3642,39 +3396,33 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Fish Finder"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "GPS"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Goblin Tech"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "R.E.K. 3000"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
@@ -3694,34 +3442,27 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "Or",
-                          "options": [],
                           "children": [
                             {
                               "rule": "And",
-                              "options": [],
                               "children": [
                                 {
                                   "rule": "Has",
-                                  "options": [],
                                   "args": {
                                     "item_name": "Ancient Manipulator"
                                   }
                                 },
                                 {
                                   "rule": "Has",
-                                  "options": [],
                                   "args": {
                                     "item_name": "Polterplasm"
                                   }
@@ -3730,7 +3471,6 @@
                             },
                             {
                               "rule": "Has",
-                              "options": [],
                               "args": {
                                 "item_name": "Post-Moon Lord"
                               }
@@ -3739,7 +3479,6 @@
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Dungeon"
                           }
@@ -3748,7 +3487,6 @@
                     },
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -3757,7 +3495,6 @@
                     },
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "getfixedboi",
                         "_original_ast_type": "name"
@@ -3768,25 +3505,21 @@
                 },
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Magic Mirror"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "PDA"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Tinkerer's Workshop"
                       }
@@ -3808,22 +3541,18 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Witch Doctor"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Wizard"
                       }
@@ -3832,14 +3561,12 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Alchemy Table"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Dungeon"
                   }
@@ -3859,18 +3586,15 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Bewitching Table"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Dungeon"
                   }
@@ -3890,7 +3614,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Dungeon"
               }
@@ -3908,15 +3631,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -3925,7 +3645,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Electrician's Glove"
                       }
@@ -3934,7 +3653,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Mechanic"
                   }
@@ -3954,7 +3672,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Mechanic"
               }
@@ -3972,7 +3689,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Dungeon"
               }
@@ -3990,15 +3706,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -4007,7 +3720,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Cobalt Bar"
                       }
@@ -4016,7 +3728,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Dungeon"
                   }
@@ -4036,25 +3747,21 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Cobalt Shield"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Obsidian Skull"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
@@ -4074,18 +3781,15 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Dungeon"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Post-Skeletron"
                   }
@@ -4117,19 +3821,15 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Not",
-                      "options": [],
                       "args": {
                         "condition": {
                           "rule": "Name",
-                          "options": [],
                           "args": {
                             "name": "calamity",
                             "_original_ast_type": "name"
@@ -4142,7 +3842,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Purified Gel"
                       }
@@ -4151,28 +3850,24 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Blade of Grass"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Evil Sword"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Fiery Greatsword"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Muramasa"
                   }
@@ -4192,7 +3887,6 @@
             "id": 8257802,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Guide"
               }
@@ -4210,7 +3904,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Guide"
               }
@@ -4228,15 +3921,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -4245,25 +3935,21 @@
                     },
                     {
                       "rule": "Or",
-                      "options": [],
                       "children": [
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Celestial Emblem"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Mechanical Glove"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Statis' Blessing"
                           }
@@ -4274,14 +3960,12 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Avenger Emblem"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Guide"
                   }
@@ -4301,15 +3985,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -4318,21 +3999,18 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Pixie Dust"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Soul of Light"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Wire"
                       }
@@ -4341,14 +4019,12 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Trifold Map"
                   }
@@ -4368,7 +4044,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hardmode"
               }
@@ -4386,18 +4061,15 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Power Glove"
                   }
@@ -4417,25 +4089,21 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Feral Claws"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Titan Glove"
                   }
@@ -4455,15 +4123,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -4472,7 +4137,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Elemental Quiver"
                       }
@@ -4481,7 +4145,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
@@ -4501,22 +4164,18 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Dryad"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Hardmode"
                       }
@@ -4525,7 +4184,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Holy Water"
                   }
@@ -4545,15 +4203,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -4562,14 +4217,12 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Ancient Bone Dust"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Bone"
                       }
@@ -4578,14 +4231,12 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Vitamins"
                   }
@@ -4605,11 +4256,9 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Name",
-                  "options": [],
                   "args": {
                     "name": "calamity",
                     "_original_ast_type": "name"
@@ -4618,7 +4267,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
@@ -4638,25 +4286,21 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Adhesive Bandage"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Bezoar"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
@@ -4676,15 +4320,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -4693,14 +4334,12 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Cobalt Bar"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Wire"
                       }
@@ -4709,14 +4348,12 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Nazar"
                   }
@@ -4736,15 +4373,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -4753,14 +4387,12 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Crystal Shard"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Soul of Night"
                       }
@@ -4769,14 +4401,12 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Blindfold"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
@@ -4796,15 +4426,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -4813,14 +4440,12 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Soul of Light"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Soul of Night"
                       }
@@ -4829,14 +4454,12 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Fast Clock"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
@@ -4856,25 +4479,21 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Fast Clock"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Trifold Map"
                   }
@@ -4894,22 +4513,18 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Hardmode"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Purification Powder"
                       }
@@ -4918,7 +4533,6 @@
                 },
                 {
                   "rule": "Name",
-                  "options": [],
                   "args": {
                     "name": "getfixedboi",
                     "_original_ast_type": "name"
@@ -4940,7 +4554,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hardmode"
               }
@@ -4958,7 +4571,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Spider Fangs"
               }
@@ -4976,7 +4588,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hardmode"
               }
@@ -4994,71 +4605,60 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Abyssal Warhammer"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Astral Hamaxe"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Chlorophyte Warhammer"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Grax"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Luminite Hamaxe"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Pwnhammer"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Seismic Hampick"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Spectre Hamaxe"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "The Axe"
                       }
@@ -5067,7 +4667,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
@@ -5087,7 +4686,6 @@
             "id": 8257803,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Altar"
               }
@@ -5105,23 +4703,18 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Or",
-                      "options": [],
                       "children": [
                         {
                           "rule": "And",
-                          "options": [],
                           "children": [
                             {
                               "rule": "Name",
-                              "options": [],
                               "args": {
                                 "name": "calamity",
                                 "_original_ast_type": "name"
@@ -5130,7 +4723,6 @@
                             },
                             {
                               "rule": "Has",
-                              "options": [],
                               "args": {
                                 "item_name": "Hardmode"
                               }
@@ -5139,15 +4731,12 @@
                         },
                         {
                           "rule": "And",
-                          "options": [],
                           "children": [
                             {
                               "rule": "Not",
-                              "options": [],
                               "args": {
                                 "condition": {
                                   "rule": "Name",
-                                  "options": [],
                                   "args": {
                                     "name": "calamity",
                                     "_original_ast_type": "name"
@@ -5160,7 +4749,6 @@
                             },
                             {
                               "rule": "Has",
-                              "options": [],
                               "args": {
                                 "item_name": "Altar"
                               }
@@ -5171,137 +4759,117 @@
                     },
                     {
                       "rule": "Or",
-                      "options": [],
                       "children": [
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Adamantite Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Astral Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Beastial Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Blossom Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Chlorophyte Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Cobalt Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Crystyl Crusher"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Gelpick"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Genesis Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Laser Drill"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Luminite Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Molten Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Mythril Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Pickaxe Axe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Picksaw"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Seismic Hampick"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Shardlight Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Shroomite Digging Claw"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Spectre Pickaxe"
                           }
@@ -5312,21 +4880,18 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Cobalt Bar"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Mythril Ore"
                   }
@@ -5346,32 +4911,27 @@
             "id": 8257804,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Adamantite Ore"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Chlorophyte Ore"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Cobalt Ore"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Mythril Ore"
                   }
@@ -5391,15 +4951,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -5408,7 +4965,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Lunic Eye"
                       }
@@ -5417,14 +4973,12 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Cobalt Ore"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
@@ -5444,7 +4998,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Cobalt Bar"
               }
@@ -5462,11 +5015,9 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Name",
-                  "options": [],
                   "args": {
                     "name": "calamity",
                     "_original_ast_type": "name"
@@ -5475,14 +5026,12 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Pocket Mirror"
                   }
@@ -5502,25 +5051,21 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Blindfold"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Pocket Mirror"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
@@ -5540,15 +5085,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -5557,14 +5099,12 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Alchemy Table"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Blood Orb"
                       }
@@ -5573,14 +5113,12 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Armor Polish"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
@@ -5600,25 +5138,21 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Armor Polish"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Vitamins"
                   }
@@ -5638,15 +5172,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -5655,7 +5186,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Soul of Night"
                       }
@@ -5664,14 +5194,12 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Megaphone"
                   }
@@ -5691,25 +5219,21 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Megaphone"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Nazar"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
@@ -5729,46 +5253,39 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Armor Bracing"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Countercurse Mantra"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Medicated Bandage"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Reflective Shades"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "The Plan"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
@@ -5788,25 +5305,21 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Ankh Charm"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Obsidian Shield"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tinkerer's Workshop"
                   }
@@ -5826,15 +5339,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -5843,15 +5353,12 @@
                     },
                     {
                       "rule": "Or",
-                      "options": [],
                       "children": [
                         {
                           "rule": "And",
-                          "options": [],
                           "children": [
                             {
                               "rule": "Name",
-                              "options": [],
                               "args": {
                                 "name": "getfixedboi",
                                 "_original_ast_type": "name"
@@ -5860,22 +5367,18 @@
                             },
                             {
                               "rule": "Or",
-                              "options": [],
                               "children": [
                                 {
                                   "rule": "And",
-                                  "options": [],
                                   "children": [
                                     {
                                       "rule": "Has",
-                                      "options": [],
                                       "args": {
                                         "item_name": "Bug Net"
                                       }
                                     },
                                     {
                                       "rule": "Has",
-                                      "options": [],
                                       "args": {
                                         "item_name": "Hardmode"
                                       }
@@ -5884,11 +5387,9 @@
                                 },
                                 {
                                   "rule": "And",
-                                  "options": [],
                                   "children": [
                                     {
                                       "rule": "Name",
-                                      "options": [],
                                       "args": {
                                         "name": "calamity",
                                         "_original_ast_type": "name"
@@ -5897,7 +5398,6 @@
                                     },
                                     {
                                       "rule": "Name",
-                                      "options": [],
                                       "args": {
                                         "name": "getfixedboi",
                                         "_original_ast_type": "name"
@@ -5906,7 +5406,6 @@
                                     },
                                     {
                                       "rule": "Has",
-                                      "options": [],
                                       "args": {
                                         "item_name": "Titan Heart"
                                       }
@@ -5919,7 +5418,6 @@
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Altar"
                           }
@@ -5930,7 +5428,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
@@ -5950,7 +5447,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hardmode"
               }
@@ -5968,25 +5464,21 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hallow"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Holy Water"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Meteor Staff"
                   }
@@ -6006,22 +5498,18 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Hallowed Seeds"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Pixie Dust"
                       }
@@ -6030,11 +5518,9 @@
                 },
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -6043,7 +5529,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Statis' Blessing"
                       }
@@ -6065,7 +5550,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hallow"
               }
@@ -6083,7 +5567,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hallow"
               }
@@ -6101,15 +5584,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -6118,15 +5598,12 @@
                     },
                     {
                       "rule": "Or",
-                      "options": [],
                       "children": [
                         {
                           "rule": "And",
-                          "options": [],
                           "children": [
                             {
                               "rule": "Name",
-                              "options": [],
                               "args": {
                                 "name": "getfixedboi",
                                 "_original_ast_type": "name"
@@ -6135,22 +5612,18 @@
                             },
                             {
                               "rule": "Or",
-                              "options": [],
                               "children": [
                                 {
                                   "rule": "And",
-                                  "options": [],
                                   "children": [
                                     {
                                       "rule": "Has",
-                                      "options": [],
                                       "args": {
                                         "item_name": "Bug Net"
                                       }
                                     },
                                     {
                                       "rule": "Has",
-                                      "options": [],
                                       "args": {
                                         "item_name": "Hardmode"
                                       }
@@ -6159,11 +5632,9 @@
                                 },
                                 {
                                   "rule": "And",
-                                  "options": [],
                                   "children": [
                                     {
                                       "rule": "Name",
-                                      "options": [],
                                       "args": {
                                         "name": "calamity",
                                         "_original_ast_type": "name"
@@ -6172,7 +5643,6 @@
                                     },
                                     {
                                       "rule": "Name",
-                                      "options": [],
                                       "args": {
                                         "name": "getfixedboi",
                                         "_original_ast_type": "name"
@@ -6181,7 +5651,6 @@
                                     },
                                     {
                                       "rule": "Has",
-                                      "options": [],
                                       "args": {
                                         "item_name": "Titan Heart"
                                       }
@@ -6194,47 +5663,39 @@
                         },
                         {
                           "rule": "Or",
-                          "options": [],
                           "children": [
                             {
                               "rule": "And",
-                              "options": [],
                               "children": [
                                 {
                                   "rule": "And",
-                                  "options": [],
                                   "children": [
                                     {
                                       "rule": "Has",
-                                      "options": [],
                                       "args": {
                                         "item_name": "Auric Bar"
                                       }
                                     },
                                     {
                                       "rule": "Has",
-                                      "options": [],
                                       "args": {
                                         "item_name": "Brimstone Slag"
                                       }
                                     },
                                     {
                                       "rule": "Has",
-                                      "options": [],
                                       "args": {
                                         "item_name": "Core of Calamity"
                                       }
                                     },
                                     {
                                       "rule": "Has",
-                                      "options": [],
                                       "args": {
                                         "item_name": "Cosmic Anvil"
                                       }
                                     },
                                     {
                                       "rule": "Has",
-                                      "options": [],
                                       "args": {
                                         "item_name": "Fabsol's Vodka"
                                       }
@@ -6243,7 +5704,6 @@
                                 },
                                 {
                                   "rule": "Name",
-                                  "options": [],
                                   "args": {
                                     "name": "calamity",
                                     "_original_ast_type": "name"
@@ -6252,7 +5712,6 @@
                                 },
                                 {
                                   "rule": "Name",
-                                  "options": [],
                                   "args": {
                                     "name": "getfixedboi",
                                     "_original_ast_type": "name"
@@ -6263,7 +5722,6 @@
                             },
                             {
                               "rule": "Has",
-                              "options": [],
                               "args": {
                                 "item_name": "Hallow"
                               }
@@ -6276,21 +5734,18 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hallow"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Light Disc"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Meteor Staff"
                   }
@@ -6310,36 +5765,30 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Hardmode Anvil"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Meteorite Bar"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Pixie Dust"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Soul of Light"
                       }
@@ -6348,7 +5797,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Asteroid Staff"
                   }
@@ -6368,7 +5816,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hallow"
               }
@@ -6386,7 +5833,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hallow"
               }
@@ -6404,7 +5850,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hardmode"
               }
@@ -6422,29 +5867,24 @@
             "id": 8257807,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Ancient Manipulator"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Fragment"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Luminite Bar"
                       }
@@ -6453,25 +5893,21 @@
                 },
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Hardmode"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Post-Golem"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Tavernkeep"
                       }
@@ -6480,25 +5916,21 @@
                 },
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Hardmode"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Post-Plantera"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Witch Doctor"
                       }
@@ -6507,18 +5939,15 @@
                 },
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Post-Plantera"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Solar Eclipse"
                       }
@@ -6527,26 +5956,21 @@
                 },
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Or",
-                      "options": [],
                       "children": [
                         {
                           "rule": "And",
-                          "options": [],
                           "children": [
                             {
                               "rule": "Has",
-                              "options": [],
                               "args": {
                                 "item_name": "Autohammer"
                               }
                             },
                             {
                               "rule": "Has",
-                              "options": [],
                               "args": {
                                 "item_name": "Shroomite Bar"
                               }
@@ -6555,19 +5979,17 @@
                         },
                         {
                           "rule": "And",
-                          "options": [],
                           "children": [
                             {
                               "rule": "Or",
-                              "options": [],
                               "children": [
                                 {
                                   "rule": "has_n_from_list",
-                                  "options": [],
+                                  "_original_ast_type": "helper",
+                                  "_converted_from_cc": true,
                                   "args": [
                                     {
                                       "rule": "Constant",
-                                      "options": [],
                                       "args": {
                                         "value": [
                                           "Post-The Twins",
@@ -6579,41 +6001,33 @@
                                     },
                                     {
                                       "rule": "Constant",
-                                      "options": [],
                                       "args": {
                                         "value": 1
                                       },
                                       "_converted_from_cc": true
                                     }
-                                  ],
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_cc": true
+                                  ]
                                 },
                                 {
                                   "rule": "Or",
-                                  "options": [],
                                   "children": [
                                     {
                                       "rule": "And",
-                                      "options": [],
                                       "children": [
                                         {
                                           "rule": "Has",
-                                          "options": [],
                                           "args": {
                                             "item_name": "Hardmode"
                                           }
                                         },
                                         {
                                           "rule": "Has",
-                                          "options": [],
                                           "args": {
                                             "item_name": "Lihzahrd Temple"
                                           }
                                         },
                                         {
                                           "rule": "Has",
-                                          "options": [],
                                           "args": {
                                             "item_name": "Post-Plantera"
                                           }
@@ -6622,11 +6036,9 @@
                                     },
                                     {
                                       "rule": "And",
-                                      "options": [],
                                       "children": [
                                         {
                                           "rule": "Name",
-                                          "options": [],
                                           "args": {
                                             "name": "calamity",
                                             "_original_ast_type": "name"
@@ -6635,21 +6047,18 @@
                                         },
                                         {
                                           "rule": "Has",
-                                          "options": [],
                                           "args": {
                                             "item_name": "Essence of Sunlight"
                                           }
                                         },
                                         {
                                           "rule": "Has",
-                                          "options": [],
                                           "args": {
                                             "item_name": "Hardmode Anvil"
                                           }
                                         },
                                         {
                                           "rule": "Has",
-                                          "options": [],
                                           "args": {
                                             "item_name": "Lihzahrd Temple"
                                           }
@@ -6660,49 +6069,42 @@
                                 },
                                 {
                                   "rule": "Has",
-                                  "options": [],
                                   "args": {
                                     "item_name": "Hardmode"
                                   }
                                 },
                                 {
                                   "rule": "Has",
-                                  "options": [],
                                   "args": {
                                     "item_name": "Pixie Dust"
                                   }
                                 },
                                 {
                                   "rule": "Has",
-                                  "options": [],
                                   "args": {
                                     "item_name": "Post-Plantera"
                                   }
                                 },
                                 {
                                   "rule": "Has",
-                                  "options": [],
                                   "args": {
                                     "item_name": "Solar Eclipse"
                                   }
                                 },
                                 {
                                   "rule": "Has",
-                                  "options": [],
                                   "args": {
                                     "item_name": "Soul of Light"
                                   }
                                 },
                                 {
                                   "rule": "Has",
-                                  "options": [],
                                   "args": {
                                     "item_name": "Soul of Night"
                                   }
                                 },
                                 {
                                   "rule": "Has",
-                                  "options": [],
                                   "args": {
                                     "item_name": "Spectre Bar"
                                   }
@@ -6711,7 +6113,6 @@
                             },
                             {
                               "rule": "Has",
-                              "options": [],
                               "args": {
                                 "item_name": "Hardmode Anvil"
                               }
@@ -6720,14 +6121,12 @@
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Pumpkin Moon"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Pumpkin Moon"
                           }
@@ -6736,7 +6135,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Soul of Flight"
                       }
@@ -6745,7 +6143,6 @@
                 },
                 {
                   "rule": "Name",
-                  "options": [],
                   "args": {
                     "name": "grindy_achievements",
                     "_original_ast_type": "name"
@@ -6754,47 +6151,39 @@
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "And",
-                          "options": [],
                           "children": [
                             {
                               "rule": "Has",
-                              "options": [],
                               "args": {
                                 "item_name": "Auric Bar"
                               }
                             },
                             {
                               "rule": "Has",
-                              "options": [],
                               "args": {
                                 "item_name": "Brimstone Slag"
                               }
                             },
                             {
                               "rule": "Has",
-                              "options": [],
                               "args": {
                                 "item_name": "Core of Calamity"
                               }
                             },
                             {
                               "rule": "Has",
-                              "options": [],
                               "args": {
                                 "item_name": "Cosmic Anvil"
                               }
                             },
                             {
                               "rule": "Has",
-                              "options": [],
                               "args": {
                                 "item_name": "Fabsol's Vodka"
                               }
@@ -6803,7 +6192,6 @@
                         },
                         {
                           "rule": "Name",
-                          "options": [],
                           "args": {
                             "name": "calamity",
                             "_original_ast_type": "name"
@@ -6812,7 +6200,6 @@
                         },
                         {
                           "rule": "Name",
-                          "options": [],
                           "args": {
                             "name": "getfixedboi",
                             "_original_ast_type": "name"
@@ -6823,15 +6210,12 @@
                     },
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "Or",
-                          "options": [],
                           "children": [
                             {
                               "rule": "Name",
-                              "options": [],
                               "args": {
                                 "name": "calamity",
                                 "_original_ast_type": "name"
@@ -6840,7 +6224,6 @@
                             },
                             {
                               "rule": "Has",
-                              "options": [],
                               "args": {
                                 "item_name": "Post-Plantera"
                               }
@@ -6849,14 +6232,12 @@
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Hallow"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Hardmode"
                           }
@@ -6867,22 +6248,18 @@
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Bug Net"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Hardmode"
                           }
@@ -6891,11 +6268,9 @@
                     },
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "Name",
-                          "options": [],
                           "args": {
                             "name": "calamity",
                             "_original_ast_type": "name"
@@ -6904,7 +6279,6 @@
                         },
                         {
                           "rule": "Name",
-                          "options": [],
                           "args": {
                             "name": "getfixedboi",
                             "_original_ast_type": "name"
@@ -6913,7 +6287,6 @@
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Titan Heart"
                           }
@@ -6924,14 +6297,12 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Frost Moon"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Steampunker"
                   }
@@ -6951,18 +6322,15 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Zoologist"
                   }
@@ -6982,18 +6350,15 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Sandstorm"
                   }
@@ -7013,7 +6378,6 @@
             "id": 8257809,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hardmode"
               }
@@ -7031,7 +6395,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hardmode"
               }
@@ -7049,7 +6412,6 @@
             "id": 8257811,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Truffle"
               }
@@ -7067,7 +6429,6 @@
             "id": 8257812,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hardmode"
               }
@@ -7085,7 +6446,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Post-Pirate Invasion"
               }
@@ -7103,47 +6463,39 @@
             "id": 8257813,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Auric Bar"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Brimstone Slag"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Core of Calamity"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Cosmic Anvil"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Fabsol's Vodka"
                           }
@@ -7152,7 +6504,6 @@
                     },
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -7161,7 +6512,6 @@
                     },
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "getfixedboi",
                         "_original_ast_type": "name"
@@ -7172,7 +6522,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hallow"
                   }
@@ -7192,47 +6541,39 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Auric Bar"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Brimstone Slag"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Core of Calamity"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Cosmic Anvil"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Fabsol's Vodka"
                           }
@@ -7241,7 +6582,6 @@
                     },
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -7250,7 +6590,6 @@
                     },
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "getfixedboi",
                         "_original_ast_type": "name"
@@ -7261,7 +6600,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hallow"
                   }
@@ -7281,7 +6619,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sparkle Slime Balloon"
               }
@@ -7299,60 +6636,51 @@
             "id": 8257814,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Clumsy Slime"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Cool Slime"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Diva Slime"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Elder Slime"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Mystic Slime"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Nerdy Slime"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Squire Slime"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Surly Slime"
                   }
@@ -7372,27 +6700,23 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Or",
-                      "options": [],
                       "children": [
                         {
                           "rule": "And",
-                          "options": [],
                           "children": [
                             {
                               "rule": "has_n_from_list",
-                              "options": [],
+                              "_original_ast_type": "helper",
+                              "_converted_from_cc": true,
                               "args": [
                                 {
                                   "rule": "Constant",
-                                  "options": [],
                                   "args": {
                                     "value": [
                                       "Post-The Twins",
@@ -7404,19 +6728,15 @@
                                 },
                                 {
                                   "rule": "Constant",
-                                  "options": [],
                                   "args": {
                                     "value": 1
                                   },
                                   "_converted_from_cc": true
                                 }
-                              ],
-                              "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              ]
                             },
                             {
                               "rule": "Name",
-                              "options": [],
                               "args": {
                                 "name": "calamity",
                                 "_original_ast_type": "name"
@@ -7427,15 +6747,12 @@
                         },
                         {
                           "rule": "And",
-                          "options": [],
                           "children": [
                             {
                               "rule": "Not",
-                              "options": [],
                               "args": {
                                 "condition": {
                                   "rule": "Name",
-                                  "options": [],
                                   "args": {
                                     "name": "calamity",
                                     "_original_ast_type": "name"
@@ -7448,7 +6765,6 @@
                             },
                             {
                               "rule": "Has",
-                              "options": [],
                               "args": {
                                 "item_name": "Altar"
                               }
@@ -7459,123 +6775,105 @@
                     },
                     {
                       "rule": "Or",
-                      "options": [],
                       "children": [
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Adamantite Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Astral Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Beastial Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Blossom Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Chlorophyte Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Cobalt Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Crystyl Crusher"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Genesis Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Laser Drill"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Luminite Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Mythril Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Pickaxe Axe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Picksaw"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Seismic Hampick"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Shardlight Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Shroomite Digging Claw"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Spectre Pickaxe"
                           }
@@ -7586,21 +6884,18 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Adamantite Ore"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Mythril Bar"
                   }
@@ -7620,15 +6915,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -7637,7 +6929,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Electrician's Glove"
                       }
@@ -7646,14 +6937,12 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Mythril Ore"
                   }
@@ -7673,7 +6962,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Mythril Bar"
               }
@@ -7691,18 +6979,15 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode Anvil"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Mythril Bar"
                   }
@@ -7722,15 +7007,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -7739,7 +7021,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Hallowed Ore"
                       }
@@ -7748,15 +7029,12 @@
                 },
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Not",
-                      "options": [],
                       "args": {
                         "condition": {
                           "rule": "Name",
-                          "options": [],
                           "args": {
                             "name": "calamity",
                             "_original_ast_type": "name"
@@ -7769,7 +7047,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Chlorophyte Ore"
                       }
@@ -7778,23 +7055,20 @@
                 },
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Or",
-                      "options": [],
                       "children": [
                         {
                           "rule": "And",
-                          "options": [],
                           "children": [
                             {
                               "rule": "has_n_from_list",
-                              "options": [],
+                              "_original_ast_type": "helper",
+                              "_converted_from_cc": true,
                               "args": [
                                 {
                                   "rule": "Constant",
-                                  "options": [],
                                   "args": {
                                     "value": [
                                       "Post-The Twins",
@@ -7806,19 +7080,15 @@
                                 },
                                 {
                                   "rule": "Constant",
-                                  "options": [],
                                   "args": {
                                     "value": 2
                                   },
                                   "_converted_from_cc": true
                                 }
-                              ],
-                              "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              ]
                             },
                             {
                               "rule": "Name",
-                              "options": [],
                               "args": {
                                 "name": "calamity",
                                 "_original_ast_type": "name"
@@ -7829,15 +7099,12 @@
                         },
                         {
                           "rule": "And",
-                          "options": [],
                           "children": [
                             {
                               "rule": "Not",
-                              "options": [],
                               "args": {
                                 "condition": {
                                   "rule": "Name",
-                                  "options": [],
                                   "args": {
                                     "name": "calamity",
                                     "_original_ast_type": "name"
@@ -7850,7 +7117,6 @@
                             },
                             {
                               "rule": "Has",
-                              "options": [],
                               "args": {
                                 "item_name": "Altar"
                               }
@@ -7861,116 +7127,99 @@
                     },
                     {
                       "rule": "Or",
-                      "options": [],
                       "children": [
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Adamantite Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Astral Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Beastial Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Blossom Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Chlorophyte Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Crystyl Crusher"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Genesis Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Laser Drill"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Luminite Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Mythril Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Pickaxe Axe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Picksaw"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Seismic Hampick"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Shardlight Pickaxe"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Shroomite Digging Claw"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Spectre Pickaxe"
                           }
@@ -7981,14 +7230,12 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Adamantite Bar"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
@@ -8008,25 +7255,21 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Adamantite Ore"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode Anvil"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hellforge"
                   }
@@ -8046,22 +7289,18 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Adamantite Ore"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Hardmode Forge"
                       }
@@ -8070,7 +7309,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode"
                   }
@@ -8090,18 +7328,15 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Adamantite Bar"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode Anvil"
                   }
@@ -8121,25 +7356,21 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Adamantite Bar"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Forbidden Fragment"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hardmode Anvil"
                   }
@@ -8159,15 +7390,12 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -8176,7 +7404,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Hardmode Anvil"
                       }
@@ -8185,7 +7412,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Soul of Light"
                   }
@@ -8205,15 +7431,12 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -8222,7 +7445,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Hardmode Anvil"
                       }
@@ -8231,7 +7453,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Soul of Night"
                   }
@@ -8251,15 +7472,12 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "calamity",
                         "_original_ast_type": "name"
@@ -8268,7 +7486,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Hardmode Anvil"
                       }
@@ -8277,21 +7494,18 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Bone"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Soul of Light"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Soul of Night"
                   }
@@ -8311,15 +7525,12 @@
             "id": 8257818,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "getfixedboi",
                         "_original_ast_type": "name"
@@ -8328,7 +7539,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Ocram's Razor"
                       }
@@ -8337,15 +7547,12 @@
                 },
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Not",
-                      "options": [],
                       "args": {
                         "condition": {
                           "rule": "Name",
-                          "options": [],
                           "args": {
                             "name": "getfixedboi",
                             "_original_ast_type": "name"
@@ -8358,7 +7565,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Mechanical Eye"
                       }
@@ -8380,15 +7586,12 @@
             "id": 8257820,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "getfixedboi",
                         "_original_ast_type": "name"
@@ -8397,7 +7600,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Ocram's Razor"
                       }
@@ -8406,15 +7608,12 @@
                 },
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Not",
-                      "options": [],
                       "args": {
                         "condition": {
                           "rule": "Name",
-                          "options": [],
                           "args": {
                             "name": "getfixedboi",
                             "_original_ast_type": "name"
@@ -8427,7 +7626,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Mechanical Worm"
                       }
@@ -8449,15 +7647,12 @@
             "id": 8257822,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Name",
-                      "options": [],
                       "args": {
                         "name": "getfixedboi",
                         "_original_ast_type": "name"
@@ -8466,7 +7661,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Ocram's Razor"
                       }
@@ -8475,15 +7669,12 @@
                 },
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Not",
-                      "options": [],
                       "args": {
                         "condition": {
                           "rule": "Name",
-                          "options": [],
                           "args": {
                             "name": "getfixedboi",
                             "_original_ast_type": "name"
@@ -8496,7 +7687,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Mechanical Skull"
                       }

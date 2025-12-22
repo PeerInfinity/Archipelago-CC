@@ -19,36 +19,28 @@
             "name": "Menu -> Mushroom Zone",
             "connected_region": "Mushroom Zone",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Menu -> Scenic Course",
             "connected_region": "Scenic Course",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Menu -> Tree Zone 1",
             "connected_region": "Tree Zone 1",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Menu -> Hippo Zone",
             "connected_region": "Hippo Zone",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -56,19 +48,15 @@
             "connected_region": "Space Zone 1",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Not",
-                      "options": [],
                       "args": {
                         "condition": {
                           "rule": "AST_block",
-                          "options": [],
                           "args": {
                             "statements": [
                               {
@@ -157,7 +145,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Carrot"
                       }
@@ -166,7 +153,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hippo Bubble"
                   }
@@ -178,36 +164,28 @@
             "name": "Menu -> Macro Zone 1",
             "connected_region": "Macro Zone 1",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Menu -> Pumpkin Zone 1",
             "connected_region": "Pumpkin Zone 1",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Menu -> Mario Zone 1",
             "connected_region": "Mario Zone 1",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Menu -> Turtle Zone 1",
             "connected_region": "Turtle Zone 1",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -215,7 +193,6 @@
             "connected_region": "Mario's Castle",
             "access_rule": {
               "rule": "HasFromListUnique",
-              "options": [],
               "args": {
                 "items": [
                   "Tree Coin",
@@ -240,9 +217,7 @@
             "name": "Mushroom Zone - Normal Exit",
             "id": 1,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Pumpkin Zone Secret 2",
@@ -256,9 +231,7 @@
             "name": "Mushroom Zone - Midway Bell",
             "id": 2,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -278,9 +251,7 @@
             "name": "Scenic Course - Normal Exit",
             "id": 3,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -300,15 +271,12 @@
             "connected_region": "Tree Zone 2",
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "Arithmetic",
-                  "options": [],
                   "args": {
                     "left": {
                       "rule": "CountItem",
-                      "options": [],
                       "args": {
                         "item_name": "Tree Zone Progression"
                       }
@@ -316,11 +284,9 @@
                     "op": "+",
                     "right": {
                       "rule": "Arithmetic",
-                      "options": [],
                       "args": {
                         "left": {
                           "rule": "CountItem",
-                          "options": [],
                           "args": {
                             "item_name": "Tree Zone Progression x2"
                           }
@@ -328,7 +294,6 @@
                         "op": "*",
                         "right": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 2
                           },
@@ -341,7 +306,6 @@
                 "op": ">=",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 1
                   },
@@ -358,9 +322,7 @@
             "name": "Tree Zone 1 - Normal Exit",
             "id": 4,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Tree Zone Secret",
@@ -374,9 +336,7 @@
             "name": "Tree Zone 1 - Midway Bell",
             "id": 5,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -396,15 +356,12 @@
             "connected_region": "Tree Zone 3",
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "Arithmetic",
-                  "options": [],
                   "args": {
                     "left": {
                       "rule": "CountItem",
-                      "options": [],
                       "args": {
                         "item_name": "Tree Zone Progression"
                       }
@@ -412,11 +369,9 @@
                     "op": "+",
                     "right": {
                       "rule": "Arithmetic",
-                      "options": [],
                       "args": {
                         "left": {
                           "rule": "CountItem",
-                          "options": [],
                           "args": {
                             "item_name": "Tree Zone Progression x2"
                           }
@@ -424,7 +379,6 @@
                         "op": "*",
                         "right": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 2
                           },
@@ -437,7 +391,6 @@
                 "op": ">=",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 2
                   },
@@ -453,7 +406,6 @@
             "connected_region": "Tree Zone Secret Course",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tree Zone Secret"
               }
@@ -466,11 +418,9 @@
             "id": 6,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -480,7 +430,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tree Zone 2 Midway Bell"
                   }
@@ -500,11 +449,9 @@
             "id": 7,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -514,7 +461,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Carrot"
                   }
@@ -534,11 +480,9 @@
             "id": 8,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -548,7 +492,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tree Zone 2 Midway Bell"
                   }
@@ -572,9 +515,7 @@
             "name": "Tree Zone 3 -> Tree Zone 4",
             "connected_region": "Tree Zone 4",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -584,11 +525,9 @@
             "id": 9,
             "access_rule": {
               "rule": "Not",
-              "options": [],
               "args": {
                 "condition": {
                   "rule": "AST_block",
-                  "options": [],
                   "args": {
                     "statements": [
                       {
@@ -693,15 +632,12 @@
             "connected_region": "Tree Zone 5",
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "Arithmetic",
-                  "options": [],
                   "args": {
                     "left": {
                       "rule": "CountItem",
-                      "options": [],
                       "args": {
                         "item_name": "Tree Zone Progression"
                       }
@@ -709,11 +645,9 @@
                     "op": "+",
                     "right": {
                       "rule": "Arithmetic",
-                      "options": [],
                       "args": {
                         "left": {
                           "rule": "CountItem",
-                          "options": [],
                           "args": {
                             "item_name": "Tree Zone Progression x2"
                           }
@@ -721,7 +655,6 @@
                         "op": "*",
                         "right": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 2
                           },
@@ -734,7 +667,6 @@
                 "op": ">=",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 3
                   },
@@ -752,19 +684,15 @@
             "id": 10,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "HasAny",
-                          "options": [],
                           "args": {
                             "items": [
                               "Pipe Traversal",
@@ -774,7 +702,6 @@
                         },
                         {
                           "rule": "HasAny",
-                          "options": [],
                           "args": {
                             "items": [
                               "Pipe Traversal",
@@ -786,7 +713,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Tree Zone 4 Midway Bell"
                       }
@@ -795,7 +721,6 @@
                 },
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -818,15 +743,12 @@
             "id": 11,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Pipe Traversal",
@@ -836,7 +758,6 @@
                     },
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Pipe Traversal",
@@ -848,7 +769,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tree Zone 4 Midway Bell"
                   }
@@ -874,15 +794,12 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Pipe Traversal",
@@ -892,7 +809,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Carrot"
                       }
@@ -901,7 +817,6 @@
                 },
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -923,9 +838,7 @@
             "name": "Tree Zone 5 - Midway Bell",
             "id": 13,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -945,9 +858,7 @@
             "name": "Tree Zone Secret Course - Normal Exit",
             "id": 14,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Pumpkin Zone Progression",
@@ -968,19 +879,15 @@
             "id": 15,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Not",
-                      "options": [],
                       "args": {
                         "condition": {
                           "rule": "AST_block",
-                          "options": [],
                           "args": {
                             "statements": [
                               {
@@ -1069,7 +976,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Carrot"
                       }
@@ -1078,7 +984,6 @@
                 },
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Hippo Bubble",
@@ -1106,7 +1011,6 @@
             "connected_region": "Space Zone Secret Course",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Space Zone Secret"
               }
@@ -1117,15 +1021,12 @@
             "connected_region": "Space Zone 2",
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "Arithmetic",
-                  "options": [],
                   "args": {
                     "left": {
                       "rule": "CountItem",
-                      "options": [],
                       "args": {
                         "item_name": "Space Zone Progression"
                       }
@@ -1133,11 +1034,9 @@
                     "op": "+",
                     "right": {
                       "rule": "Arithmetic",
-                      "options": [],
                       "args": {
                         "left": {
                           "rule": "CountItem",
-                          "options": [],
                           "args": {
                             "item_name": "Space Zone Progression x2"
                           }
@@ -1145,7 +1044,6 @@
                         "op": "*",
                         "right": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 2
                           },
@@ -1158,7 +1056,6 @@
                 "op": ">=",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 1
                   },
@@ -1176,7 +1073,6 @@
             "id": 16,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Carrot",
@@ -1197,15 +1093,12 @@
             "id": 17,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Not",
-                  "options": [],
                   "args": {
                     "condition": {
                       "rule": "AST_block",
-                      "options": [],
                       "args": {
                         "statements": [
                           {
@@ -1294,7 +1187,6 @@
                 },
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Carrot",
@@ -1316,9 +1208,7 @@
             "name": "Space Zone 1 - Midway Bell",
             "id": 18,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -1338,9 +1228,7 @@
             "name": "Space Zone Secret Course - Normal Exit",
             "id": 19,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mario Zone Progression",
@@ -1361,11 +1249,9 @@
             "id": null,
             "access_rule": {
               "rule": "Conditional",
-              "options": [],
               "args": {
                 "test": {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -1375,23 +1261,18 @@
                 },
                 "if_true": {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Conditional",
-                      "options": [],
                       "args": {
                         "test": {
                           "rule": "Or",
-                          "options": [],
                           "children": [
                             {
                               "rule": "Not",
-                              "options": [],
                               "args": {
                                 "condition": {
                                   "rule": "AST_setting_value",
-                                  "options": [],
                                   "args": {
                                     "setting": "shuffle_midway_bells",
                                     "_original_ast_type": "setting_value"
@@ -1404,7 +1285,6 @@
                             },
                             {
                               "rule": "Has",
-                              "options": [],
                               "args": {
                                 "item_name": "Space Zone 2 Midway Bell"
                               }
@@ -1413,11 +1293,9 @@
                         },
                         "if_true": {
                           "rule": "Conditional",
-                          "options": [],
                           "args": {
                             "test": {
                               "rule": "HasAny",
-                              "options": [],
                               "args": {
                                 "items": [
                                   "Carrot",
@@ -1427,9 +1305,7 @@
                               }
                             },
                             "if_true": {
-                              "rule": "True_",
-                              "options": [],
-                              "args": {}
+                              "rule": "True_"
                             },
                             "if_false": null,
                             "_original_ast_type": "conditional"
@@ -1438,15 +1314,12 @@
                         },
                         "if_false": {
                           "rule": "Conditional",
-                          "options": [],
                           "args": {
                             "test": {
                               "rule": "And",
-                              "options": [],
                               "children": [
                                 {
                                   "rule": "HasAny",
-                                  "options": [],
                                   "args": {
                                     "items": [
                                       "Carrot",
@@ -1456,7 +1329,6 @@
                                 },
                                 {
                                   "rule": "Has",
-                                  "options": [],
                                   "args": {
                                     "item_name": "Mushroom"
                                   }
@@ -1464,9 +1336,7 @@
                               ]
                             },
                             "if_true": {
-                              "rule": "True_",
-                              "options": [],
-                              "args": {}
+                              "rule": "True_"
                             },
                             "if_false": null,
                             "_original_ast_type": "conditional"
@@ -1479,7 +1349,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Space Physics"
                       }
@@ -1487,9 +1356,7 @@
                   ]
                 },
                 "if_false": {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 "_original_ast_type": "conditional"
               },
@@ -1508,7 +1375,6 @@
             "id": 21,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Carrot",
@@ -1537,15 +1403,12 @@
             "connected_region": "Macro Zone 2",
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "Arithmetic",
-                  "options": [],
                   "args": {
                     "left": {
                       "rule": "CountItem",
-                      "options": [],
                       "args": {
                         "item_name": "Macro Zone Progression"
                       }
@@ -1553,11 +1416,9 @@
                     "op": "+",
                     "right": {
                       "rule": "Arithmetic",
-                      "options": [],
                       "args": {
                         "left": {
                           "rule": "CountItem",
-                          "options": [],
                           "args": {
                             "item_name": "Macro Zone Progression x2"
                           }
@@ -1565,7 +1426,6 @@
                         "op": "*",
                         "right": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 2
                           },
@@ -1578,7 +1438,6 @@
                 "op": ">=",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 1
                   },
@@ -1594,7 +1453,6 @@
             "connected_region": "Macro Zone Secret Course",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Macro Zone Secret 1"
               }
@@ -1607,11 +1465,9 @@
             "id": 22,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -1621,7 +1477,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Macro Zone 1 Midway Bell"
                   }
@@ -1641,15 +1496,12 @@
             "id": 23,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Pipe Traversal",
@@ -1659,7 +1511,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Macro Zone 1 Midway Bell"
                       }
@@ -1668,7 +1519,6 @@
                 },
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -1678,7 +1528,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Fire Flower"
                   }
@@ -1698,11 +1547,9 @@
             "id": 24,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -1712,7 +1559,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Macro Zone 1 Midway Bell"
                   }
@@ -1737,15 +1583,12 @@
             "connected_region": "Macro Zone 3",
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "Arithmetic",
-                  "options": [],
                   "args": {
                     "left": {
                       "rule": "CountItem",
-                      "options": [],
                       "args": {
                         "item_name": "Macro Zone Progression"
                       }
@@ -1753,11 +1596,9 @@
                     "op": "+",
                     "right": {
                       "rule": "Arithmetic",
-                      "options": [],
                       "args": {
                         "left": {
                           "rule": "CountItem",
-                          "options": [],
                           "args": {
                             "item_name": "Macro Zone Progression x2"
                           }
@@ -1765,7 +1606,6 @@
                         "op": "*",
                         "right": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 2
                           },
@@ -1778,7 +1618,6 @@
                 "op": ">=",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 2
                   },
@@ -1796,15 +1635,12 @@
             "id": 25,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Not",
-                  "options": [],
                   "args": {
                     "condition": {
                       "rule": "AST_block",
-                      "options": [],
                       "args": {
                         "statements": [
                           {
@@ -1893,11 +1729,9 @@
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Pipe Traversal",
@@ -1907,7 +1741,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Macro Zone 2 Midway Bell"
                       }
@@ -1916,7 +1749,6 @@
                 },
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -1926,7 +1758,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Water Physics"
                   }
@@ -1946,15 +1777,12 @@
             "id": 26,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Pipe Traversal",
@@ -1964,7 +1792,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Water Physics"
                       }
@@ -1973,7 +1800,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Macro Zone 2 Midway Bell"
                   }
@@ -1998,15 +1824,12 @@
             "connected_region": "Macro Zone 4",
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "Arithmetic",
-                  "options": [],
                   "args": {
                     "left": {
                       "rule": "CountItem",
-                      "options": [],
                       "args": {
                         "item_name": "Macro Zone Progression"
                       }
@@ -2014,11 +1837,9 @@
                     "op": "+",
                     "right": {
                       "rule": "Arithmetic",
-                      "options": [],
                       "args": {
                         "left": {
                           "rule": "CountItem",
-                          "options": [],
                           "args": {
                             "item_name": "Macro Zone Progression x2"
                           }
@@ -2026,7 +1847,6 @@
                         "op": "*",
                         "right": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 2
                           },
@@ -2039,7 +1859,6 @@
                 "op": ">=",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 3
                   },
@@ -2057,15 +1876,12 @@
             "id": 27,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Pipe Traversal",
@@ -2075,7 +1891,6 @@
                     },
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Pipe Traversal",
@@ -2087,7 +1902,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Macro Zone 3 Midway Bell"
                   }
@@ -2107,15 +1921,12 @@
             "id": 28,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Pipe Traversal",
@@ -2125,7 +1936,6 @@
                     },
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Pipe Traversal",
@@ -2137,7 +1947,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Macro Zone 3 Midway Bell"
                   }
@@ -2162,7 +1971,6 @@
             "connected_region": "Macro Zone Secret Course",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Macro Zone Secret 2"
               }
@@ -2175,7 +1983,6 @@
             "id": null,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Pipe Traversal",
@@ -2195,9 +2002,7 @@
             "name": "Macro Zone 4 - Midway Bell",
             "id": 30,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Turtle Zone Secret",
@@ -2217,7 +2022,6 @@
             "connected_region": "Macro Zone 4",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Macro Zone Secret 2"
               }
@@ -2229,9 +2033,7 @@
             "name": "Macro Zone Secret Course - Normal Exit",
             "id": 31,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Pumpkin Zone Progression",
@@ -2251,15 +2053,12 @@
             "connected_region": "Pumpkin Zone 2",
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "Arithmetic",
-                  "options": [],
                   "args": {
                     "left": {
                       "rule": "CountItem",
-                      "options": [],
                       "args": {
                         "item_name": "Pumpkin Zone Progression"
                       }
@@ -2267,11 +2066,9 @@
                     "op": "+",
                     "right": {
                       "rule": "Arithmetic",
-                      "options": [],
                       "args": {
                         "left": {
                           "rule": "CountItem",
-                          "options": [],
                           "args": {
                             "item_name": "Pumpkin Zone Progression x2"
                           }
@@ -2279,7 +2076,6 @@
                         "op": "*",
                         "right": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 2
                           },
@@ -2292,7 +2088,6 @@
                 "op": ">=",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 1
                   },
@@ -2310,19 +2105,15 @@
             "id": 32,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Not",
-                      "options": [],
                       "args": {
                         "condition": {
                           "rule": "AST_block",
-                          "options": [],
                           "args": {
                             "statements": [
                               {
@@ -2411,7 +2202,6 @@
                     },
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Pipe Traversal",
@@ -2423,7 +2213,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Pumpkin Zone 1 Midway Bell"
                   }
@@ -2443,19 +2232,15 @@
             "id": 33,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Not",
-                      "options": [],
                       "args": {
                         "condition": {
                           "rule": "AST_block",
-                          "options": [],
                           "args": {
                             "statements": [
                               {
@@ -2544,7 +2329,6 @@
                     },
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Pipe Traversal",
@@ -2556,7 +2340,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Pumpkin Zone 1 Midway Bell"
                   }
@@ -2581,15 +2364,12 @@
             "connected_region": "Pumpkin Zone 3",
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "Arithmetic",
-                  "options": [],
                   "args": {
                     "left": {
                       "rule": "CountItem",
-                      "options": [],
                       "args": {
                         "item_name": "Pumpkin Zone Progression"
                       }
@@ -2597,11 +2377,9 @@
                     "op": "+",
                     "right": {
                       "rule": "Arithmetic",
-                      "options": [],
                       "args": {
                         "left": {
                           "rule": "CountItem",
-                          "options": [],
                           "args": {
                             "item_name": "Pumpkin Zone Progression x2"
                           }
@@ -2609,7 +2387,6 @@
                         "op": "*",
                         "right": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 2
                           },
@@ -2622,7 +2399,6 @@
                 "op": ">=",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 2
                   },
@@ -2638,7 +2414,6 @@
             "connected_region": "Pumpkin Zone Secret Course 1",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Pumpkin Zone Secret 1"
               }
@@ -2651,15 +2426,12 @@
             "id": 34,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Not",
-                  "options": [],
                   "args": {
                     "condition": {
                       "rule": "AST_block",
-                      "options": [],
                       "args": {
                         "statements": [
                           {
@@ -2748,7 +2520,6 @@
                 },
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -2758,7 +2529,6 @@
                 },
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -2768,7 +2538,6 @@
                 },
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -2778,7 +2547,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Water Physics"
                   }
@@ -2798,19 +2566,15 @@
             "id": 35,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Not",
-                      "options": [],
                       "args": {
                         "condition": {
                           "rule": "AST_block",
-                          "options": [],
                           "args": {
                             "statements": [
                               {
@@ -2899,7 +2663,6 @@
                     },
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Pipe Traversal",
@@ -2909,7 +2672,6 @@
                     },
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Pipe Traversal",
@@ -2919,7 +2681,6 @@
                     },
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Pipe Traversal",
@@ -2929,7 +2690,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Water Physics"
                       }
@@ -2938,7 +2698,6 @@
                 },
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Fire Flower",
@@ -2960,9 +2719,7 @@
             "name": "Pumpkin Zone 2 - Midway Bell",
             "id": 36,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fire Flower",
@@ -2982,15 +2739,12 @@
             "connected_region": "Pumpkin Zone 4",
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "Arithmetic",
-                  "options": [],
                   "args": {
                     "left": {
                       "rule": "CountItem",
-                      "options": [],
                       "args": {
                         "item_name": "Pumpkin Zone Progression"
                       }
@@ -2998,11 +2752,9 @@
                     "op": "+",
                     "right": {
                       "rule": "Arithmetic",
-                      "options": [],
                       "args": {
                         "left": {
                           "rule": "CountItem",
-                          "options": [],
                           "args": {
                             "item_name": "Pumpkin Zone Progression x2"
                           }
@@ -3010,7 +2762,6 @@
                         "op": "*",
                         "right": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 2
                           },
@@ -3023,7 +2774,6 @@
                 "op": ">=",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 3
                   },
@@ -3039,7 +2789,6 @@
             "connected_region": "Pumpkin Zone Secret Course 2",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Pumpkin Zone Secret 2"
               }
@@ -3051,9 +2800,7 @@
             "name": "Pumpkin Zone 3 - Normal Exit",
             "id": 37,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Carrot",
@@ -3068,7 +2815,6 @@
             "id": 38,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Carrot"
               }
@@ -3085,9 +2831,7 @@
             "name": "Pumpkin Zone 3 - Midway Bell",
             "id": 39,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -3108,7 +2852,6 @@
             "id": null,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Pipe Traversal",
@@ -3128,9 +2871,7 @@
             "name": "Pumpkin Zone 4 - Midway Bell",
             "id": 41,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -3150,9 +2891,7 @@
             "name": "Pumpkin Zone Secret Course 1 - Normal Exit",
             "id": 42,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -3172,9 +2911,7 @@
             "name": "Pumpkin Zone Secret Course 2 - Normal Exit",
             "id": 43,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -3194,15 +2931,12 @@
             "connected_region": "Mario Zone 2",
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "Arithmetic",
-                  "options": [],
                   "args": {
                     "left": {
                       "rule": "CountItem",
-                      "options": [],
                       "args": {
                         "item_name": "Mario Zone Progression"
                       }
@@ -3210,11 +2944,9 @@
                     "op": "+",
                     "right": {
                       "rule": "Arithmetic",
-                      "options": [],
                       "args": {
                         "left": {
                           "rule": "CountItem",
-                          "options": [],
                           "args": {
                             "item_name": "Mario Zone Progression x2"
                           }
@@ -3222,7 +2954,6 @@
                         "op": "*",
                         "right": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 2
                           },
@@ -3235,7 +2966,6 @@
                 "op": ">=",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 1
                   },
@@ -3253,19 +2983,15 @@
             "id": 44,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Not",
-                      "options": [],
                       "args": {
                         "condition": {
                           "rule": "AST_block",
-                          "options": [],
                           "args": {
                             "statements": [
                               {
@@ -3354,7 +3080,6 @@
                     },
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Carrot",
@@ -3368,7 +3093,6 @@
                 },
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -3391,15 +3115,12 @@
             "id": 45,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Carrot",
@@ -3410,7 +3131,6 @@
                     },
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Pipe Traversal",
@@ -3422,7 +3142,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Mario Zone 1 Midway Bell"
                   }
@@ -3447,15 +3166,12 @@
             "connected_region": "Mario Zone 3",
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "Arithmetic",
-                  "options": [],
                   "args": {
                     "left": {
                       "rule": "CountItem",
-                      "options": [],
                       "args": {
                         "item_name": "Mario Zone Progression"
                       }
@@ -3463,11 +3179,9 @@
                     "op": "+",
                     "right": {
                       "rule": "Arithmetic",
-                      "options": [],
                       "args": {
                         "left": {
                           "rule": "CountItem",
-                          "options": [],
                           "args": {
                             "item_name": "Mario Zone Progression x2"
                           }
@@ -3475,7 +3189,6 @@
                         "op": "*",
                         "right": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 2
                           },
@@ -3488,7 +3201,6 @@
                 "op": ">=",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 2
                   },
@@ -3505,9 +3217,7 @@
             "name": "Mario Zone 2 - Normal Exit",
             "id": 46,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -3521,9 +3231,7 @@
             "name": "Mario Zone 2 - Midway Bell",
             "id": 47,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mario Zone Progression",
@@ -3543,15 +3251,12 @@
             "connected_region": "Mario Zone 4",
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "Arithmetic",
-                  "options": [],
                   "args": {
                     "left": {
                       "rule": "CountItem",
-                      "options": [],
                       "args": {
                         "item_name": "Mario Zone Progression"
                       }
@@ -3559,11 +3264,9 @@
                     "op": "+",
                     "right": {
                       "rule": "Arithmetic",
-                      "options": [],
                       "args": {
                         "left": {
                           "rule": "CountItem",
-                          "options": [],
                           "args": {
                             "item_name": "Mario Zone Progression x2"
                           }
@@ -3571,7 +3274,6 @@
                         "op": "*",
                         "right": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 2
                           },
@@ -3584,7 +3286,6 @@
                 "op": ">=",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 3
                   },
@@ -3601,9 +3302,7 @@
             "name": "Mario Zone 3 - Normal Exit",
             "id": 48,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Macro Zone Progression",
@@ -3617,9 +3316,7 @@
             "name": "Mario Zone 3 - Midway Bell",
             "id": 49,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -3640,7 +3337,6 @@
             "id": null,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Pipe Traversal",
@@ -3660,9 +3356,7 @@
             "name": "Mario Zone 4 - Midway Bell",
             "id": 51,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -3682,15 +3376,12 @@
             "connected_region": "Turtle Zone 2",
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "Arithmetic",
-                  "options": [],
                   "args": {
                     "left": {
                       "rule": "CountItem",
-                      "options": [],
                       "args": {
                         "item_name": "Turtle Zone Progression"
                       }
@@ -3698,11 +3389,9 @@
                     "op": "+",
                     "right": {
                       "rule": "Arithmetic",
-                      "options": [],
                       "args": {
                         "left": {
                           "rule": "CountItem",
-                          "options": [],
                           "args": {
                             "item_name": "Turtle Zone Progression x2"
                           }
@@ -3710,7 +3399,6 @@
                         "op": "*",
                         "right": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 2
                           },
@@ -3723,7 +3411,6 @@
                 "op": ">=",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 1
                   },
@@ -3741,7 +3428,6 @@
             "id": 52,
             "access_rule": {
               "rule": "AST_block",
-              "options": [],
               "args": {
                 "statements": [
                   {
@@ -3921,9 +3607,7 @@
             "name": "Turtle Zone 1 - Midway Bell",
             "id": 53,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -3943,15 +3627,12 @@
             "connected_region": "Turtle Zone 3",
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "Arithmetic",
-                  "options": [],
                   "args": {
                     "left": {
                       "rule": "CountItem",
-                      "options": [],
                       "args": {
                         "item_name": "Turtle Zone Progression"
                       }
@@ -3959,11 +3640,9 @@
                     "op": "+",
                     "right": {
                       "rule": "Arithmetic",
-                      "options": [],
                       "args": {
                         "left": {
                           "rule": "CountItem",
-                          "options": [],
                           "args": {
                             "item_name": "Turtle Zone Progression x2"
                           }
@@ -3971,7 +3650,6 @@
                         "op": "*",
                         "right": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 2
                           },
@@ -3984,7 +3662,6 @@
                 "op": ">=",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 2
                   },
@@ -4000,7 +3677,6 @@
             "connected_region": "Turtle Zone Secret Course",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Turtle Zone Secret"
               }
@@ -4013,15 +3689,12 @@
             "id": 54,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Not",
-                  "options": [],
                   "args": {
                     "condition": {
                       "rule": "AST_block",
-                      "options": [],
                       "args": {
                         "statements": [
                           {
@@ -4110,7 +3783,6 @@
                 },
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -4120,7 +3792,6 @@
                 },
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -4130,7 +3801,6 @@
                 },
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -4140,7 +3810,6 @@
                 },
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -4150,7 +3819,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Water Physics"
                   }
@@ -4170,15 +3838,12 @@
             "id": 55,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Not",
-                  "options": [],
                   "args": {
                     "condition": {
                       "rule": "AST_block",
-                      "options": [],
                       "args": {
                         "statements": [
                           {
@@ -4267,7 +3932,6 @@
                 },
                 {
                   "rule": "HasAny",
-                  "options": [],
                   "args": {
                     "items": [
                       "Pipe Traversal",
@@ -4277,7 +3941,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Water Physics"
                   }
@@ -4297,19 +3960,15 @@
             "id": 56,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Not",
-                      "options": [],
                       "args": {
                         "condition": {
                           "rule": "AST_block",
-                          "options": [],
                           "args": {
                             "statements": [
                               {
@@ -4398,7 +4057,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Water Physics"
                       }
@@ -4407,7 +4065,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Turtle Zone 2 Midway Bell"
                   }
@@ -4433,7 +4090,6 @@
             "id": null,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Pipe Traversal",
@@ -4453,9 +4109,7 @@
             "name": "Turtle Zone 3 - Midway Bell",
             "id": 58,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -4476,7 +4130,6 @@
             "id": 59,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Carrot",
@@ -4503,15 +4156,12 @@
             "id": null,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Pipe Traversal",
@@ -4521,7 +4171,6 @@
                     },
                     {
                       "rule": "HasAny",
-                      "options": [],
                       "args": {
                         "items": [
                           "Pipe Traversal",
@@ -4533,7 +4182,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Mario's Castle Midway Bell"
                   }

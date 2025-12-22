@@ -20,9 +20,7 @@
             "name": "Menu -> Bob-omb Battlefield",
             "connected_region": "Bob-omb Battlefield",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -30,7 +28,6 @@
             "connected_region": "Whomp's Fortress",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Power Star"
               }
@@ -41,7 +38,6 @@
             "connected_region": "Jolly Roger Bay",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Power Star",
                 "count": 3
@@ -53,7 +49,6 @@
             "connected_region": "Cool, Cool Mountain",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Power Star",
                 "count": 3
@@ -65,7 +60,6 @@
             "connected_region": "Big Boo's Haunt",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Power Star",
                 "count": 12
@@ -77,7 +71,6 @@
             "connected_region": "The Princess's Secret Slide",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Power Star"
               }
@@ -88,7 +81,6 @@
             "connected_region": "Tower of the Wing Cap",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Power Star",
                 "count": 10
@@ -100,7 +92,6 @@
             "connected_region": "Bowser in the Dark World",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Power Star",
                 "count": 7
@@ -112,18 +103,15 @@
             "connected_region": "Basement",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Basement Key"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Progressive Key"
                   }
@@ -136,11 +124,9 @@
             "connected_region": "Second Floor",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Progressive Key",
                     "count": 2
@@ -148,7 +134,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Second Floor Key"
                   }
@@ -163,18 +148,15 @@
             "id": 3626168,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Basement"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Power Star",
                     "count": 12
@@ -195,18 +177,15 @@
             "id": 3626169,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Second Floor"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Power Star",
                     "count": 25
@@ -227,18 +206,15 @@
             "id": 3626170,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Third Floor"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Power Star",
                     "count": 35
@@ -259,18 +235,15 @@
             "id": 3626171,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Basement"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Power Star",
                     "count": 13
@@ -291,18 +264,15 @@
             "id": 3626172,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Basement"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Power Star",
                     "count": 44
@@ -328,7 +298,6 @@
             "connected_region": "BoB: Island",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Cannon Unlock BoB"
               }
@@ -340,9 +309,7 @@
             "name": "BoB: Big Bob-Omb on the Summit",
             "id": 3626000,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -356,9 +323,7 @@
             "name": "BoB: Footrace with Koopa The Quick",
             "id": 3626001,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -373,18 +338,15 @@
             "id": 3626004,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Cannon Unlock BoB"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Wing Cap"
                   }
@@ -403,9 +365,7 @@
             "name": "BoB: Behind Chain Chomp's Gate",
             "id": 3626005,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -419,9 +379,7 @@
             "name": "BoB: Bob-omb Buddy",
             "id": 3626200,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Cannon Unlock BoB",
@@ -441,9 +399,7 @@
             "name": "BoB: Shoot to the Island in the Sky",
             "id": 3626002,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -457,9 +413,7 @@
             "name": "BoB: Find the 8 Red Coins",
             "id": 3626003,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -478,9 +432,7 @@
             "name": "WF: Tower",
             "connected_region": "WF: Tower",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -489,9 +441,7 @@
             "name": "WF: Chip Off Whomp's Block",
             "id": 3626007,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Key",
@@ -505,9 +455,7 @@
             "name": "WF: Shoot into the Wild Blue",
             "id": 3626009,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -521,9 +469,7 @@
             "name": "WF: Red Coins on the Floating Isle",
             "id": 3626010,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -538,7 +484,6 @@
             "id": 3626011,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "WF: Tower"
               }
@@ -556,7 +501,6 @@
             "id": 3626012,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Cannon Unlock WF"
               }
@@ -579,9 +523,7 @@
             "name": "WF: To the Top of the Fortress",
             "id": 3626008,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -595,9 +537,7 @@
             "name": "WF: Bob-omb Buddy",
             "id": 3626201,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Cannon Unlock WF",
@@ -616,18 +556,14 @@
             "name": "JRB: Upper",
             "connected_region": "JRB: Upper",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Jolly Roger Bay -> The Secret Aquarium",
             "connected_region": "The Secret Aquarium",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -636,9 +572,7 @@
             "name": "JRB: Plunder in the Sunken Ship",
             "id": 3626014,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -652,9 +586,7 @@
             "name": "JRB: Can the Eel Come Out to Play?",
             "id": 3626015,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -668,9 +600,7 @@
             "name": "JRB: Treasure of the Ocean Cave",
             "id": 3626016,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -685,7 +615,6 @@
             "id": 3626018,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Cannon Unlock JRB"
               }
@@ -703,7 +632,6 @@
             "id": 3626019,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Metal Cap"
               }
@@ -720,9 +648,7 @@
             "name": "JRB: Bob-omb Buddy",
             "id": 3626202,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Cannon Unlock JRB",
@@ -742,9 +668,7 @@
             "name": "JRB: Red Coins on the Ship Afloat",
             "id": 3626017,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -764,9 +688,7 @@
             "name": "CCM: Slip Slidin' Away",
             "id": 3626021,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -780,9 +702,7 @@
             "name": "CCM: Li'l Penguin Lost",
             "id": 3626022,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -796,9 +716,7 @@
             "name": "CCM: Big Penguin Race",
             "id": 3626023,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -812,9 +730,7 @@
             "name": "CCM: Frosty Slide for 8 Red Coins",
             "id": 3626024,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Key",
@@ -828,9 +744,7 @@
             "name": "CCM: Snowman's Lost His Head",
             "id": 3626025,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -845,7 +759,6 @@
             "id": 3626026,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Cannon Unlock CCM"
               }
@@ -862,9 +775,7 @@
             "name": "CCM: Bob-omb Buddy",
             "id": 3626203,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Cannon Unlock CCM",
@@ -878,9 +789,7 @@
             "name": "CCM: 1Up Block Near Snowman",
             "id": 3626215,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -894,9 +803,7 @@
             "name": "CCM: 1Up Block Ice Pillar",
             "id": 3626216,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -910,9 +817,7 @@
             "name": "CCM: 1Up Block Secret Slide",
             "id": 3626217,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -931,9 +836,7 @@
             "name": "BBH: Third Floor",
             "connected_region": "BBH: Third Floor",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -942,9 +845,7 @@
             "name": "BBH: Go on a Ghost Hunt",
             "id": 3626028,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -958,9 +859,7 @@
             "name": "BBH: Ride Big Boo's Merry-Go-Round",
             "id": 3626029,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -974,9 +873,7 @@
             "name": "BBH: Secret of the Haunted Books",
             "id": 3626030,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -990,9 +887,7 @@
             "name": "BBH: Seek the 8 Red Coins",
             "id": 3626031,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1011,9 +906,7 @@
             "name": "BBH: Roof",
             "connected_region": "BBH: Roof",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1023,7 +916,6 @@
             "id": 3626033,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Vanish Cap"
               }
@@ -1046,9 +938,7 @@
             "name": "BBH: Big Boo's Balcony",
             "id": 3626032,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1062,9 +952,7 @@
             "name": "BBH: 1Up Block Top of Mansion",
             "id": 3626218,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -1084,9 +972,7 @@
             "name": "The Princess's Secret Slide Block",
             "id": 3626126,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1100,9 +986,7 @@
             "name": "The Princess's Secret Slide Fast",
             "id": 3626127,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1122,9 +1006,7 @@
             "name": "The Secret Aquarium",
             "id": 3626161,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1144,9 +1026,7 @@
             "name": "Tower of the Wing Cap Switch",
             "id": 3626181,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1160,9 +1040,7 @@
             "name": "Tower of the Wing Cap Red Coins",
             "id": 3626140,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1182,9 +1060,7 @@
             "name": "Bowser in the Dark World Red Coins",
             "id": 3626105,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1198,9 +1074,7 @@
             "name": "Bowser in the Dark World Key",
             "id": 3626178,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1214,9 +1088,7 @@
             "name": "Bowser in the Dark World 1Up Block on Tower",
             "id": 3626236,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -1230,9 +1102,7 @@
             "name": "Bowser in the Dark World 1Up Block near Goombas",
             "id": 3626237,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -1251,27 +1121,21 @@
             "name": "Basement -> Hazy Maze Cave",
             "connected_region": "Hazy Maze Cave",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Basement -> Lethal Lava Land",
             "connected_region": "Lethal Lava Land",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Basement -> Shifting Sand Land",
             "connected_region": "Shifting Sand Land",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1279,7 +1143,6 @@
             "connected_region": "Dire, Dire Docks",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Power Star",
                 "count": 26
@@ -1290,9 +1153,7 @@
             "name": "Basement -> Vanish Cap under the Moat",
             "connected_region": "Vanish Cap under the Moat",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1300,18 +1161,15 @@
             "connected_region": "Bowser in the Fire Sea",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachLocation",
-                  "options": [],
                   "args": {
                     "location_name": "DDD: Board Bowser's Sub"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Power Star",
                     "count": 26
@@ -1330,27 +1188,21 @@
             "name": "HMC: Red Coin Area",
             "connected_region": "HMC: Red Coin Area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "HMC: Pit Islands",
             "connected_region": "HMC: Pit Islands",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Hazy Maze Cave -> Cavern of the Metal Cap",
             "connected_region": "Cavern of the Metal Cap",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1359,9 +1211,7 @@
             "name": "HMC: Swimming Beast in the Cavern",
             "id": 3626035,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1376,7 +1226,6 @@
             "id": 3626037,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Metal Cap"
               }
@@ -1393,9 +1242,7 @@
             "name": "HMC: Watch for Rolling Rocks",
             "id": 3626040,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1409,9 +1256,7 @@
             "name": "HMC: Navigating the Toxic Maze",
             "id": 3626038,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1425,9 +1270,7 @@
             "name": "HMC: 1Up Block Past Rolling Rocks",
             "id": 3626220,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -1447,9 +1290,7 @@
             "name": "HMC: Elevate for 8 Red Coins",
             "id": 3626036,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1469,9 +1310,7 @@
             "name": "HMC: A-Maze-Ing Emergency Exit",
             "id": 3626039,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1485,9 +1324,7 @@
             "name": "HMC: 1Up Block above Pit",
             "id": 3626219,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -1506,9 +1343,7 @@
             "name": "LLL: Upper Volcano",
             "connected_region": "LLL: Upper Volcano",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1517,9 +1352,7 @@
             "name": "LLL: Boil the Big Bully",
             "id": 3626042,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1533,9 +1366,7 @@
             "name": "LLL: Bully the Bullies",
             "id": 3626043,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1549,9 +1380,7 @@
             "name": "LLL: 8-Coin Puzzle with 15 Pieces",
             "id": 3626044,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1565,9 +1394,7 @@
             "name": "LLL: Red-Hot Log Rolling",
             "id": 3626045,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1587,9 +1414,7 @@
             "name": "LLL: Hot-Foot-It into the Volcano",
             "id": 3626046,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1603,9 +1428,7 @@
             "name": "LLL: Elevator Tour in the Volcano",
             "id": 3626047,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1624,9 +1447,7 @@
             "name": "SSL: Upper Pyramid",
             "connected_region": "SSL: Upper Pyramid",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1635,9 +1456,7 @@
             "name": "SSL: In the Talons of the Big Bird",
             "id": 3626049,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1651,9 +1470,7 @@
             "name": "SSL: Shining Atop the Pyramid",
             "id": 3626050,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1668,11 +1485,9 @@
             "id": 3626053,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Cannon Unlock SSL",
@@ -1682,7 +1497,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Wing Cap"
                   }
@@ -1701,9 +1515,7 @@
             "name": "SSL: Bob-omb Buddy",
             "id": 3626207,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Cannon Unlock SSL",
@@ -1717,9 +1529,7 @@
             "name": "SSL: 1Up Block Outside Pyramid",
             "id": 3626221,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -1733,9 +1543,7 @@
             "name": "SSL: 1Up Block Pyramid Left Path",
             "id": 3626222,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -1749,9 +1557,7 @@
             "name": "SSL: 1Up Block Pyramid Back",
             "id": 3626223,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -1771,9 +1577,7 @@
             "name": "SSL: Inside the Ancient Pyramid",
             "id": 3626051,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1788,11 +1592,9 @@
             "id": 3626052,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Cannon Unlock SSL",
@@ -1802,7 +1604,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Wing Cap"
                   }
@@ -1821,9 +1622,7 @@
             "name": "SSL: Pyramid Puzzle",
             "id": 3626054,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1843,9 +1642,7 @@
             "name": "DDD: Board Bowser's Sub",
             "id": 3626056,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1859,9 +1656,7 @@
             "name": "DDD: Chests in the Current",
             "id": 3626057,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1876,7 +1671,6 @@
             "id": 3626059,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Metal Cap"
               }
@@ -1893,9 +1687,7 @@
             "name": "DDD: The Manta Ray's Reward",
             "id": 3626060,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1910,7 +1702,6 @@
             "id": 3626061,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Metal Cap",
@@ -1931,7 +1722,6 @@
             "id": 3626058,
             "access_rule": {
               "rule": "CanReachLocation",
-              "options": [],
               "args": {
                 "location_name": "Bowser in the Fire Sea Key"
               }
@@ -1954,9 +1744,7 @@
             "name": "Cavern of the Metal Cap Switch",
             "id": 3626182,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -1971,7 +1759,6 @@
             "id": 3626133,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Metal Cap"
               }
@@ -1988,9 +1775,7 @@
             "name": "Cavern of the Metal Cap 1Up Block",
             "id": 3626241,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -2010,9 +1795,7 @@
             "name": "Vanish Cap Under the Moat Switch",
             "id": 3626183,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2027,7 +1810,6 @@
             "id": 3626147,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Vanish Cap"
               }
@@ -2044,9 +1826,7 @@
             "name": "Vanish Cap Under the Moat 1Up Block",
             "id": 3626242,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -2065,9 +1845,7 @@
             "name": "BitFS: Upper",
             "connected_region": "BitFS: Upper",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2081,9 +1859,7 @@
             "name": "Bowser in the Fire Sea Red Coins",
             "id": 3626112,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2097,9 +1873,7 @@
             "name": "Bowser in the Fire Sea Key",
             "id": 3626179,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2113,9 +1887,7 @@
             "name": "Bowser in the Fire Sea 1Up Block Swaying Stairs",
             "id": 3626238,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -2129,9 +1901,7 @@
             "name": "Bowser in the Fire Sea 1Up Block Near Poles",
             "id": 3626239,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -2150,45 +1920,35 @@
             "name": "Second Floor -> Snowman's Land",
             "connected_region": "Snowman's Land",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Second Floor -> Wet-Dry World",
             "connected_region": "Wet-Dry World",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Second Floor -> Tall, Tall Mountain",
             "connected_region": "Tall, Tall Mountain",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Second Floor -> Tiny-Huge Island (Tiny)",
             "connected_region": "Tiny-Huge Island (Tiny)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Second Floor -> Tiny-Huge Island (Huge)",
             "connected_region": "Tiny-Huge Island (Huge)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2196,7 +1956,6 @@
             "connected_region": "Third Floor",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Power Star",
                 "count": 44
@@ -2214,9 +1973,7 @@
             "name": "SL: Snowman's Big Head",
             "id": 3626063,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2230,9 +1987,7 @@
             "name": "SL: Chill with the Bully",
             "id": 3626064,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2246,9 +2001,7 @@
             "name": "SL: In the Deep Freeze",
             "id": 3626065,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2262,9 +2015,7 @@
             "name": "SL: Whirl from the Freezing Pond",
             "id": 3626066,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2278,9 +2029,7 @@
             "name": "SL: Shell Shreddin' for Red Coins",
             "id": 3626067,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2295,7 +2044,6 @@
             "id": 3626068,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Vanish Cap"
               }
@@ -2312,9 +2060,7 @@
             "name": "SL: Bob-omb Buddy",
             "id": 3626209,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Cannon Unlock SL",
@@ -2328,9 +2074,7 @@
             "name": "SL: 1Up Block Near Moneybags",
             "id": 3626224,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -2344,9 +2088,7 @@
             "name": "SL: 1Up Block inside Igloo",
             "id": 3626225,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -2365,18 +2107,14 @@
             "name": "WDW: Top",
             "connected_region": "WDW: Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "WDW: Downtown",
             "connected_region": "WDW: Downtown",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2385,9 +2123,7 @@
             "name": "WDW: Express Elevator--Hurry Up!",
             "id": 3626073,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2407,9 +2143,7 @@
             "name": "WDW: Shocking Arrow Lifts!",
             "id": 3626070,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2423,9 +2157,7 @@
             "name": "WDW: Top o' the Town",
             "id": 3626071,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2439,9 +2171,7 @@
             "name": "WDW: Secrets in the Shallows & Sky",
             "id": 3626072,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2455,9 +2185,7 @@
             "name": "WDW: Bob-omb Buddy",
             "id": 3626210,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Cannon Unlock WDW",
@@ -2477,9 +2205,7 @@
             "name": "WDW: Go to Town for Red Coins",
             "id": 3626074,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2494,18 +2220,15 @@
             "id": 3626075,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Vanish Cap"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Vanish Cap"
                   }
@@ -2524,9 +2247,7 @@
             "name": "WDW: 1Up Block in Downtown",
             "id": 3626226,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -2545,9 +2266,7 @@
             "name": "TTM: Middle",
             "connected_region": "TTM: Middle",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2560,9 +2279,7 @@
             "name": "TTM: Top",
             "connected_region": "TTM: Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2571,9 +2288,7 @@
             "name": "TTM: Scary 'Shrooms, Red Coins",
             "id": 3626079,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2588,7 +2303,6 @@
             "id": 3626082,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Cannon Unlock TTM"
               }
@@ -2605,9 +2319,7 @@
             "name": "TTM: Bob-omb Buddy",
             "id": 3626211,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Cannon Unlock TTM",
@@ -2621,9 +2333,7 @@
             "name": "TTM: 1Up Block on Red Mushroom",
             "id": 3626227,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -2643,9 +2353,7 @@
             "name": "TTM: Scale the Mountain",
             "id": 3626077,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2659,9 +2367,7 @@
             "name": "TTM: Mystery of the Monkey Cage",
             "id": 3626078,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2675,9 +2381,7 @@
             "name": "TTM: Mysterious Mountainside",
             "id": 3626080,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2691,9 +2395,7 @@
             "name": "TTM: Breathtaking View from Bridge",
             "id": 3626081,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2712,9 +2414,7 @@
             "name": "Tiny-Huge Island (Huge) -> Tiny-Huge Island",
             "connected_region": "Tiny-Huge Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2727,9 +2427,7 @@
             "name": "Tiny-Huge Island (Tiny) -> Tiny-Huge Island",
             "connected_region": "Tiny-Huge Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2742,9 +2440,7 @@
             "name": "THI: Pipes",
             "connected_region": "THI: Pipes",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2753,9 +2449,7 @@
             "name": "THI: 1Up Block THI Small near Start",
             "id": 3626228,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -2774,9 +2468,7 @@
             "name": "THI: Large Top",
             "connected_region": "THI: Large Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2785,9 +2477,7 @@
             "name": "THI: The Tip Top of the Huge Island",
             "id": 3626085,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2801,9 +2491,7 @@
             "name": "THI: Pluck the Piranha Flower",
             "id": 3626084,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2817,9 +2505,7 @@
             "name": "THI: Rematch with Koopa the Quick",
             "id": 3626086,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2833,9 +2519,7 @@
             "name": "THI: Five Itty Bitty Secrets",
             "id": 3626087,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2849,9 +2533,7 @@
             "name": "THI: Wiggler's Red Coins",
             "id": 3626088,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2865,9 +2547,7 @@
             "name": "THI: Bob-omb Buddy",
             "id": 3626212,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Cannon Unlock THI",
@@ -2881,9 +2561,7 @@
             "name": "THI: 1Up Block THI Large near Start",
             "id": 3626229,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -2897,9 +2575,7 @@
             "name": "THI: 1Up Block Windy Area",
             "id": 3626230,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -2919,9 +2595,7 @@
             "name": "THI: Make Wiggler Squirm",
             "id": 3626089,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -2940,27 +2614,21 @@
             "name": "Third Floor -> Tick Tock Clock",
             "connected_region": "Tick Tock Clock",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Third Floor -> Rainbow Ride",
             "connected_region": "Rainbow Ride",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Third Floor -> Wing Mario over the Rainbow",
             "connected_region": "Wing Mario over the Rainbow",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2968,7 +2636,6 @@
             "connected_region": "Bowser in the Sky",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Power Star",
                 "count": 61
@@ -2985,9 +2652,7 @@
             "name": "TTC: Lower",
             "connected_region": "TTC: Lower",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2996,9 +2661,7 @@
             "name": "TTC: Stop Time for Red Coins",
             "id": 3626096,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -3017,9 +2680,7 @@
             "name": "TTC: Upper",
             "connected_region": "TTC: Upper",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3028,9 +2689,7 @@
             "name": "TTC: Roll into the Cage",
             "id": 3626091,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -3044,9 +2703,7 @@
             "name": "TTC: Get a Hand",
             "id": 3626093,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -3065,9 +2722,7 @@
             "name": "TTC: Top",
             "connected_region": "TTC: Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3076,9 +2731,7 @@
             "name": "TTC: Timed Jumps on Moving Bars",
             "id": 3626095,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -3092,9 +2745,7 @@
             "name": "TTC: The Pit and the Pendulums",
             "id": 3626092,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -3114,9 +2765,7 @@
             "name": "TTC: 1Up Block Midway Up",
             "id": 3626231,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -3130,9 +2779,7 @@
             "name": "TTC: Stomp on the Thwomp",
             "id": 3626094,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -3146,9 +2793,7 @@
             "name": "TTC: 1Up Block at the Top",
             "id": 3626232,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -3167,27 +2812,21 @@
             "name": "RR: Maze",
             "connected_region": "RR: Maze",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "RR: Cruiser",
             "connected_region": "RR: Cruiser",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "RR: House",
             "connected_region": "RR: House",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3196,9 +2835,7 @@
             "name": "RR: Swingin' in the Breeze",
             "id": 3626101,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -3212,9 +2849,7 @@
             "name": "RR: Tricky Triangles!",
             "id": 3626102,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -3228,9 +2863,7 @@
             "name": "RR: 1Up Block Top of Red Coin Maze",
             "id": 3626233,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -3244,9 +2877,7 @@
             "name": "RR: 1Up Block Under Fly Guy",
             "id": 3626234,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -3260,9 +2891,7 @@
             "name": "RR: Bob-omb Buddy",
             "id": 3626214,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Cannon Unlock RR",
@@ -3282,9 +2911,7 @@
             "name": "RR: Coins Amassed in a Maze",
             "id": 3626100,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -3304,9 +2931,7 @@
             "name": "RR: Cruiser Crossing the Rainbow",
             "id": 3626098,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Vanish Cap",
@@ -3321,7 +2946,6 @@
             "id": 3626103,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Cannon Unlock RR"
               }
@@ -3344,9 +2968,7 @@
             "name": "RR: The Big House in the Sky",
             "id": 3626099,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",
@@ -3360,9 +2982,7 @@
             "name": "RR: 1Up Block On House in the Sky",
             "id": 3626235,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -3383,7 +3003,6 @@
             "id": 3626154,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wing Cap"
               }
@@ -3401,7 +3020,6 @@
             "id": 3626243,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wing Cap"
               }
@@ -3423,9 +3041,7 @@
             "name": "BitS: Top",
             "connected_region": "BitS: Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3434,9 +3050,7 @@
             "name": "Bowser in the Sky 1Up Block",
             "id": 3626240,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1Up Mushroom",
@@ -3456,9 +3070,7 @@
             "name": "Bowser in the Sky Red Coins",
             "id": 3626119,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Star",

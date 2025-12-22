@@ -19,45 +19,35 @@
             "name": "To Statement 1",
             "connected_region": "Prove Statement 1",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "To Statement 2",
             "connected_region": "Prove Statement 2",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "To Statement 4",
             "connected_region": "Prove Statement 4",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "To Statement 5",
             "connected_region": "Prove Statement 5",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "To Statement 6",
             "connected_region": "Prove Statement 6",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -71,7 +61,6 @@
             "connected_region": "Prove Statement 3",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Statement 1",
@@ -91,7 +80,6 @@
             "connected_region": "Prove Statement 3",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Statement 1",
@@ -106,9 +94,7 @@
             "name": "Prove Statement 2",
             "id": 234790002,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Statement 8",
@@ -128,7 +114,6 @@
             "connected_region": "Prove Statement 8",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Statement 3",
@@ -145,7 +130,6 @@
             "id": 234790003,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Statement 1",
@@ -171,7 +155,6 @@
             "connected_region": "Prove Statement 9",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Statement 4"
@@ -185,9 +168,7 @@
             "name": "Prove Statement 4",
             "id": 234790004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Statement 6",
@@ -207,7 +188,6 @@
             "connected_region": "Prove Statement 7",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Statement 5"
@@ -221,9 +201,7 @@
             "name": "Prove Statement 5",
             "id": 234790005,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Statement 4",
@@ -243,7 +221,6 @@
             "connected_region": "Prove Statement 8",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Statement 3",
@@ -259,9 +236,7 @@
             "name": "Prove Statement 6",
             "id": 234790006,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Statement 5",
@@ -281,7 +256,6 @@
             "connected_region": "Prove Statement 8",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Statement 3",
@@ -298,7 +272,6 @@
             "id": 234790007,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Statement 5"
@@ -323,7 +296,6 @@
             "connected_region": "Prove Statement 10",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Statement 8",
@@ -339,7 +311,6 @@
             "id": 234790008,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Statement 3",
@@ -366,7 +337,6 @@
             "connected_region": "Prove Statement 10",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Statement 8",
@@ -382,7 +352,6 @@
             "id": 234790009,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Statement 4"
@@ -408,7 +377,6 @@
             "id": 234790010,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Statement 8",

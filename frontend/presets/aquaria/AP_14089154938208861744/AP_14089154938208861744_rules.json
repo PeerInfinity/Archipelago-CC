@@ -19,9 +19,7 @@
             "name": "Menu to Verse Cave right area",
             "connected_region": "Verse Cave right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -34,9 +32,7 @@
             "name": "Verse Cave right area to Verse Cave left area",
             "connected_region": "Verse Cave left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -45,9 +41,7 @@
             "name": "Verse Cave right area, bulb in the skeleton room",
             "id": 698107,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rotten Meat",
@@ -61,9 +55,7 @@
             "name": "Verse Cave right area, bulb in the path right of the skeleton room",
             "id": 698108,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hot Soup",
@@ -78,8 +70,6 @@
             "id": 698175,
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -100,18 +90,14 @@
             "name": "Verse Cave left area to Verse Cave right area",
             "connected_region": "Verse Cave right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Verse Cave left area to Home Waters",
             "connected_region": "Home Waters",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -120,9 +106,7 @@
             "name": "Verse Cave left area, the Naija hint about the shield ability",
             "id": 698200,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Crab Armor",
@@ -136,9 +120,7 @@
             "name": "Verse Cave left area, bulb in the center part",
             "id": 698021,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rainbow Mushroom",
@@ -152,9 +134,7 @@
             "name": "Verse Cave left area, bulb in the right part",
             "id": 698022,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spirit Form",
@@ -169,8 +149,6 @@
             "id": 698023,
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -191,27 +169,21 @@
             "name": "Home Waters to Verse Cave left area",
             "connected_region": "Verse Cave left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Home Waters to Naija's Home",
             "connected_region": "Naija's Home",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Home Waters to Song Cave",
             "connected_region": "Song Cave",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -219,8 +191,6 @@
             "connected_region": "Home Waters, behind rock",
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -230,8 +200,6 @@
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -241,19 +209,14 @@
             "connected_region": "Open Waters top left area",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -266,9 +229,7 @@
             "name": "Home Waters, bulb below the grouper fish",
             "id": 698058,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hearty Soup",
@@ -282,9 +243,7 @@
             "name": "Home Waters, bulb in the little room above the grouper fish",
             "id": 698060,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Tooth",
@@ -298,9 +257,7 @@
             "name": "Home Waters, bulb in the end of the path close to the Verse Cave",
             "id": 698061,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Cold Borscht",
@@ -314,9 +271,7 @@
             "name": "Home Waters, bulb in the top left path",
             "id": 698062,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Golden Starfish",
@@ -330,9 +285,7 @@
             "name": "Home Waters, bulb close to Naija's Home",
             "id": 698064,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Health Upgrade",
@@ -347,8 +300,6 @@
             "id": 698065,
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -370,8 +321,6 @@
             "connected_region": "Home Waters, behind rock",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -382,9 +331,7 @@
             "name": "Home Waters, Nautilus Egg",
             "id": 698194,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Health Upgrade",
@@ -398,9 +345,7 @@
             "name": "Beating Nautilus Prime",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Nautilus Prime beated",
@@ -419,9 +364,7 @@
             "name": "Home Waters, turtle room to Home Waters",
             "connected_region": "Home Waters",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -429,7 +372,6 @@
             "connected_region": "The Veil top left area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Veil top left"
               }
@@ -440,7 +382,6 @@
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Veil top right"
               }
@@ -451,7 +392,6 @@
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Open Waters top right"
               }
@@ -462,7 +402,6 @@
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Kelp Forest bottom left"
               }
@@ -473,7 +412,6 @@
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Abyss right"
               }
@@ -484,7 +422,6 @@
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Final Boss"
               }
@@ -495,7 +432,6 @@
             "connected_region": "Simon Says area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Simon Says"
               }
@@ -506,7 +442,6 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Arnassi Ruins"
               }
@@ -518,9 +453,7 @@
             "name": "Home Waters, Transturtle",
             "id": 698213,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Plant Leaf",
@@ -539,9 +472,7 @@
             "name": "Naija's Home to Home Waters",
             "connected_region": "Home Waters",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -551,8 +482,6 @@
             "id": 698119,
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -569,8 +498,6 @@
             "id": 698120,
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -591,9 +518,7 @@
             "name": "Song Cave to Home Waters",
             "connected_region": "Home Waters",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -602,9 +527,7 @@
             "name": "Song Cave, Erulian spirit",
             "id": 698206,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "King's Skull",
@@ -618,9 +541,7 @@
             "name": "Song Cave, bulb in the top right part",
             "id": 698071,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Energy Form",
@@ -634,9 +555,7 @@
             "name": "Song Cave, bulb in the big anemone room",
             "id": 698072,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Krotite Armor",
@@ -650,9 +569,7 @@
             "name": "Song Cave, bulb in the path to the singing statues",
             "id": 698073,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bind Song",
@@ -667,8 +584,6 @@
             "id": 698074,
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -685,8 +600,6 @@
             "id": 698075,
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -703,8 +616,6 @@
             "id": 698160,
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -720,9 +631,7 @@
             "name": "Song Cave, Jelly Beacon",
             "id": 698178,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Health Upgrade",
@@ -737,8 +646,6 @@
             "id": 698162,
             "access_rule": {
               "rule": "_has_nature_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -759,9 +666,7 @@
             "name": "Energy Temple first area to Home Waters, behind rock",
             "connected_region": "Home Waters, behind rock",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -769,8 +674,6 @@
             "connected_region": "Energy Temple second area",
             "access_rule": {
               "rule": "_has_energy_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -780,8 +683,6 @@
             "connected_region": "Energy Temple Idol room",
             "access_rule": {
               "rule": "_has_fish_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -791,8 +692,6 @@
             "connected_region": "Energy Temple after boss path",
             "access_rule": {
               "rule": "_has_beast_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -803,9 +702,7 @@
             "name": "Energy Temple first area, beating the Energy Statue",
             "id": 698205,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sun Form",
@@ -820,8 +717,6 @@
             "id": 698027,
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -843,8 +738,6 @@
             "connected_region": "Energy Temple first area",
             "access_rule": {
               "rule": "_has_energy_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -853,9 +746,7 @@
             "name": "Energy Temple second area to Energy Temple third area",
             "connected_region": "Energy Temple third area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -865,8 +756,6 @@
             "id": 698028,
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -887,9 +776,7 @@
             "name": "Energy Temple third area to Energy Temple second area",
             "connected_region": "Energy Temple second area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -897,19 +784,14 @@
             "connected_region": "Energy Temple fallen God room",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -922,9 +804,7 @@
             "name": "Energy Temple third area, bulb in the bottom path",
             "id": 698029,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Veggie Soup",
@@ -944,19 +824,14 @@
             "connected_region": "Energy Temple Idol room",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_energy_attack_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_fish_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -968,8 +843,6 @@
             "connected_region": "Energy Temple after boss path",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -980,9 +853,7 @@
             "name": "Energy Temple boss area, Fallen God Tooth",
             "id": 698169,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Leaf Poultice",
@@ -996,9 +867,7 @@
             "name": "Beating Fallen God",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fallen God beated",
@@ -1018,9 +887,7 @@
             "name": "Energy Temple blaster room, Blaster Egg",
             "id": 698195,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Divine Soup",
@@ -1034,9 +901,7 @@
             "name": "Beating Blaster Peg Prime",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Blaster Peg Prime beated",
@@ -1056,19 +921,14 @@
             "connected_region": "Home Waters, behind rock",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1081,9 +941,7 @@
             "name": "Energy Temple bottom entrance, Krotite Armor",
             "id": 698163,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Transturtle Veil top left",
@@ -1102,36 +960,28 @@
             "name": "Open Waters top left area to Home Waters",
             "connected_region": "Home Waters",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Open Waters top left area to Open Waters top right area",
             "connected_region": "Open Waters top right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Open Waters top left area to Open Waters bottom left area",
             "connected_region": "Open Waters bottom left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Open Waters top left area to Kelp Forest bottom right area",
             "connected_region": "Kelp Forest bottom right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1141,8 +991,6 @@
             "id": 698001,
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1159,8 +1007,6 @@
             "id": 698002,
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1176,9 +1022,7 @@
             "name": "Open Waters top left area, bulb to the right of the save crystal",
             "id": 698003,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spicy Soup",
@@ -1197,9 +1041,7 @@
             "name": "Open Waters top right area to Open Waters top left area",
             "connected_region": "Open Waters top left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1207,8 +1049,6 @@
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
               "rule": "_has_beast_form_or_arnassi_armor",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -1218,22 +1058,19 @@
             "connected_region": "Open Waters top right area, Mithalas entrance",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_damaging_item",
-                  "options": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true,
                   "args": [
                     {
                       "rule": "Constant",
-                      "options": [],
                       "args": {
                         "value": [
                           "Energy Form",
@@ -1246,9 +1083,7 @@
                       },
                       "_converted_from_cc": true
                     }
-                  ],
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  ]
                 }
               ]
             }
@@ -1257,27 +1092,21 @@
             "name": "Open Waters top right area to Open Waters bottom right area",
             "connected_region": "Open Waters bottom right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Open Waters top right area to Mithalas City",
             "connected_region": "Mithalas City",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Open Waters top right area to The Veil bottom left area",
             "connected_region": "The Veil bottom left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1285,8 +1114,6 @@
             "connected_region": "The Veil bottom right area",
             "access_rule": {
               "rule": "_has_beast_form_or_arnassi_armor",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -1298,8 +1125,6 @@
             "id": 698004,
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1315,9 +1140,7 @@
             "name": "Open Waters top right area, bulb in the path from the left entrance",
             "id": 698005,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rotten Meat",
@@ -1331,9 +1154,7 @@
             "name": "Open Waters top right area, bulb in the clearing close to the bottom exit",
             "id": 698006,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hand Roll",
@@ -1347,9 +1168,7 @@
             "name": "Open Waters top right area, bulb in the big clearing close to the save crystal",
             "id": 698007,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mushroom x 2",
@@ -1363,9 +1182,7 @@
             "name": "Open Waters top right area, bulb in the big clearing to the top exit",
             "id": 698008,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hot Soup",
@@ -1384,9 +1201,7 @@
             "name": "Open Waters top right area, turtle room to Open Waters top right area",
             "connected_region": "Open Waters top right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1394,7 +1209,6 @@
             "connected_region": "The Veil top left area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Veil top left"
               }
@@ -1405,7 +1219,6 @@
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Veil top right"
               }
@@ -1416,7 +1229,6 @@
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Kelp Forest bottom left"
               }
@@ -1427,7 +1239,6 @@
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Home Waters"
               }
@@ -1438,7 +1249,6 @@
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Abyss right"
               }
@@ -1449,7 +1259,6 @@
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Final Boss"
               }
@@ -1460,7 +1269,6 @@
             "connected_region": "Simon Says area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Simon Says"
               }
@@ -1471,7 +1279,6 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Arnassi Ruins"
               }
@@ -1483,9 +1290,7 @@
             "name": "Open Waters top right area, bulb in the turtle room",
             "id": 698009,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Arcane Poultice",
@@ -1499,9 +1304,7 @@
             "name": "Open Waters top right area, Transturtle",
             "id": 698211,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Turtle Soup",
@@ -1520,27 +1323,21 @@
             "name": "Open Waters bottom left area to Open Waters top left area",
             "connected_region": "Open Waters top left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Open Waters bottom left area to Open Waters bottom right area",
             "connected_region": "Open Waters bottom right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Open Waters bottom left area to Open Waters skeleton path",
             "connected_region": "Open Waters skeleton path",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1548,8 +1345,6 @@
             "connected_region": "Abyss left area",
             "access_rule": {
               "rule": "_has_light",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -1560,9 +1355,7 @@
             "name": "Open Waters bottom left area, bulb behind the chomper fish",
             "id": 698011,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rainbow Mushroom",
@@ -1577,8 +1370,6 @@
             "id": 698010,
             "access_rule": {
               "rule": "_has_fish_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1599,18 +1390,14 @@
             "name": "Open Waters bottom right area to Open Waters top right area",
             "connected_region": "Open Waters top right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Open Waters bottom right area to Open Waters bottom left area",
             "connected_region": "Open Waters bottom left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1618,8 +1405,6 @@
             "connected_region": "Abyss right area",
             "access_rule": {
               "rule": "_has_light",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -1629,8 +1414,6 @@
             "connected_region": "Arnassi Ruins",
             "access_rule": {
               "rule": "_has_beast_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -1645,9 +1428,7 @@
             "name": "Open Waters skeleton path to Open Waters bottom left area",
             "connected_region": "Open Waters bottom left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1655,8 +1436,6 @@
             "connected_region": "Open Waters skeleton path spirit crystal",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -1667,9 +1446,7 @@
             "name": "Open Waters skeleton path, bulb close to the right exit",
             "id": 698012,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Leaf Poultice",
@@ -1683,9 +1460,7 @@
             "name": "Open Waters skeleton path, bulb behind the chomper fish",
             "id": 698013,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Egg x 2",
@@ -1705,8 +1480,6 @@
             "connected_region": "Open Waters skeleton path",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -1717,9 +1490,7 @@
             "name": "Open Waters skeleton path, King Skull",
             "id": 698177,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trident",
@@ -1738,18 +1509,14 @@
             "name": "Arnassi Ruins to Open Waters bottom right area",
             "connected_region": "Open Waters bottom right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Arnassi Ruins to Arnassi Ruins cave",
             "connected_region": "Arnassi Ruins cave",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1758,9 +1525,7 @@
             "name": "Arnassi Ruins, bulb in the right part",
             "id": 698014,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Leaf Poultice",
@@ -1774,9 +1539,7 @@
             "name": "Arnassi Ruins, bulb in the left part",
             "id": 698015,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spicy Roll",
@@ -1790,9 +1553,7 @@
             "name": "Arnassi Ruins, bulb in the center part",
             "id": 698016,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Black Pearl",
@@ -1807,8 +1568,6 @@
             "id": 698179,
             "access_rule": {
               "rule": "_has_beast_form_or_arnassi_armor",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1825,19 +1584,14 @@
             "id": 698191,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_beast_and_soup_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_fish_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1860,9 +1614,7 @@
             "name": "Arnassi Ruins cave to Arnassi Ruins",
             "connected_region": "Arnassi Ruins",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1870,8 +1622,6 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
               "rule": "_has_fish_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -1881,30 +1631,22 @@
             "connected_region": "Arnassi Ruins, Crabbius Maximus lair",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_beast_form_or_arnassi_armor",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "_has_energy_attack_item",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "_has_nature_form",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -1919,9 +1661,7 @@
             "name": "Arnassi Ruins, Arnassi Statue",
             "id": 698164,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sea Loaf",
@@ -1941,8 +1681,6 @@
             "connected_region": "Arnassi Ruins cave",
             "access_rule": {
               "rule": "_has_fish_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -1952,7 +1690,6 @@
             "connected_region": "The Veil top left area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Veil top left"
               }
@@ -1963,7 +1700,6 @@
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Veil top right"
               }
@@ -1974,7 +1710,6 @@
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Open Waters top right"
               }
@@ -1985,7 +1720,6 @@
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Kelp Forest bottom left"
               }
@@ -1996,7 +1730,6 @@
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Home Waters"
               }
@@ -2007,7 +1740,6 @@
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Abyss right"
               }
@@ -2018,7 +1750,6 @@
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Final Boss"
               }
@@ -2029,7 +1760,6 @@
             "connected_region": "Simon Says area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Simon Says"
               }
@@ -2041,9 +1771,7 @@
             "name": "Arnassi Ruins, Transturtle",
             "id": 698217,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fish Oil",
@@ -2062,9 +1790,7 @@
             "name": "Arnassi Ruins, Crabbius Maximus lair to Arnassi Ruins cave",
             "connected_region": "Arnassi Ruins cave",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2073,9 +1799,7 @@
             "name": "Arnassi Ruins, Crab Armor",
             "id": 698187,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Special Bulb",
@@ -2089,9 +1813,7 @@
             "name": "Beating Crabbius Maximus",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Crabbius Maximus beated",
@@ -2111,7 +1833,6 @@
             "connected_region": "The Veil top left area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Veil top left"
               }
@@ -2122,7 +1843,6 @@
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Veil top right"
               }
@@ -2133,7 +1853,6 @@
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Open Waters top right"
               }
@@ -2144,7 +1863,6 @@
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Kelp Forest bottom left"
               }
@@ -2155,7 +1873,6 @@
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Home Waters"
               }
@@ -2166,7 +1883,6 @@
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Abyss right"
               }
@@ -2177,7 +1893,6 @@
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Final Boss"
               }
@@ -2188,7 +1903,6 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Arnassi Ruins"
               }
@@ -2200,9 +1914,7 @@
             "name": "Simon Says area, beating Simon Says",
             "id": 698156,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Song Plant Spore",
@@ -2216,9 +1928,7 @@
             "name": "Simon Says area, Transturtle",
             "id": 698216,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Arcane Poultice",
@@ -2237,9 +1947,7 @@
             "name": "Mithalas City to Open Waters top right area",
             "connected_region": "Open Waters top right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2247,8 +1955,6 @@
             "connected_region": "Mithalas City urns",
             "access_rule": {
               "rule": "_has_damaging_item",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2258,8 +1964,6 @@
             "connected_region": "Mithalas City top path",
             "access_rule": {
               "rule": "_has_beast_form_or_arnassi_armor",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2269,8 +1973,6 @@
             "connected_region": "Mithalas City fish pass",
             "access_rule": {
               "rule": "_has_fish_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2279,9 +1981,7 @@
             "name": "Mithalas City to Mithalas castle",
             "connected_region": "Mithalas castle",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2290,9 +1990,7 @@
             "name": "Mithalas City, first bulb in the left city part",
             "id": 698030,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Plant Leaf x 3",
@@ -2306,9 +2004,7 @@
             "name": "Mithalas City, second bulb in the left city part",
             "id": 698035,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hand Roll",
@@ -2322,9 +2018,7 @@
             "name": "Mithalas City, bulb in the right part",
             "id": 698031,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sight Poultice",
@@ -2338,9 +2032,7 @@
             "name": "Mithalas City, bulb at the top of the city",
             "id": 698033,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spicy Roll",
@@ -2354,9 +2046,7 @@
             "name": "Mithalas City, first bulb in a broken home",
             "id": 698034,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Plant Leaf",
@@ -2370,9 +2060,7 @@
             "name": "Mithalas City, second bulb in a broken home",
             "id": 698041,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Vedha Sea Crisp",
@@ -2386,9 +2074,7 @@
             "name": "Mithalas City, bulb in the bottom left part",
             "id": 698037,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spicy Roll",
@@ -2402,9 +2088,7 @@
             "name": "Mithalas City, first bulb in one of the homes",
             "id": 698038,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Jelly Egg",
@@ -2418,9 +2102,7 @@
             "name": "Mithalas City, second bulb in one of the homes",
             "id": 698039,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Arcane Poultice",
@@ -2434,9 +2116,7 @@
             "name": "Second Secret",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Second Secret obtained",
@@ -2455,9 +2135,7 @@
             "name": "Mithalas City top path to Mithalas City",
             "connected_region": "Mithalas City",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2465,19 +2143,14 @@
             "connected_region": "Mithalas castle, plant tube entrance",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_energy_attack_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_nature_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2490,9 +2163,7 @@
             "name": "Mithalas City, first bulb at the end of the top path",
             "id": 698032,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Transturtle Kelp Forest bottom left",
@@ -2506,9 +2177,7 @@
             "name": "Mithalas City, second bulb at the end of the top path",
             "id": 698040,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sea Cake",
@@ -2522,9 +2191,7 @@
             "name": "Mithalas City, bulb in the top path",
             "id": 698036,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Special Bulb",
@@ -2538,9 +2205,7 @@
             "name": "Mithalas City, Mithalas Pot",
             "id": 698174,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Arnassi Armor",
@@ -2555,8 +2220,6 @@
             "id": 698128,
             "access_rule": {
               "rule": "_has_damaging_item",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2578,8 +2241,6 @@
             "connected_region": "Mithalas City",
             "access_rule": {
               "rule": "_has_fish_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2590,9 +2251,7 @@
             "name": "Mithalas City, Doll",
             "id": 698173,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Baby Blaster",
@@ -2607,8 +2266,6 @@
             "id": 698129,
             "access_rule": {
               "rule": "_has_damaging_item",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2629,9 +2286,7 @@
             "name": "Mithalas castle to Mithalas City",
             "connected_region": "Mithalas City",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2639,8 +2294,6 @@
             "connected_region": "Mithalas castle urns",
             "access_rule": {
               "rule": "_has_damaging_item",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2650,8 +2303,6 @@
             "connected_region": "Mithalas castle spirit crystal",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2661,8 +2312,6 @@
             "connected_region": "Mithalas Cathedral, before Mithalan God",
             "access_rule": {
               "rule": "_has_beast_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2672,8 +2321,6 @@
             "connected_region": "Mithalas Cathedral underground",
             "access_rule": {
               "rule": "_has_beast_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2683,8 +2330,6 @@
             "connected_region": "Mithalas Cathedral start",
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2695,9 +2340,7 @@
             "name": "Mithalas City Castle, bulb in the flesh hole",
             "id": 698042,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spicy Roll",
@@ -2711,9 +2354,7 @@
             "name": "Mithalas City Castle, Blue Banner",
             "id": 698165,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sea Loaf x 2",
@@ -2733,8 +2374,6 @@
             "connected_region": "Mithalas City top path",
             "access_rule": {
               "rule": "_has_nature_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2744,8 +2383,6 @@
             "connected_region": "Mithalas castle spirit crystal",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2755,8 +2392,6 @@
             "connected_region": "Mithalas castle",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2767,9 +2402,7 @@
             "name": "Mithalas City Castle, beating the Priests",
             "id": 698208,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hot Soup x 2",
@@ -2783,9 +2416,7 @@
             "name": "Beating Mithalan priests",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mithalan priests beated",
@@ -2805,8 +2436,6 @@
             "connected_region": "Mithalas castle",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2817,9 +2446,7 @@
             "name": "Mithalas City Castle, Trident Head",
             "id": 698183,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Health Upgrade",
@@ -2839,8 +2466,6 @@
             "connected_region": "Mithalas Cathedral start urns",
             "access_rule": {
               "rule": "_has_damaging_item",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2850,8 +2475,6 @@
             "connected_region": "Mithalas Cathedral end",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2862,9 +2485,7 @@
             "name": "Mithalas Cathedral, bulb in the flesh room with fleas",
             "id": 698139,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Leadership Roll x 2",
@@ -2879,8 +2500,6 @@
             "id": 698189,
             "access_rule": {
               "rule": "_has_beast_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2902,9 +2521,7 @@
             "name": "Mithalas Cathedral, first urn in the top right room",
             "id": 698136,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Arcane Poultice",
@@ -2918,9 +2535,7 @@
             "name": "Mithalas Cathedral, second urn in the top right room",
             "id": 698137,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Veggie Cake",
@@ -2934,9 +2549,7 @@
             "name": "Mithalas Cathedral, third urn in the top right room",
             "id": 698138,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spicy Roll",
@@ -2950,9 +2563,7 @@
             "name": "Mithalas Cathedral, urn behind the flesh vein",
             "id": 698142,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Transturtle Simon Says",
@@ -2966,9 +2577,7 @@
             "name": "Mithalas Cathedral, urn in the top left eyes boss room",
             "id": 698143,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spicy Roll",
@@ -2982,9 +2591,7 @@
             "name": "Mithalas Cathedral, first urn in the path behind the flesh vein",
             "id": 698144,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Healing Poultice",
@@ -2998,9 +2605,7 @@
             "name": "Mithalas Cathedral, second urn in the path behind the flesh vein",
             "id": 698145,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Bone x 2",
@@ -3014,9 +2619,7 @@
             "name": "Mithalas Cathedral, third urn in the path behind the flesh vein",
             "id": 698146,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wok",
@@ -3030,9 +2633,7 @@
             "name": "Mithalas Cathedral, fourth urn in the top right room",
             "id": 698147,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Leeching Poultice",
@@ -3046,9 +2647,7 @@
             "name": "Mithalas Cathedral, urn below the left entrance",
             "id": 698198,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Plant Leaf x 2",
@@ -3068,8 +2667,6 @@
             "connected_region": "Mithalas Cathedral start",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -3079,8 +2676,6 @@
             "connected_region": "Mithalas Cathedral underground",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -3091,9 +2686,7 @@
             "name": "Mithalas Cathedral, first urn in the bottom right path",
             "id": 698140,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Leadership Roll",
@@ -3107,9 +2700,7 @@
             "name": "Mithalas Cathedral, second urn in the bottom right path",
             "id": 698141,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Egg",
@@ -3129,8 +2720,6 @@
             "connected_region": "Mithalas castle",
             "access_rule": {
               "rule": "_has_beast_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -3140,19 +2729,14 @@
             "connected_region": "Mithalas Cathedral end",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_beast_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_damaging_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -3163,9 +2747,7 @@
             "name": "Mithalas Cathedral underground to Mithalas Cathedral, before Mithalan God",
             "connected_region": "Mithalas Cathedral, before Mithalan God",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3174,9 +2756,7 @@
             "name": "Cathedral Underground, bulb in the center part",
             "id": 698113,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Tough Cake",
@@ -3190,9 +2770,7 @@
             "name": "Cathedral Underground, first bulb in the top left part",
             "id": 698114,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Plant Leaf x 3",
@@ -3206,9 +2784,7 @@
             "name": "Cathedral Underground, second bulb in the top left part",
             "id": 698115,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Healing Poultice",
@@ -3222,9 +2798,7 @@
             "name": "Cathedral Underground, third bulb in the top left part",
             "id": 698116,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Royal Soup",
@@ -3238,9 +2812,7 @@
             "name": "Cathedral Underground, bulb close to the save crystal",
             "id": 698117,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Vedha's Cure-All",
@@ -3254,9 +2826,7 @@
             "name": "Cathedral Underground, bulb in the bottom right path",
             "id": 698118,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Baby Walker",
@@ -3276,8 +2846,6 @@
             "connected_region": "Mithalas castle",
             "access_rule": {
               "rule": "_has_beast_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -3286,9 +2854,7 @@
             "name": "Mithalas Cathedral, after Mithalan God to Mithalas Cathedral, before Mithalan God",
             "connected_region": "Mithalas Cathedral, before Mithalan God",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3297,9 +2863,7 @@
             "name": "Mithalas boss area, beating Mithalan God",
             "id": 698202,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Glowing Egg x 2",
@@ -3313,9 +2877,7 @@
             "name": "Beating Mithalan God",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mithalan God beated",
@@ -3335,8 +2897,6 @@
             "connected_region": "Mithalas Cathedral underground",
             "access_rule": {
               "rule": "_has_beast_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -3346,19 +2906,14 @@
             "connected_region": "Mithalas Cathedral, after Mithalan God",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -3375,9 +2930,7 @@
             "name": "Kelp Forest top left area to Kelp Forest bottom left area",
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -3385,33 +2938,24 @@
             "connected_region": "Kelp Forest top left area fish pass",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_fish_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_nature_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -3422,18 +2966,14 @@
             "name": "Kelp Forest top left area to Kelp Forest top right area",
             "connected_region": "Kelp Forest top right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Kelp Forest top left area to Kelp Forest Drunian God room entrance",
             "connected_region": "Kelp Forest Drunian God room entrance",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3442,9 +2982,7 @@
             "name": "Kelp Forest top left area, bulb in the bottom left clearing",
             "id": 698044,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spicy Meat x 2",
@@ -3458,9 +2996,7 @@
             "name": "Kelp Forest top left area, bulb in the path down from the top left clearing",
             "id": 698045,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Glowing Egg",
@@ -3474,9 +3010,7 @@
             "name": "Kelp Forest top left area, bulb in the top left clearing",
             "id": 698046,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Transturtle Arnassi Ruins",
@@ -3491,8 +3025,6 @@
             "id": 698185,
             "access_rule": {
               "rule": "_has_beast_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3514,8 +3046,6 @@
             "connected_region": "Kelp Forest top left area",
             "access_rule": {
               "rule": "_has_fish_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -3526,9 +3056,7 @@
             "name": "Kelp Forest top left area, bulb close to the Verse Egg",
             "id": 698047,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Buttery Sea Loaf",
@@ -3542,9 +3070,7 @@
             "name": "Kelp Forest top left area, Verse Egg",
             "id": 698158,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Health Upgrade",
@@ -3563,18 +3089,14 @@
             "name": "Kelp Forest top right area to Kelp Forest bottom right area",
             "connected_region": "Kelp Forest bottom right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Kelp Forest top right area to Kelp Forest top left area",
             "connected_region": "Kelp Forest top left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -3582,8 +3104,6 @@
             "connected_region": "Kelp Forest top right area fish pass",
             "access_rule": {
               "rule": "_has_fish_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -3592,9 +3112,7 @@
             "name": "Kelp Forest top right area to Sprite cave",
             "connected_region": "Sprite cave",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3604,8 +3122,6 @@
             "id": 698048,
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3621,9 +3137,7 @@
             "name": "Kelp Forest top right area, bulb at the left of the center clearing",
             "id": 698049,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dumbo Ice Cream",
@@ -3637,9 +3151,7 @@
             "name": "Kelp Forest top right area, bulb in the left path's big room",
             "id": 698051,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Plant Leaf",
@@ -3653,9 +3165,7 @@
             "name": "Kelp Forest top right area, bulb in the left path's small room",
             "id": 698052,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Energy Statue",
@@ -3669,9 +3179,7 @@
             "name": "Kelp Forest top right area, bulb at the top of the center clearing",
             "id": 698053,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Magic Soup",
@@ -3686,8 +3194,6 @@
             "id": 698167,
             "access_rule": {
               "rule": "_has_light",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3709,8 +3215,6 @@
             "connected_region": "Kelp Forest top right area",
             "access_rule": {
               "rule": "_has_fish_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -3719,9 +3223,7 @@
             "name": "Kelp Forest top right area fish pass to Mermog cave",
             "connected_region": "Mermog cave",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3730,9 +3232,7 @@
             "name": "Kelp Forest top right area, bulb in the top fish pass",
             "id": 698050,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fish Meat x 2",
@@ -3751,9 +3251,7 @@
             "name": "Kelp Forest bottom left area to Kelp Forest bottom right area",
             "connected_region": "Kelp Forest bottom right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -3761,19 +3259,14 @@
             "connected_region": "Kelp Forest bottom left area, spirit crystals",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_energy_attack_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_fish_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -3784,18 +3277,14 @@
             "name": "Kelp Forest bottom left area to Kelp Forest fish cave",
             "connected_region": "Kelp Forest fish cave",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Kelp Forest bottom left area to Kelp Forest top left area",
             "connected_region": "Kelp Forest top left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -3803,8 +3292,6 @@
             "connected_region": "Kelp Forest Drunian God room entrance",
             "access_rule": {
               "rule": "_has_nature_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -3814,7 +3301,6 @@
             "connected_region": "The Veil top left area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Veil top left"
               }
@@ -3825,7 +3311,6 @@
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Veil top right"
               }
@@ -3836,7 +3321,6 @@
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Open Waters top right"
               }
@@ -3847,7 +3331,6 @@
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Home Waters"
               }
@@ -3858,7 +3341,6 @@
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Abyss right"
               }
@@ -3869,7 +3351,6 @@
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Final Boss"
               }
@@ -3880,7 +3361,6 @@
             "connected_region": "Simon Says area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Simon Says"
               }
@@ -3891,7 +3371,6 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Arnassi Ruins"
               }
@@ -3903,9 +3382,7 @@
             "name": "Kelp Forest bottom left area, Transturtle",
             "id": 698212,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Bone x 3",
@@ -3924,9 +3401,7 @@
             "name": "Kelp Forest bottom left area, spirit crystals to Kelp Forest bottom left area",
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3935,9 +3410,7 @@
             "name": "Kelp Forest bottom left area, bulb close to the spirit crystals",
             "id": 698054,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Veggie Ice Cream",
@@ -3952,8 +3425,6 @@
             "id": 698186,
             "access_rule": {
               "rule": "_has_spirit_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3974,36 +3445,28 @@
             "name": "Kelp Forest bottom right area to Open Waters top left area",
             "connected_region": "Open Waters top left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Kelp Forest bottom right area to The Veil bottom left area",
             "connected_region": "The Veil bottom left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Kelp Forest bottom right area to Kelp Forest bottom left area",
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Kelp Forest bottom right area to Kelp Forest top right area",
             "connected_region": "Kelp Forest top right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4013,8 +3476,6 @@
             "id": 698168,
             "access_rule": {
               "rule": "_has_light",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -4035,9 +3496,7 @@
             "name": "Kelp Forest Drunian God room to Kelp Forest Drunian God room entrance",
             "connected_region": "Kelp Forest Drunian God room entrance",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4046,9 +3505,7 @@
             "name": "Kelp Forest boss area, beating Drunian God",
             "id": 698204,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dual Form",
@@ -4062,9 +3519,7 @@
             "name": "Beating Drunian God",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Drunian God beated",
@@ -4084,8 +3539,6 @@
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
               "rule": "_has_nature_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -4094,9 +3547,7 @@
             "name": "Kelp Forest Drunian God room entrance to Kelp Forest top left area",
             "connected_region": "Kelp Forest top left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -4104,8 +3555,6 @@
             "connected_region": "Kelp Forest Drunian God room",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -4116,9 +3565,7 @@
             "name": "Kelp Forest boss room, bulb at the bottom of the area",
             "id": 698055,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Swamp Cake",
@@ -4137,9 +3584,7 @@
             "name": "Sprite cave to Kelp Forest top right area",
             "connected_region": "Kelp Forest top right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -4147,8 +3592,6 @@
             "connected_region": "Sprite cave after the plant tube",
             "access_rule": {
               "rule": "_has_nature_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -4159,9 +3602,7 @@
             "name": "Kelp Forest sprite cave, bulb inside the fish pass",
             "id": 698056,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fish Oil x 3",
@@ -4181,8 +3622,6 @@
             "connected_region": "Sprite cave",
             "access_rule": {
               "rule": "_has_nature_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -4193,9 +3632,7 @@
             "name": "Kelp Forest sprite cave, bulb in the second room",
             "id": 698057,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spicy Roll",
@@ -4209,9 +3646,7 @@
             "name": "Kelp Forest sprite cave, Seed Bag",
             "id": 698176,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sea Cake",
@@ -4230,9 +3665,7 @@
             "name": "Mermog cave to Kelp Forest top right area fish pass",
             "connected_region": "Kelp Forest top right area fish pass",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -4240,19 +3673,14 @@
             "connected_region": "Mermog cave boss",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_beast_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -4265,9 +3693,7 @@
             "name": "Mermog cave, bulb in the left part of the cave",
             "id": 698121,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Urchin Costume",
@@ -4287,19 +3713,14 @@
             "connected_region": "Mermog cave",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_beast_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -4312,9 +3733,7 @@
             "name": "Mermog cave, Piranha Egg",
             "id": 698197,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Turtle Egg",
@@ -4328,9 +3747,7 @@
             "name": "Beating Mergog",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mergog beated",
@@ -4349,9 +3766,7 @@
             "name": "Kelp Forest fish cave to Kelp Forest bottom left area",
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4360,9 +3775,7 @@
             "name": "Kelp Forest bottom left area, Fish Cave puzzle",
             "id": 698207,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Odd Container",
@@ -4381,9 +3794,7 @@
             "name": "The Veil top left area to The Veil bottom right area",
             "connected_region": "The Veil bottom right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -4391,8 +3802,6 @@
             "connected_region": "The Veil top left area fish pass",
             "access_rule": {
               "rule": "_has_fish_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -4401,18 +3810,14 @@
             "name": "The Veil top left area to The Veil top right area, right of temple",
             "connected_region": "The Veil top right area, right of temple",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "The Veil top left area to The Veil top left area, turtle cave",
             "connected_region": "The Veil top left area, turtle cave",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -4420,7 +3825,6 @@
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Veil top right"
               }
@@ -4431,7 +3835,6 @@
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Open Waters top right"
               }
@@ -4442,7 +3845,6 @@
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Kelp Forest bottom left"
               }
@@ -4453,7 +3855,6 @@
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Home Waters"
               }
@@ -4464,7 +3865,6 @@
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Abyss right"
               }
@@ -4475,7 +3875,6 @@
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Final Boss"
               }
@@ -4486,7 +3885,6 @@
             "connected_region": "Simon Says area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Simon Says"
               }
@@ -4497,7 +3895,6 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Arnassi Ruins"
               }
@@ -4509,9 +3906,7 @@
             "name": "The Veil top left area, In Li's cave",
             "id": 698199,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Tasty Roll",
@@ -4526,19 +3921,14 @@
             "id": 698078,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -4557,8 +3947,6 @@
             "id": 698076,
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -4574,9 +3962,7 @@
             "name": "The Veil top left area, Transturtle",
             "id": 698209,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Bone x 3",
@@ -4596,8 +3982,6 @@
             "connected_region": "The Veil top left area",
             "access_rule": {
               "rule": "_has_fish_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -4608,9 +3992,7 @@
             "name": "The Veil top left area, bulb inside the fish pass",
             "id": 698077,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Beast Form",
@@ -4629,9 +4011,7 @@
             "name": "The Veil top right area, left of temple to Sun Temple left area entrance",
             "connected_region": "Sun Temple left area entrance",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -4639,8 +4019,6 @@
             "connected_region": "The Veil top right area, fish pass left of temple",
             "access_rule": {
               "rule": "_has_fish_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -4650,7 +4028,6 @@
             "connected_region": "The Veil top left area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Veil top left"
               }
@@ -4661,7 +4038,6 @@
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Open Waters top right"
               }
@@ -4672,7 +4048,6 @@
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Kelp Forest bottom left"
               }
@@ -4683,7 +4058,6 @@
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Home Waters"
               }
@@ -4694,7 +4068,6 @@
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Abyss right"
               }
@@ -4705,7 +4078,6 @@
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Final Boss"
               }
@@ -4716,7 +4088,6 @@
             "connected_region": "Simon Says area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Simon Says"
               }
@@ -4727,7 +4098,6 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Arnassi Ruins"
               }
@@ -4740,8 +4110,6 @@
             "id": 698080,
             "access_rule": {
               "rule": "_has_beast_and_soup_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -4757,9 +4125,7 @@
             "name": "The Veil top right area, Transturtle",
             "id": 698210,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hearty Soup",
@@ -4779,8 +4145,6 @@
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
               "rule": "_has_fish_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -4790,26 +4154,19 @@
             "connected_region": "Octopus Cave top entrance",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_beast_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_sun_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -4820,9 +4177,7 @@
             "name": "The Veil top right area, fish pass left of temple to Octopus Cave bottom entrance",
             "connected_region": "Octopus Cave bottom entrance",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4835,18 +4190,14 @@
             "name": "The Veil top right area, right of temple to The Veil top left area",
             "connected_region": "The Veil top left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "The Veil top right area, right of temple to Sun Temple right area",
             "connected_region": "Sun Temple right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4856,8 +4207,6 @@
             "id": 698079,
             "access_rule": {
               "rule": "_has_beast_form_or_arnassi_armor",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -4873,9 +4222,7 @@
             "name": "The Veil top right area, Golden Starfish",
             "id": 698180,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Transturtle Veil top right",
@@ -4894,18 +4241,14 @@
             "name": "The Veil bottom left area to Open Waters top right area",
             "connected_region": "Open Waters top right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "The Veil bottom left area to Kelp Forest bottom right area",
             "connected_region": "Kelp Forest bottom right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -4913,19 +4256,14 @@
             "connected_region": "The Veil bottom left area, in the sunken ship",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_fish_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -4937,8 +4275,6 @@
             "connected_region": "The Veil bottom spirit crystal area",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -4949,9 +4285,7 @@
             "name": "The Veil bottom area, bulb in the left path",
             "id": 698082,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sight Poultice",
@@ -4971,8 +4305,6 @@
             "connected_region": "The Veil bottom left area",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -4982,8 +4314,6 @@
             "connected_region": "The Veil bottom right area",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -4994,9 +4324,7 @@
             "name": "The Veil bottom area, bulb in the spirit path",
             "id": 698081,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Jelly Beacon",
@@ -5016,19 +4344,14 @@
             "connected_region": "The Veil bottom left area",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_fish_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -5041,9 +4364,7 @@
             "name": "The Veil bottom area, Verse Egg",
             "id": 698157,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Shark Fin Soup",
@@ -5062,9 +4383,7 @@
             "name": "The Veil bottom right area to Open Waters top right area",
             "connected_region": "Open Waters top right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -5072,8 +4391,6 @@
             "connected_region": "The Veil bottom spirit crystal area",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -5082,9 +4399,7 @@
             "name": "The Veil bottom right area to The Veil top left area",
             "connected_region": "The Veil top left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5093,9 +4408,7 @@
             "name": "The Veil bottom area, Stone Head",
             "id": 698181,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Long Life Soup",
@@ -5114,9 +4427,7 @@
             "name": "Octopus Cave top entrance to The Veil top right area, fish pass left of temple",
             "connected_region": "The Veil top right area, fish pass left of temple",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5125,9 +4436,7 @@
             "name": "Octopus Cave, Dumbo Egg",
             "id": 698196,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hand Roll",
@@ -5141,9 +4450,7 @@
             "name": "Beating Octopus Prime",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Octopus Prime beated",
@@ -5162,9 +4469,7 @@
             "name": "Octopus Cave bottom entrance to The Veil top right area, fish pass left of temple",
             "connected_region": "The Veil top right area, fish pass left of temple",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5173,9 +4478,7 @@
             "name": "Octopus Cave, bulb in the path below the Octopus Cave path",
             "id": 698122,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mithalan Dress",
@@ -5194,18 +4497,14 @@
             "name": "The Veil top left area, turtle cave to The Veil top left area",
             "connected_region": "The Veil top left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "The Veil top left area, turtle cave to The Veil top left area, turtle cave Bubble Cliff",
             "connected_region": "The Veil top left area, turtle cave Bubble Cliff",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5215,8 +4514,6 @@
             "id": 698184,
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -5237,9 +4534,7 @@
             "name": "The Veil top left area, turtle cave Bubble Cliff to The Veil top left area, turtle cave",
             "connected_region": "The Veil top left area, turtle cave",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5248,9 +4543,7 @@
             "name": "Turtle cave, bulb in Bubble Cliff",
             "id": 698000,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Transturtle Home Waters",
@@ -5265,8 +4558,6 @@
             "id": 698193,
             "access_rule": {
               "rule": "_has_hot_soup",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -5287,18 +4578,14 @@
             "name": "Sun Temple left area to Sun Temple left area entrance",
             "connected_region": "Sun Temple left area entrance",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Sun Temple left area to Sun Temple before boss area",
             "connected_region": "Sun Temple before boss area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5307,9 +4594,7 @@
             "name": "Sun Temple, bulb in the top left part",
             "id": 698094,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Leaf Poultice",
@@ -5323,9 +4608,7 @@
             "name": "Sun Temple, bulb in the top right part",
             "id": 698095,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Transturtle Abyss right",
@@ -5339,9 +4622,7 @@
             "name": "Sun Temple, bulb at the top of the high dark room",
             "id": 698096,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Cold Soup",
@@ -5355,9 +4636,7 @@
             "name": "Sun Temple, Golden Gear",
             "id": 698171,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fish Oil",
@@ -5371,9 +4650,7 @@
             "name": "Third Secret",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Third Secret obtained",
@@ -5393,8 +4670,6 @@
             "connected_region": "Sun Temple right area",
             "access_rule": {
               "rule": "_has_light",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -5403,9 +4678,7 @@
             "name": "Sun Temple left area entrance to The Veil top right area, left of temple",
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -5413,19 +4686,14 @@
             "connected_region": "Sun Temple left area",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_light",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_sun_crystal",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -5442,9 +4710,7 @@
             "name": "Sun Temple right area to The Veil top right area, right of temple",
             "connected_region": "The Veil top right area, right of temple",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -5452,19 +4718,14 @@
             "connected_region": "Sun Temple left area entrance",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_light",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -5477,9 +4738,7 @@
             "name": "Sun Temple, first bulb of the temple",
             "id": 698091,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spicy Meat x 2",
@@ -5493,9 +4752,7 @@
             "name": "Sun Temple, bulb on the right part",
             "id": 698092,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Loaf of Life",
@@ -5509,9 +4766,7 @@
             "name": "Sun Temple, bulb in the hidden room of the right part",
             "id": 698093,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Long Life Soup",
@@ -5525,9 +4780,7 @@
             "name": "Sun Temple, Sun Key",
             "id": 698182,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rotten Meat",
@@ -5541,9 +4794,7 @@
             "name": "Sun Crystal",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Has Sun Crystal",
@@ -5563,19 +4814,14 @@
             "connected_region": "Sun Temple left area",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_light",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_sun_crystal",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -5587,8 +4833,6 @@
             "connected_region": "Sun Temple boss area",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -5599,9 +4843,7 @@
             "name": "Sun Temple boss path, first path bulb",
             "id": 698017,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Jelly Costume",
@@ -5615,9 +4857,7 @@
             "name": "Sun Temple boss path, second path bulb",
             "id": 698018,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rainbow Mushroom",
@@ -5632,22 +4872,17 @@
             "id": 698019,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "_has_beast_and_soup_form",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Lumerean God beated"
                       }
@@ -5656,7 +4891,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Sun God beated"
                   }
@@ -5676,22 +4910,17 @@
             "id": 698020,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "_has_beast_and_soup_form",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Lumerean God beated"
                       }
@@ -5700,7 +4929,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Sun God beated"
                   }
@@ -5725,8 +4953,6 @@
             "connected_region": "Sun Temple before boss area",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -5735,9 +4961,7 @@
             "name": "Sun Temple boss area to The Veil top right area, left of temple",
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5746,9 +4970,7 @@
             "name": "Sun Temple boss area, beating Lumerean God",
             "id": 698203,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spicy Roll",
@@ -5762,9 +4984,7 @@
             "name": "Beating Lumerean God",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Lumerean God beated",
@@ -5783,9 +5003,7 @@
             "name": "Abyss left area to Open Waters bottom left area",
             "connected_region": "Open Waters bottom left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -5793,8 +5011,6 @@
             "connected_region": "Abyss left bottom area",
             "access_rule": {
               "rule": "_has_nature_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -5804,23 +5020,17 @@
             "connected_region": "Abyss left area, King jellyfish cave",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "_has_beast_form",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "_has_energy_form",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -5828,8 +5038,6 @@
                 },
                 {
                   "rule": "_has_dual_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -5840,9 +5048,7 @@
             "name": "Abyss left area to Abyss right area",
             "connected_region": "Abyss right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5851,9 +5057,7 @@
             "name": "Abyss left area, bulb in hidden path room",
             "id": 698024,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dumbo Ice Cream",
@@ -5867,9 +5071,7 @@
             "name": "Abyss left area, bulb in the right part",
             "id": 698025,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Arcane Poultice",
@@ -5883,9 +5085,7 @@
             "name": "Abyss left area, Glowing Seed",
             "id": 698166,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spicy Roll",
@@ -5899,9 +5099,7 @@
             "name": "Abyss left area, Glowing Plant",
             "id": 698172,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Shark Fin Soup",
@@ -5921,8 +5119,6 @@
             "connected_region": "Abyss left area",
             "access_rule": {
               "rule": "_has_nature_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -5932,8 +5128,6 @@
             "connected_region": "Sunken City right area",
             "access_rule": {
               "rule": "_has_li",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -5943,8 +5137,6 @@
             "connected_region": "The Body center area",
             "access_rule": {
               "rule": "_has_tongue_cleared",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -5956,8 +5148,6 @@
             "id": 698026,
             "access_rule": {
               "rule": "_has_fish_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -5978,18 +5168,14 @@
             "name": "Abyss right area to Open Waters bottom right area",
             "connected_region": "Open Waters bottom right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Abyss right area to Abyss left area",
             "connected_region": "Abyss left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -5997,19 +5183,14 @@
             "connected_region": "Abyss right area, outside the whale",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_spirit_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_sun_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -6020,9 +5201,7 @@
             "name": "Abyss right area to Abyss right area, transturtle",
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -6030,33 +5209,24 @@
             "connected_region": "First Secret area",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_spirit_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_sun_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -6068,8 +5238,6 @@
             "connected_region": "Ice Cavern",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -6081,8 +5249,6 @@
             "id": 698110,
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -6098,9 +5264,7 @@
             "name": "Abyss right area, bulb behind the rock in the middle path",
             "id": 698111,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spider Roll",
@@ -6114,9 +5278,7 @@
             "name": "Abyss right area, bulb in the left green room",
             "id": 698112,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rainbow Mushroom",
@@ -6136,19 +5298,14 @@
             "connected_region": "Abyss right area",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_spirit_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_sun_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -6159,9 +5316,7 @@
             "name": "Abyss right area, outside the whale to Inside the whale",
             "connected_region": "Inside the whale",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -6171,8 +5326,6 @@
             "id": 698109,
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -6194,8 +5347,6 @@
             "connected_region": "Abyss right area",
             "access_rule": {
               "rule": "_has_light",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -6205,7 +5356,6 @@
             "connected_region": "The Veil top left area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Veil top left"
               }
@@ -6216,7 +5366,6 @@
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Veil top right"
               }
@@ -6227,7 +5376,6 @@
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Open Waters top right"
               }
@@ -6238,7 +5386,6 @@
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Kelp Forest bottom left"
               }
@@ -6249,7 +5396,6 @@
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Home Waters"
               }
@@ -6260,7 +5406,6 @@
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Final Boss"
               }
@@ -6271,7 +5416,6 @@
             "connected_region": "Simon Says area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Simon Says"
               }
@@ -6282,7 +5426,6 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Arnassi Ruins"
               }
@@ -6294,9 +5437,7 @@
             "name": "Abyss right area, Transturtle",
             "id": 698214,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Li and Li Song",
@@ -6316,8 +5457,6 @@
             "connected_region": "Abyss right area",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -6326,9 +5465,7 @@
             "name": "Ice Cavern to Frozen Veil",
             "connected_region": "Frozen Veil",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -6337,9 +5474,7 @@
             "name": "Ice Cavern, bulb in the room to the right",
             "id": 698083,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Bulb x 2",
@@ -6353,9 +5488,7 @@
             "name": "Ice Cavern, first bulb in the top exit room",
             "id": 698084,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Leeching Poultice",
@@ -6369,9 +5502,7 @@
             "name": "Ice Cavern, second bulb in the top exit room",
             "id": 698085,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hand Roll",
@@ -6385,9 +5516,7 @@
             "name": "Ice Cavern, third bulb in the top exit room",
             "id": 698086,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Legendary Cake",
@@ -6401,9 +5530,7 @@
             "name": "Ice Cavern, bulb in the left room",
             "id": 698087,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Tasty Roll",
@@ -6422,9 +5549,7 @@
             "name": "Bubble Cave to Frozen Veil",
             "connected_region": "Frozen Veil",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -6432,19 +5557,14 @@
             "connected_region": "Bubble Cave boss area",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_nature_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -6457,9 +5577,7 @@
             "name": "Bubble Cave, bulb in the left cave wall",
             "id": 698089,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Special Cake",
@@ -6473,9 +5591,7 @@
             "name": "Bubble Cave, bulb in the right cave wall (behind the ice crystal)",
             "id": 698090,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Leeching Poultice",
@@ -6494,9 +5610,7 @@
             "name": "Bubble Cave boss area to Bubble Cave",
             "connected_region": "Bubble Cave",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -6505,9 +5619,7 @@
             "name": "Bubble Cave, Verse Egg",
             "id": 698161,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rotten Loaf x 8",
@@ -6521,9 +5633,7 @@
             "name": "Beating Mantis Shrimp Prime",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mantis Shrimp Prime beated",
@@ -6542,9 +5652,7 @@
             "name": "Abyss left area, King jellyfish cave to Abyss left area",
             "connected_region": "Abyss left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -6553,9 +5661,7 @@
             "name": "King Jellyfish Cave, bulb in the right path from King Jelly",
             "id": 698088,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sun Key",
@@ -6569,9 +5675,7 @@
             "name": "King Jellyfish Cave, Jellyfish Costume",
             "id": 698188,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Leaf Poultice x 3",
@@ -6585,9 +5689,7 @@
             "name": "Beating King Jellyfish God Prime",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "King Jellyfish God Prime beated",
@@ -6606,9 +5708,7 @@
             "name": "Inside the whale to Abyss right area, outside the whale",
             "connected_region": "Abyss right area, outside the whale",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -6617,9 +5717,7 @@
             "name": "The Whale, Verse Egg",
             "id": 698159,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Glowing Seed",
@@ -6638,9 +5736,7 @@
             "name": "Sunken City left area to Sunken City right area",
             "connected_region": "Sunken City right area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -6648,8 +5744,6 @@
             "connected_region": "Sunken City left area, bedroom",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -6659,8 +5753,6 @@
             "connected_region": "Sunken City left area crates",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -6670,33 +5762,24 @@
             "connected_region": "Sunken City boss area",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_beast_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_sun_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -6714,8 +5797,6 @@
             "connected_region": "Abyss left bottom area",
             "access_rule": {
               "rule": "_has_li",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -6724,9 +5805,7 @@
             "name": "Sunken City right area to Sunken City left area",
             "connected_region": "Sunken City left area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -6734,8 +5813,6 @@
             "connected_region": "Sunken City right area crates",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -6751,33 +5828,24 @@
             "connected_region": "Sunken City left area",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_beast_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_sun_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -6790,9 +5858,7 @@
             "name": "Sunken City, bulb on top of the boss area",
             "id": 698043,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Anemone",
@@ -6806,9 +5872,7 @@
             "name": "Beating the Golem",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "The Golem beated",
@@ -6822,9 +5886,7 @@
             "name": "Sunken City cleared",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Body Tongue cleared",
@@ -6844,8 +5906,6 @@
             "connected_region": "Sunken City left area",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -6856,9 +5916,7 @@
             "name": "Sunken City left area, Girl Costume",
             "id": 698192,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Shield Song",
@@ -6878,8 +5936,6 @@
             "connected_region": "Abyss left bottom area",
             "access_rule": {
               "rule": "_has_light",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -6889,8 +5945,6 @@
             "connected_region": "The Body left area",
             "access_rule": {
               "rule": "_has_energy_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -6899,9 +5953,7 @@
             "name": "The Body center area to The Body right area, top path",
             "connected_region": "The Body right area, top path",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -6909,8 +5961,6 @@
             "connected_region": "The Body right area, bottom path",
             "access_rule": {
               "rule": "_has_energy_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -6920,8 +5970,6 @@
             "connected_region": "The Body bottom area",
             "access_rule": {
               "rule": "_has_dual_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -6933,8 +5981,6 @@
             "id": 698201,
             "access_rule": {
               "rule": "_has_tongue_cleared",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -6950,9 +5996,7 @@
             "name": "The Body center area, bulb on the main path blocking tube",
             "id": 698097,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rainbow Soup",
@@ -6971,9 +6015,7 @@
             "name": "The Body left area to The Body center area",
             "connected_region": "The Body center area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -6982,9 +6024,7 @@
             "name": "The Body left area, first bulb in the top face room",
             "id": 698066,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Vedha Sea Crisp",
@@ -6998,9 +6038,7 @@
             "name": "The Body left area, second bulb in the top face room",
             "id": 698069,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Veggie Soup",
@@ -7014,9 +6052,7 @@
             "name": "The Body left area, bulb below the water stream",
             "id": 698067,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dumbo Ice Cream",
@@ -7030,9 +6066,7 @@
             "name": "The Body left area, bulb in the top path to the top face room",
             "id": 698068,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rotten Meat x 8",
@@ -7046,9 +6080,7 @@
             "name": "The Body left area, bulb in the bottom face room",
             "id": 698070,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Leaf Poultice x 3",
@@ -7067,9 +6099,7 @@
             "name": "The Body right area, top path to The Body center area",
             "connected_region": "The Body center area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -7078,9 +6108,7 @@
             "name": "The Body right area, bulb in the top face room",
             "id": 698100,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Stone Head",
@@ -7099,9 +6127,7 @@
             "name": "The Body right area, bottom path to The Body center area",
             "connected_region": "The Body center area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -7110,9 +6136,7 @@
             "name": "The Body right area, bulb in the top path to the bottom face room",
             "id": 698098,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hot Borscht",
@@ -7126,9 +6150,7 @@
             "name": "The Body right area, bulb in the bottom face room",
             "id": 698099,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Tentacle x 2",
@@ -7148,8 +6170,6 @@
             "connected_region": "The Body center area",
             "access_rule": {
               "rule": "_has_dual_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -7159,8 +6179,6 @@
             "connected_region": "The Body, before final boss",
             "access_rule": {
               "rule": "_has_dual_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -7171,9 +6189,7 @@
             "name": "The Body bottom area, bulb in the Jelly Zap room",
             "id": 698101,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Special Bulb",
@@ -7187,9 +6203,7 @@
             "name": "The Body bottom area, bulb in the nautilus room",
             "id": 698102,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spicy Meat x 2",
@@ -7203,9 +6217,7 @@
             "name": "The Body bottom area, Mutant Costume",
             "id": 698190,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Poison Soup",
@@ -7225,8 +6237,6 @@
             "connected_region": "The Body bottom area",
             "access_rule": {
               "rule": "_has_dual_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -7236,8 +6246,6 @@
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
               "rule": "_has_nature_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -7247,33 +6255,24 @@
             "connected_region": "The Body, final boss",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_dual_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_energy_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_sun_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -7291,8 +6290,6 @@
             "connected_region": "The Body, before final boss",
             "access_rule": {
               "rule": "_has_nature_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -7302,7 +6299,6 @@
             "connected_region": "The Veil top left area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Veil top left"
               }
@@ -7313,7 +6309,6 @@
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Veil top right"
               }
@@ -7324,7 +6319,6 @@
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Open Waters top right"
               }
@@ -7335,7 +6329,6 @@
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Kelp Forest bottom left"
               }
@@ -7346,7 +6339,6 @@
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Home Waters"
               }
@@ -7357,7 +6349,6 @@
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Abyss right"
               }
@@ -7368,7 +6359,6 @@
             "connected_region": "Simon Says area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Simon Says"
               }
@@ -7379,7 +6369,6 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Transturtle Arnassi Ruins"
               }
@@ -7391,9 +6380,7 @@
             "name": "Final Boss area, first bulb in the turtle room",
             "id": 698103,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mithalas Pot",
@@ -7407,9 +6394,7 @@
             "name": "Final Boss area, second bulb in the turtle room",
             "id": 698104,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rotten Cake",
@@ -7423,9 +6408,7 @@
             "name": "Final Boss area, third bulb in the turtle room",
             "id": 698105,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Perogi",
@@ -7439,9 +6422,7 @@
             "name": "Final Boss area, Transturtle",
             "id": 698215,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Transturtle Final Boss",
@@ -7460,9 +6441,7 @@
             "name": "The Body, final boss to The Body, final boss area",
             "connected_region": "The Body, final boss area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -7471,9 +6450,7 @@
             "name": "Final Boss area, bulb in the boss third form room",
             "id": 698106,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hot Soup",
@@ -7493,9 +6470,7 @@
             "name": "Objective complete",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Victory",
@@ -7515,33 +6490,24 @@
             "connected_region": "Abyss right area",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_spirit_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_sun_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -7554,9 +6520,7 @@
             "name": "First Secret",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "First Secret obtained",
@@ -7577,8 +6541,6 @@
             "connected_region": "Energy Temple first area",
             "access_rule": {
               "rule": "_has_fish_form",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -7588,19 +6550,14 @@
             "connected_region": "Energy Temple fallen God room",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_energy_attack_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_fish_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -7613,9 +6570,7 @@
             "name": "Energy Temple, Energy Idol",
             "id": 698170,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hearty Soup",
@@ -7635,9 +6590,7 @@
             "name": "Energy Temple after boss path to Energy Temple first area",
             "connected_region": "Energy Temple first area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -7645,8 +6598,6 @@
             "connected_region": "Energy Temple fallen God room",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -7656,26 +6607,19 @@
             "connected_region": "Energy Temple blaster room",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_nature_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -7693,9 +6637,7 @@
             "name": "Frozen Veil to Ice Cavern",
             "connected_region": "Ice Cavern",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -7703,19 +6645,14 @@
             "connected_region": "Bubble Cave",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_beast_form",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_hot_soup",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -7735,9 +6672,7 @@
             "name": "Sunken City left area, crate in the little pipe room",
             "id": 698151,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Leeching Poultice",
@@ -7751,9 +6686,7 @@
             "name": "Sunken City left area, crate close to the save crystal",
             "id": 698152,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hearty Soup",
@@ -7767,9 +6700,7 @@
             "name": "Sunken City left area, crate before the bedroom",
             "id": 698153,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Transturtle Open Waters top right",
@@ -7790,9 +6721,7 @@
             "name": "Sunken City right area, crate close to the save crystal",
             "id": 698154,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Plant Leaf x 3",
@@ -7806,9 +6735,7 @@
             "name": "Sunken City right area, crate in the left bottom room",
             "id": 698155,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Arnassi Statue",
@@ -7829,8 +6756,6 @@
             "connected_region": "Home Waters",
             "access_rule": {
               "rule": "_has_bind_song",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -7840,8 +6765,6 @@
             "connected_region": "Home Waters, Nautilus nest",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -7850,9 +6773,7 @@
             "name": "Home Waters, behind rock to Energy Temple first area",
             "connected_region": "Energy Temple first area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -7860,19 +6781,14 @@
             "connected_region": "Energy Temple bottom entrance",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -7885,9 +6801,7 @@
             "name": "Home Waters, bulb in the path below Nautilus Prime",
             "id": 698059,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rotten Meat",
@@ -7901,9 +6815,7 @@
             "name": "Home Waters, bulb in the bottom left room",
             "id": 698063,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hand Roll",
@@ -7924,9 +6836,7 @@
             "name": "Open Waters top right area, first urn in the Mithalas exit",
             "id": 698148,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Plant Leaf x 2",
@@ -7940,9 +6850,7 @@
             "name": "Open Waters top right area, second urn in the Mithalas exit",
             "id": 698149,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Zuuna's Perogi",
@@ -7956,9 +6864,7 @@
             "name": "Open Waters top right area, third urn in the Mithalas exit",
             "id": 698150,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Big Seed",
@@ -7979,9 +6885,7 @@
             "name": "Mithalas City, first urn in one of the homes",
             "id": 698123,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Healing Poultice",
@@ -7995,9 +6899,7 @@
             "name": "Mithalas City, second urn in one of the homes",
             "id": 698124,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Baby Dumbo",
@@ -8011,9 +6913,7 @@
             "name": "Mithalas City, first urn in the city reserve",
             "id": 698125,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Bone x 3",
@@ -8027,9 +6927,7 @@
             "name": "Mithalas City, second urn in the city reserve",
             "id": 698126,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Healing Poultice x 2",
@@ -8043,9 +6941,7 @@
             "name": "Mithalas City, third urn in the city reserve",
             "id": 698127,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Arcane Poultice",
@@ -8066,9 +6962,7 @@
             "name": "Mithalas City Castle, urn in the bedroom",
             "id": 698130,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Berry",
@@ -8082,9 +6976,7 @@
             "name": "Mithalas City Castle, first urn of the single lamp path",
             "id": 698131,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Volcano Roll",
@@ -8098,9 +6990,7 @@
             "name": "Mithalas City Castle, second urn of the single lamp path",
             "id": 698132,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sea Cake",
@@ -8114,9 +7004,7 @@
             "name": "Mithalas City Castle, urn in the bottom room",
             "id": 698133,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mithalas Banner",
@@ -8130,9 +7018,7 @@
             "name": "Mithalas City Castle, first urn on the entrance path",
             "id": 698134,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Plump Perogi",
@@ -8146,9 +7032,7 @@
             "name": "Mithalas City Castle, second urn on the entrance path",
             "id": 698135,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rotten Meat",
@@ -10210,13 +9094,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "_has_beast_form",
-            "args": []
+            "name": "_has_beast_form"
           },
           {
             "type": "helper",
-            "name": "_has_hot_soup",
-            "args": []
+            "name": "_has_hot_soup"
           }
         ]
       },
@@ -10229,8 +9111,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "_has_beast_form",
-            "args": []
+            "name": "_has_beast_form"
           },
           {
             "type": "item_check",
@@ -10285,8 +9166,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "_has_li",
-            "args": []
+            "name": "_has_li"
           },
           {
             "type": "item_check",
@@ -10299,13 +9179,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "_has_energy_form",
-            "args": []
+            "name": "_has_energy_form"
           },
           {
             "type": "helper",
-            "name": "_has_dual_form",
-            "args": []
+            "name": "_has_dual_form"
           }
         ]
       },
@@ -10349,8 +9227,7 @@
           },
           {
             "type": "helper",
-            "name": "_has_sun_form",
-            "args": []
+            "name": "_has_sun_form"
           }
         ]
       },
@@ -10371,8 +9248,7 @@
           },
           {
             "type": "helper",
-            "name": "_has_bind_song",
-            "args": []
+            "name": "_has_bind_song"
           }
         ]
       },

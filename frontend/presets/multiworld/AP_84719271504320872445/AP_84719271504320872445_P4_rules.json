@@ -26,9 +26,7 @@
             "name": "GameStart",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -42,7 +40,6 @@
             "connected_region": "YellowCastle",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Yellow Key"
               }
@@ -53,7 +50,6 @@
             "connected_region": "WhiteCastle",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "White Key"
               }
@@ -64,7 +60,6 @@
             "connected_region": "BlackCastle",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Black Key"
               }
@@ -75,18 +70,15 @@
             "connected_region": "CreditsRoom",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Black Key"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Bridge"
                   }
@@ -100,9 +92,7 @@
             "name": "Blue Labyrinth 0",
             "id": 118000004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Glove",
@@ -116,9 +106,7 @@
             "name": "Blue Labyrinth 1",
             "id": 118000006,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Time Piece",
@@ -132,9 +120,7 @@
             "name": "Catacombs",
             "id": 118000009,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Relic (Cow)",
@@ -148,9 +134,7 @@
             "name": "Adjacent to Catacombs",
             "id": 118000012,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Relic (Red Crayon)",
@@ -164,9 +148,7 @@
             "name": "Southwest of Catacombs",
             "id": 118000014,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Moon Pearl",
@@ -180,9 +162,7 @@
             "name": "White Castle Gate",
             "id": 118000015,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Seashell",
@@ -196,9 +176,7 @@
             "name": "Black Castle Gate",
             "id": 118000016,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "25 Pons",
@@ -212,9 +190,7 @@
             "name": "Yellow Castle Gate",
             "id": 118000017,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "13 Coins",
@@ -228,9 +204,7 @@
             "name": "Northeast of Catacombs",
             "id": 118000028,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Umbrella",
@@ -244,9 +218,7 @@
             "name": "Southeast of Catacombs",
             "id": 118000029,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "No Bonk Badge",
@@ -261,18 +233,15 @@
             "id": 118000208,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Right Difficulty Switch"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Sword"
                   }
@@ -297,9 +266,7 @@
             "name": "YellowCastleExit",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -308,9 +275,7 @@
             "name": "Inside Yellow Castle",
             "id": 118000018,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Boss Heart Container",
@@ -325,18 +290,15 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Chalice"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Yellow Key"
                   }
@@ -361,9 +323,7 @@
             "name": "WhiteCastleExit",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -371,7 +331,6 @@
             "connected_region": "WhiteCastleVault",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Bridge"
               }
@@ -382,18 +341,15 @@
             "connected_region": "WhiteCastlePreVaultPeek",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Bridge"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Magnet"
                   }
@@ -407,9 +363,7 @@
             "name": "RedMaze0",
             "id": 118000023,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Seashell",
@@ -423,9 +377,7 @@
             "name": "RedMaze1",
             "id": 118000026,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Health Pon",
@@ -445,9 +397,7 @@
             "name": "WhiteCastleFromPeek",
             "connected_region": "WhiteCastle",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -456,9 +406,7 @@
             "name": "Red Maze Vault Entrance",
             "id": 118000183,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Time Piece",
@@ -478,9 +426,7 @@
             "name": "WhiteCastleReturnPassage",
             "connected_region": "WhiteCastle",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -489,9 +435,7 @@
             "name": "Red Maze Vault",
             "id": 118000025,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Seashell",
@@ -506,18 +450,15 @@
             "id": 118000209,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Right Difficulty Switch"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Sword"
                   }
@@ -542,9 +483,7 @@
             "name": "BlackCastleExit",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -552,18 +491,15 @@
             "connected_region": "BlackCastleVault",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Bridge"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Magnet"
                   }
@@ -577,9 +513,7 @@
             "name": "Dungeon0",
             "id": 118000019,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Yarn",
@@ -593,9 +527,7 @@
             "name": "Dungeon1",
             "id": 118000021,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Piece of Heart",
@@ -609,9 +541,7 @@
             "name": "Black Castle Foyer",
             "id": 118000027,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rupee (1)",
@@ -626,18 +556,15 @@
             "id": 118000210,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Right Difficulty Switch"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Sword"
                   }
@@ -662,9 +589,7 @@
             "name": "BlackCastleReturnPassage",
             "connected_region": "BlackCastle",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -673,9 +598,7 @@
             "name": "Dungeon Vault",
             "id": 118000181,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Toy Shovel",
@@ -695,9 +618,7 @@
             "name": "CreditsExit",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -705,7 +626,6 @@
             "connected_region": "CreditsRoomFarSide",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Magnet"
               }
@@ -717,9 +637,7 @@
             "name": "Credits Left Side",
             "id": 118000030,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hookshot",
@@ -739,9 +657,7 @@
             "name": "CreditsFromFarSide",
             "connected_region": "CreditsRoom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -750,9 +666,7 @@
             "name": "Credits Right Side",
             "id": 118000190,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "25 Pons",
@@ -1411,8 +1325,7 @@
                     ]
                   },
                   "attr": "access_rule"
-                },
-                "args": []
+                }
               }
             }
           ]
@@ -1649,8 +1562,7 @@
                     },
                     {
                       "type": "helper",
-                      "name": "has_fire_source",
-                      "args": []
+                      "name": "has_fire_source"
                     },
                     {
                       "type": "item_check",
@@ -1658,8 +1570,7 @@
                     },
                     {
                       "type": "helper",
-                      "name": "can_shoot_arrows",
-                      "args": []
+                      "name": "can_shoot_arrows"
                     }
                   ]
                 }
@@ -1671,8 +1582,7 @@
             "name": "can_hurt",
             "value": {
               "type": "helper",
-              "name": "has_beam_sword",
-              "args": []
+              "name": "has_beam_sword"
             }
           },
           {
@@ -1687,8 +1597,7 @@
                 },
                 {
                   "type": "helper",
-                  "name": "has_fire_source",
-                  "args": []
+                  "name": "has_fire_source"
                 }
               ]
             }
@@ -1737,8 +1646,7 @@
                             },
                             {
                               "type": "helper",
-                              "name": "can_shoot_arrows",
-                              "args": []
+                              "name": "can_shoot_arrows"
                             }
                           ]
                         },
@@ -1778,8 +1686,7 @@
                     },
                     {
                       "type": "helper",
-                      "name": "can_shoot_arrows",
-                      "args": []
+                      "name": "can_shoot_arrows"
                     }
                   ]
                 }
@@ -1849,18 +1756,15 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "has_melee_weapon",
-            "args": []
+            "name": "has_melee_weapon"
           },
           {
             "type": "helper",
-            "name": "can_use_bombs",
-            "args": []
+            "name": "can_use_bombs"
           },
           {
             "type": "helper",
-            "name": "can_shoot_arrows",
-            "args": []
+            "name": "can_shoot_arrows"
           },
           {
             "type": "state_method",
@@ -1891,8 +1795,7 @@
           },
           {
             "type": "helper",
-            "name": "can_use_bombs",
-            "args": []
+            "name": "can_use_bombs"
           }
         ]
       },
@@ -2104,8 +2007,7 @@
                           "op": "*",
                           "right": {
                             "type": "helper",
-                            "name": "bottle_count",
-                            "args": []
+                            "name": "bottle_count"
                           }
                         }
                       ]
@@ -2165,8 +2067,7 @@
                             "op": "*",
                             "right": {
                               "type": "helper",
-                              "name": "bottle_count",
-                              "args": []
+                              "name": "bottle_count"
                             }
                           }
                         ]
@@ -2188,8 +2089,7 @@
                         "op": "*",
                         "right": {
                           "type": "helper",
-                          "name": "bottle_count",
-                          "args": []
+                          "name": "bottle_count"
                         }
                       }
                     }
@@ -2259,8 +2159,7 @@
                       "conditions": [
                         {
                           "type": "helper",
-                          "name": "has_sword",
-                          "args": []
+                          "name": "has_sword"
                         },
                         {
                           "type": "item_check",
@@ -2279,8 +2178,7 @@
                       "name": "cave"
                     },
                     "attr": "can_reach"
-                  },
-                  "args": []
+                  }
                 },
                 {
                   "type": "helper",
@@ -2514,8 +2412,7 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "has_melee_weapon",
-                "args": []
+                "name": "has_melee_weapon"
               },
               {
                 "type": "item_check",
@@ -2527,13 +2424,11 @@
               },
               {
                 "type": "helper",
-                "name": "can_extend_magic",
-                "args": []
+                "name": "can_extend_magic"
               },
               {
                 "type": "helper",
-                "name": "can_shoot_arrows",
-                "args": []
+                "name": "can_shoot_arrows"
               },
               {
                 "type": "item_check",
@@ -2564,8 +2459,7 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "has_melee_weapon",
-                "args": []
+                "name": "has_melee_weapon"
               },
               {
                 "type": "item_check",
@@ -2595,8 +2489,7 @@
                       },
                       {
                         "type": "helper",
-                        "name": "can_extend_magic",
-                        "args": []
+                        "name": "can_extend_magic"
                       }
                     ]
                   }
@@ -2604,8 +2497,7 @@
               },
               {
                 "type": "helper",
-                "name": "can_shoot_arrows",
-                "args": []
+                "name": "can_shoot_arrows"
               },
               {
                 "type": "item_check",
@@ -2702,8 +2594,7 @@
                   },
                   {
                     "type": "helper",
-                    "name": "has_sword",
-                    "args": []
+                    "name": "has_sword"
                   }
                 ]
               }
@@ -2723,8 +2614,7 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "has_beam_sword",
-                "args": []
+                "name": "has_beam_sword"
               },
               {
                 "type": "and",
@@ -3091,8 +2981,7 @@
           "type": "compare",
           "left": {
             "type": "helper",
-            "name": "heart_count",
-            "args": []
+            "name": "heart_count"
           },
           "op": ">=",
           "right": {
@@ -3106,8 +2995,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "has_sword",
-            "args": []
+            "name": "has_sword"
           },
           {
             "type": "item_check",

@@ -19,9 +19,7 @@
             "name": "Menu New Game",
             "connected_region": "Waynehouse",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -34,18 +32,14 @@
             "name": "Afterlife To Waynehouse",
             "connected_region": "Waynehouse",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Afterlife To New Muldul",
             "connected_region": "New Muldul",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -53,19 +47,14 @@
             "connected_region": "Viewax",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "air_dash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "airship",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -77,8 +66,6 @@
             "connected_region": "TV Island",
             "access_rule": {
               "rule": "airship",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -88,8 +75,6 @@
             "connected_region": "Shield Facility",
             "access_rule": {
               "rule": "airship",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -99,8 +84,6 @@
             "connected_region": "Worm Pod",
             "access_rule": {
               "rule": "enter_wormpod",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -110,19 +93,14 @@
             "connected_region": "Foglast",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "charge_up",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "enter_foglast",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -134,8 +112,6 @@
             "connected_region": "Sage Labyrinth",
             "access_rule": {
               "rule": "skull_bomb",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -145,23 +121,17 @@
             "connected_region": "Hylemxylem",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "charge_up",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "paper_cup",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -169,8 +139,6 @@
                 },
                 {
                   "rule": "enter_hylemxylem",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -183,9 +151,7 @@
             "name": "Afterlife: Mangled Wayne",
             "id": 200628,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BURRITO",
@@ -199,9 +165,7 @@
             "name": "Afterlife: Jar near Mangled Wayne",
             "id": 200629,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "CLOUD GERM",
@@ -215,9 +179,7 @@
             "name": "Afterlife: Jar under Pool",
             "id": 200630,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "COOKIE",
@@ -232,8 +194,6 @@
             "id": 200631,
             "access_rule": {
               "rule": "cave_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -254,18 +214,14 @@
             "name": "Waynehouse To World",
             "connected_region": "World",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Waynehouse To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -274,9 +230,7 @@
             "name": "Waynehouse: Toilet",
             "id": 200622,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "CLICKER",
@@ -290,9 +244,7 @@
             "name": "Waynehouse: Basement Pot 1",
             "id": 200623,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MULTI STEM CELL",
@@ -306,9 +258,7 @@
             "name": "Waynehouse: Basement Pot 2",
             "id": 200624,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MULTI SOUL SPONGE",
@@ -322,9 +272,7 @@
             "name": "Waynehouse: Basement Pot 3",
             "id": 200625,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "JUICE",
@@ -338,9 +286,7 @@
             "name": "Waynehouse: Sarcophagus",
             "id": 200626,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BANANA",
@@ -354,9 +300,7 @@
             "name": "Waynehouse: TV",
             "id": 200627,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "SINGLE GLOVE",
@@ -376,8 +320,6 @@
             "connected_region": "Airship",
             "access_rule": {
               "rule": "airship",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -386,27 +328,21 @@
             "name": "World To Waynehouse",
             "connected_region": "Waynehouse",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "World To New Muldul",
             "connected_region": "New Muldul",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "World To Drill Castle",
             "connected_region": "Drill Castle",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -414,19 +350,14 @@
             "connected_region": "Viewax",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "air_dash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "airship",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -438,19 +369,14 @@
             "connected_region": "Arcade Island",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "air_dash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "airship",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -462,8 +388,6 @@
             "connected_region": "TV Island",
             "access_rule": {
               "rule": "airship",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -473,8 +397,6 @@
             "connected_region": "Juice Ranch",
             "access_rule": {
               "rule": "airship",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -484,8 +406,6 @@
             "connected_region": "Shield Facility",
             "access_rule": {
               "rule": "airship",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -495,8 +415,6 @@
             "connected_region": "Worm Pod",
             "access_rule": {
               "rule": "enter_wormpod",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -506,19 +424,14 @@
             "connected_region": "Foglast",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "charge_up",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "enter_foglast",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -530,30 +443,22 @@
             "connected_region": "Sage Airship",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "charge_up",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "paper_cup",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "worm_room_key",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -561,8 +466,6 @@
                 },
                 {
                   "rule": "enter_sageship",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -574,23 +477,17 @@
             "connected_region": "Hylemxylem",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "charge_up",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "paper_cup",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -598,8 +495,6 @@
                 },
                 {
                   "rule": "enter_hylemxylem",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -616,27 +511,21 @@
             "name": "New Muldul To World",
             "connected_region": "World",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "New Muldul To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "New Muldul To New Muldul Vault",
             "connected_region": "New Muldul Vault",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -645,9 +534,7 @@
             "name": "New Muldul: Shop Ceiling Pot 1",
             "id": 200632,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "UPPER HOUSE KEY",
@@ -661,9 +548,7 @@
             "name": "New Muldul: Shop Ceiling Pot 2",
             "id": 200633,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BOOTS",
@@ -677,9 +562,7 @@
             "name": "New Muldul: Flag Banana",
             "id": 200634,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "WORM ROOM KEY",
@@ -693,9 +576,7 @@
             "name": "New Muldul: Pot near Vault",
             "id": 200635,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BURRITO",
@@ -710,8 +591,6 @@
             "id": 200785,
             "access_rule": {
               "rule": "air_dash",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -727,9 +606,7 @@
             "name": "New Muldul: Underground Pot",
             "id": 200636,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MULTI-JUICE",
@@ -744,8 +621,6 @@
             "id": 200637,
             "access_rule": {
               "rule": "air_dash",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -761,9 +636,7 @@
             "name": "New Muldul: Juice Trade",
             "id": 200638,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "CLOUD GERM",
@@ -777,9 +650,7 @@
             "name": "New Muldul: Basement Suitcase",
             "id": 200639,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BANANA",
@@ -794,8 +665,6 @@
             "id": 200640,
             "access_rule": {
               "rule": "upper_house_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -812,8 +681,6 @@
             "id": 200641,
             "access_rule": {
               "rule": "upper_house_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -829,9 +696,7 @@
             "name": "New Muldul: Talk to Pongorma",
             "id": 200643,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "STEM CELL",
@@ -846,27 +711,20 @@
             "id": 200645,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "jail_key",
-                          "options": [],
-                          "args": [],
                           "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
                           "rule": "paddle",
-                          "options": [],
-                          "args": [],
                           "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         }
@@ -874,19 +732,14 @@
                     },
                     {
                       "rule": "Or",
-                      "options": [],
                       "children": [
                         {
                           "rule": "air_dash",
-                          "options": [],
-                          "args": [],
                           "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
                           "rule": "airship",
-                          "options": [],
-                          "args": [],
                           "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         }
@@ -896,8 +749,6 @@
                 },
                 {
                   "rule": "enter_hylemxylem",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -916,27 +767,20 @@
             "id": 200646,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "jail_key",
-                          "options": [],
-                          "args": [],
                           "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
                           "rule": "paddle",
-                          "options": [],
-                          "args": [],
                           "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         }
@@ -944,19 +788,14 @@
                     },
                     {
                       "rule": "Or",
-                      "options": [],
                       "children": [
                         {
                           "rule": "air_dash",
-                          "options": [],
-                          "args": [],
                           "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
                           "rule": "airship",
-                          "options": [],
-                          "args": [],
                           "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         }
@@ -966,8 +805,6 @@
                 },
                 {
                   "rule": "enter_hylemxylem",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -986,8 +823,6 @@
             "id": 200642,
             "access_rule": {
               "rule": "house_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1008,9 +843,7 @@
             "name": "New Muldul Vault To New Muldul",
             "connected_region": "New Muldul",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1020,8 +853,6 @@
             "id": 200647,
             "access_rule": {
               "rule": "enter_hylemxylem",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1038,8 +869,6 @@
             "id": 200648,
             "access_rule": {
               "rule": "enter_hylemxylem",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1056,8 +885,6 @@
             "id": 200649,
             "access_rule": {
               "rule": "enter_hylemxylem",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1079,18 +906,14 @@
             "name": "Viewax To World",
             "connected_region": "World",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Viewax To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1099,9 +922,7 @@
             "name": "Viewax's Edifice: Fountain Banana",
             "id": 200650,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "DUBIOUS BERRY",
@@ -1115,9 +936,7 @@
             "name": "Viewax's Edifice: Dedusmuln's Suitcase",
             "id": 200651,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "CUPCAKE",
@@ -1131,9 +950,7 @@
             "name": "Viewax's Edifice: Dedusmuln's Campfire",
             "id": 200652,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "LONG GLOVES",
@@ -1147,9 +964,7 @@
             "name": "Viewax's Edifice: Talk to Dedusmuln",
             "id": 200653,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "JAIL KEY",
@@ -1164,8 +979,6 @@
             "id": 200655,
             "access_rule": {
               "rule": "paddle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1182,8 +995,6 @@
             "id": 200656,
             "access_rule": {
               "rule": "paddle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1200,19 +1011,14 @@
             "id": 200657,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "paddle",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "paddle",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1231,8 +1037,6 @@
             "id": 200658,
             "access_rule": {
               "rule": "paddle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1249,8 +1053,6 @@
             "id": 200659,
             "access_rule": {
               "rule": "paddle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1267,19 +1069,14 @@
             "id": 200660,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "paddle",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "tower_key",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1298,8 +1095,6 @@
             "id": 200661,
             "access_rule": {
               "rule": "air_dash",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1316,8 +1111,6 @@
             "id": 200662,
             "access_rule": {
               "rule": "air_dash",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1334,8 +1127,6 @@
             "id": 200663,
             "access_rule": {
               "rule": "air_dash",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1352,8 +1143,6 @@
             "id": 200664,
             "access_rule": {
               "rule": "paddle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1370,8 +1159,6 @@
             "id": 200665,
             "access_rule": {
               "rule": "paddle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1388,8 +1175,6 @@
             "id": 200667,
             "access_rule": {
               "rule": "paddle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1406,8 +1191,6 @@
             "id": 200668,
             "access_rule": {
               "rule": "paddle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1424,8 +1207,6 @@
             "id": 200669,
             "access_rule": {
               "rule": "paddle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1442,8 +1223,6 @@
             "id": 200670,
             "access_rule": {
               "rule": "paddle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1460,8 +1239,6 @@
             "id": 200671,
             "access_rule": {
               "rule": "paddle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1478,8 +1255,6 @@
             "id": 200672,
             "access_rule": {
               "rule": "paddle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1496,8 +1271,6 @@
             "id": 200673,
             "access_rule": {
               "rule": "paddle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1514,8 +1287,6 @@
             "id": 200674,
             "access_rule": {
               "rule": "paddle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1532,19 +1303,14 @@
             "id": 200666,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "jail_key",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "paddle",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1567,9 +1333,7 @@
             "name": "Airship To World",
             "connected_region": "World",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1579,8 +1343,6 @@
             "id": 200675,
             "access_rule": {
               "rule": "worm_room_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1601,9 +1363,7 @@
             "name": "Arcade Island To World",
             "connected_region": "World",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1612,9 +1372,7 @@
             "name": "Arcade Island: Shielded Key",
             "id": 200676,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "LONG GLOVES",
@@ -1628,9 +1386,7 @@
             "name": "Arcade 2: Flying Machine Banana",
             "id": 200677,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BANANA",
@@ -1644,9 +1400,7 @@
             "name": "Arcade 2: Paper Cup Detour",
             "id": 200678,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "TELEDENUDATE",
@@ -1660,9 +1414,7 @@
             "name": "Arcade 2: Peak Muscle Applique",
             "id": 200679,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "SAGE TOKEN",
@@ -1676,9 +1428,7 @@
             "name": "Arcade 2: Double Banana 1",
             "id": 200680,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "VESSEL ROOM KEY",
@@ -1692,9 +1442,7 @@
             "name": "Arcade 2: Double Banana 2",
             "id": 200681,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MULTI STEM CELL",
@@ -1708,9 +1456,7 @@
             "name": "Arcade 2: Cave Burrito",
             "id": 200682,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BURRITO",
@@ -1729,18 +1475,14 @@
             "name": "TV Island To World",
             "connected_region": "World",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "TV Island To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1749,9 +1491,7 @@
             "name": "TV Island: TV",
             "id": 200683,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "UPPER CHAMBER KEY",
@@ -1770,9 +1510,7 @@
             "name": "Juice Ranch To World",
             "connected_region": "World",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1781,9 +1519,7 @@
             "name": "Juice Ranch: Juice 1",
             "id": 200684,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "PEPTIDE BODKINS",
@@ -1797,9 +1533,7 @@
             "name": "Juice Ranch: Juice 2",
             "id": 200685,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "DUCTILE HABIT",
@@ -1813,9 +1547,7 @@
             "name": "Juice Ranch: Juice 3",
             "id": 200686,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "SOUL SPONGE",
@@ -1829,9 +1561,7 @@
             "name": "Juice Ranch: Ledge Rancher",
             "id": 200687,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BURRITO",
@@ -1845,9 +1575,7 @@
             "name": "Juice Ranch: Battle with Somsnosa",
             "id": 200688,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BANANA",
@@ -1861,9 +1589,7 @@
             "name": "Juice Ranch: Fridge",
             "id": 200690,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MUSCLE APPLIQUE",
@@ -1877,9 +1603,7 @@
             "name": "Juice Ranch: TV",
             "id": 200691,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BANANA",
@@ -1898,18 +1622,14 @@
             "name": "Shield Facility To World",
             "connected_region": "World",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Shield Facility To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1917,8 +1637,6 @@
             "connected_region": "Worm Pod",
             "access_rule": {
               "rule": "enter_wormpod",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -1934,8 +1652,6 @@
             "connected_region": "Shield Facility",
             "access_rule": {
               "rule": "airship",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -1944,9 +1660,7 @@
             "name": "Worm Pod To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1955,9 +1669,7 @@
             "name": "Worm Pod: Key",
             "id": 200692,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "PLEATHER GAGE",
@@ -1976,18 +1688,14 @@
             "name": "Foglast To World",
             "connected_region": "World",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Foglast To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1996,9 +1704,7 @@
             "name": "Foglast: West Sarcophagus",
             "id": 200693,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "PNEUMATOPHORE",
@@ -2013,8 +1719,6 @@
             "id": 200694,
             "access_rule": {
               "rule": "air_dash",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2031,8 +1735,6 @@
             "id": 200695,
             "access_rule": {
               "rule": "air_dash",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2049,8 +1751,6 @@
             "id": 200696,
             "access_rule": {
               "rule": "air_dash",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2067,8 +1767,6 @@
             "id": 200698,
             "access_rule": {
               "rule": "air_dash",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2085,8 +1783,6 @@
             "id": 200699,
             "access_rule": {
               "rule": "air_dash",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2103,19 +1799,14 @@
             "id": 200700,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "air_dash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "bridge_key",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2134,19 +1825,14 @@
             "id": 200701,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "air_dash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "bridge_key",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2165,19 +1851,14 @@
             "id": 200702,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "air_dash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "bridge_key",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2196,19 +1877,14 @@
             "id": 200703,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "air_dash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "bridge_key",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2227,19 +1903,14 @@
             "id": 200704,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "air_dash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "bridge_key",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2258,19 +1929,14 @@
             "id": 200705,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "air_dash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "bridge_key",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2289,19 +1955,14 @@
             "id": 200706,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "air_dash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "bridge_key",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2320,19 +1981,14 @@
             "id": 200697,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "air_dash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "clicker",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2355,9 +2011,7 @@
             "name": "Drill Castle To World",
             "connected_region": "World",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2365,8 +2019,6 @@
             "connected_region": "Sage Labyrinth",
             "access_rule": {
               "rule": "skull_bomb",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2377,9 +2029,7 @@
             "name": "Drill Castle: Ledge Banana",
             "id": 200707,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MULTI SOUL SPONGE",
@@ -2394,8 +2044,6 @@
             "id": 200708,
             "access_rule": {
               "rule": "air_dash",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2412,8 +2060,6 @@
             "id": 200709,
             "access_rule": {
               "rule": "air_dash",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2430,8 +2076,6 @@
             "id": 200710,
             "access_rule": {
               "rule": "air_dash",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2447,9 +2091,7 @@
             "name": "Drill Castle: Roof Banana",
             "id": 200711,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "COOKIE",
@@ -2464,8 +2106,6 @@
             "id": 200712,
             "access_rule": {
               "rule": "air_dash",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2486,18 +2126,14 @@
             "name": "Sage Labyrinth To Drill Castle",
             "connected_region": "Drill Castle",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Sage Labyrinth To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2506,9 +2142,7 @@
             "name": "Sage Labyrinth: 1F Chest Near Fountain",
             "id": 200713,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "JUICE",
@@ -2522,9 +2156,7 @@
             "name": "Sage Labyrinth: 1F Hidden Sarcophagus",
             "id": 200714,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "TELESCOPIC SLEEVE",
@@ -2538,9 +2170,7 @@
             "name": "Sage Labyrinth: 1F Four Statues Chest 1",
             "id": 200715,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MUSCLE APPLIQUE",
@@ -2554,9 +2184,7 @@
             "name": "Sage Labyrinth: 1F Four Statues Chest 2",
             "id": 200716,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "JUICE",
@@ -2570,9 +2198,7 @@
             "name": "Sage Labyrinth: B1 Double Chest 1",
             "id": 200717,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "CUPCAKE",
@@ -2586,9 +2212,7 @@
             "name": "Sage Labyrinth: B1 Double Chest 2",
             "id": 200718,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MULTI SOUL SPONGE",
@@ -2602,9 +2226,7 @@
             "name": "Sage Labyrinth: B1 Single Chest",
             "id": 200719,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MEAT",
@@ -2618,9 +2240,7 @@
             "name": "Sage Labyrinth: B1 Enemy Chest",
             "id": 200720,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "PADDLE",
@@ -2634,9 +2254,7 @@
             "name": "Sage Labyrinth: B1 Hidden Sarcophagus",
             "id": 200721,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "100 Bones",
@@ -2650,9 +2268,7 @@
             "name": "Sage Labyrinth: B1 Hole Chest",
             "id": 200722,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "SAGE TOKEN",
@@ -2666,9 +2282,7 @@
             "name": "Sage Labyrinth: B2 Hidden Sarcophagus 1",
             "id": 200723,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MULTI-JUICE",
@@ -2682,9 +2296,7 @@
             "name": "Sage Labyrinth: B2 Hidden Sarcophagus 2",
             "id": 200724,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "DEEP KEY",
@@ -2698,9 +2310,7 @@
             "name": "Sage Labyrinth: 2F Sarcophagus",
             "id": 200754,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "CAVE KEY",
@@ -2714,9 +2324,7 @@
             "name": "Sage Labyrinth: Boss Secret Chest 1",
             "id": 200786,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BANANA",
@@ -2730,9 +2338,7 @@
             "name": "Sage Labyrinth: Boss Secret Chest 2",
             "id": 200787,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BANANA",
@@ -2747,19 +2353,14 @@
             "id": 200725,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "charge_up",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "paper_cup",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2778,8 +2379,6 @@
             "id": 200726,
             "access_rule": {
               "rule": "deep_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2796,8 +2395,6 @@
             "id": 200727,
             "access_rule": {
               "rule": "deep_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2814,8 +2411,6 @@
             "id": 200728,
             "access_rule": {
               "rule": "deep_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2832,8 +2427,6 @@
             "id": 200729,
             "access_rule": {
               "rule": "deep_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2850,8 +2443,6 @@
             "id": 200730,
             "access_rule": {
               "rule": "deep_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2868,8 +2459,6 @@
             "id": 200731,
             "access_rule": {
               "rule": "deep_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2890,9 +2479,7 @@
             "name": "Sage Airship To World",
             "connected_region": "World",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2901,9 +2488,7 @@
             "name": "Sage Airship: Bottom Level Pot",
             "id": 200732,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MEAT",
@@ -2917,9 +2502,7 @@
             "name": "Sage Airship: Flesh Pot",
             "id": 200733,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "JUMPSUIT",
@@ -2933,9 +2516,7 @@
             "name": "Sage Airship: Top Jar",
             "id": 200734,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RANCHER PONCHO",
@@ -2950,8 +2531,6 @@
             "id": 200735,
             "access_rule": {
               "rule": "all_tokens",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2972,18 +2551,14 @@
             "name": "Hylemxylem To World",
             "connected_region": "World",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Hylemxylem To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2992,9 +2567,7 @@
             "name": "Hylemxylem: Jar",
             "id": 200736,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MUSCLE APPLIQUE",
@@ -3008,9 +2581,7 @@
             "name": "Hylemxylem: Lower Reservoir Key",
             "id": 200737,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MULTI-COFFEE",
@@ -3024,9 +2595,7 @@
             "name": "Hylemxylem: Fountain Banana",
             "id": 200738,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "JUICE",
@@ -3040,9 +2609,7 @@
             "name": "Hylemxylem: East Island Banana",
             "id": 200739,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BOTTOMLESS JUICE",
@@ -3056,9 +2623,7 @@
             "name": "Hylemxylem: East Island Chest",
             "id": 200740,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "SOUL SPONGE",
@@ -3073,8 +2638,6 @@
             "id": 200741,
             "access_rule": {
               "rule": "upper_chamber_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3091,8 +2654,6 @@
             "id": 200742,
             "access_rule": {
               "rule": "upper_chamber_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3109,8 +2670,6 @@
             "id": 200743,
             "access_rule": {
               "rule": "upper_chamber_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3127,8 +2686,6 @@
             "id": 200744,
             "access_rule": {
               "rule": "upper_chamber_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3145,8 +2702,6 @@
             "id": 200745,
             "access_rule": {
               "rule": "upper_chamber_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3163,8 +2718,6 @@
             "id": 200746,
             "access_rule": {
               "rule": "upper_chamber_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3181,8 +2734,6 @@
             "id": 200747,
             "access_rule": {
               "rule": "upper_chamber_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3199,8 +2750,6 @@
             "id": 200748,
             "access_rule": {
               "rule": "upper_chamber_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3217,8 +2766,6 @@
             "id": 200749,
             "access_rule": {
               "rule": "upper_chamber_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3235,8 +2782,6 @@
             "id": 200750,
             "access_rule": {
               "rule": "upper_chamber_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3253,8 +2798,6 @@
             "id": 200751,
             "access_rule": {
               "rule": "upper_chamber_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3271,8 +2814,6 @@
             "id": 200752,
             "access_rule": {
               "rule": "upper_chamber_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3289,8 +2830,6 @@
             "id": 200753,
             "access_rule": {
               "rule": "upper_chamber_key",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3307,18 +2846,15 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "UPPER CHAMBER KEY"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "VESSEL ROOM KEY"
                   }
@@ -4315,26 +3851,22 @@
       },
       "enter_foglast": {
         "type": "helper",
-        "name": "enter_wormpod",
-        "args": []
+        "name": "enter_wormpod"
       },
       "enter_hylemxylem": {
         "type": "and",
         "conditions": [
           {
             "type": "helper",
-            "name": "air_dash",
-            "args": []
+            "name": "air_dash"
           },
           {
             "type": "helper",
-            "name": "enter_foglast",
-            "args": []
+            "name": "enter_foglast"
           },
           {
             "type": "helper",
-            "name": "bridge_key",
-            "args": []
+            "name": "bridge_key"
           }
         ]
       },
@@ -4343,18 +3875,15 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "skull_bomb",
-            "args": []
+            "name": "skull_bomb"
           },
           {
             "type": "helper",
-            "name": "airship",
-            "args": []
+            "name": "airship"
           },
           {
             "type": "helper",
-            "name": "paddle",
-            "args": []
+            "name": "paddle"
           }
         ]
       },
@@ -4363,18 +3892,15 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "airship",
-            "args": []
+            "name": "airship"
           },
           {
             "type": "helper",
-            "name": "worm_room_key",
-            "args": []
+            "name": "worm_room_key"
           },
           {
             "type": "helper",
-            "name": "paddle",
-            "args": []
+            "name": "paddle"
           }
         ]
       },

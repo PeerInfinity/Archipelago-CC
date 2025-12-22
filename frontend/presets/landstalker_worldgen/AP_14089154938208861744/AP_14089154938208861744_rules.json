@@ -19,9 +19,7 @@
             "name": "menu -> massan",
             "connected_region": "Massan",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -36,7 +34,6 @@
             "connected_region": "Massan Cave",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Axe Magic",
@@ -50,7 +47,6 @@
             "connected_region": "Massan (after Swamp Shrine)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "event_visited_swamp_shrine",
                 "count": 1
@@ -61,9 +57,7 @@
             "name": "massan -> route_massan_gumi",
             "connected_region": "Route between Massan and Gumi",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -72,9 +66,7 @@
             "name": "Massan: chest triggered by dog statue",
             "id": 4177,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -88,9 +80,7 @@
             "name": "Massan: chest in house nearest to elder house",
             "id": 4178,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -104,9 +94,7 @@
             "name": "Massan: chest in middle house",
             "id": 4179,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -120,9 +108,7 @@
             "name": "Massan: chest in house farthest from elder house",
             "id": 4180,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Lithograph",
@@ -136,9 +122,7 @@
             "name": "Massan: Shop item #1",
             "id": 4287,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -152,9 +136,7 @@
             "name": "Massan: Shop item #2",
             "id": 4288,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Lantern",
@@ -168,9 +150,7 @@
             "name": "Massan: Shop item #3",
             "id": 4289,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Gola's Horn",
@@ -184,9 +164,7 @@
             "name": "event_visited_massan",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "event_visited_massan",
@@ -207,7 +185,6 @@
             "connected_region": "Massan",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Axe Magic",
@@ -222,9 +199,7 @@
             "name": "Massan Cave: right chest",
             "id": 4216,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -238,9 +213,7 @@
             "name": "Massan Cave: left chest",
             "id": 4217,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -254,9 +227,7 @@
             "name": "Massan Cave: item on ground in treasure room",
             "id": 4264,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -276,18 +247,14 @@
             "name": "route_massan_gumi -> massan",
             "connected_region": "Massan",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "route_massan_gumi -> waterfall_shrine",
             "connected_region": "Waterfall Shrine",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -295,7 +262,6 @@
             "connected_region": "Swamp Shrine",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Idol Stone",
                 "count": 1
@@ -306,9 +272,7 @@
             "name": "route_massan_gumi -> gumi",
             "connected_region": "Gumi",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -317,9 +281,7 @@
             "name": "Route between Massan and Gumi: chest on cliff",
             "id": 4135,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -339,9 +301,7 @@
             "name": "waterfall_shrine -> route_massan_gumi",
             "connected_region": "Route between Massan and Gumi",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -350,9 +310,7 @@
             "name": "Waterfall Shrine: chest under entrance hallway",
             "id": 4033,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "20 Golds",
@@ -366,9 +324,7 @@
             "name": "Waterfall Shrine: chest near Prospero",
             "id": 4034,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Pawn Ticket",
@@ -382,9 +338,7 @@
             "name": "Waterfall Shrine: chest on right branch of biggest room",
             "id": 4035,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -398,9 +352,7 @@
             "name": "Waterfall Shrine: upstairs chest",
             "id": 4036,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -421,7 +373,6 @@
             "connected_region": "Route between Massan and Gumi",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Idol Stone",
                 "count": 1
@@ -434,9 +385,7 @@
             "name": "Swamp Shrine (0F): chest in room to the right",
             "id": 4000,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -450,9 +399,7 @@
             "name": "Swamp Shrine (0F): chest in carpet room",
             "id": 4001,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "50 Golds",
@@ -466,9 +413,7 @@
             "name": "Swamp Shrine (0F): chest in left hallway (accessed by falling from upstairs)",
             "id": 4002,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Armlet",
@@ -482,9 +427,7 @@
             "name": "Swamp Shrine (0F): falling chest after beating orc",
             "id": 4003,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -498,9 +441,7 @@
             "name": "Swamp Shrine (0F): chest in room visible from second entrance",
             "id": 4004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Oracle Stone",
@@ -514,9 +455,7 @@
             "name": "Swamp Shrine (1F): lower chest in wooden bridges room",
             "id": 4005,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Venus Stone",
@@ -530,9 +469,7 @@
             "name": "Swamp Shrine (2F): upper chest in wooden bridges room",
             "id": 4006,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -546,9 +483,7 @@
             "name": "Swamp Shrine (2F): chest on spiked floor room balcony",
             "id": 4007,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "20 Golds",
@@ -562,9 +497,7 @@
             "name": "Swamp Shrine (3F): chest in boss arena",
             "id": 4008,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -578,9 +511,7 @@
             "name": "event_visited_swamp_shrine",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "event_visited_swamp_shrine",
@@ -601,9 +532,7 @@
             "name": "Massan: Elder reward after freeing Fara in Swamp Shrine",
             "id": 4336,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -624,9 +553,7 @@
             "name": "Gumi: chest in elder house after saving Fara",
             "id": 4182,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Statue of Gaia",
@@ -646,9 +573,7 @@
             "name": "gumi -> route_massan_gumi",
             "connected_region": "Route between Massan and Gumi",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -656,7 +581,6 @@
             "connected_region": "Gumi (after Swamp Shrine)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "event_visited_swamp_shrine",
                 "count": 1
@@ -667,9 +591,7 @@
             "name": "gumi -> route_gumi_ryuma",
             "connected_region": "Route from Gumi to Ryuma",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -678,9 +600,7 @@
             "name": "Gumi: chest on top of bed in house",
             "id": 4181,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Safety Pass",
@@ -694,9 +614,7 @@
             "name": "Gumi: item on furniture in elder's house",
             "id": 4257,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -710,9 +628,7 @@
             "name": "Gumi: Inn item #1",
             "id": 4290,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -726,9 +642,7 @@
             "name": "Gumi: Inn item #2",
             "id": 4291,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mars Stone",
@@ -748,36 +662,28 @@
             "name": "route_gumi_ryuma -> ryuma",
             "connected_region": "Ryuma",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "route_gumi_ryuma -> tibor_tree",
             "connected_region": "Route from Gumi to Ryuma (Tibor tree)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "route_gumi_ryuma -> mercator_gate_tree",
             "connected_region": "Route from Gumi to Ryuma (Mercator gate tree)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "route_gumi_ryuma -> tibor",
             "connected_region": "Tibor",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -785,7 +691,6 @@
             "connected_region": "Witch Helga's Hut",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Einstein Whistle",
@@ -799,7 +704,6 @@
             "connected_region": "Mercator",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Safety Pass",
                 "count": 1
@@ -812,9 +716,7 @@
             "name": "Route between Gumi and Ryuma: chest on the way to Swordsman Kado",
             "id": 4134,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -828,9 +730,7 @@
             "name": "Route between Gumi and Ryuma: Swordsman Kado reward",
             "id": 4340,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -850,9 +750,7 @@
             "name": "tibor_tree -> route_gumi_ryuma",
             "connected_region": "Route from Gumi to Ryuma",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -866,9 +764,7 @@
             "name": "mercator_gate_tree -> route_gumi_ryuma",
             "connected_region": "Route from Gumi to Ryuma",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -882,9 +778,7 @@
             "name": "tibor -> route_gumi_ryuma",
             "connected_region": "Route from Gumi to Ryuma",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -893,9 +787,7 @@
             "name": "Tibor: reward chest after boss",
             "id": 4218,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Buyer Card",
@@ -909,9 +801,7 @@
             "name": "Tibor: chest in spike balls room",
             "id": 4219,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "50 Golds",
@@ -925,9 +815,7 @@
             "name": "Tibor: left chest on 2 chest group",
             "id": 4220,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -941,9 +829,7 @@
             "name": "Tibor: right chest on 2 chest group",
             "id": 4221,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -963,9 +849,7 @@
             "name": "ryuma -> route_gumi_ryuma",
             "connected_region": "Route from Gumi to Ryuma",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -973,7 +857,6 @@
             "connected_region": "Ryuma (after Thieves Hideout)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "event_visited_thieves_hideout_post_key",
                 "count": 1
@@ -985,7 +868,6 @@
             "connected_region": "Ryuma (repaired lighthouse)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sun Stone",
                 "count": 1
@@ -996,9 +878,7 @@
             "name": "ryuma -> thieves_hideout_pre_key",
             "connected_region": "Thieves Hideout (before keydoor)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1007,9 +887,7 @@
             "name": "Ryuma: chest in mayor's house",
             "id": 4183,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -1023,9 +901,7 @@
             "name": "Ryuma: Inn item",
             "id": 4297,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -1046,9 +922,7 @@
             "name": "Ryuma: Shop item #1",
             "id": 4292,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Anti Paralyze",
@@ -1062,9 +936,7 @@
             "name": "Ryuma: Shop item #2",
             "id": 4293,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Detox Grass",
@@ -1078,9 +950,7 @@
             "name": "Ryuma: Shop item #3",
             "id": 4294,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Golden Statue",
@@ -1094,9 +964,7 @@
             "name": "Ryuma: Shop item #4",
             "id": 4295,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -1110,9 +978,7 @@
             "name": "Ryuma: Shop item #5",
             "id": 4296,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Magic Sword",
@@ -1126,9 +992,7 @@
             "name": "Ryuma: Mayor's first reward",
             "id": 4344,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -1142,9 +1006,7 @@
             "name": "Ryuma: Mayor's second reward",
             "id": 4345,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -1165,7 +1027,6 @@
             "connected_region": "Ryuma",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sun Stone",
                 "count": 1
@@ -1178,9 +1039,7 @@
             "name": "Ryuma: chest in repaired lighthouse",
             "id": 4184,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Anti Paralyze",
@@ -1194,9 +1053,7 @@
             "name": "event_visited_ryuma_lighthouse_repaired",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "event_visited_ryuma_lighthouse_repaired",
@@ -1216,9 +1073,7 @@
             "name": "thieves_hideout_pre_key -> ryuma",
             "connected_region": "Ryuma",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1226,7 +1081,6 @@
             "connected_region": "Thieves Hideout (after keydoor)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Key",
                 "count": 1
@@ -1239,9 +1093,7 @@
             "name": "Thieves Hideout: chest under water in entrance room",
             "id": 4038,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Casino Ticket",
@@ -1255,9 +1107,7 @@
             "name": "Thieves Hideout: left chest in Pockets cell",
             "id": 4043,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -1271,9 +1121,7 @@
             "name": "Thieves Hideout: right chest in Pockets cell",
             "id": 4044,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Detox Grass",
@@ -1287,9 +1135,7 @@
             "name": "Thieves Hideout: rolling boulder chest near entrance",
             "id": 4050,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dahl",
@@ -1303,9 +1149,7 @@
             "name": "Thieves Hideout: left chest in room on the way to goddess statue",
             "id": 4052,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Statue of Gaia",
@@ -1319,9 +1163,7 @@
             "name": "Thieves Hideout: right chest in room on the way to goddess statue",
             "id": 4053,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dahl",
@@ -1341,9 +1183,7 @@
             "name": "thieves_hideout_post_key -> thieves_hideout_pre_key",
             "connected_region": "Thieves Hideout (before keydoor)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1352,9 +1192,7 @@
             "name": "Thieves Hideout (back): right chest after teal knight mini-boss",
             "id": 4041,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -1368,9 +1206,7 @@
             "name": "Thieves Hideout (back): left chest after teal knight mini-boss",
             "id": 4042,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "20 Golds",
@@ -1384,9 +1220,7 @@
             "name": "Thieves Hideout (back): second chest in hallway after quick climb trial",
             "id": 4045,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -1400,9 +1234,7 @@
             "name": "Thieves Hideout (back): first chest in hallway after quick climb trial",
             "id": 4046,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dahl",
@@ -1416,9 +1248,7 @@
             "name": "Thieves Hideout (back): chest in moving platforms room",
             "id": 4047,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -1432,9 +1262,7 @@
             "name": "Thieves Hideout (back): chest in falling platforms room",
             "id": 4048,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -1448,9 +1276,7 @@
             "name": "Thieves Hideout (back): reward chest after moving balls room",
             "id": 4049,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -1464,9 +1290,7 @@
             "name": "Thieves Hideout (back): left chest in room before boss",
             "id": 4054,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -1480,9 +1304,7 @@
             "name": "Thieves Hideout (back): right chest in room before boss",
             "id": 4055,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -1496,9 +1318,7 @@
             "name": "Thieves Hideout (back): chest #1 in boss reward room",
             "id": 4056,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -1512,9 +1332,7 @@
             "name": "Thieves Hideout (back): chest #2 in boss reward room",
             "id": 4057,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Detox Grass",
@@ -1528,9 +1346,7 @@
             "name": "Thieves Hideout (back): chest #3 in boss reward room",
             "id": 4058,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -1544,9 +1360,7 @@
             "name": "Thieves Hideout (back): chest #4 in boss reward room",
             "id": 4059,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Pawn Ticket",
@@ -1560,9 +1374,7 @@
             "name": "Thieves Hideout (back): chest #5 in boss reward room",
             "id": 4060,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -1576,9 +1388,7 @@
             "name": "event_visited_thieves_hideout_post_key",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "event_visited_thieves_hideout_post_key",
@@ -1599,7 +1409,6 @@
             "connected_region": "Route from Gumi to Ryuma",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Einstein Whistle",
@@ -1614,9 +1423,7 @@
             "name": "Witch Helga's Hut: end chest",
             "id": 4215,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Golden Statue",
@@ -1630,9 +1437,7 @@
             "name": "Witch Helga's Hut: item on furniture",
             "id": 4270,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Golden Statue",
@@ -1653,7 +1458,6 @@
             "connected_region": "Route from Gumi to Ryuma",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Safety Pass",
                 "count": 1
@@ -1664,18 +1468,14 @@
             "name": "mercator -> mercator_dungeon",
             "connected_region": "Mercator Dungeon",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "mercator -> crypt",
             "connected_region": "Crypt",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1683,7 +1483,6 @@
             "connected_region": "Mercator special shop",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Buyer Card",
                 "count": 1
@@ -1695,7 +1494,6 @@
             "connected_region": "Mercator casino",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Casino Ticket",
                 "count": 1
@@ -1706,9 +1504,7 @@
             "name": "mercator -> mir_tower_sector",
             "connected_region": "Mir Tower sector",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1716,7 +1512,6 @@
             "connected_region": "Greenmaze (pre-whistle)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Key",
                 "count": 1
@@ -1728,7 +1523,6 @@
             "connected_region": "Mercator (docks with repaired lighthouse)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "event_visited_ryuma_lighthouse_repaired",
                 "count": 1
@@ -1741,9 +1535,7 @@
             "name": "Mercator: castle kitchen chest",
             "id": 4013,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -1757,9 +1549,7 @@
             "name": "Mercator: chest in special shop backroom",
             "id": 4014,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dahl",
@@ -1773,9 +1563,7 @@
             "name": "Mercator: chest in castle tower (ladder revealed by slashing armor)",
             "id": 4017,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -1789,9 +1577,7 @@
             "name": "Mercator: chest in Greenpea's house",
             "id": 4192,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -1805,9 +1591,7 @@
             "name": "Mercator: chest in grandma's house (pot shelving trial)",
             "id": 4193,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "50 Golds",
@@ -1821,9 +1605,7 @@
             "name": "Mercator: falling item in castle court",
             "id": 4272,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Einstein Whistle",
@@ -1837,9 +1619,7 @@
             "name": "Mercator: Shop item #1",
             "id": 4298,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -1853,9 +1633,7 @@
             "name": "Mercator: Shop item #2",
             "id": 4299,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Restoration",
@@ -1869,9 +1647,7 @@
             "name": "Mercator: Shop item #3",
             "id": 4300,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Golden Statue",
@@ -1885,9 +1661,7 @@
             "name": "Mercator: Shop item #4",
             "id": 4301,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mind Repair",
@@ -1901,9 +1675,7 @@
             "name": "Mercator: Shop item #5",
             "id": 4302,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -1917,9 +1689,7 @@
             "name": "Mercator: Shop item #6",
             "id": 4303,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Anti Paralyze",
@@ -1933,9 +1703,7 @@
             "name": "Mercator: Arthur reward (in castle throne room)",
             "id": 4342,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -1950,7 +1718,6 @@
             "id": 4343,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Life Stock",
                 "count": 15
@@ -1974,9 +1741,7 @@
             "name": "mercator_repaired_docks -> verla_shore",
             "connected_region": "Verla shore",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1985,9 +1750,7 @@
             "name": "Mercator: Docks shop item #1",
             "id": 4308,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -2001,9 +1764,7 @@
             "name": "Mercator: Docks shop item #2",
             "id": 4309,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -2017,9 +1778,7 @@
             "name": "Mercator: Docks shop item #3",
             "id": 4310,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dahl",
@@ -2039,7 +1798,6 @@
             "connected_region": "Mercator",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Casino Ticket",
                 "count": 1
@@ -2052,9 +1810,7 @@
             "name": "Mercator: hidden casino chest",
             "id": 4191,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -2073,9 +1829,7 @@
             "name": "mercator_dungeon -> mercator",
             "connected_region": "Mercator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2084,9 +1838,7 @@
             "name": "Mercator Dungeon (-1F): chest on elevated path near entrance",
             "id": 4009,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Pawn Ticket",
@@ -2100,9 +1852,7 @@
             "name": "Mercator Dungeon (-1F): chest in Moralis's cell",
             "id": 4010,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -2116,9 +1866,7 @@
             "name": "Mercator Dungeon (-1F): left chest in undeground double chest room",
             "id": 4011,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mind Repair",
@@ -2132,9 +1880,7 @@
             "name": "Mercator Dungeon (-1F): right chest in undeground double chest room",
             "id": 4012,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -2148,9 +1894,7 @@
             "name": "Mercator Dungeon (1F): left chest in tower double chest room",
             "id": 4015,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Detox Grass",
@@ -2164,9 +1908,7 @@
             "name": "Mercator Dungeon (1F): right chest in tower double chest room",
             "id": 4016,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Death Statue",
@@ -2180,9 +1922,7 @@
             "name": "Mercator Dungeon (4F): chest in topmost tower room",
             "id": 4018,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -2202,9 +1942,7 @@
             "name": "crypt -> mercator",
             "connected_region": "Mercator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2213,9 +1951,7 @@
             "name": "Crypt: chest in main room",
             "id": 4185,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mind Repair",
@@ -2229,9 +1965,7 @@
             "name": "Crypt: reward chest",
             "id": 4186,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -2252,7 +1986,6 @@
             "connected_region": "Mercator",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Buyer Card",
                 "count": 1
@@ -2265,9 +1998,7 @@
             "name": "Mercator: Special shop item #1",
             "id": 4304,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Jewel",
@@ -2281,9 +2012,7 @@
             "name": "Mercator: Special shop item #2",
             "id": 4305,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -2297,9 +2026,7 @@
             "name": "Mercator: Special shop item #3",
             "id": 4306,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -2313,9 +2040,7 @@
             "name": "Mercator: Special shop item #4",
             "id": 4307,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dahl",
@@ -2335,18 +2060,14 @@
             "name": "mir_tower_sector -> mercator",
             "connected_region": "Mercator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "mir_tower_sector -> twinkle_village",
             "connected_region": "Twinkle village",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2354,7 +2075,6 @@
             "connected_region": "Mir Tower sector (ledge behind sacred tree)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Axe Magic",
                 "count": 1
@@ -2366,7 +2086,6 @@
             "connected_region": "Mir Tower sector (coast behind sacred tree)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Axe Magic",
                 "count": 1
@@ -2378,7 +2097,6 @@
             "connected_region": "Mir Tower (pre-garlic)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Armlet",
                 "count": 1
@@ -2390,7 +2108,6 @@
             "connected_region": "Verla shore",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "event_visited_verla_mines",
                 "count": 1
@@ -2403,9 +2120,7 @@
             "name": "Route between Mercator and Verla: chest on cliff next to tree",
             "id": 4136,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "50 Golds",
@@ -2419,9 +2134,7 @@
             "name": "Route between Mercator and Verla: chest on cliff next to blocked cave",
             "id": 4137,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -2435,9 +2148,7 @@
             "name": "Route between Mercator and Verla: chest near Twinkle village",
             "id": 4138,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -2451,9 +2162,7 @@
             "name": "Route to Mir Tower: chest on cliff accessed by pressing hidden switch",
             "id": 4141,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sun Stone",
@@ -2474,7 +2183,6 @@
             "connected_region": "Mir Tower sector",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Axe Magic",
                 "count": 1
@@ -2487,9 +2195,7 @@
             "name": "Route to Mir Tower: chest behind first sacred tree",
             "id": 4142,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Gola's Eye",
@@ -2510,7 +2216,6 @@
             "connected_region": "Mir Tower sector",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Axe Magic",
                 "count": 1
@@ -2523,9 +2228,7 @@
             "name": "Route to Mir Tower: chest behind second sacred tree",
             "id": 4146,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mind Repair",
@@ -2545,9 +2248,7 @@
             "name": "twinkle_village -> mir_tower_sector",
             "connected_region": "Mir Tower sector",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2556,9 +2257,7 @@
             "name": "Twinkle Village: first item on ground",
             "id": 4277,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Blue Jewel",
@@ -2572,9 +2271,7 @@
             "name": "Twinkle Village: second item on ground",
             "id": 4278,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -2588,9 +2285,7 @@
             "name": "Twinkle Village: third item on ground",
             "id": 4279,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -2610,9 +2305,7 @@
             "name": "mir_tower_pre_garlic -> mir_tower_sector",
             "connected_region": "Mir Tower sector",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2620,7 +2313,6 @@
             "connected_region": "Mir Tower (post-garlic)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Garlic",
                 "count": 1
@@ -2633,9 +2325,7 @@
             "name": "Mir Tower: timed jump trial chest",
             "id": 4197,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "200 Golds",
@@ -2649,9 +2339,7 @@
             "name": "Mir Tower: chest after mimic room",
             "id": 4198,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -2665,9 +2353,7 @@
             "name": "Mir Tower: mimic room chest #1",
             "id": 4199,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "20 Golds",
@@ -2681,9 +2367,7 @@
             "name": "Mir Tower: mimic room chest #2",
             "id": 4200,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Golden Statue",
@@ -2697,9 +2381,7 @@
             "name": "Mir Tower: mimic room chest #3",
             "id": 4201,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Statue of Gaia",
@@ -2713,9 +2395,7 @@
             "name": "Mir Tower: mimic room chest #4",
             "id": 4202,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -2729,9 +2409,7 @@
             "name": "Mir Tower: chest in mushroom pit room",
             "id": 4203,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -2745,9 +2423,7 @@
             "name": "Mir Tower: chest in room next to mummy switch room",
             "id": 4204,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -2767,18 +2443,14 @@
             "name": "mir_tower_post_garlic -> mir_tower_pre_garlic",
             "connected_region": "Mir Tower (pre-garlic)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "mir_tower_post_garlic -> mir_tower_sector",
             "connected_region": "Mir Tower sector",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2787,9 +2459,7 @@
             "name": "Mir Tower: chest in library accessible from teleporter maze",
             "id": 4205,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -2803,9 +2473,7 @@
             "name": "Mir Tower: hidden chest in room before library",
             "id": 4206,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Restoration",
@@ -2819,9 +2487,7 @@
             "name": "Mir Tower: chest in falling spikeballs room",
             "id": 4207,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Armor",
@@ -2835,9 +2501,7 @@
             "name": "Mir Tower: chest in timed challenge room",
             "id": 4208,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Green Jewel",
@@ -2851,9 +2515,7 @@
             "name": "Mir Tower: chest in room where Miro closes the door",
             "id": 4209,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Short Cake",
@@ -2867,9 +2529,7 @@
             "name": "Mir Tower: chest after room where Miro closes the door",
             "id": 4210,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -2883,9 +2543,7 @@
             "name": "Mir Tower: reward chest",
             "id": 4211,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Gola's Fang",
@@ -2899,9 +2557,7 @@
             "name": "Mir Tower: right chest in reward room",
             "id": 4212,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "20 Golds",
@@ -2915,9 +2571,7 @@
             "name": "Mir Tower: left chest in reward room",
             "id": 4213,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -2931,9 +2585,7 @@
             "name": "Mir Tower: chest behind wall accessible after beating Mir",
             "id": 4214,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -2947,9 +2599,7 @@
             "name": "Mir Tower: Priest room item #1",
             "id": 4280,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Statue of Gaia",
@@ -2963,9 +2613,7 @@
             "name": "Mir Tower: Priest room item #2",
             "id": 4281,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Yellow Jewel",
@@ -2979,9 +2627,7 @@
             "name": "Mir Tower: Priest room item #3",
             "id": 4282,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -3002,7 +2648,6 @@
             "connected_region": "Greenmaze (post-whistle)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Einstein Whistle",
                 "count": 1
@@ -3014,7 +2659,6 @@
             "connected_region": "Greenmaze (Cutter hidden sector)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "EkeEke",
                 "count": 1
@@ -3026,7 +2670,6 @@
             "connected_region": "Mountainous Area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Axe Magic",
                 "count": 1
@@ -3039,9 +2682,7 @@
             "name": "Greenmaze: chest on cliff near the swamp",
             "id": 4169,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "20 Golds",
@@ -3055,9 +2696,7 @@
             "name": "Greenmaze: chest in mages room",
             "id": 4171,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Golden Statue",
@@ -3071,9 +2710,7 @@
             "name": "Greenmaze: left chest in elbow cave",
             "id": 4172,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -3087,9 +2724,7 @@
             "name": "Greenmaze: right chest in elbow cave",
             "id": 4173,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "20 Golds",
@@ -3103,9 +2738,7 @@
             "name": "Greenmaze: chest in waterfall cave",
             "id": 4174,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "100 Golds",
@@ -3119,9 +2752,7 @@
             "name": "Greenmaze: left chest in hidden room behind waterfall",
             "id": 4175,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -3135,9 +2766,7 @@
             "name": "Greenmaze: right chest in hidden room behind waterfall",
             "id": 4176,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -3151,9 +2780,7 @@
             "name": "Greenmaze: dwarf hidden in the trees",
             "id": 4341,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Restoration",
@@ -3174,7 +2801,6 @@
             "connected_region": "Greenmaze (pre-whistle)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "EkeEke",
                 "count": 1
@@ -3187,9 +2813,7 @@
             "name": "Greenmaze: chest on path to Cutter",
             "id": 4168,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Idol Stone",
@@ -3203,9 +2827,7 @@
             "name": "Greenmaze: Cutter reward for saving Einstein",
             "id": 4338,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -3225,18 +2847,14 @@
             "name": "greenmaze_post_whistle -> greenmaze_post_whistle_tree",
             "connected_region": "Greenmaze (post-whistle tree)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "greenmaze_post_whistle -> route_massan_gumi",
             "connected_region": "Route between Massan and Gumi",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -3244,7 +2862,6 @@
             "connected_region": "Greenmaze (pre-whistle)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Einstein Whistle",
                 "count": 1
@@ -3257,9 +2874,7 @@
             "name": "Greenmaze: chest between Sunstone and Massan shortcut",
             "id": 4170,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -3273,9 +2888,7 @@
             "name": "Greenmaze: item behind trees requiring Cutter",
             "id": 4258,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -3295,9 +2908,7 @@
             "name": "greenmaze_post_whistle_tree -> greenmaze_post_whistle",
             "connected_region": "Greenmaze (post-whistle)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3311,27 +2922,21 @@
             "name": "verla_shore -> verla",
             "connected_region": "Verla",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "verla_shore -> verla_mines",
             "connected_region": "Verla Mines",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "verla_shore -> verla_shore_tree",
             "connected_region": "Verla shore tree",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -3339,7 +2944,6 @@
             "connected_region": "Mir Tower sector",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "event_visited_verla_mines",
                 "count": 1
@@ -3352,9 +2956,7 @@
             "name": "Verla Shore: chest on corner cliff after Verla tunnel",
             "id": 4139,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -3368,9 +2970,7 @@
             "name": "Verla Shore: chest behind cabin",
             "id": 4143,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -3390,9 +2990,7 @@
             "name": "verla_shore_tree -> verla_shore",
             "connected_region": "Verla shore",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3406,18 +3004,14 @@
             "name": "verla_shore_cliff -> verla_mines",
             "connected_region": "Verla Mines",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "verla_shore_cliff -> verla_shore",
             "connected_region": "Verla shore",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3426,9 +3020,7 @@
             "name": "Verla Shore: chest on highest cliff after Verla tunnel (accessible through Verla mines)",
             "id": 4140,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sword of Ice",
@@ -3448,9 +3040,7 @@
             "name": "verla -> verla_shore",
             "connected_region": "Verla shore",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -3458,7 +3048,6 @@
             "connected_region": "Verla (after mines)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "event_visited_verla_mines",
                 "count": 1
@@ -3471,9 +3060,7 @@
             "name": "Verla: Shop item #1",
             "id": 4311,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -3487,9 +3074,7 @@
             "name": "Verla: Shop item #2",
             "id": 4312,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mind Repair",
@@ -3503,9 +3088,7 @@
             "name": "Verla: Shop item #3",
             "id": 4313,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Golden Statue",
@@ -3519,9 +3102,7 @@
             "name": "Verla: Shop item #4",
             "id": 4314,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -3542,7 +3123,6 @@
             "connected_region": "Verla",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "event_visited_verla_mines",
                 "count": 1
@@ -3555,9 +3135,7 @@
             "name": "Verla: chest in well after beating Marley",
             "id": 4194,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -3571,9 +3149,7 @@
             "name": "Verla: Shop item #5 (extra item after saving town)",
             "id": 4315,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -3593,27 +3169,21 @@
             "name": "verla_mines -> verla_shore",
             "connected_region": "Verla shore",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "verla_mines -> verla_shore_cliff",
             "connected_region": "Verla shore cliff (accessible from Verla Mines)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "verla_mines -> route_verla_destel",
             "connected_region": "Route between Verla and Destel",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -3621,7 +3191,6 @@
             "connected_region": "Verla Mines (behind lava)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Fireproof",
                 "count": 1
@@ -3634,9 +3203,7 @@
             "name": "Verla Mines: right chest in double chest room near entrance",
             "id": 4066,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -3650,9 +3217,7 @@
             "name": "Verla Mines: left chest in double chest room near entrance",
             "id": 4067,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -3666,9 +3231,7 @@
             "name": "Verla Mines: chest on jar staircase room balcony",
             "id": 4068,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Statue of Gaia",
@@ -3682,9 +3245,7 @@
             "name": "Verla Mines: Dex reward chest",
             "id": 4069,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -3698,9 +3259,7 @@
             "name": "Verla Mines: Slasher reward chest",
             "id": 4070,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Garlic",
@@ -3714,9 +3273,7 @@
             "name": "Verla Mines: left chest in 3-chests room near Slasher",
             "id": 4071,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dahl",
@@ -3730,9 +3287,7 @@
             "name": "Verla Mines: middle chest in 3-chests room near Slasher",
             "id": 4072,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "100 Golds",
@@ -3746,9 +3301,7 @@
             "name": "Verla Mines: right chest in 3-chests room near Slasher",
             "id": 4073,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Restoration",
@@ -3762,9 +3315,7 @@
             "name": "Verla Mines: right chest in button room near elevator shaft leading to Marley",
             "id": 4074,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sword of Gaia",
@@ -3778,9 +3329,7 @@
             "name": "Verla Mines: left chest in button room near elevator shaft leading to Marley",
             "id": 4075,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Logs",
@@ -3794,9 +3343,7 @@
             "name": "Verla Mines: item in the corner of lava filled room",
             "id": 4259,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -3810,9 +3357,7 @@
             "name": "event_visited_verla_mines",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "event_visited_verla_mines",
@@ -3833,7 +3378,6 @@
             "connected_region": "Verla Mines",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Fireproof",
                 "count": 1
@@ -3846,9 +3390,7 @@
             "name": "Verla Mines: chest in hidden room accessed by walking on lava",
             "id": 4076,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "20 Golds",
@@ -3868,9 +3410,7 @@
             "name": "route_verla_destel -> destel",
             "connected_region": "Destel",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3879,9 +3419,7 @@
             "name": "Route to Destel: chest in map right after Verla mines exit",
             "id": 4144,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dahl",
@@ -3895,9 +3433,7 @@
             "name": "Route to Destel: chest in small platform elevator map",
             "id": 4145,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dahl",
@@ -3911,9 +3447,7 @@
             "name": "Route to Destel: hidden chest in map right before Destel",
             "id": 4147,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -3927,9 +3461,7 @@
             "name": "Route from Verla to Destel: Kelketo shop item #1",
             "id": 4316,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Restoration",
@@ -3943,9 +3475,7 @@
             "name": "Route from Verla to Destel: Kelketo shop item #2",
             "id": 4317,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -3959,9 +3489,7 @@
             "name": "Route from Verla to Destel: Kelketo shop item #3",
             "id": 4318,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Gola's Nail",
@@ -3975,9 +3503,7 @@
             "name": "Route from Verla to Destel: Kelketo shop item #4",
             "id": 4319,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -3991,9 +3517,7 @@
             "name": "Route from Verla to Destel: Kelketo shop item #5",
             "id": 4320,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Statue of Gaia",
@@ -4013,27 +3537,21 @@
             "name": "destel -> route_verla_destel",
             "connected_region": "Route between Verla and Destel",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "destel -> route_after_destel",
             "connected_region": "Route after Destel",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "destel -> destel_well",
             "connected_region": "Destel Well",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4042,9 +3560,7 @@
             "name": "Destel: chest in inn next to innkeeper",
             "id": 4196,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Blue Ribbon",
@@ -4058,9 +3574,7 @@
             "name": "Destel: Inn item",
             "id": 4321,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -4074,9 +3588,7 @@
             "name": "Destel: Shop item #1",
             "id": 4322,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Statue of Gaia",
@@ -4090,9 +3602,7 @@
             "name": "Destel: Shop item #2",
             "id": 4323,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Armor",
@@ -4106,9 +3616,7 @@
             "name": "Destel: Shop item #3",
             "id": 4324,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dahl",
@@ -4122,9 +3630,7 @@
             "name": "Destel: Shop item #4",
             "id": 4325,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Detox Grass",
@@ -4138,9 +3644,7 @@
             "name": "Destel: Shop item #5",
             "id": 4326,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Anti Paralyze",
@@ -4160,9 +3664,7 @@
             "name": "route_after_destel -> destel",
             "connected_region": "Destel",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4171,9 +3673,7 @@
             "name": "Route after Destel: chest on tiny cliff",
             "id": 4157,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -4187,9 +3687,7 @@
             "name": "Route after Destel: hidden chest in map after seeing Duke raft",
             "id": 4158,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "20 Golds",
@@ -4203,9 +3701,7 @@
             "name": "Route after Destel: visible chest in map after seeing Duke raft",
             "id": 4159,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Statue of Gaia",
@@ -4219,9 +3715,7 @@
             "name": "Route after Destel: item on ground on the cliff",
             "id": 4268,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Thunder Sword",
@@ -4241,18 +3735,14 @@
             "name": "destel_well -> destel",
             "connected_region": "Destel",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "destel_well -> route_lake_shrine",
             "connected_region": "Route to Lake Shrine",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4261,9 +3751,7 @@
             "name": "Destel Well (0F): 4 crates puzzle room chest",
             "id": 4077,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "50 Golds",
@@ -4277,9 +3765,7 @@
             "name": "Destel Well (1F): chest on small stairs",
             "id": 4078,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -4293,9 +3779,7 @@
             "name": "Destel Well (1F): chest on narrow floating ground",
             "id": 4079,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1 Gold",
@@ -4309,9 +3793,7 @@
             "name": "Destel Well (1F): chest in spiky hallway",
             "id": 4080,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dahl",
@@ -4325,9 +3807,7 @@
             "name": "Destel Well (2F): chest in ghosts room",
             "id": 4081,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -4341,9 +3821,7 @@
             "name": "Destel Well (2F): chest in falling platforms room",
             "id": 4082,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Axe Magic",
@@ -4357,9 +3835,7 @@
             "name": "Destel Well (2F): right chest in Pockets room",
             "id": 4083,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -4373,9 +3849,7 @@
             "name": "Destel Well (2F): left chest in Pockets room",
             "id": 4084,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -4389,9 +3863,7 @@
             "name": "Destel Well (3F): chest in first trapped arena",
             "id": 4085,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -4405,9 +3877,7 @@
             "name": "Destel Well (3F): chest in trapped giants room",
             "id": 4086,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Logs",
@@ -4421,9 +3891,7 @@
             "name": "Destel Well (3F): chest in second trapped arena",
             "id": 4087,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "20 Golds",
@@ -4437,9 +3905,7 @@
             "name": "Destel Well (4F): top chest in room before boss",
             "id": 4088,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -4453,9 +3919,7 @@
             "name": "Destel Well (4F): left chest in room before boss",
             "id": 4089,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -4469,9 +3933,7 @@
             "name": "Destel Well (4F): bottom chest in room before boss",
             "id": 4090,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Golden Statue",
@@ -4485,9 +3947,7 @@
             "name": "Destel Well (4F): right chest in room before boss",
             "id": 4091,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Detox Grass",
@@ -4501,9 +3961,7 @@
             "name": "Destel Well: item on platform revealed after beating Quake",
             "id": 4262,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Purple Jewel",
@@ -4523,9 +3981,7 @@
             "name": "route_lake_shrine -> destel_well",
             "connected_region": "Destel Well",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -4533,7 +3989,6 @@
             "connected_region": "Lake Shrine",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sword of Gaia",
                 "count": 1
@@ -4546,9 +4001,7 @@
             "name": "Route to Lake Shrine: chest on long cliff in crossroads map",
             "id": 4161,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -4562,9 +4015,7 @@
             "name": "Route to Lake Shrine: right chest in volcano",
             "id": 4164,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Key",
@@ -4578,9 +4029,7 @@
             "name": "Route to Lake Shrine: left chest in volcano",
             "id": 4165,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Armor",
@@ -4594,9 +4043,7 @@
             "name": "Route to Lake Shrine: Greedly's shop item #1",
             "id": 4327,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -4610,9 +4057,7 @@
             "name": "Route to Lake Shrine: Greedly's shop item #2",
             "id": 4328,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Statue of Gaia",
@@ -4626,9 +4071,7 @@
             "name": "Route to Lake Shrine: Greedly's shop item #3",
             "id": 4329,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -4642,9 +4085,7 @@
             "name": "Route to Lake Shrine: Greedly's shop item #4",
             "id": 4330,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mind Repair",
@@ -4665,7 +4106,6 @@
             "connected_region": "Mountainous Area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Axe Magic",
                 "count": 1
@@ -4676,9 +4116,7 @@
             "name": "route_lake_shrine_cliff -> route_lake_shrine",
             "connected_region": "Route to Lake Shrine",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4687,9 +4125,7 @@
             "name": "Route to Lake Shrine: chest on middle cliff in crossroads map (reached from Mountainous Area)",
             "id": 4162,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -4709,18 +4145,14 @@
             "name": "lake_shrine -> route_lake_shrine",
             "connected_region": "Route to Lake Shrine",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "lake_shrine -> mir_tower_sector",
             "connected_region": "Mir Tower sector",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4729,9 +4161,7 @@
             "name": "Lake Shrine (-1F): chest in crate room near green golem spinner",
             "id": 4092,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fireproof",
@@ -4745,9 +4175,7 @@
             "name": "Lake Shrine (-1F): chest in hallway with hole leading downstairs",
             "id": 4093,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -4761,9 +4189,7 @@
             "name": "Lake Shrine (-1F): chest in spikeballs hallway near green golem spinner",
             "id": 4094,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "20 Golds",
@@ -4777,9 +4203,7 @@
             "name": "Lake Shrine (-1F): reward chest for golem hopping puzzle",
             "id": 4095,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "50 Golds",
@@ -4793,9 +4217,7 @@
             "name": "Lake Shrine (-2F): chest on room corner accessed by falling from above",
             "id": 4096,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mind Repair",
@@ -4809,9 +4231,7 @@
             "name": "Lake Shrine (-2F): lower chest in throne room",
             "id": 4097,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -4825,9 +4245,7 @@
             "name": "Lake Shrine (-2F): upper chest in throne room",
             "id": 4098,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "100 Golds",
@@ -4841,9 +4259,7 @@
             "name": "Lake Shrine (-3F): chest on floating platform in white golems room",
             "id": 4099,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Statue of Gaia",
@@ -4857,9 +4273,7 @@
             "name": "Lake Shrine (-3F): chest near Sword of Ice",
             "id": 4100,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Golden Statue",
@@ -4873,9 +4287,7 @@
             "name": "Lake Shrine (-3F): chest in snake trapping puzzle room",
             "id": 4101,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -4889,9 +4301,7 @@
             "name": "Lake Shrine (-3F): chest on cube accessed by falling from upstairs",
             "id": 4102,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -4905,9 +4315,7 @@
             "name": "Lake Shrine (-3F): chest in watery archway room",
             "id": 4103,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -4921,9 +4329,7 @@
             "name": "Lake Shrine (-3F): left reward chest in boss room",
             "id": 4104,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -4937,9 +4343,7 @@
             "name": "Lake Shrine (-3F): middle reward chest in boss room",
             "id": 4105,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -4953,9 +4357,7 @@
             "name": "Lake Shrine (-3F): right reward chest in boss room",
             "id": 4106,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Restoration",
@@ -4969,9 +4371,7 @@
             "name": "Lake Shrine (-3F): chest near golden golems spinner",
             "id": 4107,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -4985,9 +4385,7 @@
             "name": "Lake Shrine (-3F): item on ground at the SE exit of the golden golems roundabout",
             "id": 4260,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -5001,9 +4399,7 @@
             "name": "Lake Shrine (-3F): isolated item on ground requiring raised platform to reach",
             "id": 4266,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -5017,9 +4413,7 @@
             "name": "Lake Shrine (-2F): north item on ground in quadruple items room",
             "id": 4273,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Statue of Gaia",
@@ -5033,9 +4427,7 @@
             "name": "Lake Shrine (-2F): south item on ground in quadruple items room",
             "id": 4274,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -5049,9 +4441,7 @@
             "name": "Lake Shrine (-2F): west item on ground in quadruple items room",
             "id": 4275,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -5065,9 +4455,7 @@
             "name": "Lake Shrine (-2F): east item on ground in quadruple items room",
             "id": 4276,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Healing Boots",
@@ -5081,9 +4469,7 @@
             "name": "Lake Shrine: Mir reward after beating Duke",
             "id": 4337,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "20 Golds",
@@ -5104,7 +4490,6 @@
             "connected_region": "Greenmaze (pre-whistle)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Axe Magic",
                 "count": 1
@@ -5115,9 +4500,7 @@
             "name": "mountainous_area -> mountainous_area_tree",
             "connected_region": "Mountainous Area tree",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -5125,7 +4508,6 @@
             "connected_region": "Route to Lake Shrine cliff",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Axe Magic",
                 "count": 1
@@ -5137,7 +4519,6 @@
             "connected_region": "King Nole's Cave",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Gola's Eye",
                 "count": 1
@@ -5150,9 +4531,7 @@
             "name": "Mountainous Area: chest near teleport tree",
             "id": 4148,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Restoration",
@@ -5166,9 +4545,7 @@
             "name": "Mountainous Area: chest on right side of map before the bridge",
             "id": 4149,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Iron Boots",
@@ -5182,9 +4559,7 @@
             "name": "Mountainous Area: hidden chest in L-shaped path",
             "id": 4150,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "50 Golds",
@@ -5198,9 +4573,7 @@
             "name": "Mountainous Area: hidden chest in uppermost path",
             "id": 4151,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Pawn Ticket",
@@ -5214,9 +4587,7 @@
             "name": "Mountainous Area: isolated chest on cliff in bridge map",
             "id": 4152,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "100 Golds",
@@ -5230,9 +4601,7 @@
             "name": "Mountainous Area: left chest on wall in bridge map",
             "id": 4153,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -5246,9 +4615,7 @@
             "name": "Mountainous Area: right chest on wall in bridge map",
             "id": 4154,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dahl",
@@ -5262,9 +4629,7 @@
             "name": "Mountainous Area: right chest in map before Zak arena",
             "id": 4155,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "100 Golds",
@@ -5278,9 +4643,7 @@
             "name": "Mountainous Area: left chest in map before Zak arena",
             "id": 4156,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -5294,9 +4657,7 @@
             "name": "Mountainous Area: chest hidden under rocky arch",
             "id": 4160,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -5310,9 +4671,7 @@
             "name": "Mountainous Area: chest in map in front of bridge statue",
             "id": 4163,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Detox Grass",
@@ -5326,9 +4685,7 @@
             "name": "Mountainous Area Cave: chest in small hidden room",
             "id": 4166,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Statue of Gaia",
@@ -5342,9 +4699,7 @@
             "name": "Mountainous Area Cave: chest in small visible room",
             "id": 4167,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dahl",
@@ -5358,9 +4713,7 @@
             "name": "Mountainous Area cave: item on ground behind hidden path",
             "id": 4269,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -5374,9 +4727,7 @@
             "name": "Mountainous Area: Zak reward after fighting",
             "id": 4339,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -5396,9 +4747,7 @@
             "name": "mountainous_area_tree -> mountainous_area",
             "connected_region": "Mountainous Area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5413,7 +4762,6 @@
             "connected_region": "Mountainous Area",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Gola's Eye",
                 "count": 1
@@ -5424,9 +4772,7 @@
             "name": "king_nole_cave -> mercator",
             "connected_region": "Mercator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -5434,7 +4780,6 @@
             "connected_region": "Kazalt",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Blue Jewel",
@@ -5452,9 +4797,7 @@
             "name": "King Nole's Cave: chest in second room",
             "id": 4022,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -5468,9 +4811,7 @@
             "name": "King Nole's Cave: first chest in third room",
             "id": 4024,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -5484,9 +4825,7 @@
             "name": "King Nole's Cave: second chest in third room",
             "id": 4025,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Detox Grass",
@@ -5500,9 +4839,7 @@
             "name": "King Nole's Cave: chest in isolated room",
             "id": 4028,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -5516,9 +4853,7 @@
             "name": "King Nole's Cave: chest in crate room",
             "id": 4029,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -5532,9 +4867,7 @@
             "name": "King Nole's Cave: boulder chase hallway chest",
             "id": 4031,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -5554,18 +4887,14 @@
             "name": "kazalt -> king_nole_cave",
             "connected_region": "King Nole's Cave",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "kazalt -> king_nole_labyrinth_pre_door",
             "connected_region": "King Nole's Labyrinth (before door)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5574,9 +4903,7 @@
             "name": "Kazalt: Shop item #1",
             "id": 4331,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -5590,9 +4917,7 @@
             "name": "Kazalt: Shop item #2",
             "id": 4332,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bell",
@@ -5606,9 +4931,7 @@
             "name": "Kazalt: Shop item #3",
             "id": 4333,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dahl",
@@ -5622,9 +4945,7 @@
             "name": "Kazalt: Shop item #4",
             "id": 4334,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Statue of Jypta",
@@ -5638,9 +4959,7 @@
             "name": "Kazalt: Shop item #5",
             "id": 4335,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -5660,9 +4979,7 @@
             "name": "king_nole_labyrinth_pre_door -> kazalt",
             "connected_region": "Kazalt",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -5670,7 +4987,6 @@
             "connected_region": "King Nole's Labyrinth (after door)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Key",
                 "count": 1
@@ -5682,7 +4998,6 @@
             "connected_region": "King Nole's Labyrinth (exterior)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Iron Boots",
                 "count": 1
@@ -5695,9 +5010,7 @@
             "name": "King Nole's Labyrinth (0F): chest in spike balls room",
             "id": 4112,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Snow Spikes",
@@ -5711,9 +5024,7 @@
             "name": "King Nole's Labyrinth (-1F): chest in 3-chest dark room (right side)",
             "id": 4114,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -5727,9 +5038,7 @@
             "name": "King Nole's Labyrinth (-1F): upper chest in lantern room",
             "id": 4117,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "20 Golds",
@@ -5743,9 +5052,7 @@
             "name": "King Nole's Labyrinth (-1F): lower chest in lantern room",
             "id": 4118,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -5759,9 +5066,7 @@
             "name": "King Nole's Labyrinth (-1F): chest in ice shortcut room",
             "id": 4119,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -5781,9 +5086,7 @@
             "name": "king_nole_labyrinth_post_door -> king_nole_labyrinth_pre_door",
             "connected_region": "King Nole's Labyrinth (before door)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -5791,7 +5094,6 @@
             "connected_region": "King Nole's Labyrinth (raft entrance)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Snow Spikes",
                 "count": 1
@@ -5803,7 +5105,6 @@
             "connected_region": "King Nole's Labyrinth (path to palace)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Snow Spikes",
                 "count": 1
@@ -5815,7 +5116,6 @@
             "connected_region": "King Nole's Labyrinth (sacred tree)",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Axe Magic",
@@ -5830,9 +5130,7 @@
             "name": "King Nole's Labyrinth (0F): left chest in room after key door",
             "id": 4109,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Anti Paralyze",
@@ -5846,9 +5144,7 @@
             "name": "King Nole's Labyrinth (0F): right chest in room after key door",
             "id": 4110,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -5862,9 +5158,7 @@
             "name": "King Nole's Labyrinth (-1F): chest in maze room with healing tile",
             "id": 4111,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Anti Paralyze",
@@ -5878,9 +5172,7 @@
             "name": "King Nole's Labyrinth (-1F): right chest in 3-chest dark room (left side)",
             "id": 4113,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Detox Grass",
@@ -5894,9 +5186,7 @@
             "name": "King Nole's Labyrinth (-1F): left chest in 3-chest dark room (left side)",
             "id": 4115,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Restoration",
@@ -5910,9 +5200,7 @@
             "name": "King Nole's Labyrinth (-1F): chest in maze room with two buttons",
             "id": 4116,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dahl",
@@ -5926,9 +5214,7 @@
             "name": "King Nole's Labyrinth (-2F): chest in save room",
             "id": 4120,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "20 Golds",
@@ -5942,9 +5228,7 @@
             "name": "King Nole's Labyrinth (-1F): chest in room with button and crates stairway",
             "id": 4121,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Golden Statue",
@@ -5958,9 +5242,7 @@
             "name": "King Nole's Labyrinth (-3F): first chest before Firedemon",
             "id": 4122,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Saturn Stone",
@@ -5974,9 +5256,7 @@
             "name": "King Nole's Labyrinth (-3F): second chest before Firedemon",
             "id": 4123,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -5990,9 +5270,7 @@
             "name": "King Nole's Labyrinth (-3F): reward chest for beating Firedemon",
             "id": 4124,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -6006,9 +5284,7 @@
             "name": "King Nole's Labyrinth (-2F): chest in four buttons room",
             "id": 4125,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -6022,9 +5298,7 @@
             "name": "King Nole's Labyrinth (-3F): chest in hands room",
             "id": 4133,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "200 Golds",
@@ -6038,9 +5312,7 @@
             "name": "King Nole's Labyrinth (-1F): item on ground in ninjas room",
             "id": 4263,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -6054,9 +5326,7 @@
             "name": "King Nole's Labyrinth (-3F): item on floating hands",
             "id": 4265,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Moon Stone",
@@ -6070,9 +5340,7 @@
             "name": "King Nole's Labyrinth (-3F): item on ground climbing back from Firedemon",
             "id": 4271,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -6086,9 +5354,7 @@
             "name": "King Nole's Labyrinth (-3F): First item on ground before Firedemon",
             "id": 4285,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -6109,7 +5375,6 @@
             "connected_region": "King Nole's Labyrinth (fall from exterior)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Axe Magic",
                 "count": 1
@@ -6122,9 +5387,7 @@
             "name": "King Nole's Labyrinth (0F): chest in exterior room",
             "id": 4108,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Garlic",
@@ -6144,9 +5407,7 @@
             "name": "king_nole_labyrinth_fall_from_exterior -> king_nole_labyrinth_pre_door",
             "connected_region": "King Nole's Labyrinth (before door)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -6155,9 +5416,7 @@
             "name": "King Nole's Labyrinth (-2F): item on ground after falling from exterior room",
             "id": 4267,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dahl",
@@ -6177,9 +5436,7 @@
             "name": "king_nole_labyrinth_raft_entrance -> king_nole_labyrinth_post_door",
             "connected_region": "King Nole's Labyrinth (after door)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -6187,7 +5444,6 @@
             "connected_region": "King Nole's Labyrinth (raft)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Logs",
                 "count": 1
@@ -6200,9 +5456,7 @@
             "name": "event_visited_king_nole_labyrinth_raft_entrance",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "event_visited_king_nole_labyrinth_raft_entrance",
@@ -6222,9 +5476,7 @@
             "name": "king_nole_labyrinth_raft -> king_nole_labyrinth_raft_entrance",
             "connected_region": "King Nole's Labyrinth (raft entrance)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -6233,9 +5485,7 @@
             "name": "King Nole's Labyrinth (-3F): first chest after falling from raft",
             "id": 4126,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Armor",
@@ -6249,9 +5499,7 @@
             "name": "King Nole's Labyrinth (-3F): left chest in room before Spinner",
             "id": 4127,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dahl",
@@ -6265,9 +5513,7 @@
             "name": "King Nole's Labyrinth (-3F): right chest in room before Spinner",
             "id": 4128,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -6281,9 +5527,7 @@
             "name": "King Nole's Labyrinth (-3F): reward chest for beating Spinner",
             "id": 4129,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "20 Golds",
@@ -6297,9 +5541,7 @@
             "name": "King Nole's Labyrinth (-3F): chest in room after Spinner",
             "id": 4130,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -6313,9 +5555,7 @@
             "name": "King Nole's Labyrinth (-3F): item on ground behind waterfall after beating Spinner",
             "id": 4261,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -6336,9 +5576,7 @@
             "name": "King Nole's Labyrinth (-2F): Left item dropped by sacred tree",
             "id": 4283,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -6352,9 +5590,7 @@
             "name": "King Nole's Labyrinth (-2F): Right item dropped by sacred tree",
             "id": 4284,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -6374,18 +5610,14 @@
             "name": "king_nole_labyrinth_path_to_palace -> king_nole_labyrinth_post_door",
             "connected_region": "King Nole's Labyrinth (after door)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "king_nole_labyrinth_path_to_palace -> king_nole_palace",
             "connected_region": "King Nole's Palace",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -6394,9 +5626,7 @@
             "name": "King Nole's Labyrinth (-3F): chest in room before Miro",
             "id": 4131,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Life Stock",
@@ -6410,9 +5640,7 @@
             "name": "King Nole's Labyrinth (-3F): reward chest for beating Miro",
             "id": 4132,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Anti Paralyze",
@@ -6432,9 +5660,7 @@
             "name": "king_nole_palace -> king_nole_labyrinth_path_to_palace",
             "connected_region": "King Nole's Labyrinth (path to palace)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -6442,7 +5668,6 @@
             "connected_region": "The End",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Gola's Fang",
@@ -6458,9 +5683,7 @@
             "name": "King Nole's Palace: chest at entrance",
             "id": 4019,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -6474,9 +5697,7 @@
             "name": "King Nole's Palace: chest along central pit",
             "id": 4020,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "EkeEke",
@@ -6490,9 +5711,7 @@
             "name": "King Nole's Palace: chest in floating button room",
             "id": 4021,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dahl",
@@ -6512,9 +5731,7 @@
             "name": "End",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "King Nole's Treasure",
@@ -7705,7 +6922,7 @@
         "start_inventory": {},
         "start_location_hints": []
       },
-      "world_directory": "landstalker_worldgen"
+      "world_directory": "landstalker"
     }
   },
   "game_info": {
@@ -7763,17 +6980,17 @@
         "dark_region": "Massan Cave",
         "hints": {
           "Foxy (right after making Miro flee with Garlic in Mir Tower)": "I can sense Buyer Card among the trees.",
-          "Foxy (in room near white golems roundabout in Lake Shrine)": "I can sense Casino Ticket close to a waterfall.",
-          "Foxy (in sector with red orcs making an elevator appear in Greenmaze)": "I can sense Oracle Stone near a swamp.",
-          "Foxy (in Gumi boulder map)": "I can sense Lantern in the village of Massan.",
-          "Foxy (in room next to spiked floor and keydoor room in King Nole's Labyrinth)": "I can sense Gola's Nail on a route.",
-          "Foxy (in empty isolated room inside King Nole's Cave)": "I can sense Garlic in King Nole's domain.",
-          "Foxy (in Destel)": "I can sense Lithograph in the village of Massan.",
-          "Foxy (in room next to green golem roundabout in Lake Shrine)": "I can sense Logs in Verla Mines.",
-          "Foxy (on Kazalt bridge)": "I can sense Safety Pass in a region inhabited by bears.",
-          "Foxy (inside Mercator Crypt)": "I can sense Fireproof near a lake.",
-          "Foxy (at Waterfall Shrine crossroads)": "I can sense Iron Boots in a mountainous area.",
-          "Foxy (in King Nole's Palace entrance room)": "I can sense Purple Jewel in Destel region.",
+          "Foxy (in room near white golems roundabout in Lake Shrine)": "I can sense Gola's Eye on a route.",
+          "Foxy (in sector with red orcs making an elevator appear in Greenmaze)": "I can sense Green Jewel inside a tower.",
+          "Foxy (in Gumi boulder map)": "I can sense Logs in Verla Mines.",
+          "Foxy (in room next to spiked floor and keydoor room in King Nole's Labyrinth)": "I can sense Fireproof near a lake.",
+          "Foxy (in empty isolated room inside King Nole's Cave)": "I can sense Einstein Whistle in the town of Mercator.",
+          "Foxy (in Destel)": "I can sense Red Jewel in a town.",
+          "Foxy (in room next to green golem roundabout in Lake Shrine)": "I can sense Oracle Stone near a swamp.",
+          "Foxy (on Kazalt bridge)": "I can sense Gola's Nail on a route.",
+          "Foxy (inside Mercator Crypt)": "I can sense Blue Jewel in Twinkle village.",
+          "Foxy (at Waterfall Shrine crossroads)": "I can sense Sun Stone on a route.",
+          "Foxy (in King Nole's Palace entrance room)": "I can sense Idol Stone among the trees.",
           "Lithograph": "It's barely readable:\nRED MERCATOR ITEM\nPURPLE ITEM DESTEL\nTOWER GREEN CHALLENGE\nFIRST GROUND BLUE\nYELLOW ROOM TOWER",
           "Oracle Stone": "It shows Massan Cave\nenshrouded in darkness."
         },

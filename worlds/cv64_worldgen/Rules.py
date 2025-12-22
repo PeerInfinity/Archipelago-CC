@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Has, HasAll, Or
+from rule_builder import True_, False_, And, Compare, Has, HasAll, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -119,12 +119,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Storeroom door", player),
-        Or(True_(), Or(True_(), Or(True_(), Has('Storeroom Key'))))
+        Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Villa: Storeroom statue',)), "==", True_()), Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Villa: Storeroom - Right',)), "==", True_()), Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Villa: Storeroom - Left',)), "==", True_()), Has('Storeroom Key'))))
     )
 
     world.set_rule(
         multiworld.get_entrance("To Archives door", player),
-        Or(True_(), Or(True_(), Has('Archives Key')))
+        Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Villa: Archives rear corner',)), "==", True_()), Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Villa: Archives table',)), "==", True_()), Has('Archives Key')))
     )
 
     world.set_rule(
@@ -149,7 +149,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Torture Chamber door", player),
-        Or(True_(), Or(True_(), Or(True_(), Or(True_(), Has('Chamber Key')))))
+        Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Castle Center: Torture chamber rafters',)), "==", True_()), Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Castle Center: Torture chamber instrument rack',)), "==", True_()), Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Castle Center: Mandragora shelf - Right',)), "==", True_()), Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Castle Center: Mandragora shelf - Left',)), "==", True_()), Has('Chamber Key')))))
     )
 
     world.set_rule(
@@ -169,7 +169,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Science Door 1", player),
-        Or(True_(), Has('Science Key1'))
+        Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Tower of Science: Pick-a-door hallway locked middle room',)), "==", True_()), Has('Science Key1'))
     )
 
     world.set_rule(
@@ -184,7 +184,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Science Door 3", player),
-        Or(True_(), Or(True_(), Has('Science Key3')))
+        Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Tower of Science: Locked Key3 room - Left',)), "==", True_()), Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Tower of Science: Locked Key3 room - Right',)), "==", True_()), Has('Science Key3')))
     )
 
     world.set_rule(

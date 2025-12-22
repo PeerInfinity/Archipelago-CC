@@ -19,9 +19,7 @@
             "name": "StartProof",
             "connected_region": "Definitions",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -34,18 +32,14 @@
             "name": "ToAxioms",
             "connected_region": "Axioms",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "ToBasicProperties",
             "connected_region": "BasicProperties",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -53,18 +47,15 @@
             "connected_region": "ArithmeticOperations",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "df-2"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "df-3"
                   }
@@ -78,9 +69,7 @@
             "name": "Definition of 2",
             "id": 200000001,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "df-3",
@@ -94,9 +83,7 @@
             "name": "Definition of 3",
             "id": 200000002,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "oveq1i",
@@ -110,9 +97,7 @@
             "name": "Definition of 4",
             "id": 200000003,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "df-4",
@@ -131,9 +116,7 @@
             "name": "BackToDefinitions",
             "connected_region": "Definitions",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -142,9 +125,7 @@
             "name": "1 is Complex",
             "id": 200000004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "3eqtri",
@@ -163,9 +144,7 @@
             "name": "BackToDefinitionsFromProperties",
             "connected_region": "Definitions",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -174,9 +153,7 @@
             "name": "2 is Complex",
             "id": 200000005,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "addassi",
@@ -196,18 +173,15 @@
             "connected_region": "ProofCompletion",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "addassi"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "oveq2i"
                   }
@@ -222,7 +196,6 @@
             "id": 200000006,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "df-2"
               }
@@ -240,7 +213,6 @@
             "id": 200000007,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "df-3"
               }
@@ -258,18 +230,15 @@
             "id": 200000008,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "2cn"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "ax-1cn"
                   }
@@ -295,25 +264,21 @@
             "id": 200000009,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "addassi"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "df-4"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "oveq1i"
                   }
@@ -333,18 +298,15 @@
             "id": 200000010,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "3eqtri"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "oveq2i"
                   }
@@ -364,7 +326,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "eqtr4i"
               }

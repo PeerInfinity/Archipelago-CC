@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, Has, Or
+from rule_builder import True_, False_, Has, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -151,12 +151,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Electrical entrance", player),
-        True_()
+        HelperCall(helper_func=_savingprincessworldgen_is_gate_unlocked, helper_name="is_gate_unlocked")
     )
 
     world.set_rule(
         multiworld.get_entrance("Electrical (Power On) entrance", player),
-        True_()
+        HelperCall(helper_func=_savingprincessworldgen_is_power_on, helper_name="is_power_on")
     )
     # Location rules
     world.set_rule(
@@ -171,17 +171,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Volcanic: Hot coals", player),
-        Or(True_(), Has('Ice Spreadshot'))
+        Or(HelperCall(helper_func=_savingprincessworldgen_can_hover, helper_name="can_hover"), Has('Ice Spreadshot'))
     )
 
     world.set_rule(
         multiworld.get_location("Volcanic: Flamethrower chest", player),
-        True_()
+        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check")
     )
 
     world.set_rule(
         multiworld.get_location("Volcanic: Cliff (Boss)", player),
-        True_()
+        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check")
     )
 
     world.set_rule(
@@ -191,7 +191,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Arctic: Ice Spreadshot chest", player),
-        True_()
+        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check")
     )
 
     world.set_rule(
@@ -201,7 +201,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Arctic: Ace (Boss)", player),
-        True_()
+        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check")
     )
 
     world.set_rule(
@@ -216,17 +216,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Swamp: Bramble room", player),
-        True_()
+        HelperCall(helper_func=_savingprincessworldgen_can_hover, helper_name="can_hover")
     )
 
     world.set_rule(
         multiworld.get_location("Swamp: Special Extension chest", player),
-        True_()
+        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check")
     )
 
     world.set_rule(
         multiworld.get_location("Swamp: Snake (Boss)", player),
-        True_()
+        HelperCall(helper_func=_savingprincessworldgen_nice_check, helper_name="nice_check")
     )
 
     world.set_rule(
@@ -236,10 +236,10 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Electrical: BRAINOS (Boss)", player),
-        True_()
+        HelperCall(helper_func=_savingprincessworldgen_all_weapons, helper_name="all_weapons")
     )
 
     world.set_rule(
         multiworld.get_location("Mission objective", player),
-        True_()
+        HelperCall(helper_func=_savingprincessworldgen_all_weapons, helper_name="all_weapons")
     )

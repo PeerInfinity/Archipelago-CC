@@ -34,27 +34,21 @@
             "name": "Coal Pits -> Fungal Caverns",
             "connected_region": "Fungal Caverns",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Coal Pits -> Snowy Depths Holy Mountain",
             "connected_region": "Snowy Depths Holy Mountain",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Coal Pits -> Ancient Laboratory",
             "connected_region": "Ancient Laboratory",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -63,9 +57,7 @@
             "name": "Coal Pits Chest 1",
             "id": 110126,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spell Refresher",
@@ -79,9 +71,7 @@
             "name": "Coal Pits Chest 2",
             "id": 110127,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Gold (200)",
@@ -95,9 +85,7 @@
             "name": "Coal Pits Chest 3",
             "id": 110128,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -111,9 +99,7 @@
             "name": "Coal Pits Pedestal 1",
             "id": 110146,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 3)",
@@ -127,9 +113,7 @@
             "name": "Coal Pits Pedestal 2",
             "id": 110147,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 1)",
@@ -143,9 +127,7 @@
             "name": "Coal Pits Pedestal 3",
             "id": 110148,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "S\u00e4dekivi",
@@ -159,9 +141,7 @@
             "name": "Coal Pits Pedestal 4",
             "id": 110149,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trap",
@@ -175,9 +155,7 @@
             "name": "Coal Pits Pedestal 5",
             "id": 110150,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Gold (200)",
@@ -191,9 +169,7 @@
             "name": "Coal Pits Pedestal 6",
             "id": 110151,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Potion",
@@ -207,9 +183,7 @@
             "name": "Portal to Holy Mountain 2",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Portal to Holy Mountain 2",
@@ -228,9 +202,7 @@
             "name": "Coal Pits Holy Mountain -> Coal Pits",
             "connected_region": "Coal Pits",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -239,9 +211,7 @@
             "name": "Coal Pits Holy Mountain Shop Item 1",
             "id": 110000,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -255,9 +225,7 @@
             "name": "Coal Pits Holy Mountain Shop Item 2",
             "id": 110001,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spell Refresher",
@@ -271,9 +239,7 @@
             "name": "Coal Pits Holy Mountain Shop Item 3",
             "id": 110002,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -287,9 +253,7 @@
             "name": "Coal Pits Holy Mountain Shop Item 4",
             "id": 110003,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 5)",
@@ -303,9 +267,7 @@
             "name": "Coal Pits Holy Mountain Shop Item 5",
             "id": 110004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 3)",
@@ -319,9 +281,7 @@
             "name": "Coal Pits Holy Mountain Spell Refresh",
             "id": 110005,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -360,36 +320,28 @@
             "name": "Forest -> Mines",
             "connected_region": "Mines",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Forest -> Floating Island",
             "connected_region": "Floating Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Forest -> Desert",
             "connected_region": "Desert",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Forest -> Snowy Wasteland",
             "connected_region": "Snowy Wasteland",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -407,9 +359,7 @@
             "name": "Frozen Vault -> The Vault",
             "connected_region": "The Vault",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -427,27 +377,21 @@
             "name": "Hiisi Base -> Secret Shop",
             "connected_region": "Secret Shop",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Hiisi Base -> Pyramid",
             "connected_region": "Pyramid",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Hiisi Base -> Underground Jungle Holy Mountain",
             "connected_region": "Underground Jungle Holy Mountain",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -456,9 +400,7 @@
             "name": "Hiisi Base Chest 1",
             "id": 110246,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -472,9 +414,7 @@
             "name": "Hiisi Base Chest 2",
             "id": 110247,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Potion",
@@ -488,9 +428,7 @@
             "name": "Hiisi Base Chest 3",
             "id": 110248,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -504,9 +442,7 @@
             "name": "Hiisi Base Pedestal 1",
             "id": 110266,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Potion",
@@ -520,9 +456,7 @@
             "name": "Hiisi Base Pedestal 2",
             "id": 110267,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kammi",
@@ -536,9 +470,7 @@
             "name": "Hiisi Base Pedestal 3",
             "id": 110268,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 3)",
@@ -552,9 +484,7 @@
             "name": "Hiisi Base Pedestal 4",
             "id": 110269,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trap",
@@ -568,9 +498,7 @@
             "name": "Hiisi Base Pedestal 5",
             "id": 110270,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -584,9 +512,7 @@
             "name": "Hiisi Base Pedestal 6",
             "id": 110271,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 6)",
@@ -600,9 +526,7 @@
             "name": "Portal to Holy Mountain 4",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Portal to Holy Mountain 4",
@@ -621,9 +545,7 @@
             "name": "Hiisi Base Holy Mountain -> Hiisi Base",
             "connected_region": "Hiisi Base",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -632,9 +554,7 @@
             "name": "Hiisi Base Holy Mountain Shop Item 1",
             "id": 110012,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 3)",
@@ -648,9 +568,7 @@
             "name": "Hiisi Base Holy Mountain Shop Item 2",
             "id": 110013,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -664,9 +582,7 @@
             "name": "Hiisi Base Holy Mountain Shop Item 3",
             "id": 110014,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trap",
@@ -680,9 +596,7 @@
             "name": "Hiisi Base Holy Mountain Shop Item 4",
             "id": 110015,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -696,9 +610,7 @@
             "name": "Hiisi Base Holy Mountain Shop Item 5",
             "id": 110016,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trap",
@@ -712,9 +624,7 @@
             "name": "Hiisi Base Holy Mountain Spell Refresh",
             "id": 110017,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Potion",
@@ -733,9 +643,7 @@
             "name": "Laboratory Holy Mountain -> The Laboratory",
             "connected_region": "The Laboratory",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -744,9 +652,7 @@
             "name": "Laboratory Holy Mountain Shop Item 1",
             "id": 110036,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -760,9 +666,7 @@
             "name": "Laboratory Holy Mountain Shop Item 2",
             "id": 110037,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -776,9 +680,7 @@
             "name": "Laboratory Holy Mountain Shop Item 3",
             "id": 110038,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -792,9 +694,7 @@
             "name": "Laboratory Holy Mountain Shop Item 4",
             "id": 110039,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trap",
@@ -808,9 +708,7 @@
             "name": "Laboratory Holy Mountain Shop Item 5",
             "id": 110040,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -824,9 +722,7 @@
             "name": "Laboratory Holy Mountain Spell Refresh",
             "id": 110041,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Chaos Die",
@@ -850,9 +746,7 @@
             "name": "Lava Lake -> Abyss Orb Room",
             "connected_region": "Abyss Orb Room",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -880,9 +774,7 @@
             "name": "Menu -> Forest",
             "connected_region": "Forest",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -895,27 +787,21 @@
             "name": "Mines -> Collapsed Mines",
             "connected_region": "Collapsed Mines",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Mines -> Coal Pits Holy Mountain",
             "connected_region": "Coal Pits Holy Mountain",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Mines -> Lava Lake",
             "connected_region": "Lava Lake",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -924,9 +810,7 @@
             "name": "Mines Chest 1",
             "id": 110046,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Gold (200)",
@@ -940,9 +824,7 @@
             "name": "Mines Chest 2",
             "id": 110047,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Life Perk",
@@ -956,9 +838,7 @@
             "name": "Mines Chest 3",
             "id": 110048,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 4)",
@@ -972,9 +852,7 @@
             "name": "Mines Pedestal 1",
             "id": 110066,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trap",
@@ -988,9 +866,7 @@
             "name": "Mines Pedestal 2",
             "id": 110067,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spell Refresher",
@@ -1004,9 +880,7 @@
             "name": "Mines Pedestal 3",
             "id": 110068,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 2)",
@@ -1020,9 +894,7 @@
             "name": "Mines Pedestal 4",
             "id": 110069,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Potion",
@@ -1036,9 +908,7 @@
             "name": "Mines Pedestal 5",
             "id": 110070,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Secret Potion",
@@ -1052,9 +922,7 @@
             "name": "Mines Pedestal 6",
             "id": 110071,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -1068,9 +936,7 @@
             "name": "Portal to Holy Mountain 1",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Portal to Holy Mountain 1",
@@ -1089,9 +955,7 @@
             "name": "Overgrown Cavern -> Sandcave",
             "connected_region": "Sandcave",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1104,9 +968,7 @@
             "name": "Powerplant -> Meat Realm",
             "connected_region": "Meat Realm",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1130,9 +992,7 @@
             "name": "Secret Shop Item 1",
             "id": 110042,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spell Refresher",
@@ -1146,9 +1006,7 @@
             "name": "Secret Shop Item 2",
             "id": 110043,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 4)",
@@ -1162,9 +1020,7 @@
             "name": "Secret Shop Item 3",
             "id": 110044,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -1178,9 +1034,7 @@
             "name": "Secret Shop Item 4",
             "id": 110045,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 3)",
@@ -1204,27 +1058,21 @@
             "name": "Snowy Depths -> Hiisi Base Holy Mountain",
             "connected_region": "Hiisi Base Holy Mountain",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Snowy Depths -> Magical Temple",
             "connected_region": "Magical Temple",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Snowy Depths -> Below Lava Lake",
             "connected_region": "Below Lava Lake",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1233,9 +1081,7 @@
             "name": "Snowy Depths Chest 1",
             "id": 110206,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Powder Pouch",
@@ -1249,9 +1095,7 @@
             "name": "Snowy Depths Chest 2",
             "id": 110207,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Secret Potion",
@@ -1265,9 +1109,7 @@
             "name": "Snowy Depths Chest 3",
             "id": 110208,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trap",
@@ -1281,9 +1123,7 @@
             "name": "Snowy Depths Pedestal 1",
             "id": 110226,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Potion",
@@ -1297,9 +1137,7 @@
             "name": "Snowy Depths Pedestal 2",
             "id": 110227,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -1313,9 +1151,7 @@
             "name": "Snowy Depths Pedestal 3",
             "id": 110228,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 2)",
@@ -1329,9 +1165,7 @@
             "name": "Snowy Depths Pedestal 4",
             "id": 110229,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Potion",
@@ -1345,9 +1179,7 @@
             "name": "Snowy Depths Pedestal 5",
             "id": 110230,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Potion",
@@ -1361,9 +1193,7 @@
             "name": "Snowy Depths Pedestal 6",
             "id": 110231,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Chaos Die",
@@ -1377,9 +1207,7 @@
             "name": "Portal to Holy Mountain 3",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Portal to Holy Mountain 3",
@@ -1398,9 +1226,7 @@
             "name": "Snowy Depths Holy Mountain -> Snowy Depths",
             "connected_region": "Snowy Depths",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1409,9 +1235,7 @@
             "name": "Snowy Depths Holy Mountain Shop Item 1",
             "id": 110006,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 4)",
@@ -1425,9 +1249,7 @@
             "name": "Snowy Depths Holy Mountain Shop Item 2",
             "id": 110007,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 4)",
@@ -1441,9 +1263,7 @@
             "name": "Snowy Depths Holy Mountain Shop Item 3",
             "id": 110008,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -1457,9 +1277,7 @@
             "name": "Snowy Depths Holy Mountain Shop Item 4",
             "id": 110009,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spell Refresher",
@@ -1473,9 +1291,7 @@
             "name": "Snowy Depths Holy Mountain Shop Item 5",
             "id": 110010,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spell Refresher",
@@ -1489,9 +1305,7 @@
             "name": "Snowy Depths Holy Mountain Spell Refresh",
             "id": 110011,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -1515,27 +1329,21 @@
             "name": "Temple of the Art -> Laboratory Holy Mountain",
             "connected_region": "Laboratory Holy Mountain",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Temple of the Art -> The Tower",
             "connected_region": "The Tower",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Temple of the Art -> Wizards' Den",
             "connected_region": "Wizards' Den",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1544,9 +1352,7 @@
             "name": "Temple of the Art Chest 1",
             "id": 110406,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Greed Die",
@@ -1560,9 +1366,7 @@
             "name": "Temple of the Art Chest 2",
             "id": 110407,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Broken Wand",
@@ -1576,9 +1380,7 @@
             "name": "Temple of the Art Chest 3",
             "id": 110408,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 1)",
@@ -1592,9 +1394,7 @@
             "name": "Temple of the Art Pedestal 1",
             "id": 110426,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Potion",
@@ -1608,9 +1408,7 @@
             "name": "Temple of the Art Pedestal 2",
             "id": 110427,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Gold (200)",
@@ -1624,9 +1422,7 @@
             "name": "Temple of the Art Pedestal 3",
             "id": 110428,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Powder Pouch",
@@ -1640,9 +1436,7 @@
             "name": "Temple of the Art Pedestal 4",
             "id": 110429,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Powder Pouch",
@@ -1656,9 +1450,7 @@
             "name": "Temple of the Art Pedestal 5",
             "id": 110430,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Powder Pouch",
@@ -1672,9 +1464,7 @@
             "name": "Temple of the Art Pedestal 6",
             "id": 110431,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Broken Wand",
@@ -1688,9 +1478,7 @@
             "name": "Portal to Holy Mountain 7",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Portal to Holy Mountain 7",
@@ -1709,9 +1497,7 @@
             "name": "Temple of the Art Holy Mountain -> Temple of the Art",
             "connected_region": "Temple of the Art",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1720,9 +1506,7 @@
             "name": "Temple of the Art Holy Mountain Shop Item 1",
             "id": 110030,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -1736,9 +1520,7 @@
             "name": "Temple of the Art Holy Mountain Shop Item 2",
             "id": 110031,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trap",
@@ -1752,9 +1534,7 @@
             "name": "Temple of the Art Holy Mountain Shop Item 3",
             "id": 110032,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trap",
@@ -1768,9 +1548,7 @@
             "name": "Temple of the Art Holy Mountain Shop Item 4",
             "id": 110033,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Refreshing Gourd",
@@ -1784,9 +1562,7 @@
             "name": "Temple of the Art Holy Mountain Shop Item 5",
             "id": 110034,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kammi",
@@ -1800,9 +1576,7 @@
             "name": "Temple of the Art Holy Mountain Spell Refresh",
             "id": 110035,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 2)",
@@ -1821,45 +1595,35 @@
             "name": "The Laboratory -> The Work",
             "connected_region": "The Work",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "The Laboratory -> Friend Cave",
             "connected_region": "Friend Cave",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "The Laboratory -> The Work (Hell)",
             "connected_region": "The Work (Hell)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "The Laboratory -> Lake",
             "connected_region": "Lake",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "The Laboratory -> The Sky",
             "connected_region": "The Sky",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1882,18 +1646,14 @@
             "name": "The Vault -> Frozen Vault",
             "connected_region": "Frozen Vault",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "The Vault -> Temple of the Art Holy Mountain",
             "connected_region": "Temple of the Art Holy Mountain",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1902,9 +1662,7 @@
             "name": "The Vault Chest 1",
             "id": 110366,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Potion",
@@ -1918,9 +1676,7 @@
             "name": "The Vault Chest 2",
             "id": 110367,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Chaos Die",
@@ -1934,9 +1690,7 @@
             "name": "The Vault Chest 3",
             "id": 110368,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Random Potion",
@@ -1950,9 +1704,7 @@
             "name": "The Vault Pedestal 1",
             "id": 110386,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Powder Pouch",
@@ -1966,9 +1718,7 @@
             "name": "The Vault Pedestal 2",
             "id": 110387,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Potion",
@@ -1982,9 +1732,7 @@
             "name": "The Vault Pedestal 3",
             "id": 110388,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Potion",
@@ -1998,9 +1746,7 @@
             "name": "The Vault Pedestal 4",
             "id": 110389,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Random Potion",
@@ -2014,9 +1760,7 @@
             "name": "The Vault Pedestal 5",
             "id": 110390,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Gold (200)",
@@ -2030,9 +1774,7 @@
             "name": "The Vault Pedestal 6",
             "id": 110391,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Potion",
@@ -2046,9 +1788,7 @@
             "name": "Portal to Holy Mountain 6",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Portal to Holy Mountain 6",
@@ -2068,9 +1808,7 @@
             "name": "Victory",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Victory",
@@ -2094,54 +1832,42 @@
             "name": "Underground Jungle -> Dragoncave",
             "connected_region": "Dragoncave",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Underground Jungle -> Overgrown Cavern",
             "connected_region": "Overgrown Cavern",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Underground Jungle -> Vault Holy Mountain",
             "connected_region": "Vault Holy Mountain",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Underground Jungle -> Lukki Lair",
             "connected_region": "Lukki Lair",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Underground Jungle -> Snow Chasm",
             "connected_region": "Snow Chasm",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Underground Jungle -> West Meat Realm",
             "connected_region": "West Meat Realm",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2150,9 +1876,7 @@
             "name": "Underground Jungle Chest 1",
             "id": 110286,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 3)",
@@ -2166,9 +1890,7 @@
             "name": "Underground Jungle Chest 2",
             "id": 110287,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Greed Die",
@@ -2182,9 +1904,7 @@
             "name": "Underground Jungle Chest 3",
             "id": 110288,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Powder Pouch",
@@ -2198,9 +1918,7 @@
             "name": "Underground Jungle Pedestal 1",
             "id": 110306,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Chaos Die",
@@ -2214,9 +1932,7 @@
             "name": "Underground Jungle Pedestal 2",
             "id": 110307,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Gold (200)",
@@ -2230,9 +1946,7 @@
             "name": "Underground Jungle Pedestal 3",
             "id": 110308,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Gold (1000)",
@@ -2246,9 +1960,7 @@
             "name": "Underground Jungle Pedestal 4",
             "id": 110309,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Gold (200)",
@@ -2262,9 +1974,7 @@
             "name": "Underground Jungle Pedestal 5",
             "id": 110310,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Secret Potion",
@@ -2278,9 +1988,7 @@
             "name": "Underground Jungle Pedestal 6",
             "id": 110311,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Secret Potion",
@@ -2294,9 +2002,7 @@
             "name": "Portal to Holy Mountain 5",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Portal to Holy Mountain 5",
@@ -2315,9 +2021,7 @@
             "name": "Underground Jungle Holy Mountain -> Underground Jungle",
             "connected_region": "Underground Jungle",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2326,9 +2030,7 @@
             "name": "Underground Jungle Holy Mountain Shop Item 1",
             "id": 110018,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Life Perk",
@@ -2342,9 +2044,7 @@
             "name": "Underground Jungle Holy Mountain Shop Item 2",
             "id": 110019,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "All-Seeing Eye Perk",
@@ -2358,9 +2058,7 @@
             "name": "Underground Jungle Holy Mountain Shop Item 3",
             "id": 110020,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Tinker with Wands Everywhere Perk",
@@ -2374,9 +2072,7 @@
             "name": "Underground Jungle Holy Mountain Shop Item 4",
             "id": 110021,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Electricity Immunity Perk",
@@ -2390,9 +2086,7 @@
             "name": "Underground Jungle Holy Mountain Shop Item 5",
             "id": 110022,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Melee Immunity Perk",
@@ -2406,9 +2100,7 @@
             "name": "Underground Jungle Holy Mountain Spell Refresh",
             "id": 110023,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trap",
@@ -2427,9 +2119,7 @@
             "name": "Vault Holy Mountain -> The Vault",
             "connected_region": "The Vault",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2438,9 +2128,7 @@
             "name": "Vault Holy Mountain Shop Item 1",
             "id": 110024,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Explosion Immunity Perk",
@@ -2454,9 +2142,7 @@
             "name": "Vault Holy Mountain Shop Item 2",
             "id": 110025,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Toxic Immunity Perk",
@@ -2470,9 +2156,7 @@
             "name": "Vault Holy Mountain Shop Item 3",
             "id": 110026,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fire Immunity Perk",
@@ -2486,9 +2170,7 @@
             "name": "Vault Holy Mountain Shop Item 4",
             "id": 110027,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 6)",
@@ -2502,9 +2184,7 @@
             "name": "Vault Holy Mountain Shop Item 5",
             "id": 110028,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wand (Tier 5)",
@@ -2518,9 +2198,7 @@
             "name": "Vault Holy Mountain Spell Refresh",
             "id": 110029,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Extra Max HP",
@@ -2544,9 +2222,7 @@
             "name": "Wizards' Den -> Powerplant",
             "connected_region": "Powerplant",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3239,7 +2915,7 @@
         "start_inventory": {},
         "start_location_hints": []
       },
-      "world_directory": "noita_worldgen"
+      "world_directory": "noita"
     }
   },
   "game_info": {

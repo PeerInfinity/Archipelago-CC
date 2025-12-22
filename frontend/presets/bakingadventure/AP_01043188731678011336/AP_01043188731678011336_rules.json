@@ -19,9 +19,7 @@
             "name": "StartBaking",
             "connected_region": "Kitchen",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -34,36 +32,28 @@
             "name": "BackToMenu",
             "connected_region": "Menu",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "ToPreparation",
             "connected_region": "Preparation",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "ToWetIngredients",
             "connected_region": "WetIngredients",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "ToDryIngredients",
             "connected_region": "DryIngredients",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -72,9 +62,7 @@
             "name": "Gather Mixing Bowls",
             "id": 300000001,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Egg Mixture",
@@ -88,9 +76,7 @@
             "name": "Get Electric Mixer",
             "id": 300000002,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Shaped Cookies",
@@ -104,9 +90,7 @@
             "name": "Find Measuring Tools",
             "id": 300000003,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Creamed Mixture",
@@ -125,9 +109,7 @@
             "name": "BackToKitchenFromPrep",
             "connected_region": "Kitchen",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -136,9 +118,7 @@
             "name": "Preheat Oven to 375F",
             "id": 300000004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Prepared Sheets",
@@ -152,9 +132,7 @@
             "name": "Line Baking Sheets",
             "id": 300000005,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Measuring Tools",
@@ -168,9 +146,7 @@
             "name": "Soften Butter",
             "id": 300000006,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mixing Bowls",
@@ -189,9 +165,7 @@
             "name": "BackToKitchenFromWet",
             "connected_region": "Kitchen",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -199,18 +173,15 @@
             "connected_region": "Combining",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Creamed Mixture"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Flour Mixture"
                   }
@@ -225,25 +196,21 @@
             "id": 300000007,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Electric Mixer"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Mixing Bowls"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Softened Butter"
                   }
@@ -263,7 +230,6 @@
             "id": 300000008,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Butter Sugar Base"
               }
@@ -281,7 +247,6 @@
             "id": 300000009,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Egg Mixture"
               }
@@ -303,9 +268,7 @@
             "name": "BackToKitchenFromDry",
             "connected_region": "Kitchen",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -315,7 +278,6 @@
             "id": 300000010,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Measuring Tools"
               }
@@ -333,7 +295,6 @@
             "id": 300000011,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Measured Flour"
               }
@@ -355,9 +316,7 @@
             "name": "BackToWetIngredients",
             "connected_region": "WetIngredients",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -365,7 +324,6 @@
             "connected_region": "Finishing",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Cookie Dough"
               }
@@ -377,9 +335,7 @@
             "name": "Gradually Mix Dry into Wet",
             "id": 300000012,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Cookie Dough",
@@ -394,7 +350,6 @@
             "id": 300000013,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Basic Dough"
               }
@@ -416,9 +371,7 @@
             "name": "BackToCombining",
             "connected_region": "Combining",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -426,7 +379,6 @@
             "connected_region": "Baking",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shaped Cookies"
               }
@@ -439,18 +391,15 @@
             "id": 300000014,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Cookie Dough"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Prepared Sheets"
                   }
@@ -474,9 +423,7 @@
             "name": "BackToFinishing",
             "connected_region": "Finishing",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -486,18 +433,15 @@
             "id": 300000015,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Preheated Oven"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Shaped Cookies"
                   }
@@ -517,7 +461,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Baked Cookies"
               }

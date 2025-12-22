@@ -19,9 +19,7 @@
             "name": "Menu -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -34,82 +32,158 @@
             "name": "Overworld -> 1-1",
             "connected_region": "1-1",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Overworld -> 1-2",
             "connected_region": "1-2",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "1-1 Level Complete",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "1-1 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 1-3",
             "connected_region": "1-3",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "1-2 Level Complete",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "1-2 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 1-4",
             "connected_region": "1-4",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "1-3 Level Complete",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "1-3 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 1-5",
             "connected_region": "1-5",
             "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "1-4 Level Complete",
-                  "Yellow Ramp"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "1-4 Level Complete",
+                      "Yellow Ramp"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 1-6",
             "connected_region": "1-6",
             "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "1-5 Level Complete",
-                  "Yellow Ramp"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "1-5 Level Complete",
+                      "Yellow Ramp"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 2-1",
             "connected_region": "2-1",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -117,15 +191,24 @@
             "connected_region": "2-2",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAll",
-                      "options": [],
                       "args": {
                         "items": [
                           "5-1 Level Complete",
@@ -135,7 +218,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Green Ramp",
                         "count": 1
@@ -145,7 +227,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "2-1 Level Complete",
                     "count": 1
@@ -159,15 +240,24 @@
             "connected_region": "2-3",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAll",
-                      "options": [],
                       "args": {
                         "items": [
                           "5-1 Level Complete",
@@ -177,7 +267,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Green Ramp",
                         "count": 1
@@ -187,7 +276,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "2-2 Level Complete",
                     "count": 1
@@ -200,36 +288,84 @@
             "name": "Overworld -> 2-4",
             "connected_region": "2-4",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "2-3 Level Complete",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "2-3 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 2-5",
             "connected_region": "2-5",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "2-4 Level Complete",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "2-4 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 2-6",
             "connected_region": "2-6",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "2-5 Level Complete",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "2-5 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
@@ -237,7 +373,6 @@
             "connected_region": "3-1",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Blue Ramp",
                 "count": 1
@@ -248,146 +383,311 @@
             "name": "Overworld -> 3-2",
             "connected_region": "3-2",
             "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "3-1 Level Complete",
-                  "Blue Ramp"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "3-1 Level Complete",
+                      "Blue Ramp"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 3-3",
             "connected_region": "3-3",
             "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "3-2 Level Complete",
-                  "Blue Ramp"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "3-2 Level Complete",
+                      "Blue Ramp"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 3-4",
             "connected_region": "3-4",
             "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "3-3 Level Complete",
-                  "Blue Ramp"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "3-3 Level Complete",
+                      "Blue Ramp"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 3-5",
             "connected_region": "3-5",
             "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "3-4 Level Complete",
-                  "Blue Ramp"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "3-4 Level Complete",
+                      "Blue Ramp"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 3-6",
             "connected_region": "3-6",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "3-5 Level Complete",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "3-5 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 4-1",
             "connected_region": "4-1",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Overworld -> 4-2",
             "connected_region": "4-2",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "4-1 Level Complete",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "4-1 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 4-3",
             "connected_region": "4-3",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "4-2 Level Complete",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "4-2 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 4-4",
             "connected_region": "4-4",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "4-3 Level Complete",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "4-3 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 4-5",
             "connected_region": "4-5",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "4-4 Level Complete",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "4-4 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 4-6",
             "connected_region": "4-6",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "4-5 Level Complete",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "4-5 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 5-1",
             "connected_region": "5-1",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "True_"
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "True_"
+                }
+              }
             }
           },
           {
@@ -395,15 +695,24 @@
             "connected_region": "5-2",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAll",
-                      "options": [],
                       "args": {
                         "items": [
                           "5-1 Level Complete",
@@ -413,7 +722,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Green Ramp",
                         "count": 1
@@ -423,7 +731,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "5-1 Level Complete",
                     "count": 1
@@ -436,99 +743,211 @@
             "name": "Overworld -> 5-3",
             "connected_region": "5-3",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "5-2 Level Complete",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "5-2 Level Complete",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 5-4",
             "connected_region": "5-4",
             "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "5-1 Level Complete",
-                  "Purple Ramp",
-                  "5-3 Level Complete"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "Purple Ramp",
+                      "5-3 Level Complete"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 5-5",
             "connected_region": "5-5",
             "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "5-1 Level Complete",
-                  "Purple Ramp",
-                  "5-4 Level Complete"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "Purple Ramp",
+                      "5-4 Level Complete"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 5-6",
             "connected_region": "5-6",
             "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "5-1 Level Complete",
-                  "Purple Ramp",
-                  "5-5 Level Complete"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "Purple Ramp",
+                      "5-5 Level Complete"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 6-1",
             "connected_region": "6-1",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Pink Ramp",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Pink Ramp",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 6-2",
             "connected_region": "6-2",
             "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "5-1 Level Complete",
-                  "Purple Ramp",
-                  "6-1 Level Complete"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "Purple Ramp",
+                      "6-1 Level Complete"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 6-3",
             "connected_region": "6-3",
             "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "5-1 Level Complete",
-                  "Purple Ramp",
-                  "6-2 Level Complete"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "Purple Ramp",
+                      "6-2 Level Complete"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
@@ -536,15 +955,24 @@
             "connected_region": "6-4",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAll",
-                      "options": [],
                       "args": {
                         "items": [
                           "5-1 Level Complete",
@@ -554,7 +982,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Green Ramp",
                         "count": 1
@@ -564,7 +991,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "6-3 Level Complete",
                     "count": 1
@@ -577,34 +1003,66 @@
             "name": "Overworld -> 6-5",
             "connected_region": "6-5",
             "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "5-1 Level Complete",
-                  "Purple Ramp",
-                  "6-1 Level Complete",
-                  "Red Ramp",
-                  "6-4 Level Complete"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "Purple Ramp",
+                      "6-1 Level Complete",
+                      "Red Ramp",
+                      "6-4 Level Complete"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 6-6",
             "connected_region": "6-6",
             "access_rule": {
-              "rule": "HasAll",
-              "options": [],
-              "args": {
-                "items": [
-                  "5-1 Level Complete",
-                  "Purple Ramp",
-                  "6-1 Level Complete",
-                  "Red Ramp",
-                  "6-5 Level Complete"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "True_"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "rule": "True_"
+                    }
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "Purple Ramp",
+                      "6-1 Level Complete",
+                      "Red Ramp",
+                      "6-5 Level Complete"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
@@ -612,7 +1070,6 @@
             "connected_region": "Kevin-1",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Dark Green Ramp",
@@ -626,7 +1083,6 @@
             "connected_region": "Kevin-2",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Kevin-2",
                 "count": 1
@@ -638,7 +1094,6 @@
             "connected_region": "Kevin-3",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Kevin-3",
                 "count": 1
@@ -650,7 +1105,6 @@
             "connected_region": "Kevin-4",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Kevin-4",
                 "count": 1
@@ -662,7 +1116,6 @@
             "connected_region": "Kevin-5",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Kevin-5",
                 "count": 1
@@ -674,7 +1127,6 @@
             "connected_region": "Kevin-6",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Kevin-6",
                 "count": 1
@@ -686,7 +1138,6 @@
             "connected_region": "Kevin-7",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "5-1 Level Complete",
@@ -701,7 +1152,6 @@
             "connected_region": "Kevin-8",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "5-1 Level Complete",
@@ -723,9 +1173,7 @@
             "name": "1-1 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -734,9 +1182,7 @@
             "name": "1-1 Completed",
             "id": 1,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Dash",
@@ -750,9 +1196,7 @@
             "name": "1-1 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1-1 Level Complete",
@@ -766,9 +1210,7 @@
             "name": "1-1 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -782,9 +1224,7 @@
             "name": "1-1 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -798,9 +1238,7 @@
             "name": "1-1 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -819,9 +1257,7 @@
             "name": "1-2 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -830,9 +1266,7 @@
             "name": "1-2 Completed",
             "id": 2,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Coin Purse",
@@ -846,9 +1280,7 @@
             "name": "1-2 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1-2 Level Complete",
@@ -862,9 +1294,7 @@
             "name": "1-2 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -878,9 +1308,7 @@
             "name": "1-2 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -894,9 +1322,7 @@
             "name": "1-2 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -915,9 +1341,7 @@
             "name": "1-3 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -926,9 +1350,7 @@
             "name": "1-3 Completed",
             "id": 3,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Larger Tip Jar",
@@ -942,9 +1364,7 @@
             "name": "1-3 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1-3 Level Complete",
@@ -958,9 +1378,7 @@
             "name": "1-3 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -974,9 +1392,7 @@
             "name": "1-3 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -990,9 +1406,7 @@
             "name": "1-3 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1011,9 +1425,7 @@
             "name": "1-4 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1022,9 +1434,7 @@
             "name": "1-4 Completed",
             "id": 4,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kevin-8",
@@ -1038,9 +1448,7 @@
             "name": "1-4 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1-4 Level Complete",
@@ -1054,9 +1462,7 @@
             "name": "1-4 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1070,9 +1476,7 @@
             "name": "1-4 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1086,9 +1490,7 @@
             "name": "1-4 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1107,9 +1509,7 @@
             "name": "1-5 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1118,9 +1518,7 @@
             "name": "1-5 Completed",
             "id": 5,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Throw/Catch",
@@ -1134,9 +1532,7 @@
             "name": "1-5 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1-5 Level Complete",
@@ -1150,9 +1546,7 @@
             "name": "1-5 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1166,9 +1560,7 @@
             "name": "1-5 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1182,9 +1574,7 @@
             "name": "1-5 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1203,9 +1593,7 @@
             "name": "1-6 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1214,9 +1602,7 @@
             "name": "1-6 Completed",
             "id": 6,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Faster Condiment/Drink Switch",
@@ -1230,9 +1616,7 @@
             "name": "1-6 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1-6 Level Complete",
@@ -1246,9 +1630,7 @@
             "name": "1-6 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1262,9 +1644,7 @@
             "name": "1-6 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1278,9 +1658,7 @@
             "name": "1-6 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1299,9 +1677,7 @@
             "name": "2-1 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1310,9 +1686,7 @@
             "name": "2-1 Completed",
             "id": 7,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fire Extinguisher",
@@ -1326,9 +1700,7 @@
             "name": "2-1 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "2-1 Level Complete",
@@ -1342,9 +1714,7 @@
             "name": "2-1 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1358,9 +1728,7 @@
             "name": "2-1 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1374,9 +1742,7 @@
             "name": "2-1 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1395,9 +1761,7 @@
             "name": "2-2 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1406,9 +1770,7 @@
             "name": "2-2 Completed",
             "id": 8,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Emote Wheel",
@@ -1422,9 +1784,7 @@
             "name": "2-2 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "2-2 Level Complete",
@@ -1438,9 +1798,7 @@
             "name": "2-2 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1454,9 +1812,7 @@
             "name": "2-2 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1470,9 +1826,7 @@
             "name": "2-2 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1491,9 +1845,7 @@
             "name": "2-3 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1502,9 +1854,7 @@
             "name": "2-3 Completed",
             "id": 9,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sharp Knife",
@@ -1518,9 +1868,7 @@
             "name": "2-3 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "2-3 Level Complete",
@@ -1534,9 +1882,7 @@
             "name": "2-3 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1550,9 +1896,7 @@
             "name": "2-3 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1566,9 +1910,7 @@
             "name": "2-3 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1587,9 +1929,7 @@
             "name": "2-4 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1598,9 +1938,7 @@
             "name": "2-4 Completed",
             "id": 10,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wok Wheels",
@@ -1614,9 +1952,7 @@
             "name": "2-4 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "2-4 Level Complete",
@@ -1630,9 +1966,7 @@
             "name": "2-4 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1646,9 +1980,7 @@
             "name": "2-4 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1662,9 +1994,7 @@
             "name": "2-4 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1683,9 +2013,7 @@
             "name": "2-5 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1694,9 +2022,7 @@
             "name": "2-5 Completed",
             "id": 11,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kevin-3",
@@ -1710,9 +2036,7 @@
             "name": "2-5 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "2-5 Level Complete",
@@ -1726,9 +2050,7 @@
             "name": "2-5 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1742,9 +2064,7 @@
             "name": "2-5 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1758,9 +2078,7 @@
             "name": "2-5 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1779,9 +2097,7 @@
             "name": "2-6 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1790,9 +2106,7 @@
             "name": "2-6 Completed",
             "id": 12,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Yellow Ramp",
@@ -1806,9 +2120,7 @@
             "name": "2-6 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "2-6 Level Complete",
@@ -1822,9 +2134,7 @@
             "name": "2-6 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1838,9 +2148,7 @@
             "name": "2-6 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1854,9 +2162,7 @@
             "name": "2-6 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1875,9 +2181,7 @@
             "name": "3-1 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1886,9 +2190,7 @@
             "name": "3-1 Completed",
             "id": 13,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bonus Star",
@@ -1902,9 +2204,7 @@
             "name": "3-1 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "3-1 Level Complete",
@@ -1918,9 +2218,7 @@
             "name": "3-1 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1934,9 +2232,7 @@
             "name": "3-1 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1950,9 +2246,7 @@
             "name": "3-1 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -1971,9 +2265,7 @@
             "name": "3-2 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1982,9 +2274,7 @@
             "name": "3-2 Completed",
             "id": 14,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Throw/Catch",
@@ -1998,9 +2288,7 @@
             "name": "3-2 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "3-2 Level Complete",
@@ -2014,9 +2302,7 @@
             "name": "3-2 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2030,9 +2316,7 @@
             "name": "3-2 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2046,9 +2330,7 @@
             "name": "3-2 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2067,9 +2349,7 @@
             "name": "3-3 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2078,9 +2358,7 @@
             "name": "3-3 Completed",
             "id": 15,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dish Scrubber",
@@ -2094,9 +2372,7 @@
             "name": "3-3 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "3-3 Level Complete",
@@ -2110,9 +2386,7 @@
             "name": "3-3 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2126,9 +2400,7 @@
             "name": "3-3 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2142,9 +2414,7 @@
             "name": "3-3 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2163,9 +2433,7 @@
             "name": "3-4 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2174,9 +2442,7 @@
             "name": "3-4 Completed",
             "id": 16,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bonus Star",
@@ -2190,9 +2456,7 @@
             "name": "3-4 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "3-4 Level Complete",
@@ -2206,9 +2470,7 @@
             "name": "3-4 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2222,9 +2484,7 @@
             "name": "3-4 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2238,9 +2498,7 @@
             "name": "3-4 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2259,9 +2517,7 @@
             "name": "3-5 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2270,9 +2526,7 @@
             "name": "3-5 Completed",
             "id": 17,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kevin-7",
@@ -2286,9 +2540,7 @@
             "name": "3-5 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "3-5 Level Complete",
@@ -2302,9 +2554,7 @@
             "name": "3-5 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2318,9 +2568,7 @@
             "name": "3-5 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2334,9 +2582,7 @@
             "name": "3-5 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2355,9 +2601,7 @@
             "name": "3-6 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2366,9 +2610,7 @@
             "name": "3-6 Completed",
             "id": 18,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kevin-5",
@@ -2382,9 +2624,7 @@
             "name": "3-6 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "3-6 Level Complete",
@@ -2398,9 +2638,7 @@
             "name": "3-6 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2414,9 +2652,7 @@
             "name": "3-6 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2430,9 +2666,7 @@
             "name": "3-6 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2451,9 +2685,7 @@
             "name": "4-1 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2462,9 +2694,7 @@
             "name": "4-1 Completed",
             "id": 19,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Green Ramp",
@@ -2478,9 +2708,7 @@
             "name": "4-1 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "4-1 Level Complete",
@@ -2494,9 +2722,7 @@
             "name": "4-1 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2510,9 +2736,7 @@
             "name": "4-1 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2526,9 +2750,7 @@
             "name": "4-1 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2547,9 +2769,7 @@
             "name": "4-2 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2558,9 +2778,7 @@
             "name": "4-2 Completed",
             "id": 20,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kevin-1",
@@ -2574,9 +2792,7 @@
             "name": "4-2 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "4-2 Level Complete",
@@ -2590,9 +2806,7 @@
             "name": "4-2 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2606,9 +2820,7 @@
             "name": "4-2 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2622,9 +2834,7 @@
             "name": "4-2 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2643,9 +2853,7 @@
             "name": "4-3 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2654,9 +2862,7 @@
             "name": "4-3 Completed",
             "id": 21,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spare Plate",
@@ -2670,9 +2876,7 @@
             "name": "4-3 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "4-3 Level Complete",
@@ -2686,9 +2890,7 @@
             "name": "4-3 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2702,9 +2904,7 @@
             "name": "4-3 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2718,9 +2918,7 @@
             "name": "4-3 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2739,9 +2937,7 @@
             "name": "4-4 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2750,9 +2946,7 @@
             "name": "4-4 Completed",
             "id": 22,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Order Lookahead",
@@ -2766,9 +2960,7 @@
             "name": "4-4 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "4-4 Level Complete",
@@ -2782,9 +2974,7 @@
             "name": "4-4 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2798,9 +2988,7 @@
             "name": "4-4 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2814,9 +3002,7 @@
             "name": "4-4 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2835,9 +3021,7 @@
             "name": "4-5 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2846,9 +3030,7 @@
             "name": "4-5 Completed",
             "id": 23,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Purple Ramp",
@@ -2862,9 +3044,7 @@
             "name": "4-5 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "4-5 Level Complete",
@@ -2878,9 +3058,7 @@
             "name": "4-5 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2894,9 +3072,7 @@
             "name": "4-5 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2910,9 +3086,7 @@
             "name": "4-5 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2931,9 +3105,7 @@
             "name": "4-6 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2942,9 +3114,7 @@
             "name": "4-6 Completed",
             "id": 24,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Faster Respawn Time",
@@ -2958,9 +3128,7 @@
             "name": "4-6 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "4-6 Level Complete",
@@ -2974,9 +3142,7 @@
             "name": "4-6 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -2990,9 +3156,7 @@
             "name": "4-6 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3006,9 +3170,7 @@
             "name": "4-6 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3027,9 +3189,7 @@
             "name": "5-1 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3038,9 +3198,7 @@
             "name": "5-1 Completed",
             "id": 25,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Dark Green Ramp",
@@ -3054,9 +3212,7 @@
             "name": "5-1 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "5-1 Level Complete",
@@ -3070,9 +3226,7 @@
             "name": "5-1 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3086,9 +3240,7 @@
             "name": "5-1 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3102,9 +3254,7 @@
             "name": "5-1 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3123,9 +3273,7 @@
             "name": "5-2 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3134,9 +3282,7 @@
             "name": "5-2 Completed",
             "id": 26,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Control Stick Batteries",
@@ -3150,9 +3296,7 @@
             "name": "5-2 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "5-2 Level Complete",
@@ -3166,9 +3310,7 @@
             "name": "5-2 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3182,9 +3324,7 @@
             "name": "5-2 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3198,9 +3338,7 @@
             "name": "5-2 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3219,9 +3357,7 @@
             "name": "5-3 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3230,9 +3366,7 @@
             "name": "5-3 Completed",
             "id": 27,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Blue Ramp",
@@ -3246,9 +3380,7 @@
             "name": "5-3 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "5-3 Level Complete",
@@ -3262,9 +3394,7 @@
             "name": "5-3 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3278,9 +3408,7 @@
             "name": "5-3 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3294,9 +3422,7 @@
             "name": "5-3 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3315,9 +3441,7 @@
             "name": "5-4 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3326,9 +3450,7 @@
             "name": "5-4 Completed",
             "id": 28,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bonus Star",
@@ -3342,9 +3464,7 @@
             "name": "5-4 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "5-4 Level Complete",
@@ -3358,9 +3478,7 @@
             "name": "5-4 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3374,9 +3492,7 @@
             "name": "5-4 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3390,9 +3506,7 @@
             "name": "5-4 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3411,9 +3525,7 @@
             "name": "5-5 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3422,9 +3534,7 @@
             "name": "5-5 Completed",
             "id": 29,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Ramp",
@@ -3438,9 +3548,7 @@
             "name": "5-5 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "5-5 Level Complete",
@@ -3454,9 +3562,7 @@
             "name": "5-5 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3470,9 +3576,7 @@
             "name": "5-5 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3486,9 +3590,7 @@
             "name": "5-5 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3507,9 +3609,7 @@
             "name": "5-6 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3518,9 +3618,7 @@
             "name": "5-6 Completed",
             "id": 30,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Calmer Unbread",
@@ -3534,9 +3632,7 @@
             "name": "5-6 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "5-6 Level Complete",
@@ -3550,9 +3646,7 @@
             "name": "5-6 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3566,9 +3660,7 @@
             "name": "5-6 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3582,9 +3674,7 @@
             "name": "5-6 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3603,9 +3693,7 @@
             "name": "6-1 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3614,9 +3702,7 @@
             "name": "6-1 Completed",
             "id": 31,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kevin-2",
@@ -3630,9 +3716,7 @@
             "name": "6-1 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "6-1 Level Complete",
@@ -3646,9 +3730,7 @@
             "name": "6-1 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3662,9 +3744,7 @@
             "name": "6-1 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3678,9 +3758,7 @@
             "name": "6-1 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3699,9 +3777,7 @@
             "name": "6-2 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3710,9 +3786,7 @@
             "name": "6-2 Completed",
             "id": 32,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Burn Leniency",
@@ -3726,9 +3800,7 @@
             "name": "6-2 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "6-2 Level Complete",
@@ -3742,9 +3814,7 @@
             "name": "6-2 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3758,9 +3828,7 @@
             "name": "6-2 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3774,9 +3842,7 @@
             "name": "6-2 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3795,9 +3861,7 @@
             "name": "6-3 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3806,9 +3870,7 @@
             "name": "6-3 Completed",
             "id": 33,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Order Lookahead",
@@ -3822,9 +3884,7 @@
             "name": "6-3 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "6-3 Level Complete",
@@ -3838,9 +3898,7 @@
             "name": "6-3 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3859,9 +3917,7 @@
             "name": "6-4 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3870,9 +3926,7 @@
             "name": "6-4 Completed",
             "id": 34,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Guest Patience",
@@ -3886,9 +3940,7 @@
             "name": "6-4 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "6-4 Level Complete",
@@ -3902,9 +3954,7 @@
             "name": "6-4 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3918,9 +3968,7 @@
             "name": "6-4 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3934,9 +3982,7 @@
             "name": "6-4 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -3955,9 +4001,7 @@
             "name": "6-5 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3966,9 +4010,7 @@
             "name": "6-5 Completed",
             "id": 35,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Clean Dishes",
@@ -3982,9 +4024,7 @@
             "name": "6-5 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "6-5 Level Complete",
@@ -3998,9 +4038,7 @@
             "name": "6-5 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4014,9 +4052,7 @@
             "name": "6-5 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4030,9 +4066,7 @@
             "name": "6-5 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4051,9 +4085,7 @@
             "name": "6-6 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4062,9 +4094,7 @@
             "name": "6-6 Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Victory",
@@ -4078,9 +4108,7 @@
             "name": "6-6 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4094,9 +4122,7 @@
             "name": "6-6 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4110,9 +4136,7 @@
             "name": "6-6 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4131,9 +4155,7 @@
             "name": "Kevin-1 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4142,9 +4164,7 @@
             "name": "Kevin-1 Completed",
             "id": 37,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Pink Ramp",
@@ -4158,9 +4178,7 @@
             "name": "Kevin-1 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kevin-1 Level Complete",
@@ -4174,9 +4192,7 @@
             "name": "Kevin-1 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4190,9 +4206,7 @@
             "name": "Kevin-1 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4206,9 +4220,7 @@
             "name": "Kevin-1 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4227,9 +4239,7 @@
             "name": "Kevin-2 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4238,9 +4248,7 @@
             "name": "Kevin-2 Completed",
             "id": 38,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kevin-6",
@@ -4254,9 +4262,7 @@
             "name": "Kevin-2 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kevin-2 Level Complete",
@@ -4270,9 +4276,7 @@
             "name": "Kevin-2 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4286,9 +4290,7 @@
             "name": "Kevin-2 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4302,9 +4304,7 @@
             "name": "Kevin-2 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4323,9 +4323,7 @@
             "name": "Kevin-3 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4334,9 +4332,7 @@
             "name": "Kevin-3 Completed",
             "id": 39,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Larger Tip Jar",
@@ -4350,9 +4346,7 @@
             "name": "Kevin-3 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kevin-3 Level Complete",
@@ -4366,9 +4360,7 @@
             "name": "Kevin-3 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4382,9 +4374,7 @@
             "name": "Kevin-3 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4398,9 +4388,7 @@
             "name": "Kevin-3 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4419,9 +4407,7 @@
             "name": "Kevin-4 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4430,9 +4416,7 @@
             "name": "Kevin-4 Completed",
             "id": 40,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bonus Star",
@@ -4446,9 +4430,7 @@
             "name": "Kevin-4 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kevin-4 Level Complete",
@@ -4462,9 +4444,7 @@
             "name": "Kevin-4 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4483,9 +4463,7 @@
             "name": "Kevin-5 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4494,9 +4472,7 @@
             "name": "Kevin-5 Completed",
             "id": 41,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kevin-4",
@@ -4510,9 +4486,7 @@
             "name": "Kevin-5 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kevin-5 Level Complete",
@@ -4526,9 +4500,7 @@
             "name": "Kevin-5 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4542,9 +4514,7 @@
             "name": "Kevin-5 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4558,9 +4528,7 @@
             "name": "Kevin-5 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4579,9 +4547,7 @@
             "name": "Kevin-6 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4590,9 +4556,7 @@
             "name": "Kevin-6 Completed",
             "id": 42,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bonus Star",
@@ -4606,9 +4570,7 @@
             "name": "Kevin-6 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kevin-6 Level Complete",
@@ -4622,9 +4584,7 @@
             "name": "Kevin-6 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4638,9 +4598,7 @@
             "name": "Kevin-6 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4654,9 +4612,7 @@
             "name": "Kevin-6 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4675,9 +4631,7 @@
             "name": "Kevin-7 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4686,9 +4640,7 @@
             "name": "Kevin-7 Completed",
             "id": 43,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Dash",
@@ -4702,9 +4654,7 @@
             "name": "Kevin-7 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kevin-7 Level Complete",
@@ -4718,9 +4668,7 @@
             "name": "Kevin-7 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4734,9 +4682,7 @@
             "name": "Kevin-7 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4750,9 +4696,7 @@
             "name": "Kevin-7 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4771,9 +4715,7 @@
             "name": "Kevin-8 -> Overworld",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4782,9 +4724,7 @@
             "name": "Kevin-8 Completed",
             "id": 44,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bonus Star",
@@ -4798,9 +4738,7 @@
             "name": "Kevin-8 Level Completed",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kevin-8 Level Complete",
@@ -4814,9 +4752,7 @@
             "name": "Kevin-8 (1-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4830,9 +4766,7 @@
             "name": "Kevin-8 (2-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -4846,9 +4780,7 @@
             "name": "Kevin-8 (3-Star)",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Star",
@@ -6249,7 +6181,7 @@
         "start_location_hints": []
       },
       "ramp_tricks": false,
-      "world_directory": "overcooked2_worldgen"
+      "world_directory": "overcooked2"
     }
   },
   "game_info": {

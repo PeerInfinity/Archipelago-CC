@@ -19,9 +19,7 @@
             "name": "New Game",
             "connected_region": "Hideout",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -34,9 +32,7 @@
             "name": "Misc -> Hideout",
             "connected_region": "Hideout",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -45,9 +41,7 @@
             "name": "Tagged 5 Graffiti Spots",
             "id": 2308169,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (XL - WILD STRUXXA)",
@@ -61,9 +55,7 @@
             "name": "Tagged 10 Graffiti Spots",
             "id": 2308170,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Two Days Off)",
@@ -77,9 +69,7 @@
             "name": "Tagged 15 Graffiti Spots",
             "id": 2308171,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (XL - Gamex UPA ABL)",
@@ -93,9 +83,7 @@
             "name": "Tagged 20 Graffiti Spots",
             "id": 2308172,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Inline Skates (Strawberry Missiles)",
@@ -109,9 +97,7 @@
             "name": "Tagged 25 Graffiti Spots",
             "id": 2308173,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -125,9 +111,7 @@
             "name": "Tagged 30 Graffiti Spots",
             "id": 2308174,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (In The Pocket)",
@@ -141,9 +125,7 @@
             "name": "Tagged 35 Graffiti Spots",
             "id": 2308175,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Chromebies)",
@@ -157,9 +139,7 @@
             "name": "Tagged 40 Graffiti Spots",
             "id": 2308176,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (XL - Bomb Burner)",
@@ -173,9 +153,7 @@
             "name": "Tagged 45 Graffiti Spots",
             "id": 2308177,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (L - Campaign Trail)",
@@ -189,9 +167,7 @@
             "name": "Tagged 50 Graffiti Spots",
             "id": 2308178,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -205,9 +181,7 @@
             "name": "Tagged 55 Graffiti Spots",
             "id": 2308179,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BMX (Ceremony)",
@@ -221,9 +195,7 @@
             "name": "Tagged 60 Graffiti Spots",
             "id": 2308180,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Outfit (Mesh - Winter)",
@@ -237,9 +209,7 @@
             "name": "Tagged 65 Graffiti Spots",
             "id": 2308181,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (JACK DA FUNK)",
@@ -253,9 +223,7 @@
             "name": "Tagged 70 Graffiti Spots",
             "id": 2308182,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Outfit (Solace - Autumn)",
@@ -269,9 +237,7 @@
             "name": "Tagged 75 Graffiti Spots",
             "id": 2308183,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -285,9 +251,7 @@
             "name": "Tagged 80 Graffiti Spots",
             "id": 2308184,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (XL - Raver Funk)",
@@ -301,9 +265,7 @@
             "name": "Tagged 85 Graffiti Spots",
             "id": 2308185,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Bounce Upon A Time)",
@@ -317,9 +279,7 @@
             "name": "Tagged 90 Graffiti Spots",
             "id": 2308186,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Shine",
@@ -333,9 +293,7 @@
             "name": "Tagged 95 Graffiti Spots",
             "id": 2308187,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -349,9 +307,7 @@
             "name": "Tagged 100 Graffiti Spots",
             "id": 2308188,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Condensed milk)",
@@ -365,9 +321,7 @@
             "name": "Tagged 105 Graffiti Spots",
             "id": 2308189,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Inline Skates (Mech Adversary)",
@@ -381,9 +335,7 @@
             "name": "Tagged 110 Graffiti Spots",
             "id": 2308190,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -397,9 +349,7 @@
             "name": "Tagged 115 Graffiti Spots",
             "id": 2308191,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (L - FREAKS)",
@@ -413,9 +363,7 @@
             "name": "Tagged 120 Graffiti Spots",
             "id": 2308192,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -429,9 +377,7 @@
             "name": "Tagged 125 Graffiti Spots",
             "id": 2308193,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "32 REP",
@@ -445,9 +391,7 @@
             "name": "Tagged 130 Graffiti Spots",
             "id": 2308194,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rise",
@@ -461,9 +405,7 @@
             "name": "Tagged 135 Graffiti Spots",
             "id": 2308195,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (M - B-boy Love)",
@@ -477,9 +419,7 @@
             "name": "Tagged 140 Graffiti Spots",
             "id": 2308196,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BMX (Gum)",
@@ -493,9 +433,7 @@
             "name": "Tagged 145 Graffiti Spots",
             "id": 2308197,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (House Cats Mixtape)",
@@ -509,9 +447,7 @@
             "name": "Tagged 150 Graffiti Spots",
             "id": 2308198,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "24 REP",
@@ -525,9 +461,7 @@
             "name": "Tagged 155 Graffiti Spots",
             "id": 2308199,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -541,9 +475,7 @@
             "name": "Tagged 160 Graffiti Spots",
             "id": 2308200,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Sunshine Popping Mixtape)",
@@ -557,9 +489,7 @@
             "name": "Tagged 165 Graffiti Spots",
             "id": 2308201,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Flesh Prince",
@@ -573,9 +503,7 @@
             "name": "Tagged 170 Graffiti Spots",
             "id": 2308202,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Frank",
@@ -589,9 +517,7 @@
             "name": "Tagged 175 Graffiti Spots",
             "id": 2308203,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (L - Graffo Le Fou)",
@@ -605,9 +531,7 @@
             "name": "Tagged 180 Graffiti Spots",
             "id": 2308204,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BMX (oyo)",
@@ -621,9 +545,7 @@
             "name": "Tagged 185 Graffiti Spots",
             "id": 2308205,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -637,9 +559,7 @@
             "name": "Tagged 190 Graffiti Spots",
             "id": 2308206,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Outfit (Coil - Autumn)",
@@ -653,9 +573,7 @@
             "name": "Tagged 195 Graffiti Spots",
             "id": 2308207,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -669,9 +587,7 @@
             "name": "Tagged 200 Graffiti Spots",
             "id": 2308208,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Scraped On The Way Out)",
@@ -685,9 +601,7 @@
             "name": "Tagged 205 Graffiti Spots",
             "id": 2308209,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -701,9 +615,7 @@
             "name": "Tagged 210 Graffiti Spots",
             "id": 2308210,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Skateboard (Sylk)",
@@ -717,9 +629,7 @@
             "name": "Tagged 215 Graffiti Spots",
             "id": 2308211,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -733,9 +643,7 @@
             "name": "Tagged 220 Graffiti Spots",
             "id": 2308212,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "32 REP",
@@ -749,9 +657,7 @@
             "name": "Tagged 225 Graffiti Spots",
             "id": 2308213,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (L - Fang It Up!)",
@@ -765,9 +671,7 @@
             "name": "Tagged 230 Graffiti Spots",
             "id": 2308214,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -781,9 +685,7 @@
             "name": "Tagged 235 Graffiti Spots",
             "id": 2308215,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (L - Tius)",
@@ -797,9 +699,7 @@
             "name": "Tagged 240 Graffiti Spots",
             "id": 2308216,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -813,9 +713,7 @@
             "name": "Tagged 245 Graffiti Spots",
             "id": 2308217,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Outfit (Tryce - Autumn)",
@@ -829,9 +727,7 @@
             "name": "Tagged 250 Graffiti Spots",
             "id": 2308218,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Precious Thing)",
@@ -845,9 +741,7 @@
             "name": "Tagged 255 Graffiti Spots",
             "id": 2308219,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BMX (XXX)",
@@ -861,9 +755,7 @@
             "name": "Tagged 260 Graffiti Spots",
             "id": 2308220,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Coil",
@@ -877,9 +769,7 @@
             "name": "Tagged 265 Graffiti Spots",
             "id": 2308221,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Outfit (Bel - Autumn)",
@@ -893,9 +783,7 @@
             "name": "Tagged 270 Graffiti Spots",
             "id": 2308222,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "24 REP",
@@ -909,9 +797,7 @@
             "name": "Tagged 275 Graffiti Spots",
             "id": 2308223,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -925,9 +811,7 @@
             "name": "Tagged 280 Graffiti Spots",
             "id": 2308224,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "24 REP",
@@ -941,9 +825,7 @@
             "name": "Tagged 285 Graffiti Spots",
             "id": 2308225,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -957,9 +839,7 @@
             "name": "Tagged 290 Graffiti Spots",
             "id": 2308226,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -973,9 +853,7 @@
             "name": "Tagged 295 Graffiti Spots",
             "id": 2308227,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Breaking Machine Mixtape)",
@@ -989,9 +867,7 @@
             "name": "Tagged 300 Graffiti Spots",
             "id": 2308228,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "32 REP",
@@ -1005,9 +881,7 @@
             "name": "Tagged 305 Graffiti Spots",
             "id": 2308229,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "24 REP",
@@ -1021,9 +895,7 @@
             "name": "Tagged 310 Graffiti Spots",
             "id": 2308230,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -1037,9 +909,7 @@
             "name": "Tagged 315 Graffiti Spots",
             "id": 2308231,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (M - TeleBinge)",
@@ -1053,9 +923,7 @@
             "name": "Tagged 320 Graffiti Spots",
             "id": 2308232,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -1069,9 +937,7 @@
             "name": "Tagged 325 Graffiti Spots",
             "id": 2308233,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (M - Devil 68)",
@@ -1085,9 +951,7 @@
             "name": "Tagged 330 Graffiti Spots",
             "id": 2308234,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (L - WHOLE SIXER)",
@@ -1101,9 +965,7 @@
             "name": "Tagged 335 Graffiti Spots",
             "id": 2308235,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (M - BOMB BEATS)",
@@ -1117,9 +979,7 @@
             "name": "Tagged 340 Graffiti Spots",
             "id": 2308236,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Iridium)",
@@ -1133,9 +993,7 @@
             "name": "Tagged 345 Graffiti Spots",
             "id": 2308237,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Outfit (Coil - Winter)",
@@ -1149,9 +1007,7 @@
             "name": "Tagged 350 Graffiti Spots",
             "id": 2308238,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -1165,9 +1021,7 @@
             "name": "Tagged 355 Graffiti Spots",
             "id": 2308239,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -1181,9 +1035,7 @@
             "name": "Tagged 360 Graffiti Spots",
             "id": 2308240,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Spectres)",
@@ -1197,9 +1049,7 @@
             "name": "Tagged 365 Graffiti Spots",
             "id": 2308241,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (XL - Bomb Croc)",
@@ -1213,9 +1063,7 @@
             "name": "Tagged 370 Graffiti Spots",
             "id": 2308242,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Chuckin Up)",
@@ -1229,9 +1077,7 @@
             "name": "Tagged 375 Graffiti Spots",
             "id": 2308243,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -1245,9 +1091,7 @@
             "name": "Tagged 380 Graffiti Spots",
             "id": 2308244,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -1261,9 +1105,7 @@
             "name": "Tagged 385 Graffiti Spots",
             "id": 2308245,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -1277,9 +1119,7 @@
             "name": "Tagged 389 Graffiti Spots",
             "id": 2308246,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Operator)",
@@ -1298,36 +1138,31 @@
             "name": "Hideout -> Misc",
             "connected_region": "Misc",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Hideout -> Versum Hill",
             "connected_region": "Versum Hill",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "versum_hill_entrance",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Hideout -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_square_entrance",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Hideout -> Mataan - Streets",
             "connected_region": "Mataan - Streets",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "mataan_entrance",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -1336,9 +1171,7 @@
             "name": "Hideout: Half pipe CD",
             "id": 2308000,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (XL - headphones on Helmet on)",
@@ -1352,9 +1185,7 @@
             "name": "Hideout: Garage tower CD",
             "id": 2308001,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (M - Vom'B)",
@@ -1368,9 +1199,7 @@
             "name": "Hideout: Rooftop CD",
             "id": 2308002,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (M - colorBOMB)",
@@ -1384,9 +1213,7 @@
             "name": "Hideout: Under staircase graffiti",
             "id": 2308003,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Futurism",
@@ -1400,9 +1227,7 @@
             "name": "Hideout: Secret area graffiti",
             "id": 2308004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (XL - Bombing by FireMan)",
@@ -1416,9 +1241,7 @@
             "name": "Hideout: Rear studio graffiti",
             "id": 2308005,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Refuse)",
@@ -1432,9 +1255,7 @@
             "name": "Hideout: Corner ledge graffiti",
             "id": 2308006,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (L - Moai Marathon)",
@@ -1448,9 +1269,7 @@
             "name": "Hideout: Upper platform skateboard",
             "id": 2308007,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -1464,9 +1283,11 @@
             "name": "Hideout: BMX garage skateboard",
             "id": 2308008,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "bmx",
+              "_original_ast_type": "helper",
+              "args": [
+                2
+              ]
             },
             "item": {
               "name": "Skateboard (Terrence)",
@@ -1480,9 +1301,11 @@
             "name": "Hideout: Unlock phone app",
             "id": 2308009,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "current_chapter",
+              "_original_ast_type": "helper",
+              "args": [
+                2
+              ]
             },
             "item": {
               "name": "Inline Skates (Glaciers)",
@@ -1496,9 +1319,11 @@
             "name": "Hideout: Vinyl joins the crew",
             "id": 2308010,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "current_chapter",
+              "_original_ast_type": "helper",
+              "args": [
+                4
+              ]
             },
             "item": {
               "name": "Inline Skates (Red Industry)",
@@ -1512,9 +1337,11 @@
             "name": "Hideout: Solace joins the crew",
             "id": 2308011,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "current_chapter",
+              "_original_ast_type": "helper",
+              "args": [
+                5
+              ]
             },
             "item": {
               "name": "16 REP",
@@ -1533,18 +1360,18 @@
             "name": "Versum Hill -> Hideout",
             "connected_region": "Hideout",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Versum Hill -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "versum_hill_ch1_roadblock",
+              "_original_ast_type": "helper",
+              "args": [
+                0
+              ]
             }
           }
         ],
@@ -1553,9 +1380,7 @@
             "name": "Versum Hill: Main street Robo Post graffiti",
             "id": 2308012,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (M - Zona Leste)",
@@ -1569,9 +1394,7 @@
             "name": "Versum Hill: Behind glass graffiti",
             "id": 2308013,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (M - OVERWHELMME)",
@@ -1585,9 +1408,7 @@
             "name": "Versum Hill: Office room graffiti",
             "id": 2308014,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "24 REP",
@@ -1601,9 +1422,11 @@
             "name": "Versum Hill: BMX gate outfit",
             "id": 2308031,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "bmx",
+              "_original_ast_type": "helper",
+              "args": [
+                2
+              ]
             },
             "item": {
               "name": "24 REP",
@@ -1617,9 +1440,8 @@
             "name": "Versum Hill: Big Polo",
             "id": 2308037,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "camera",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Music (You Can Say Hi)",
@@ -1633,9 +1455,8 @@
             "name": "Versum Hill: Trash Polo",
             "id": 2308038,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "camera",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Bel",
@@ -1654,54 +1475,47 @@
             "name": "Versum Hill - After Roadblock -> Hideout",
             "connected_region": "Hideout",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Versum Hill - After Roadblock -> Versum Hill",
             "connected_region": "Versum Hill",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "versum_hill_entrance",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Versum Hill - After Roadblock -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_square_entrance",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Versum Hill - After Roadblock -> Versum Hill - Underground Mall",
             "connected_region": "Versum Hill - Underground Mall",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "versum_hill_oldhead",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Versum Hill - After Roadblock -> Versum Hill - Side Street",
             "connected_region": "Versum Hill - Side Street",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "versum_hill_all_challenges",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Versum Hill - After Roadblock -> Versum Hill - Basketball Court",
             "connected_region": "Versum Hill - Basketball Court",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "versum_hill_basketball_court",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -1710,9 +1524,7 @@
             "name": "Versum Hill: Under bridge graffiti",
             "id": 2308015,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -1726,9 +1538,7 @@
             "name": "Versum Hill: Train rail ledge skateboard",
             "id": 2308016,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Skateboard (Taiga)",
@@ -1742,9 +1552,7 @@
             "name": "Versum Hill: Train station CD",
             "id": 2308017,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -1758,9 +1566,7 @@
             "name": "Versum Hill: Billboard platform outfit",
             "id": 2308018,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -1774,9 +1580,7 @@
             "name": "Versum Hill: Hilltop Robo Post CD",
             "id": 2308019,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rietveld",
@@ -1790,9 +1594,7 @@
             "name": "Versum Hill: Hill secret skateboard",
             "id": 2308020,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Outfit (Red - Autumn)",
@@ -1806,9 +1608,7 @@
             "name": "Versum Hill: Rooftop CD",
             "id": 2308021,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Inline Skates (Orange Blasters)",
@@ -1822,9 +1622,8 @@
             "name": "Versum Hill: Wallrunning challenge reward",
             "id": 2308022,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "versum_hill_challenge1",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Solace",
@@ -1838,9 +1637,8 @@
             "name": "Versum Hill: Manual challenge reward",
             "id": 2308023,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "versum_hill_challenge2",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Graffiti (L - INFINITY)",
@@ -1854,9 +1652,8 @@
             "name": "Versum Hill: Corner challenge reward",
             "id": 2308024,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "versum_hill_challenge3",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "8 REP",
@@ -1870,9 +1667,11 @@
             "name": "Versum Hill: Glass floor skates",
             "id": 2308032,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "inline_skates",
+              "_original_ast_type": "helper",
+              "args": [
+                2
+              ]
             },
             "item": {
               "name": "8 REP",
@@ -1886,9 +1685,11 @@
             "name": "Versum Hill: Frank joins the crew",
             "id": 2308035,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "current_chapter",
+              "_original_ast_type": "helper",
+              "args": [
+                2
+              ]
             },
             "item": {
               "name": "24 REP",
@@ -1907,9 +1708,11 @@
             "name": "Versum Hill - Underground Mall -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "versum_hill_ch1_roadblock",
+              "_original_ast_type": "helper",
+              "args": [
+                0
+              ]
             }
           }
         ],
@@ -1918,9 +1721,7 @@
             "name": "Versum Hill: Underground mall billboard graffiti",
             "id": 2308029,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Outfit (Shine - Autumn)",
@@ -1934,9 +1735,7 @@
             "name": "Versum Hill: Underground mall vending machine skateboard",
             "id": 2308030,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Skateboard (Death Boogie)",
@@ -1950,9 +1749,12 @@
             "name": "Versum Hill: Rave joins the crew",
             "id": 2308034,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "versum_hill_rave",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             },
             "item": {
               "name": "Music (Anime Break)",
@@ -1966,9 +1768,8 @@
             "name": "Versum Hill: Fruit stand Polo",
             "id": 2308039,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "camera",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Music (GET ENUF)",
@@ -1987,9 +1788,11 @@
             "name": "Versum Hill - Side Street -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "versum_hill_ch1_roadblock",
+              "_original_ast_type": "helper",
+              "args": [
+                0
+              ]
             }
           }
         ],
@@ -1998,9 +1801,7 @@
             "name": "Versum Hill: Side street alley outfit",
             "id": 2308025,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (L - NOISY NINJA)",
@@ -2014,9 +1815,7 @@
             "name": "Versum Hill: Side street secret skateboard",
             "id": 2308026,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Big City Life)",
@@ -2035,18 +1834,19 @@
             "name": "Versum Hill - Basketball Court -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "versum_hill_ch1_roadblock",
+              "_original_ast_type": "helper",
+              "args": [
+                0
+              ]
             }
           },
           {
             "name": "Versum Hill - Basketball Court -> Versum Hill",
             "connected_region": "Versum Hill",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "versum_hill_entrance",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2055,9 +1855,7 @@
             "name": "Versum Hill: Basketball court alley skateboard",
             "id": 2308027,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (L - wild rush)",
@@ -2071,9 +1869,7 @@
             "name": "Versum Hill: Basketball court Robo Post CD",
             "id": 2308028,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -2087,9 +1883,11 @@
             "name": "Versum Hill: Basketball court shortcut CD",
             "id": 2308033,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "current_chapter",
+              "_original_ast_type": "helper",
+              "args": [
+                2
+              ]
             },
             "item": {
               "name": "Graffiti (M - Stacked Symbols)",
@@ -2103,9 +1901,12 @@
             "name": "Versum Hill: Rietveld joins the crew",
             "id": 2308036,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "versum_hill_rietveld",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             },
             "item": {
               "name": "Music (Plume)",
@@ -2119,9 +1920,12 @@
             "name": "Versum Hill: Complete Chapter 1",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "versum_hill_crew_battle",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             },
             "item": {
               "name": "Chapter Completed",
@@ -2141,45 +1945,43 @@
             "name": "Millennium Square -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "versum_hill_ch1_roadblock",
+              "_original_ast_type": "helper",
+              "args": [
+                0
+              ]
             }
           },
           {
             "name": "Millennium Square -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "brink_terminal_entrance",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Millennium Square -> Millennium Mall",
             "connected_region": "Millennium Mall",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_mall_entrance",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Millennium Square -> Pyramid Island - Base",
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "pyramid_island_entrance",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Millennium Square -> Mataan - Streets",
             "connected_region": "Mataan - Streets",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "mataan_entrance",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2188,9 +1990,7 @@
             "name": "Millennium Square: Center ramp graffiti",
             "id": 2308040,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "24 REP",
@@ -2204,9 +2004,7 @@
             "name": "Millennium Square: Rooftop staircase graffiti",
             "id": 2308041,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -2220,9 +2018,7 @@
             "name": "Millennium Square: Toilet graffiti",
             "id": 2308042,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "DOT.EXE",
@@ -2236,9 +2032,7 @@
             "name": "Millennium Square: Trash graffiti",
             "id": 2308043,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -2252,9 +2046,7 @@
             "name": "Millennium Square: Center tower graffiti",
             "id": 2308044,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -2268,9 +2060,7 @@
             "name": "Millennium Square: Rooftop billboard graffiti",
             "id": 2308045,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -2284,9 +2074,7 @@
             "name": "Millennium Square: Center Robo Post CD",
             "id": 2308046,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (L - Messenger Mural)",
@@ -2300,9 +2088,7 @@
             "name": "Millennium Square: Parking garage Robo Post CD",
             "id": 2308047,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Next To Me)",
@@ -2316,9 +2102,7 @@
             "name": "Millennium Square: Mall ledge outfit",
             "id": 2308048,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "32 REP",
@@ -2332,9 +2116,7 @@
             "name": "Millennium Square: Alley rooftop outfit",
             "id": 2308049,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (M - pico pow)",
@@ -2348,9 +2130,7 @@
             "name": "Millennium Square: Alley staircase skateboard",
             "id": 2308050,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -2364,9 +2144,7 @@
             "name": "Millennium Square: Secret painting skates",
             "id": 2308051,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "48 REP",
@@ -2380,9 +2158,7 @@
             "name": "Millennium Square: Vending machine skates",
             "id": 2308052,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (XL - Deep Dive)",
@@ -2396,9 +2172,7 @@
             "name": "Millennium Square: Walkway roof skates",
             "id": 2308053,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (AGUA)",
@@ -2412,9 +2186,7 @@
             "name": "Millennium Square: Alley ledge skates",
             "id": 2308054,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (M - QUICK BING)",
@@ -2428,9 +2200,7 @@
             "name": "Millennium Square: DJ Cyber joins the crew",
             "id": 2308055,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (M - BLOCKY)",
@@ -2444,9 +2214,8 @@
             "name": "Millennium Square: Half pipe Polo",
             "id": 2308056,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "camera",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Outfit (Red - Winter)",
@@ -2465,36 +2234,32 @@
             "name": "Brink Terminal -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_square_entrance",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Brink Terminal -> Brink Terminal - Underground",
             "connected_region": "Brink Terminal - Underground",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "brink_terminal_oldhead_underground",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Brink Terminal -> Brink Terminal - Dock",
             "connected_region": "Brink Terminal - Dock",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "brink_terminal_oldhead_dock",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Brink Terminal -> Brink Terminal - Planet Plaza",
             "connected_region": "Brink Terminal - Planet Plaza",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "brink_terminal_plaza",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2503,9 +2268,8 @@
             "name": "Brink Terminal: Upside grind challenge reward",
             "id": 2308057,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "brink_terminal_challenge1",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Music (Light Switch)",
@@ -2519,9 +2283,8 @@
             "name": "Brink Terminal: Manual challenge reward",
             "id": 2308058,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "brink_terminal_challenge2",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "16 REP",
@@ -2535,9 +2298,8 @@
             "name": "Brink Terminal: Score challenge reward",
             "id": 2308059,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "brink_terminal_challenge3",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Graffiti (L - RECORD.HEAD)",
@@ -2551,9 +2313,7 @@
             "name": "Brink Terminal: Under square ledge graffiti",
             "id": 2308060,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -2567,9 +2327,7 @@
             "name": "Brink Terminal: Bus graffiti",
             "id": 2308061,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Skateboard (Lazer Accuracy)",
@@ -2583,9 +2341,7 @@
             "name": "Brink Terminal: Under square Robo Post graffiti",
             "id": 2308062,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -2599,9 +2355,11 @@
             "name": "Brink Terminal: BMX gate graffiti",
             "id": 2308063,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "bmx",
+              "_original_ast_type": "helper",
+              "args": [
+                2
+              ]
             },
             "item": {
               "name": "Skateboard (Devon)",
@@ -2615,9 +2373,7 @@
             "name": "Brink Terminal: Square tower CD",
             "id": 2308064,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "48 REP",
@@ -2631,9 +2387,7 @@
             "name": "Brink Terminal: Trash CD",
             "id": 2308065,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -2647,9 +2401,7 @@
             "name": "Brink Terminal: Shop roof outfit",
             "id": 2308066,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Beastmode Hip Hop Mixtape)",
@@ -2663,9 +2415,7 @@
             "name": "Brink Terminal: Glass roof skates",
             "id": 2308068,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Outfit (Shine - Winter)",
@@ -2679,9 +2429,11 @@
             "name": "Brink Terminal: Eclipse joins the crew",
             "id": 2308081,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "current_chapter",
+              "_original_ast_type": "helper",
+              "args": [
+                3
+              ]
             },
             "item": {
               "name": "Skateboard (Just Swell)",
@@ -2695,9 +2447,8 @@
             "name": "Brink Terminal: Behind glass Polo",
             "id": 2308082,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "camera",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Graffiti (M - Pora)",
@@ -2716,9 +2467,8 @@
             "name": "Brink Terminal - Underground -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "brink_terminal_entrance",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2727,9 +2477,7 @@
             "name": "Brink Terminal: Underground glass skates",
             "id": 2308067,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (XL - end 2 end)",
@@ -2743,9 +2491,7 @@
             "name": "Brink Terminal: Underground ramp skates",
             "id": 2308070,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -2764,9 +2510,8 @@
             "name": "Brink Terminal - Dock -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "brink_terminal_entrance",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2775,9 +2520,12 @@
             "name": "Brink Terminal: Mesh's skateboard",
             "id": 2308069,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "brink_terminal_mesh",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             },
             "item": {
               "name": "Mesh",
@@ -2791,9 +2539,7 @@
             "name": "Brink Terminal: Ocean platform CD",
             "id": 2308076,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -2807,9 +2553,7 @@
             "name": "Brink Terminal: End of dock CD",
             "id": 2308077,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (hwbouths)",
@@ -2823,9 +2567,7 @@
             "name": "Brink Terminal: Dock Robo Post outfit",
             "id": 2308078,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -2839,9 +2581,7 @@
             "name": "Brink Terminal: Control room skates",
             "id": 2308079,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -2855,9 +2595,12 @@
             "name": "Brink Terminal: Mesh joins the crew",
             "id": 2308080,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "brink_terminal_mesh",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             },
             "item": {
               "name": "24 REP",
@@ -2876,18 +2619,16 @@
             "name": "Brink Terminal - Planet Plaza -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "brink_terminal_entrance",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Brink Terminal - Planet Plaza -> Brink Terminal - Tower",
             "connected_region": "Brink Terminal - Tower",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "brink_terminal_tower",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2896,9 +2637,7 @@
             "name": "Brink Terminal: Wire grind CD",
             "id": 2308072,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Skateboard (Mantra)",
@@ -2917,18 +2656,16 @@
             "name": "Brink Terminal - Tower -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "brink_terminal_entrance",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Brink Terminal - Tower -> Brink Terminal - Planet Plaza",
             "connected_region": "Brink Terminal - Planet Plaza",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "brink_terminal_plaza",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2937,9 +2674,7 @@
             "name": "Brink Terminal: Rooftop halfpipe graffiti",
             "id": 2308071,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -2953,9 +2688,11 @@
             "name": "Brink Terminal: Rooftop glass CD",
             "id": 2308073,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "inline_skates",
+              "_original_ast_type": "helper",
+              "args": [
+                2
+              ]
             },
             "item": {
               "name": "8 REP",
@@ -2969,9 +2706,7 @@
             "name": "Brink Terminal: Tower core outfit",
             "id": 2308074,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (XL - SECOND SIGHT)",
@@ -2985,9 +2720,7 @@
             "name": "Brink Terminal: High rooftop outfit",
             "id": 2308075,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -3001,9 +2734,12 @@
             "name": "Brink Terminal: Complete Chapter 2",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "brink_terminal_crew_battle",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             },
             "item": {
               "name": "Chapter Completed",
@@ -3023,27 +2759,31 @@
             "name": "Millennium Mall -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_square_entrance",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Millennium Mall -> Millennium Mall - Hanging Lights",
             "connected_region": "Millennium Mall - Hanging Lights",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_mall_oldhead_ceiling",
+              "_original_ast_type": "helper",
+              "args": [
+                0
+              ]
             }
           },
           {
             "name": "Millennium Mall -> Millennium Mall - Atrium",
             "connected_region": "Millennium Mall - Atrium",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_mall_big",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             }
           }
         ],
@@ -3052,9 +2792,7 @@
             "name": "Millennium Mall: Warehouse pallet graffiti",
             "id": 2308083,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (XL - MegaHood)",
@@ -3068,9 +2806,7 @@
             "name": "Millennium Mall: Wall alcove graffiti",
             "id": 2308084,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Morning Glow)",
@@ -3084,9 +2820,7 @@
             "name": "Millennium Mall: Maintenance shaft CD",
             "id": 2308085,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Inline Skates (Sweet Royale)",
@@ -3100,9 +2834,11 @@
             "name": "Millennium Mall: Glass cylinder CD",
             "id": 2308086,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "inline_skates",
+              "_original_ast_type": "helper",
+              "args": [
+                2
+              ]
             },
             "item": {
               "name": "Vinyl",
@@ -3116,9 +2852,7 @@
             "name": "Millennium Mall: Lower Robo Post outfit",
             "id": 2308087,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Outfit (Vinyl - Winter)",
@@ -3137,9 +2871,8 @@
             "name": "Millennium Mall - Hanging Lights -> Millennium Mall",
             "connected_region": "Millennium Mall",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_mall_entrance",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -3148,9 +2881,7 @@
             "name": "Millennium Mall: Hanging lights CD",
             "id": 2308104,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Outfit (Mesh - Autumn)",
@@ -3169,27 +2900,27 @@
             "name": "Millennium Mall - Atrium -> Millennium Mall",
             "connected_region": "Millennium Mall",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_mall_entrance",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Millennium Mall - Atrium -> Millennium Mall - Race Track",
             "connected_region": "Millennium Mall - Race Track",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_mall_oldhead_race",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Millennium Mall - Atrium -> Millennium Mall - Theater",
             "connected_region": "Millennium Mall - Theater",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_mall_theater",
+              "_original_ast_type": "helper",
+              "args": [
+                0
+              ]
             }
           }
         ],
@@ -3198,9 +2929,7 @@
             "name": "Millennium Mall: Atrium vending machine graffiti",
             "id": 2308088,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BMX (Mr. Taupe)",
@@ -3214,9 +2943,8 @@
             "name": "Millennium Mall: Trick challenge reward",
             "id": 2308089,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_mall_challenge1",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Graffiti (XL - FATE)",
@@ -3230,9 +2958,8 @@
             "name": "Millennium Mall: Slide challenge reward",
             "id": 2308090,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_mall_challenge2",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "24 REP",
@@ -3246,9 +2973,8 @@
             "name": "Millennium Mall: Fish challenge reward",
             "id": 2308091,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_mall_challenge3",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "8 REP",
@@ -3262,9 +2988,8 @@
             "name": "Millennium Mall: Score challenge reward",
             "id": 2308092,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_mall_challenge4",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Inline Skates (Sharpshooters)",
@@ -3278,9 +3003,7 @@
             "name": "Millennium Mall: Atrium top floor Robo Post CD",
             "id": 2308093,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Outfit (Bel - Winter)",
@@ -3294,9 +3017,7 @@
             "name": "Millennium Mall: Atrium top floor floating CD",
             "id": 2308094,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (L - Boom)",
@@ -3310,9 +3031,7 @@
             "name": "Millennium Mall: Atrium top floor BMX",
             "id": 2308095,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BMX (Terrazza)",
@@ -3326,9 +3045,7 @@
             "name": "Millennium Mall: Theater entrance BMX",
             "id": 2308096,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Last Hoorah)",
@@ -3342,9 +3059,11 @@
             "name": "Millennium Mall: Atrium BMX gate BMX",
             "id": 2308097,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "bmx",
+              "_original_ast_type": "helper",
+              "args": [
+                2
+              ]
             },
             "item": {
               "name": "Tryce",
@@ -3358,9 +3077,7 @@
             "name": "Millennium Mall: Upside down rail outfit",
             "id": 2308098,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Inline Skates (ck)",
@@ -3374,9 +3091,11 @@
             "name": "Millennium Mall: DOT.EXE joins the crew",
             "id": 2308106,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "current_chapter",
+              "_original_ast_type": "helper",
+              "args": [
+                4
+              ]
             },
             "item": {
               "name": "Graffiti (L - Jd Vila Formosa)",
@@ -3395,9 +3114,12 @@
             "name": "Millennium Mall - Race Track -> Millennium Mall - Atrium",
             "connected_region": "Millennium Mall - Atrium",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_mall_big",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             }
           }
         ],
@@ -3406,9 +3128,7 @@
             "name": "Millennium Mall: Race track Robo Post CD",
             "id": 2308103,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -3427,18 +3147,20 @@
             "name": "Millennium Mall - Theater -> Millennium Mall - Atrium",
             "connected_region": "Millennium Mall - Atrium",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_mall_big",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             }
           },
           {
             "name": "Millennium Mall - Theater -> Millennium Mall",
             "connected_region": "Millennium Mall",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_mall_entrance",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -3447,9 +3169,7 @@
             "name": "Millennium Mall: Theater stage corner graffiti",
             "id": 2308099,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (M - SHOGUN)",
@@ -3463,9 +3183,7 @@
             "name": "Millennium Mall: Theater hanging billboards graffiti",
             "id": 2308100,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (M - Street classic)",
@@ -3479,9 +3197,7 @@
             "name": "Millennium Mall: Theater garage graffiti",
             "id": 2308101,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Eclipse",
@@ -3495,9 +3211,7 @@
             "name": "Millennium Mall: Theater maintenance CD",
             "id": 2308102,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rave",
@@ -3511,9 +3225,11 @@
             "name": "Millennium Mall: Shine joins the crew",
             "id": 2308105,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "current_chapter",
+              "_original_ast_type": "helper",
+              "args": [
+                4
+              ]
             },
             "item": {
               "name": "Oldhead",
@@ -3527,9 +3243,12 @@
             "name": "Millennium Mall: Complete Chapter 3",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_mall_crew_battle",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             },
             "item": {
               "name": "Chapter Completed",
@@ -3549,18 +3268,16 @@
             "name": "Pyramid Island - Base -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_square_entrance",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Pyramid Island - Base -> Pyramid Island - After Gate",
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "pyramid_island_gate",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -3569,9 +3286,7 @@
             "name": "Pyramid Island: Lower rooftop graffiti",
             "id": 2308107,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Outfit (Felix - Autumn)",
@@ -3585,9 +3300,7 @@
             "name": "Pyramid Island: Polo graffiti",
             "id": 2308108,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Inline Skates (Ice Cold Killers)",
@@ -3601,9 +3314,7 @@
             "name": "Pyramid Island: Above entrance graffiti",
             "id": 2308109,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -3617,9 +3328,11 @@
             "name": "Pyramid Island: BMX gate BMX",
             "id": 2308110,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "bmx",
+              "_original_ast_type": "helper",
+              "args": [
+                2
+              ]
             },
             "item": {
               "name": "Outfit (Rise - Autumn)",
@@ -3633,9 +3346,8 @@
             "name": "Pyramid Island: Polo pile 1",
             "id": 2308131,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "camera",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Graffiti (M - 0m33)",
@@ -3649,9 +3361,8 @@
             "name": "Pyramid Island: Polo pile 2",
             "id": 2308132,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "camera",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Music (DA PEOPLE)",
@@ -3665,9 +3376,8 @@
             "name": "Pyramid Island: Polo pile 3",
             "id": 2308133,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "camera",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Devil Theory",
@@ -3681,9 +3391,8 @@
             "name": "Pyramid Island: Polo pile 4",
             "id": 2308134,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "camera",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Outfit (Solace - Winter)",
@@ -3702,27 +3411,28 @@
             "name": "Pyramid Island - After Gate -> Pyramid Island - Base",
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "pyramid_island_entrance",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Pyramid Island - After Gate -> Pyramid Island - Maze",
             "connected_region": "Pyramid Island - Maze",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "pyramid_island_oldhead",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Pyramid Island - After Gate -> Pyramid Island - Upper Areas",
             "connected_region": "Pyramid Island - Upper Areas",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "pyramid_island_upper_half",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             }
           }
         ],
@@ -3731,9 +3441,7 @@
             "name": "Pyramid Island: Quarter pipe rooftop graffiti",
             "id": 2308111,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "24 REP",
@@ -3747,9 +3455,7 @@
             "name": "Pyramid Island: Supply port Robo Post CD",
             "id": 2308112,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (XL - BiGSHiNYBoMB)",
@@ -3763,9 +3469,7 @@
             "name": "Pyramid Island: Above gate ledge CD",
             "id": 2308113,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Skateboard (Maceo)",
@@ -3779,9 +3483,7 @@
             "name": "Pyramid Island: Smoke hole BMX",
             "id": 2308114,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "32 REP",
@@ -3795,9 +3497,7 @@
             "name": "Pyramid Island: Above gate rail outfit",
             "id": 2308115,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -3811,9 +3511,7 @@
             "name": "Pyramid Island: Rail loop outfit",
             "id": 2308116,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (XL - MOTORCYCLE GANG)",
@@ -3827,9 +3525,8 @@
             "name": "Pyramid Island: Score challenge reward",
             "id": 2308117,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "pyramid_island_challenge1",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "8 REP",
@@ -3843,9 +3540,8 @@
             "name": "Pyramid Island: Score challenge 2 reward",
             "id": 2308118,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "pyramid_island_challenge2",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "16 REP",
@@ -3859,9 +3555,8 @@
             "name": "Pyramid Island: Quarter pipe challenge reward",
             "id": 2308119,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "pyramid_island_challenge3",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "8 REP",
@@ -3880,9 +3575,8 @@
             "name": "Pyramid Island - Maze -> Pyramid Island - After Gate",
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "pyramid_island_gate",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -3891,9 +3585,11 @@
             "name": "Pyramid Island: Maze outfit",
             "id": 2308128,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "skateboard",
+              "_original_ast_type": "helper",
+              "args": [
+                2
+              ]
             },
             "item": {
               "name": "Graffiti (XL - Web Spitter)",
@@ -3907,9 +3603,8 @@
             "name": "Pyramid Island: Maze glass Polo",
             "id": 2308135,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "camera",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Graffiti (XL - Gold Rush)",
@@ -3923,9 +3618,8 @@
             "name": "Pyramid Island: Maze classroom Polo",
             "id": 2308136,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "camera",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Outfit (Rave - Autumn)",
@@ -3939,9 +3633,8 @@
             "name": "Pyramid Island: Maze vent Polo",
             "id": 2308137,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "camera",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Music (Funk Express)",
@@ -3955,9 +3648,8 @@
             "name": "Pyramid Island: Big maze Polo",
             "id": 2308138,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "camera",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "8 REP",
@@ -3971,9 +3663,8 @@
             "name": "Pyramid Island: Maze desk Polo",
             "id": 2308139,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "camera",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "16 REP",
@@ -3987,9 +3678,8 @@
             "name": "Pyramid Island: Maze forklift Polo",
             "id": 2308140,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "camera",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Music (watchyaback!)",
@@ -4008,27 +3698,24 @@
             "name": "Pyramid Island - Upper Areas -> Pyramid Island - Base",
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "pyramid_island_entrance",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Pyramid Island - Upper Areas -> Pyramid Island - After Gate",
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "pyramid_island_gate",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Pyramid Island - Upper Areas -> Pyramid Island - Top",
             "connected_region": "Pyramid Island - Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "pyramid_island_top",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -4037,9 +3724,7 @@
             "name": "Pyramid Island: Wind turbines CD",
             "id": 2308120,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (L - buttercup)",
@@ -4053,9 +3738,11 @@
             "name": "Pyramid Island: Shortcut glass CD",
             "id": 2308121,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "inline_skates",
+              "_original_ast_type": "helper",
+              "args": [
+                2
+              ]
             },
             "item": {
               "name": "Music (Trinitron)",
@@ -4069,9 +3756,7 @@
             "name": "Pyramid Island: Turret jump CD",
             "id": 2308122,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (XL - VIBRATIONS)",
@@ -4085,9 +3770,7 @@
             "name": "Pyramid Island: Helipad BMX",
             "id": 2308123,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "DJ Cyber",
@@ -4101,9 +3784,7 @@
             "name": "Pyramid Island: Pipe outfit",
             "id": 2308124,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "24 REP",
@@ -4117,9 +3798,7 @@
             "name": "Pyramid Island: Trash outfit",
             "id": 2308125,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Outfit (Tryce - Winter)",
@@ -4133,9 +3812,11 @@
             "name": "Pyramid Island: Devil Theory joins the crew",
             "id": 2308130,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "current_chapter",
+              "_original_ast_type": "helper",
+              "args": [
+                5
+              ]
             },
             "item": {
               "name": "Music (State of Mind)",
@@ -4149,9 +3830,12 @@
             "name": "Pyramid Island: Complete Chapter 4",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "pyramid_island_crew_battle",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             },
             "item": {
               "name": "Chapter Completed",
@@ -4171,27 +3855,28 @@
             "name": "Pyramid Island - Top -> Pyramid Island - Base",
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "pyramid_island_entrance",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Pyramid Island - Top -> Pyramid Island - After Gate",
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "pyramid_island_gate",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Pyramid Island - Top -> Pyramid Island - Upper Areas",
             "connected_region": "Pyramid Island - Upper Areas",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "pyramid_island_upper_half",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             }
           }
         ],
@@ -4200,9 +3885,7 @@
             "name": "Pyramid Island: Pyramid top CD",
             "id": 2308126,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -4216,9 +3899,7 @@
             "name": "Pyramid Island: Pyramid top Robo Post CD",
             "id": 2308127,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -4232,9 +3913,8 @@
             "name": "Pyramid Island: Rise joins the crew",
             "id": 2308129,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "camera",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "16 REP",
@@ -4253,27 +3933,23 @@
             "name": "Mataan - Streets -> Hideout",
             "connected_region": "Hideout",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Mataan - Streets -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "millennium_square_entrance",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Mataan - Streets -> Mataan - After Smoke Wall",
             "connected_region": "Mataan - After Smoke Wall",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "mataan_smoke_wall",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -4282,9 +3958,7 @@
             "name": "Mataan: Robo Post graffiti",
             "id": 2308141,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (I Wanna Kno)",
@@ -4298,9 +3972,7 @@
             "name": "Mataan: Secret ledge BMX",
             "id": 2308142,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -4314,9 +3986,7 @@
             "name": "Mataan: Highway rooftop BMX",
             "id": 2308143,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "8 REP",
@@ -4335,18 +4005,20 @@
             "name": "Mataan - After Smoke Wall -> Mataan - Streets",
             "connected_region": "Mataan - Streets",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "mataan_entrance",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Mataan - After Smoke Wall -> Mataan - Deep City",
             "connected_region": "Mataan - Deep City",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "mataan_deep_city",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             }
           }
         ],
@@ -4355,9 +4027,7 @@
             "name": "Mataan: Trash CD",
             "id": 2308144,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (L - Lauder)",
@@ -4371,9 +4041,7 @@
             "name": "Mataan: Half pipe CD",
             "id": 2308145,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Camera App",
@@ -4387,9 +4055,7 @@
             "name": "Mataan: Across bull horns graffiti",
             "id": 2308146,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (M - Teddy 4)",
@@ -4403,9 +4069,7 @@
             "name": "Mataan: Small rooftop graffiti",
             "id": 2308147,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Hair Dun Nails Dun)",
@@ -4419,9 +4083,7 @@
             "name": "Mataan: Trash graffiti",
             "id": 2308148,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "24 REP",
@@ -4435,9 +4097,8 @@
             "name": "Mataan: Trash Polo",
             "id": 2308167,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "camera",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "8 REP",
@@ -4456,27 +4117,28 @@
             "name": "Mataan - Deep City -> Mataan - After Smoke Wall",
             "connected_region": "Mataan - After Smoke Wall",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "mataan_smoke_wall",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Mataan - Deep City -> Mataan - Red Light District",
             "connected_region": "Mataan - Red Light District",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "mataan_oldhead",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Mataan - Deep City -> Mataan - Lion Statue",
             "connected_region": "Mataan - Lion Statue",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "mataan_smoke_wall2",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             }
           }
         ],
@@ -4485,9 +4147,7 @@
             "name": "Mataan: Deep city Robo Post CD",
             "id": 2308149,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (L - skate or di3)",
@@ -4501,9 +4161,7 @@
             "name": "Mataan: Deep city tower CD",
             "id": 2308150,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -4517,9 +4175,12 @@
             "name": "Mataan: Race challenge reward",
             "id": 2308151,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "mataan_challenge1",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             },
             "item": {
               "name": "48 REP",
@@ -4533,9 +4194,12 @@
             "name": "Mataan: Wallrunning challenge reward",
             "id": 2308152,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "mataan_challenge2",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             },
             "item": {
               "name": "Music (Feel The Funk (Computer Love))",
@@ -4549,9 +4213,8 @@
             "name": "Mataan: Score challenge reward",
             "id": 2308153,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "mataan_challenge3",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Outfit (Rave - Winter)",
@@ -4565,9 +4228,7 @@
             "name": "Mataan: Deep city vent jump BMX",
             "id": 2308154,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BMX (Steel Wheeler)",
@@ -4581,9 +4242,7 @@
             "name": "Mataan: Deep city side wires outfit",
             "id": 2308155,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -4597,9 +4256,7 @@
             "name": "Mataan: Deep city center island outfit",
             "id": 2308156,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BMX (Rigid No.6)",
@@ -4618,9 +4275,12 @@
             "name": "Mataan - Red Light District -> Mataan - Deep City",
             "connected_region": "Mataan - Deep City",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "mataan_deep_city",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             }
           }
         ],
@@ -4629,9 +4289,7 @@
             "name": "Mataan: Red light rail graffiti",
             "id": 2308157,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Outfit (Vinyl - Autumn)",
@@ -4645,9 +4303,7 @@
             "name": "Mataan: Red light side alley outfit",
             "id": 2308158,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (M - SPRAYTANICPANIC!)",
@@ -4666,18 +4322,24 @@
             "name": "Mataan - Lion Statue -> Mataan - Deep City",
             "connected_region": "Mataan - Deep City",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "mataan_deep_city",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             }
           },
           {
             "name": "Mataan - Lion Statue -> Mataan - Skyscrapers",
             "connected_region": "Mataan - Skyscrapers",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "mataan_deepest",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             }
           }
         ],
@@ -4686,9 +4348,7 @@
             "name": "Mataan: Statue hand outfit",
             "id": 2308159,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "16 REP",
@@ -4707,9 +4367,8 @@
             "name": "Mataan - Skyscrapers -> Mataan - Streets",
             "connected_region": "Mataan - Streets",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "mataan_entrance",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -4718,9 +4377,7 @@
             "name": "Mataan: Crane CD",
             "id": 2308160,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BMX (Dedication)",
@@ -4734,9 +4391,7 @@
             "name": "Mataan: Elephant tower glass outfit",
             "id": 2308161,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (M - Thick Candy)",
@@ -4750,9 +4405,7 @@
             "name": "Mataan: Helipad outfit",
             "id": 2308162,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (XL - Pirate's Life 4 Me)",
@@ -4766,9 +4419,7 @@
             "name": "Mataan: Vending machine CD",
             "id": 2308163,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (L - VoodooBoy)",
@@ -4782,9 +4433,12 @@
             "name": "Mataan: Coil joins the crew",
             "id": 2308164,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "mataan_deepest",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             },
             "item": {
               "name": "8 REP",
@@ -4798,9 +4452,7 @@
             "name": "Mataan: Flesh Prince joins the crew",
             "id": 2308165,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Outfit (Rise - Winter)",
@@ -4814,9 +4466,7 @@
             "name": "Mataan: Futurism joins the crew",
             "id": 2308166,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (L - SpawningSeason)",
@@ -4830,9 +4480,8 @@
             "name": "Mataan: Shopping Polo",
             "id": 2308168,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "camera",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Outfit (Felix - Winter)",
@@ -4846,9 +4495,12 @@
             "name": "Defeat Faux",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "mataan_faux",
+              "_original_ast_type": "helper",
+              "args": [
+                0,
+                0
+              ]
             },
             "item": {
               "name": "Victory",
@@ -7414,7 +7066,7 @@
         "start_inventory": {},
         "start_location_hints": []
       },
-      "world_directory": "bomb_rush_cyberfunk_worldgen"
+      "world_directory": "bomb_rush_cyberfunk"
     }
   },
   "game_info": {
@@ -8113,7 +7765,6 @@
         "type": "item_check"
       },
       "brink_terminal_plaza": {
-        "args": [],
         "name": "brink_terminal_challenge3",
         "type": "helper"
       },
@@ -9225,7 +8876,6 @@
                   "type": "helper"
                 },
                 {
-                  "args": [],
                   "name": "mataan_challenge3",
                   "type": "helper"
                 }

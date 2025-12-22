@@ -19,18 +19,14 @@
             "name": "New Game",
             "connected_region": "Hub",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "??? Exit",
             "connected_region": "???",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -49,7 +45,6 @@
             "connected_region": "Ruins",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Ruins Key"
               }
@@ -60,7 +55,6 @@
             "connected_region": "Snowdin Forest",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Snowdin Key"
               }
@@ -71,7 +65,6 @@
             "connected_region": "Waterfall",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Waterfall Key"
               }
@@ -82,7 +75,6 @@
             "connected_region": "Hotland",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Hotland Key"
               }
@@ -93,7 +85,6 @@
             "connected_region": "Core",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Core Key"
               }
@@ -109,9 +100,7 @@
             "name": "Ruins Exit",
             "connected_region": "Old Home",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -120,9 +109,7 @@
             "name": "Candy 1",
             "id": 79014,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spider Cider",
@@ -136,9 +123,7 @@
             "name": "Candy 2",
             "id": 79015,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Old Tutu",
@@ -152,9 +137,7 @@
             "name": "Candy 3",
             "id": 79016,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "temy armor",
@@ -168,9 +151,7 @@
             "name": "Candy 4",
             "id": 79017,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Snowdin Key",
@@ -184,9 +165,7 @@
             "name": "Donut Sale",
             "id": 79018,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Stained Apron",
@@ -200,9 +179,7 @@
             "name": "Cider Sale",
             "id": 79019,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Punch Card",
@@ -216,9 +193,7 @@
             "name": "Ribbon Cracks",
             "id": 79020,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Torn Notebook",
@@ -232,9 +207,7 @@
             "name": "Toy Knife Edge",
             "id": 79021,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Burnt Pan",
@@ -248,9 +221,7 @@
             "name": "B.Scotch Pie Given",
             "id": 79022,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Instant Noodles",
@@ -274,9 +245,7 @@
             "name": "Snowdin Forest Exit",
             "connected_region": "Snowdin Town",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -286,7 +255,6 @@
             "id": 79100,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Snowdin Town"
               }
@@ -304,7 +272,6 @@
             "id": 79001,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Snowdin Town"
               }
@@ -326,9 +293,7 @@
             "name": "Papyrus\" Home Entrance",
             "connected_region": "Papyrus\" Home",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -338,7 +303,6 @@
             "id": 79034,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Snowdin Town"
               }
@@ -356,7 +320,6 @@
             "id": 79035,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Snowdin Town"
               }
@@ -374,7 +337,6 @@
             "id": 79036,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Snowdin Town"
               }
@@ -392,7 +354,6 @@
             "id": 79037,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Snowdin Town"
               }
@@ -415,9 +376,7 @@
             "name": "Papyrus Date",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Papyrus Date",
@@ -436,9 +395,7 @@
             "name": "Undyne\"s Home Entrance",
             "connected_region": "Undyne\"s Home",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -448,7 +405,6 @@
             "id": 79002,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Waterfall"
               }
@@ -466,18 +422,15 @@
             "id": 79003,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Waterfall"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Punch Card",
                     "count": 3
@@ -499,7 +452,6 @@
             "id": 79004,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Waterfall"
               }
@@ -517,7 +469,6 @@
             "id": 79005,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Waterfall"
               }
@@ -535,7 +486,6 @@
             "id": 79006,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Waterfall"
               }
@@ -553,7 +503,6 @@
             "id": 79007,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Waterfall"
               }
@@ -571,7 +520,6 @@
             "id": 79023,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Waterfall"
               }
@@ -589,7 +537,6 @@
             "id": 79024,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Waterfall"
               }
@@ -607,7 +554,6 @@
             "id": 79038,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Waterfall"
               }
@@ -625,7 +571,6 @@
             "id": 79039,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Waterfall"
               }
@@ -643,7 +588,6 @@
             "id": 79040,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Waterfall"
               }
@@ -661,7 +605,6 @@
             "id": 79041,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Waterfall"
               }
@@ -679,7 +622,6 @@
             "id": 79050,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Waterfall"
               }
@@ -697,7 +639,6 @@
             "id": 79051,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Waterfall"
               }
@@ -715,7 +656,6 @@
             "id": 79052,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Waterfall"
               }
@@ -733,18 +673,15 @@
             "id": 79053,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Waterfall"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "1000G",
                     "count": 2
@@ -770,9 +707,7 @@
             "name": "Undyne Date",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Undyne Date",
@@ -791,18 +726,14 @@
             "name": "Cooking Show Entrance",
             "connected_region": "Cooking Show",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Lab Elevator",
             "connected_region": "True Lab",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -812,7 +743,6 @@
             "id": 79008,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Hotland"
               }
@@ -830,7 +760,6 @@
             "id": 79009,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Hotland"
               }
@@ -848,7 +777,6 @@
             "id": 79010,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Cooking Show"
               }
@@ -866,7 +794,6 @@
             "id": 79042,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "News Show"
               }
@@ -884,7 +811,6 @@
             "id": 79043,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "News Show"
               }
@@ -902,7 +828,6 @@
             "id": 79044,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "News Show"
               }
@@ -920,7 +845,6 @@
             "id": 79045,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "News Show"
               }
@@ -938,7 +862,6 @@
             "id": 79046,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "News Show"
               }
@@ -956,7 +879,6 @@
             "id": 79047,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "News Show"
               }
@@ -974,7 +896,6 @@
             "id": 79048,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "News Show"
               }
@@ -992,7 +913,6 @@
             "id": 79049,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "News Show"
               }
@@ -1009,9 +929,7 @@
             "name": "Alphys Date",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Alphys Date",
@@ -1030,9 +948,7 @@
             "name": "News Show Entrance",
             "connected_region": "News Show",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1056,19 +972,17 @@
             "connected_region": "New Home",
             "access_rule": {
               "rule": "_undertale_has_plot",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Mettaton Plush"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           }
         ],
@@ -1078,7 +992,6 @@
             "id": 79011,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Core"
               }
@@ -1096,7 +1009,6 @@
             "id": 79062,
             "access_rule": {
               "rule": "CanReachEntrance",
-              "options": [],
               "args": {
                 "entrance_name": "Core Exit"
               }
@@ -1119,22 +1031,18 @@
             "connected_region": "Last Corridor",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Left Home Key"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Right Home Key"
                       }
@@ -1143,12 +1051,10 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Key Piece",
                     "count": {
                       "rule": "SettingValue",
-                      "options": [],
                       "args": {
                         "setting": "key_pieces"
                       }
@@ -1165,7 +1071,6 @@
             "id": 79012,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "New Home"
               }
@@ -1183,7 +1088,6 @@
             "id": 79013,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "New Home"
               }
@@ -1201,7 +1105,6 @@
             "id": 79064,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "New Home"
               }
@@ -1219,7 +1122,6 @@
             "id": 79065,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "New Home"
               }
@@ -1241,9 +1143,7 @@
             "name": "Last Corridor Exit",
             "connected_region": "Barrier",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],

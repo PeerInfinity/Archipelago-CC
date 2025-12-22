@@ -21,7 +21,6 @@
             "connected_region": "Laboratory",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Trinket 01",
@@ -36,7 +35,6 @@
             "connected_region": "The Tower",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Trinket 04",
@@ -51,7 +49,6 @@
             "connected_region": "Space Station 2",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Trinket 07",
@@ -66,7 +63,6 @@
             "connected_region": "Warp Zone",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Trinket 10",
@@ -82,9 +78,7 @@
             "name": "Overworld (Pipe-shaped Segment)",
             "id": 2515013,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trinket 14",
@@ -98,9 +92,7 @@
             "name": "Overworld (Left of Ship)",
             "id": 2515015,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trinket 03",
@@ -114,9 +106,7 @@
             "name": "Overworld (Square Room)",
             "id": 2515016,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trinket 08",
@@ -130,9 +120,7 @@
             "name": "Overworld (Sad Elephant)",
             "id": 2515017,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trinket 01",
@@ -146,9 +134,7 @@
             "name": "It's a Secret to Nobody",
             "id": 2515000,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trinket 20",
@@ -162,9 +148,7 @@
             "name": "Trench Warfare",
             "id": 2515001,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trinket 02",
@@ -179,29 +163,24 @@
             "id": 2515018,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "CanReachRegion",
-                      "options": [],
                       "args": {
                         "region_name": "Space Station 2"
                       }
                     },
                     {
                       "rule": "CanReachRegion",
-                      "options": [],
                       "args": {
                         "region_name": "The Tower"
                       }
                     },
                     {
                       "rule": "CanReachRegion",
-                      "options": [],
                       "args": {
                         "region_name": "Warp Zone"
                       }
@@ -210,7 +189,6 @@
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Laboratory"
                   }
@@ -230,32 +208,27 @@
             "id": 2515019,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Laboratory"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Space Station 2"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "The Tower"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Warp Zone"
                   }
@@ -280,9 +253,7 @@
             "name": "Young Man, It's Worth the Challenge",
             "id": 2515009,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trinket 04",
@@ -296,9 +267,7 @@
             "name": "Overworld (Outside Entanglement Generator)",
             "id": 2515014,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trinket 16",
@@ -312,9 +281,7 @@
             "name": "The Tantalizing Trinket",
             "id": 2515010,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trinket 09",
@@ -328,9 +295,7 @@
             "name": "Purest Unobtainium",
             "id": 2515011,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trinket 10",
@@ -350,9 +315,7 @@
             "name": "The Tower 1",
             "id": 2515007,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trinket 18",
@@ -366,9 +329,7 @@
             "name": "The Tower 2",
             "id": 2515008,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trinket 15",
@@ -388,9 +349,7 @@
             "name": "One Way Room",
             "id": 2515002,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trinket 11",
@@ -404,9 +363,7 @@
             "name": "You Just Keep Coming Back",
             "id": 2515003,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trinket 12",
@@ -420,9 +377,7 @@
             "name": "Clarion Call",
             "id": 2515004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trinket 06",
@@ -436,9 +391,7 @@
             "name": "Prize for the Reckless",
             "id": 2515006,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trinket 05",
@@ -452,9 +405,7 @@
             "name": "Doing things the hard way",
             "id": 2515005,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trinket 19",
@@ -474,9 +425,7 @@
             "name": "Edge Games",
             "id": 2515012,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trinket 13",
@@ -800,7 +749,15 @@
         "start_inventory": {},
         "start_location_hints": []
       },
-      "world_directory": "v6_worldgen"
+      "door_cost": 3,
+      "area_cost_map": {
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "0": 0
+      },
+      "world_directory": "v6"
     }
   },
   "game_info": {
