@@ -4,4 +4,4 @@ This document tracks general issues (not exporter or helper specific) for the SC
 
 ## Issues
 
-*To be populated after running the spoiler test.*
+*No remaining issues at this time. The SC2 spoiler test passes all 135 events.*
