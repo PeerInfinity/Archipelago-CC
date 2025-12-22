@@ -626,7 +626,8 @@ function soa_power_rating(snapshot, staticData) {
 
 export function terran_competent_comp(snapshot, staticData, upgradeLevel = 1) {
     // All competent comps require anti-air
-    if (!terran_competent_anti_air(snapshot, staticData)) {
+    const hasAntiAir = terran_competent_anti_air(snapshot, staticData);
+    if (!hasAntiAir) {
         return false;
     }
 

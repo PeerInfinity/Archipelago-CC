@@ -68,6 +68,9 @@ class SC2GameExportHandler(GenericGameExportHandler):
         'zerg_competent_ground_to_air', 'terran_beats_protoss_deathball',
         'terran_base_trasher',  # calls terran_competent_comp
         'terran_respond_to_colony_infestations',  # calls terran_havens_fall_requirement
+        # Anti-air helpers that call competent_ground_to_air
+        'terran_competent_anti_air',  # calls terran_competent_ground_to_air
+        'terran_moderate_anti_air',  # calls terran_competent_anti_air
         # Simple helpers - now exported (just boolean logic):
         # 'terran_can_rescue',  # just has_any + advanced_tactics
         # 'terran_cliffjumper',  # just has/has_all
@@ -105,10 +108,10 @@ class SC2GameExportHandler(GenericGameExportHandler):
         logger.debug(f"[SC2] override_rule_analysis called for '{rule_target_name}' with func_name='{func_name}'")
 
         # Check if this is a complex helper method that should not be expanded
-        # For blacklisted helpers, return True_ directly so worldgen produces matching rules
+        # For blacklisted helpers, return a helper call so the frontend can use the JS implementation
         if func_name in self.HELPERS_TO_EXPORT_BLACKLIST:
-            logger.debug(f"[SC2] Blacklisted helper '{func_name}' - returning True_ for consistent worldgen")
-            return {'type': 'constant', 'value': True}
+            logger.debug(f"[SC2] Blacklisted helper '{func_name}' - keeping as helper call for JS fallback")
+            return {'type': 'helper', 'name': func_name}
 
         # Handle count_missions pattern (from CountMissionsEntryRule.to_lambda)
         if func_name == 'count_missions':
@@ -313,8 +316,8 @@ class SC2GameExportHandler(GenericGameExportHandler):
         if rule.get('type') == 'helper':
             helper_name = rule.get('name', '')
             if helper_name in self.HELPERS_TO_EXPORT_BLACKLIST:
-                logger.debug(f"[SC2] Blacklisted helper AST node '{helper_name}' - returning True_")
-                return {'type': 'constant', 'value': True}
+                logger.debug(f"[SC2] Blacklisted helper AST node '{helper_name}' - keeping as helper for JS fallback")
+                return {'type': 'helper', 'name': helper_name}
 
         # Check for the pattern: function_call with function being attribute access on "logic"
         # This pattern looks like:
@@ -339,8 +342,12 @@ class SC2GameExportHandler(GenericGameExportHandler):
 
                     # Check if this helper is blacklisted
                     if method_name in self.HELPERS_TO_EXPORT_BLACKLIST:
-                        logger.debug(f"[SC2] Blacklisted helper '{method_name}' - returning True_")
-                        return {'type': 'constant', 'value': True}
+                        logger.debug(f"[SC2] Blacklisted helper '{method_name}' - keeping as helper for JS fallback")
+                        # Include args so the JS helper receives the same parameters
+                        result = {'type': 'helper', 'name': method_name}
+                        if args:
+                            result['args'] = args
+                        return result
 
                     logger.debug(f"[SC2] Converting logic.{method_name}() to helper call")
 
@@ -406,8 +413,8 @@ class SC2GameExportHandler(GenericGameExportHandler):
                 if attr_name in known_helpers:
                     # Check if this helper is blacklisted
                     if attr_name in self.HELPERS_TO_EXPORT_BLACKLIST:
-                        logger.debug(f"[SC2] Blacklisted helper '{attr_name}' - returning True_")
-                        return {'type': 'constant', 'value': True}
+                        logger.debug(f"[SC2] Blacklisted helper '{attr_name}' - keeping as helper for JS fallback")
+                        return {'type': 'helper', 'name': attr_name}
 
                     # This is a helper method accessed without parentheses
                     # Convert to a helper call
