@@ -514,6 +514,7 @@ class RuleCodeGenerator:
                     'Has': 'item_check',
                     'HasAll': 'group_check',
                     'HasAny': 'group_check',
+                    'HasAllCounts': 'group_check',
                     'HasGroup': 'group_check',
                     'Count': 'count_check',
                     'CanReachRegion': 'can_reach',
@@ -651,6 +652,15 @@ class RuleCodeGenerator:
             # HasAny expects variadic arguments, not a list
             items_str = ', '.join(repr(item) for item in items)
             return f'HasAny({items_str})'
+
+        if rb_rule == 'HasAllCounts':
+            items = args.get('items', {})
+            if not items:
+                self.required_imports.add('True_')
+                return 'True_()'
+            self.required_imports.add('HasAllCounts')
+            # HasAllCounts expects a dict of {item_name: count}
+            return f'HasAllCounts({repr(items)})'
 
         if rb_rule == 'HasGroup':
             group = args.get('group', '')
