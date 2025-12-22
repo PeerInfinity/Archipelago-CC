@@ -26,17 +26,24 @@ class TimespinnerGameExportHandler(GenericGameExportHandler):
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Export Timespinner-specific settings including option flags and warp unlocks."""
-        # Get base settings
+        # Get base settings (this also loads _worldgen_settings.json for worldgen worlds)
         settings_dict = super().get_settings_data(world, multiworld, player)
 
         # Export option flags needed by helper functions
         # Use flag_ prefix to match TimespinnerLogic attribute names (e.g., self.flag_specific_keycards)
+        # For worldgen worlds, these flags are already loaded from _worldgen_settings.json by the base handler
         if hasattr(world, 'options'):
             options = world.options
-            settings_dict['flag_specific_keycards'] = bool(getattr(options.specific_keycards, 'value', False))
-            settings_dict['flag_eye_spy'] = bool(getattr(options.eye_spy, 'value', False))
-            settings_dict['flag_unchained_keys'] = bool(getattr(options.unchained_keys, 'value', False))
-            settings_dict['flag_prism_break'] = bool(getattr(options.prism_break, 'value', False))
+            # Only set flags if the options exist (original Timespinner world)
+            # Worldgen worlds have different options and get their flags from _worldgen_settings.json
+            if hasattr(options, 'specific_keycards'):
+                settings_dict['flag_specific_keycards'] = bool(getattr(options.specific_keycards, 'value', False))
+            if hasattr(options, 'eye_spy'):
+                settings_dict['flag_eye_spy'] = bool(getattr(options.eye_spy, 'value', False))
+            if hasattr(options, 'unchained_keys'):
+                settings_dict['flag_unchained_keys'] = bool(getattr(options.unchained_keys, 'value', False))
+            if hasattr(options, 'prism_break'):
+                settings_dict['flag_prism_break'] = bool(getattr(options.prism_break, 'value', False))
 
         # Export precalculated weights (warp gate unlocks)
         if hasattr(world, 'precalculated_weights'):
