@@ -16,8 +16,7 @@ Excluded Locations:
 Priority Locations:              
 Item Links:                      
 Plando Items:                    
-Randomize Items:                 No
-Goal:                            0
+Randomize Items:                 Yes
 
 
 Locations:

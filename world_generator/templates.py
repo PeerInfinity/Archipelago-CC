@@ -82,15 +82,23 @@ def _extract_region_dependencies(rule: dict, helpers: Dict[str, 'HelperData'] = 
                 dependencies.append(region)
 
     # Check for helper calls and resolve them
+    # Handle both formats:
+    # 1. type='helper' with name='helper_name' (standard format)
+    # 2. _original_ast_type='helper' with rule='helper_name' (CC export format)
+    helper_name = None
     if rule_type == 'helper':
         helper_name = rule.get('name', '')
-        if helper_name and helper_name not in visited_helpers and helper_name in helpers:
-            visited_helpers.add(helper_name)
-            helper_data = helpers[helper_name]
-            if helper_data.body:
-                for dep in _extract_region_dependencies(helper_data.body, helpers, visited_helpers):
-                    if dep not in dependencies:
-                        dependencies.append(dep)
+    elif rule.get('_original_ast_type') == 'helper':
+        # CC export format: helper name is in 'rule' field
+        helper_name = rule.get('rule', '')
+
+    if helper_name and helper_name not in visited_helpers and helper_name in helpers:
+        visited_helpers.add(helper_name)
+        helper_data = helpers[helper_name]
+        if helper_data.body:
+            for dep in _extract_region_dependencies(helper_data.body, helpers, visited_helpers):
+                if dep not in dependencies:
+                    dependencies.append(dep)
 
     # Recurse into nested rules
     for key in ('conditions', 'children', 'if_true', 'if_false', 'test', 'args', 'left', 'right'):
