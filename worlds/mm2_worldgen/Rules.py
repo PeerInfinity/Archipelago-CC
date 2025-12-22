@@ -105,8 +105,7 @@ _HELPER_DEFINITIONS = {   'can_defeat_enough_rbms': {   'body': {   'statements'
                                                                                                                                'Defeated'}},
                                                                                                 'type': 'compare'},
                                                                                     'type': 'if_statement'}],
-                                                                    'iterable': {   'args': [],
-                                                                                    'function': {   'attr': 'items',
+                                                                    'iterable': {   'function': {   'attr': 'items',
                                                                                                     'object': {   'name': 'boss_requirements',
                                                                                                                   'type': 'name'},
                                                                                                     'type': 'attribute'},
@@ -132,97 +131,97 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("To Heat Man Stage", player),
-        And(HasAll(['Heat Man Access Codes']), Has('Item 2 - Rocket'))
+        And(HasAll('Heat Man Access Codes'), Has('Item 2 - Rocket'))
     )
 
     world.set_rule(
         multiworld.get_entrance("To Air Man Stage", player),
-        HasAll(['Air Man Access Codes'])
+        HasAll('Air Man Access Codes')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wood Man Stage", player),
-        HasAll(['Wood Man Access Codes'])
+        HasAll('Wood Man Access Codes')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Bubble Man Stage", player),
-        HasAll(['Bubble Man Access Codes'])
+        HasAll('Bubble Man Access Codes')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Quick Man Stage", player),
-        And(HasAll(['Quick Man Access Codes']), Has('Time Stopper'))
+        And(HasAll('Quick Man Access Codes'), Has('Time Stopper'))
     )
 
     world.set_rule(
         multiworld.get_entrance("To Flash Man Stage", player),
-        HasAll(['Flash Man Access Codes'])
+        HasAll('Flash Man Access Codes')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Metal Man Stage", player),
-        HasAll(['Metal Man Access Codes'])
+        HasAll('Metal Man Access Codes')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Crash Man Stage", player),
-        HasAll(['Crash Man Access Codes'])
+        HasAll('Crash Man Access Codes')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 1", player),
-        HasAll(['Item 1 - Propeller', 'Item 2 - Rocket', 'Item 3 - Bouncy'])
+        HasAll('Item 1 - Propeller', 'Item 2 - Rocket', 'Item 3 - Bouncy')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 2", player),
-        HasAll(['Wily Stage 1 - Completed'])
+        HasAll('Wily Stage 1 - Completed')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 3", player),
-        HasAll(['Wily Stage 2 - Completed'])
+        HasAll('Wily Stage 2 - Completed')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 4", player),
-        HasAll(['Wily Stage 3 - Completed'])
+        HasAll('Wily Stage 3 - Completed')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 5", player),
-        HasAll(['Wily Stage 4 - Completed'])
+        HasAll('Wily Stage 4 - Completed')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 6", player),
-        HasAll(['Wily Stage 5 - Completed'])
+        HasAll('Wily Stage 5 - Completed')
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Quick Man Stage - 1-Up 1", player),
-        HasAny(['Item 1 - Propeller', 'Item 2 - Rocket', 'Item 3 - Bouncy'])
+        HasAny('Item 1 - Propeller', 'Item 2 - Rocket', 'Item 3 - Bouncy')
     )
 
     world.set_rule(
         multiworld.get_location("Flash Man Stage - 1-Up", player),
-        HasAny(['Item 1 - Propeller', 'Item 2 - Rocket', 'Item 3 - Bouncy'])
+        HasAny('Item 1 - Propeller', 'Item 2 - Rocket', 'Item 3 - Bouncy')
     )
 
     world.set_rule(
         multiworld.get_location("Metal Man Stage - 1-Up", player),
-        HasAny(['Item 1 - Propeller', 'Item 2 - Rocket'])
+        HasAny('Item 1 - Propeller', 'Item 2 - Rocket')
     )
 
     world.set_rule(
         multiworld.get_location("Metal Man Stage - E-Tank 2", player),
-        HasAny(['Item 1 - Propeller', 'Item 2 - Rocket'])
+        HasAny('Item 1 - Propeller', 'Item 2 - Rocket')
     )
 
     world.set_rule(
         multiworld.get_location("Crash Man Stage - 1-Up", player),
-        HasAny(['Item 1 - Propeller', 'Item 2 - Rocket', 'Item 3 - Bouncy'])
+        HasAny('Item 1 - Propeller', 'Item 2 - Rocket', 'Item 3 - Bouncy')
     )
 
     world.set_rule(
@@ -242,12 +241,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Boobeam Trap - Defeated", player),
-        And(HasAny(['Crash Bomber']), Has('Crash Bomber'))
+        And(HasAny('Crash Bomber'), Has('Crash Bomber'))
     )
 
     world.set_rule(
         multiworld.get_location("Wily Stage 4 - Completed", player),
-        And(HasAny(['Crash Bomber']), Has('Crash Bomber'))
+        And(HasAny('Crash Bomber'), Has('Crash Bomber'))
     )
 
     world.set_rule(
@@ -262,5 +261,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dr. Wily (Alien) - Defeated", player),
-        HasAny(['Bubble Lead'])
+        HasAny('Bubble Lead')
     )

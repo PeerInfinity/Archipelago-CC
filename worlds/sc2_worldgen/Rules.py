@@ -261,8 +261,7 @@ _HELPER_DEFINITIONS = {   'marine_medic_firebat_upgrade': {   'conditions': [   
                                                                   'test': {   'item': {'name': 'item', 'type': 'name'},
                                                                               'type': 'item_check'},
                                                                   'type': 'if_statement'}],
-                                                  'iterable': {   'args': [],
-                                                                  'function': {   'attr': 'items',
+                                                  'iterable': {   'function': {   'attr': 'items',
                                                                                   'object': {   'type': 'constant',
                                                                                                 'value': {   'Purifier Beam (Spear of Adun)': 3,
                                                                                                              'Solar Bombardment (Spear of Adun)': 3,
@@ -323,8 +322,7 @@ _HELPER_DEFINITIONS = {   'marine_medic_firebat_upgrade': {   'conditions': [   
                                                                               'item': {'name': 'item', 'type': 'name'},
                                                                               'type': 'item_check'},
                                                                   'type': 'if_statement'}],
-                                                  'iterable': {   'args': [],
-                                                                  'function': {   'attr': 'items',
+                                                  'iterable': {   'function': {   'attr': 'items',
                                                                                   'object': {   'type': 'constant',
                                                                                                 'value': {   'Deploy Fenix (Spear of Adun)': 7,
                                                                                                              'Orbital Strike (Spear of Adun)': 4,
@@ -429,8 +427,7 @@ _HELPER_DEFINITIONS = {   'marine_medic_firebat_upgrade': {   'conditions': [   
                                                                          {   'item': 'Winged Nightmares',
                                                                              'type': 'item_check'}],
                                                        'type': 'or'},
-                                                   {   'conditions': [   {   'args': [],
-                                                                             'name': 'terran_competent_anti_air',
+                                                   {   'conditions': [   {   'name': 'terran_competent_anti_air',
                                                                              'type': 'helper'},
                                                                          {   'conditions': [   {   'conditions': [   {   'item': 'Battlecruiser',
                                                                                                                          'type': 'item_check'},
@@ -523,9 +520,7 @@ _HELPER_DEFINITIONS = {   'marine_medic_firebat_upgrade': {   'conditions': [   
                                                            'Warhound']}],
                               'method': 'has_any',
                               'type': 'state_method'},
-    'terran_competent_anti_air': {   'conditions': [   {   'args': [],
-                                                           'name': 'terran_competent_ground_to_air',
-                                                           'type': 'helper'},
+    'terran_competent_anti_air': {   'conditions': [   {'name': 'terran_competent_ground_to_air', 'type': 'helper'},
                                                        {   'conditions': [   {'item': 'Viking', 'type': 'item_check'},
                                                                              {   'conditions': [   {   'item': 'Advanced '
                                                                                                                'Laser '
@@ -841,8 +836,7 @@ _HELPER_DEFINITIONS = {   'marine_medic_firebat_upgrade': {   'conditions': [   
                                                                                                                                                                                         {   'item': 'Medivac',
                                                                                                                                                                                             'type': 'item_check'}],
                                                                                                                                                                       'type': 'or'},
-                                                                                                                                                                  {   'args': [   ],
-                                                                                                                                                                      'name': 'terran_common_unit',
+                                                                                                                                                                  {   'name': 'terran_common_unit',
                                                                                                                                                                       'type': 'helper'}],
                                                                                                                                                 'type': 'and'},
                                                                                                                                             {   'conditions': [   {   'item': 'Hunter-Seeker '
@@ -946,14 +940,11 @@ _HELPER_DEFINITIONS = {   'marine_medic_firebat_upgrade': {   'conditions': [   
                                                                                                                           'type': 'item_check'}],
                                                                                                     'type': 'and'}],
                                                                               'type': 'or'},
-                                                                          {   'args': [],
-                                                                              'name': 'terran_competent_comp',
+                                                                          {   'name': 'terran_competent_comp',
                                                                               'type': 'helper'},
-                                                                          {   'conditions': [   {   'args': [],
-                                                                                                    'name': 'terran_competent_ground_to_air',
+                                                                          {   'conditions': [   {   'name': 'terran_competent_ground_to_air',
                                                                                                     'type': 'helper'},
-                                                                                                {   'args': [],
-                                                                                                    'name': 'terran_air_anti_air',
+                                                                                                {   'name': 'terran_air_anti_air',
                                                                                                     'type': 'helper'}],
                                                                               'type': 'or'},
                                                                           {   'conditions': [   {   'item': 'Science '
@@ -1009,11 +1000,9 @@ _HELPER_DEFINITIONS = {   'marine_medic_firebat_upgrade': {   'conditions': [   
                                                                               'type': 'or'}],
                                                         'type': 'and'}],
                                   'type': 'or'},
-    'terran_moderate_anti_air': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                'name': 'terran_competent_ground_to_air',
+    'terran_moderate_anti_air': {   'conditions': [   {   'conditions': [   {   'name': 'terran_competent_ground_to_air',
                                                                                 'type': 'helper'},
-                                                                            {   'args': [],
-                                                                                'name': 'terran_air_anti_air',
+                                                                            {   'name': 'terran_air_anti_air',
                                                                                 'type': 'helper'}],
                                                           'type': 'or'},
                                                       {   'conditions': [   {   'conditions': [   {   'item': 'Battlecruiser',
@@ -1073,8 +1062,7 @@ _HELPER_DEFINITIONS = {   'marine_medic_firebat_upgrade': {   'conditions': [   
                                                                   'iterator_info': {   'condition': {   'item': {   'name': 'item',
                                                                                                                     'type': 'name'},
                                                                                                         'type': 'item_check'},
-                                                                                       'iterator': {   'args': [],
-                                                                                                       'function': {   'attr': 'items',
+                                                                                       'iterator': {   'function': {   'attr': 'items',
                                                                                                                        'object': {   'type': 'constant',
                                                                                                                                      'value': {   'Automated Refinery (Terran)': 4,
                                                                                                                                                   'Command Center Reactor (Command Center)': 2,
@@ -1109,8 +1097,7 @@ _HELPER_DEFINITIONS = {   'marine_medic_firebat_upgrade': {   'conditions': [   
                                                                                                                                                 'type': 'name'},
                                                                                                                                     'type': 'item_check'},
                                                                                                                         'type': 'if_statement'}],
-                                                                                                        'iterable': {   'args': [   ],
-                                                                                                                        'function': {   'attr': 'items',
+                                                                                                        'iterable': {   'function': {   'attr': 'items',
                                                                                                                                         'object': {   'type': 'constant',
                                                                                                                                                       'value': {   'Purifier Beam (Spear of Adun)': 3,
                                                                                                                                                                    'Solar Bombardment (Spear of Adun)': 3,
@@ -1175,8 +1162,7 @@ _HELPER_DEFINITIONS = {   'marine_medic_firebat_upgrade': {   'conditions': [   
                                                                                                                                                 'type': 'name'},
                                                                                                                                     'type': 'item_check'},
                                                                                                                         'type': 'if_statement'}],
-                                                                                                        'iterable': {   'args': [   ],
-                                                                                                                        'function': {   'attr': 'items',
+                                                                                                        'iterable': {   'function': {   'attr': 'items',
                                                                                                                                         'object': {   'type': 'constant',
                                                                                                                                                       'value': {   'Deploy Fenix (Spear of Adun)': 7,
                                                                                                                                                                    'Orbital Strike (Spear of Adun)': 4,
@@ -1218,8 +1204,7 @@ _HELPER_DEFINITIONS = {   'marine_medic_firebat_upgrade': {   'conditions': [   
                                                                                   'iterator_info': {   'condition': {   'item': {   'name': 'item',
                                                                                                                                     'type': 'name'},
                                                                                                                         'type': 'item_check'},
-                                                                                                       'iterator': {   'args': [   ],
-                                                                                                                       'function': {   'attr': 'items',
+                                                                                                       'iterator': {   'function': {   'attr': 'items',
                                                                                                                                        'object': {   'type': 'constant',
                                                                                                                                                      'value': {   'Guardian Shell (Spear of Adun)': 4,
                                                                                                                                                                   'Overwatch (Spear of Adun)': 2}},
@@ -1469,7 +1454,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): Flawless", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_early_tech, helper_name="terran_early_tech"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), HelperCall(helper_func=_starcraft2worldgen_terran_early_tech, helper_name="terran_early_tech"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")))
     )
 
     world.set_rule(
@@ -1489,42 +1474,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Victory", player),
-        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
+        Or(And(Compare(True_(), ">=", True_()), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Brutalisk Relic", player),
-        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
+        Or(And(Compare(True_(), ">=", True_()), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: First Escape Relic", player),
-        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
+        Or(And(Compare(True_(), ">=", True_()), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Second Escape Relic", player),
-        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
+        Or(And(Compare(True_(), ">=", True_()), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Brutalisk", player),
-        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
+        Or(And(Compare(True_(), ">=", True_()), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Fusion Reactor", player),
-        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
+        Or(And(Compare(True_(), ">=", True_()), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Escape Warbot", player),
-        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
+        Or(And(Compare(True_(), ">=", True_()), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Piercing the Shroud", player),
-        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
+        Or(And(Compare(True_(), ">=", True_()), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
@@ -1594,7 +1579,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Victory", player),
-        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", True_()), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", True_()), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
@@ -1609,17 +1594,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): South Far Prisoners", player),
-        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", True_()), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", True_()), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): North Prisoners", player),
-        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", True_()), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", True_()), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Mothership", player),
-        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", True_()), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", True_()), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
@@ -1629,67 +1614,67 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Middle Rip Field Generator", player),
-        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", True_()), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", True_()), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Southeast Rip Field Generator", player),
-        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", True_()), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", True_()), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Stargate Rip Field Generator", player),
-        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", True_()), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", True_()), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Northwest Rip Field Generator", player),
-        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", True_()), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", True_()), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): West Rip Field Generator", player),
-        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", True_()), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", True_()), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Southwest Rip Field Generator", player),
-        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", True_()), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", True_()), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Maw of the Void (Terran)", player),
-        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", True_()), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", True_()), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): Victory", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6), True_())
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", True_()), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): South Relic", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6), True_())
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", True_()), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): East Relic", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6), True_())
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", True_()), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): Middle Base", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6), True_())
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", True_()), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): Southeast Base", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6), True_())
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", True_()), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beat Supernova (Terran)", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6), True_())
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", True_()), True_())
     )
 
     world.set_rule(
@@ -1744,22 +1729,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Victory", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Left Relic", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 6), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Right Ground Relic", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 6), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Right Cliff Relic", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 6), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
@@ -1769,42 +1754,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Door Outer Layer", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 6), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Door Thermal Barrier", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Cutting Through the Core", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Structure Access Imminent", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Northwestern Protoss Base", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), True_(), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), True_(), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Northeastern Protoss Base", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), True_(), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), True_(), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Eastern Protoss Base", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), True_(), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), True_(), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
     )
 
     world.set_rule(
         multiworld.get_location("Beat The Dig (Terran)", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
@@ -1949,47 +1934,47 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): Victory", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): Left Infestor", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): Right Infestor", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): North Infested Command Center", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): South Infested Command Center", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): Northwest Bar", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): North Bar", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): South Bar", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Outbreak (Terran)", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", True_()), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
@@ -2149,7 +2134,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Engine of Destruction (Terran): Odin", player),
-        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
+        Or(And(Compare(True_(), ">=", True_()), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
@@ -2159,7 +2144,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Engine of Destruction (Terran): Lab Devourer", player),
-        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
+        Or(And(Compare(True_(), ">=", True_()), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
@@ -2369,7 +2354,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Victory", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", True_()), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air")))
     )
 
     world.set_rule(
@@ -2379,7 +2364,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Third Group Rescued", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", True_()), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
     )
 
     world.set_rule(
@@ -2409,17 +2394,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Hold Just a Little Longer", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", True_()), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
     )
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Cavalry's on the Way", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", True_()), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Zero Hour (Terran)", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", True_()), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air")))
     )
 
     world.set_rule(

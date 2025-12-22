@@ -476,8 +476,8 @@ Act Completion (Award Ceremony)
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
    =>   She Came from Outer Space -> Battle of the Birds - Act 2: Connection 1
-   =>   Down with the Mafia! -> Battle of the Birds - Act 4: Connection 1
-   =>   Dead Bird Studio -> Battle of the Birds - Finale A: Connection 1
+   =>   Down with the Mafia! -> Battle of the Birds - Act 5: Connection 1
+   =>   Train Rush -> Battle of the Birds - Finale A: Connection 2
    =>   Award Ceremony
 Act Completion (Barrel Battle)
         Menu -> Save File -> Spaceship
@@ -509,8 +509,8 @@ Act Completion (Mail Delivery Service)
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
    =>   She Came from Outer Space -> Battle of the Birds - Act 2: Connection 1
-   =>   Down with the Mafia! -> Battle of the Birds - Act 4: Connection 1
-   =>   Dead Bird Studio -> Battle of the Birds - Finale A: Connection 1
+   =>   Down with the Mafia! -> Battle of the Birds - Act 5: Connection 1
+   =>   Train Rush -> Battle of the Birds - Finale A: Connection 2
    =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
    =>   Mail Delivery Service
 Act Completion (Picture Perfect)
@@ -582,9 +582,10 @@ Act Completion (Time Rift - Dead Bird Studio)
    =>   Time Rift - Dead Bird Studio
 Act Completion (Time Rift - Gallery)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Time Rift - Sewers Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   She Came from Outer Space -> Battle of the Birds - Act 2: Connection 1
+   =>   Down with the Mafia! -> Time Rift - Sewers Portal - Entrance 4
    =>   Time Rift - Gallery
 Act Completion (Time Rift - Mafia of Cooks)
         Menu -> Save File -> Spaceship
@@ -1191,8 +1192,8 @@ Subcon Well - On Pipe
 TIHS Access
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 2
-   =>   Murder on the Owl Express -> Subcon Forest - Finale: Connection 2
+   =>   Subcon Forest -> Subcon Forest - Act 1
+   =>   Your Contract has Expired -> Subcon Forest - Finale: Connection 1
    =>   The Illness has Spread
 TOD Access
         Menu -> Save File -> Spaceship

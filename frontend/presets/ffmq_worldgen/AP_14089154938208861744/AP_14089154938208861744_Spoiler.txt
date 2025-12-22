@@ -332,7 +332,6 @@ Playthrough:
   Bomb
 }
 1: {
-  Level Forest - Southeast Box: Mega Grenade
   Long Spine: Long Spine Bombed
   Old Man Barrel: Barrel Pushed
   Tristam Companion: Tristam
@@ -353,11 +352,11 @@ Playthrough:
 5: {
   Bone Dungeon B2 - Flamerus Rex Chest: Sun Coin
   Flamerus Rex: Flamerus Rex
+  Level Forest - Southeast Box: Mega Grenade
 }
 6: {
   Doom Castle B2 - Sun Door Chest: Multi Key
   Giant Tree 2F - Mushroom Tunnel West Box: Gemini Crest
-  Giant Tree 4F - West Slime Room Box: River Coin
   Pazuzu 2F: Pazuzu 2F
   Pazuzu 2F Lock: Pazuzu 2F Lock
   Pazuzu 3F: Pazuzu 3F
@@ -372,8 +371,11 @@ Playthrough:
   Windia - Inn Bedroom South Box: Captain's Cap
 }
 7: {
-  Jinn: Jinn
+  Giant Tree 4F - West Slime Room Box: River Coin
   Kaeli Companion: Kaeli 1
+}
+8: {
+  Jinn: Jinn
   Lava Dome - Exterior Dead End Caldera Box: Giant's Axe
   Lava Dome - U-Bend Room North Box: Charm Claw
   Lava Dome Plate: Lava Dome Plate
@@ -381,24 +383,24 @@ Playthrough:
   Mine - Crescent Room Chest: Knight Sword
   Mine - Parallel Room East Box: Battle Axe
   Mine - Parallel Room West Box: Mobius Crest
+  Minotaur: Minotaur
   Reuben Companion: Reuben 1
   Volcano - Base East Right Box: Excalibur
 }
-8: {
+9: {
   Dualhead Hydra: Dualhead Hydra
   Lava Dome - Hydra Room Northwest Box: Cat Claw
   Mine - Cliff Northeast Box: Elixir
-  Minotaur: Minotaur
   Reuben's dad Saved: Reuben Dad Saved
   Ship Dock Access: Ship Dock Access
 }
-9: {
+10: {
   Kaeli 2: Kaeli 2
 }
-10: {
+11: {
   Windia - Kaeli: Sand Coin
 }
-11: {
+12: {
   Dullahan: Dullahan
   Freezer Crab: Freezer Crab
   Gidrah: Gidrah
@@ -408,12 +410,12 @@ Playthrough:
   Phoebe Companion: Phoebe 1
   Wintry Cave 2F - West Left Box: Thunder Rock
 }
-12: {
+13: {
   Ice Pyramid 3F Statue: Ice Pyramid 3F Statue
   Otto: Rainbow Bridge
   Pazuzu: Pazuzu
 }
-13: {
+14: {
   Bomb Libra Block: Spencer Cave Libra Block Bombed
   Collapse Spencer's Cave: Ship Liberated
   Ice Golem: Ice Golem
@@ -422,21 +424,21 @@ Playthrough:
   Ice Pyramid 5F Statue: Ice Pyramid 5F Statue
   Ice Pyramid B1 - West Box: Jumbo Bomb
 }
-14: {
+15: {
   Captain Mac: Ship Loaned
   Mac Ship Steering Wheel: Ship Steering Wheel
 }
-15: {
+16: {
   Stone Golem: Stone Golem
 }
-16: {
+17: {
   Twinhead Wyvern: Twinhead Wyvern
 }
-17: {
+18: {
   Doom Castle 6F - West Box: Wakewater
   Zuh: Zuh
 }
-18: {
+19: {
   Dark King: Dark King
   Summer Aquaria: Summer Aquaria
 }

@@ -143,6 +143,7 @@ Playthrough:
 4: {
   Activate the "Protect Item" Prayer: Progressive Weapons
   Bake a Cake: Area: Rimmington
+  Cut a Diamond: Area: Falador
   Cut a Ruby: Progressive Armor
   Kill a Hill Giant: Progressive Armor
   Points: Doric's Quest: 1 QP (Doric's Quest)
@@ -159,17 +160,15 @@ Playthrough:
   Total Level 150: Area: Citharede Abbey
 }
 5: {
-  Cut a Diamond: Area: Falador
-  Points: Witch's Potion: 1 QP (Witch's Potion)
-}
-6: {
   Points: Below Ice Mountain: 1 QP (Below Ice Mountain)
   Points: Black Knights' Fortress: 3 QP (Black Knights' Fortress)
   Points: Goblin Diplomacy: 5 QP (Goblin Diplomacy)
+  Points: Witch's Potion: 1 QP (Witch's Potion)
   Quest: Below Ice Mountain: Progressive Armor
   Quest: Black Knights' Fortress: Area: Varrock Palace
+  Quest: Dragon Slayer: Victory
 }
-7: {
+6: {
   Have the Apothecary Make a Strength Potion: Area: Corsair Cove
   Points: Demon Slayer: 3 QP (Demon Slayer)
   Points: Romeo & Juliet: 5 QP (Romeo & Juliet)
@@ -178,10 +177,9 @@ Playthrough:
   Quest: Romeo & Juliet: Area: Karamja
   Quest: Shield of Arrav: Progressive Armor
 }
-8: {
+7: {
   Points: Pirate's Treasure: 2 QP (Pirate's Treasure)
   Points: The Corsair Curse: 2 QP (The Corsair Curse)
-  Quest: Dragon Slayer: Victory
   Quest: Pirate's Treasure: Area: Lumberyard
   Quest: The Corsair Curse: Area: HAM Hideout
 }

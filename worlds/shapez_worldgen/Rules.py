@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Has, HasAny, Or
+from rule_builder import True_, False_, And, Has, HasAny, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -88,9 +88,7 @@ def _shapezworldgen_has_x_belt_multiplier(state: "CollectionState", player: int,
 
 # Helper definitions for frontend evaluation
 # These are looked up by name instead of being inlined at every call site
-_HELPER_DEFINITIONS = {   'can_build_mam': {   'body': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                 'name': 'can_stack',
-                                                                                 'type': 'helper'},
+_HELPER_DEFINITIONS = {   'can_build_mam': {   'body': {   'conditions': [   {   'conditions': [   {'name': 'can_stack', 'type': 'helper'},
                                                                              {   'conditions': [   {   'conditions': [   {   'item': 'Quad '
                                                                                                                                      'Cutter',
                                                                                                                              'type': 'item_check'},
@@ -98,11 +96,9 @@ _HELPER_DEFINITIONS = {   'can_build_mam': {   'body': {   'conditions': [   {  
                                                                                                                                               'type': 'name'},
                                                                                                                              'type': 'not'}],
                                                                                                        'type': 'and'},
-                                                                                                   {   'conditions': [   {   'args': [   ],
-                                                                                                                             'name': 'can_cut_half',
+                                                                                                   {   'conditions': [   {   'name': 'can_cut_half',
                                                                                                                              'type': 'helper'},
-                                                                                                                         {   'args': [   ],
-                                                                                                                             'name': 'can_rotate_90',
+                                                                                                                         {   'name': 'can_rotate_90',
                                                                                                                              'type': 'helper'}],
                                                                                                        'type': 'and'}],
                                                                                  'type': 'or'}],
@@ -113,8 +109,7 @@ _HELPER_DEFINITIONS = {   'can_build_mam': {   'body': {   'conditions': [   {  
                                                                                                               'Painter']}],
                                                                                  'method': 'has_any',
                                                                                  'type': 'state_method'},
-                                                                             {   'args': [],
-                                                                                 'name': 'can_use_quad_painter',
+                                                                             {   'name': 'can_use_quad_painter',
                                                                                  'type': 'helper'}],
                                                            'type': 'or'},
                                                        {'item': 'Color Mixer', 'type': 'item_check'},
@@ -250,8 +245,7 @@ _HELPER_DEFINITIONS = {   'can_build_mam': {   'body': {   'conditions': [   {  
                                                                                                                                                                                  'Painter']}],
                                                                                                                                                     'method': 'has_any',
                                                                                                                                                     'type': 'state_method'},
-                                                                                                                                                {   'args': [   ],
-                                                                                                                                                    'name': 'can_use_quad_painter',
+                                                                                                                                                {   'name': 'can_use_quad_painter',
                                                                                                                                                     'type': 'helper'}],
                                                                                                                               'type': 'or'},
                                                                                                                'test': {   'left': {   'index': {   'name': 'index',
@@ -433,7 +427,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Extracting shapes from patches", player),
-        HasAny(['Chaining Extractor', 'Extractor'])
+        HasAny('Chaining Extractor', 'Extractor')
     )
 
     world.set_rule(
@@ -443,17 +437,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Placing any building", player),
-        HasAny(['Balancer', 'Belt', 'Belt Reader', 'Chaining Extractor', 'Color Mixer', 'Compact Merger', 'Compact Splitter', 'Cutter', 'Display', 'Double Painter', 'Extractor', 'Item Filter', 'Painter', 'Quad Cutter', 'Quad Painter', 'Rotator', 'Rotator (180°)', 'Rotator (CCW)', 'Stacker', 'Storage', 'Switch', 'Trash', 'Tunnel', 'Tunnel Tier II', 'Wires'])
+        HasAny('Balancer', 'Belt', 'Belt Reader', 'Chaining Extractor', 'Color Mixer', 'Compact Merger', 'Compact Splitter', 'Cutter', 'Display', 'Double Painter', 'Extractor', 'Item Filter', 'Painter', 'Quad Cutter', 'Quad Painter', 'Rotator', 'Rotator (180°)', 'Rotator (CCW)', 'Stacker', 'Storage', 'Switch', 'Trash', 'Tunnel', 'Tunnel Tier II', 'Wires')
     )
 
     world.set_rule(
         multiworld.get_entrance("Transporting shapes over the canvas", player),
-        HasAny(['Belt', 'Compact Merger', 'Compact Splitter'])
+        HasAny('Belt', 'Compact Merger', 'Compact Splitter')
     )
 
     world.set_rule(
         multiworld.get_entrance("Cutting with half cutter", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_cut_half, helper_name="can_cut_half")
     )
 
     world.set_rule(
@@ -463,7 +457,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Stacking shapes", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_stack, helper_name="can_stack")
     )
 
     world.set_rule(
@@ -478,220 +472,220 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Painting with (double) painter", player),
-        HasAny(['Double Painter', 'Painter'])
+        HasAny('Double Painter', 'Painter')
     )
 
     world.set_rule(
         multiworld.get_entrance("Copying and placing blueprints", player),
-        And(True_(), True_(), True_(), Has('Blueprints'))
+        And(HelperCall(helper_func=_shapezworldgen_can_make_stitched_shape, helper_name="can_make_stitched_shape", args=(None,)), HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors"), HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint"), Has('Blueprints'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Building a MAM", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_build_mam, helper_name="can_build_mam", args=(None,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Using all main buildings", player),
-        And(True_(), True_(), True_())
+        And(HelperCall(helper_func=_shapezworldgen_can_make_stitched_shape, helper_name="can_make_stitched_shape", args=(None,)), HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors"), HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Using first level building", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Cutter', 'Rotator', 'Painter', 'Color Mixer', 'Stacker'], 0, None, None,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Using first upgrade building", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Stacker', 'Cutter', 'Rotator', 'Painter', 'Color Mixer'], 0, None, None,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Cutting in single half", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_make_half_shape, helper_name="can_make_half_shape")
     )
 
     world.set_rule(
         multiworld.get_entrance("Cutting in single piece", player),
-        Or(And(True_(), True_()), Has('Quad Cutter'))
+        Or(And(HelperCall(helper_func=_shapezworldgen_can_cut_half, helper_name="can_cut_half"), HelperCall(helper_func=_shapezworldgen_can_rotate_90, helper_name="can_rotate_90")), Has('Quad Cutter'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Cutting and stacking into two halves", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_make_half_half_shape, helper_name="can_make_half_half_shape")
     )
 
     world.set_rule(
         multiworld.get_entrance("Stitching complex shapes", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_make_stitched_shape, helper_name="can_make_stitched_shape", args=(None,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Rotating and stitching a single windmill half", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_make_east_windmill, helper_name="can_make_east_windmill")
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting with a quad painter or stitching", player),
-        Or(True_(), True_())
+        Or(HelperCall(helper_func=_shapezworldgen_can_make_stitched_shape, helper_name="can_make_stitched_shape", args=(None,)), HelperCall(helper_func=_shapezworldgen_can_use_quad_painter, helper_name="can_use_quad_painter"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Why windmill, why?", player),
-        Or(And(True_(), True_()), True_())
+        Or(And(HelperCall(helper_func=_shapezworldgen_can_make_east_windmill, helper_name="can_make_east_windmill"), HelperCall(helper_func=_shapezworldgen_can_use_quad_painter, helper_name="can_use_quad_painter")), HelperCall(helper_func=_shapezworldgen_can_make_stitched_shape, helper_name="can_make_stitched_shape", args=(None,)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Quad painting a half-half shape", player),
-        Or(And(True_(), True_()), True_())
+        Or(And(HelperCall(helper_func=_shapezworldgen_can_make_half_half_shape, helper_name="can_make_half_half_shape"), HelperCall(helper_func=_shapezworldgen_can_use_quad_painter, helper_name="can_use_quad_painter")), HelperCall(helper_func=_shapezworldgen_can_make_stitched_shape, helper_name="can_make_stitched_shape", args=(None,)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Quad painting a half shape", player),
-        Or(And(True_(), True_()), True_())
+        Or(And(HelperCall(helper_func=_shapezworldgen_can_make_half_shape, helper_name="can_make_half_shape"), HelperCall(helper_func=_shapezworldgen_can_use_quad_painter, helper_name="can_use_quad_painter")), HelperCall(helper_func=_shapezworldgen_can_make_stitched_shape, helper_name="can_make_stitched_shape", args=(None,)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Using second level building", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Cutter', 'Rotator', 'Painter', 'Color Mixer', 'Stacker'], 1, None, None,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Using third level building", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Cutter', 'Rotator', 'Painter', 'Color Mixer', 'Stacker'], 2, None, None,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Using fourth level building", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Cutter', 'Rotator', 'Painter', 'Color Mixer', 'Stacker'], 3, None, None,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Using fifth level building", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Cutter', 'Rotator', 'Painter', 'Color Mixer', 'Stacker'], 4, None, None,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Using second upgrade building", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Stacker', 'Cutter', 'Rotator', 'Painter', 'Color Mixer'], 1, None, None,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Using third upgrade building", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Stacker', 'Cutter', 'Rotator', 'Painter', 'Color Mixer'], 2, None, None,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Using fourth upgrade building", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Stacker', 'Cutter', 'Rotator', 'Painter', 'Color Mixer'], 3, None, None,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Using fifth upgrade building", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_has_logic_list_building, helper_name="has_logic_list_building", args=(['Stacker', 'Cutter', 'Rotator', 'Painter', 'Color Mixer'], 4, None, None,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Delivering per second with 1.6x belt speed", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_has_x_belt_multiplier, helper_name="has_x_belt_multiplier", args=(1.6,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a full shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint")
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a full shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors")
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a half shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint")
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a half shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors")
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a piece shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint")
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a piece shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors")
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a stitched shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint")
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a stitched shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors")
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a east windmill shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint")
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a east windmill shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors")
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a half-half shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint")
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a half-half shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors")
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a colorful east windmill shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint")
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a colorful east windmill shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors")
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a colorful half-half shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint")
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a colorful half-half shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors")
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a colorful full shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint")
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a colorful full shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors")
     )
 
     world.set_rule(
         multiworld.get_entrance("Painting a colorful half shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_paint, helper_name="can_paint")
     )
 
     world.set_rule(
         multiworld.get_entrance("Mixing colors for a colorful half shape", player),
-        True_()
+        HelperCall(helper_func=_shapezworldgen_can_mix_colors, helper_name="can_mix_colors")
     )

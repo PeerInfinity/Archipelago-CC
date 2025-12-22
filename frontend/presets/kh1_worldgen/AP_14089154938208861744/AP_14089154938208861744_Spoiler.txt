@@ -568,6 +568,15 @@ Playthrough:
   Traverse Town Defeat Guard Armor Brave Warrior Event: Olympus Coliseum
   Traverse Town Green Room Clock Puzzle Chest: Lucky Emblem
   Traverse Town Item Shop Postcard: Puppy
+  Traverse Town Piano Room Return 10 Puppies: Puppy
+  Traverse Town Piano Room Return 20 Puppies: Blizzard Arts
+  Traverse Town Piano Room Return 30 Puppies: Puppy
+  Traverse Town Piano Room Return 40 Puppies: Postcard
+  Traverse Town Piano Room Return 50 Puppies Reward 1: Pumpkinhead
+  Traverse Town Piano Room Return 50 Puppies Reward 2: Progressive Thunder
+  Traverse Town Piano Room Return 60 Puppies: Puppy
+  Traverse Town Piano Room Return 80 Puppies: Puppy
+  Traverse Town Piano Room Return 99 Puppies Reward 2: Divine Rose
   Traverse Town Red Room Chest: Combo Master
   Wonderland Lotus Forest Red Flowers on the Main Path: Puppy
   Wonderland Lotus Forest Yellow Flowers in Middle Clearing and Through Painting: Orichalcum
@@ -583,6 +592,9 @@ Playthrough:
   Traverse Town Geppetto's House Geppetto Reward 3: Progressive Fire
   Traverse Town Geppetto's House Postcard: Three Wishes
   Traverse Town Geppetto's House Talk to Pinocchio: Progressive Thunder
+  Traverse Town Gizmo Shop Postcard 1: Cure Arts
+  Traverse Town Gizmo Shop Postcard 2: Progressive Stop
+  Traverse Town Mail Postcard 04 Event: Orichalcum
   Wonderland Lotus Forest Corner Chest: Green Trinity
   Wonderland Lotus Forest Glide Chest: Postcard
   Wonderland Queen's Castle Hedge Left Red Chest: Puppy
@@ -624,12 +636,9 @@ Playthrough:
   Neverland Pirate Ship Crows Nest Chest: Puppy
   Neverland Seal Keyhole Navi-G Piece Event: Puppy
   Neverland Seal Keyhole Tinker Bell Event: Puppy
-  Traverse Town Gizmo Shop Postcard 1: Cure Arts
-  Traverse Town Gizmo Shop Postcard 2: Progressive Stop
   Traverse Town Item Workshop Left Chest: MP Rage
   Traverse Town Item Workshop Right Chest: Lady Luck
-  Traverse Town Mail Postcard 04 Event: Orichalcum
-  Traverse Town Piano Room Return 10 Puppies: Puppy
+  Traverse Town Mail Postcard 05 Event: Progressive Gravity
   Wonderland Bizarre Room Green Trinity Chest: Hercules Cup
   Wonderland Rabbit Hole Green Trinity Chest: Lucky Emblem
 }
@@ -646,9 +655,6 @@ Playthrough:
   Hollow Bastion Rising Falls Under Water 1st Chest: Mythril
   Hollow Bastion Waterway Blizzard on Bubble Chest: Lucky Emblem
   Hollow Bastion Waterway Unlock Passage from Base Level Chest: Postcard
-  Traverse Town Piano Room Return 20 Puppies: Blizzard Arts
-  Traverse Town Piano Room Return 30 Puppies: Puppy
-  Traverse Town Piano Room Return 40 Puppies: Postcard
 }
 5: {
   Deep Jungle Camp Hi-Potion Experiment: Puppy
@@ -672,11 +678,8 @@ Playthrough:
   End of the World World Terminus Neverland Chest: Lucky Emblem
   End of the World World Terminus Olympus Coliseum Chest: Mythril
   End of the World World Terminus Wonderland Chest: Hollow Bastion
-  Traverse Town Mail Postcard 05 Event: Progressive Gravity
   Traverse Town Mail Postcard 06 Event: Mythril
   Traverse Town Mail Postcard 07 Event: High Jump
-  Traverse Town Piano Room Return 50 Puppies Reward 1: Pumpkinhead
-  Traverse Town Piano Room Return 50 Puppies Reward 2: Progressive Thunder
 }
 6: {
   Agrabah Cave of Wonders Treasure Room Red Trinity: Puppy
@@ -686,7 +689,6 @@ Playthrough:
   Hollow Bastion Entrance Hall Emblem Piece (Fountain): Emblem Piece (Fountain)
   Hollow Bastion Entrance Hall Emblem Piece (Statue): Emblem Piece (Statue)
   Traverse Town Alleyway Behind Crates Chest: Spellbinder
-  Traverse Town Piano Room Return 60 Puppies: Puppy
 }
 7: {
   Hollow Bastion Defeat Dragon Maleficent Fireglow Event: Mythril
@@ -706,7 +708,6 @@ Playthrough:
 8: {
   Neverland Hold Aero Chest: Postcard
   Neverland Hold Yellow Trinity Left Blue Chest: Orichalcum
-  Traverse Town Piano Room Return 80 Puppies: Puppy
 }
 9: {
   Traverse Town Mail Postcard 08 Event: Blue Trinity
@@ -755,5 +756,4 @@ Playthrough:
 11: {
   Final Ansem: Victory
   Traverse Town Mail Postcard 10 Event: Progressive Glide
-  Traverse Town Piano Room Return 99 Puppies Reward 2: Divine Rose
 }

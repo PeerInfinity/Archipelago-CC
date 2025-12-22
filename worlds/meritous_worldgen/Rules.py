@@ -42,7 +42,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Back to the entrance with the Knife", player),
-        HasAll(['Agate Knife', 'Cursed Seal'])
+        HasAll('Agate Knife', 'Cursed Seal')
     )
 
     world.set_rule(

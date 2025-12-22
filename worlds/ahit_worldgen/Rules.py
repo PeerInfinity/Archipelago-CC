@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, False_, Has, Or, True_
+from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, False_, Has, HelperCall, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -115,8 +115,7 @@ _HELPER_DEFINITIONS = {   'Difficulty': {'body': {'name': 'value', 'type': 'name
                                                                                  'type': 'f_string',
                                                                                  'value': 'Act Completion ({...})'}},
                                                                 {   'type': 'return',
-                                                                    'value': {   'args': [],
-                                                                                 'function': {   'attr': 'access_rule',
+                                                                    'value': {   'function': {   'attr': 'access_rule',
                                                                                                  'object': {   'args': [   {   'name': 'name',
                                                                                                                                'type': 'name'}],
                                                                                                                'function': {   'attr': 'get_location',
@@ -254,17 +253,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Telescope -> Time's End", player),
-        And(True_(), True_(), Has('Time Piece', 35))
+        And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,)), Has('Time Piece', 35))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Lab Portal - Entrance 1", player),
-        And(True_(), Has('Time Piece', 8))
+        And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,)), Has('Time Piece', 8))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Gallery Portal - Entrance 1", player),
-        And(True_(), Has('Time Piece', 17))
+        And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Time Piece', 17))
     )
 
     world.set_rule(
@@ -299,7 +298,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 1", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
     )
 
     world.set_rule(
@@ -314,7 +313,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 2", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
     )
 
     world.set_rule(
@@ -329,7 +328,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 3", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
     )
 
     world.set_rule(
@@ -344,7 +343,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 4", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
     )
 
     world.set_rule(
@@ -374,7 +373,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 5", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
     )
 
     world.set_rule(
@@ -389,7 +388,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 6", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
     )
 
     world.set_rule(
@@ -434,12 +433,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 1", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Train',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Mafia Town - Act 5: Connection 2", player),
-        Or(True_(), Has('Umbrella'))
+        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
     )
 
     world.set_rule(
@@ -454,17 +453,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mafia Town - Act 5: Connection 1", player),
-        Or(True_(), Has('Umbrella'))
+        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 4: Connection 1", player),
-        And(And(True_(), Has('Hookshot Badge')), True_())
+        And(And(True_(), Has('Hookshot Badge')), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 5: Connection 1", player),
-        And(And(True_(), Has('Hookshot Badge')), True_())
+        And(And(True_(), Has('Hookshot Badge')), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,)))
     )
 
     world.set_rule(
@@ -479,7 +478,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 2", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Train',))
     )
 
     world.set_rule(
@@ -514,7 +513,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 1", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
     )
 
     world.set_rule(
@@ -529,7 +528,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 2", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
     )
 
     world.set_rule(
@@ -544,7 +543,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 3", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
     )
 
     world.set_rule(
@@ -569,7 +568,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 4", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
     )
 
     world.set_rule(
@@ -589,7 +588,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 5", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
     )
 
     world.set_rule(
@@ -604,12 +603,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 4: Connection 2", player),
-        And(And(True_(), Has('Hookshot Badge')), True_())
+        And(And(True_(), Has('Hookshot Badge')), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 5: Connection 2", player),
-        And(And(True_(), Has('Hookshot Badge')), True_())
+        And(And(True_(), Has('Hookshot Badge')), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,)))
     )
 
     world.set_rule(
@@ -634,7 +633,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 1", player),
-        And(And(True_(), Has('Hookshot Badge')), True_())
+        And(And(True_(), Has('Hookshot Badge')), HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Crayon',)))
     )
 
     world.set_rule(
@@ -644,7 +643,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("-> The Birdhouse", player),
-        And(True_(), Has('Hookshot Badge'))
+        And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Hookshot Badge'))
     )
 
     world.set_rule(
@@ -659,12 +658,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("-> The Twilight Bell", player),
-        And(True_(), Has('Hookshot Badge'))
+        And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,)), Has('Hookshot Badge'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 2", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Crayon',))
     )
 
     world.set_rule(
@@ -684,32 +683,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - Gallery)", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia HQ - Hallway Brewing Crate", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia HQ - Secret Room", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Cheating the Race)", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Dead Bird Studio)", player),
-        Or(True_(), Has('Umbrella'))
+        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
     )
 
     world.set_rule(
         multiworld.get_location("Murder on the Owl Express - Raven Suite Room", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
@@ -759,17 +758,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio - DJ Grooves Sign Chest", player),
-        Or(True_(), Has('Umbrella'))
+        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio - Tepee Chest", player),
-        Or(True_(), Has('Umbrella'))
+        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio - Conductor Chest", player),
-        Or(True_(), Has('Umbrella'))
+        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Umbrella'))
     )
 
     world.set_rule(
@@ -789,17 +788,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (Mail Delivery Service)", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,))
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Mystifying Time Mesa: Zipline", player),
-        Or(True_(), True_())
+        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(0,)), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(4,)))
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - The Twilight Path", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
@@ -814,7 +813,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Yellow Band Hills", player),
-        And(True_(), Has('Hookshot Badge'))
+        And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), Has('Hookshot Badge'))
     )
 
     world.set_rule(
@@ -834,7 +833,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - The Birdhouse: Dweller Platforms Relic", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
@@ -844,12 +843,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - The Twilight Bell)", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - Curly Tail Trail)", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
     )
 
     world.set_rule(
@@ -864,12 +863,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Blue Vault Brewing Crate", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Ice Hat Cage", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
     )
 
     world.set_rule(
@@ -879,17 +878,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Top of Ruined Tower", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Hot Air Balloon", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Secret Cave", player),
-        Or(True_(), Has('HUMT Access'))
+        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), Has('HUMT Access'))
     )
 
     world.set_rule(
@@ -919,7 +918,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Swamp Gravestone", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
@@ -929,37 +928,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Long Tree Climb Chest", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Infinite Yarn Bush", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Magnet Badge Bush", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Dweller Stump", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Dweller Floating Rocks", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Dweller Platforming Tree B", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Dweller Shack", player),
-        True_()
+        HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,))
     )
 
     world.set_rule(
@@ -974,15 +973,15 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - Village)", player),
-        Or(True_(), True_(), Has('Umbrella'))
+        Or(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,)), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,)), Has('Umbrella'))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (The Finale)", player),
-        And(True_(), Has('Hookshot Badge'))
+        And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,)), Has('Hookshot Badge'))
     )
 
     world.set_rule(
         multiworld.get_location("Time Piece Cluster", player),
-        And(True_(), Has('Hookshot Badge'))
+        And(HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(3,)), Has('Hookshot Badge'))
     )

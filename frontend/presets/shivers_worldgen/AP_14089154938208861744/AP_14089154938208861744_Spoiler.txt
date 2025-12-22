@@ -17,10 +17,8 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
-Early Beth:                      1
-Early Lightning:                 0
-Ixupi Captures Needed:           10
-Puzzle Hints Required:           1
+Early Beth:                      Yes
+Early Lightning:                 No
 
 
 Locations:
@@ -139,6 +137,7 @@ Playthrough:
   Puzzle Solved Stone Henge: Key for Bedroom
 }
 2: {
+  Mystery Solved: Mt. Pleasant Tribune: 45 year Old Mystery Solved!
   Puzzle Hint Found: Atlantis Map: Crawling
   Puzzle Hint Found: Tape Recorder Heard: Key for Janitor Closet
   Storage: Desk Drawer: Crystal Pot Bottom DUPE
@@ -154,6 +153,7 @@ Playthrough:
   Storage: Library Statue: Sand Pot Bottom DUPE
 }
 4: {
+  Clock Chains: Set Time
   Flashback Memory Obtained Beth's Ghost: Ash Pot Bottom
   Flashback Memory Obtained Merrick's Ghost: Sand Pot Top
   Jukebox: Set Song
@@ -177,10 +177,8 @@ Playthrough:
   Viewed Fortune: Viewed Fortune
 }
 5: {
-  Clock Chains: Set Time
   Final Riddle: Planets Aligned: Ash Pot Top
   Ixupi Captured Sand: Oil Pot Bottom
-  Mystery Solved: Mt. Pleasant Tribune: 45 year Old Mystery Solved!
   Orrery: Aligned Planets
   Puzzle Hint Found: Basilisk Bone Fragments: Cloth Pot Top
   Puzzle Solved Anansi Music Box: Wax Pot Top
@@ -188,55 +186,53 @@ Playthrough:
   Puzzle Solved Bedroom Elevator: Water Pot Bottom
   Puzzle Solved Organ: Oil Pot Top
   Set Skull Dial: Prehistoric: Set Skull Dial: Prehistoric
+  Storage: Clock Tower: Water Pot Bottom DUPE
   Storage: Eagles Nest: Wax Pot Top DUPE
   Storage: Ocean: Lightning Pot Top DUPE
   Storage: Workshop Drawers: Metal Pot Bottom DUPE
 }
 6: {
-  Ixupi Captured Oil: Lightning Pot Top
-  Norse Stone: Viewed Norse Stone
-  Storage: Clock Tower: Water Pot Bottom DUPE
-}
-7: {
   Beth's Body: Viewed Page 17
   Final Riddle: Beth's Body Page 17: Key for Projector Room
+  Ixupi Captured Oil: Lightning Pot Top
+  Norse Stone: Viewed Norse Stone
 }
-8: {
+7: {
   Guillotine: Lost Your Head
   Set Skull Dial: Tar River: Set Skull Dial: Tar River
   Storage: Tar River: Wax Pot Bottom DUPE
   Viewed Theater Movie: Viewed Theater Movie
 }
-9: {
+8: {
   Puzzle Solved Maze Door: Key for Puzzle Room
 }
-10: {
+9: {
   Puzzle Hint Found: Mastermind Information Plaque: Crystal Pot Top
   Puzzle Solved Mastermind: Wood Pot Top
   Puzzle Solved Skull Dial Door: Wax Pot Bottom
   Storage: Skull Bridge: Ash Pot Top DUPE
   Storage: Slide: Ash Pot Bottom DUPE
 }
-11: {
+10: {
   Ixupi Captured Ash: Crystal Pot Bottom
   Ixupi Captured Wax: Key for Library
 }
-12: {
+11: {
   Ixupi Captured Crystal: Wood Pot Bottom
 }
-13: {
+12: {
   Ixupi Captured Wood: Key for Greenhouse
 }
-14: {
+13: {
   Storage: Greenhouse: Cloth Pot Top DUPE
 }
-15: {
+14: {
   Ixupi Captured Cloth: Water Pot Top
   Storage: Janitor Closet: Lightning Pot Bottom DUPE
 }
-16: {
+15: {
   Ixupi Captured Water: Metal Pot Top
 }
-17: {
+16: {
   Ixupi Captured Metal: Lightning Pot Bottom
 }

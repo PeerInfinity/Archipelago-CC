@@ -19,9 +19,7 @@
             "name": "StartProof",
             "connected_region": "Definitions",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -34,18 +32,14 @@
             "name": "ToAxioms",
             "connected_region": "Axioms",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "ToBasicProperties",
             "connected_region": "BasicProperties",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -53,7 +47,6 @@
             "connected_region": "ArithmeticOperations",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "df-2",
@@ -68,9 +61,7 @@
             "name": "Definition of 2",
             "id": 200000001,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "df-2",
@@ -84,9 +75,7 @@
             "name": "Definition of 3",
             "id": 200000002,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "df-3",
@@ -100,9 +89,7 @@
             "name": "Definition of 4",
             "id": 200000003,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "df-4",
@@ -121,9 +108,7 @@
             "name": "BackToDefinitions",
             "connected_region": "Definitions",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -132,9 +117,7 @@
             "name": "1 is Complex",
             "id": 200000004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "ax-1cn",
@@ -153,9 +136,7 @@
             "name": "BackToDefinitionsFromProperties",
             "connected_region": "Definitions",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -164,9 +145,7 @@
             "name": "2 is Complex",
             "id": 200000005,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "2cn",
@@ -186,7 +165,6 @@
             "connected_region": "ProofCompletion",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "addassi",
@@ -202,7 +180,6 @@
             "id": 200000006,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "df-2",
                 "count": 1
@@ -221,7 +198,6 @@
             "id": 200000007,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "df-3",
                 "count": 1
@@ -240,7 +216,6 @@
             "id": 200000008,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "2cn",
@@ -267,7 +242,6 @@
             "id": 200000009,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "addassi",
@@ -289,7 +263,6 @@
             "id": 200000010,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "3eqtri",
@@ -310,7 +283,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "eqtr4i",
                 "count": 1
@@ -525,7 +497,7 @@
         "start_inventory": {},
         "start_location_hints": []
       },
-      "world_directory": "mathadventure_worldgen"
+      "world_directory": "mathadventure"
     }
   },
   "game_info": {

@@ -19,9 +19,7 @@
             "name": "Ceres->Landing Site",
             "connected_region": "Landing Site",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -34,108 +32,84 @@
             "name": "Landing Site->Blue Brinstar Elevator Bottom",
             "connected_region": "Blue Brinstar Elevator Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Landing Site->Keyhunter Room Bottom",
             "connected_region": "Keyhunter Room Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Landing Site->Lower Mushrooms Left",
             "connected_region": "Lower Mushrooms Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Landing Site->Energy Tank, Gauntlet",
             "connected_region": "Energy Tank, Gauntlet",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Landing Site->Bomb",
             "connected_region": "Bomb",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Landing Site->Energy Tank, Terminator",
             "connected_region": "Energy Tank, Terminator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Landing Site->Power Bomb (Crateria surface)",
             "connected_region": "Power Bomb (Crateria surface)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Landing Site->Missile (Crateria bottom)",
             "connected_region": "Missile (Crateria bottom)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Landing Site->Missile (Crateria gauntlet right)",
             "connected_region": "Missile (Crateria gauntlet right)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Landing Site->Missile (Crateria gauntlet left)",
             "connected_region": "Missile (Crateria gauntlet left)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Landing Site->Super Missile (Crateria)",
             "connected_region": "Super Missile (Crateria)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Landing Site->Missile (Crateria middle)",
             "connected_region": "Missile (Crateria middle)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -148,81 +122,63 @@
             "name": "Blue Brinstar Elevator Bottom->Landing Site",
             "connected_region": "Landing Site",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Blue Brinstar Elevator Bottom->Morph Ball Room Left",
             "connected_region": "Morph Ball Room Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Blue Brinstar Elevator Bottom->Morphing Ball",
             "connected_region": "Morphing Ball",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Blue Brinstar Elevator Bottom->Energy Tank, Brinstar Ceiling",
             "connected_region": "Energy Tank, Brinstar Ceiling",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Blue Brinstar Elevator Bottom->Power Bomb (blue Brinstar)",
             "connected_region": "Power Bomb (blue Brinstar)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Blue Brinstar Elevator Bottom->Missile (blue Brinstar middle)",
             "connected_region": "Missile (blue Brinstar middle)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Blue Brinstar Elevator Bottom->Missile (blue Brinstar bottom)",
             "connected_region": "Missile (blue Brinstar bottom)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Blue Brinstar Elevator Bottom->Missile (blue Brinstar top)",
             "connected_region": "Missile (blue Brinstar top)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Blue Brinstar Elevator Bottom->Missile (blue Brinstar behind missile)",
             "connected_region": "Missile (blue Brinstar behind missile)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -235,36 +191,28 @@
             "name": "Gauntlet Top->Green Pirates Shaft Bottom Right",
             "connected_region": "Green Pirates Shaft Bottom Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Gauntlet Top->Energy Tank, Terminator",
             "connected_region": "Energy Tank, Terminator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Gauntlet Top->Missile (Crateria gauntlet right)",
             "connected_region": "Missile (Crateria gauntlet right)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Gauntlet Top->Missile (Crateria gauntlet left)",
             "connected_region": "Missile (Crateria gauntlet left)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -277,36 +225,28 @@
             "name": "Lower Mushrooms Left->Green Pirates Shaft Bottom Right",
             "connected_region": "Green Pirates Shaft Bottom Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Lower Mushrooms Left->Landing Site",
             "connected_region": "Landing Site",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Lower Mushrooms Left->Energy Tank, Terminator",
             "connected_region": "Energy Tank, Terminator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Lower Mushrooms Left->Green Brinstar Elevator",
             "connected_region": "Green Brinstar Elevator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -319,18 +259,14 @@
             "name": "Green Pirates Shaft Bottom Right->Lower Mushrooms Left",
             "connected_region": "Lower Mushrooms Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Green Pirates Shaft Bottom Right->Golden Four",
             "connected_region": "Golden Four",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -343,18 +279,14 @@
             "name": "Moat Right->Moat Left",
             "connected_region": "Moat Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Moat Right->West Ocean Left",
             "connected_region": "West Ocean Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -367,27 +299,21 @@
             "name": "Moat Left->Keyhunter Room Bottom",
             "connected_region": "Keyhunter Room Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Moat Left->Moat Right",
             "connected_region": "Moat Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Moat Left->Missile (Crateria moat)",
             "connected_region": "Missile (Crateria moat)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -400,36 +326,28 @@
             "name": "Keyhunter Room Bottom->Landing Site",
             "connected_region": "Landing Site",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Keyhunter Room Bottom->Moat Left",
             "connected_region": "Moat Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Keyhunter Room Bottom->Moat Right",
             "connected_region": "Moat Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Keyhunter Room Bottom->Red Brinstar Elevator",
             "connected_region": "Red Brinstar Elevator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -442,27 +360,21 @@
             "name": "Morph Ball Room Left->Blue Brinstar Elevator Bottom",
             "connected_region": "Blue Brinstar Elevator Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Morph Ball Room Left->Power Bomb (blue Brinstar)",
             "connected_region": "Power Bomb (blue Brinstar)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Morph Ball Room Left->Green Hill Zone Top Right",
             "connected_region": "Green Hill Zone Top Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -475,72 +387,56 @@
             "name": "Green Brinstar Elevator->Big Pink",
             "connected_region": "Big Pink",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Green Brinstar Elevator->Etecoons Bottom",
             "connected_region": "Etecoons Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Green Brinstar Elevator->Reserve Tank, Brinstar",
             "connected_region": "Reserve Tank, Brinstar",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Green Brinstar Elevator->Missile (green Brinstar below super missile)",
             "connected_region": "Missile (green Brinstar below super missile)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Green Brinstar Elevator->Super Missile (green Brinstar top)",
             "connected_region": "Super Missile (green Brinstar top)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Green Brinstar Elevator->Missile (green Brinstar behind missile)",
             "connected_region": "Missile (green Brinstar behind missile)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Green Brinstar Elevator->Missile (green Brinstar behind reserve tank)",
             "connected_region": "Missile (green Brinstar behind reserve tank)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Green Brinstar Elevator->Lower Mushrooms Left",
             "connected_region": "Lower Mushrooms Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -553,90 +449,70 @@
             "name": "Big Pink->Green Brinstar Elevator",
             "connected_region": "Green Brinstar Elevator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Big Pink->Green Hill Zone Top Right",
             "connected_region": "Green Hill Zone Top Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Big Pink->Charge Beam",
             "connected_region": "Charge Beam",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Big Pink->Energy Tank, Waterway",
             "connected_region": "Energy Tank, Waterway",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Big Pink->Energy Tank, Brinstar Gate",
             "connected_region": "Energy Tank, Brinstar Gate",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Big Pink->Spore Spawn",
             "connected_region": "Spore Spawn",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Big Pink->Super Missile (pink Brinstar)",
             "connected_region": "Super Missile (pink Brinstar)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Big Pink->Missile (pink Brinstar top)",
             "connected_region": "Missile (pink Brinstar top)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Big Pink->Missile (pink Brinstar bottom)",
             "connected_region": "Missile (pink Brinstar bottom)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Big Pink->Power Bomb (pink Brinstar)",
             "connected_region": "Power Bomb (pink Brinstar)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -649,36 +525,28 @@
             "name": "Green Hill Zone Top Right->Big Pink",
             "connected_region": "Big Pink",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Green Hill Zone Top Right->Noob Bridge Right",
             "connected_region": "Noob Bridge Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Green Hill Zone Top Right->Missile (green Brinstar pipe)",
             "connected_region": "Missile (green Brinstar pipe)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Green Hill Zone Top Right->Morph Ball Room Left",
             "connected_region": "Morph Ball Room Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -691,18 +559,14 @@
             "name": "Noob Bridge Right->Green Hill Zone Top Right",
             "connected_region": "Green Hill Zone Top Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Noob Bridge Right->Red Tower Top Left",
             "connected_region": "Red Tower Top Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -715,18 +579,14 @@
             "name": "Etecoons Supers->Etecoons Bottom",
             "connected_region": "Etecoons Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Etecoons Supers->Super Missile (green Brinstar bottom)",
             "connected_region": "Super Missile (green Brinstar bottom)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -739,36 +599,28 @@
             "name": "Etecoons Bottom->Etecoons Supers",
             "connected_region": "Etecoons Supers",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Etecoons Bottom->Green Brinstar Elevator",
             "connected_region": "Green Brinstar Elevator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Etecoons Bottom->Energy Tank, Etecoons",
             "connected_region": "Energy Tank, Etecoons",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Etecoons Bottom->Power Bomb (green Brinstar bottom)",
             "connected_region": "Power Bomb (green Brinstar bottom)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -781,27 +633,21 @@
             "name": "West Ocean Left->Wrecked Ship Main",
             "connected_region": "Wrecked Ship Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "West Ocean Left->Missile (outside Wrecked Ship bottom)",
             "connected_region": "Missile (outside Wrecked Ship bottom)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "West Ocean Left->Moat Right",
             "connected_region": "Moat Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -814,117 +660,91 @@
             "name": "Wrecked Ship Main->Bowling",
             "connected_region": "Bowling",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Wrecked Ship Main->PhantoonRoomOut",
             "connected_region": "PhantoonRoomOut",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Wrecked Ship Main->West Ocean Left",
             "connected_region": "West Ocean Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Wrecked Ship Main->Wrecked Ship Back",
             "connected_region": "Wrecked Ship Back",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Wrecked Ship Main->Reserve Tank, Wrecked Ship",
             "connected_region": "Reserve Tank, Wrecked Ship",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Wrecked Ship Main->Right Super, Wrecked Ship",
             "connected_region": "Right Super, Wrecked Ship",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Wrecked Ship Main->Gravity Suit",
             "connected_region": "Gravity Suit",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Wrecked Ship Main->Missile (outside Wrecked Ship top)",
             "connected_region": "Missile (outside Wrecked Ship top)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Wrecked Ship Main->Missile (outside Wrecked Ship middle)",
             "connected_region": "Missile (outside Wrecked Ship middle)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Wrecked Ship Main->Missile (Wrecked Ship middle)",
             "connected_region": "Missile (Wrecked Ship middle)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Wrecked Ship Main->Missile (Gravity Suit)",
             "connected_region": "Missile (Gravity Suit)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Wrecked Ship Main->Missile (Wrecked Ship top)",
             "connected_region": "Missile (Wrecked Ship top)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Wrecked Ship Main->Super Missile (Wrecked Ship left)",
             "connected_region": "Super Missile (Wrecked Ship left)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -937,27 +757,21 @@
             "name": "Wrecked Ship Back->Crab Maze Left",
             "connected_region": "Crab Maze Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Wrecked Ship Back->Wrecked Ship Main",
             "connected_region": "Wrecked Ship Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Wrecked Ship Back->Energy Tank, Wrecked Ship",
             "connected_region": "Energy Tank, Wrecked Ship",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -970,9 +784,7 @@
             "name": "Bowling->West Ocean Left",
             "connected_region": "West Ocean Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -985,18 +797,14 @@
             "name": "Crab Maze Left->Wrecked Ship Back",
             "connected_region": "Wrecked Ship Back",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Crab Maze Left->Le Coude Right",
             "connected_region": "Le Coude Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1009,18 +817,14 @@
             "name": "PhantoonRoomOut->Wrecked Ship Main",
             "connected_region": "Wrecked Ship Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "PhantoonRoomOut->PhantoonRoomIn",
             "connected_region": "PhantoonRoomIn",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1033,18 +837,14 @@
             "name": "PhantoonRoomIn->Phantoon",
             "connected_region": "Phantoon",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "PhantoonRoomIn->PhantoonRoomOut",
             "connected_region": "PhantoonRoomOut",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1057,18 +857,14 @@
             "name": "Lava Dive Right->LN Entrance",
             "connected_region": "LN Entrance",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Lava Dive Right->Kronic Boost Room Bottom Left",
             "connected_region": "Kronic Boost Room Bottom Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1081,45 +877,35 @@
             "name": "LN Entrance->Firefleas",
             "connected_region": "Firefleas",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "LN Entrance->LN Above GT",
             "connected_region": "LN Above GT",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "LN Entrance->Lava Dive Right",
             "connected_region": "Lava Dive Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "LN Entrance->Screw Attack Bottom",
             "connected_region": "Screw Attack Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "LN Entrance->Missile (Mickey Mouse room)",
             "connected_region": "Missile (Mickey Mouse room)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1132,27 +918,21 @@
             "name": "LN Above GT->LN Entrance",
             "connected_region": "LN Entrance",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "LN Above GT->Screw Attack Bottom",
             "connected_region": "Screw Attack Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "LN Above GT->Missile (Gold Torizo)",
             "connected_region": "Missile (Gold Torizo)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1165,36 +945,28 @@
             "name": "Screw Attack Bottom->LN Entrance",
             "connected_region": "LN Entrance",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Screw Attack Bottom->Screw Attack",
             "connected_region": "Screw Attack",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Screw Attack Bottom->Golden Torizo",
             "connected_region": "Golden Torizo",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Screw Attack Bottom->Super Missile (Gold Torizo)",
             "connected_region": "Super Missile (Gold Torizo)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1207,72 +979,56 @@
             "name": "Firefleas->Firefleas Top",
             "connected_region": "Firefleas Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Firefleas->LN Entrance",
             "connected_region": "LN Entrance",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Firefleas->Ridley Zone",
             "connected_region": "Ridley Zone",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Firefleas->Screw Attack Bottom",
             "connected_region": "Screw Attack Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Firefleas->Three Muskateers Room Left",
             "connected_region": "Three Muskateers Room Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Firefleas->Energy Tank, Firefleas",
             "connected_region": "Energy Tank, Firefleas",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Firefleas->Missile (lower Norfair above fire flea room)",
             "connected_region": "Missile (lower Norfair above fire flea room)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Firefleas->Missile (lower Norfair near Wave Beam)",
             "connected_region": "Missile (lower Norfair near Wave Beam)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1285,18 +1041,14 @@
             "name": "Firefleas Top->Firefleas",
             "connected_region": "Firefleas",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Firefleas Top->Power Bomb (lower Norfair above fire flea room)",
             "connected_region": "Power Bomb (lower Norfair above fire flea room)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1309,27 +1061,21 @@
             "name": "Ridley Zone->Firefleas",
             "connected_region": "Firefleas",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Ridley Zone->RidleyRoomOut",
             "connected_region": "RidleyRoomOut",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Ridley Zone->Wasteland",
             "connected_region": "Wasteland",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1342,18 +1088,14 @@
             "name": "Wasteland->Ridley Zone",
             "connected_region": "Ridley Zone",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Wasteland->Power Bomb (Power Bombs of shame)",
             "connected_region": "Power Bomb (Power Bombs of shame)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1366,18 +1108,14 @@
             "name": "Three Muskateers Room Left->Firefleas",
             "connected_region": "Firefleas",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Three Muskateers Room Left->Single Chamber Top Right",
             "connected_region": "Single Chamber Top Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1390,18 +1128,14 @@
             "name": "RidleyRoomOut->Ridley Zone",
             "connected_region": "Ridley Zone",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "RidleyRoomOut->RidleyRoomIn",
             "connected_region": "RidleyRoomIn",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1414,27 +1148,21 @@
             "name": "RidleyRoomIn->Ridley",
             "connected_region": "Ridley",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "RidleyRoomIn->Energy Tank, Ridley",
             "connected_region": "Energy Tank, Ridley",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "RidleyRoomIn->RidleyRoomOut",
             "connected_region": "RidleyRoomOut",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1447,36 +1175,28 @@
             "name": "Warehouse Zeela Room Left->KraidRoomOut",
             "connected_region": "KraidRoomOut",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Warehouse Zeela Room Left->Energy Tank, Kraid",
             "connected_region": "Energy Tank, Kraid",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Warehouse Zeela Room Left->Missile (Kraid)",
             "connected_region": "Missile (Kraid)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Warehouse Zeela Room Left->Warehouse Entrance Right",
             "connected_region": "Warehouse Entrance Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1489,18 +1209,14 @@
             "name": "KraidRoomOut->Warehouse Zeela Room Left",
             "connected_region": "Warehouse Zeela Room Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "KraidRoomOut->KraidRoomIn",
             "connected_region": "KraidRoomIn",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1513,27 +1229,21 @@
             "name": "KraidRoomIn->Kraid",
             "connected_region": "Kraid",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "KraidRoomIn->Varia Suit",
             "connected_region": "Varia Suit",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "KraidRoomIn->KraidRoomOut",
             "connected_region": "KraidRoomOut",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1546,27 +1256,21 @@
             "name": "Warehouse Entrance Left->Business Center",
             "connected_region": "Business Center",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Warehouse Entrance Left->Warehouse Entrance Right",
             "connected_region": "Warehouse Entrance Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Warehouse Entrance Left->East Tunnel Right",
             "connected_region": "East Tunnel Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1579,18 +1283,14 @@
             "name": "Warehouse Entrance Right->Warehouse Entrance Left",
             "connected_region": "Warehouse Entrance Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Warehouse Entrance Right->Warehouse Zeela Room Left",
             "connected_region": "Warehouse Zeela Room Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1603,90 +1303,70 @@
             "name": "Business Center->Bubble Mountain",
             "connected_region": "Bubble Mountain",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Business Center->Bubble Mountain Bottom",
             "connected_region": "Bubble Mountain Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Business Center->Cathedral",
             "connected_region": "Cathedral",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Business Center->Crocomire Speedway Bottom",
             "connected_region": "Crocomire Speedway Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Business Center->Warehouse Entrance Left",
             "connected_region": "Warehouse Entrance Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Business Center->Ice Beam",
             "connected_region": "Ice Beam",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Business Center->Hi-Jump Boots",
             "connected_region": "Hi-Jump Boots",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Business Center->Missile (below Ice Beam)",
             "connected_region": "Missile (below Ice Beam)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Business Center->Missile (Hi-Jump Boots)",
             "connected_region": "Missile (Hi-Jump Boots)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Business Center->Energy Tank (Hi-Jump Boots)",
             "connected_region": "Energy Tank (Hi-Jump Boots)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1699,18 +1379,14 @@
             "name": "Single Chamber Top Right->Bubble Mountain Top",
             "connected_region": "Bubble Mountain Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Single Chamber Top Right->Three Muskateers Room Left",
             "connected_region": "Three Muskateers Room Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1723,27 +1399,21 @@
             "name": "Cathedral->Bubble Mountain",
             "connected_region": "Bubble Mountain",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Cathedral->Business Center",
             "connected_region": "Business Center",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Cathedral->Missile (lava room)",
             "connected_region": "Missile (lava room)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1756,36 +1426,28 @@
             "name": "Kronic Boost Room Bottom Left->Bubble Mountain Bottom",
             "connected_region": "Bubble Mountain Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Kronic Boost Room Bottom Left->Bubble Mountain Top",
             "connected_region": "Bubble Mountain Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Kronic Boost Room Bottom Left->Crocomire Speedway Bottom",
             "connected_region": "Crocomire Speedway Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Kronic Boost Room Bottom Left->Lava Dive Right",
             "connected_region": "Lava Dive Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1798,54 +1460,42 @@
             "name": "Crocomire Speedway Bottom->Bubble Mountain Bottom",
             "connected_region": "Bubble Mountain Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Crocomire Speedway Bottom->Business Center",
             "connected_region": "Business Center",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Crocomire Speedway Bottom->Grapple Escape",
             "connected_region": "Grapple Escape",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Crocomire Speedway Bottom->Kronic Boost Room Bottom Left",
             "connected_region": "Kronic Boost Room Bottom Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Crocomire Speedway Bottom->Missile (below Ice Beam)",
             "connected_region": "Missile (below Ice Beam)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Crocomire Speedway Bottom->Crocomire Room Top",
             "connected_region": "Crocomire Room Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1858,27 +1508,21 @@
             "name": "Grapple Escape->Business Center",
             "connected_region": "Business Center",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Grapple Escape->Crocomire Speedway Bottom",
             "connected_region": "Crocomire Speedway Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Grapple Escape->Missile (above Crocomire)",
             "connected_region": "Missile (above Crocomire)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1891,72 +1535,56 @@
             "name": "Bubble Mountain->Bubble Mountain Bottom",
             "connected_region": "Bubble Mountain Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain->Bubble Mountain Top",
             "connected_region": "Bubble Mountain Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain->Business Center",
             "connected_region": "Business Center",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain->Cathedral",
             "connected_region": "Cathedral",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain->Reserve Tank, Norfair",
             "connected_region": "Reserve Tank, Norfair",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain->Missile (Norfair Reserve Tank)",
             "connected_region": "Missile (Norfair Reserve Tank)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain->Missile (bubble Norfair green door)",
             "connected_region": "Missile (bubble Norfair green door)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain->Missile (bubble Norfair)",
             "connected_region": "Missile (bubble Norfair)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1969,99 +1597,77 @@
             "name": "Bubble Mountain Top->Bubble Mountain",
             "connected_region": "Bubble Mountain",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain Top->Bubble Mountain Bottom",
             "connected_region": "Bubble Mountain Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain Top->Kronic Boost Room Bottom Left",
             "connected_region": "Kronic Boost Room Bottom Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain Top->Single Chamber Top Right",
             "connected_region": "Single Chamber Top Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain Top->Reserve Tank, Norfair",
             "connected_region": "Reserve Tank, Norfair",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain Top->Speed Booster",
             "connected_region": "Speed Booster",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain Top->Wave Beam",
             "connected_region": "Wave Beam",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain Top->Missile (Norfair Reserve Tank)",
             "connected_region": "Missile (Norfair Reserve Tank)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain Top->Missile (bubble Norfair green door)",
             "connected_region": "Missile (bubble Norfair green door)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain Top->Missile (Speed Booster)",
             "connected_region": "Missile (Speed Booster)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain Top->Missile (Wave Beam)",
             "connected_region": "Missile (Wave Beam)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2074,45 +1680,35 @@
             "name": "Bubble Mountain Bottom->Bubble Mountain",
             "connected_region": "Bubble Mountain",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain Bottom->Bubble Mountain Top",
             "connected_region": "Bubble Mountain Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain Bottom->Business Center",
             "connected_region": "Business Center",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain Bottom->Crocomire Speedway Bottom",
             "connected_region": "Crocomire Speedway Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Bubble Mountain Bottom->Kronic Boost Room Bottom Left",
             "connected_region": "Kronic Boost Room Bottom Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2125,63 +1721,49 @@
             "name": "Crocomire Room Top->Energy Tank, Crocomire",
             "connected_region": "Energy Tank, Crocomire",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Crocomire Room Top->Grapple Beam",
             "connected_region": "Grapple Beam",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Crocomire Room Top->Crocomire",
             "connected_region": "Crocomire",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Crocomire Room Top->Power Bomb (Crocomire)",
             "connected_region": "Power Bomb (Crocomire)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Crocomire Room Top->Missile (below Crocomire)",
             "connected_region": "Missile (below Crocomire)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Crocomire Room Top->Missile (Grapple Beam)",
             "connected_region": "Missile (Grapple Beam)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Crocomire Room Top->Crocomire Speedway Bottom",
             "connected_region": "Crocomire Speedway Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2194,81 +1776,63 @@
             "name": "Main Street Bottom->Crab Hole Bottom Left",
             "connected_region": "Crab Hole Bottom Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Street Bottom->Crab Shaft Left",
             "connected_region": "Crab Shaft Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Street Bottom->Oasis Bottom",
             "connected_region": "Oasis Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Street Bottom->Red Fish Room Bottom",
             "connected_region": "Red Fish Room Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Street Bottom->Energy Tank, Mama turtle",
             "connected_region": "Energy Tank, Mama turtle",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Street Bottom->Missile (green Maridia shinespark)",
             "connected_region": "Missile (green Maridia shinespark)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Street Bottom->Super Missile (green Maridia)",
             "connected_region": "Super Missile (green Maridia)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Street Bottom->Missile (green Maridia tatori)",
             "connected_region": "Missile (green Maridia tatori)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Street Bottom->Glass Tunnel Top",
             "connected_region": "Glass Tunnel Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2281,27 +1845,21 @@
             "name": "Mama Turtle->Main Street Bottom",
             "connected_region": "Main Street Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Mama Turtle->Energy Tank, Mama turtle",
             "connected_region": "Energy Tank, Mama turtle",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Mama Turtle->Missile (green Maridia tatori)",
             "connected_region": "Missile (green Maridia tatori)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2314,27 +1872,21 @@
             "name": "Crab Hole Bottom Left->Main Street Bottom",
             "connected_region": "Main Street Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Crab Hole Bottom Left->Oasis Bottom",
             "connected_region": "Oasis Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Crab Hole Bottom Left->East Tunnel Top Right",
             "connected_region": "East Tunnel Top Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2347,18 +1899,14 @@
             "name": "Red Fish Room Left->Red Fish Room Bottom",
             "connected_region": "Red Fish Room Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Red Fish Room Left->Caterpillar Room Top Right",
             "connected_region": "Caterpillar Room Top Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2371,18 +1919,14 @@
             "name": "Red Fish Room Bottom->Main Street Bottom",
             "connected_region": "Main Street Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Red Fish Room Bottom->Red Fish Room Left",
             "connected_region": "Red Fish Room Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2395,27 +1939,21 @@
             "name": "Crab Shaft Left->Beach",
             "connected_region": "Beach",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Crab Shaft Left->Crab Shaft Right",
             "connected_region": "Crab Shaft Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Crab Shaft Left->Main Street Bottom",
             "connected_region": "Main Street Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2428,18 +1966,14 @@
             "name": "Watering Hole->Beach",
             "connected_region": "Beach",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Watering Hole->Watering Hole Bottom",
             "connected_region": "Watering Hole Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2452,27 +1986,21 @@
             "name": "Watering Hole Bottom->Watering Hole",
             "connected_region": "Watering Hole",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Watering Hole Bottom->Super Missile (yellow Maridia)",
             "connected_region": "Super Missile (yellow Maridia)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Watering Hole Bottom->Missile (yellow Maridia super missile)",
             "connected_region": "Missile (yellow Maridia super missile)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2485,27 +2013,21 @@
             "name": "Beach->Crab Shaft Left",
             "connected_region": "Crab Shaft Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Beach->Watering Hole",
             "connected_region": "Watering Hole",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Beach->Missile (yellow Maridia false wall)",
             "connected_region": "Missile (yellow Maridia false wall)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2518,18 +2040,14 @@
             "name": "Crab Shaft Right->Crab Shaft Left",
             "connected_region": "Crab Shaft Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Crab Shaft Right->Aqueduct Top Left",
             "connected_region": "Aqueduct Top Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2542,18 +2060,14 @@
             "name": "Aqueduct Top Left->Aqueduct Bottom",
             "connected_region": "Aqueduct Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Aqueduct Top Left->Crab Shaft Right",
             "connected_region": "Crab Shaft Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2566,54 +2080,42 @@
             "name": "Aqueduct Bottom->Aqueduct",
             "connected_region": "Aqueduct",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Aqueduct Bottom->Aqueduct Top Left",
             "connected_region": "Aqueduct Top Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Aqueduct Bottom->Left Sandpit",
             "connected_region": "Left Sandpit",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Aqueduct Bottom->Post Botwoon",
             "connected_region": "Post Botwoon",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Aqueduct Bottom->Right Sandpit",
             "connected_region": "Right Sandpit",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Aqueduct Bottom->Botwoon",
             "connected_region": "Botwoon",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2626,27 +2128,21 @@
             "name": "Aqueduct->Aqueduct Bottom",
             "connected_region": "Aqueduct Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Aqueduct->Missile (pink Maridia)",
             "connected_region": "Missile (pink Maridia)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Aqueduct->Super Missile (pink Maridia)",
             "connected_region": "Super Missile (pink Maridia)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2659,36 +2155,28 @@
             "name": "Post Botwoon->Aqueduct Bottom",
             "connected_region": "Aqueduct Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Post Botwoon->Colosseum Top Right",
             "connected_region": "Colosseum Top Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Post Botwoon->Toilet Top",
             "connected_region": "Toilet Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Post Botwoon->Energy Tank, Botwoon",
             "connected_region": "Energy Tank, Botwoon",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2701,36 +2189,28 @@
             "name": "West Sand Hall Left->Aqueduct Bottom",
             "connected_region": "Aqueduct Bottom",
             "access_rule": {
-              "rule": "False_",
-              "options": [],
-              "args": {}
+              "rule": "False_"
             }
           },
           {
             "name": "West Sand Hall Left->Crab Hole Bottom Left",
             "connected_region": "Crab Hole Bottom Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "West Sand Hall Left->Main Street Bottom",
             "connected_region": "Main Street Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "West Sand Hall Left->Oasis Bottom",
             "connected_region": "Oasis Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2743,36 +2223,28 @@
             "name": "Left Sandpit->Oasis Bottom",
             "connected_region": "Oasis Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Left Sandpit->West Sand Hall Left",
             "connected_region": "West Sand Hall Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Left Sandpit->Reserve Tank, Maridia",
             "connected_region": "Reserve Tank, Maridia",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Left Sandpit->Missile (left Maridia sand pit room)",
             "connected_region": "Missile (left Maridia sand pit room)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2785,27 +2257,21 @@
             "name": "Oasis Bottom->Toilet Top",
             "connected_region": "Toilet Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Oasis Bottom->West Sand Hall Left",
             "connected_region": "West Sand Hall Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Oasis Bottom->Spring Ball",
             "connected_region": "Spring Ball",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2818,27 +2284,21 @@
             "name": "Right Sandpit->Oasis Bottom",
             "connected_region": "Oasis Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Right Sandpit->Missile (right Maridia sand pit room)",
             "connected_region": "Missile (right Maridia sand pit room)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Right Sandpit->Power Bomb (right Maridia sand pit room)",
             "connected_region": "Power Bomb (right Maridia sand pit room)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2851,18 +2311,14 @@
             "name": "Le Coude Right->Toilet Top",
             "connected_region": "Toilet Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Le Coude Right->Crab Maze Left",
             "connected_region": "Crab Maze Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2875,36 +2331,28 @@
             "name": "Toilet Top->Colosseum Top Right",
             "connected_region": "Colosseum Top Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Toilet Top->Le Coude Right",
             "connected_region": "Le Coude Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Toilet Top->Oasis Bottom",
             "connected_region": "Oasis Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Toilet Top->Plasma Beam",
             "connected_region": "Plasma Beam",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2917,18 +2365,14 @@
             "name": "Colosseum Top Right->Post Botwoon",
             "connected_region": "Post Botwoon",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Colosseum Top Right->Precious Room Top",
             "connected_region": "Precious Room Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2941,27 +2385,21 @@
             "name": "Precious Room Top->Colosseum Top Right",
             "connected_region": "Colosseum Top Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Precious Room Top->DraygonRoomOut",
             "connected_region": "DraygonRoomOut",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Precious Room Top->Missile (Draygon)",
             "connected_region": "Missile (Draygon)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2974,18 +2412,14 @@
             "name": "DraygonRoomOut->Precious Room Top",
             "connected_region": "Precious Room Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "DraygonRoomOut->DraygonRoomIn",
             "connected_region": "DraygonRoomIn",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2998,18 +2432,14 @@
             "name": "DraygonRoomIn->Draygon Room Bottom",
             "connected_region": "Draygon Room Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "DraygonRoomIn->DraygonRoomOut",
             "connected_region": "DraygonRoomOut",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3022,27 +2452,21 @@
             "name": "Draygon Room Bottom->DraygonRoomIn",
             "connected_region": "DraygonRoomIn",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Draygon Room Bottom->Draygon",
             "connected_region": "Draygon",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Draygon Room Bottom->Space Jump",
             "connected_region": "Space Jump",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3055,45 +2479,35 @@
             "name": "Red Tower Top Left->Caterpillar Room Top Right",
             "connected_region": "Caterpillar Room Top Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Red Tower Top Left->East Tunnel Right",
             "connected_region": "East Tunnel Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Red Tower Top Left->Red Brinstar Elevator",
             "connected_region": "Red Brinstar Elevator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Red Tower Top Left->X-Ray Scope",
             "connected_region": "X-Ray Scope",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Red Tower Top Left->Noob Bridge Right",
             "connected_region": "Noob Bridge Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3106,18 +2520,14 @@
             "name": "Caterpillar Room Top Right->Red Brinstar Elevator",
             "connected_region": "Red Brinstar Elevator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Caterpillar Room Top Right->Red Fish Room Left",
             "connected_region": "Red Fish Room Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3130,54 +2540,42 @@
             "name": "Red Brinstar Elevator->Caterpillar Room Top Right",
             "connected_region": "Caterpillar Room Top Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Red Brinstar Elevator->Red Tower Top Left",
             "connected_region": "Red Tower Top Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Red Brinstar Elevator->Power Bomb (red Brinstar sidehopper room)",
             "connected_region": "Power Bomb (red Brinstar sidehopper room)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Red Brinstar Elevator->Power Bomb (red Brinstar spike room)",
             "connected_region": "Power Bomb (red Brinstar spike room)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Red Brinstar Elevator->Missile (red Brinstar spike room)",
             "connected_region": "Missile (red Brinstar spike room)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Red Brinstar Elevator->Keyhunter Room Bottom",
             "connected_region": "Keyhunter Room Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3190,45 +2588,35 @@
             "name": "East Tunnel Right->East Tunnel Top Right",
             "connected_region": "East Tunnel Top Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "East Tunnel Right->Glass Tunnel Top",
             "connected_region": "Glass Tunnel Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "East Tunnel Right->Red Tower Top Left",
             "connected_region": "Red Tower Top Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "East Tunnel Right->Spazer",
             "connected_region": "Spazer",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "East Tunnel Right->Warehouse Entrance Left",
             "connected_region": "Warehouse Entrance Left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3241,18 +2629,14 @@
             "name": "East Tunnel Top Right->East Tunnel Right",
             "connected_region": "East Tunnel Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "East Tunnel Top Right->Crab Hole Bottom Left",
             "connected_region": "Crab Hole Bottom Left",
             "access_rule": {
-              "rule": "False_",
-              "options": [],
-              "args": {}
+              "rule": "False_"
             }
           }
         ],
@@ -3265,18 +2649,14 @@
             "name": "Glass Tunnel Top->East Tunnel Right",
             "connected_region": "East Tunnel Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Glass Tunnel Top->Main Street Bottom",
             "connected_region": "Main Street Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3289,18 +2669,14 @@
             "name": "Golden Four->Mother Brain",
             "connected_region": "Mother Brain",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Golden Four->Green Pirates Shaft Bottom Right",
             "connected_region": "Green Pirates Shaft Bottom Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3315,7 +2691,6 @@
             "id": 82005,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Landing Site"
               }
@@ -3339,7 +2714,6 @@
             "id": 82007,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Landing Site"
               }
@@ -3363,25 +2737,21 @@
             "id": 82008,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Lower Mushrooms Left"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Landing Site"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Gauntlet Top"
                   }
@@ -3407,7 +2777,6 @@
             "id": 82017,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Green Brinstar Elevator"
               }
@@ -3431,7 +2800,6 @@
             "id": 82023,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Big Pink"
               }
@@ -3455,7 +2823,6 @@
             "id": 82026,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Blue Brinstar Elevator Bottom"
               }
@@ -3479,7 +2846,6 @@
             "id": 82029,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Blue Brinstar Elevator Bottom"
               }
@@ -3503,7 +2869,6 @@
             "id": 82030,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Etecoons Bottom"
               }
@@ -3527,7 +2892,6 @@
             "id": 82033,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Big Pink"
               }
@@ -3551,7 +2915,6 @@
             "id": 82035,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Big Pink"
               }
@@ -3575,7 +2938,6 @@
             "id": 82038,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Red Tower Top Left"
               }
@@ -3599,7 +2961,6 @@
             "id": 82042,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "East Tunnel Right"
               }
@@ -3623,7 +2984,6 @@
             "id": 82043,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Warehouse Zeela Room Left"
               }
@@ -3647,7 +3007,6 @@
             "id": null,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "KraidRoomIn"
               }
@@ -3671,7 +3030,6 @@
             "id": 82048,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "KraidRoomIn"
               }
@@ -3695,7 +3053,6 @@
             "id": 82050,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Business Center"
               }
@@ -3719,7 +3076,6 @@
             "id": 82052,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Crocomire Room Top"
               }
@@ -3743,7 +3099,6 @@
             "id": 82053,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Business Center"
               }
@@ -3767,7 +3122,6 @@
             "id": 82060,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Crocomire Room Top"
               }
@@ -3791,18 +3145,15 @@
             "id": 82061,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Bubble Mountain"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Bubble Mountain Top"
                   }
@@ -3828,7 +3179,6 @@
             "id": 82066,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Bubble Mountain Top"
               }
@@ -3852,7 +3202,6 @@
             "id": 82068,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Bubble Mountain Top"
               }
@@ -3876,7 +3225,6 @@
             "id": null,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "RidleyRoomIn"
               }
@@ -3900,7 +3248,6 @@
             "id": 82078,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "RidleyRoomIn"
               }
@@ -3924,7 +3271,6 @@
             "id": 82079,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Screw Attack Bottom"
               }
@@ -3948,7 +3294,6 @@
             "id": 82080,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Firefleas"
               }
@@ -3972,7 +3317,6 @@
             "id": 82129,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Wrecked Ship Main"
               }
@@ -3996,7 +3340,6 @@
             "id": 82132,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Wrecked Ship Back"
               }
@@ -4020,7 +3363,6 @@
             "id": null,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "PhantoonRoomIn"
               }
@@ -4044,7 +3386,6 @@
             "id": 82134,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Wrecked Ship Main"
               }
@@ -4068,7 +3409,6 @@
             "id": 82135,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Wrecked Ship Main"
               }
@@ -4092,18 +3432,15 @@
             "id": 82138,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Mama Turtle"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Main Street Bottom"
                   }
@@ -4129,7 +3466,6 @@
             "id": 82143,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Toilet Top"
               }
@@ -4153,7 +3489,6 @@
             "id": 82145,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Left Sandpit"
               }
@@ -4177,7 +3512,6 @@
             "id": 82150,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Oasis Bottom"
               }
@@ -4201,7 +3535,6 @@
             "id": 82152,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Post Botwoon"
               }
@@ -4225,7 +3558,6 @@
             "id": null,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Draygon Room Bottom"
               }
@@ -4249,7 +3581,6 @@
             "id": 82154,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Draygon Room Bottom"
               }
@@ -4273,7 +3604,6 @@
             "id": null,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Golden Four"
               }
@@ -4297,7 +3627,6 @@
             "id": null,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Big Pink"
               }
@@ -4321,7 +3650,6 @@
             "id": null,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Aqueduct Bottom"
               }
@@ -4345,7 +3673,6 @@
             "id": null,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Crocomire Room Top"
               }
@@ -4369,7 +3696,6 @@
             "id": null,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Screw Attack Bottom"
               }
@@ -4393,7 +3719,6 @@
             "id": 82000,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Landing Site"
               }
@@ -4417,7 +3742,6 @@
             "id": 82001,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "West Ocean Left"
               }
@@ -4441,7 +3765,6 @@
             "id": 82002,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Wrecked Ship Main"
               }
@@ -4465,7 +3788,6 @@
             "id": 82003,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Wrecked Ship Main"
               }
@@ -4489,7 +3811,6 @@
             "id": 82004,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Moat Left"
               }
@@ -4513,7 +3834,6 @@
             "id": 82006,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Landing Site"
               }
@@ -4537,18 +3857,15 @@
             "id": 82009,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Gauntlet Top"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Landing Site"
                   }
@@ -4574,18 +3891,15 @@
             "id": 82010,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Gauntlet Top"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Landing Site"
                   }
@@ -4611,7 +3925,6 @@
             "id": 82011,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Landing Site"
               }
@@ -4635,7 +3948,6 @@
             "id": 82012,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Landing Site"
               }
@@ -4659,7 +3971,6 @@
             "id": 82013,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Etecoons Bottom"
               }
@@ -4683,7 +3994,6 @@
             "id": 82014,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Big Pink"
               }
@@ -4707,7 +4017,6 @@
             "id": 82015,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Green Brinstar Elevator"
               }
@@ -4731,7 +4040,6 @@
             "id": 82016,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Green Brinstar Elevator"
               }
@@ -4755,7 +4063,6 @@
             "id": 82018,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Green Brinstar Elevator"
               }
@@ -4779,7 +4086,6 @@
             "id": 82019,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Green Brinstar Elevator"
               }
@@ -4803,7 +4109,6 @@
             "id": 82021,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Big Pink"
               }
@@ -4827,7 +4132,6 @@
             "id": 82022,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Big Pink"
               }
@@ -4851,7 +4155,6 @@
             "id": 82024,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Big Pink"
               }
@@ -4875,7 +4178,6 @@
             "id": 82025,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Green Hill Zone Top Right"
               }
@@ -4899,18 +4201,15 @@
             "id": 82027,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Blue Brinstar Elevator Bottom"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Morph Ball Room Left"
                   }
@@ -4936,7 +4235,6 @@
             "id": 82028,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Blue Brinstar Elevator Bottom"
               }
@@ -4960,7 +4258,6 @@
             "id": 82031,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Etecoons Supers"
               }
@@ -4984,7 +4281,6 @@
             "id": 82034,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Blue Brinstar Elevator Bottom"
               }
@@ -5008,7 +4304,6 @@
             "id": 82036,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Blue Brinstar Elevator Bottom"
               }
@@ -5032,7 +4327,6 @@
             "id": 82037,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Blue Brinstar Elevator Bottom"
               }
@@ -5056,7 +4350,6 @@
             "id": 82039,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Red Brinstar Elevator"
               }
@@ -5080,7 +4373,6 @@
             "id": 82040,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Red Brinstar Elevator"
               }
@@ -5104,7 +4396,6 @@
             "id": 82041,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Red Brinstar Elevator"
               }
@@ -5128,7 +4419,6 @@
             "id": 82044,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Warehouse Zeela Room Left"
               }
@@ -5152,7 +4442,6 @@
             "id": 82049,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Cathedral"
               }
@@ -5176,18 +4465,15 @@
             "id": 82051,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Crocomire Speedway Bottom"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Business Center"
                   }
@@ -5213,7 +4499,6 @@
             "id": 82054,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Grapple Escape"
               }
@@ -5237,7 +4522,6 @@
             "id": 82055,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Business Center"
               }
@@ -5261,7 +4545,6 @@
             "id": 82056,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Business Center"
               }
@@ -5285,7 +4568,6 @@
             "id": 82057,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Crocomire Room Top"
               }
@@ -5309,7 +4591,6 @@
             "id": 82058,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Crocomire Room Top"
               }
@@ -5333,7 +4614,6 @@
             "id": 82059,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Crocomire Room Top"
               }
@@ -5357,18 +4637,15 @@
             "id": 82062,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Bubble Mountain"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Bubble Mountain Top"
                   }
@@ -5394,18 +4671,15 @@
             "id": 82063,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Bubble Mountain"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Bubble Mountain Top"
                   }
@@ -5431,7 +4705,6 @@
             "id": 82064,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Bubble Mountain"
               }
@@ -5455,7 +4728,6 @@
             "id": 82065,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Bubble Mountain Top"
               }
@@ -5479,7 +4751,6 @@
             "id": 82067,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Bubble Mountain Top"
               }
@@ -5503,7 +4774,6 @@
             "id": 82070,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "LN Above GT"
               }
@@ -5527,7 +4797,6 @@
             "id": 82071,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Screw Attack Bottom"
               }
@@ -5551,7 +4820,6 @@
             "id": 82073,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "LN Entrance"
               }
@@ -5575,7 +4843,6 @@
             "id": 82074,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Firefleas"
               }
@@ -5599,7 +4866,6 @@
             "id": 82075,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Firefleas Top"
               }
@@ -5623,7 +4889,6 @@
             "id": 82076,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Wasteland"
               }
@@ -5647,7 +4912,6 @@
             "id": 82077,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Firefleas"
               }
@@ -5671,7 +4935,6 @@
             "id": 82128,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Wrecked Ship Main"
               }
@@ -5695,7 +4958,6 @@
             "id": 82130,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Wrecked Ship Main"
               }
@@ -5719,7 +4981,6 @@
             "id": 82131,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Wrecked Ship Main"
               }
@@ -5743,7 +5004,6 @@
             "id": 82133,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Wrecked Ship Main"
               }
@@ -5767,7 +5027,6 @@
             "id": 82136,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Main Street Bottom"
               }
@@ -5791,7 +5050,6 @@
             "id": 82137,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Main Street Bottom"
               }
@@ -5815,18 +5073,15 @@
             "id": 82139,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Mama Turtle"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Main Street Bottom"
                   }
@@ -5852,7 +5107,6 @@
             "id": 82140,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Watering Hole Bottom"
               }
@@ -5876,7 +5130,6 @@
             "id": 82141,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Watering Hole Bottom"
               }
@@ -5900,7 +5153,6 @@
             "id": 82142,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Beach"
               }
@@ -5924,7 +5176,6 @@
             "id": 82144,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Left Sandpit"
               }
@@ -5948,7 +5199,6 @@
             "id": 82146,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Right Sandpit"
               }
@@ -5972,7 +5222,6 @@
             "id": 82147,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Right Sandpit"
               }
@@ -5996,7 +5245,6 @@
             "id": 82148,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Aqueduct"
               }
@@ -6020,7 +5268,6 @@
             "id": 82149,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Aqueduct"
               }
@@ -6044,7 +5291,6 @@
             "id": 82151,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Precious Room Top"
               }
@@ -6066,9 +5312,7 @@
             "name": "StartAP",
             "connected_region": "Landing Site",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -6674,7 +5918,7 @@
       },
       "knows": {},
       "hellRuns": {},
-      "world_directory": "sm_worldgen"
+      "world_directory": "sm"
     }
   },
   "game_info": {

@@ -266,12 +266,12 @@ Playthrough:
   Distant Roost (2): Chest 4: Progressive Stage
   Distant Roost (2): Chest 6: Beads of Fealty
   Distant Roost (2): Chest 9: Titanic Plains (2)
+  Wetland Aspect: Chest 9: Dio's Best Friend
 }
 3: {
   Titanic Plains (2): Chest 4: Dio's Best Friend
   Titanic Plains (2): Chest 5: Progressive Stage
   Titanic Plains (2): Shrine 5: Titanic Plains
-  Wetland Aspect: Chest 9: Dio's Best Friend
 }
 4: {
   Titanic Plains: Chest 1: Dio's Best Friend

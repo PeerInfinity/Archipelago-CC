@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Has, HasAll, Or
+from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Compare, Has, HasAll, HelperCall, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -240,7 +240,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Yoka Overworld -> Secret Area", player),
-        And(CanReachRegion('Beach Overworld'), Has('Hammer'))
+        And(Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_()), Has('Hammer'))
     )
 
     world.set_rule(
@@ -280,7 +280,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Beach Cyberworld -> Undernet", player),
-        And(CanReachRegion('Yoka Cyberworld'), Has('Press'))
+        And(Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_()), Has('Press'))
     )
     # Location rules
     world.set_rule(
@@ -300,117 +300,117 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Numberman Code 09", player),
-        CanReachRegion('SciLab Overworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 10", player),
-        CanReachRegion('SciLab Overworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 11", player),
-        CanReachRegion('SciLab Overworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 12", player),
-        CanReachRegion('SciLab Overworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 13", player),
-        CanReachRegion('SciLab Overworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 14", player),
-        CanReachRegion('SciLab Overworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 15", player),
-        CanReachRegion('SciLab Overworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 16", player),
-        CanReachRegion('SciLab Overworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 17", player),
-        CanReachRegion('SciLab Overworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 18", player),
-        CanReachRegion('SciLab Overworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 19", player),
-        CanReachRegion('SciLab Overworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 20", player),
-        CanReachRegion('SciLab Overworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 21", player),
-        CanReachRegion('SciLab Overworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 22", player),
-        CanReachRegion('SciLab Overworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 23", player),
-        CanReachRegion('SciLab Overworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 24", player),
-        CanReachRegion('SciLab Overworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 25", player),
-        CanReachRegion('Yoka Cyberworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 26", player),
-        CanReachRegion('Yoka Cyberworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 27", player),
-        CanReachRegion('Yoka Cyberworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 28", player),
-        CanReachRegion('Yoka Cyberworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 29", player),
-        CanReachRegion('Yoka Cyberworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 30", player),
-        CanReachRegion('Yoka Cyberworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 31", player),
-        CanReachRegion('Yoka Cyberworld')
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
     )
 
     world.set_rule(

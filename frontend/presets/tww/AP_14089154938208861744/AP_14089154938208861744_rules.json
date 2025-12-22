@@ -20,8 +20,6 @@
             "connected_region": "Dragon Roost Cavern",
             "access_rule": {
               "rule": "can_access_dungeon_entrance_on_dragon_roost_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -31,8 +29,6 @@
             "connected_region": "Forbidden Woods",
             "access_rule": {
               "rule": "can_access_dungeon_entrance_in_forest_haven_sector",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -42,8 +38,6 @@
             "connected_region": "Tower of the Gods",
             "access_rule": {
               "rule": "can_access_dungeon_entrance_in_tower_of_the_gods_sector",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -53,8 +47,6 @@
             "connected_region": "Earth Temple",
             "access_rule": {
               "rule": "can_access_dungeon_entrance_on_headstone_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -64,8 +56,6 @@
             "connected_region": "Wind Temple",
             "access_rule": {
               "rule": "can_access_dungeon_entrance_on_gale_isle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -75,8 +65,6 @@
             "connected_region": "Master Sword Chamber",
             "access_rule": {
               "rule": "can_access_miniboss_entrance_in_hyrule_castle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -86,8 +74,6 @@
             "connected_region": "Helmaroc King Boss Arena",
             "access_rule": {
               "rule": "can_access_boss_entrance_in_forsaken_fortress",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -97,8 +83,6 @@
             "connected_region": "Savage Labyrinth",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_outset_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -108,8 +92,6 @@
             "connected_region": "Dragon Roost Island Secret Cave",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_dragon_roost_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -119,8 +101,6 @@
             "connected_region": "Fire Mountain Secret Cave",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_fire_mountain",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -130,8 +110,6 @@
             "connected_region": "Ice Ring Isle Secret Cave",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_ice_ring_isle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -141,8 +119,6 @@
             "connected_region": "Cabana Labyrinth",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_private_oasis",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -152,8 +128,6 @@
             "connected_region": "Needle Rock Isle Secret Cave",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_needle_rock_isle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -163,8 +137,6 @@
             "connected_region": "Angular Isles Secret Cave",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_angular_isles",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -174,8 +146,6 @@
             "connected_region": "Boating Course Secret Cave",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_boating_course",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -185,8 +155,6 @@
             "connected_region": "Stone Watcher Island Secret Cave",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_stone_watcher_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -196,8 +164,6 @@
             "connected_region": "Overlook Island Secret Cave",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_overlook_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -207,8 +173,6 @@
             "connected_region": "Bird's Peak Rock Secret Cave",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_birds_peak_rock",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -218,8 +182,6 @@
             "connected_region": "Pawprint Isle Chuchu Cave",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_pawprint_isle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -229,8 +191,6 @@
             "connected_region": "Pawprint Isle Wizzrobe Cave",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_pawprint_isle_side_isle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -240,8 +200,6 @@
             "connected_region": "Diamond Steppe Island Warp Maze Cave",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_diamond_steppe_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -251,8 +209,6 @@
             "connected_region": "Bomb Island Secret Cave",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_bomb_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -262,8 +218,6 @@
             "connected_region": "Rock Spire Isle Secret Cave",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_rock_spire_isle",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -273,8 +227,6 @@
             "connected_region": "Shark Island Secret Cave",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_shark_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -284,8 +236,6 @@
             "connected_region": "Cliff Plateau Isles Secret Cave",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_cliff_plateau_isles",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -295,8 +245,6 @@
             "connected_region": "Horseshoe Island Secret Cave",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_horseshoe_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -306,8 +254,6 @@
             "connected_region": "Star Island Secret Cave",
             "access_rule": {
               "rule": "can_access_secret_cave_entrance_on_star_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -317,8 +263,6 @@
             "connected_region": "Outset Fairy Fountain",
             "access_rule": {
               "rule": "can_access_fairy_fountain_entrance_on_outset_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -328,8 +272,6 @@
             "connected_region": "Thorned Fairy Fountain",
             "access_rule": {
               "rule": "can_access_fairy_fountain_entrance_on_thorned_fairy_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -339,8 +281,6 @@
             "connected_region": "Eastern Fairy Fountain",
             "access_rule": {
               "rule": "can_access_fairy_fountain_entrance_on_eastern_fairy_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -350,8 +290,6 @@
             "connected_region": "Western Fairy Fountain",
             "access_rule": {
               "rule": "can_access_fairy_fountain_entrance_on_western_fairy_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -361,8 +299,6 @@
             "connected_region": "Southern Fairy Fountain",
             "access_rule": {
               "rule": "can_access_fairy_fountain_entrance_on_southern_fairy_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -372,8 +308,6 @@
             "connected_region": "Northern Fairy Fountain",
             "access_rule": {
               "rule": "can_access_fairy_fountain_entrance_on_northern_fairy_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -385,8 +319,6 @@
             "id": null,
             "access_rule": {
               "rule": "can_reach_and_defeat_ganondorf",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -403,8 +335,6 @@
             "id": 2326645,
             "access_rule": {
               "rule": "can_get_inside_forsaken_fortress",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -421,8 +351,6 @@
             "id": 2326644,
             "access_rule": {
               "rule": "can_get_inside_forsaken_fortress",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -439,29 +367,22 @@
             "id": 2326643,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_get_inside_forsaken_fortress",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "can_fly_with_deku_leaf_indoors",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "AST_setting_value",
-                      "options": [],
                       "args": {
                         "setting": "logic_obscure_1",
                         "_original_ast_type": "setting_value"
@@ -470,7 +391,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Hookshot"
                       }
@@ -492,8 +412,6 @@
             "id": 2326646,
             "access_rule": {
               "rule": "can_get_inside_forsaken_fortress",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -510,8 +428,6 @@
             "id": 2326642,
             "access_rule": {
               "rule": "can_reach_and_defeat_phantom_ganon",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -528,19 +444,14 @@
             "id": 2326692,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_phantom_ganon",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_reach_ganons_tower_phantom_ganon_room",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -559,7 +470,6 @@
             "id": 2326532,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Outset Fairy Fountain"
               }
@@ -577,8 +487,6 @@
             "id": 2326758,
             "access_rule": {
               "rule": "has_any_wallet_upgrade",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -595,8 +503,6 @@
             "id": 2326760,
             "access_rule": {
               "rule": "has_any_wallet_upgrade",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -613,8 +519,6 @@
             "id": 2326759,
             "access_rule": {
               "rule": "has_any_wallet_upgrade",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -630,9 +534,7 @@
             "name": "The Great Sea - Salvage Corp Gift",
             "id": 2326706,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Silver Rupee",
@@ -646,9 +548,7 @@
             "name": "Windfall Island - Jail - Tingle - First Gift",
             "id": 2326537,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wind Waker",
@@ -662,9 +562,7 @@
             "name": "Windfall Island - Jail - Tingle - Second Gift",
             "id": 2326538,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Piece of Heart",
@@ -678,9 +576,7 @@
             "name": "Windfall Island - Maggie - Free Item",
             "id": 2326553,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Triforce Shard 8",
@@ -695,7 +591,6 @@
             "id": 2326558,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wind Waker"
               }
@@ -718,8 +613,6 @@
             "connected_region": "Gohma Boss Arena",
             "access_rule": {
               "rule": "can_access_boss_entrance_in_dragon_roost_cavern",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -731,7 +624,6 @@
             "id": 2326585,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "DRC Small Key"
               }
@@ -749,25 +641,19 @@
             "id": 2326599,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_reach_dragon_roost_cavern_gaping_maw",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_stun_magtails",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Grappling Hook"
                   }
@@ -787,7 +673,6 @@
             "id": 2326591,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "DRC Small Key",
                 "count": 3
@@ -806,7 +691,6 @@
             "id": 2326587,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "DRC Small Key"
               }
@@ -824,8 +708,6 @@
             "id": 2326601,
             "access_rule": {
               "rule": "can_reach_dragon_roost_cavern_boss_stairs",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -842,8 +724,6 @@
             "id": 2326600,
             "access_rule": {
               "rule": "can_reach_dragon_roost_cavern_boss_stairs",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -860,19 +740,15 @@
             "id": 2326588,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "AST_setting_value",
-                          "options": [],
                           "args": {
                             "setting": "logic_obscure_1",
                             "_original_ast_type": "setting_value"
@@ -881,7 +757,6 @@
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Hookshot"
                           }
@@ -890,14 +765,11 @@
                     },
                     {
                       "rule": "can_fly_with_deku_leaf_indoors",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Grappling Hook"
                       }
@@ -906,7 +778,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "DRC Small Key",
                     "count": 2
@@ -927,7 +798,6 @@
             "id": 2326592,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "DRC Small Key",
                 "count": 4
@@ -945,9 +815,7 @@
             "name": "Dragon Roost Cavern - First Room",
             "id": 2326584,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "DRC Small Key",
@@ -962,7 +830,6 @@
             "id": 2326596,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "DRC Small Key",
                 "count": 4
@@ -981,7 +848,6 @@
             "id": 2326595,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "DRC Small Key",
                 "count": 4
@@ -1000,7 +866,6 @@
             "id": 2326589,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "DRC Small Key",
                 "count": 2
@@ -1019,7 +884,6 @@
             "id": 2326590,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "DRC Small Key",
                 "count": 2
@@ -1038,22 +902,17 @@
             "id": 2326597,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "can_fly_with_deku_leaf_outdoors",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Grappling Hook"
                       }
@@ -1062,7 +921,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "DRC Small Key",
                     "count": 4
@@ -1088,8 +946,6 @@
             "connected_region": "Forbidden Woods Miniboss Arena",
             "access_rule": {
               "rule": "can_access_miniboss_entrance_in_forbidden_woods",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -1099,8 +955,6 @@
             "connected_region": "Kalle Demos Boss Arena",
             "access_rule": {
               "rule": "can_access_boss_entrance_in_forbidden_woods",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -1112,25 +966,19 @@
             "id": 2326621,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Boomerang",
@@ -1153,25 +1001,19 @@
             "id": 2326618,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Boomerang",
@@ -1194,25 +1036,19 @@
             "id": 2326620,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Boomerang",
@@ -1235,19 +1071,14 @@
             "id": 2326608,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_door_flowers",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1266,43 +1097,32 @@
             "id": 2326622,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_defeat_mothulas",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "can_defeat_door_flowers",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Grappling Hook"
                       }
@@ -1323,9 +1143,7 @@
             "name": "Forbidden Woods - First Room",
             "id": 2326606,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Skull Hammer",
@@ -1340,19 +1158,14 @@
             "id": 2326610,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1371,19 +1184,14 @@
             "id": 2326607,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_defeat_door_flowers",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1402,25 +1210,19 @@
             "id": 2326611,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Grappling Hook"
                   }
@@ -1440,43 +1242,32 @@
             "id": 2326617,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_defeat_door_flowers",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "can_destroy_seeds_hanging_by_vines",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "AST_setting_value",
-                      "options": [],
                       "args": {
                         "setting": "logic_precise_1",
                         "_original_ast_type": "setting_value"
@@ -1487,7 +1278,6 @@
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "FW Small Key",
@@ -1510,36 +1300,27 @@
             "id": 2326615,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "can_defeat_peahats",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "AST_setting_value",
-                      "options": [],
                       "args": {
                         "setting": "logic_precise_2",
                         "_original_ast_type": "setting_value"
@@ -1550,7 +1331,6 @@
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "FW Small Key",
@@ -1573,25 +1353,19 @@
             "id": 2326612,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Grappling Hook"
                   }
@@ -1611,25 +1385,19 @@
             "id": 2326613,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Grappling Hook"
                   }
@@ -1654,8 +1422,6 @@
             "connected_region": "Tower of the Gods Miniboss Arena",
             "access_rule": {
               "rule": "can_access_miniboss_entrance_in_tower_of_the_gods",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -1665,8 +1431,6 @@
             "connected_region": "Gohdan Boss Arena",
             "access_rule": {
               "rule": "can_access_boss_entrance_in_tower_of_the_gods",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -1678,8 +1442,6 @@
             "id": 2326639,
             "access_rule": {
               "rule": "can_reach_tower_of_the_gods_third_floor",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1696,7 +1458,6 @@
             "id": 2326625,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Bombs"
               }
@@ -1714,19 +1475,14 @@
             "id": 2326632,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_reach_tower_of_the_gods_second_floor",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_heros_bow",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1745,33 +1501,25 @@
             "id": 2326636,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_reach_tower_of_the_gods_second_floor",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "can_fly_with_deku_leaf_indoors",
-                          "options": [],
-                          "args": [],
                           "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
                           "rule": "AST_setting_value",
-                          "options": [],
                           "args": {
                             "setting": "logic_precise_1",
                             "_original_ast_type": "setting_value"
@@ -1782,11 +1530,9 @@
                     },
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "AST_setting_value",
-                          "options": [],
                           "args": {
                             "setting": "logic_obscure_1",
                             "_original_ast_type": "setting_value"
@@ -1795,7 +1541,6 @@
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Hookshot"
                           }
@@ -1804,8 +1549,6 @@
                     },
                     {
                       "rule": "has_heros_bow",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -1825,9 +1568,7 @@
             "name": "Tower of the Gods - Hop Across Floating Boxes",
             "id": 2326627,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Orange Rupee",
@@ -1842,7 +1583,6 @@
             "id": 2326628,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Bombs"
               }
@@ -1860,25 +1600,19 @@
             "id": 2326635,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_play_winds_requiem",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_reach_tower_of_the_gods_second_floor",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Bombs"
                   }
@@ -1898,18 +1632,14 @@
             "id": 2326630,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "has_heros_bow",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Bombs"
                   }
@@ -1929,7 +1659,6 @@
             "id": 2326629,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Bombs"
               }
@@ -1947,18 +1676,14 @@
             "id": 2326633,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_reach_tower_of_the_gods_second_floor",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Wind Waker"
                   }
@@ -1978,19 +1703,14 @@
             "id": 2326637,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_reach_tower_of_the_gods_second_floor",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_heros_bow",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2014,8 +1734,6 @@
             "connected_region": "Earth Temple Miniboss Arena",
             "access_rule": {
               "rule": "can_access_miniboss_entrance_in_earth_temple",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2025,8 +1743,6 @@
             "connected_region": "Jalhalla Boss Arena",
             "access_rule": {
               "rule": "can_access_boss_entrance_in_earth_temple",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2038,54 +1754,40 @@
             "id": 2326674,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_aim_mirror_shield",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_defeat_darknuts",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_play_command_melody",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_reach_earth_temple_many_mirrors_room",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "has_heros_bow",
-                          "options": [],
-                          "args": [],
                           "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
                           "rule": "AST_setting_value",
-                          "options": [],
                           "args": {
                             "setting": "logic_obscure_1",
                             "_original_ast_type": "setting_value"
@@ -2096,29 +1798,22 @@
                     },
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "Or",
-                          "options": [],
                           "children": [
                             {
                               "rule": "has_any_master_sword",
-                              "options": [],
-                              "args": [],
                               "_original_ast_type": "helper",
                               "_converted_from_cc": true
                             },
                             {
                               "rule": "has_heros_sword",
-                              "options": [],
-                              "args": [],
                               "_original_ast_type": "helper",
                               "_converted_from_cc": true
                             },
                             {
                               "rule": "Has",
-                              "options": [],
                               "args": {
                                 "item_name": "Skull Hammer"
                               }
@@ -2127,7 +1822,6 @@
                         },
                         {
                           "rule": "AST_setting_value",
-                          "options": [],
                           "args": {
                             "setting": "logic_obscure_1",
                             "_original_ast_type": "setting_value"
@@ -2136,7 +1830,6 @@
                         },
                         {
                           "rule": "AST_setting_value",
-                          "options": [],
                           "args": {
                             "setting": "logic_precise_1",
                             "_original_ast_type": "setting_value"
@@ -2147,8 +1840,6 @@
                     },
                     {
                       "rule": "can_defeat_blue_bubbles",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -2156,7 +1847,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Power Bracelets"
                   }
@@ -2176,8 +1866,6 @@
             "id": 2326664,
             "access_rule": {
               "rule": "can_reach_earth_temple_moblins_and_poes_room",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2194,19 +1882,14 @@
             "id": 2326661,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_reach_earth_temple_right_path",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_mirror_shield",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2225,30 +1908,22 @@
             "id": 2326663,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_reach_earth_temple_moblins_and_poes_room",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "can_aim_mirror_shield",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "can_play_command_melody",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -2269,44 +1944,32 @@
             "id": 2326662,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_floormasters",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_reach_earth_temple_left_path",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_fire_arrows",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "can_aim_mirror_shield",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "can_play_command_melody",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -2314,7 +1977,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Power Bracelets"
                   }
@@ -2334,8 +1996,6 @@
             "id": 2326670,
             "access_rule": {
               "rule": "can_reach_earth_temple_third_crypt",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2352,30 +2012,22 @@
             "id": 2326667,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_reach_earth_temple_redead_hub_room",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "can_aim_mirror_shield",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "can_play_command_melody",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -2396,37 +2048,27 @@
             "id": 2326668,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_floormasters",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_reach_earth_temple_redead_hub_room",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "can_aim_mirror_shield",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "can_play_command_melody",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -2447,32 +2089,24 @@
             "id": 2326672,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_aim_mirror_shield",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_play_command_melody",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_reach_earth_temple_many_mirrors_room",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Power Bracelets"
                   }
@@ -2492,19 +2126,14 @@
             "id": 2326671,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_play_command_melody",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_reach_earth_temple_many_mirrors_room",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2523,19 +2152,14 @@
             "id": 2326673,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_stalfos",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_reach_earth_temple_many_mirrors_room",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2554,8 +2178,6 @@
             "id": 2326658,
             "access_rule": {
               "rule": "can_play_command_melody",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2572,30 +2194,22 @@
             "id": 2326660,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_reach_earth_temple_right_path",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "can_play_command_melody",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "has_mirror_shield",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -2603,7 +2217,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Power Bracelets"
                   }
@@ -2628,8 +2241,6 @@
             "connected_region": "Wind Temple Miniboss Arena",
             "access_rule": {
               "rule": "can_access_miniboss_entrance_in_wind_temple",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2639,8 +2250,6 @@
             "connected_region": "Molgera Boss Arena",
             "access_rule": {
               "rule": "can_access_boss_entrance_in_wind_temple",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2652,39 +2261,29 @@
             "id": 2326681,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_darknuts",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_fan_with_deku_leaf",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_play_wind_gods_aria",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_reach_wind_temple_kidnapping_room",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Iron Boots"
                   }
@@ -2704,19 +2303,14 @@
             "id": 2326689,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_activate_wind_temple_giant_fan",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_defeat_armos",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2735,18 +2329,14 @@
             "id": 2326679,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_reach_wind_temple_kidnapping_room",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Hookshot",
@@ -2769,8 +2359,6 @@
             "id": 2326676,
             "access_rule": {
               "rule": "can_play_command_melody",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2787,40 +2375,30 @@
             "id": 2326682,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_reach_wind_temple_kidnapping_room",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "can_defeat_blue_bubbles",
-                          "options": [],
-                          "args": [],
                           "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
                           "rule": "can_fly_with_deku_leaf_indoors",
-                          "options": [],
-                          "args": [],
                           "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Hookshot"
                           }
@@ -2829,37 +2407,27 @@
                     },
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "can_fan_with_deku_leaf",
-                          "options": [],
-                          "args": [],
                           "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
                           "rule": "can_fly_with_deku_leaf_indoors",
-                          "options": [],
-                          "args": [],
                           "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
                           "rule": "Or",
-                          "options": [],
                           "children": [
                             {
                               "rule": "can_cut_grass",
-                              "options": [],
-                              "args": [],
                               "_original_ast_type": "helper",
                               "_converted_from_cc": true
                             },
                             {
                               "rule": "has_magic_meter_upgrade",
-                              "options": [],
-                              "args": [],
                               "_original_ast_type": "helper",
                               "_converted_from_cc": true
                             }
@@ -2867,7 +2435,6 @@
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Iron Boots"
                           }
@@ -2876,18 +2443,14 @@
                     },
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "can_fly_with_deku_leaf_indoors",
-                          "options": [],
-                          "args": [],
                           "_original_ast_type": "helper",
                           "_converted_from_cc": true
                         },
                         {
                           "rule": "AST_setting_value",
-                          "options": [],
                           "args": {
                             "setting": "logic_obscure_1",
                             "_original_ast_type": "setting_value"
@@ -2896,7 +2459,6 @@
                         },
                         {
                           "rule": "AST_setting_value",
-                          "options": [],
                           "args": {
                             "setting": "logic_precise_2",
                             "_original_ast_type": "setting_value"
@@ -2905,7 +2467,6 @@
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Hookshot"
                           }
@@ -2929,8 +2490,6 @@
             "id": 2326684,
             "access_rule": {
               "rule": "can_open_wind_temple_upper_giant_grate",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2947,8 +2506,6 @@
             "id": 2326688,
             "access_rule": {
               "rule": "can_activate_wind_temple_giant_fan",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2965,25 +2522,19 @@
             "id": 2326680,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_fan_with_deku_leaf",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_reach_wind_temple_kidnapping_room",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Iron Boots"
                   }
@@ -3003,33 +2554,24 @@
             "id": 2326690,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_morths",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_defeat_stalfos",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_defeat_wizzrobes",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_reach_wind_temple_tall_basement_room",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -3048,18 +2590,14 @@
             "id": 2326686,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_open_wind_temple_upper_giant_grate",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Iron Boots"
                   }
@@ -3079,18 +2617,14 @@
             "id": 2326685,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_open_wind_temple_upper_giant_grate",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Iron Boots"
                   }
@@ -3116,8 +2650,6 @@
             "id": 2326616,
             "access_rule": {
               "rule": "can_defeat_winged_mothulas",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3140,8 +2672,6 @@
             "id": 2326634,
             "access_rule": {
               "rule": "can_defeat_darknuts",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3164,18 +2694,14 @@
             "id": 2326665,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_stalfos",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hookshot"
                   }
@@ -3201,19 +2727,14 @@
             "id": 2326687,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_defeat_darknuts",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "can_remove_peahat_armor",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -3238,8 +2759,6 @@
             "id": 2326641,
             "access_rule": {
               "rule": "can_defeat_mighty_darknuts",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3262,8 +2781,6 @@
             "id": 2326603,
             "access_rule": {
               "rule": "can_defeat_gohma",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3286,8 +2803,6 @@
             "id": 2326623,
             "access_rule": {
               "rule": "can_defeat_kalle_demos",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3310,8 +2825,6 @@
             "id": 2326640,
             "access_rule": {
               "rule": "can_defeat_gohdan",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3334,8 +2847,6 @@
             "id": 2326647,
             "access_rule": {
               "rule": "can_defeat_helmaroc_king",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3358,8 +2869,6 @@
             "id": 2326675,
             "access_rule": {
               "rule": "can_defeat_jalhalla",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3382,8 +2891,6 @@
             "id": 2326691,
             "access_rule": {
               "rule": "can_defeat_molgera",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3420,8 +2927,6 @@
             "connected_region": "Ice Ring Isle Inner Cave",
             "access_rule": {
               "rule": "can_access_inner_entrance_in_ice_ring_isle_secret_cave",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -3432,9 +2937,7 @@
             "name": "Ice Ring Isle - Cave - Chest",
             "id": 2326654,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Ballad of Gales",
@@ -3455,7 +2958,6 @@
             "id": 2326712,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Skull Hammer"
               }
@@ -3473,18 +2975,14 @@
             "id": 2326713,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_play_winds_requiem",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Skull Hammer"
                   }
@@ -3510,8 +3008,6 @@
             "id": 2326718,
             "access_rule": {
               "rule": "has_fire_arrows",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3534,29 +3030,22 @@
             "id": 2326721,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_aim_mirror_shield",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "can_fly_with_deku_leaf_indoors",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Hookshot"
                       }
@@ -3599,8 +3088,6 @@
             "id": 2326730,
             "access_rule": {
               "rule": "can_play_winds_requiem",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3623,8 +3110,6 @@
             "id": 2326732,
             "access_rule": {
               "rule": "can_move_boulders",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3641,8 +3126,6 @@
             "id": 2326733,
             "access_rule": {
               "rule": "can_move_boulders",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3658,9 +3141,7 @@
             "name": "Pawprint Isle - Chuchu Cave - Chest",
             "id": 2326731,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Grappling Hook",
@@ -3675,7 +3156,6 @@
             "id": 2326734,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Grappling Hook"
               }
@@ -3703,9 +3183,7 @@
             "name": "Diamond Steppe Island - Warp Maze Cave - First Chest",
             "id": 2326751,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Silver Rupee",
@@ -3719,9 +3197,7 @@
             "name": "Diamond Steppe Island - Warp Maze Cave - Second Chest",
             "id": 2326752,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Din's Pearl",
@@ -3742,8 +3218,6 @@
             "id": 2326754,
             "access_rule": {
               "rule": "can_stun_magtails",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3775,8 +3249,6 @@
             "connected_region": "Cliff Plateau Isles Inner Cave",
             "access_rule": {
               "rule": "can_access_inner_entrance_in_cliff_plateau_isles_secret_cave",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -3788,15 +3260,12 @@
             "id": 2326766,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "AST_setting_value",
-                      "options": [],
                       "args": {
                         "setting": "logic_obscure_1",
                         "_original_ast_type": "setting_value"
@@ -3805,7 +3274,6 @@
                     },
                     {
                       "rule": "AST_setting_value",
-                      "options": [],
                       "args": {
                         "setting": "logic_precise_1",
                         "_original_ast_type": "setting_value"
@@ -3814,7 +3282,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Grappling Hook"
                       }
@@ -3823,8 +3290,6 @@
                 },
                 {
                   "rule": "can_defeat_boko_babas",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -3863,9 +3328,7 @@
             "name": "Cliff Plateau Isles - Highest Isle",
             "id": 2326767,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Bow",
@@ -3890,9 +3353,7 @@
             "name": "Thorned Fairy Island - Great Fairy",
             "id": 2326737,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bombs",
@@ -3912,9 +3373,7 @@
             "name": "Eastern Fairy Island - Great Fairy",
             "id": 2326740,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bait Bag",
@@ -3934,9 +3393,7 @@
             "name": "Western Fairy Island - Great Fairy",
             "id": 2326742,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Silver Rupee",
@@ -3956,9 +3413,7 @@
             "name": "Southern Fairy Island - Great Fairy",
             "id": 2326744,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hurricane Spin",
@@ -3978,9 +3433,7 @@
             "name": "Northern Fairy Island - Great Fairy",
             "id": 2326747,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Triforce Shard 5",
@@ -6069,8 +5522,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_dragon_roost_cavern_boss_stairs",
-            "args": []
+            "name": "can_reach_dragon_roost_cavern_boss_stairs"
           },
           {
             "type": "item_check",
@@ -6083,8 +5535,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_earth_temple_tall_vine_room",
-            "args": []
+            "name": "can_reach_earth_temple_tall_vine_room"
           },
           {
             "type": "item_check",
@@ -6097,21 +5548,18 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_fly_with_deku_leaf_indoors",
-            "args": []
+            "name": "can_fly_with_deku_leaf_indoors"
           },
           {
             "type": "helper",
-            "name": "can_defeat_boko_babas",
-            "args": []
+            "name": "can_defeat_boko_babas"
           },
           {
             "type": "or",
             "conditions": [
               {
                 "type": "helper",
-                "name": "can_defeat_door_flowers",
-                "args": []
+                "name": "can_defeat_door_flowers"
               },
               {
                 "type": "item_check",
@@ -6121,8 +5569,7 @@
           },
           {
             "type": "helper",
-            "name": "can_defeat_mothulas",
-            "args": []
+            "name": "can_defeat_mothulas"
           },
           {
             "type": "item_check",
@@ -6135,8 +5582,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_get_inside_forsaken_fortress",
-            "args": []
+            "name": "can_get_inside_forsaken_fortress"
           },
           {
             "type": "item_check",
@@ -6147,8 +5593,7 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "can_fly_with_deku_leaf_indoors",
-                "args": []
+                "name": "can_fly_with_deku_leaf_indoors"
               },
               {
                 "type": "item_check",
@@ -6174,13 +5619,11 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "can_defeat_bokoblins",
-                "args": []
+                "name": "can_defeat_bokoblins"
               },
               {
                 "type": "helper",
-                "name": "can_fly_with_deku_leaf_outdoors",
-                "args": []
+                "name": "can_fly_with_deku_leaf_outdoors"
               },
               {
                 "type": "item_check",
@@ -6195,13 +5638,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_tower_of_the_gods_third_floor",
-            "args": []
+            "name": "can_reach_tower_of_the_gods_third_floor"
           },
           {
             "type": "helper",
-            "name": "can_defeat_armos",
-            "args": []
+            "name": "can_defeat_armos"
           },
           {
             "type": "item_check",
@@ -6214,8 +5655,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_wind_temple_tall_basement_room",
-            "args": []
+            "name": "can_reach_wind_temple_tall_basement_room"
           },
           {
             "type": "state_method",
@@ -6233,13 +5673,11 @@
           },
           {
             "type": "helper",
-            "name": "can_play_command_melody",
-            "args": []
+            "name": "can_play_command_melody"
           },
           {
             "type": "helper",
-            "name": "can_play_wind_gods_aria",
-            "args": []
+            "name": "can_play_wind_gods_aria"
           }
         ]
       },
@@ -6248,8 +5686,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_access_forest_haven",
-            "args": []
+            "name": "can_access_forest_haven"
           },
           {
             "type": "or",
@@ -6263,13 +5700,11 @@
                 "conditions": [
                   {
                     "type": "helper",
-                    "name": "can_fly_with_deku_leaf_indoors",
-                    "args": []
+                    "name": "can_fly_with_deku_leaf_indoors"
                   },
                   {
                     "type": "helper",
-                    "name": "can_fly_with_deku_leaf_outdoors",
-                    "args": []
+                    "name": "can_fly_with_deku_leaf_outdoors"
                   },
                   {
                     "type": "setting_value",
@@ -6285,21 +5720,18 @@
           },
           {
             "type": "helper",
-            "name": "can_fly_with_deku_leaf_outdoors",
-            "args": []
+            "name": "can_fly_with_deku_leaf_outdoors"
           },
           {
             "type": "or",
             "conditions": [
               {
                 "type": "helper",
-                "name": "can_cut_grass",
-                "args": []
+                "name": "can_cut_grass"
               },
               {
                 "type": "helper",
-                "name": "has_magic_meter_upgrade",
-                "args": []
+                "name": "has_magic_meter_upgrade"
               }
             ]
           }
@@ -6342,8 +5774,7 @@
       },
       "can_access_fairy_fountain_entrance_on_eastern_fairy_island": {
         "type": "helper",
-        "name": "can_move_boulders",
-        "args": []
+        "name": "can_move_boulders"
       },
       "can_access_fairy_fountain_entrance_on_northern_fairy_island": {
         "type": "constant",
@@ -6354,13 +5785,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_access_forest_of_fairies",
-            "args": []
+            "name": "can_access_forest_of_fairies"
           },
           {
             "type": "helper",
-            "name": "can_move_boulders",
-            "args": []
+            "name": "can_move_boulders"
           }
         ]
       },
@@ -6373,8 +5802,7 @@
           },
           {
             "type": "helper",
-            "name": "has_fire_arrows",
-            "args": []
+            "name": "has_fire_arrows"
           }
         ]
       },
@@ -6395,8 +5823,7 @@
           },
           {
             "type": "helper",
-            "name": "can_fly_with_deku_leaf_outdoors",
-            "args": []
+            "name": "can_fly_with_deku_leaf_outdoors"
           }
         ]
       },
@@ -6405,13 +5832,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_outset_island_upper_level",
-            "args": []
+            "name": "can_reach_outset_island_upper_level"
           },
           {
             "type": "helper",
-            "name": "can_fly_with_deku_leaf_outdoors",
-            "args": []
+            "name": "can_fly_with_deku_leaf_outdoors"
           }
         ]
       },
@@ -6420,8 +5845,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_get_past_hyrule_barrier",
-            "args": []
+            "name": "can_get_past_hyrule_barrier"
           },
           {
             "type": "or",
@@ -6432,8 +5856,7 @@
               },
               {
                 "type": "helper",
-                "name": "can_fly_with_deku_leaf_indoors",
-                "args": []
+                "name": "can_fly_with_deku_leaf_indoors"
               }
             ]
           }
@@ -6441,21 +5864,18 @@
       },
       "can_access_hyrule": {
         "type": "helper",
-        "name": "has_all_8_triforce_shards",
-        "args": []
+        "name": "has_all_8_triforce_shards"
       },
       "can_access_inner_entrance_in_cliff_plateau_isles_secret_cave": {
         "type": "and",
         "conditions": [
           {
             "type": "helper",
-            "name": "can_defeat_boko_babas",
-            "args": []
+            "name": "can_defeat_boko_babas"
           },
           {
             "type": "helper",
-            "name": "can_fly_with_deku_leaf_indoors",
-            "args": []
+            "name": "can_fly_with_deku_leaf_indoors"
           }
         ]
       },
@@ -6468,8 +5888,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_earth_temple_moblins_and_poes_room",
-            "args": []
+            "name": "can_reach_earth_temple_moblins_and_poes_room"
           },
           {
             "type": "item_check",
@@ -6486,13 +5905,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_fly_with_deku_leaf_indoors",
-            "args": []
+            "name": "can_fly_with_deku_leaf_indoors"
           },
           {
             "type": "helper",
-            "name": "can_defeat_boko_babas",
-            "args": []
+            "name": "can_defeat_boko_babas"
           },
           {
             "type": "state_method",
@@ -6511,16 +5928,14 @@
       },
       "can_access_miniboss_entrance_in_hyrule_castle": {
         "type": "helper",
-        "name": "can_access_hyrule",
-        "args": []
+        "name": "can_access_hyrule"
       },
       "can_access_miniboss_entrance_in_tower_of_the_gods": {
         "type": "and",
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_tower_of_the_gods_second_floor",
-            "args": []
+            "name": "can_reach_tower_of_the_gods_second_floor"
           },
           {
             "type": "or",
@@ -6531,8 +5946,7 @@
               },
               {
                 "type": "helper",
-                "name": "can_fly_with_deku_leaf_indoors",
-                "args": []
+                "name": "can_fly_with_deku_leaf_indoors"
               }
             ]
           },
@@ -6541,13 +5955,11 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "can_play_command_melody",
-                "args": []
+                "name": "can_play_command_melody"
               },
               {
                 "type": "helper",
-                "name": "has_heros_bow",
-                "args": []
+                "name": "has_heros_bow"
               }
             ]
           }
@@ -6558,8 +5970,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_open_wind_temple_upper_giant_grate",
-            "args": []
+            "name": "can_open_wind_temple_upper_giant_grate"
           },
           {
             "type": "item_check",
@@ -6576,8 +5987,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_fly_with_deku_leaf_outdoors",
-            "args": []
+            "name": "can_fly_with_deku_leaf_outdoors"
           },
           {
             "type": "item_check",
@@ -6594,8 +6004,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_fly_with_deku_leaf_outdoors",
-            "args": []
+            "name": "can_fly_with_deku_leaf_outdoors"
           },
           {
             "type": "item_check",
@@ -6605,8 +6014,7 @@
       },
       "can_access_secret_cave_entrance_on_bomb_island": {
         "type": "helper",
-        "name": "can_move_boulders",
-        "args": []
+        "name": "can_move_boulders"
       },
       "can_access_secret_cave_entrance_on_cliff_plateau_isles": {
         "type": "constant",
@@ -6618,28 +6026,23 @@
       },
       "can_access_secret_cave_entrance_on_dragon_roost_island": {
         "type": "helper",
-        "name": "can_move_boulders",
-        "args": []
+        "name": "can_move_boulders"
       },
       "can_access_secret_cave_entrance_on_fire_mountain": {
         "type": "helper",
-        "name": "has_ice_arrows",
-        "args": []
+        "name": "has_ice_arrows"
       },
       "can_access_secret_cave_entrance_on_horseshoe_island": {
         "type": "helper",
-        "name": "can_fan_with_deku_leaf",
-        "args": []
+        "name": "can_fan_with_deku_leaf"
       },
       "can_access_secret_cave_entrance_on_ice_ring_isle": {
         "type": "helper",
-        "name": "has_fire_arrows",
-        "args": []
+        "name": "has_fire_arrows"
       },
       "can_access_secret_cave_entrance_on_needle_rock_isle": {
         "type": "helper",
-        "name": "has_fire_arrows",
-        "args": []
+        "name": "has_fire_arrows"
       },
       "can_access_secret_cave_entrance_on_outset_island": {
         "type": "and",
@@ -6652,13 +6055,11 @@
                 "conditions": [
                   {
                     "type": "helper",
-                    "name": "can_reach_outset_island_upper_level",
-                    "args": []
+                    "name": "can_reach_outset_island_upper_level"
                   },
                   {
                     "type": "helper",
-                    "name": "can_fly_with_deku_leaf_outdoors",
-                    "args": []
+                    "name": "can_fly_with_deku_leaf_outdoors"
                   }
                 ]
               },
@@ -6719,8 +6120,7 @@
       },
       "can_access_secret_cave_entrance_on_star_island": {
         "type": "helper",
-        "name": "can_move_boulders",
-        "args": []
+        "name": "can_move_boulders"
       },
       "can_access_secret_cave_entrance_on_stone_watcher_island": {
         "type": "item_check",
@@ -6731,13 +6131,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_open_wind_temple_upper_giant_grate",
-            "args": []
+            "name": "can_open_wind_temple_upper_giant_grate"
           },
           {
             "type": "helper",
-            "name": "can_play_command_melody",
-            "args": []
+            "name": "can_play_command_melody"
           }
         ]
       },
@@ -6746,8 +6144,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "has_mirror_shield",
-            "args": []
+            "name": "has_mirror_shield"
           },
           {
             "type": "or",
@@ -6770,13 +6167,11 @@
               },
               {
                 "type": "helper",
-                "name": "has_heros_sword",
-                "args": []
+                "name": "has_heros_sword"
               },
               {
                 "type": "helper",
-                "name": "has_heros_bow",
-                "args": []
+                "name": "has_heros_bow"
               }
             ]
           }
@@ -6798,8 +6193,7 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "can_fly_with_deku_leaf_indoors",
-                "args": []
+                "name": "can_fly_with_deku_leaf_indoors"
               },
               {
                 "type": "setting_value",
@@ -6809,8 +6203,7 @@
           },
           {
             "type": "helper",
-            "name": "can_play_command_melody",
-            "args": []
+            "name": "can_play_command_melody"
           }
         ]
       },
@@ -6826,20 +6219,17 @@
               },
               {
                 "type": "helper",
-                "name": "can_fly_with_deku_leaf_indoors",
-                "args": []
+                "name": "can_fly_with_deku_leaf_indoors"
               }
             ]
           },
           {
             "type": "helper",
-            "name": "can_play_command_melody",
-            "args": []
+            "name": "can_play_command_melody"
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           }
         ]
       },
@@ -6848,23 +6238,19 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_complete_memory_dragon_roost_cavern_and_gohma",
-            "args": []
+            "name": "can_complete_memory_dragon_roost_cavern_and_gohma"
           },
           {
             "type": "helper",
-            "name": "can_complete_memory_forbidden_woods_and_kalle_demos",
-            "args": []
+            "name": "can_complete_memory_forbidden_woods_and_kalle_demos"
           },
           {
             "type": "helper",
-            "name": "can_complete_memory_earth_temple_and_jalhalla",
-            "args": []
+            "name": "can_complete_memory_earth_temple_and_jalhalla"
           },
           {
             "type": "helper",
-            "name": "can_complete_memory_wind_temple_and_molgera",
-            "args": []
+            "name": "can_complete_memory_wind_temple_and_molgera"
           }
         ]
       },
@@ -6877,38 +6263,32 @@
           },
           {
             "type": "helper",
-            "name": "can_fly_with_deku_leaf_indoors",
-            "args": []
+            "name": "can_fly_with_deku_leaf_indoors"
           },
           {
             "type": "helper",
-            "name": "can_defeat_gohma",
-            "args": []
+            "name": "can_defeat_gohma"
           }
         ]
       },
       "can_complete_memory_earth_temple_and_jalhalla": {
         "type": "helper",
-        "name": "can_defeat_jalhalla",
-        "args": []
+        "name": "can_defeat_jalhalla"
       },
       "can_complete_memory_forbidden_woods_and_kalle_demos": {
         "type": "and",
         "conditions": [
           {
             "type": "helper",
-            "name": "can_fan_with_deku_leaf",
-            "args": []
+            "name": "can_fan_with_deku_leaf"
           },
           {
             "type": "helper",
-            "name": "can_fly_with_deku_leaf_indoors",
-            "args": []
+            "name": "can_fly_with_deku_leaf_indoors"
           },
           {
             "type": "helper",
-            "name": "can_defeat_kalle_demos",
-            "args": []
+            "name": "can_defeat_kalle_demos"
           }
         ]
       },
@@ -6917,13 +6297,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_fly_with_deku_leaf_indoors",
-            "args": []
+            "name": "can_fly_with_deku_leaf_indoors"
           },
           {
             "type": "helper",
-            "name": "can_defeat_molgera",
-            "args": []
+            "name": "can_defeat_molgera"
           }
         ]
       },
@@ -6945,13 +6323,11 @@
           },
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           },
           {
             "type": "and",
@@ -6999,8 +6375,7 @@
           },
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           },
           {
             "type": "and",
@@ -7036,8 +6411,7 @@
           },
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           }
         ]
       },
@@ -7060,13 +6434,11 @@
           },
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           }
         ]
       },
@@ -7075,8 +6447,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "has_ice_arrows",
-            "args": []
+            "name": "has_ice_arrows"
           },
           {
             "type": "item_check",
@@ -7090,8 +6461,7 @@
                 "conditions": [
                   {
                     "type": "helper",
-                    "name": "can_fan_with_deku_leaf",
-                    "args": []
+                    "name": "can_fan_with_deku_leaf"
                   },
                   {
                     "type": "item_check",
@@ -7117,13 +6487,11 @@
                   },
                   {
                     "type": "helper",
-                    "name": "has_heros_sword",
-                    "args": []
+                    "name": "has_heros_sword"
                   },
                   {
                     "type": "helper",
-                    "name": "has_heros_bow",
-                    "args": []
+                    "name": "has_heros_bow"
                   }
                 ]
               }
@@ -7151,21 +6519,18 @@
           },
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           },
           {
             "type": "and",
             "conditions": [
               {
                 "type": "helper",
-                "name": "can_fan_with_deku_leaf",
-                "args": []
+                "name": "can_fan_with_deku_leaf"
               },
               {
                 "type": "item_check",
@@ -7193,13 +6558,11 @@
           },
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           }
         ]
       },
@@ -7208,13 +6571,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           },
           {
             "type": "helper",
-            "name": "has_light_arrows",
-            "args": []
+            "name": "has_light_arrows"
           },
           {
             "type": "item_check",
@@ -7227,13 +6588,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           },
           {
             "type": "helper",
-            "name": "has_light_arrows",
-            "args": []
+            "name": "has_light_arrows"
           }
         ]
       },
@@ -7256,8 +6615,7 @@
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           }
         ]
       },
@@ -7266,13 +6624,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           },
           {
             "type": "and",
@@ -7297,8 +6653,7 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "has_heros_sword",
-                "args": []
+                "name": "has_heros_sword"
               },
               {
                 "type": "setting_value",
@@ -7311,8 +6666,7 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "has_heros_shield",
-                "args": []
+                "name": "has_heros_shield"
               },
               {
                 "type": "and",
@@ -7339,8 +6693,7 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "has_heros_bow",
-                "args": []
+                "name": "has_heros_bow"
               },
               {
                 "type": "and",
@@ -7373,8 +6726,7 @@
       },
       "can_defeat_green_chuchus": {
         "type": "helper",
-        "name": "can_defeat_red_chuchus",
-        "args": []
+        "name": "can_defeat_red_chuchus"
       },
       "can_defeat_helmaroc_king": {
         "type": "item_check",
@@ -7388,13 +6740,11 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "can_aim_mirror_shield",
-                "args": []
+                "name": "can_aim_mirror_shield"
               },
               {
                 "type": "helper",
-                "name": "has_light_arrows",
-                "args": []
+                "name": "has_light_arrows"
               }
             ]
           },
@@ -7404,8 +6754,7 @@
           },
           {
             "type": "helper",
-            "name": "can_defeat_jalhalla_poes",
-            "args": []
+            "name": "can_defeat_jalhalla_poes"
           }
         ]
       },
@@ -7427,13 +6776,11 @@
           },
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           }
         ]
       },
@@ -7446,8 +6793,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_defeat_darknuts_easily",
-            "args": []
+            "name": "can_defeat_darknuts_easily"
           },
           {
             "type": "and",
@@ -7482,13 +6828,11 @@
           },
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           }
         ]
       },
@@ -7519,13 +6863,11 @@
               },
               {
                 "type": "helper",
-                "name": "has_heros_sword",
-                "args": []
+                "name": "has_heros_sword"
               },
               {
                 "type": "helper",
-                "name": "has_heros_bow",
-                "args": []
+                "name": "has_heros_bow"
               }
             ]
           }
@@ -7549,13 +6891,11 @@
           },
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           }
         ]
       },
@@ -7577,13 +6917,11 @@
           },
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           }
         ]
       },
@@ -7613,8 +6951,7 @@
               },
               {
                 "type": "helper",
-                "name": "has_heros_sword",
-                "args": []
+                "name": "has_heros_sword"
               }
             ]
           },
@@ -7623,20 +6960,17 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "can_fan_with_deku_leaf",
-                "args": []
+                "name": "can_fan_with_deku_leaf"
               },
               {
                 "type": "helper",
-                "name": "has_heros_sword",
-                "args": []
+                "name": "has_heros_sword"
               }
             ]
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           }
         ]
       },
@@ -7655,8 +6989,7 @@
               },
               {
                 "type": "helper",
-                "name": "has_any_master_sword",
-                "args": []
+                "name": "has_any_master_sword"
               }
             ]
           },
@@ -7680,8 +7013,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "has_light_arrows",
-            "args": []
+            "name": "has_light_arrows"
           },
           {
             "type": "or",
@@ -7716,13 +7048,11 @@
           },
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           },
           {
             "type": "and",
@@ -7732,8 +7062,7 @@
                 "conditions": [
                   {
                     "type": "helper",
-                    "name": "can_fan_with_deku_leaf",
-                    "args": []
+                    "name": "can_fan_with_deku_leaf"
                   },
                   {
                     "type": "item_check",
@@ -7767,13 +7096,11 @@
           },
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           }
         ]
       },
@@ -7795,13 +7122,11 @@
           },
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           },
           {
             "type": "helper",
-            "name": "has_light_arrows",
-            "args": []
+            "name": "has_light_arrows"
           }
         ]
       },
@@ -7823,13 +7148,11 @@
           },
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           }
         ]
       },
@@ -7852,13 +7175,11 @@
           },
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           }
         ]
       },
@@ -7887,28 +7208,24 @@
               },
               {
                 "type": "helper",
-                "name": "has_heros_sword",
-                "args": []
+                "name": "has_heros_sword"
               }
             ]
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           },
           {
             "type": "and",
             "conditions": [
               {
                 "type": "helper",
-                "name": "can_fan_with_deku_leaf",
-                "args": []
+                "name": "can_fan_with_deku_leaf"
               },
               {
                 "type": "helper",
-                "name": "has_heros_sword",
-                "args": []
+                "name": "has_heros_sword"
               }
             ]
           },
@@ -7921,8 +7238,7 @@
               },
               {
                 "type": "helper",
-                "name": "has_heros_sword",
-                "args": []
+                "name": "has_heros_sword"
               },
               {
                 "type": "setting_value",
@@ -7955,8 +7271,7 @@
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           }
         ]
       },
@@ -7973,8 +7288,7 @@
           },
           {
             "type": "helper",
-            "name": "has_magic_meter",
-            "args": []
+            "name": "has_magic_meter"
           }
         ]
       },
@@ -7987,13 +7301,11 @@
           },
           {
             "type": "helper",
-            "name": "has_magic_meter",
-            "args": []
+            "name": "has_magic_meter"
           },
           {
             "type": "helper",
-            "name": "can_play_winds_requiem",
-            "args": []
+            "name": "can_play_winds_requiem"
           }
         ]
       },
@@ -8002,8 +7314,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_get_past_forsaken_fortress_gate",
-            "args": []
+            "name": "can_get_past_forsaken_fortress_gate"
           },
           {
             "type": "item_check",
@@ -8036,8 +7347,7 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "can_open_ganons_tower_dark_portal",
-                "args": []
+                "name": "can_open_ganons_tower_dark_portal"
               },
               {
                 "type": "setting_value",
@@ -8052,16 +7362,14 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_access_hyrule",
-            "args": []
+            "name": "can_access_hyrule"
           },
           {
             "type": "or",
             "conditions": [
               {
                 "type": "helper",
-                "name": "has_full_power_master_sword",
-                "args": []
+                "name": "has_full_power_master_sword"
               },
               {
                 "type": "setting_value",
@@ -8089,8 +7397,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_ganons_tower_phantom_ganon_room",
-            "args": []
+            "name": "can_reach_ganons_tower_phantom_ganon_room"
           },
           {
             "type": "item_check",
@@ -8103,8 +7410,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_wind_temple_kidnapping_room",
-            "args": []
+            "name": "can_reach_wind_temple_kidnapping_room"
           },
           {
             "type": "item_check",
@@ -8112,8 +7418,7 @@
           },
           {
             "type": "helper",
-            "name": "can_defeat_blue_bubbles",
-            "args": []
+            "name": "can_defeat_blue_bubbles"
           }
         ]
       },
@@ -8122,8 +7427,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_end_of_wind_temple_many_cyclones_room",
-            "args": []
+            "name": "can_reach_end_of_wind_temple_many_cyclones_room"
           },
           {
             "type": "item_check",
@@ -8188,8 +7492,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_and_defeat_puppet_ganon",
-            "args": []
+            "name": "can_reach_and_defeat_puppet_ganon"
           },
           {
             "type": "state_method",
@@ -8206,8 +7509,7 @@
           },
           {
             "type": "helper",
-            "name": "can_defeat_ganondorf",
-            "args": []
+            "name": "can_defeat_ganondorf"
           }
         ]
       },
@@ -8216,13 +7518,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_get_past_forsaken_fortress_gate",
-            "args": []
+            "name": "can_get_past_forsaken_fortress_gate"
           },
           {
             "type": "helper",
-            "name": "can_defeat_phantom_ganon",
-            "args": []
+            "name": "can_defeat_phantom_ganon"
           }
         ]
       },
@@ -8231,23 +7531,19 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_ganons_tower_phantom_ganon_room",
-            "args": []
+            "name": "can_reach_ganons_tower_phantom_ganon_room"
           },
           {
             "type": "helper",
-            "name": "has_light_arrows",
-            "args": []
+            "name": "has_light_arrows"
           },
           {
             "type": "helper",
-            "name": "can_unlock_puppet_ganon_door",
-            "args": []
+            "name": "can_unlock_puppet_ganon_door"
           },
           {
             "type": "helper",
-            "name": "can_defeat_puppet_ganon",
-            "args": []
+            "name": "can_defeat_puppet_ganon"
           }
         ]
       },
@@ -8280,13 +7576,11 @@
               },
               {
                 "type": "helper",
-                "name": "can_fly_with_deku_leaf_indoors",
-                "args": []
+                "name": "can_fly_with_deku_leaf_indoors"
               },
               {
                 "type": "helper",
-                "name": "has_ice_arrows",
-                "args": []
+                "name": "has_ice_arrows"
               }
             ]
           }
@@ -8319,8 +7613,7 @@
                   },
                   {
                     "type": "helper",
-                    "name": "can_cut_down_hanging_drc_platform",
-                    "args": []
+                    "name": "can_cut_down_hanging_drc_platform"
                   }
                 ]
               },
@@ -8329,8 +7622,7 @@
                 "conditions": [
                   {
                     "type": "helper",
-                    "name": "can_fly_with_deku_leaf_indoors",
-                    "args": []
+                    "name": "can_fly_with_deku_leaf_indoors"
                   },
                   {
                     "type": "setting_value",
@@ -8343,8 +7635,7 @@
                 "conditions": [
                   {
                     "type": "helper",
-                    "name": "has_ice_arrows",
-                    "args": []
+                    "name": "has_ice_arrows"
                   },
                   {
                     "type": "setting_value",
@@ -8365,18 +7656,15 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_earth_temple_sun_statue_room",
-            "args": []
+            "name": "can_reach_earth_temple_sun_statue_room"
           },
           {
             "type": "helper",
-            "name": "can_play_command_melody",
-            "args": []
+            "name": "can_play_command_melody"
           },
           {
             "type": "helper",
-            "name": "can_aim_mirror_shield",
-            "args": []
+            "name": "can_aim_mirror_shield"
           }
         ]
       },
@@ -8385,8 +7673,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_earth_temple_sun_statue_room",
-            "args": []
+            "name": "can_reach_earth_temple_sun_statue_room"
           },
           {
             "type": "item_check",
@@ -8400,21 +7687,18 @@
       },
       "can_reach_earth_temple_many_mirrors_room": {
         "type": "helper",
-        "name": "can_reach_earth_temple_tall_vine_room",
-        "args": []
+        "name": "can_reach_earth_temple_tall_vine_room"
       },
       "can_reach_earth_temple_moblins_and_poes_room": {
         "type": "and",
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_earth_temple_left_path",
-            "args": []
+            "name": "can_reach_earth_temple_left_path"
           },
           {
             "type": "helper",
-            "name": "has_fire_arrows",
-            "args": []
+            "name": "has_fire_arrows"
           },
           {
             "type": "item_check",
@@ -8422,21 +7706,18 @@
           },
           {
             "type": "helper",
-            "name": "can_defeat_floormasters",
-            "args": []
+            "name": "can_defeat_floormasters"
           },
           {
             "type": "or",
             "conditions": [
               {
                 "type": "helper",
-                "name": "can_play_command_melody",
-                "args": []
+                "name": "can_play_command_melody"
               },
               {
                 "type": "helper",
-                "name": "has_mirror_shield",
-                "args": []
+                "name": "has_mirror_shield"
               }
             ]
           }
@@ -8447,13 +7728,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_earth_temple_basement",
-            "args": []
+            "name": "can_reach_earth_temple_basement"
           },
           {
             "type": "helper",
-            "name": "can_play_earth_gods_lyric",
-            "args": []
+            "name": "can_play_earth_gods_lyric"
           }
         ]
       },
@@ -8462,13 +7741,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_earth_temple_sun_statue_room",
-            "args": []
+            "name": "can_reach_earth_temple_sun_statue_room"
           },
           {
             "type": "helper",
-            "name": "can_play_command_melody",
-            "args": []
+            "name": "can_play_command_melody"
           },
           {
             "type": "item_check",
@@ -8481,18 +7758,15 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_play_command_melody",
-            "args": []
+            "name": "can_play_command_melody"
           },
           {
             "type": "helper",
-            "name": "can_defeat_red_chuchus",
-            "args": []
+            "name": "can_defeat_red_chuchus"
           },
           {
             "type": "helper",
-            "name": "can_defeat_green_chuchus",
-            "args": []
+            "name": "can_defeat_green_chuchus"
           }
         ]
       },
@@ -8501,13 +7775,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_earth_temple_third_crypt",
-            "args": []
+            "name": "can_reach_earth_temple_third_crypt"
           },
           {
             "type": "helper",
-            "name": "can_play_earth_gods_lyric",
-            "args": []
+            "name": "can_play_earth_gods_lyric"
           }
         ]
       },
@@ -8516,21 +7788,18 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_earth_temple_redead_hub_room",
-            "args": []
+            "name": "can_reach_earth_temple_redead_hub_room"
           },
           {
             "type": "or",
             "conditions": [
               {
                 "type": "helper",
-                "name": "can_play_command_melody",
-                "args": []
+                "name": "can_play_command_melody"
               },
               {
                 "type": "helper",
-                "name": "can_aim_mirror_shield",
-                "args": []
+                "name": "can_aim_mirror_shield"
               }
             ]
           },
@@ -8553,8 +7822,7 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "can_defeat_red_bubbles",
-                "args": []
+                "name": "can_defeat_red_bubbles"
               },
               {
                 "type": "setting_value",
@@ -8564,13 +7832,11 @@
           },
           {
             "type": "helper",
-            "name": "can_play_command_melody",
-            "args": []
+            "name": "can_play_command_melody"
           },
           {
             "type": "helper",
-            "name": "can_aim_mirror_shield",
-            "args": []
+            "name": "can_aim_mirror_shield"
           }
         ]
       },
@@ -8579,8 +7845,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_wind_temple_kidnapping_room",
-            "args": []
+            "name": "can_reach_wind_temple_kidnapping_room"
           },
           {
             "type": "or",
@@ -8594,18 +7859,15 @@
                   },
                   {
                     "type": "helper",
-                    "name": "can_fan_with_deku_leaf",
-                    "args": []
+                    "name": "can_fan_with_deku_leaf"
                   },
                   {
                     "type": "helper",
-                    "name": "can_fly_with_deku_leaf_indoors",
-                    "args": []
+                    "name": "can_fly_with_deku_leaf_indoors"
                   },
                   {
                     "type": "helper",
-                    "name": "can_cut_grass",
-                    "args": []
+                    "name": "can_cut_grass"
                   }
                 ]
               },
@@ -8618,13 +7880,11 @@
                   },
                   {
                     "type": "helper",
-                    "name": "can_defeat_blue_bubbles",
-                    "args": []
+                    "name": "can_defeat_blue_bubbles"
                   },
                   {
                     "type": "helper",
-                    "name": "can_fly_with_deku_leaf_indoors",
-                    "args": []
+                    "name": "can_fly_with_deku_leaf_indoors"
                   }
                 ]
               },
@@ -8637,8 +7897,7 @@
                   },
                   {
                     "type": "helper",
-                    "name": "can_fly_with_deku_leaf_indoors",
-                    "args": []
+                    "name": "can_fly_with_deku_leaf_indoors"
                   },
                   {
                     "type": "setting_value",
@@ -8659,13 +7918,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_access_ganons_tower",
-            "args": []
+            "name": "can_access_ganons_tower"
           },
           {
             "type": "helper",
-            "name": "can_unlock_ganons_tower_four_boss_door",
-            "args": []
+            "name": "can_unlock_ganons_tower_four_boss_door"
           }
         ]
       },
@@ -8674,16 +7931,14 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_cut_down_outset_trees",
-            "args": []
+            "name": "can_cut_down_outset_trees"
           },
           {
             "type": "and",
             "conditions": [
               {
                 "type": "helper",
-                "name": "can_fly_with_deku_leaf_outdoors",
-                "args": []
+                "name": "can_fly_with_deku_leaf_outdoors"
               },
               {
                 "type": "setting_value",
@@ -8711,8 +7966,7 @@
           },
           {
             "type": "helper",
-            "name": "can_defeat_yellow_chuchus",
-            "args": []
+            "name": "can_defeat_yellow_chuchus"
           }
         ]
       },
@@ -8721,18 +7975,15 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_reach_tower_of_the_gods_second_floor",
-            "args": []
+            "name": "can_reach_tower_of_the_gods_second_floor"
           },
           {
             "type": "helper",
-            "name": "can_bring_west_servant_of_the_tower",
-            "args": []
+            "name": "can_bring_west_servant_of_the_tower"
           },
           {
             "type": "helper",
-            "name": "can_bring_north_servant_of_the_tower",
-            "args": []
+            "name": "can_bring_north_servant_of_the_tower"
           },
           {
             "type": "item_check",
@@ -8745,8 +7996,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_play_command_melody",
-            "args": []
+            "name": "can_play_command_melody"
           },
           {
             "type": "item_check",
@@ -8754,8 +8004,7 @@
           },
           {
             "type": "helper",
-            "name": "can_fly_with_deku_leaf_indoors",
-            "args": []
+            "name": "can_fly_with_deku_leaf_indoors"
           }
         ]
       },
@@ -8764,13 +8013,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_open_wind_temple_upper_giant_grate",
-            "args": []
+            "name": "can_open_wind_temple_upper_giant_grate"
           },
           {
             "type": "helper",
-            "name": "can_open_wind_temple_lower_giant_grate",
-            "args": []
+            "name": "can_open_wind_temple_lower_giant_grate"
           },
           {
             "type": "item_check",
@@ -8802,13 +8049,11 @@
           },
           {
             "type": "helper",
-            "name": "can_fan_with_deku_leaf",
-            "args": []
+            "name": "can_fan_with_deku_leaf"
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           }
         ]
       },
@@ -8833,13 +8078,11 @@
           },
           {
             "type": "helper",
-            "name": "has_heros_sword",
-            "args": []
+            "name": "has_heros_sword"
           },
           {
             "type": "helper",
-            "name": "has_heros_bow",
-            "args": []
+            "name": "has_heros_bow"
           }
         ]
       },
@@ -8848,8 +8091,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_complete_all_memory_dungeons_and_bosses",
-            "args": []
+            "name": "can_complete_all_memory_dungeons_and_bosses"
           },
           {
             "type": "setting_value",
@@ -8862,13 +8104,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "can_defeat_moblins",
-            "args": []
+            "name": "can_defeat_moblins"
           },
           {
             "type": "helper",
-            "name": "can_defeat_mighty_darknuts",
-            "args": []
+            "name": "can_defeat_mighty_darknuts"
           },
           {
             "type": "or",
@@ -8940,8 +8180,7 @@
           },
           {
             "type": "helper",
-            "name": "has_magic_meter",
-            "args": []
+            "name": "has_magic_meter"
           }
         ]
       },
@@ -8990,8 +8229,7 @@
           },
           {
             "type": "helper",
-            "name": "has_magic_meter",
-            "args": []
+            "name": "has_magic_meter"
           }
         ]
       },
@@ -9008,8 +8246,7 @@
           },
           {
             "type": "helper",
-            "name": "has_magic_meter",
-            "args": []
+            "name": "has_magic_meter"
           }
         ]
       },

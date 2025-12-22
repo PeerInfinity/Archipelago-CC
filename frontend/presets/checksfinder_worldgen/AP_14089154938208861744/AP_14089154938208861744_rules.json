@@ -19,9 +19,7 @@
             "name": "New Board",
             "connected_region": "Board",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -35,9 +33,7 @@
             "name": "Tile 1",
             "id": 81000,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Map Bombs",
@@ -51,9 +47,7 @@
             "name": "Tile 2",
             "id": 81001,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Map Width",
@@ -67,9 +61,7 @@
             "name": "Tile 3",
             "id": 81002,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Map Width",
@@ -83,9 +75,7 @@
             "name": "Tile 4",
             "id": 81003,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Map Width",
@@ -99,9 +89,7 @@
             "name": "Tile 5",
             "id": 81004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Map Height",
@@ -115,9 +103,15 @@
             "name": "Tile 6",
             "id": 81005,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 1
+              }
             },
             "item": {
               "name": "Map Bombs",
@@ -131,9 +125,15 @@
             "name": "Tile 7",
             "id": 81006,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 2
+              }
             },
             "item": {
               "name": "Map Width",
@@ -147,9 +147,15 @@
             "name": "Tile 8",
             "id": 81007,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 3
+              }
             },
             "item": {
               "name": "Map Bombs",
@@ -163,9 +169,15 @@
             "name": "Tile 9",
             "id": 81008,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 4
+              }
             },
             "item": {
               "name": "Map Bombs",
@@ -179,9 +191,15 @@
             "name": "Tile 10",
             "id": 81009,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 5
+              }
             },
             "item": {
               "name": "Map Bombs",
@@ -195,9 +213,15 @@
             "name": "Tile 11",
             "id": 81010,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 6
+              }
             },
             "item": {
               "name": "Map Bombs",
@@ -211,9 +235,15 @@
             "name": "Tile 12",
             "id": 81011,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 7
+              }
             },
             "item": {
               "name": "Map Height",
@@ -227,9 +257,15 @@
             "name": "Tile 13",
             "id": 81012,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 8
+              }
             },
             "item": {
               "name": "Map Bombs",
@@ -243,9 +279,15 @@
             "name": "Tile 14",
             "id": 81013,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 9
+              }
             },
             "item": {
               "name": "Map Bombs",
@@ -259,9 +301,15 @@
             "name": "Tile 15",
             "id": 81014,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 10
+              }
             },
             "item": {
               "name": "Map Bombs",
@@ -275,9 +323,15 @@
             "name": "Tile 16",
             "id": 81015,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 11
+              }
             },
             "item": {
               "name": "Map Bombs",
@@ -291,9 +345,15 @@
             "name": "Tile 17",
             "id": 81016,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 12
+              }
             },
             "item": {
               "name": "Map Bombs",
@@ -307,9 +367,15 @@
             "name": "Tile 18",
             "id": 81017,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 13
+              }
             },
             "item": {
               "name": "Map Height",
@@ -323,9 +389,15 @@
             "name": "Tile 19",
             "id": 81018,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 14
+              }
             },
             "item": {
               "name": "Map Height",
@@ -339,9 +411,15 @@
             "name": "Tile 20",
             "id": 81019,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 15
+              }
             },
             "item": {
               "name": "Map Bombs",
@@ -355,9 +433,15 @@
             "name": "Tile 21",
             "id": 81020,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 16
+              }
             },
             "item": {
               "name": "Map Bombs",
@@ -371,9 +455,15 @@
             "name": "Tile 22",
             "id": 81021,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 17
+              }
             },
             "item": {
               "name": "Map Bombs",
@@ -387,9 +477,15 @@
             "name": "Tile 23",
             "id": 81022,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 18
+              }
             },
             "item": {
               "name": "Map Bombs",
@@ -403,9 +499,15 @@
             "name": "Tile 24",
             "id": 81023,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 19
+              }
             },
             "item": {
               "name": "Map Width",
@@ -419,9 +521,15 @@
             "name": "Tile 25",
             "id": 81024,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasFromList",
+              "args": {
+                "items": [
+                  "Map Bombs",
+                  "Map Height",
+                  "Map Width"
+                ],
+                "count": 20
+              }
             },
             "item": {
               "name": "Map Height",
@@ -546,7 +654,7 @@
         "start_inventory": {},
         "start_location_hints": []
       },
-      "world_directory": "checksfinder_worldgen"
+      "world_directory": "checksfinder"
     }
   },
   "game_info": {

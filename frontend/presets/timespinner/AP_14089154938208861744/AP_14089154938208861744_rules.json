@@ -19,9 +19,7 @@
             "name": "Tutorial",
             "connected_region": "Tutorial",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -34,9 +32,7 @@
             "name": "Start Game",
             "connected_region": "Lake desolation",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -45,9 +41,7 @@
             "name": "Tutorial: Yo Momma 1",
             "id": 1337000,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Ice Orb",
@@ -61,9 +55,7 @@
             "name": "Tutorial: Yo Momma 2",
             "id": 1337001,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Infernal Flames",
@@ -83,23 +75,17 @@
             "connected_region": "Lower lake desolation",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "has_timestop",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Talaria Attachment"
                   }
@@ -112,18 +98,14 @@
             "connected_region": "Upper lake desolation",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "has_fire",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Upper Lake Serene"
                   }
@@ -136,17 +118,12 @@
             "connected_region": "Skeleton Shaft",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "has_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -158,16 +135,12 @@
             "connected_region": "Space time continuum",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Twin Pyramid Key"
                   }
@@ -181,9 +154,7 @@
             "name": "Lake Desolation: Starter chest 2",
             "id": 1337002,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Max Aura",
@@ -197,9 +168,7 @@
             "name": "Lake Desolation: Starter chest 3",
             "id": 1337003,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Demon",
@@ -213,9 +182,7 @@
             "name": "Lake Desolation: Starter chest 1",
             "id": 1337004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Celestial Sash",
@@ -229,9 +196,7 @@
             "name": "Lake Desolation (Lower): Timespinner Wheel room",
             "id": 1337005,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bleak Ring",
@@ -246,18 +211,14 @@
             "id": 1337006,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "has_fire",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Upper Lake Serene"
                   }
@@ -277,7 +238,6 @@
             "id": 1337007,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Celestial Sash",
@@ -304,18 +264,14 @@
             "name": "Upper lake desolation -> Lake desolation",
             "connected_region": "Lake desolation",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Upper lake desolation -> Eastern lake desolation",
             "connected_region": "Eastern lake desolation",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -324,9 +280,7 @@
             "name": "Lake Desolation (Upper): Oxygen recovery room",
             "id": 1337010,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Iron Orb",
@@ -340,9 +294,7 @@
             "name": "Lake Desolation (Upper): Secret room",
             "id": 1337011,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Water Mask",
@@ -357,7 +309,6 @@
             "id": 1337012,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Celestial Sash",
@@ -378,9 +329,7 @@
             "name": "Lake Desolation (Upper): Double jump cave floor",
             "id": 1337013,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Berry Pick-Mi-Up",
@@ -394,9 +343,7 @@
             "name": "Lake Desolation (Upper): Sparrow chest",
             "id": 1337014,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Max Sand",
@@ -410,9 +357,7 @@
             "name": "Lake Desolation (Upper): Crash site pedestal",
             "id": 1337015,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sunglasses",
@@ -427,7 +372,6 @@
             "id": 1337016,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Killed Maw"
               }
@@ -445,7 +389,6 @@
             "id": 1337017,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Killed Maw"
               }
@@ -467,18 +410,14 @@
             "name": "Lower lake desolation -> Lake desolation",
             "connected_region": "Lake desolation",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Lower lake desolation -> Eastern lake desolation",
             "connected_region": "Eastern lake desolation",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -487,9 +426,7 @@
             "name": "Lake Desolation (Lower): Not so secret room",
             "id": 1337008,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Umbra Orb",
@@ -504,7 +441,6 @@
             "id": 1337009,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Celestial Sash",
@@ -532,16 +468,12 @@
             "connected_region": "Space time continuum",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Twin Pyramid Key"
                   }
@@ -553,18 +485,14 @@
             "name": "Eastern lake desolation -> Library",
             "connected_region": "Library",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Eastern lake desolation -> Lower lake desolation",
             "connected_region": "Lower lake desolation",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -572,18 +500,14 @@
             "connected_region": "Upper lake desolation",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "has_fire",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Upper Lake Serene"
                   }
@@ -597,9 +521,7 @@
             "name": "Lake Desolation: Kitty Boss",
             "id": 1337018,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Forbidden Tome",
@@ -618,9 +540,7 @@
             "name": "Library -> Eastern lake desolation",
             "connected_region": "Eastern lake desolation",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -628,18 +548,14 @@
             "connected_region": "Library top",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Talaria Attachment"
                   }
@@ -652,7 +568,6 @@
             "connected_region": "Varndagroth tower left",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Security Keycard A",
@@ -668,16 +583,12 @@
             "connected_region": "Space time continuum",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Twin Pyramid Key"
                   }
@@ -691,9 +602,7 @@
             "name": "Library: Basement",
             "id": 1337019,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wind Orb",
@@ -707,9 +616,7 @@
             "name": "Library: Warp gate",
             "id": 1337020,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Wyrm Brooch",
@@ -723,9 +630,7 @@
             "name": "Library: Librarian",
             "id": 1337021,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Herb",
@@ -739,9 +644,7 @@
             "name": "Library: Reading nook chest",
             "id": 1337022,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Blue Orb",
@@ -756,7 +659,6 @@
             "id": 1337023,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Security Keycard A",
@@ -779,7 +681,6 @@
             "id": 1337024,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Security Keycard A",
@@ -802,7 +703,6 @@
             "id": 1337025,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Security Keycard A",
@@ -825,7 +725,6 @@
             "id": 1337156,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tablet"
               }
@@ -843,7 +742,6 @@
             "id": 1337157,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tablet"
               }
@@ -861,7 +759,6 @@
             "id": 1337159,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tablet"
               }
@@ -879,7 +776,6 @@
             "id": 1337160,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Library Keycard V",
@@ -900,7 +796,6 @@
             "id": 1337161,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Library Keycard V",
@@ -921,7 +816,6 @@
             "id": 1337162,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Library Keycard V",
@@ -946,9 +840,7 @@
             "name": "Library top -> Library",
             "connected_region": "Library",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -957,9 +849,7 @@
             "name": "Library: Backer room chest 5",
             "id": 1337026,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Metal Wristband",
@@ -973,9 +863,7 @@
             "name": "Library: Backer room chest 4",
             "id": 1337027,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Security Keycard A",
@@ -989,9 +877,7 @@
             "name": "Library: Backer room chest 3",
             "id": 1337028,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Max Sand",
@@ -1005,9 +891,7 @@
             "name": "Library: Backer room chest 2",
             "id": 1337029,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Nether Orb",
@@ -1021,9 +905,7 @@
             "name": "Library: Backer room chest 1",
             "id": 1337030,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Merchant Crow",
@@ -1038,7 +920,6 @@
             "id": 1337163,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tablet"
               }
@@ -1060,9 +941,7 @@
             "name": "Varndagroth tower left -> Library",
             "connected_region": "Library",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1070,7 +949,6 @@
             "connected_region": "Varndagroth tower right (upper)",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Security Keycard A",
@@ -1085,7 +963,6 @@
             "connected_region": "Varndagroth tower right (lower)",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Security Keycard A",
@@ -1099,18 +976,14 @@
             "connected_region": "Sealed Caves (Sirens)",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "has_keycard_B",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Elevator Keycard"
                   }
@@ -1123,18 +996,15 @@
             "connected_region": "Refugee Camp",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Timespinner Spindle"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Timespinner Wheel"
                   }
@@ -1148,9 +1018,7 @@
             "name": "Varndagroth Towers (Left): Elevator Key not required",
             "id": 1337031,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Plasma IV Bag",
@@ -1164,9 +1032,7 @@
             "name": "Varndagroth Towers (Left): Ye olde Timespinner",
             "id": 1337032,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Soul Scanner",
@@ -1181,7 +1047,6 @@
             "id": 1337033,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Security Keycard A",
@@ -1202,9 +1067,7 @@
             "name": "Varndagroth Towers (Left): Air vents secret",
             "id": 1337034,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Alchemy Tools",
@@ -1219,7 +1082,6 @@
             "id": 1337035,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Elevator Keycard"
               }
@@ -1241,9 +1103,7 @@
             "name": "Varndagroth tower right (upper) -> Varndagroth tower left",
             "connected_region": "Varndagroth tower left",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1251,7 +1111,6 @@
             "connected_region": "Varndagroth tower right (elevator)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Elevator Keycard"
               }
@@ -1263,9 +1122,7 @@
             "name": "Varndagroth Towers: Bridge",
             "id": 1337036,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Pyro Ring",
@@ -1280,18 +1137,14 @@
             "id": 1337038,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Elevator Keycard"
                   }
@@ -1311,18 +1164,14 @@
             "id": 1337039,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Elevator Keycard"
                   }
@@ -1342,18 +1191,14 @@
             "id": 1337040,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Elevator Keycard"
                   }
@@ -1378,7 +1223,6 @@
             "connected_region": "Varndagroth tower left",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Security Keycard A",
@@ -1392,7 +1236,6 @@
             "connected_region": "Varndagroth tower right (elevator)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Elevator Keycard"
               }
@@ -1403,18 +1246,14 @@
             "connected_region": "Sealed Caves (Sirens)",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "has_keycard_B",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Elevator Keycard"
                   }
@@ -1427,7 +1266,6 @@
             "connected_region": "Military Fortress",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Killed Aelana",
@@ -1442,16 +1280,12 @@
             "connected_region": "Space time continuum",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Twin Pyramid Key"
                   }
@@ -1465,9 +1299,7 @@
             "name": "Varndagroth Towers (Right): Bottom floor",
             "id": 1337041,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hi-Ether",
@@ -1486,18 +1318,14 @@
             "name": "Varndagroth tower right (elevator) -> Varndagroth tower right (upper)",
             "connected_region": "Varndagroth tower right (upper)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Varndagroth tower right (elevator) -> Varndagroth tower right (lower)",
             "connected_region": "Varndagroth tower right (lower)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1506,9 +1334,7 @@
             "name": "Varndagroth Towers (Right): Elevator chest",
             "id": 1337037,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Colossal Hammer",
@@ -1523,7 +1349,6 @@
             "id": 1337042,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Security Keycard A",
@@ -1545,7 +1370,6 @@
             "id": 1337043,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Security Keycard A"
               }
@@ -1563,18 +1387,14 @@
             "id": 1337164,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "has_keycard_B",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tablet"
                   }
@@ -1599,7 +1419,6 @@
             "connected_region": "Varndagroth tower left",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Elevator Keycard"
               }
@@ -1610,7 +1429,6 @@
             "connected_region": "Varndagroth tower right (lower)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Elevator Keycard"
               }
@@ -1621,16 +1439,12 @@
             "connected_region": "Space time continuum",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Twin Pyramid Key"
                   }
@@ -1645,7 +1459,6 @@
             "id": 1337053,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Water Mask"
               }
@@ -1663,7 +1476,6 @@
             "id": 1337054,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Water Mask"
               }
@@ -1681,7 +1493,6 @@
             "id": 1337055,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Water Mask"
               }
@@ -1698,9 +1509,7 @@
             "name": "Sealed Caves (Sirens): Cave after sirens chest 1",
             "id": 1337056,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Chaos Rose",
@@ -1714,9 +1523,7 @@
             "name": "Sealed Caves (Sirens): Cave after sirens chest 2",
             "id": 1337057,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kobo",
@@ -1736,7 +1543,6 @@
             "connected_region": "Varndagroth tower right (lower)",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Killed Aelana",
@@ -1751,18 +1557,14 @@
             "connected_region": "Temporal Gyre",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_kill_all_3_bosses",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Timespinner Wheel"
                   }
@@ -1775,7 +1577,6 @@
             "connected_region": "Military Fortress (hangar)",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Celestial Sash",
@@ -1792,18 +1593,14 @@
             "id": 1337058,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "has_doublejump_of_npc",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Timespinner Wheel"
                   }
@@ -1822,9 +1619,7 @@
             "name": "Military Fortress: Close combat room",
             "id": 1337059,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bird Statue",
@@ -1843,9 +1638,7 @@
             "name": "Military Fortress (hangar) -> Military Fortress",
             "connected_region": "Military Fortress",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1853,8 +1646,6 @@
             "connected_region": "Lab Entrance",
             "access_rule": {
               "rule": "has_doublejump",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -1865,9 +1656,7 @@
             "name": "Military Fortress: Soldiers bridge",
             "id": 1337060,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Max Aura",
@@ -1881,9 +1670,7 @@
             "name": "Military Fortress: Giantess room",
             "id": 1337061,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Chaos Rose",
@@ -1897,9 +1684,7 @@
             "name": "Military Fortress: Giantess bridge",
             "id": 1337062,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Ether",
@@ -1914,19 +1699,14 @@
             "id": 1337063,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "has_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_keycard_B",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1945,19 +1725,14 @@
             "id": 1337064,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "has_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_keycard_B",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1976,19 +1751,14 @@
             "id": 1337065,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_doublejump_of_npc",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_forwarddash_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2012,8 +1782,6 @@
             "connected_region": "Main Lab",
             "access_rule": {
               "rule": "has_keycard_B",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2022,9 +1790,7 @@
             "name": "Lab Entrance -> Military Fortress (hangar)",
             "connected_region": "Military Fortress (hangar)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2037,9 +1803,7 @@
             "name": "Main Lab -> Lab Entrance",
             "connected_region": "Lab Entrance",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2047,8 +1811,6 @@
             "connected_region": "Lab Research",
             "access_rule": {
               "rule": "has_doublejump_of_npc",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -2058,26 +1820,20 @@
             "connected_region": "The lab (upper)",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "has_forwarddash_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Not",
-                      "options": [],
                       "args": {
                         "condition": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 0
                           },
@@ -2089,7 +1845,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Lab Access Genza"
                       }
@@ -2105,9 +1860,7 @@
             "name": "Lab: Coffee break",
             "id": 1337066,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Aura Serpent",
@@ -2122,7 +1875,6 @@
             "id": 1337067,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Celestial Sash",
@@ -2144,8 +1896,6 @@
             "id": 1337068,
             "access_rule": {
               "rule": "has_upwarddash",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2162,7 +1912,6 @@
             "id": 1337069,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Celestial Sash",
@@ -2184,22 +1933,17 @@
             "id": 1337070,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_doublejump_of_npc",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Not",
-                  "options": [],
                   "args": {
                     "condition": {
                       "rule": "Constant",
-                      "options": [],
                       "args": {
                         "value": 0
                       },
@@ -2224,15 +1968,12 @@
             "id": 1337073,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Not",
-                  "options": [],
                   "args": {
                     "condition": {
                       "rule": "Constant",
-                      "options": [],
                       "args": {
                         "value": 0
                       },
@@ -2244,7 +1985,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Lab Access Experiment"
                   }
@@ -2264,19 +2004,17 @@
             "id": 1337167,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "can_teleport_to",
-                      "options": [],
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true,
                       "args": [
                         {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": "Time"
                           },
@@ -2284,23 +2022,18 @@
                         },
                         {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": "GateDadsTower"
                           },
                           "_converted_from_cc": true
                         }
-                      ],
-                      "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      ]
                     },
                     {
                       "rule": "Not",
-                      "options": [],
                       "args": {
                         "condition": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 0
                           },
@@ -2312,7 +2045,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Lab Access Genza"
                       }
@@ -2321,7 +2053,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Tablet"
                   }
@@ -2341,7 +2072,6 @@
             "id": 1337168,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tablet"
               }
@@ -2359,7 +2089,6 @@
             "id": 1337169,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tablet"
               }
@@ -2383,22 +2112,17 @@
             "id": 1337071,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "has_upwarddash",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Lab Access Dynamo"
                       }
@@ -2407,11 +2131,9 @@
                 },
                 {
                   "rule": "Not",
-                  "options": [],
                   "args": {
                     "condition": {
                       "rule": "Constant",
-                      "options": [],
                       "args": {
                         "value": 0
                       },
@@ -2436,8 +2158,6 @@
             "id": 1337076,
             "access_rule": {
               "rule": "has_keycard_A",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2454,7 +2174,6 @@
             "id": 1337166,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tablet"
               }
@@ -2472,7 +2191,6 @@
             "id": 1337170,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tablet"
               }
@@ -2495,11 +2213,9 @@
             "connected_region": "Main Lab",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 0
                   },
@@ -2507,7 +2223,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Lab Access Genza"
                   }
@@ -2520,22 +2235,17 @@
             "connected_region": "Emperors tower (courtyard)",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "has_doublejump",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Talaria Attachment"
                       }
@@ -2544,8 +2254,6 @@
                 },
                 {
                   "rule": "has_upwarddash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2557,7 +2265,6 @@
             "connected_region": "Ancient Pyramid (entrance)",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Timespinner Gear 1",
@@ -2575,9 +2282,7 @@
             "name": "Lab: Genza (Blob Mom)",
             "id": 1337072,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Chaos Trap",
@@ -2591,9 +2296,7 @@
             "name": "Lab: Download and chest room chest",
             "id": 1337074,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Max HP",
@@ -2607,9 +2310,7 @@
             "name": "Lab: Lab secret",
             "id": 1337075,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Viletian Crown",
@@ -2624,7 +2325,6 @@
             "id": 1337165,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tablet"
               }
@@ -2646,9 +2346,7 @@
             "name": "Emperors tower (courtyard) -> The lab (upper)",
             "connected_region": "The lab (upper)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2656,7 +2354,6 @@
             "connected_region": "Emperors tower",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Celestial Sash",
@@ -2672,9 +2369,7 @@
             "name": "Emperor's Tower: Courtyard bottom chest",
             "id": 1337077,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Librarian Hat",
@@ -2693,9 +2388,7 @@
             "name": "Emperors tower -> Emperors tower (courtyard)",
             "connected_region": "Emperors tower (courtyard)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2705,19 +2398,14 @@
             "id": 1337078,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_break_walls",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_upwarddash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2736,8 +2424,6 @@
             "id": 1337079,
             "access_rule": {
               "rule": "has_upwarddash",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2753,9 +2439,7 @@
             "name": "Emperor's Tower: Galactic sage room",
             "id": 1337080,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Librarian Robe",
@@ -2769,9 +2453,7 @@
             "name": "Emperor's Tower: Bottom right tower",
             "id": 1337081,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Max Sand",
@@ -2786,22 +2468,17 @@
             "id": 1337082,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "has_doublejump",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Timespinner Wheel"
                       }
@@ -2810,8 +2487,6 @@
                 },
                 {
                   "rule": "has_upwarddash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2829,9 +2504,7 @@
             "name": "Emperor's Tower: Left tower balcony",
             "id": 1337083,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sand Bottle",
@@ -2845,9 +2518,7 @@
             "name": "Emperor's Tower: Emperor's Chambers chest",
             "id": 1337084,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Glass Pumpkin",
@@ -2861,9 +2532,7 @@
             "name": "Emperor's Tower: Emperor's Chambers pedestal",
             "id": 1337085,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sand Bottle",
@@ -2877,9 +2546,7 @@
             "name": "Killed Emperor",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Killed Emperor",
@@ -2898,9 +2565,7 @@
             "name": "Skeleton Shaft -> Lake desolation",
             "connected_region": "Lake desolation",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2908,7 +2573,6 @@
             "connected_region": "Sealed Caves (Xarion)",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Security Keycard A"
               }
@@ -2919,16 +2583,12 @@
             "connected_region": "Space time continuum",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Twin Pyramid Key"
                   }
@@ -2942,9 +2602,7 @@
             "name": "Sealed Caves (Xarion): Skeleton",
             "id": 1337044,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Max Aura",
@@ -2963,9 +2621,7 @@
             "name": "Sealed Caves (Xarion) -> Skeleton Shaft",
             "connected_region": "Skeleton Shaft",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2973,16 +2629,12 @@
             "connected_region": "Space time continuum",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Twin Pyramid Key"
                   }
@@ -2997,7 +2649,6 @@
             "id": 1337045,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Celestial Sash",
@@ -3019,9 +2670,7 @@
             "name": "Sealed Caves (Xarion): Double shroom room",
             "id": 1337046,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Plasma Crystal",
@@ -3036,22 +2685,17 @@
             "id": 1337047,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "has_doublejump",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Talaria Attachment"
                       }
@@ -3060,8 +2704,6 @@
                 },
                 {
                   "rule": "has_upwarddash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -3079,9 +2721,7 @@
             "name": "Sealed Caves (Xarion): Below Jacksquat room",
             "id": 1337048,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Radiant Orb",
@@ -3095,9 +2735,7 @@
             "name": "Sealed Caves (Xarion): Secret room",
             "id": 1337049,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Gun Orb",
@@ -3111,9 +2749,7 @@
             "name": "Sealed Caves (Xarion): Bottom left room",
             "id": 1337050,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Warp Shard",
@@ -3128,7 +2764,6 @@
             "id": 1337051,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Celestial Sash",
@@ -3150,16 +2785,12 @@
             "id": 1337052,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "True_",
-                  "options": [],
-                  "args": {}
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Water Mask"
                   }
@@ -3183,9 +2814,7 @@
             "name": "Refugee Camp -> Forest",
             "connected_region": "Forest",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -3193,11 +2822,9 @@
             "connected_region": "Library",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 0
                   },
@@ -3205,11 +2832,9 @@
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Constant",
-                      "options": [],
                       "args": {
                         "value": 0
                       },
@@ -3217,7 +2842,6 @@
                     },
                     {
                       "rule": "Constant",
-                      "options": [],
                       "args": {
                         "value": 0
                       },
@@ -3227,7 +2851,6 @@
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Timespinner Spindle",
@@ -3243,16 +2866,12 @@
             "connected_region": "Space time continuum",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Twin Pyramid Key"
                   }
@@ -3266,9 +2885,7 @@
             "name": "Refugee Camp: Neliste's Bra",
             "id": 1337086,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Eye Orb",
@@ -3282,9 +2899,7 @@
             "name": "Refugee Camp: Storage chest 3",
             "id": 1337087,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Max HP",
@@ -3298,9 +2913,7 @@
             "name": "Refugee Camp: Storage chest 2",
             "id": 1337088,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Pointy Hat",
@@ -3314,9 +2927,7 @@
             "name": "Refugee Camp: Storage chest 1",
             "id": 1337089,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Max Sand",
@@ -3335,9 +2946,7 @@
             "name": "Forest -> Refugee Camp",
             "connected_region": "Refugee Camp",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -3345,23 +2954,17 @@
             "connected_region": "Left Side forest Caves",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "has_timestop",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Talaria Attachment"
                   }
@@ -3373,9 +2976,7 @@
             "name": "Forest -> Caves of Banishment (Sirens)",
             "connected_region": "Caves of Banishment (Sirens)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -3383,22 +2984,17 @@
             "connected_region": "Castle Ramparts",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_upwarddash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Not",
-                  "options": [],
                   "args": {
                     "condition": {
                       "rule": "Constant",
-                      "options": [],
                       "args": {
                         "value": 0
                       },
@@ -3410,7 +3006,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Drawbridge Key"
                   }
@@ -3424,9 +3019,7 @@
             "name": "Forest: Refugee camp roof",
             "id": 1337090,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Max Aura",
@@ -3441,26 +3034,19 @@
             "id": 1337091,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_doublejump_of_npc",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_fastjump_on_npc",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_forwarddash_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -3478,9 +3064,7 @@
             "name": "Forest: Green platform secret",
             "id": 1337092,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Tailwind Ring",
@@ -3494,9 +3078,7 @@
             "name": "Forest: Rats guarded chest",
             "id": 1337093,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Max HP",
@@ -3511,7 +3093,6 @@
             "id": 1337094,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Water Mask"
               }
@@ -3529,7 +3110,6 @@
             "id": 1337095,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Water Mask"
               }
@@ -3546,9 +3126,7 @@
             "name": "Forest: Batcave",
             "id": 1337096,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Max Aura",
@@ -3563,16 +3141,12 @@
             "id": 1337097,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "True_",
-                  "options": [],
-                  "args": {}
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Water Mask"
                   }
@@ -3596,9 +3170,7 @@
             "name": "Left Side forest Caves -> Forest",
             "connected_region": "Forest",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -3606,7 +3178,6 @@
             "connected_region": "Upper Lake Serene",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Celestial Sash",
@@ -3622,16 +3193,12 @@
             "connected_region": "Lower Lake Serene",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Water Mask"
                   }
@@ -3644,16 +3211,12 @@
             "connected_region": "Space time continuum",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Twin Pyramid Key"
                   }
@@ -3667,9 +3230,7 @@
             "name": "Forest: Before Serene single bat cave",
             "id": 1337098,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Shield Ring",
@@ -3684,7 +3245,6 @@
             "id": 1337106,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Water Mask"
               }
@@ -3702,7 +3262,6 @@
             "id": 1337110,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Water Mask"
               }
@@ -3724,9 +3283,7 @@
             "name": "Upper Lake Serene -> Left Side forest Caves",
             "connected_region": "Left Side forest Caves",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -3734,16 +3291,12 @@
             "connected_region": "Lower Lake Serene",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Water Mask"
                   }
@@ -3757,9 +3310,7 @@
             "name": "Lake Serene (Upper): Rat nest",
             "id": 1337099,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Crimson Vortex",
@@ -3774,7 +3325,6 @@
             "id": 1337100,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Celestial Sash",
@@ -3795,9 +3345,7 @@
             "name": "Lake Serene (Upper): Double jump cave floor",
             "id": 1337101,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Shadow Seal",
@@ -3811,9 +3359,7 @@
             "name": "Lake Serene (Upper): Cave secret",
             "id": 1337102,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Traveler's Cloak",
@@ -3827,9 +3373,7 @@
             "name": "Lake Serene: Before Big Bird",
             "id": 1337175,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Max Aura",
@@ -3843,9 +3387,7 @@
             "name": "Lake Serene: Behind the vines",
             "id": 1337103,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Talaria Attachment",
@@ -3859,9 +3401,7 @@
             "name": "Lake Serene: Pyramid keys room",
             "id": 1337104,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Captain's Uniform",
@@ -3875,9 +3415,7 @@
             "name": "Lake Serene (Upper): Chicken ledge",
             "id": 1337174,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sun Ring",
@@ -3896,18 +3434,14 @@
             "name": "Lower Lake Serene -> Upper Lake Serene",
             "connected_region": "Upper Lake Serene",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Lower Lake Serene -> Left Side forest Caves",
             "connected_region": "Left Side forest Caves",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -3915,17 +3449,12 @@
             "connected_region": "Caves of Banishment (upper)",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "True_",
-                  "options": [],
-                  "args": {}
+                  "rule": "True_"
                 },
                 {
                   "rule": "has_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -3938,9 +3467,7 @@
             "name": "Lake Serene (Lower): Deep dive",
             "id": 1337105,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Ether",
@@ -3954,9 +3481,7 @@
             "name": "Lake Serene (Lower): Water spikes room",
             "id": 1337107,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Blade Orb",
@@ -3970,9 +3495,7 @@
             "name": "Lake Serene (Lower): Underwater secret",
             "id": 1337108,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Corruption",
@@ -3987,17 +3510,12 @@
             "id": 1337109,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "True_",
-                  "options": [],
-                  "args": {}
+                  "rule": "True_"
                 },
                 {
                   "rule": "has_doublejump_of_npc",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -4016,17 +3534,12 @@
             "id": 1337111,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "True_",
-                  "options": [],
-                  "args": {}
+                  "rule": "True_"
                 },
                 {
                   "rule": "has_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -4050,16 +3563,12 @@
             "connected_region": "Lower Lake Serene",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Water Mask"
                   }
@@ -4072,16 +3581,12 @@
             "connected_region": "Caves of Banishment (Maw)",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "True_",
-                  "options": [],
-                  "args": {}
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Water Mask"
                   }
@@ -4094,16 +3599,12 @@
             "connected_region": "Space time continuum",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Twin Pyramid Key"
                   }
@@ -4118,17 +3619,12 @@
             "id": 1337112,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "has_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -4147,27 +3643,20 @@
             "id": 1337113,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_break_walls",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
-                      "rule": "True_",
-                      "options": [],
-                      "args": {}
+                      "rule": "True_"
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Water Mask"
                       }
@@ -4189,16 +3678,12 @@
             "id": 1337114,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "True_",
-                  "options": [],
-                  "args": {}
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Water Mask"
                   }
@@ -4217,9 +3702,7 @@
             "name": "Caves of Banishment (Maw): Single shroom room",
             "id": 1337115,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Griffin",
@@ -4234,17 +3717,12 @@
             "id": 1337116,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "has_forwarddash_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -4263,17 +3741,12 @@
             "id": 1337117,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "has_forwarddash_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -4292,17 +3765,12 @@
             "id": 1337118,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "has_forwarddash_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -4321,17 +3789,12 @@
             "id": 1337119,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "has_forwarddash_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -4350,16 +3813,12 @@
             "id": 1337120,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "True_",
-                  "options": [],
-                  "args": {}
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Water Mask"
                   }
@@ -4384,8 +3843,6 @@
             "connected_region": "Caves of Banishment (upper)",
             "access_rule": {
               "rule": "has_doublejump",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             }
@@ -4395,7 +3852,6 @@
             "connected_region": "Caves of Banishment (Sirens)",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Gas Mask",
@@ -4409,16 +3865,12 @@
             "connected_region": "Caves of Banishment (Flooded)",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Water Mask"
                   }
@@ -4431,16 +3883,12 @@
             "connected_region": "Space time continuum",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Twin Pyramid Key"
                   }
@@ -4455,17 +3903,12 @@
             "id": 1337121,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "has_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -4484,7 +3927,6 @@
             "id": 1337173,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Gas Mask",
@@ -4505,7 +3947,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Gas Mask"
               }
@@ -4523,7 +3964,6 @@
             "id": 1337122,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Gas Mask",
@@ -4553,9 +3993,7 @@
             "name": "Caves of Banishment (Sirens) -> Forest",
             "connected_region": "Forest",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4564,9 +4002,7 @@
             "name": "Caves of Banishment (Sirens): Wyvern room",
             "id": 1337123,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hope Ring",
@@ -4580,9 +4016,7 @@
             "name": "Caves of Banishment (Sirens): Siren room above water chest",
             "id": 1337124,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Arm Cannon",
@@ -4597,7 +4031,6 @@
             "id": 1337125,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Water Mask"
               }
@@ -4615,7 +4048,6 @@
             "id": 1337126,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Water Mask"
               }
@@ -4633,7 +4065,6 @@
             "id": 1337172,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Water Mask"
               }
@@ -4651,7 +4082,6 @@
             "id": 1337127,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Water Mask"
               }
@@ -4673,18 +4103,14 @@
             "name": "Castle Ramparts -> Forest",
             "connected_region": "Forest",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Castle Ramparts -> Castle Keep",
             "connected_region": "Castle Keep",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -4692,16 +4118,12 @@
             "connected_region": "Space time continuum",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Twin Pyramid Key"
                   }
@@ -4716,18 +4138,14 @@
             "id": 1337128,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_upwarddash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Timespinner Wheel"
                   }
@@ -4747,18 +4165,14 @@
             "id": 1337129,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_timestop",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Talaria Attachment"
                   }
@@ -4777,9 +4191,7 @@
             "name": "Castle Ramparts: Giantess guarded room",
             "id": 1337130,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Timespinner Spindle",
@@ -4793,9 +4205,7 @@
             "name": "Castle Ramparts: Knight and archer guarded room",
             "id": 1337131,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Timespinner Wheel",
@@ -4809,9 +4219,7 @@
             "name": "Castle Ramparts: Pedestal",
             "id": 1337132,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Gas Mask",
@@ -4830,9 +4238,7 @@
             "name": "Castle Keep -> Castle Ramparts",
             "connected_region": "Castle Ramparts",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -4840,16 +4246,12 @@
             "connected_region": "Castle Basement",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "True_",
-                  "options": [],
-                  "args": {}
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Water Mask"
                   }
@@ -4862,33 +4264,25 @@
             "connected_region": "Royal towers (lower)",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "has_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "has_pink",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "Not",
-                      "options": [],
                       "args": {
                         "condition": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 0
                           },
@@ -4908,16 +4302,12 @@
             "connected_region": "Space time continuum",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Twin Pyramid Key"
                   }
@@ -4931,9 +4321,7 @@
             "name": "Castle Keep: Under the twins",
             "id": 1337139,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Max Sand",
@@ -4948,7 +4336,6 @@
             "id": null,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Celestial Sash",
@@ -4971,7 +4358,6 @@
             "id": 1337171,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Celestial Sash",
@@ -4994,7 +4380,6 @@
             "id": 1337140,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Celestial Sash",
@@ -5017,19 +4402,14 @@
             "id": 1337141,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_fastjump_on_npc",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -5053,9 +4433,7 @@
             "name": "Castle Basement: Secret pedestal",
             "id": 1337133,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Economizer Ring",
@@ -5069,9 +4447,7 @@
             "name": "Castle Basement: Clean the castle basement",
             "id": 1337134,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Filigree Tea",
@@ -5085,9 +4461,7 @@
             "name": "Castle Basement: Giantess guarded chest",
             "id": 1337136,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Security Keycard C",
@@ -5101,9 +4475,7 @@
             "name": "Castle Basement: Omelette chest",
             "id": 1337137,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hi-Potion",
@@ -5117,9 +4489,7 @@
             "name": "Castle Basement: Just an egg",
             "id": 1337138,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Greed Brooch",
@@ -5138,9 +4508,7 @@
             "name": "Royal towers (lower) -> Castle Keep",
             "connected_region": "Castle Keep",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -5148,18 +4516,14 @@
             "connected_region": "Royal towers",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_forwarddash_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Timespinner Wheel"
                   }
@@ -5172,16 +4536,12 @@
             "connected_region": "Space time continuum",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Twin Pyramid Key"
                   }
@@ -5196,7 +4556,6 @@
             "id": 1337135,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Plasma Geyser",
@@ -5218,19 +4577,14 @@
             "id": 1337142,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_break_walls",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -5253,9 +4607,7 @@
             "name": "Royal towers -> Royal towers (lower)",
             "connected_region": "Royal towers (lower)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -5263,7 +4615,6 @@
             "connected_region": "Royal towers (upper)",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Celestial Sash",
@@ -5279,9 +4630,7 @@
             "name": "Royal Towers: Pre-climb gap",
             "id": 1337143,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Max Aura",
@@ -5296,16 +4645,12 @@
             "id": 1337144,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "True_",
-                  "options": [],
-                  "args": {}
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Water Mask"
                   }
@@ -5325,17 +4670,12 @@
             "id": 1337145,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "has_doublejump_of_npc",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -5354,22 +4694,17 @@
             "id": 1337146,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "has_doublejump",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Timespinner Wheel"
                       }
@@ -5378,8 +4713,6 @@
                 },
                 {
                   "rule": "has_upwarddash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -5397,9 +4730,7 @@
             "name": "Royal Towers: Right tower freebie",
             "id": 1337149,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Max Aura",
@@ -5418,9 +4749,7 @@
             "name": "Royal towers (upper) -> Royal towers",
             "connected_region": "Royal towers",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5430,22 +4759,17 @@
             "id": 1337147,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "has_doublejump",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Timespinner Wheel"
                       }
@@ -5454,8 +4778,6 @@
                 },
                 {
                   "rule": "has_upwarddash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -5473,9 +4795,7 @@
             "name": "Royal Towers: No struggle required",
             "id": 1337148,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Eternal Crown",
@@ -5489,9 +4809,7 @@
             "name": "Royal Towers: Left tower small balcony",
             "id": 1337150,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Max HP",
@@ -5505,9 +4823,7 @@
             "name": "Royal Towers: Left tower royal guard",
             "id": 1337151,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Midnight Cloak",
@@ -5521,9 +4837,7 @@
             "name": "Royal Towers: Before Aelana",
             "id": 1337152,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Succubus Hairpin",
@@ -5537,9 +4851,7 @@
             "name": "Killed Aelana",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Killed Aelana",
@@ -5554,7 +4866,6 @@
             "id": 1337153,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Celestial Sash",
@@ -5574,9 +4885,7 @@
             "name": "Royal Towers: Aelana's chest",
             "id": 1337154,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Selen's Bangle",
@@ -5590,9 +4899,7 @@
             "name": "Royal Towers: Aelana's pedestal",
             "id": 1337155,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Max HP",
@@ -5611,9 +4918,7 @@
             "name": "Temporal Gyre -> Military Fortress",
             "connected_region": "Military Fortress",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5627,7 +4932,6 @@
             "connected_region": "Ancient Pyramid (left)",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Celestial Sash",
@@ -5642,16 +4946,12 @@
             "connected_region": "Space time continuum",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Twin Pyramid Key"
                   }
@@ -5665,9 +4965,7 @@
             "name": "Ancient Pyramid: Why not it's right there",
             "id": 1337246,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Djinn Inferno",
@@ -5686,9 +4984,7 @@
             "name": "Ancient Pyramid (left) -> Ancient Pyramid (entrance)",
             "connected_region": "Ancient Pyramid (entrance)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -5696,17 +4992,12 @@
             "connected_region": "Ancient Pyramid (right)",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "has_upwarddash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -5718,16 +5009,12 @@
             "connected_region": "Space time continuum",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Twin Pyramid Key"
                   }
@@ -5741,9 +5028,7 @@
             "name": "Ancient Pyramid: Conviction guarded room",
             "id": 1337247,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Food Synthesizer",
@@ -5758,27 +5043,20 @@
             "id": 1337248,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_break_walls",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
-                      "rule": "True_",
-                      "options": [],
-                      "args": {}
+                      "rule": "True_"
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Water Mask"
                       }
@@ -5800,19 +5078,14 @@
             "id": 1337249,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "can_break_walls",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_doublejump",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -5836,17 +5109,12 @@
             "connected_region": "Ancient Pyramid (left)",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "has_upwarddash",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -5858,16 +5126,12 @@
             "connected_region": "Space time continuum",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Twin Pyramid Key"
                   }
@@ -5882,16 +5146,12 @@
             "id": 1337236,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "True_",
-                  "options": [],
-                  "args": {}
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Water Mask"
                   }
@@ -5911,20 +5171,15 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
-                      "rule": "True_",
-                      "options": [],
-                      "args": {}
+                      "rule": "True_"
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Water Mask"
                       }
@@ -5933,7 +5188,6 @@
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Timespinner Gear 1",
@@ -5963,9 +5217,7 @@
             "name": "Teleport back to start",
             "connected_region": "Lake desolation",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -5973,11 +5225,11 @@
             "connected_region": "Lake desolation",
             "access_rule": {
               "rule": "can_teleport_to",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Present"
                   },
@@ -5985,15 +5237,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "GateLakeDesolation"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           },
           {
@@ -6001,11 +5250,11 @@
             "connected_region": "Lower lake desolation",
             "access_rule": {
               "rule": "can_teleport_to",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Present"
                   },
@@ -6013,15 +5262,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "GateKittyBoss"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           },
           {
@@ -6029,11 +5275,11 @@
             "connected_region": "Library",
             "access_rule": {
               "rule": "can_teleport_to",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Present"
                   },
@@ -6041,15 +5287,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "GateLeftLibrary"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           },
           {
@@ -6057,11 +5300,11 @@
             "connected_region": "Varndagroth tower right (lower)",
             "access_rule": {
               "rule": "can_teleport_to",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Present"
                   },
@@ -6069,15 +5312,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "GateMilitaryGate"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           },
           {
@@ -6085,11 +5325,11 @@
             "connected_region": "Skeleton Shaft",
             "access_rule": {
               "rule": "can_teleport_to",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Present"
                   },
@@ -6097,15 +5337,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "GateSealedCaves"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           },
           {
@@ -6113,11 +5350,11 @@
             "connected_region": "Sealed Caves (Sirens)",
             "access_rule": {
               "rule": "can_teleport_to",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Present"
                   },
@@ -6125,15 +5362,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "GateSealedSirensCave"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           },
           {
@@ -6141,11 +5375,11 @@
             "connected_region": "Sealed Caves (Xarion)",
             "access_rule": {
               "rule": "can_teleport_to",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Present"
                   },
@@ -6153,15 +5387,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "GateXarion"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           },
           {
@@ -6169,11 +5400,11 @@
             "connected_region": "Upper Lake Serene",
             "access_rule": {
               "rule": "can_teleport_to",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Past"
                   },
@@ -6181,15 +5412,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "GateLakeSereneLeft"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           },
           {
@@ -6197,11 +5425,11 @@
             "connected_region": "Left Side forest Caves",
             "access_rule": {
               "rule": "can_teleport_to",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Past"
                   },
@@ -6209,15 +5437,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "GateLakeSereneRight"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           },
           {
@@ -6225,11 +5450,11 @@
             "connected_region": "Refugee Camp",
             "access_rule": {
               "rule": "can_teleport_to",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Past"
                   },
@@ -6237,15 +5462,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "GateAccessToPast"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           },
           {
@@ -6253,11 +5475,11 @@
             "connected_region": "Forest",
             "access_rule": {
               "rule": "can_teleport_to",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Past"
                   },
@@ -6265,15 +5487,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "GateCastleRamparts"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           },
           {
@@ -6281,11 +5500,11 @@
             "connected_region": "Castle Keep",
             "access_rule": {
               "rule": "can_teleport_to",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Past"
                   },
@@ -6293,15 +5512,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "GateCastleKeep"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           },
           {
@@ -6309,11 +5525,11 @@
             "connected_region": "Royal towers (lower)",
             "access_rule": {
               "rule": "can_teleport_to",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Past"
                   },
@@ -6321,15 +5537,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "GateRoyalTowers"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           },
           {
@@ -6337,11 +5550,11 @@
             "connected_region": "Caves of Banishment (Maw)",
             "access_rule": {
               "rule": "can_teleport_to",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Past"
                   },
@@ -6349,15 +5562,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "GateMaw"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           },
           {
@@ -6365,11 +5575,11 @@
             "connected_region": "Caves of Banishment (upper)",
             "access_rule": {
               "rule": "can_teleport_to",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Past"
                   },
@@ -6377,15 +5587,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "GateCavesOfBanishment"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           },
           {
@@ -6393,11 +5600,11 @@
             "connected_region": "Military Fortress (hangar)",
             "access_rule": {
               "rule": "can_teleport_to",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Present"
                   },
@@ -6405,15 +5612,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "GateLabEntrance"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           },
           {
@@ -6421,11 +5625,11 @@
             "connected_region": "The lab (upper)",
             "access_rule": {
               "rule": "can_teleport_to",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Present"
                   },
@@ -6433,15 +5637,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "GateDadsTower"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           },
           {
@@ -6449,15 +5650,12 @@
             "connected_region": "Ancient Pyramid (entrance)",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Constant",
-                      "options": [],
                       "args": {
                         "value": 0
                       },
@@ -6465,11 +5663,9 @@
                     },
                     {
                       "rule": "Not",
-                      "options": [],
                       "args": {
                         "condition": {
                           "rule": "Constant",
-                          "options": [],
                           "args": {
                             "value": 0
                           },
@@ -6483,11 +5679,11 @@
                 },
                 {
                   "rule": "can_teleport_to",
-                  "options": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true,
                   "args": [
                     {
                       "rule": "Constant",
-                      "options": [],
                       "args": {
                         "value": "Time"
                       },
@@ -6495,23 +5691,20 @@
                     },
                     {
                       "rule": "Constant",
-                      "options": [],
                       "args": {
                         "value": "GateGyre"
                       },
                       "_converted_from_cc": true
                     }
-                  ],
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  ]
                 },
                 {
                   "rule": "can_teleport_to",
-                  "options": [],
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true,
                   "args": [
                     {
                       "rule": "Constant",
-                      "options": [],
                       "args": {
                         "value": "Time"
                       },
@@ -6519,15 +5712,12 @@
                     },
                     {
                       "rule": "Constant",
-                      "options": [],
                       "args": {
                         "value": "GateLeftPyramid"
                       },
                       "_converted_from_cc": true
                     }
-                  ],
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  ]
                 }
               ]
             }
@@ -6537,11 +5727,11 @@
             "connected_region": "Ancient Pyramid (right)",
             "access_rule": {
               "rule": "can_teleport_to",
-              "options": [],
+              "_original_ast_type": "helper",
+              "_converted_from_cc": true,
               "args": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "Time"
                   },
@@ -6549,15 +5739,12 @@
                 },
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": "GateRightPyramid"
                   },
                   "_converted_from_cc": true
                 }
-              ],
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              ]
             }
           }
         ],
@@ -10275,8 +9462,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "has_upwarddash",
-            "args": []
+            "name": "has_upwarddash"
           },
           {
             "type": "and",
@@ -10287,8 +9473,7 @@
               },
               {
                 "type": "helper",
-                "name": "has_doublejump",
-                "args": []
+                "name": "has_doublejump"
               }
             ]
           }
@@ -10333,8 +9518,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "has_upwarddash",
-            "args": []
+            "name": "has_upwarddash"
           },
           {
             "type": "and",
@@ -10345,8 +9529,7 @@
               },
               {
                 "type": "helper",
-                "name": "has_doublejump",
-                "args": []
+                "name": "has_doublejump"
               }
             ]
           }
