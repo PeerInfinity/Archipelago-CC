@@ -164,6 +164,8 @@ Playthrough:
 
 }
 1: {
+  Disable Quarantine: Disable Quarantine
+  Full Infection: Full Infection
   Grassy Plateaus South Wreck - Databox: Seaglide Fragment
   Grassy Plateaus South Wreck - PDA: Laser Cutter Fragment
   Kelp Forest Wreck - Databox: Seaglide Fragment
@@ -215,7 +217,6 @@ Playthrough:
   Disease Research Facility - Mid Alien Data Terminal: Ion Battery
   Disease Research Facility - Upper Alien Data Terminal: Mobile Vehicle Bay Fragment
   Dunes Sanctuary - Alien Data Terminal: Cyclops Engine Fragment
-  Full Infection: Full Infection
   Grand Reef South Wreck - Outside Databox: Neptune Fuel Reserve
   Lifepod 2 - Databox: Moonpool Fragment
   Northern Blood Kelp Zone Sanctuary - Alien Data Terminal: Radiation Suit
@@ -248,7 +249,6 @@ Playthrough:
   Underwater Islands Wreck - Pipes Databox 2: Mobile Vehicle Bay Fragment
 }
 8: {
-  Disable Quarantine: Disable Quarantine
   Primary Containment Facility's Egg Laboratory - Alien Data Terminal: Seaglide Fragment
   Primary Containment Facility's Pipe Room - Alien Data Terminal: Neptune Cockpit
 }

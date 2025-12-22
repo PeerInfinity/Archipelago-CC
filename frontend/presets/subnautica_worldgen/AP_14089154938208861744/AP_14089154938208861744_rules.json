@@ -36,12 +36,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Engine Fragment",
+              "name": "Power Cell Charger Fragment",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Blood Kelp Trench Wreck - Inside Databox",
@@ -63,12 +63,12 @@
               ]
             },
             "item": {
-              "name": "Spotlight",
+              "name": "Prawn Suit Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Blood Kelp Trench Wreck - PDA",
@@ -90,12 +90,12 @@
               ]
             },
             "item": {
-              "name": "Large Room",
+              "name": "Cyclops Bridge Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Bulb Zone West Wreck - Outside Databox",
@@ -117,12 +117,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Fire Suppression System",
+              "name": "Scanner Room Fragment",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Bulb Zone West Wreck - Under Databox",
@@ -144,12 +144,12 @@
               ]
             },
             "item": {
-              "name": "Laser Cutter Fragment",
+              "name": "Power Transmitter Fragment",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Bulb Zone West Wreck - Inside Databox",
@@ -171,12 +171,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Shield Generator",
+              "name": "Titanium",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Bulb Zone West Wreck - PDA",
@@ -198,12 +198,12 @@
               ]
             },
             "item": {
-              "name": "Crystalline Sulfur",
+              "name": "Swim Charge Fins",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Bulb Zone East Wreck - Databox",
@@ -225,12 +225,12 @@
               ]
             },
             "item": {
-              "name": "Beacon Fragment",
+              "name": "Cyclops Hull Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dunes North Wreck - Outside Databox",
@@ -252,12 +252,12 @@
               ]
             },
             "item": {
-              "name": "Creature Decoy",
+              "name": "Furniture",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dunes North Wreck - Office Databox",
@@ -279,12 +279,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Bridge Fragment",
+              "name": "Prawn Suit Propulsion Cannon Fragment",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dunes North Wreck - PDA",
@@ -306,12 +306,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Engine Fragment",
+              "name": "Creature Decoy",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dunes North Wreck - Cargo Databox",
@@ -333,12 +333,12 @@
               ]
             },
             "item": {
-              "name": "Bioreactor Fragment",
+              "name": "Farming",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dunes West Wreck - Databox",
@@ -360,12 +360,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Hull Fragment",
+              "name": "Silver Ore",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dunes East Wreck - Outside Databox",
@@ -387,12 +387,12 @@
               ]
             },
             "item": {
-              "name": "Power Cell Charger Fragment",
+              "name": "Cyclops Thermal Reactor Module",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dunes East Wreck - Inside Databox",
@@ -414,12 +414,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Thermal Reactor Module",
+              "name": "Nuclear Reactor Fragment",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grand Reef North Wreck - Outside Databox",
@@ -441,12 +441,12 @@
               ]
             },
             "item": {
-              "name": "Seaglide Fragment",
+              "name": "Ultra Glide Fins",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grand Reef North Wreck - Elevator Databox",
@@ -468,12 +468,12 @@
               ]
             },
             "item": {
-              "name": "Seamoth Fragment",
+              "name": "Thermal Plant Fragment",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grand Reef North Wreck - Bottom Databox",
@@ -495,12 +495,12 @@
               ]
             },
             "item": {
-              "name": "Alien Containment",
+              "name": "Exterior Growbed",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grand Reef North Wreck - Hangar PDA",
@@ -522,12 +522,12 @@
               ]
             },
             "item": {
-              "name": "Thermal Plant Fragment",
+              "name": "Cyclops Hull Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grand Reef South Wreck - Trench Databox",
@@ -549,12 +549,12 @@
               ]
             },
             "item": {
-              "name": "Grav Trap Fragment",
+              "name": "Scanner Room Fragment",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grand Reef South Wreck - Comms Databox",
@@ -576,12 +576,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Hull Fragment",
+              "name": "Prawn Suit Grappling Arm Fragment",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grand Reef South Wreck - Outside Databox",
@@ -603,12 +603,12 @@
               ]
             },
             "item": {
-              "name": "Modification Station Fragment",
+              "name": "Neptune Fuel Reserve",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grand Reef South Wreck - PDA",
@@ -630,12 +630,12 @@
               ]
             },
             "item": {
-              "name": "Resources Bundle",
+              "name": "Prawn Suit Drill Arm Fragment",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grassy Plateaus South Wreck - Databox",
@@ -684,12 +684,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Decoy Tube Upgrade",
+              "name": "Laser Cutter Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grassy Plateaus East Wreck - Breach Databox",
@@ -711,12 +711,12 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Fragment",
+              "name": "Thermal Plant Fragment",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grassy Plateaus East Wreck - Hangar Databox",
@@ -738,12 +738,12 @@
               ]
             },
             "item": {
-              "name": "Exterior Growbed",
+              "name": "Propulsion Cannon Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grassy Plateaus West Wreck - Locker PDA",
@@ -765,12 +765,12 @@
               ]
             },
             "item": {
-              "name": "Lightweight High Capacity Tank",
+              "name": "Diamond",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grassy Plateaus West Wreck - Data Terminal",
@@ -792,12 +792,12 @@
               ]
             },
             "item": {
-              "name": "Mobile Vehicle Bay Fragment",
+              "name": "Scanner Room Fragment",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grassy Plateaus Southwest Wreck - Databox",
@@ -819,12 +819,12 @@
               ]
             },
             "item": {
-              "name": "Moonpool Fragment",
+              "name": "Seamoth Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Safe Shallows Wreck - PDA",
@@ -846,12 +846,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Bridge Fragment",
+              "name": "Cyclops Docking Bay Repair Module",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kelp Forest Wreck - Databox",
@@ -900,12 +900,12 @@
               ]
             },
             "item": {
-              "name": "Seamoth Fragment",
+              "name": "Alien Containment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountains West Wreck - Outside Databox",
@@ -927,12 +927,12 @@
               ]
             },
             "item": {
-              "name": "Propulsion Cannon Fragment",
+              "name": "Lightweight High Capacity Tank",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountains West Wreck - Data Terminal",
@@ -954,12 +954,12 @@
               ]
             },
             "item": {
-              "name": "Mobile Vehicle Bay Fragment",
+              "name": "Prawn Suit Torpedo Arm Fragment",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountains West Wreck - Hangar Databox",
@@ -981,12 +981,12 @@
               ]
             },
             "item": {
-              "name": "Moonpool Fragment",
+              "name": "Resources Bundle",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountains West Wreck - Office Databox",
@@ -1008,12 +1008,12 @@
               ]
             },
             "item": {
-              "name": "Nuclear Reactor Fragment",
+              "name": "Prawn Suit Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountains East Wreck - Comms Databox",
@@ -1035,12 +1035,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Hull Fragment",
+              "name": "Neptune Gantry",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountains East Wreck - Outside Databox",
@@ -1062,12 +1062,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Bridge Fragment",
+              "name": "Farming",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Northwestern Mushroom Forest Wreck - Cargo Databox",
@@ -1089,12 +1089,12 @@
               ]
             },
             "item": {
-              "name": "Stasis Rifle Fragment",
+              "name": "Furniture",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Northwestern Mushroom Forest Wreck - Office Databox",
@@ -1116,12 +1116,12 @@
               ]
             },
             "item": {
-              "name": "Exterior Growbed",
+              "name": "Cyclops Engine Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Northwestern Mushroom Forest Wreck - PDA",
@@ -1143,12 +1143,12 @@
               ]
             },
             "item": {
-              "name": "Ultra High Capacity Tank",
+              "name": "Multipurpose Room",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sea Treader's Path Wreck - Outside Databox",
@@ -1170,12 +1170,12 @@
               ]
             },
             "item": {
-              "name": "Scanner Room Fragment",
+              "name": "Seamoth Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sea Treader's Path Wreck - Hangar Databox",
@@ -1197,12 +1197,12 @@
               ]
             },
             "item": {
-              "name": "Moonpool Fragment",
+              "name": "Cyclops Engine Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sea Treader's Path Wreck - Lobby Databox",
@@ -1224,12 +1224,12 @@
               ]
             },
             "item": {
-              "name": "Propulsion Cannon Fragment",
+              "name": "Prawn Suit Drill Arm Fragment",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sea Treader's Path Wreck - PDA",
@@ -1251,12 +1251,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Depth Module MK1",
+              "name": "Laser Cutter Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sparse Reef Wreck - Locker Databox",
@@ -1278,12 +1278,12 @@
               ]
             },
             "item": {
-              "name": "Swim Charge Fins",
+              "name": "Prawn Suit Propulsion Cannon Fragment",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sparse Reef Wreck - Outside Databox",
@@ -1305,12 +1305,12 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Propulsion Cannon Fragment",
+              "name": "Large Room",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sparse Reef Wreck - Lab Databox",
@@ -1332,12 +1332,12 @@
               ]
             },
             "item": {
-              "name": "Modification Station Fragment",
+              "name": "Nuclear Reactor Fragment",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underwater Islands Wreck - Outside Databox",
@@ -1359,12 +1359,12 @@
               ]
             },
             "item": {
-              "name": "Scanner Room Fragment",
+              "name": "Cyclops Fire Suppression System",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underwater Islands Wreck - Hangar Databox",
@@ -1386,12 +1386,12 @@
               ]
             },
             "item": {
-              "name": "Laser Cutter Fragment",
+              "name": "Bioreactor Fragment",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underwater Islands Wreck - Data Terminal",
@@ -1413,12 +1413,12 @@
               ]
             },
             "item": {
-              "name": "Power Transmitter Fragment",
+              "name": "Exterior Growbed",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underwater Islands Wreck - Cable Databox",
@@ -1440,12 +1440,12 @@
               ]
             },
             "item": {
-              "name": "Battery Charger fragment",
+              "name": "Beacon Fragment",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underwater Islands Wreck - Pipes Databox 1",
@@ -1468,12 +1468,12 @@
               ]
             },
             "item": {
-              "name": "Power Cell Charger Fragment",
+              "name": "Cyclops Depth Module MK1",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underwater Islands Wreck - Pipes Databox 2",
@@ -1496,12 +1496,12 @@
               ]
             },
             "item": {
-              "name": "Ultra Glide Fins",
+              "name": "Mobile Vehicle Bay Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Deep Grand Reef - Bedroom Databox",
@@ -1523,12 +1523,12 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Propulsion Cannon Fragment",
+              "name": "Propulsion Cannon Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Deep Grand Reef - Observatory Databox",
@@ -1550,12 +1550,12 @@
               ]
             },
             "item": {
-              "name": "Scanner Room Fragment",
+              "name": "Observatory",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Deep Grand Reef - Bedroom PDA",
@@ -1577,12 +1577,12 @@
               ]
             },
             "item": {
-              "name": "Neptune Cockpit",
+              "name": "Grav Trap Fragment",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Deep Grand Reef - Outside PDA",
@@ -1604,12 +1604,12 @@
               ]
             },
             "item": {
-              "name": "Laser Cutter Fragment",
+              "name": "Ion Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Deep Grand Reef - Observatory PDA",
@@ -1631,12 +1631,12 @@
               ]
             },
             "item": {
-              "name": "Modification Station Fragment",
+              "name": "Cyclops Hull Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Deep Grand Reef - Lab PDA",
@@ -1658,12 +1658,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Engine Fragment",
+              "name": "Cyclops Bridge Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Floating Island - Lake PDA",
@@ -1685,12 +1685,12 @@
               ]
             },
             "item": {
-              "name": "Mobile Vehicle Bay Fragment",
+              "name": "Floodlight",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Floating Island - Databox",
@@ -1712,12 +1712,12 @@
               ]
             },
             "item": {
-              "name": "Modification Station Fragment",
+              "name": "Mobile Vehicle Bay Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Floating Island - Room PDA",
@@ -1739,12 +1739,12 @@
               ]
             },
             "item": {
-              "name": "Beacon Fragment",
+              "name": "Cyclops Bridge Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Floating Island - Green Wall PDA",
@@ -1766,12 +1766,12 @@
               ]
             },
             "item": {
-              "name": "Ion Power Cell",
+              "name": "Modification Station Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Floating Island - Corridor PDA",
@@ -1793,12 +1793,12 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Torpedo Arm Fragment",
+              "name": "Cyclops Sonar Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Floating Island - North Observatory PDA",
@@ -1820,12 +1820,12 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Torpedo Arm Fragment",
+              "name": "Power Cell Charger Fragment",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Floating Island - South Observatory PDA",
@@ -1847,12 +1847,12 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Grappling Arm Fragment",
+              "name": "Bulkhead",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Jellyshroom Cave - PDA",
@@ -1874,12 +1874,12 @@
               ]
             },
             "item": {
-              "name": "Crystalline Sulfur",
+              "name": "Cyclops Bridge Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Jellyshroom Cave - Bedroom Databox",
@@ -1901,12 +1901,12 @@
               ]
             },
             "item": {
-              "name": "Mobile Vehicle Bay Fragment",
+              "name": "Prawn Suit Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Jellyshroom Cave - Detached PDA",
@@ -1928,12 +1928,12 @@
               ]
             },
             "item": {
-              "name": "Mobile Vehicle Bay Fragment",
+              "name": "Moonpool Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Jellyshroom Cave - Office PDA",
@@ -1955,12 +1955,12 @@
               ]
             },
             "item": {
-              "name": "Gold",
+              "name": "Kyanite",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Jellyshroom Cave - Locker PDA",
@@ -1982,12 +1982,12 @@
               ]
             },
             "item": {
-              "name": "Seamoth Fragment",
+              "name": "Modification Station Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Jellyshroom Cave - Bedroom PDA",
@@ -2009,12 +2009,12 @@
               ]
             },
             "item": {
-              "name": "Silver Ore",
+              "name": "Compass",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Jellyshroom Cave - Observatory PDA",
@@ -2036,12 +2036,12 @@
               ]
             },
             "item": {
-              "name": "Neptune Gantry",
+              "name": "Ultra High Capacity Tank",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lifepod 2 - Databox",
@@ -2063,12 +2063,12 @@
               ]
             },
             "item": {
-              "name": "Observatory",
+              "name": "Moonpool Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lifepod 2 - PDA",
@@ -2090,12 +2090,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Engine Fragment",
+              "name": "Crystalline Sulfur",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lifepod 3 - Databox",
@@ -2117,12 +2117,12 @@
               ]
             },
             "item": {
-              "name": "Bioreactor Fragment",
+              "name": "Modification Station Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lifepod 3 - PDA",
@@ -2144,12 +2144,12 @@
               ]
             },
             "item": {
-              "name": "Seamoth Fragment",
+              "name": "Mobile Vehicle Bay Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lifepod 4 - Databox",
@@ -2171,12 +2171,12 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Drill Arm Fragment",
+              "name": "Gold",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lifepod 4 - PDA",
@@ -2198,12 +2198,12 @@
               ]
             },
             "item": {
-              "name": "Repulsion Cannon",
+              "name": "Prawn Suit Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lifepod 6 - Databox",
@@ -2225,12 +2225,12 @@
               ]
             },
             "item": {
-              "name": "Neptune Fuel Reserve",
+              "name": "Cyclops Engine Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lifepod 6 - Inside PDA",
@@ -2252,12 +2252,12 @@
               ]
             },
             "item": {
-              "name": "Furniture",
+              "name": "Prawn Suit Grappling Arm Fragment",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lifepod 6 - Outside PDA",
@@ -2279,12 +2279,12 @@
               ]
             },
             "item": {
-              "name": "Nuclear Reactor Fragment",
+              "name": "Reinforced Dive Suit",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lifepod 7 - PDA",
@@ -2306,12 +2306,12 @@
               ]
             },
             "item": {
-              "name": "Multipurpose Room",
+              "name": "Resources Bundle",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lifepod 12 - Databox",
@@ -2333,12 +2333,12 @@
               ]
             },
             "item": {
-              "name": "Resources Bundle",
+              "name": "Seamoth Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lifepod 12 - PDA",
@@ -2360,12 +2360,12 @@
               ]
             },
             "item": {
-              "name": "Salt Deposit",
+              "name": "Battery Charger fragment",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lifepod 13 - Databox",
@@ -2387,12 +2387,12 @@
               ]
             },
             "item": {
-              "name": "Seamoth Fragment",
+              "name": "Stasis Rifle Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lifepod 13 - PDA",
@@ -2414,12 +2414,12 @@
               ]
             },
             "item": {
-              "name": "Kyanite",
+              "name": "Lithium",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lifepod 17 - PDA",
@@ -2441,12 +2441,12 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Fragment",
+              "name": "Seamoth Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lifepod 19 - Databox",
@@ -2468,12 +2468,12 @@
               ]
             },
             "item": {
-              "name": "Seamoth Fragment",
+              "name": "Battery Charger fragment",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lifepod 19 - Outside PDA",
@@ -2495,12 +2495,12 @@
               ]
             },
             "item": {
-              "name": "Compass",
+              "name": "Prawn Suit Torpedo Arm Fragment",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lifepod 19 - Inside PDA",
@@ -2527,7 +2527,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora Seamoth Bay - Upgrade Console",
@@ -2550,12 +2550,12 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Fragment",
+              "name": "Cyclops Shield Generator",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora Drive Room - Upgrade Console",
@@ -2578,12 +2578,12 @@
               ]
             },
             "item": {
-              "name": "Titanium",
+              "name": "Cyclops Engine Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora Prawn Suit Bay - Upgrade Console",
@@ -2606,12 +2606,12 @@
               ]
             },
             "item": {
-              "name": "Nuclear Reactor Fragment",
+              "name": "Seamoth Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora - Office PDA",
@@ -2633,12 +2633,12 @@
               ]
             },
             "item": {
-              "name": "Water Filtration Machine",
+              "name": "Water Filtration Suit",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora - Corridor PDA",
@@ -2660,12 +2660,12 @@
               ]
             },
             "item": {
-              "name": "Bulkhead",
+              "name": "Cyclops Bridge Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora - Cargo Bay PDA",
@@ -2688,12 +2688,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Docking Bay Repair Module",
+              "name": "Seaglide Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora - Seamoth Bay PDA",
@@ -2716,12 +2716,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Bridge Fragment",
+              "name": "Vehicle Upgrade Console",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora - Medkit Locker PDA",
@@ -2744,12 +2744,12 @@
               ]
             },
             "item": {
-              "name": "Seaglide Fragment",
+              "name": "Seamoth Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora - Locker PDA",
@@ -2772,12 +2772,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Bridge Fragment",
+              "name": "Repulsion Cannon",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora - Canteen PDA",
@@ -2800,12 +2800,12 @@
               ]
             },
             "item": {
-              "name": "Grav Trap Fragment",
+              "name": "Prawn Suit Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora - Cabin 4 PDA",
@@ -2828,12 +2828,12 @@
               ]
             },
             "item": {
-              "name": "Furniture",
+              "name": "Cyclops Hull Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora - Cabin 7 PDA",
@@ -2856,12 +2856,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Hull Fragment",
+              "name": "Prawn Suit Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora - Cabin 1 PDA",
@@ -2884,12 +2884,12 @@
               ]
             },
             "item": {
-              "name": "Thermal Plant Fragment",
+              "name": "Modification Station Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora - Captain PDA",
@@ -2912,12 +2912,12 @@
               ]
             },
             "item": {
-              "name": "Water Filtration Suit",
+              "name": "Neptune Boosters",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora - Ring PDA",
@@ -2940,12 +2940,12 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Fragment",
+              "name": "Laser Cutter Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora - Lab PDA",
@@ -2968,12 +2968,12 @@
               ]
             },
             "item": {
-              "name": "Laser Cutter Fragment",
+              "name": "Water Filtration Machine",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora - Office Data Terminal",
@@ -2995,12 +2995,12 @@
               ]
             },
             "item": {
-              "name": "Lithium",
+              "name": "Spotlight",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora - Captain Data Terminal",
@@ -3051,12 +3051,12 @@
               ]
             },
             "item": {
-              "name": "Ion Battery",
+              "name": "Salt Deposit",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aurora - Lab Data Terminal",
@@ -3079,12 +3079,12 @@
               ]
             },
             "item": {
-              "name": "Battery Charger fragment",
+              "name": "Mobile Vehicle Bay Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Quarantine Enforcement Platform's - Upper Alien Data Terminal",
@@ -3106,12 +3106,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Engine Fragment",
+              "name": "Moonpool Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Quarantine Enforcement Platform's - Mid Alien Data Terminal",
@@ -3133,12 +3133,12 @@
               ]
             },
             "item": {
-              "name": "Vehicle Upgrade Console",
+              "name": "Laser Cutter Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dunes Sanctuary - Alien Data Terminal",
@@ -3160,12 +3160,12 @@
               ]
             },
             "item": {
-              "name": "Silver Ore",
+              "name": "Cyclops Engine Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Deep Sparse Reef Sanctuary - Alien Data Terminal",
@@ -3187,12 +3187,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Hull Fragment",
+              "name": "Stasis Rifle Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Northern Blood Kelp Zone Sanctuary - Alien Data Terminal",
@@ -3214,12 +3214,12 @@
               ]
             },
             "item": {
-              "name": "Stasis Rifle Fragment",
+              "name": "Radiation Suit",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lost River Laboratory Cache - Alien Data Terminal",
@@ -3241,12 +3241,12 @@
               ]
             },
             "item": {
-              "name": "Neptune Boosters",
+              "name": "Crystalline Sulfur",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Disease Research Facility - Upper Alien Data Terminal",
@@ -3268,12 +3268,12 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Fragment",
+              "name": "Mobile Vehicle Bay Fragment",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Disease Research Facility - Mid Alien Data Terminal",
@@ -3295,12 +3295,12 @@
               ]
             },
             "item": {
-              "name": "Radiation Suit",
+              "name": "Ion Battery",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Disease Research Facility - Lower Alien Data Terminal",
@@ -3322,12 +3322,12 @@
               ]
             },
             "item": {
-              "name": "Cyclops Sonar Upgrade",
+              "name": "Cyclops Hull Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alien Thermal Plant - Entrance Alien Data Terminal",
@@ -3349,12 +3349,12 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Fragment",
+              "name": "Beacon Fragment",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alien Thermal Plant - Green Alien Data Terminal",
@@ -3376,12 +3376,12 @@
               ]
             },
             "item": {
-              "name": "Floodlight",
+              "name": "Nuclear Reactor Fragment",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alien Thermal Plant - Yellow Alien Data Terminal",
@@ -3403,12 +3403,12 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Grappling Arm Fragment",
+              "name": "Cyclops Decoy Tube Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Primary Containment Facility's Antechamber - Alien Data Terminal",
@@ -3430,12 +3430,12 @@
               ]
             },
             "item": {
-              "name": "Farming",
+              "name": "Bioreactor Fragment",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Primary Containment Facility's Egg Laboratory - Alien Data Terminal",
@@ -3457,12 +3457,12 @@
               ]
             },
             "item": {
-              "name": "Diamond",
+              "name": "Seaglide Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Primary Containment Facility's Pipe Room - Alien Data Terminal",
@@ -3484,12 +3484,12 @@
               ]
             },
             "item": {
-              "name": "Farming",
+              "name": "Neptune Cockpit",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grassy Plateaus West Wreck - Beam PDA",
@@ -3511,12 +3511,12 @@
               ]
             },
             "item": {
-              "name": "Mobile Vehicle Bay Fragment",
+              "name": "Grav Trap Fragment",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Floating Island - Cave Entrance PDA",
@@ -3538,12 +3538,12 @@
               ]
             },
             "item": {
-              "name": "Reinforced Dive Suit",
+              "name": "Mobile Vehicle Bay Fragment",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Jellyshroom Cave - Outside PDA",
@@ -3565,12 +3565,12 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Drill Arm Fragment",
+              "name": "Silver Ore",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Neptune Launch",
@@ -4977,143 +4977,7 @@
     }
   },
   "canonical_placements": {
-    "1": {
-      "Blood Kelp Trench Wreck - Outside Databox": "Cyclops Engine Fragment",
-      "Blood Kelp Trench Wreck - Inside Databox": "Spotlight",
-      "Blood Kelp Trench Wreck - PDA": "Large Room",
-      "Bulb Zone West Wreck - Outside Databox": "Cyclops Fire Suppression System",
-      "Bulb Zone West Wreck - Under Databox": "Laser Cutter Fragment",
-      "Bulb Zone West Wreck - Inside Databox": "Cyclops Shield Generator",
-      "Bulb Zone West Wreck - PDA": "Crystalline Sulfur",
-      "Bulb Zone East Wreck - Databox": "Beacon Fragment",
-      "Dunes North Wreck - Outside Databox": "Creature Decoy",
-      "Dunes North Wreck - Office Databox": "Cyclops Bridge Fragment",
-      "Dunes North Wreck - PDA": "Cyclops Engine Fragment",
-      "Dunes North Wreck - Cargo Databox": "Bioreactor Fragment",
-      "Dunes West Wreck - Databox": "Cyclops Hull Fragment",
-      "Dunes East Wreck - Outside Databox": "Power Cell Charger Fragment",
-      "Dunes East Wreck - Inside Databox": "Cyclops Thermal Reactor Module",
-      "Grand Reef North Wreck - Outside Databox": "Seaglide Fragment",
-      "Grand Reef North Wreck - Elevator Databox": "Seamoth Fragment",
-      "Grand Reef North Wreck - Bottom Databox": "Alien Containment",
-      "Grand Reef North Wreck - Hangar PDA": "Thermal Plant Fragment",
-      "Grand Reef South Wreck - Trench Databox": "Grav Trap Fragment",
-      "Grand Reef South Wreck - Comms Databox": "Cyclops Hull Fragment",
-      "Grand Reef South Wreck - Outside Databox": "Modification Station Fragment",
-      "Grand Reef South Wreck - PDA": "Resources Bundle",
-      "Grassy Plateaus South Wreck - Databox": "Seaglide Fragment",
-      "Grassy Plateaus South Wreck - PDA": "Cyclops Decoy Tube Upgrade",
-      "Grassy Plateaus East Wreck - Breach Databox": "Prawn Suit Fragment",
-      "Grassy Plateaus East Wreck - Hangar Databox": "Exterior Growbed",
-      "Grassy Plateaus West Wreck - Locker PDA": "Lightweight High Capacity Tank",
-      "Grassy Plateaus West Wreck - Data Terminal": "Mobile Vehicle Bay Fragment",
-      "Grassy Plateaus Southwest Wreck - Databox": "Moonpool Fragment",
-      "Safe Shallows Wreck - PDA": "Cyclops Bridge Fragment",
-      "Kelp Forest Wreck - Databox": "Seaglide Fragment",
-      "Kelp Forest Wreck - PDA": "Seamoth Fragment",
-      "Mountains West Wreck - Outside Databox": "Propulsion Cannon Fragment",
-      "Mountains West Wreck - Data Terminal": "Mobile Vehicle Bay Fragment",
-      "Mountains West Wreck - Hangar Databox": "Moonpool Fragment",
-      "Mountains West Wreck - Office Databox": "Nuclear Reactor Fragment",
-      "Mountains East Wreck - Comms Databox": "Cyclops Hull Fragment",
-      "Mountains East Wreck - Outside Databox": "Cyclops Bridge Fragment",
-      "Northwestern Mushroom Forest Wreck - Cargo Databox": "Stasis Rifle Fragment",
-      "Northwestern Mushroom Forest Wreck - Office Databox": "Exterior Growbed",
-      "Northwestern Mushroom Forest Wreck - PDA": "Ultra High Capacity Tank",
-      "Sea Treader's Path Wreck - Outside Databox": "Scanner Room Fragment",
-      "Sea Treader's Path Wreck - Hangar Databox": "Moonpool Fragment",
-      "Sea Treader's Path Wreck - Lobby Databox": "Propulsion Cannon Fragment",
-      "Sea Treader's Path Wreck - PDA": "Cyclops Depth Module MK1",
-      "Sparse Reef Wreck - Locker Databox": "Swim Charge Fins",
-      "Sparse Reef Wreck - Outside Databox": "Prawn Suit Propulsion Cannon Fragment",
-      "Sparse Reef Wreck - Lab Databox": "Modification Station Fragment",
-      "Underwater Islands Wreck - Outside Databox": "Scanner Room Fragment",
-      "Underwater Islands Wreck - Hangar Databox": "Laser Cutter Fragment",
-      "Underwater Islands Wreck - Data Terminal": "Power Transmitter Fragment",
-      "Underwater Islands Wreck - Cable Databox": "Battery Charger fragment",
-      "Underwater Islands Wreck - Pipes Databox 1": "Power Cell Charger Fragment",
-      "Underwater Islands Wreck - Pipes Databox 2": "Ultra Glide Fins",
-      "Degasi Seabase - Deep Grand Reef - Bedroom Databox": "Prawn Suit Propulsion Cannon Fragment",
-      "Degasi Seabase - Deep Grand Reef - Observatory Databox": "Scanner Room Fragment",
-      "Degasi Seabase - Deep Grand Reef - Bedroom PDA": "Neptune Cockpit",
-      "Degasi Seabase - Deep Grand Reef - Outside PDA": "Laser Cutter Fragment",
-      "Degasi Seabase - Deep Grand Reef - Observatory PDA": "Modification Station Fragment",
-      "Degasi Seabase - Deep Grand Reef - Lab PDA": "Cyclops Engine Fragment",
-      "Floating Island - Lake PDA": "Mobile Vehicle Bay Fragment",
-      "Degasi Seabase - Floating Island - Databox": "Modification Station Fragment",
-      "Degasi Seabase - Floating Island - Room PDA": "Beacon Fragment",
-      "Degasi Seabase - Floating Island - Green Wall PDA": "Ion Power Cell",
-      "Degasi Seabase - Floating Island - Corridor PDA": "Prawn Suit Torpedo Arm Fragment",
-      "Degasi Seabase - Floating Island - North Observatory PDA": "Prawn Suit Torpedo Arm Fragment",
-      "Degasi Seabase - Floating Island - South Observatory PDA": "Prawn Suit Grappling Arm Fragment",
-      "Jellyshroom Cave - PDA": "Crystalline Sulfur",
-      "Degasi Seabase - Jellyshroom Cave - Bedroom Databox": "Mobile Vehicle Bay Fragment",
-      "Degasi Seabase - Jellyshroom Cave - Detached PDA": "Mobile Vehicle Bay Fragment",
-      "Degasi Seabase - Jellyshroom Cave - Office PDA": "Gold",
-      "Degasi Seabase - Jellyshroom Cave - Locker PDA": "Seamoth Fragment",
-      "Degasi Seabase - Jellyshroom Cave - Bedroom PDA": "Silver Ore",
-      "Degasi Seabase - Jellyshroom Cave - Observatory PDA": "Neptune Gantry",
-      "Lifepod 2 - Databox": "Observatory",
-      "Lifepod 2 - PDA": "Cyclops Engine Fragment",
-      "Lifepod 3 - Databox": "Bioreactor Fragment",
-      "Lifepod 3 - PDA": "Seamoth Fragment",
-      "Lifepod 4 - Databox": "Prawn Suit Drill Arm Fragment",
-      "Lifepod 4 - PDA": "Repulsion Cannon",
-      "Lifepod 6 - Databox": "Neptune Fuel Reserve",
-      "Lifepod 6 - Inside PDA": "Furniture",
-      "Lifepod 6 - Outside PDA": "Nuclear Reactor Fragment",
-      "Lifepod 7 - PDA": "Multipurpose Room",
-      "Lifepod 12 - Databox": "Resources Bundle",
-      "Lifepod 12 - PDA": "Salt Deposit",
-      "Lifepod 13 - Databox": "Seamoth Fragment",
-      "Lifepod 13 - PDA": "Kyanite",
-      "Lifepod 17 - PDA": "Prawn Suit Fragment",
-      "Lifepod 19 - Databox": "Seamoth Fragment",
-      "Lifepod 19 - Outside PDA": "Compass",
-      "Lifepod 19 - Inside PDA": "Prawn Suit Fragment",
-      "Aurora Seamoth Bay - Upgrade Console": "Prawn Suit Fragment",
-      "Aurora Drive Room - Upgrade Console": "Titanium",
-      "Aurora Prawn Suit Bay - Upgrade Console": "Nuclear Reactor Fragment",
-      "Aurora - Office PDA": "Water Filtration Machine",
-      "Aurora - Corridor PDA": "Bulkhead",
-      "Aurora - Cargo Bay PDA": "Cyclops Docking Bay Repair Module",
-      "Aurora - Seamoth Bay PDA": "Cyclops Bridge Fragment",
-      "Aurora - Medkit Locker PDA": "Seaglide Fragment",
-      "Aurora - Locker PDA": "Cyclops Bridge Fragment",
-      "Aurora - Canteen PDA": "Grav Trap Fragment",
-      "Aurora - Cabin 4 PDA": "Furniture",
-      "Aurora - Cabin 7 PDA": "Cyclops Hull Fragment",
-      "Aurora - Cabin 1 PDA": "Thermal Plant Fragment",
-      "Aurora - Captain PDA": "Water Filtration Suit",
-      "Aurora - Ring PDA": "Prawn Suit Fragment",
-      "Aurora - Lab PDA": "Laser Cutter Fragment",
-      "Aurora - Office Data Terminal": "Lithium",
-      "Aurora - Captain Data Terminal": "Neptune Launch Platform",
-      "Aurora - Battery Room Data Terminal": "Ion Battery",
-      "Aurora - Lab Data Terminal": "Battery Charger fragment",
-      "Quarantine Enforcement Platform's - Upper Alien Data Terminal": "Cyclops Engine Fragment",
-      "Quarantine Enforcement Platform's - Mid Alien Data Terminal": "Vehicle Upgrade Console",
-      "Dunes Sanctuary - Alien Data Terminal": "Silver Ore",
-      "Deep Sparse Reef Sanctuary - Alien Data Terminal": "Cyclops Hull Fragment",
-      "Northern Blood Kelp Zone Sanctuary - Alien Data Terminal": "Stasis Rifle Fragment",
-      "Lost River Laboratory Cache - Alien Data Terminal": "Neptune Boosters",
-      "Disease Research Facility - Upper Alien Data Terminal": "Prawn Suit Fragment",
-      "Disease Research Facility - Mid Alien Data Terminal": "Radiation Suit",
-      "Disease Research Facility - Lower Alien Data Terminal": "Cyclops Sonar Upgrade",
-      "Alien Thermal Plant - Entrance Alien Data Terminal": "Prawn Suit Fragment",
-      "Alien Thermal Plant - Green Alien Data Terminal": "Floodlight",
-      "Alien Thermal Plant - Yellow Alien Data Terminal": "Prawn Suit Grappling Arm Fragment",
-      "Primary Containment Facility's Antechamber - Alien Data Terminal": "Farming",
-      "Primary Containment Facility's Egg Laboratory - Alien Data Terminal": "Diamond",
-      "Primary Containment Facility's Pipe Room - Alien Data Terminal": "Farming",
-      "Grassy Plateaus West Wreck - Beam PDA": "Mobile Vehicle Bay Fragment",
-      "Floating Island - Cave Entrance PDA": "Reinforced Dive Suit",
-      "Degasi Seabase - Jellyshroom Cave - Outside PDA": "Prawn Suit Drill Arm Fragment",
-      "Neptune Launch": "Victory",
-      "Disable Quarantine": "Disable Quarantine",
-      "Full Infection": "Full Infection",
-      "Repair Aurora Drive": "Repair Aurora Drive"
-    }
+    "1": {}
   },
   "progression_mapping": {
     "1": {}
@@ -5135,7 +4999,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": "false",
+        "randomize_items": "true",
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
