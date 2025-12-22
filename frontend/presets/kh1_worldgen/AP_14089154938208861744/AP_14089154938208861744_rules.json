@@ -1217,12 +1217,20 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "Arithmetic",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Puppy"
+                      }
+                    },
+                    "op": "*",
+                    "right": 3
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 10
               }
             },
             "item": {
@@ -1240,12 +1248,20 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "Arithmetic",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Puppy"
+                      }
+                    },
+                    "op": "*",
+                    "right": 3
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 20
               }
             },
             "item": {
@@ -1263,12 +1279,20 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "Arithmetic",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Puppy"
+                      }
+                    },
+                    "op": "*",
+                    "right": 3
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 30
               }
             },
             "item": {
@@ -1286,12 +1310,20 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "Arithmetic",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Puppy"
+                      }
+                    },
+                    "op": "*",
+                    "right": 3
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 40
               }
             },
             "item": {
@@ -1309,12 +1341,20 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "Arithmetic",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Puppy"
+                      }
+                    },
+                    "op": "*",
+                    "right": 3
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 50
               }
             },
             "item": {
@@ -1332,12 +1372,20 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "Arithmetic",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Puppy"
+                      }
+                    },
+                    "op": "*",
+                    "right": 3
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 50
               }
             },
             "item": {
@@ -1355,12 +1403,20 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "Arithmetic",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Puppy"
+                      }
+                    },
+                    "op": "*",
+                    "right": 3
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 60
               }
             },
             "item": {
@@ -1378,12 +1434,20 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "Arithmetic",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Puppy"
+                      }
+                    },
+                    "op": "*",
+                    "right": 3
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 70
               }
             },
             "item": {
@@ -1401,12 +1465,20 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "Arithmetic",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Puppy"
+                      }
+                    },
+                    "op": "*",
+                    "right": 3
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 80
               }
             },
             "item": {
@@ -1424,12 +1496,20 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "Arithmetic",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Puppy"
+                      }
+                    },
+                    "op": "*",
+                    "right": 3
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 90
               }
             },
             "item": {
@@ -1447,12 +1527,20 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "Arithmetic",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Puppy"
+                      }
+                    },
+                    "op": "*",
+                    "right": 3
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 99
               }
             },
             "item": {
@@ -1470,12 +1558,20 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "Arithmetic",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Puppy"
+                      }
+                    },
+                    "op": "*",
+                    "right": 3
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 99
               }
             },
             "item": {
@@ -1565,12 +1661,37 @@
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "True_"
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "MinValue",
+                          "args": {
+                            "left": {
+                              "rule": "CountItem",
+                              "args": {
+                                "item_name": "Orichalcum"
+                              }
+                            },
+                            "right": 9
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "MinValue",
+                          "args": {
+                            "left": {
+                              "rule": "CountItem",
+                              "args": {
+                                "item_name": "Mythril"
+                              }
+                            },
+                            "right": 9
+                          }
+                        }
+                      }
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 15
                   }
                 },
                 {
