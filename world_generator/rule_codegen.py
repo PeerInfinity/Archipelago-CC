@@ -1547,7 +1547,7 @@ class RuleCodeGenerator:
             arg_strs = []
             for arg in args:
                 if isinstance(arg, dict):
-                    # Handle Rule Builder format args (SettingValue, etc.)
+                    # Handle Rule Builder format args (SettingValue, Constant, etc.)
                     arg_rule = arg.get('rule', '')
                     if arg_rule == 'SettingValue':
                         # Resolve setting_value args to their actual values
@@ -1556,7 +1556,12 @@ class RuleCodeGenerator:
                             arg_strs.append(repr(self.settings[setting]))
                         else:
                             arg_strs.append('None')
+                    elif arg_rule == 'Constant':
+                        # Handle Rule Builder format Constant: {'rule': 'Constant', 'args': {'value': ...}}
+                        value = arg.get('args', {}).get('value')
+                        arg_strs.append(repr(value))
                     elif arg.get('type') == 'constant':
+                        # Handle AST format constant: {'type': 'constant', 'value': ...}
                         arg_strs.append(repr(arg.get('value')))
                     elif arg.get('type') == 'setting_value':
                         setting = arg.get('setting', '')
