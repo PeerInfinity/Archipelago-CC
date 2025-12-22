@@ -1259,6 +1259,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                 # Add game-specific region attributes from the handler
                 region_attributes = game_handler.get_region_attributes(region)
                 region_data.update(region_attributes)
+
                 
 
                 # Store reference to dungeon instead of full dungeon data

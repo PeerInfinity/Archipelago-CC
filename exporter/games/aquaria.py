@@ -67,9 +67,10 @@ class AquariaGameExportHandler(GenericGameExportHandler):
     
     def get_region_attributes(self, region) -> Dict[str, Any]:
         """Add game-specific region attributes."""
-        attributes = {}
+        # First get base attributes (includes dynamically_added from region object)
+        attributes = super().get_region_attributes(region)
 
-        # Mark regions that were dynamically added after sphere calculation
+        # Also mark regions that were dynamically added by postprocess_regions
         if hasattr(self, 'dynamically_added_regions') and region.name in self.dynamically_added_regions:
             attributes['dynamically_added'] = True
 

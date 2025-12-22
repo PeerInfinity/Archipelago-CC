@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, HelperCall, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _bombrushcyberfunkworldgen_bmx(state: "CollectionState", player: int, movestyle = None) -> bool:
+def _bombrushcyberfunkworldgen_bmx(state: "CollectionState", player: int, movestyle) -> bool:
     return (True if (movestyle == 1) else state.has_group('bmx', player))
 
 
@@ -36,7 +36,7 @@ def _bombrushcyberfunkworldgen_brink_terminal_challenge3(state: "CollectionState
     return _bombrushcyberfunkworldgen_rep(state, player, 220)
 
 
-def _bombrushcyberfunkworldgen_brink_terminal_crew_battle(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_brink_terminal_crew_battle(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_rep(state, player, 280)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 103)) if glitched else (_bombrushcyberfunkworldgen_rep(state, player, 280)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 62)))
 
 
@@ -44,7 +44,7 @@ def _bombrushcyberfunkworldgen_brink_terminal_entrance(state: "CollectionState",
     return (_bombrushcyberfunkworldgen_is_girl(state, player)) and (_bombrushcyberfunkworldgen_rep(state, player, 180)) and (_bombrushcyberfunkworldgen_current_chapter(state, player, 2))
 
 
-def _bombrushcyberfunkworldgen_brink_terminal_mesh(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_brink_terminal_mesh(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 114)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 45)) if glitched else (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 67)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 45)))
 
 
@@ -68,23 +68,23 @@ def _bombrushcyberfunkworldgen_camera(state: "CollectionState", player: int) -> 
     return state.has('Camera App', player)
 
 
-def _bombrushcyberfunkworldgen_current_chapter(state: "CollectionState", player: int, chapter = None) -> bool:
+def _bombrushcyberfunkworldgen_current_chapter(state: "CollectionState", player: int, chapter) -> bool:
     return state.has('Chapter Completed', player, (chapter - 1))
 
 
-def _bombrushcyberfunkworldgen_graffitiL(state: "CollectionState", player: int, limit = None, spots = None) -> bool:
+def _bombrushcyberfunkworldgen_graffitiL(state: "CollectionState", player: int, limit, spots) -> bool:
     return (((state.count_group_unique('graffitil', player) * 6) >= spots) if limit else state.has_group('graffitil', player))
 
 
-def _bombrushcyberfunkworldgen_graffitiM(state: "CollectionState", player: int, limit = None, spots = None) -> bool:
+def _bombrushcyberfunkworldgen_graffitiM(state: "CollectionState", player: int, limit, spots) -> bool:
     return (((state.count_group_unique('graffitim', player) * 7) >= spots) if limit else state.has_group('graffitim', player))
 
 
-def _bombrushcyberfunkworldgen_graffitiXL(state: "CollectionState", player: int, limit = None, spots = None) -> bool:
+def _bombrushcyberfunkworldgen_graffitiXL(state: "CollectionState", player: int, limit, spots) -> bool:
     return (((state.count_group_unique('graffitixl', player) * 4) >= spots) if limit else state.has_group('graffitixl', player))
 
 
-def _bombrushcyberfunkworldgen_inline_skates(state: "CollectionState", player: int, movestyle = None) -> bool:
+def _bombrushcyberfunkworldgen_inline_skates(state: "CollectionState", player: int, movestyle) -> bool:
     return (True if (movestyle == 3) else state.has_group('skates', player))
 
 
@@ -92,15 +92,15 @@ def _bombrushcyberfunkworldgen_is_girl(state: "CollectionState", player: int) ->
     return state.has_group('girl', player)
 
 
-def _bombrushcyberfunkworldgen_mataan_all_challenges(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_mataan_all_challenges(state: "CollectionState", player: int, limit, glitched) -> bool:
     return (_bombrushcyberfunkworldgen_mataan_challenge2(state, player, limit, glitched)) and (_bombrushcyberfunkworldgen_mataan_challenge3(state, player))
 
 
-def _bombrushcyberfunkworldgen_mataan_challenge1(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_mataan_challenge1(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_current_chapter(state, player, 5)) and (_bombrushcyberfunkworldgen_rep(state, player, 864)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 108)) if glitched else (_bombrushcyberfunkworldgen_current_chapter(state, player, 5)) and (_bombrushcyberfunkworldgen_rep(state, player, 864)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 98)))
 
 
-def _bombrushcyberfunkworldgen_mataan_challenge2(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_mataan_challenge2(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_rep(state, player, 880)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 59)) if glitched else (_bombrushcyberfunkworldgen_rep(state, player, 880)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 57)))
 
 
@@ -108,15 +108,15 @@ def _bombrushcyberfunkworldgen_mataan_challenge3(state: "CollectionState", playe
     return _bombrushcyberfunkworldgen_rep(state, player, 920)
 
 
-def _bombrushcyberfunkworldgen_mataan_crew_battle(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_mataan_crew_battle(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_mataan_smoke_wall2(state, player, limit, glitched)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 122)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 59)) if glitched else (_bombrushcyberfunkworldgen_mataan_smoke_wall2(state, player, limit, glitched)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 117)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 57)))
 
 
-def _bombrushcyberfunkworldgen_mataan_deep_city(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_mataan_deep_city(state: "CollectionState", player: int, limit, glitched) -> bool:
     return _bombrushcyberfunkworldgen_mataan_challenge1(state, player, limit, glitched)
 
 
-def _bombrushcyberfunkworldgen_mataan_deepest(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_mataan_deepest(state: "CollectionState", player: int, limit, glitched) -> bool:
     return _bombrushcyberfunkworldgen_mataan_crew_battle(state, player, limit, glitched)
 
 
@@ -124,7 +124,7 @@ def _bombrushcyberfunkworldgen_mataan_entrance(state: "CollectionState", player:
     return _bombrushcyberfunkworldgen_current_chapter(state, player, 2)
 
 
-def _bombrushcyberfunkworldgen_mataan_faux(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_mataan_faux(state: "CollectionState", player: int, limit, glitched) -> bool:
     return (_bombrushcyberfunkworldgen_mataan_deepest(state, player, limit, glitched)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 122))
 
 
@@ -136,11 +136,11 @@ def _bombrushcyberfunkworldgen_mataan_smoke_wall(state: "CollectionState", playe
     return (_bombrushcyberfunkworldgen_current_chapter(state, player, 5)) and (_bombrushcyberfunkworldgen_rep(state, player, 850))
 
 
-def _bombrushcyberfunkworldgen_mataan_smoke_wall2(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_mataan_smoke_wall2(state: "CollectionState", player: int, limit, glitched) -> bool:
     return (_bombrushcyberfunkworldgen_mataan_all_challenges(state, player, limit, glitched)) and (_bombrushcyberfunkworldgen_rep(state, player, 960))
 
 
-def _bombrushcyberfunkworldgen_millennium_mall_big(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_millennium_mall_big(state: "CollectionState", player: int, limit, glitched) -> bool:
     return _bombrushcyberfunkworldgen_millennium_mall_switch(state, player, limit, glitched)
 
 
@@ -160,7 +160,7 @@ def _bombrushcyberfunkworldgen_millennium_mall_challenge4(state: "CollectionStat
     return _bombrushcyberfunkworldgen_rep(state, player, 458)
 
 
-def _bombrushcyberfunkworldgen_millennium_mall_crew_battle(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_millennium_mall_crew_battle(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_rep(state, player, 491)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 114)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 107)) if glitched else (_bombrushcyberfunkworldgen_rep(state, player, 491)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 78)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 80)))
 
 
@@ -168,7 +168,7 @@ def _bombrushcyberfunkworldgen_millennium_mall_entrance(state: "CollectionState"
     return (_bombrushcyberfunkworldgen_rep(state, player, 380)) and (_bombrushcyberfunkworldgen_current_chapter(state, player, 3))
 
 
-def _bombrushcyberfunkworldgen_millennium_mall_oldhead_ceiling(state: "CollectionState", player: int, limit = None) -> bool:
+def _bombrushcyberfunkworldgen_millennium_mall_oldhead_ceiling(state: "CollectionState", player: int, limit) -> bool:
     return (_bombrushcyberfunkworldgen_rep(state, player, 580)) or (_bombrushcyberfunkworldgen_millennium_mall_theater(state, player, limit))
 
 
@@ -176,11 +176,11 @@ def _bombrushcyberfunkworldgen_millennium_mall_oldhead_race(state: "CollectionSt
     return _bombrushcyberfunkworldgen_rep(state, player, 530)
 
 
-def _bombrushcyberfunkworldgen_millennium_mall_switch(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_millennium_mall_switch(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 114)) and (_bombrushcyberfunkworldgen_current_chapter(state, player, 3)) if glitched else (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 72)) and (_bombrushcyberfunkworldgen_current_chapter(state, player, 3)))
 
 
-def _bombrushcyberfunkworldgen_millennium_mall_theater(state: "CollectionState", player: int, limit = None) -> bool:
+def _bombrushcyberfunkworldgen_millennium_mall_theater(state: "CollectionState", player: int, limit) -> bool:
     return (_bombrushcyberfunkworldgen_rep(state, player, 491)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 78))
 
 
@@ -188,7 +188,7 @@ def _bombrushcyberfunkworldgen_millennium_square_entrance(state: "CollectionStat
     return _bombrushcyberfunkworldgen_current_chapter(state, player, 2)
 
 
-def _bombrushcyberfunkworldgen_pyramid_island_all_challenges(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_pyramid_island_all_challenges(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 114)) and (_bombrushcyberfunkworldgen_rep(state, player, 660)) if glitched else (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 88)) and (_bombrushcyberfunkworldgen_rep(state, player, 660)))
 
 
@@ -204,7 +204,7 @@ def _bombrushcyberfunkworldgen_pyramid_island_challenge3(state: "CollectionState
     return _bombrushcyberfunkworldgen_rep(state, player, 660)
 
 
-def _bombrushcyberfunkworldgen_pyramid_island_crew_battle(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_pyramid_island_crew_battle(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_rep(state, player, 730)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 108)) if glitched else (_bombrushcyberfunkworldgen_rep(state, player, 730)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 97)))
 
 
@@ -224,15 +224,15 @@ def _bombrushcyberfunkworldgen_pyramid_island_top(state: "CollectionState", play
     return _bombrushcyberfunkworldgen_current_chapter(state, player, 5)
 
 
-def _bombrushcyberfunkworldgen_pyramid_island_upper_half(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_pyramid_island_upper_half(state: "CollectionState", player: int, limit, glitched) -> bool:
     return _bombrushcyberfunkworldgen_pyramid_island_all_challenges(state, player, limit, glitched)
 
 
-def _bombrushcyberfunkworldgen_rep(state: "CollectionState", player: int, required = None) -> bool:
+def _bombrushcyberfunkworldgen_rep(state: "CollectionState", player: int, required) -> bool:
     return state.has('rep', player, required)
 
 
-def _bombrushcyberfunkworldgen_skateboard(state: "CollectionState", player: int, movestyle = None) -> bool:
+def _bombrushcyberfunkworldgen_skateboard(state: "CollectionState", player: int, movestyle) -> bool:
     return (True if (movestyle == 2) else state.has_group('skateboard', player))
 
 
@@ -244,7 +244,7 @@ def _bombrushcyberfunkworldgen_versum_hill_basketball_court(state: "CollectionSt
     return _bombrushcyberfunkworldgen_rep(state, player, 90)
 
 
-def _bombrushcyberfunkworldgen_versum_hill_ch1_roadblock(state: "CollectionState", player: int, limit = None) -> bool:
+def _bombrushcyberfunkworldgen_versum_hill_ch1_roadblock(state: "CollectionState", player: int, limit) -> bool:
     return _bombrushcyberfunkworldgen_graffitiL(state, player, limit, 10)
 
 
@@ -260,7 +260,7 @@ def _bombrushcyberfunkworldgen_versum_hill_challenge3(state: "CollectionState", 
     return _bombrushcyberfunkworldgen_rep(state, player, 65)
 
 
-def _bombrushcyberfunkworldgen_versum_hill_crew_battle(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_versum_hill_crew_battle(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_rep(state, player, 90)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 98)) if glitched else (_bombrushcyberfunkworldgen_rep(state, player, 90)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 27)))
 
 
@@ -272,11 +272,11 @@ def _bombrushcyberfunkworldgen_versum_hill_oldhead(state: "CollectionState", pla
     return _bombrushcyberfunkworldgen_rep(state, player, 120)
 
 
-def _bombrushcyberfunkworldgen_versum_hill_rave(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_versum_hill_rave(state: "CollectionState", player: int, limit, glitched) -> bool:
     return (((_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 90)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 51)) if _bombrushcyberfunkworldgen_current_chapter(state, player, 4) else ((_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 89)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 51)) if _bombrushcyberfunkworldgen_current_chapter(state, player, 3) else (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 85)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 48)))) if glitched else (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 26)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 10)))
 
 
-def _bombrushcyberfunkworldgen_versum_hill_rietveld(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_versum_hill_rietveld(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_current_chapter(state, player, 2)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 114)) if glitched else (_bombrushcyberfunkworldgen_current_chapter(state, player, 2)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 67)))
 
 
@@ -1520,307 +1520,307 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Hideout -> Versum Hill", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_entrance, helper_name="versum_hill_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Hideout -> Millennium Square", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Hideout -> Mataan - Streets", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_entrance, helper_name="mataan_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill -> Versum Hill - After Roadblock", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - After Roadblock -> Versum Hill", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_entrance, helper_name="versum_hill_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - After Roadblock -> Millennium Square", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - After Roadblock -> Versum Hill - Underground Mall", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_oldhead, helper_name="versum_hill_oldhead")
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - After Roadblock -> Versum Hill - Side Street", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_all_challenges, helper_name="versum_hill_all_challenges")
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - After Roadblock -> Versum Hill - Basketball Court", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_basketball_court, helper_name="versum_hill_basketball_court")
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - Underground Mall -> Versum Hill - After Roadblock", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - Side Street -> Versum Hill - After Roadblock", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - Basketball Court -> Versum Hill - After Roadblock", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Versum Hill - Basketball Court -> Versum Hill", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_entrance, helper_name="versum_hill_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Square -> Versum Hill - After Roadblock", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_ch1_roadblock, helper_name="versum_hill_ch1_roadblock", args=(0,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Square -> Brink Terminal", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Square -> Millennium Mall", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_entrance, helper_name="millennium_mall_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Square -> Pyramid Island - Base", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_entrance, helper_name="pyramid_island_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Square -> Mataan - Streets", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_entrance, helper_name="mataan_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal -> Millennium Square", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal -> Brink Terminal - Underground", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_oldhead_underground, helper_name="brink_terminal_oldhead_underground")
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal -> Brink Terminal - Dock", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_oldhead_dock, helper_name="brink_terminal_oldhead_dock")
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal -> Brink Terminal - Planet Plaza", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_plaza, helper_name="brink_terminal_plaza")
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal - Underground -> Brink Terminal", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal - Dock -> Brink Terminal", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal - Planet Plaza -> Brink Terminal", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal - Planet Plaza -> Brink Terminal - Tower", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_tower, helper_name="brink_terminal_tower")
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal - Tower -> Brink Terminal", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_entrance, helper_name="brink_terminal_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Brink Terminal - Tower -> Brink Terminal - Planet Plaza", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_plaza, helper_name="brink_terminal_plaza")
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall -> Millennium Square", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall -> Millennium Mall - Hanging Lights", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_oldhead_ceiling, helper_name="millennium_mall_oldhead_ceiling", args=(0,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall -> Millennium Mall - Atrium", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_big, helper_name="millennium_mall_big", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Hanging Lights -> Millennium Mall", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_entrance, helper_name="millennium_mall_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Atrium -> Millennium Mall", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_entrance, helper_name="millennium_mall_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Atrium -> Millennium Mall - Race Track", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_oldhead_race, helper_name="millennium_mall_oldhead_race")
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Atrium -> Millennium Mall - Theater", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_theater, helper_name="millennium_mall_theater", args=(0,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Race Track -> Millennium Mall - Atrium", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_big, helper_name="millennium_mall_big", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Theater -> Millennium Mall - Atrium", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_big, helper_name="millennium_mall_big", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Millennium Mall - Theater -> Millennium Mall", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_entrance, helper_name="millennium_mall_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Base -> Millennium Square", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Base -> Pyramid Island - After Gate", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_gate, helper_name="pyramid_island_gate")
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - After Gate -> Pyramid Island - Base", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_entrance, helper_name="pyramid_island_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - After Gate -> Pyramid Island - Maze", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_oldhead, helper_name="pyramid_island_oldhead")
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - After Gate -> Pyramid Island - Upper Areas", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_upper_half, helper_name="pyramid_island_upper_half", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Maze -> Pyramid Island - After Gate", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_gate, helper_name="pyramid_island_gate")
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Upper Areas -> Pyramid Island - Base", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_entrance, helper_name="pyramid_island_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Upper Areas -> Pyramid Island - After Gate", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_gate, helper_name="pyramid_island_gate")
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Upper Areas -> Pyramid Island - Top", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_top, helper_name="pyramid_island_top")
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Top -> Pyramid Island - Base", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_entrance, helper_name="pyramid_island_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Top -> Pyramid Island - After Gate", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_gate, helper_name="pyramid_island_gate")
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Island - Top -> Pyramid Island - Upper Areas", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_upper_half, helper_name="pyramid_island_upper_half", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Streets -> Millennium Square", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_square_entrance, helper_name="millennium_square_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Streets -> Mataan - After Smoke Wall", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_smoke_wall, helper_name="mataan_smoke_wall")
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - After Smoke Wall -> Mataan - Streets", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_entrance, helper_name="mataan_entrance")
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - After Smoke Wall -> Mataan - Deep City", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deep_city, helper_name="mataan_deep_city", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Deep City -> Mataan - After Smoke Wall", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_smoke_wall, helper_name="mataan_smoke_wall")
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Deep City -> Mataan - Red Light District", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_oldhead, helper_name="mataan_oldhead")
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Deep City -> Mataan - Lion Statue", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_smoke_wall2, helper_name="mataan_smoke_wall2", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Red Light District -> Mataan - Deep City", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deep_city, helper_name="mataan_deep_city", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Lion Statue -> Mataan - Deep City", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deep_city, helper_name="mataan_deep_city", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Lion Statue -> Mataan - Skyscrapers", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deepest, helper_name="mataan_deepest", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Mataan - Skyscrapers -> Mataan - Streets", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_entrance, helper_name="mataan_entrance")
     )
     # Location rules
     world.set_rule(
@@ -2215,315 +2215,315 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hideout: BMX garage skateboard", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Hideout: Unlock phone app", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Hideout: Vinyl joins the crew", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(4,))
     )
 
     world.set_rule(
         multiworld.get_location("Hideout: Solace joins the crew", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(5,))
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: BMX gate outfit", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Big Polo", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera")
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Trash Polo", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera")
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Wallrunning challenge reward", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_challenge1, helper_name="versum_hill_challenge1")
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Manual challenge reward", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_challenge2, helper_name="versum_hill_challenge2")
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Corner challenge reward", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_challenge3, helper_name="versum_hill_challenge3")
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Glass floor skates", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_inline_skates, helper_name="inline_skates", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Frank joins the crew", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Rave joins the crew", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_rave, helper_name="versum_hill_rave", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Fruit stand Polo", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera")
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Basketball court shortcut CD", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Rietveld joins the crew", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_rietveld, helper_name="versum_hill_rietveld", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Complete Chapter 1", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_versum_hill_crew_battle, helper_name="versum_hill_crew_battle", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Square: Half pipe Polo", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera")
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Upside grind challenge reward", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_challenge1, helper_name="brink_terminal_challenge1")
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Manual challenge reward", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_challenge2, helper_name="brink_terminal_challenge2")
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Score challenge reward", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_challenge3, helper_name="brink_terminal_challenge3")
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: BMX gate graffiti", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Eclipse joins the crew", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Behind glass Polo", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera")
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Mesh's skateboard", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_mesh, helper_name="brink_terminal_mesh", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Mesh joins the crew", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_mesh, helper_name="brink_terminal_mesh", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Rooftop glass CD", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_inline_skates, helper_name="inline_skates", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Complete Chapter 2", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_brink_terminal_crew_battle, helper_name="brink_terminal_crew_battle", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Glass cylinder CD", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_inline_skates, helper_name="inline_skates", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Trick challenge reward", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_challenge1, helper_name="millennium_mall_challenge1")
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Slide challenge reward", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_challenge2, helper_name="millennium_mall_challenge2")
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Fish challenge reward", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_challenge3, helper_name="millennium_mall_challenge3")
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Score challenge reward", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_challenge4, helper_name="millennium_mall_challenge4")
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Atrium BMX gate BMX", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: DOT.EXE joins the crew", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(4,))
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Shine joins the crew", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(4,))
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Complete Chapter 3", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_millennium_mall_crew_battle, helper_name="millennium_mall_crew_battle", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: BMX gate BMX", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_bmx, helper_name="bmx", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Polo pile 1", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera")
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Polo pile 2", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera")
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Polo pile 3", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera")
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Polo pile 4", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera")
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Score challenge reward", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_challenge1, helper_name="pyramid_island_challenge1")
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Score challenge 2 reward", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_challenge2, helper_name="pyramid_island_challenge2")
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Quarter pipe challenge reward", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_challenge3, helper_name="pyramid_island_challenge3")
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Maze outfit", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_skateboard, helper_name="skateboard", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Maze glass Polo", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera")
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Maze classroom Polo", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera")
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Maze vent Polo", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera")
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Big maze Polo", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera")
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Maze desk Polo", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera")
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Maze forklift Polo", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera")
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Shortcut glass CD", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_inline_skates, helper_name="inline_skates", args=(2,))
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Devil Theory joins the crew", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_current_chapter, helper_name="current_chapter", args=(5,))
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Complete Chapter 4", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_pyramid_island_crew_battle, helper_name="pyramid_island_crew_battle", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Rise joins the crew", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera")
     )
 
     world.set_rule(
         multiworld.get_location("Mataan: Trash Polo", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera")
     )
 
     world.set_rule(
         multiworld.get_location("Mataan: Race challenge reward", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_challenge1, helper_name="mataan_challenge1", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_location("Mataan: Wallrunning challenge reward", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_challenge2, helper_name="mataan_challenge2", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_location("Mataan: Score challenge reward", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_challenge3, helper_name="mataan_challenge3")
     )
 
     world.set_rule(
         multiworld.get_location("Mataan: Coil joins the crew", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_deepest, helper_name="mataan_deepest", args=(0, 0,))
     )
 
     world.set_rule(
         multiworld.get_location("Mataan: Shopping Polo", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_camera, helper_name="camera")
     )
 
     world.set_rule(
         multiworld.get_location("Defeat Faux", player),
-        True_()
+        HelperCall(helper_func=_bombrushcyberfunkworldgen_mataan_faux, helper_name="mataan_faux", args=(0, 0,))
     )
