@@ -1423,6 +1423,14 @@ class RuleCodeGenerator:
         if op_type == 'constant':
             return repr(operand.get('value'))
 
+        # Handle Rule Builder format Constant (e.g., {"rule": "Constant", "args": {"value": 6}})
+        # These are numeric constants used in comparisons (e.g., quest_points > 6)
+        # and must be preserved as numbers, not converted to booleans
+        rb_rule = operand.get('rule', '')
+        if rb_rule == 'Constant':
+            value = operand.get('args', {}).get('value')
+            return repr(value)
+
         if op_type == 'count_item':
             # Handle count_item type from rules.json export
             item_name = operand.get('item', '')
@@ -1458,11 +1466,6 @@ class RuleCodeGenerator:
             item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
             return f'CountItem("{item_escaped}")'
 
-        if rb_rule == 'Constant':
-            # In compare context, preserve the actual numeric value (don't convert to boolean)
-            value = rb_args.get('value')
-            return repr(value)
-
         # For other types, try to convert as a rule
         return self._convert_rule(operand)
 
@@ -1495,6 +1498,13 @@ class RuleCodeGenerator:
 
         if op_type == 'constant':
             return repr(operand.get('value'))
+
+        # Handle Rule Builder format Constant (e.g., {"rule": "Constant", "args": {"value": 6}})
+        # These are numeric constants used in arithmetic and must be preserved as numbers
+        rb_rule = operand.get('rule', '')
+        if rb_rule == 'Constant':
+            value = operand.get('args', {}).get('value')
+            return repr(value)
 
         if op_type == 'count_item':
             # Handle count_item type from rules.json export
