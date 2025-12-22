@@ -3011,9 +3011,25 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             result: dict[str, Any] = {
                 "rule": self.helper_name,
                 "_original_ast_type": "helper",
+                "_converted_from_cc": True,
             }
             if self.args:
-                result["args"] = list(self.args)
+                # Wrap primitive args in Constant rule objects to match the AST exporter format
+                converted_args = []
+                for arg in self.args:
+                    if isinstance(arg, (int, float, str, bool)):
+                        converted_args.append({
+                            "rule": "Constant",
+                            "args": {"value": arg},
+                            "_converted_from_cc": True,
+                        })
+                    elif isinstance(arg, dict):
+                        # Already a rule dict
+                        converted_args.append(arg)
+                    else:
+                        # Fallback for other types
+                        converted_args.append(arg)
+                result["args"] = converted_args
             return result
 
 

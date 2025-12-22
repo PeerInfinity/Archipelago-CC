@@ -552,6 +552,26 @@ class RuleCodeGenerator:
                     args = rule.get('args', {})
                     return self._convert_count_true_from_args(args)
 
+                # Check if this is an AST_comparison rule (comparison operators from AST format)
+                if rb_rule == 'AST_comparison':
+                    args = rule.get('args', {})
+                    compare_rule = {
+                        'type': 'compare',
+                        'left': args.get('left', {}),
+                        'op': args.get('op', ''),
+                        'right': args.get('right', {})
+                    }
+                    return self._convert_compare(compare_rule)
+
+                # Check if this is an AST_setting_value rule (setting references from AST format)
+                if rb_rule == 'AST_setting_value':
+                    args = rule.get('args', {})
+                    setting_rule = {
+                        'type': 'setting_value',
+                        'setting': args.get('setting', '')
+                    }
+                    return self._convert_setting_value(setting_rule)
+
         # Dispatch based on rule type
         converters = {
             'constant': self._convert_constant,
