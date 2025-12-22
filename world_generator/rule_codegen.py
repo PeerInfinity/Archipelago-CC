@@ -601,12 +601,10 @@ class RuleCodeGenerator:
         children = rule.get('children', [])
 
         if rb_rule == 'True_':
-            self.required_imports.add('True_')
-            return 'True_()'
+            return self._make_bool_constant(True)
 
         if rb_rule == 'False_':
-            self.required_imports.add('False_')
-            return 'False_()'
+            return self._make_bool_constant(False)
 
         if rb_rule == 'Has':
             item_name = args.get('item_name', '')
@@ -618,8 +616,7 @@ class RuleCodeGenerator:
 
         if rb_rule == 'And':
             if not children:
-                self.required_imports.add('True_')
-                return 'True_()'
+                return self._make_bool_constant(True)
             if len(children) == 1:
                 return self._convert_rule(children[0])
             child_exprs = [self._convert_rule(child) for child in children]
@@ -628,8 +625,7 @@ class RuleCodeGenerator:
 
         if rb_rule == 'Or':
             if not children:
-                self.required_imports.add('False_')
-                return 'False_()'
+                return self._make_bool_constant(False)
             if len(children) == 1:
                 return self._convert_rule(children[0])
             child_exprs = [self._convert_rule(child) for child in children]
@@ -644,8 +640,7 @@ class RuleCodeGenerator:
                 # Handle Rule Builder format from AST exporter (args.condition)
                 child_expr = self._convert_rule(args['condition'])
             else:
-                child_expr = 'True_()'
-                self.required_imports.add('True_')
+                child_expr = self._make_bool_constant(True)
             self.required_imports.add('Not')
             return f'Not({child_expr})'
 
@@ -658,8 +653,7 @@ class RuleCodeGenerator:
         if rb_rule == 'HasAll':
             items = args.get('items', [])
             if not items:
-                self.required_imports.add('True_')
-                return 'True_()'
+                return self._make_bool_constant(True)
             self.required_imports.add('HasAll')
             # HasAll expects variadic arguments, not a list
             items_str = ', '.join(repr(item) for item in items)
@@ -668,8 +662,7 @@ class RuleCodeGenerator:
         if rb_rule == 'HasAny':
             items = args.get('items', [])
             if not items:
-                self.required_imports.add('False_')
-                return 'False_()'
+                return self._make_bool_constant(False)
             self.required_imports.add('HasAny')
             # HasAny expects variadic arguments, not a list
             items_str = ', '.join(repr(item) for item in items)
@@ -678,8 +671,7 @@ class RuleCodeGenerator:
         if rb_rule == 'HasAllCounts':
             items = args.get('items', {})
             if not items:
-                self.required_imports.add('True_')
-                return 'True_()'
+                return self._make_bool_constant(True)
             self.required_imports.add('HasAllCounts')
             # HasAllCounts expects a dict of {item_name: count}
             return f'HasAllCounts({repr(items)})'
@@ -698,8 +690,7 @@ class RuleCodeGenerator:
             items = args.get('items', [])
             count = args.get('count', 1)
             if not items:
-                self.required_imports.add('True_')
-                return 'True_()'
+                return self._make_bool_constant(True)
             self.required_imports.add('HasFromList')
             # HasFromList expects (*item_names: str, count: int = 1)
             items_str = ', '.join(repr(item) for item in items)
@@ -709,8 +700,7 @@ class RuleCodeGenerator:
             items = args.get('items', [])
             count = args.get('count', 1)
             if not items:
-                self.required_imports.add('True_')
-                return 'True_()'
+                return self._make_bool_constant(True)
             self.required_imports.add('HasFromListUnique')
             # HasFromListUnique expects (*item_names: str, count: int = 1)
             items_str = ', '.join(repr(item) for item in items)
@@ -823,9 +813,7 @@ class RuleCodeGenerator:
         # Handle CountItem rule (item count for comparisons)
         if rb_rule == 'CountItem':
             item_name = args.get('item_name', '')
-            self.required_imports.add('CountItem')
-            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
-            return f'CountItem("{item_escaped}")'
+            return self._make_count_item(item_name)
 
         if rb_rule == 'AST_block':
             # Convert AST block to evaluated result
@@ -835,18 +823,7 @@ class RuleCodeGenerator:
             # Convert Name rule to constant based on settings
             # The name is in args.name for Rule Builder format
             name = args.get('name', '')
-            if name in self.settings:
-                value = self.settings[name]
-                if value:
-                    self.required_imports.add('True_')
-                    return 'True_()'
-                else:
-                    self.required_imports.add('False_')
-                    return 'False_()'
-            # Unknown name - default to False (disables optional features)
-            # This is safe because Not(False) = True, making locations accessible
-            self.required_imports.add('False_')
-            return 'False_()'
+            return self._resolve_setting_to_bool(name, default=False)
 
         # Unknown Rule Builder rule - return True_() as placeholder
         self.required_imports.add('True_')
@@ -862,33 +839,12 @@ class RuleCodeGenerator:
         that should be disabled for vanilla worldgen.
         """
         name = rule.get('name', '')
-
-        # Check if this name exists in our settings
-        if name in self.settings:
-            value = self.settings[name]
-            if value:
-                self.required_imports.add('True_')
-                return 'True_()'
-            else:
-                self.required_imports.add('False_')
-                return 'False_()'
-
-        # Unknown name - default to False (disables optional features)
-        # This is safe because:
-        # - Not(False) = True, making locations accessible without the feature
-        # - False in an AND makes that branch fail, falling back to alternatives
-        self.required_imports.add('False_')
-        return 'False_()'
+        return self._resolve_setting_to_bool(name, default=False)
 
     def _convert_constant(self, rule: Dict[str, Any]) -> str:
         """Convert constant true/false rule."""
         value = rule.get('value', True)
-        if value:
-            self.required_imports.add('True_')
-            return 'True_()'
-        else:
-            self.required_imports.add('False_')
-            return 'False_()'
+        return self._make_bool_constant(bool(value))
 
     def _convert_list(self, rule: Dict[str, Any]) -> str:
         """Convert list rule to Python list literal.
@@ -983,6 +939,77 @@ class RuleCodeGenerator:
             return default
         return value if value is not None else default
 
+    # =========================================================================
+    # Helper methods to reduce code duplication
+    # =========================================================================
+
+    def _escape_string(self, s: str, quote_char: str = '"') -> str:
+        """Escape a string for use in generated Python code.
+
+        Args:
+            s: The string to escape
+            quote_char: The quote character to escape (" or ')
+
+        Returns:
+            The escaped string (without surrounding quotes)
+        """
+        escaped = s.replace('\\', '\\\\')
+        if quote_char == '"':
+            return escaped.replace('"', '\\"')
+        else:
+            return escaped.replace("'", "\\'")
+
+    def _make_count_item(self, item_name: str) -> str:
+        """Generate CountItem expression for the given item name.
+
+        Args:
+            item_name: The item name to count
+
+        Returns:
+            A CountItem("item_name") expression string
+        """
+        self.required_imports.add('CountItem')
+        item_escaped = self._escape_string(item_name)
+        return f'CountItem("{item_escaped}")'
+
+    def _make_bool_constant(self, value: bool) -> str:
+        """Generate a True_() or False_() expression.
+
+        Args:
+            value: The boolean value
+
+        Returns:
+            'True_()' or 'False_()' expression string
+        """
+        if value:
+            self.required_imports.add('True_')
+            return 'True_()'
+        else:
+            self.required_imports.add('False_')
+            return 'False_()'
+
+    def _resolve_setting_to_bool(self, name: str, default: bool = False) -> str:
+        """Resolve a setting/option name to a boolean constant.
+
+        Looks up the name in self.settings and returns True_() or False_()
+        based on the value. If the name is not found, returns the default.
+
+        Args:
+            name: The setting/option name to look up
+            default: Default value if setting not found
+
+        Returns:
+            'True_()' or 'False_()' expression string
+        """
+        if name in self.settings:
+            value = self.settings[name]
+            return self._make_bool_constant(bool(value))
+        return self._make_bool_constant(default)
+
+    # =========================================================================
+    # End helper methods
+    # =========================================================================
+
     def _convert_item_check(self, rule: Dict[str, Any]) -> str:
         """Convert item_check to Has()."""
         self.required_imports.add('Has')
@@ -992,8 +1019,7 @@ class RuleCodeGenerator:
         count_raw = rule.get('count', 1)
         count = self._extract_constant_value(count_raw, 1)
 
-        # Escape item name for Python string
-        item_escaped = item.replace('\\', '\\\\').replace('"', '\\"')
+        item_escaped = self._escape_string(item)
 
         if count == 1:
             return f'Has("{item_escaped}")'
@@ -1013,8 +1039,7 @@ class RuleCodeGenerator:
         count_raw = rule.get('count', 1)
         count = self._extract_constant_value(count_raw, 1)
 
-        # Escape item name for Python string
-        item_escaped = item.replace('\\', '\\\\').replace('"', '\\"')
+        item_escaped = self._escape_string(item)
 
         if count == 1:
             return f'Has("{item_escaped}")'
@@ -1030,7 +1055,7 @@ class RuleCodeGenerator:
         count_raw = rule.get('count', 1)
         count = self._extract_constant_value(count_raw, 1)
 
-        group_escaped = group.replace('\\', '\\\\').replace('"', '\\"')
+        group_escaped = self._escape_string(group)
 
         if count == 1:
             return f'HasGroup("{group_escaped}")'
@@ -1177,7 +1202,7 @@ class RuleCodeGenerator:
 
         region_raw = rule.get('region', '')
         region = self._extract_constant_value(region_raw, '')
-        region_escaped = region.replace('\\', '\\\\').replace('"', '\\"')
+        region_escaped = self._escape_string(region)
 
         return f'CanReachRegion("{region_escaped}")'
 
@@ -1187,7 +1212,7 @@ class RuleCodeGenerator:
 
         location_raw = rule.get('location', '')
         location = self._extract_constant_value(location_raw, '')
-        location_escaped = location.replace('\\', '\\\\').replace('"', '\\"')
+        location_escaped = self._escape_string(location)
 
         return f'CanReachLocation("{location_escaped}")'
 
@@ -1197,7 +1222,7 @@ class RuleCodeGenerator:
 
         entrance_raw = rule.get('entrance', '')
         entrance = self._extract_constant_value(entrance_raw, '')
-        entrance_escaped = entrance.replace('\\', '\\\\').replace('"', '\\"')
+        entrance_escaped = self._escape_string(entrance)
 
         return f'CanReachEntrance("{entrance_escaped}")'
 
@@ -1213,7 +1238,7 @@ class RuleCodeGenerator:
                 # Check if second argument specifies "Location" or "Entrance" type
                 reach_type = self._extract_constant_value(args[1], 'Region') if len(args) > 1 else 'Region'
                 if target:
-                    target_escaped = target.replace('\\', '\\\\').replace('"', '\\"')
+                    target_escaped = self._escape_string(target)
                     if reach_type == 'Location':
                         self.required_imports.add('CanReachLocation')
                         return f'CanReachLocation("{target_escaped}")'
@@ -1231,7 +1256,7 @@ class RuleCodeGenerator:
                 location = self._extract_constant_value(args[0], '')
                 if location:
                     self.required_imports.add('CanReachLocation')
-                    location_escaped = location.replace('\\', '\\\\').replace('"', '\\"')
+                    location_escaped = self._escape_string(location)
                     return f'CanReachLocation("{location_escaped}")'
             return 'True_()'
 
@@ -1242,7 +1267,7 @@ class RuleCodeGenerator:
                 count = self._extract_constant_value(args[1], 1) if len(args) > 1 else 1
                 if item:
                     self.required_imports.add('Has')
-                    item_escaped = item.replace('\\', '\\\\').replace('"', '\\"')
+                    item_escaped = self._escape_string(item)
                     if count == 1:
                         return f'Has("{item_escaped}")'
                     return f'Has("{item_escaped}", {count})'
@@ -1466,9 +1491,7 @@ class RuleCodeGenerator:
         if op_type == 'count_item':
             # Handle count_item type from rules.json export
             item_name = operand.get('item', '')
-            self.required_imports.add('CountItem')
-            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
-            return f'CountItem("{item_escaped}")'
+            return self._make_count_item(item_name)
 
         if op_type == 'state_method':
             method = operand.get('method', '')
@@ -1478,9 +1501,7 @@ class RuleCodeGenerator:
             if method == 'count':
                 if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
                     item_name = args[0].get('value', '')
-                    self.required_imports.add('CountItem')
-                    item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
-                    return f'CountItem("{item_escaped}")'
+                    return self._make_count_item(item_name)
 
         if op_type == 'binary_op':
             return self._convert_binary_op(operand)
@@ -1494,9 +1515,7 @@ class RuleCodeGenerator:
 
         if rb_rule == 'CountItem':
             item_name = rb_args.get('item_name', '')
-            self.required_imports.add('CountItem')
-            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
-            return f'CountItem("{item_escaped}")'
+            return self._make_count_item(item_name)
 
         # For other types, try to convert as a rule
         return self._convert_rule(operand)
@@ -1541,9 +1560,7 @@ class RuleCodeGenerator:
         if op_type == 'count_item':
             # Handle count_item type from rules.json export
             item_name = operand.get('item', '')
-            self.required_imports.add('CountItem')
-            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
-            return f'CountItem("{item_escaped}")'
+            return self._make_count_item(item_name)
 
         if op_type == 'state_method':
             method = operand.get('method', '')
@@ -1552,9 +1569,7 @@ class RuleCodeGenerator:
             if method == 'count':
                 if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
                     item_name = args[0].get('value', '')
-                    self.required_imports.add('CountItem')
-                    item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
-                    return f'CountItem("{item_escaped}")'
+                    return self._make_count_item(item_name)
 
         if op_type == 'binary_op':
             return self._convert_binary_op(operand)
@@ -1939,14 +1954,14 @@ class RuleCodeGenerator:
                     # Generate HasAll check for required technologies
                     if len(required_techs) == 1:
                         tech = required_techs[0]
-                        tech_escaped = tech.replace('\\', '\\\\').replace("'", "\\'")
+                        tech_escaped = self._escape_string(tech, "'")
                         self.required_imports.add('Has')
                         return f"Has('{tech_escaped}')"
                     else:
                         # Multiple technologies - use And with Has for each
                         has_checks = []
                         for tech in required_techs:
-                            tech_escaped = tech.replace('\\', '\\\\').replace("'", "\\'")
+                            tech_escaped = self._escape_string(tech, "'")
                             has_checks.append(f"Has('{tech_escaped}')")
                         self.required_imports.add('Has')
                         self.required_imports.add('And')
@@ -1992,14 +2007,14 @@ class RuleCodeGenerator:
                     # Generate Or check for items
                     if len(items) == 1:
                         item = items[0]
-                        item_escaped = item.replace('\\', '\\\\').replace("'", "\\'")
+                        item_escaped = self._escape_string(item, "'")
                         self.required_imports.add('Has')
                         return f"Has('{item_escaped}')"
                     else:
                         # Multiple items - use Or with Has for each
                         has_checks = []
                         for item in items:
-                            item_escaped = item.replace('\\', '\\\\').replace("'", "\\'")
+                            item_escaped = self._escape_string(item, "'")
                             has_checks.append(f"Has('{item_escaped}')")
                         self.required_imports.add('Has')
                         self.required_imports.add('Or')
@@ -2039,8 +2054,7 @@ class RuleCodeGenerator:
 
         self.required_imports.add('Has')
 
-        # Escape item name for Python string
-        item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+        item_escaped = self._escape_string(item_name)
 
         if count == 1:
             return f'Has("{item_escaped}")'
@@ -3218,7 +3232,7 @@ class HelperCodeGenerator:
         This accesses state.prog_items[player][key] which counts accumulated items.
         """
         key = expr.get('key', '')
-        key_escaped = key.replace('\\', '\\\\').replace("'", "\\'")
+        key_escaped = self._escape_string(key, "'")
         return f"state.prog_items[player].get('{key_escaped}', 0)"
 
     def _expr_sum_of(self, expr: Dict[str, Any]) -> str:
