@@ -2278,6 +2278,7 @@ class HelperCodeGenerator:
             'set': self._expr_set,
             'negate': self._expr_negate,
             'can_reach': self._expr_can_reach,
+            'region_check': self._expr_can_reach,  # alias for can_reach
             'can_reach_entrance': self._expr_can_reach_entrance,
             'location_check': self._expr_location_check,
             'count_item': self._expr_count_item,
