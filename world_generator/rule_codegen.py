@@ -530,6 +530,8 @@ class RuleCodeGenerator:
                     'Constant': 'constant',
                     'AST_all_of': 'ast_all_of',
                     'AST_any_of': 'ast_any_of',
+                    'Arithmetic': 'arithmetic',
+                    'AST_count_item': 'ast_count_item',
                 }
                 rule_type = rb_to_type.get(rb_rule, '')
 
@@ -772,6 +774,22 @@ class RuleCodeGenerator:
         # Handle AST_count_true rules (count N of M conditions as true)
         if rb_rule == 'AST_count_true':
             return self._convert_count_true_from_args(args)
+
+        # Handle Arithmetic rules (Rule Builder format from exporter)
+        if rb_rule == 'Arithmetic':
+            left = args.get('left', {})
+            op = args.get('op', '+')
+            right = args.get('right', {})
+            left_code = self._convert_rule(left)
+            right_code = self._convert_rule(right)
+            self.required_imports.add('Arithmetic')
+            return f'Arithmetic({left_code}, "{op}", {right_code})'
+
+        # Handle AST_count_item rules (exported count_item from AST format)
+        if rb_rule == 'AST_count_item':
+            item = args.get('item', '')
+            self.required_imports.add('CountItem')
+            return f'CountItem({repr(item)})'
 
         # Unknown Rule Builder rule - return True_() as placeholder
         self.required_imports.add('True_')
@@ -1404,6 +1422,14 @@ class RuleCodeGenerator:
 
         if op_type == 'min':
             return self._convert_min(operand)
+
+        # Handle Rule Builder format Constant (for Compare operands)
+        # In Compare context, we want the actual numeric value, not True_()/False_()
+        rb_rule = operand.get('rule', '')
+        if rb_rule == 'Constant':
+            args = operand.get('args', {})
+            value = args.get('value')
+            return repr(value)
 
         # For other types, try to convert as a rule
         return self._convert_rule(operand)

@@ -803,6 +803,143 @@ def extract_world_attributes(json_data: Dict[str, Any]) -> Dict[str, Any]:
     return world_attributes
 
 
+def _add_overcooked2_star_location_rules(json_data: Dict[str, Any], locations: Dict[str, LocationData]) -> None:
+    """
+    Add access rules for Overcooked! 2 star locations.
+
+    The original world uses has_requirements_for_level_star() for all star locations,
+    which checks global star requirements from level_logic. The exporter keeps the
+    level_logic in game_info but outputs null for location rules.
+
+    This function generates explicit rules for 2-Star and 3-Star locations based on
+    the global star requirements in level_logic.
+
+    2-Star: Additive requirements - need items with weights summing to 1.0+
+    3-Star: Exclusive requirements (must have ALL) + additive requirements
+    """
+    import re
+
+    # Get level_logic from game_info
+    game_info = json_data.get('game_info', {}).get('1', {})
+    level_logic = game_info.get('level_logic', {})
+
+    if not level_logic:
+        return
+
+    # Get global requirements (key = "*")
+    global_reqs = level_logic.get('*', [])
+    if len(global_reqs) < 3:
+        return  # Need at least 3 entries for 1-Star, 2-Star, 3-Star
+
+    # Extract 2-Star requirements (index 1)
+    two_star_req = global_reqs[1] if len(global_reqs) > 1 else [{}, {}]
+    two_star_exclusive = two_star_req[0] if len(two_star_req) > 0 else {}
+    two_star_additive = two_star_req[1] if len(two_star_req) > 1 else {}
+
+    # Extract 3-Star requirements (index 2)
+    three_star_req = global_reqs[2] if len(global_reqs) > 2 else [{}, {}]
+    three_star_exclusive = three_star_req[0] if len(three_star_req) > 0 else {}
+    three_star_additive = three_star_req[1] if len(three_star_req) > 1 else {}
+
+    # Pattern for star locations: "X-X (N-Star)" where X is level number
+    star_pattern = re.compile(r'^.+-\d+ \((\d)-Star\)$')
+
+    for loc_name, loc_data in locations.items():
+        match = star_pattern.match(loc_name)
+        if not match:
+            continue
+
+        # Check if this is a has_requirements_for_level_star helper call that needs expansion
+        # These helpers are not implemented in the worldgen, so we need to replace them
+        # with explicit rules based on the level_logic
+        if loc_data.access_rule is not None:
+            rule = loc_data.access_rule
+            if rule.get('rule') != 'has_requirements_for_level_star':
+                continue  # Keep existing non-helper rules
+
+        stars = int(match.group(1))
+
+        if stars == 1:
+            # 1-Star has no global requirements (only level-specific)
+            # Clear the helper call to make it accessible
+            loc_data.access_rule = None
+            continue
+        elif stars == 2:
+            # 2-Star: additive requirements
+            if isinstance(two_star_additive, list) and two_star_additive:
+                loc_data.access_rule = _build_additive_rule(two_star_additive)
+        elif stars == 3:
+            # 3-Star: exclusive + 2-Star additive + 3-Star additive
+            rules = []
+
+            # Exclusive requirements (must have ALL)
+            if isinstance(three_star_exclusive, list) and three_star_exclusive:
+                for item in three_star_exclusive:
+                    rules.append({'rule': 'Has', 'options': [], 'args': {'item_name': item}})
+
+            # 2-Star additive requirements
+            if isinstance(two_star_additive, list) and two_star_additive:
+                add_rule = _build_additive_rule(two_star_additive)
+                if add_rule:
+                    rules.append(add_rule)
+
+            # 3-Star additive requirements
+            if isinstance(three_star_additive, list) and three_star_additive:
+                add_rule = _build_additive_rule(three_star_additive)
+                if add_rule:
+                    rules.append(add_rule)
+
+            if len(rules) == 1:
+                loc_data.access_rule = rules[0]
+            elif len(rules) > 1:
+                loc_data.access_rule = {
+                    'rule': 'And',
+                    'options': [],
+                    'children': rules
+                }
+
+
+def _build_additive_rule(additive_items: List) -> Optional[Dict[str, Any]]:
+    """
+    Build a rule that checks if items sum to >= 1.0 weight.
+
+    We require 2 items with weight >= 0.3 to approximate the 1.0 weight threshold.
+    This is a loose approximation that allows for fillable games while still
+    respecting the general progression curve.
+
+    We use HasFromList which supports a count parameter.
+    """
+    if not additive_items:
+        return None
+
+    # Get items with weight >= 0.3 (items that meaningfully contribute)
+    significant_items = [item_pair[0] for item_pair in additive_items
+                        if isinstance(item_pair, list) and len(item_pair) >= 2 and item_pair[1] >= 0.3]
+
+    if not significant_items:
+        # Fallback to items with weight >= 0.2 if no high-weight items
+        significant_items = [item_pair[0] for item_pair in additive_items
+                            if isinstance(item_pair, list) and len(item_pair) >= 2 and item_pair[1] >= 0.2]
+
+    if not significant_items:
+        return None
+
+    if len(significant_items) == 1:
+        return {'rule': 'Has', 'options': [], 'args': {'item_name': significant_items[0]}}
+
+    # Require 2 of the significant items (loose approximation of 1.0 weight threshold)
+    # Using HasFromList which supports count parameter
+    required_count = min(2, len(significant_items))
+    return {
+        'rule': 'HasFromList',
+        'options': [],
+        'args': {
+            'items': significant_items,
+            'count': required_count
+        }
+    }
+
+
 def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     """
     Extract all data from a JSON rules file.
@@ -875,6 +1012,10 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
 
     # Extract game-specific world attributes (e.g., hat_info for A Hat in Time)
     world_attributes = extract_world_attributes(json_data)
+
+    # Add Overcooked! 2 star location rules
+    if metadata.game_name == "Overcooked! 2":
+        _add_overcooked2_star_location_rules(json_data, locations)
 
     return ExtractedData(
         metadata=metadata,
