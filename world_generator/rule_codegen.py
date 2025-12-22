@@ -522,12 +522,21 @@ class RuleCodeGenerator:
                     'True_': 'constant',
                     'False_': 'constant',
                     'Helper': 'helper',
+                    'StateMethod': 'state_method',
+                    'Compare': 'compare',
+                    'Constant': 'constant',
                 }
                 rule_type = rb_to_type.get(rb_rule, '')
 
                 # Convert Rule Builder format to Python code
                 if rule_type:
                     return self._convert_rule_builder_format(rule, rb_rule, rule_type)
+
+                # Check if this is a helper call from AST exporter format
+                # AST exporter outputs helpers with rule=helper_name and _original_ast_type="helper"
+                # Also check known_helpers for helpers without the _original_ast_type marker
+                if rule.get('_original_ast_type') == 'helper' or rb_rule in self.known_helpers:
+                    return self._convert_rule_builder_helper(rule, rb_rule)
 
         # Dispatch based on rule type
         converters = {
@@ -625,7 +634,9 @@ class RuleCodeGenerator:
                 self.required_imports.add('True_')
                 return 'True_()'
             self.required_imports.add('HasAll')
-            return f'HasAll({repr(items)})'
+            # HasAll expects variadic arguments, not a list
+            items_str = ', '.join(repr(item) for item in items)
+            return f'HasAll({items_str})'
 
         if rb_rule == 'HasAny':
             items = args.get('items', [])
@@ -633,7 +644,9 @@ class RuleCodeGenerator:
                 self.required_imports.add('False_')
                 return 'False_()'
             self.required_imports.add('HasAny')
-            return f'HasAny({repr(items)})'
+            # HasAny expects variadic arguments, not a list
+            items_str = ', '.join(repr(item) for item in items)
+            return f'HasAny({items_str})'
 
         if rb_rule == 'HasGroup':
             group = args.get('group', '')
@@ -663,6 +676,36 @@ class RuleCodeGenerator:
                 'args': args.get('args', [])
             }
             return self._convert_helper(helper_rule)
+
+        if rb_rule == 'StateMethod':
+            # Convert to the format expected by _convert_state_method
+            state_rule = {
+                'method': args.get('method', ''),
+                'args': args.get('args', [])
+            }
+            return self._convert_state_method(state_rule)
+
+        if rb_rule == 'Compare':
+            # Convert Rule Builder format Compare to AST format
+            compare_rule = {
+                'type': 'compare',
+                'left': args.get('left', {}),
+                'op': args.get('op', ''),
+                'right': args.get('right', {})
+            }
+            return self._convert_compare(compare_rule)
+
+        if rb_rule == 'Constant':
+            # Handle Constant rule
+            value = args.get('value')
+            if value is True:
+                self.required_imports.add('True_')
+                return 'True_()'
+            elif value is False:
+                self.required_imports.add('False_')
+                return 'False_()'
+            else:
+                return repr(value)
 
         # Unknown Rule Builder rule - return True_() as placeholder
         self.required_imports.add('True_')
@@ -744,6 +787,58 @@ class RuleCodeGenerator:
         if isinstance(value, dict):
             if value.get('type') == 'constant':
                 return value.get('value', default)
+            return default
+        return value if value is not None else default
+
+    def _extract_constant(self, value: Any, default: Any = None) -> Any:
+        """Extract constant value from complex expressions.
+
+        Handles constants, binary operations (like 'Axe' + 's' -> 'Axes'),
+        and subscript operations (like item_groups["Axes"]).
+        """
+        if isinstance(value, dict):
+            if value.get('type') == 'constant':
+                return value.get('value', default)
+            if value.get('type') == 'value':
+                return value.get('value', default)
+            if value.get('type') == 'set':
+                elements = value.get('elements', [])
+                return [self._extract_constant(elem, None) for elem in elements if self._extract_constant(elem, None) is not None]
+
+            # Handle binary operations on constants (e.g., 'Axe' + 's' -> 'Axes')
+            if value.get('type') in ('binary_op', 'binop'):
+                left = self._extract_constant(value.get('left', {}), None)
+                right = self._extract_constant(value.get('right', {}), None)
+                op = value.get('op', '+')
+                op_map = {'Add': '+', 'Sub': '-', 'Mult': '*', 'Div': '/', 'FloorDiv': '//'}
+                op = op_map.get(op, op)
+                if left is not None and right is not None:
+                    try:
+                        if op == '+':
+                            return left + right
+                        elif op == '-':
+                            return left - right
+                        elif op == '*':
+                            return left * right
+                        elif op == '/':
+                            return left / right
+                        elif op == '//':
+                            return left // right
+                    except TypeError:
+                        pass
+                return default
+
+            # Handle subscript (e.g., item_groups["Axes"])
+            if value.get('type') == 'subscript':
+                base_value = self._extract_constant(value.get('value', {}), None)
+                index = self._extract_constant(value.get('index', {}), None)
+                if base_value is not None and index is not None:
+                    try:
+                        return base_value[index]
+                    except (IndexError, KeyError, TypeError):
+                        pass
+                return default
+
             return default
         return value if value is not None else default
 
@@ -969,6 +1064,16 @@ class RuleCodeGenerator:
             # Unpack the items as separate arguments
             items_repr = ', '.join(repr(item) for item in items)
             return f'{class_name}({items_repr})'
+
+        # Handle 'subscript' type (e.g., item_groups["Axes"])
+        # This extracts the value using _extract_constant which handles
+        # subscript with binary_op index (like item_groups["Axe" + "s"])
+        if first_arg.get('type') == 'subscript':
+            items = self._extract_constant(first_arg, [])
+            if isinstance(items, list) and items:
+                items_repr = ', '.join(repr(item) for item in items)
+                return f'{class_name}({items_repr})'
+            # If extraction failed or returned empty, fall through to True_()
 
         # Unknown format - return True_ as safe fallback
         self.required_imports.add('True_')
@@ -1321,13 +1426,13 @@ class RuleCodeGenerator:
         Extract the item name from a prog_items subscript expression.
 
         Pattern: state.prog_items[player][item_name]
-        Also handles CC export format: {"type": "prog_item_count", "key": " coins"}
+        Also handles AST export format: {"type": "prog_item_count", "key": " coins"}
         Returns the item_name string if the pattern matches, None otherwise.
         """
         if not isinstance(expr, dict):
             return None
 
-        # Handle CC export format: {"type": "prog_item_count", "key": " coins"}
+        # Handle AST export format: {"type": "prog_item_count", "key": " coins"}
         if expr.get('type') == 'prog_item_count':
             return expr.get('key')
 
@@ -1413,6 +1518,59 @@ class RuleCodeGenerator:
             # exported via get_helper_definitions() in the Rules.py module, and the
             # frontend looks them up from the helpers section instead of inlining
             # them at every call site.
+            parts = [f'helper_func={func_name}', f'helper_name="{helper_name}"']
+
+            if arg_strs:
+                parts.append(f'args=({", ".join(arg_strs)},)')
+
+            return f'HelperCall({", ".join(parts)})'
+
+        # Unknown helper - return True_() as placeholder
+        self.required_imports.add('True_')
+        return 'True_()'
+
+    def _convert_rule_builder_helper(self, rule: Dict[str, Any], helper_name: str) -> str:
+        """Convert Rule Builder format helper rule to HelperCall().
+
+        This handles helpers that come from the exporter in Rule Builder format
+        with a 'rule' key containing the helper name (e.g., {'rule': 'ultra', 'args': [], ...})
+        instead of AST format with 'type': 'helper'.
+        """
+        args = rule.get('args', [])
+
+        # If we know about this helper, generate a proper HelperCall
+        if helper_name in self.known_helpers:
+            self.required_imports.add('HelperCall')
+            func_name = self.get_function_name(helper_name)
+
+            # Convert arguments to Python code
+            arg_strs = []
+            for arg in args:
+                if isinstance(arg, dict):
+                    # Handle Rule Builder format args (SettingValue, etc.)
+                    arg_rule = arg.get('rule', '')
+                    if arg_rule == 'SettingValue':
+                        # Resolve setting_value args to their actual values
+                        setting = arg.get('args', {}).get('setting', '')
+                        if setting in self.settings:
+                            arg_strs.append(repr(self.settings[setting]))
+                        else:
+                            arg_strs.append('None')
+                    elif arg.get('type') == 'constant':
+                        arg_strs.append(repr(arg.get('value')))
+                    elif arg.get('type') == 'setting_value':
+                        setting = arg.get('setting', '')
+                        if setting in self.settings:
+                            arg_strs.append(repr(self.settings[setting]))
+                        else:
+                            arg_strs.append('None')
+                    else:
+                        # For complex args, try to convert
+                        arg_strs.append('None')
+                else:
+                    arg_strs.append(repr(arg))
+
+            # Build HelperCall with helper_func reference
             parts = [f'helper_func={func_name}', f'helper_name="{helper_name}"']
 
             if arg_strs:
@@ -2423,7 +2581,7 @@ class HelperCodeGenerator:
     def _expr_prog_item_count(self, expr: Dict[str, Any]) -> str:
         """Generate state.prog_items access for counter items like coins.
 
-        CC export format: {"type": "prog_item_count", "key": " coins"}
+        AST export format: {"type": "prog_item_count", "key": " coins"}
         This accesses state.prog_items[player][key] which counts accumulated items.
         """
         key = expr.get('key', '')
@@ -2480,6 +2638,30 @@ class HelperCodeGenerator:
                 # Extract all elements from the set
                 elements = value.get('elements', [])
                 return [self._extract_constant(elem, None) for elem in elements if self._extract_constant(elem, None) is not None]
+
+            # Handle binary operations on constants (e.g., 'Axe' + 's' -> 'Axes')
+            if value.get('type') in ('binary_op', 'binop'):
+                left = self._extract_constant(value.get('left', {}), None)
+                right = self._extract_constant(value.get('right', {}), None)
+                op = value.get('op', '+')
+                # Map operator names to actual operators
+                op_map = {'Add': '+', 'Sub': '-', 'Mult': '*', 'Div': '/', 'FloorDiv': '//'}
+                op = op_map.get(op, op)
+                if left is not None and right is not None:
+                    try:
+                        if op == '+':
+                            return left + right
+                        elif op == '-':
+                            return left - right
+                        elif op == '*':
+                            return left * right
+                        elif op == '/':
+                            return left / right
+                        elif op == '//':
+                            return left // right
+                    except TypeError:
+                        pass
+                return default
 
             # Handle subscript on settings (e.g., self.boss_order[0])
             if value.get('type') == 'subscript':

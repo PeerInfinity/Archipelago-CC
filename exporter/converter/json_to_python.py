@@ -150,7 +150,7 @@ class JSONToPython:
         Convert a JSON rule to Python code.
 
         Args:
-            rule: Rule dictionary in Archipelago-CC format
+            rule: Rule dictionary in AST format
 
         Returns:
             ConversionResult with Python code and any warnings/errors
@@ -847,7 +847,7 @@ def convert_json_to_python(
     Convert a JSON rule to Python code.
 
     Args:
-        rule: Rule dictionary in Archipelago-CC format
+        rule: Rule dictionary in AST format
         state_var: Name of the state variable (default: 'state')
         indent_size: Number of spaces per indent level (default: 4)
 
@@ -867,7 +867,7 @@ def convert_json_to_lambda(
     Convert a JSON rule to a Python lambda expression.
 
     Args:
-        rule: Rule dictionary in Archipelago-CC format
+        rule: Rule dictionary in AST format
         state_var: Name of the state variable (default: 'state')
 
     Returns:
@@ -894,7 +894,7 @@ def convert_json_to_function(
     Convert a JSON rule to a Python function definition.
 
     Args:
-        rule: Rule dictionary in Archipelago-CC format
+        rule: Rule dictionary in AST format
         func_name: Name for the function (default: 'rule')
         state_var: Name of the state variable (default: 'state')
         indent_size: Number of spaces per indent level (default: 4)
