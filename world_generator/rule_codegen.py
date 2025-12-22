@@ -773,6 +773,13 @@ class RuleCodeGenerator:
         if rb_rule == 'AST_count_true':
             return self._convert_count_true_from_args(args)
 
+        # Handle CountItem rule (item count for comparisons)
+        if rb_rule == 'CountItem':
+            item_name = args.get('item_name', '')
+            self.required_imports.add('CountItem')
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            return f'CountItem("{item_escaped}")'
+
         # Unknown Rule Builder rule - return True_() as placeholder
         self.required_imports.add('True_')
         return 'True_()'
@@ -1404,6 +1411,21 @@ class RuleCodeGenerator:
 
         if op_type == 'min':
             return self._convert_min(operand)
+
+        # Check for Rule Builder format (has 'rule' key instead of 'type')
+        rb_rule = operand.get('rule', '')
+        rb_args = operand.get('args', {})
+
+        if rb_rule == 'CountItem':
+            item_name = rb_args.get('item_name', '')
+            self.required_imports.add('CountItem')
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            return f'CountItem("{item_escaped}")'
+
+        if rb_rule == 'Constant':
+            # In compare context, preserve the actual numeric value (don't convert to boolean)
+            value = rb_args.get('value')
+            return repr(value)
 
         # For other types, try to convert as a rule
         return self._convert_rule(operand)
