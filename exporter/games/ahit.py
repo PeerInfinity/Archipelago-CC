@@ -133,6 +133,9 @@ class AHitGameExportHandler(GenericGameExportHandler):
         """Extract A Hat in Time settings."""
         settings = super().get_settings_data(world, multiworld, player)
 
+        # Enable Pattern 4 accumulator for "Time Shard (N)" items -> "Shards" counter
+        settings['use_paren_number_accumulator'] = True
+
         # Add AHIT-specific settings used by helpers
         options_map = {
             'HatItems': ('HatItems', bool, False),

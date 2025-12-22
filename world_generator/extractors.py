@@ -536,7 +536,8 @@ def extract_progression_mapping(json_data: Dict[str, Any]) -> Dict[str, List[str
 def compute_state_counter_accumulator_rules(
     items: Dict[str, 'ItemData'],
     original_placements: Dict[str, str],
-    helpers: Dict[str, Any] = None
+    helpers: Dict[str, Any] = None,
+    settings: Dict[str, Any] = None
 ) -> Tuple[List[Dict[str, Any]], Dict[str, int]]:
     """
     Compute accumulator rules and prog_items_init for state counter patterns.
@@ -726,6 +727,65 @@ def compute_state_counter_accumulator_rules(
         })
         prog_items_init[target_name] = 0
 
+    # Pattern 4: Find items like "Time Shard (100)", "Time Shard (50)" that should accumulate
+    # These are detected by finding items matching "BaseName (N)" pattern where:
+    # - Multiple items share the same base name with different numbers in parentheses
+    # - Look for patterns like "Time Shard (100)" -> accumulate to "Shards"
+    # This pattern is opt-in via the 'use_paren_number_accumulator' setting
+    if settings and settings.get('use_paren_number_accumulator', False):
+        paren_number_pattern = regex_module.compile(r'^(.+?)\s+\((\d+)\)$')
+        paren_suffix_candidates = {}  # base_name -> list of matching items
+
+        for item_name in items.keys():
+            match = paren_number_pattern.match(item_name)
+            if match:
+                base_name = match.group(1)  # e.g., "Time Shard"
+                if base_name not in paren_suffix_candidates:
+                    paren_suffix_candidates[base_name] = []
+                paren_suffix_candidates[base_name].append(item_name)
+
+        # Also check original_placements for additional items
+        for loc_name, item_name in original_placements.items():
+            match = paren_number_pattern.match(item_name)
+            if match:
+                base_name = match.group(1)
+                if base_name not in paren_suffix_candidates:
+                    paren_suffix_candidates[base_name] = []
+                if item_name not in paren_suffix_candidates[base_name]:
+                    paren_suffix_candidates[base_name].append(item_name)
+
+        # For each base name candidate, check if we should create an accumulator rule
+        for base_name, matching_items in paren_suffix_candidates.items():
+            if len(matching_items) < 2:
+                continue  # Need at least 2 items to be a meaningful pattern
+
+            # For "Time Shard", the target is "Shards"
+            # For other patterns, use the base name with 's' suffix
+            if base_name == "Time Shard":
+                target_name = "Shards"
+            else:
+                # Create a target name by removing spaces and adding 's' if needed
+                target_name = base_name.replace(" ", "") + "s"
+
+            # Skip if we already have a rule for this target
+            if any(rule['target'] == target_name for rule in accumulator_rules):
+                continue
+
+            # Skip if there's already an item with exactly this name
+            if target_name in items:
+                continue
+
+            # Create the accumulator rule - escape the parentheses in the pattern
+            escaped_base = regex_module.escape(base_name)
+            pattern = f'^{escaped_base} \\((\\d+)\\)$'
+            accumulator_rules.append({
+                'pattern': pattern,
+                'extract_value': True,
+                'target': target_name,
+                'discriminator': None
+            })
+            prog_items_init[target_name] = 0
+
     return accumulator_rules, prog_items_init
 
 
@@ -838,7 +898,9 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     progression_mapping = extract_progression_mapping(json_data)
 
     # Compute accumulator rules for state counter patterns (for frontend export)
-    accumulator_rules, prog_items_init = compute_state_counter_accumulator_rules(items, original_placements)
+    accumulator_rules, prog_items_init = compute_state_counter_accumulator_rules(
+        items, original_placements, settings=metadata.resolved_settings
+    )
 
     # For games with state counters, we need to precollect the counter items
     # for generation to work (rules check Has(" coins", X) which needs items in inventory).
