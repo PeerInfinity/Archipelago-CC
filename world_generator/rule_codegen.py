@@ -530,16 +530,11 @@ class RuleCodeGenerator:
                 if rule_type:
                     return self._convert_rule_builder_format(rule, rb_rule, rule_type)
 
-                # Check if this is a helper call from CC exporter format
-                # CC exports helpers with rule=helper_name and _original_ast_type="helper"
+                # Check if this is a helper call from AST exporter format
+                # AST exporter outputs helpers with rule=helper_name and _original_ast_type="helper"
+                # Also check known_helpers for helpers without the _original_ast_type marker
                 if rule.get('_original_ast_type') == 'helper' or rb_rule in self.known_helpers:
-                    # Convert to format expected by _convert_helper
-                    helper_rule = {
-                        'type': 'helper',
-                        'name': rb_rule,
-                        'args': rule.get('args', [])
-                    }
-                    return self._convert_helper(helper_rule)
+                    return self._convert_rule_builder_helper(rule, rb_rule)
 
         # Dispatch based on rule type
         converters = {
@@ -1407,13 +1402,13 @@ class RuleCodeGenerator:
         Extract the item name from a prog_items subscript expression.
 
         Pattern: state.prog_items[player][item_name]
-        Also handles CC export format: {"type": "prog_item_count", "key": " coins"}
+        Also handles AST export format: {"type": "prog_item_count", "key": " coins"}
         Returns the item_name string if the pattern matches, None otherwise.
         """
         if not isinstance(expr, dict):
             return None
 
-        # Handle CC export format: {"type": "prog_item_count", "key": " coins"}
+        # Handle AST export format: {"type": "prog_item_count", "key": " coins"}
         if expr.get('type') == 'prog_item_count':
             return expr.get('key')
 
@@ -1499,6 +1494,59 @@ class RuleCodeGenerator:
             # exported via get_helper_definitions() in the Rules.py module, and the
             # frontend looks them up from the helpers section instead of inlining
             # them at every call site.
+            parts = [f'helper_func={func_name}', f'helper_name="{helper_name}"']
+
+            if arg_strs:
+                parts.append(f'args=({", ".join(arg_strs)},)')
+
+            return f'HelperCall({", ".join(parts)})'
+
+        # Unknown helper - return True_() as placeholder
+        self.required_imports.add('True_')
+        return 'True_()'
+
+    def _convert_rule_builder_helper(self, rule: Dict[str, Any], helper_name: str) -> str:
+        """Convert Rule Builder format helper rule to HelperCall().
+
+        This handles helpers that come from the exporter in Rule Builder format
+        with a 'rule' key containing the helper name (e.g., {'rule': 'ultra', 'args': [], ...})
+        instead of AST format with 'type': 'helper'.
+        """
+        args = rule.get('args', [])
+
+        # If we know about this helper, generate a proper HelperCall
+        if helper_name in self.known_helpers:
+            self.required_imports.add('HelperCall')
+            func_name = self.get_function_name(helper_name)
+
+            # Convert arguments to Python code
+            arg_strs = []
+            for arg in args:
+                if isinstance(arg, dict):
+                    # Handle Rule Builder format args (SettingValue, etc.)
+                    arg_rule = arg.get('rule', '')
+                    if arg_rule == 'SettingValue':
+                        # Resolve setting_value args to their actual values
+                        setting = arg.get('args', {}).get('setting', '')
+                        if setting in self.settings:
+                            arg_strs.append(repr(self.settings[setting]))
+                        else:
+                            arg_strs.append('None')
+                    elif arg.get('type') == 'constant':
+                        arg_strs.append(repr(arg.get('value')))
+                    elif arg.get('type') == 'setting_value':
+                        setting = arg.get('setting', '')
+                        if setting in self.settings:
+                            arg_strs.append(repr(self.settings[setting]))
+                        else:
+                            arg_strs.append('None')
+                    else:
+                        # For complex args, try to convert
+                        arg_strs.append('None')
+                else:
+                    arg_strs.append(repr(arg))
+
+            # Build HelperCall with helper_func reference
             parts = [f'helper_func={func_name}', f'helper_name="{helper_name}"']
 
             if arg_strs:
@@ -2509,7 +2557,7 @@ class HelperCodeGenerator:
     def _expr_prog_item_count(self, expr: Dict[str, Any]) -> str:
         """Generate state.prog_items access for counter items like coins.
 
-        CC export format: {"type": "prog_item_count", "key": " coins"}
+        AST export format: {"type": "prog_item_count", "key": " coins"}
         This accesses state.prog_items[player][key] which counts accumulated items.
         """
         key = expr.get('key', '')
