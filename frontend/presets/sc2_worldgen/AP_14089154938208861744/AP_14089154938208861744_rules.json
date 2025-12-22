@@ -483,9 +483,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 2
                   }
                 },
                 {
@@ -519,6 +517,15 @@
                 {
                   "rule": "terran_competent_anti_air",
                   "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Jump Jets (Siege Tank)",
+                      "Siege Tank"
+                    ]
+                  }
                 }
               ]
             },
@@ -543,6 +550,15 @@
                 {
                   "rule": "terran_competent_anti_air",
                   "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Jump Jets (Siege Tank)",
+                      "Siege Tank"
+                    ]
+                  }
                 }
               ]
             },
@@ -597,12 +613,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stimpack (Marine)"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 2
                       }
                     },
                     {
@@ -661,12 +678,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stimpack (Marine)"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 2
                       }
                     },
                     {
@@ -711,12 +729,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stimpack (Marine)"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 2
                       }
                     },
                     {
@@ -761,12 +780,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stimpack (Marine)"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 2
                       }
                     },
                     {
@@ -811,12 +831,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stimpack (Marine)"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 2
                       }
                     },
                     {
@@ -861,12 +882,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stimpack (Marine)"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 2
                       }
                     },
                     {
@@ -939,12 +961,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stimpack (Marine)"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 2
                       }
                     },
                     {
@@ -989,12 +1012,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stimpack (Marine)"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 2
                       }
                     },
                     {
@@ -1254,9 +1278,7 @@
                                   "rule": "True_"
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "True_"
-                                }
+                                "right": 2
                               }
                             },
                             {
@@ -1360,9 +1382,7 @@
                               "rule": "True_"
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "True_"
-                            }
+                            "right": 2
                           }
                         },
                         {
@@ -1471,9 +1491,7 @@
                                   "rule": "True_"
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "True_"
-                                }
+                                "right": 2
                               }
                             },
                             {
@@ -1577,9 +1595,7 @@
                               "rule": "True_"
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "True_"
-                            }
+                            "right": 2
                           }
                         },
                         {
@@ -1644,9 +1660,7 @@
                                   "rule": "True_"
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "True_"
-                                }
+                                "right": 2
                               }
                             },
                             {
@@ -1750,9 +1764,7 @@
                               "rule": "True_"
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "True_"
-                            }
+                            "right": 2
                           }
                         },
                         {
@@ -1817,9 +1829,7 @@
                                   "rule": "True_"
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "True_"
-                                }
+                                "right": 2
                               }
                             },
                             {
@@ -1923,9 +1933,7 @@
                               "rule": "True_"
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "True_"
-                            }
+                            "right": 2
                           }
                         },
                         {
@@ -2005,9 +2013,7 @@
                                   "rule": "True_"
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "True_"
-                                }
+                                "right": 2
                               }
                             },
                             {
@@ -2111,9 +2117,7 @@
                               "rule": "True_"
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "True_"
-                            }
+                            "right": 2
                           }
                         },
                         {
@@ -2178,9 +2182,7 @@
                                   "rule": "True_"
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "True_"
-                                }
+                                "right": 2
                               }
                             },
                             {
@@ -2284,9 +2286,7 @@
                               "rule": "True_"
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "True_"
-                            }
+                            "right": 2
                           }
                         },
                         {
@@ -2351,9 +2351,7 @@
                                   "rule": "True_"
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "True_"
-                                }
+                                "right": 2
                               }
                             },
                             {
@@ -2457,9 +2455,7 @@
                               "rule": "True_"
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "True_"
-                            }
+                            "right": 2
                           }
                         },
                         {
@@ -2524,9 +2520,7 @@
                                   "rule": "True_"
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "True_"
-                                }
+                                "right": 2
                               }
                             },
                             {
@@ -2630,9 +2624,7 @@
                               "rule": "True_"
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "True_"
-                            }
+                            "right": 2
                           }
                         },
                         {
@@ -2697,9 +2689,7 @@
                                   "rule": "True_"
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "True_"
-                                }
+                                "right": 2
                               }
                             },
                             {
@@ -2803,9 +2793,7 @@
                               "rule": "True_"
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "True_"
-                            }
+                            "right": 2
                           }
                         },
                         {
@@ -2870,9 +2858,7 @@
                                   "rule": "True_"
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "True_"
-                                }
+                                "right": 2
                               }
                             },
                             {
@@ -2976,9 +2962,7 @@
                               "rule": "True_"
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "True_"
-                            }
+                            "right": 2
                           }
                         },
                         {
@@ -3043,9 +3027,7 @@
                                   "rule": "True_"
                                 },
                                 "op": ">=",
-                                "right": {
-                                  "rule": "True_"
-                                }
+                                "right": 2
                               }
                             },
                             {
@@ -3149,9 +3131,7 @@
                               "rule": "True_"
                             },
                             "op": ">=",
-                            "right": {
-                              "rule": "True_"
-                            }
+                            "right": 2
                           }
                         },
                         {
@@ -3301,9 +3281,7 @@
                   "_original_ast_type": "helper"
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 6
               }
             },
             "item": {
@@ -3353,9 +3331,7 @@
                   "_original_ast_type": "helper"
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 6
               }
             },
             "item": {
@@ -3377,9 +3353,7 @@
                   "_original_ast_type": "helper"
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 6
               }
             },
             "item": {
@@ -3415,9 +3389,7 @@
                   "_original_ast_type": "helper"
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 6
               }
             },
             "item": {
@@ -3439,9 +3411,7 @@
                   "_original_ast_type": "helper"
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 6
               }
             },
             "item": {
@@ -3463,9 +3433,7 @@
                   "_original_ast_type": "helper"
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 6
               }
             },
             "item": {
@@ -3948,9 +3916,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 8
                   }
                 },
                 {
@@ -3993,9 +3959,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 6
                   }
                 },
                 {
@@ -4034,9 +3998,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 6
                   }
                 },
                 {
@@ -4075,9 +4037,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 6
                   }
                 },
                 {
@@ -4131,9 +4091,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 6
                   }
                 },
                 {
@@ -4172,9 +4130,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 8
                   }
                 },
                 {
@@ -4217,9 +4173,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 8
                   }
                 },
                 {
@@ -4262,9 +4216,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 8
                   }
                 },
                 {
@@ -4307,9 +4259,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 8
                   }
                 },
                 {
@@ -4319,6 +4269,15 @@
                 {
                   "rule": "marine_medic_upgrade",
                   "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Jump Jets (Siege Tank)",
+                      "Siege Tank"
+                    ]
+                  }
                 }
               ]
             },
@@ -4348,9 +4307,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 8
                   }
                 },
                 {
@@ -4360,6 +4317,15 @@
                 {
                   "rule": "marine_medic_upgrade",
                   "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Jump Jets (Siege Tank)",
+                      "Siege Tank"
+                    ]
+                  }
                 }
               ]
             },
@@ -4389,14 +4355,21 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 8
                   }
                 },
                 {
                   "rule": "terran_common_unit",
                   "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Jump Jets (Siege Tank)",
+                      "Siege Tank"
+                    ]
+                  }
                 }
               ]
             },
@@ -4426,9 +4399,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 8
                   }
                 },
                 {
@@ -5151,8 +5122,22 @@
             "name": "Smash and Grab (Terran): Defeat Kerrigan",
             "id": 1807,
             "access_rule": {
-              "rule": "terran_common_unit",
-              "_original_ast_type": "helper"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "terran_common_unit",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Jump Jets (Siege Tank)",
+                      "Siege Tank"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Black Market Launchers (Widow Mine)",
@@ -5350,9 +5335,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 4
                   }
                 },
                 {
@@ -5399,9 +5382,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 4
                   }
                 },
                 {
@@ -5448,9 +5429,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 4
                   }
                 },
                 {
@@ -5497,9 +5476,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 4
                   }
                 },
                 {
@@ -5546,9 +5523,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 4
                   }
                 },
                 {
@@ -5595,9 +5570,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 4
                   }
                 },
                 {
@@ -5644,9 +5617,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 4
                   }
                 },
                 {
@@ -5693,9 +5664,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 4
                   }
                 },
                 {
@@ -5742,9 +5711,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 4
                   }
                 },
                 {
@@ -6435,12 +6402,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stimpack (Marine)"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 2
                       }
                     },
                     {
@@ -6499,12 +6467,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stimpack (Marine)"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 2
                       }
                     },
                     {
@@ -6714,7 +6683,13 @@
             "name": "Welcome to the Jungle (Terran): Protoss Cleared",
             "id": 2405,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Jump Jets (Siege Tank)",
+                  "Siege Tank"
+                ]
+              }
             },
             "item": {
               "name": "Progressive Cross-Spectrum Dampeners (Banshee)",
@@ -6728,7 +6703,14 @@
             "name": "Welcome to the Jungle (Terran): No Terrazine Nodes Sealed",
             "id": 2406,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Cyclone",
+                  "Goliath",
+                  "Thor"
+                ]
+              }
             },
             "item": {
               "name": "Demolition Payload (Widow Mine)",
@@ -6742,7 +6724,14 @@
             "name": "Welcome to the Jungle (Terran): Up to 1 Terrazine Node Sealed",
             "id": 2407,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Cyclone",
+                  "Goliath",
+                  "Thor"
+                ]
+              }
             },
             "item": {
               "name": "Raven",
@@ -7421,9 +7410,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 2
                   }
                 },
                 {
@@ -7500,9 +7487,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 2
                   }
                 },
                 {
@@ -7617,9 +7602,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 2
                   }
                 },
                 {
@@ -7653,9 +7636,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 2
                   }
                 },
                 {
@@ -7689,9 +7670,7 @@
                       ]
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 2
                   }
                 },
                 {
@@ -37691,70 +37670,8 @@
       "marine_medic_firebat_upgrade": {
         "conditions": [
           {
-            "conditions": [
-              {
-                "conditions": [
-                  {
-                    "item": "Combat Shield (Marine)",
-                    "type": "item_check"
-                  },
-                  {
-                    "item": "Magrail Munitions (Marine)",
-                    "type": "item_check"
-                  },
-                  {
-                    "item": "Stabilizer Medpacks (Medic)",
-                    "type": "item_check"
-                  }
-                ],
-                "type": "or"
-              },
-              {
-                "conditions": [
-                  {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Progressive Stimpack (Marine)"
-                        }
-                      ],
-                      "method": "count",
-                      "type": "state_method"
-                    },
-                    "op": ">=",
-                    "right": {
-                      "type": "constant",
-                      "value": 2
-                    },
-                    "type": "compare"
-                  },
-                  {
-                    "count": {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    "group": "Missions",
-                    "type": "group_check"
-                  }
-                ],
-                "type": "and"
-              },
-              {
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": false
-                  },
-                  {
-                    "item": "Laser Targeting System (Marine)",
-                    "type": "item_check"
-                  }
-                ],
-                "type": "and"
-              }
-            ],
-            "type": "or"
+            "name": "marine_medic_upgrade",
+            "type": "helper"
           },
           {
             "left": {
@@ -38246,22 +38163,8 @@
                         "type": "or"
                       },
                       {
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Dominion Trooper",
-                              "Goliath",
-                              "Hellion",
-                              "Marauder",
-                              "Marine",
-                              "Vulture",
-                              "Warhound"
-                            ]
-                          }
-                        ],
-                        "method": "has_any",
-                        "type": "state_method"
+                        "name": "terran_common_unit",
+                        "type": "helper"
                       }
                     ],
                     "type": "and"
@@ -38345,14 +38248,8 @@
               },
               {
                 "left": {
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Progressive Terran Ship Weapon"
-                    }
-                  ],
-                  "name": "weapon_armor_upgrade_count",
-                  "type": "helper"
+                  "type": "constant",
+                  "value": true
                 },
                 "op": ">=",
                 "right": {
@@ -38411,113 +38308,8 @@
             "type": "or"
           },
           {
-            "conditions": [
-              {
-                "name": "terran_competent_anti_air",
-                "type": "helper"
-              },
-              {
-                "conditions": [
-                  {
-                    "conditions": [
-                      {
-                        "item": "Battlecruiser",
-                        "type": "item_check"
-                      },
-                      {
-                        "item": "Cyclone",
-                        "type": "item_check"
-                      },
-                      {
-                        "item": "Dominion Trooper",
-                        "type": "item_check"
-                      },
-                      {
-                        "item": "Marine",
-                        "type": "item_check"
-                      },
-                      {
-                        "item": "Thor",
-                        "type": "item_check"
-                      },
-                      {
-                        "item": "Valkyrie",
-                        "type": "item_check"
-                      },
-                      {
-                        "item": "Wraith",
-                        "type": "item_check"
-                      }
-                    ],
-                    "type": "or"
-                  },
-                  {
-                    "conditions": [
-                      {
-                        "conditions": [
-                          {
-                            "item": "Medivac",
-                            "type": "item_check"
-                          },
-                          {
-                            "item": "Siege Tank",
-                            "type": "item_check"
-                          }
-                        ],
-                        "type": "and"
-                      },
-                      {
-                        "left": {
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "Progressive Transport Hook (Siege Tank)"
-                            }
-                          ],
-                          "method": "count",
-                          "type": "state_method"
-                        },
-                        "op": ">=",
-                        "right": {
-                          "type": "constant",
-                          "value": 2
-                        },
-                        "type": "compare"
-                      }
-                    ],
-                    "type": "and"
-                  },
-                  {
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "conditions": [
-                          {
-                            "item": "Ghost",
-                            "type": "item_check"
-                          },
-                          {
-                            "item": "Liberator",
-                            "type": "item_check"
-                          },
-                          {
-                            "item": "Spectre",
-                            "type": "item_check"
-                          }
-                        ],
-                        "type": "or"
-                      }
-                    ],
-                    "type": "and"
-                  }
-                ],
-                "type": "or"
-              }
-            ],
-            "type": "or"
+            "name": "terran_moderate_anti_air",
+            "type": "helper"
           },
           {
             "conditions": [
@@ -38607,16 +38399,12 @@
       "terran_common_unit": {
         "args": [
           {
-            "type": "constant",
-            "value": [
-              "Dominion Trooper",
-              "Goliath",
-              "Hellion",
-              "Marauder",
-              "Marine",
-              "Vulture",
-              "Warhound"
-            ]
+            "attr": "basic_terran_units",
+            "object": {
+              "name": "self",
+              "type": "name"
+            },
+            "type": "attribute"
           }
         ],
         "method": "has_any",
@@ -38625,87 +38413,25 @@
       "terran_competent_anti_air": {
         "conditions": [
           {
-            "name": "terran_competent_ground_to_air",
-            "type": "helper"
-          },
-          {
             "conditions": [
               {
-                "item": "Viking",
+                "item": "Goliath",
                 "type": "item_check"
               },
               {
-                "conditions": [
-                  {
-                    "item": "Advanced Laser Technology (Wraith)",
-                    "type": "item_check"
-                  },
-                  {
-                    "item": "Wraith",
-                    "type": "item_check"
-                  }
-                ],
-                "type": "and"
+                "item": "Cyclone",
+                "type": "item_check"
               },
               {
-                "conditions": [
-                  {
-                    "item": "ATX Laser Battery (Battlecruiser)",
-                    "type": "item_check"
-                  },
-                  {
-                    "item": "Battlecruiser",
-                    "type": "item_check"
-                  }
-                ],
-                "type": "and"
-              },
-              {
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": false
-                  },
-                  {
-                    "conditions": [
-                      {
-                        "item": "Battlecruiser",
-                        "type": "item_check"
-                      },
-                      {
-                        "item": "Valkyrie",
-                        "type": "item_check"
-                      },
-                      {
-                        "item": "Wraith",
-                        "type": "item_check"
-                      }
-                    ],
-                    "type": "or"
-                  },
-                  {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Progressive Terran Ship Weapon"
-                        }
-                      ],
-                      "name": "weapon_armor_upgrade_count",
-                      "type": "helper"
-                    },
-                    "op": ">=",
-                    "right": {
-                      "type": "constant",
-                      "value": 2
-                    },
-                    "type": "compare"
-                  }
-                ],
-                "type": "and"
+                "item": "Thor",
+                "type": "item_check"
               }
             ],
             "type": "or"
+          },
+          {
+            "name": "terran_air_anti_air",
+            "type": "helper"
           }
         ],
         "type": "or"
@@ -39010,53 +38736,12 @@
                   "op": "+=",
                   "type": "assign",
                   "value": {
-                    "if_false": {
-                      "element_rule": {
-                        "index": {
-                          "name": "item",
-                          "type": "name"
-                        },
-                        "type": "subscript",
-                        "value": {
-                          "type": "constant",
-                          "value": {
-                            "Missile Turret": 2
-                          }
-                        }
-                      },
-                      "iterator_info": {
-                        "condition": {
-                          "item": {
-                            "name": "item",
-                            "type": "name"
-                          },
-                          "type": "item_check"
-                        },
-                        "iterator": {
-                          "type": "constant",
-                          "value": {
-                            "Missile Turret": 2
-                          }
-                        },
-                        "target": {
-                          "name": "item",
-                          "type": "name"
-                        },
-                        "type": "comprehension_details"
-                      },
-                      "type": "sum_of"
-                    },
-                    "if_true": {
-                      "type": "constant",
-                      "value": 2
-                    },
-                    "test": {
-                      "left": {
+                    "args": [
+                      {
                         "type": "constant",
                         "value": 2
                       },
-                      "op": "<=",
-                      "right": {
+                      {
                         "element_rule": {
                           "index": {
                             "name": "item",
@@ -39091,10 +38776,10 @@
                           "type": "comprehension_details"
                         },
                         "type": "sum_of"
-                      },
-                      "type": "compare"
-                    },
-                    "type": "conditional"
+                      }
+                    ],
+                    "name": "min2",
+                    "type": "helper"
                   }
                 }
               ],
@@ -39244,14 +38929,8 @@
                 "conditions": [
                   {
                     "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Progressive Terran Ship Weapon"
-                        }
-                      ],
-                      "name": "weapon_armor_upgrade_count",
-                      "type": "helper"
+                      "type": "constant",
+                      "value": true
                     },
                     "op": ">=",
                     "right": {
@@ -39273,105 +38952,8 @@
           {
             "conditions": [
               {
-                "conditions": [
-                  {
-                    "conditions": [
-                      {
-                        "item": "Banshee",
-                        "type": "item_check"
-                      },
-                      {
-                        "item": "Battlecruiser",
-                        "type": "item_check"
-                      },
-                      {
-                        "item": "Viking",
-                        "type": "item_check"
-                      },
-                      {
-                        "item": "Wraith",
-                        "type": "item_check"
-                      }
-                    ],
-                    "type": "or"
-                  },
-                  {
-                    "conditions": [
-                      {
-                        "item": "Flechette Missiles (Valkyrie)",
-                        "type": "item_check"
-                      },
-                      {
-                        "item": "Valkyrie",
-                        "type": "item_check"
-                      }
-                    ],
-                    "type": "and"
-                  },
-                  {
-                    "conditions": [
-                      {
-                        "item": "Liberator",
-                        "type": "item_check"
-                      },
-                      {
-                        "item": "Raid Artillery (Liberator)",
-                        "type": "item_check"
-                      }
-                    ],
-                    "type": "and"
-                  },
-                  {
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "conditions": [
-                          {
-                            "conditions": [
-                              {
-                                "conditions": [
-                                  {
-                                    "item": "Hercules",
-                                    "type": "item_check"
-                                  },
-                                  {
-                                    "item": "Medivac",
-                                    "type": "item_check"
-                                  }
-                                ],
-                                "type": "or"
-                              },
-                              {
-                                "name": "terran_common_unit",
-                                "type": "helper"
-                              }
-                            ],
-                            "type": "and"
-                          },
-                          {
-                            "conditions": [
-                              {
-                                "item": "Hunter-Seeker Weapon (Raven)",
-                                "type": "item_check"
-                              },
-                              {
-                                "item": "Raven",
-                                "type": "item_check"
-                              }
-                            ],
-                            "type": "and"
-                          }
-                        ],
-                        "type": "or"
-                      }
-                    ],
-                    "type": "and"
-                  }
-                ],
-                "type": "or"
+                "name": "terran_air",
+                "type": "helper"
               },
               {
                 "conditions": [
@@ -39441,48 +39023,8 @@
                         "type": "item_check"
                       },
                       {
-                        "conditions": [
-                          {
-                            "conditions": [
-                              {
-                                "item": "Field Response Theta",
-                                "type": "item_check"
-                              },
-                              {
-                                "item": "Medic",
-                                "type": "item_check"
-                              },
-                              {
-                                "item": "Medivac",
-                                "type": "item_check"
-                              }
-                            ],
-                            "type": "or"
-                          },
-                          {
-                            "conditions": [
-                              {
-                                "type": "constant",
-                                "value": false
-                              },
-                              {
-                                "conditions": [
-                                  {
-                                    "item": "Bio Mechanical Repair Drone (Raven)",
-                                    "type": "item_check"
-                                  },
-                                  {
-                                    "item": "Raven",
-                                    "type": "item_check"
-                                  }
-                                ],
-                                "type": "and"
-                              }
-                            ],
-                            "type": "and"
-                          }
-                        ],
-                        "type": "or"
+                        "name": "terran_bio_heal",
+                        "type": "helper"
                       }
                     ],
                     "type": "and"
@@ -39530,14 +39072,8 @@
                       },
                       {
                         "left": {
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "Progressive Terran Ship Weapon"
-                            }
-                          ],
-                          "name": "weapon_armor_upgrade_count",
-                          "type": "helper"
+                          "type": "constant",
+                          "value": true
                         },
                         "op": ">=",
                         "right": {
@@ -39566,115 +39102,16 @@
                 "type": "or"
               },
               {
-                "name": "terran_competent_comp",
+                "type": "constant",
+                "value": true
+              },
+              {
+                "name": "terran_competent_anti_air",
                 "type": "helper"
               },
               {
-                "conditions": [
-                  {
-                    "name": "terran_competent_ground_to_air",
-                    "type": "helper"
-                  },
-                  {
-                    "name": "terran_air_anti_air",
-                    "type": "helper"
-                  }
-                ],
-                "type": "or"
-              },
-              {
-                "conditions": [
-                  {
-                    "item": "Science Vessel",
-                    "type": "item_check"
-                  },
-                  {
-                    "conditions": [
-                      {
-                        "conditions": [
-                          {
-                            "item": "Field Response Theta",
-                            "type": "item_check"
-                          },
-                          {
-                            "item": "Medic",
-                            "type": "item_check"
-                          }
-                        ],
-                        "type": "or"
-                      },
-                      {
-                        "item": "Adaptive Medpacks (Medic)",
-                        "type": "item_check"
-                      }
-                    ],
-                    "type": "and"
-                  },
-                  {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Progressive Regenerative Bio-Steel (Terran)"
-                        }
-                      ],
-                      "method": "count",
-                      "type": "state_method"
-                    },
-                    "op": ">=",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    "type": "compare"
-                  },
-                  {
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "conditions": [
-                          {
-                            "conditions": [
-                              {
-                                "item": "Bio Mechanical Repair Drone (Raven)",
-                                "type": "item_check"
-                              },
-                              {
-                                "item": "Raven",
-                                "type": "item_check"
-                              }
-                            ],
-                            "type": "and"
-                          },
-                          {
-                            "left": {
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "Progressive Regenerative Bio-Steel (Terran)"
-                                }
-                              ],
-                              "method": "count",
-                              "type": "state_method"
-                            },
-                            "op": ">=",
-                            "right": {
-                              "type": "constant",
-                              "value": 2
-                            },
-                            "type": "compare"
-                          }
-                        ],
-                        "type": "or"
-                      }
-                    ],
-                    "type": "and"
-                  }
-                ],
-                "type": "or"
+                "name": "terran_sustainable_mech_heal",
+                "type": "helper"
               }
             ],
             "type": "and"
@@ -39685,17 +39122,8 @@
       "terran_moderate_anti_air": {
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "terran_competent_ground_to_air",
-                "type": "helper"
-              },
-              {
-                "name": "terran_air_anti_air",
-                "type": "helper"
-              }
-            ],
-            "type": "or"
+            "name": "terran_competent_anti_air",
+            "type": "helper"
           },
           {
             "conditions": [
@@ -39871,227 +39299,8 @@
                 "op": "+=",
                 "type": "assign",
                 "value": {
-                  "statements": [
-                    {
-                      "name": "_h11_power_rating",
-                      "type": "assign",
-                      "value": {
-                        "type": "constant",
-                        "value": 0
-                      }
-                    },
-                    {
-                      "body": [
-                        {
-                          "body": [
-                            {
-                              "name": "_h11_power_rating",
-                              "op": "+=",
-                              "type": "assign",
-                              "value": {
-                                "name": "rating",
-                                "type": "name"
-                              }
-                            },
-                            {
-                              "type": "break"
-                            }
-                          ],
-                          "test": {
-                            "item": {
-                              "name": "item",
-                              "type": "name"
-                            },
-                            "type": "item_check"
-                          },
-                          "type": "if_statement"
-                        }
-                      ],
-                      "iterable": {
-                        "function": {
-                          "attr": "items",
-                          "object": {
-                            "type": "constant",
-                            "value": {
-                              "Purifier Beam (Spear of Adun)": 3,
-                              "Solar Bombardment (Spear of Adun)": 3,
-                              "Time Stop (Spear of Adun)": 4
-                            }
-                          },
-                          "type": "attribute"
-                        },
-                        "type": "function_call"
-                      },
-                      "type": "for_iter",
-                      "vars": [
-                        "item",
-                        "rating"
-                      ]
-                    },
-                    {
-                      "name": "_h11_found_main_weapon",
-                      "type": "assign",
-                      "value": {
-                        "type": "constant",
-                        "value": false
-                      }
-                    },
-                    {
-                      "body": [
-                        {
-                          "name": "_h11_count",
-                          "type": "assign",
-                          "value": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        },
-                        {
-                          "name": "_h11_count",
-                          "type": "assign",
-                          "value": {
-                            "if_false": {
-                              "name": "_h11_count",
-                              "type": "name"
-                            },
-                            "if_true": {
-                              "type": "constant",
-                              "value": 2
-                            },
-                            "test": {
-                              "left": {
-                                "name": "item",
-                                "type": "name"
-                              },
-                              "op": "==",
-                              "right": {
-                                "type": "constant",
-                                "value": "Progressive Proxy Pylon (Spear of Adun)"
-                              },
-                              "type": "compare"
-                            },
-                            "type": "conditional"
-                          }
-                        },
-                        {
-                          "body": [
-                            {
-                              "body": [
-                                {
-                                  "name": "_h11_power_rating",
-                                  "op": "+=",
-                                  "type": "assign",
-                                  "value": {
-                                    "name": "rating",
-                                    "type": "name"
-                                  }
-                                },
-                                {
-                                  "name": "_h11_found_main_weapon",
-                                  "type": "assign",
-                                  "value": {
-                                    "type": "constant",
-                                    "value": true
-                                  }
-                                }
-                              ],
-                              "orelse": [
-                                {
-                                  "name": "_h11_power_rating",
-                                  "op": "+=",
-                                  "type": "assign",
-                                  "value": {
-                                    "left": {
-                                      "name": "rating",
-                                      "type": "name"
-                                    },
-                                    "op": "//",
-                                    "right": {
-                                      "type": "constant",
-                                      "value": 2
-                                    },
-                                    "type": "binary_op"
-                                  }
-                                },
-                                {
-                                  "type": "break"
-                                }
-                              ],
-                              "test": {
-                                "condition": {
-                                  "name": "_h11_found_main_weapon",
-                                  "type": "name"
-                                },
-                                "type": "not"
-                              },
-                              "type": "if_statement"
-                            }
-                          ],
-                          "test": {
-                            "count": {
-                              "name": "_h11_count",
-                              "type": "name"
-                            },
-                            "item": {
-                              "name": "item",
-                              "type": "name"
-                            },
-                            "type": "item_check"
-                          },
-                          "type": "if_statement"
-                        }
-                      ],
-                      "iterable": {
-                        "function": {
-                          "attr": "items",
-                          "object": {
-                            "type": "constant",
-                            "value": {
-                              "Deploy Fenix (Spear of Adun)": 7,
-                              "Orbital Strike (Spear of Adun)": 4,
-                              "Progressive Proxy Pylon (Spear of Adun)": 5,
-                              "Shield Overcharge (Spear of Adun)": 5,
-                              "Solar Lance (Spear of Adun)": 8,
-                              "Temporal Field (Spear of Adun)": 6
-                            }
-                          },
-                          "type": "attribute"
-                        },
-                        "type": "function_call"
-                      },
-                      "type": "for_iter",
-                      "vars": [
-                        "item",
-                        "rating"
-                      ]
-                    },
-                    {
-                      "body": [
-                        {
-                          "name": "_h11_power_rating",
-                          "op": "+=",
-                          "type": "assign",
-                          "value": {
-                            "type": "constant",
-                            "value": 2
-                          }
-                        }
-                      ],
-                      "test": {
-                        "item": "Mass Recall (Spear of Adun)",
-                        "type": "item_check"
-                      },
-                      "type": "if_statement"
-                    },
-                    {
-                      "type": "return",
-                      "value": {
-                        "name": "_h11_power_rating",
-                        "type": "name"
-                      }
-                    }
-                  ],
-                  "type": "block"
+                  "name": "soa_power_rating",
+                  "type": "helper"
                 }
               }
             ],
