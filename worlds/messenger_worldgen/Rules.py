@@ -217,7 +217,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Glacial Peak - Left -> Elemental Skylands - Air Shmup", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'Quillshroom Marsh - Queen of Quills'}), Has('Magic Firefly'))
+        And(CanReachLocation('Quillshroom Marsh - Queen of Quills'), Has('Magic Firefly'))
     )
 
     world.set_rule(
@@ -512,7 +512,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ninja Village - Candle", player),
-        CanReachLocation({'type': 'constant', 'value': 'Searing Crags - Astral Tea Leaves'})
+        CanReachLocation('Searing Crags - Astral Tea Leaves')
     )
 
     world.set_rule(
@@ -572,7 +572,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Searing Crags - Astral Tea Leaves", player),
-        CanReachLocation({'type': 'constant', 'value': 'Ninja Village - Astral Seed'})
+        CanReachLocation('Ninja Village - Astral Seed')
     )
 
     world.set_rule(
