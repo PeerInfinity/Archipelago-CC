@@ -523,6 +523,8 @@ class RuleCodeGenerator:
                     'False_': 'constant',
                     'Helper': 'helper',
                     'StateMethod': 'state_method',
+                    'Compare': 'compare',
+                    'Constant': 'constant',
                 }
                 rule_type = rb_to_type.get(rb_rule, '')
 
@@ -682,6 +684,28 @@ class RuleCodeGenerator:
                 'args': args.get('args', [])
             }
             return self._convert_state_method(state_rule)
+
+        if rb_rule == 'Compare':
+            # Convert Rule Builder format Compare to AST format
+            compare_rule = {
+                'type': 'compare',
+                'left': args.get('left', {}),
+                'op': args.get('op', ''),
+                'right': args.get('right', {})
+            }
+            return self._convert_compare(compare_rule)
+
+        if rb_rule == 'Constant':
+            # Handle Constant rule
+            value = args.get('value')
+            if value is True:
+                self.required_imports.add('True_')
+                return 'True_()'
+            elif value is False:
+                self.required_imports.add('False_')
+                return 'False_()'
+            else:
+                return repr(value)
 
         # Unknown Rule Builder rule - return True_() as placeholder
         self.required_imports.add('True_')
