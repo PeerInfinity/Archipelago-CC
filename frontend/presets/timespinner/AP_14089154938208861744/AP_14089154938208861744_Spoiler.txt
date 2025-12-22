@@ -360,7 +360,9 @@ Ancient Pyramid: Why not it's right there
 Castle Basement: Giantess guarded chest
         Menu -> Tutorial
    =>   Tutorial -> Start Game
-   =>   Lake desolation -> Lake desolation -> Space time continuum
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Forest
    =>   Forest -> Forest -> Castle Ramparts
@@ -370,7 +372,9 @@ Castle Basement: Giantess guarded chest
 Castle Ramparts: Giantess guarded room
         Menu -> Tutorial
    =>   Tutorial -> Start Game
-   =>   Lake desolation -> Lake desolation -> Space time continuum
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Forest
    =>   Forest -> Forest -> Castle Ramparts
@@ -378,7 +382,9 @@ Castle Ramparts: Giantess guarded room
 Castle Ramparts: Knight and archer guarded room
         Menu -> Tutorial
    =>   Tutorial -> Start Game
-   =>   Lake desolation -> Lake desolation -> Space time continuum
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Forest
    =>   Forest -> Forest -> Castle Ramparts
@@ -386,7 +392,9 @@ Castle Ramparts: Knight and archer guarded room
 Castle Ramparts: Pedestal
         Menu -> Tutorial
    =>   Tutorial -> Start Game
-   =>   Lake desolation -> Lake desolation -> Space time continuum
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Forest
    =>   Forest -> Forest -> Castle Ramparts
@@ -394,7 +402,9 @@ Castle Ramparts: Pedestal
 Caves of Banishment (Maw): Last chance before Maw
         Menu -> Tutorial
    =>   Tutorial -> Start Game
-   =>   Lake desolation -> Lake desolation -> Space time continuum
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Lower Lake Serene
    =>   Lower Lake Serene -> Lower Lake Serene -> Caves of Banishment (upper)
@@ -403,7 +413,9 @@ Caves of Banishment (Maw): Last chance before Maw
 Caves of Banishment (Sirens): Siren room underwater left chest
         Menu -> Tutorial
    =>   Tutorial -> Start Game
-   =>   Lake desolation -> Lake desolation -> Space time continuum
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Forest
    =>   Forest -> Forest -> Caves of Banishment (Sirens)
@@ -411,14 +423,18 @@ Caves of Banishment (Sirens): Siren room underwater left chest
 Forest: Waterfall chest 1
         Menu -> Tutorial
    =>   Tutorial -> Start Game
-   =>   Lake desolation -> Lake desolation -> Space time continuum
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Forest
    =>   Forest
 Killed Aelana
         Menu -> Tutorial
    =>   Tutorial -> Start Game
-   =>   Lake desolation -> Lake desolation -> Space time continuum
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Forest
    =>   Forest -> Forest -> Castle Ramparts
@@ -446,7 +462,9 @@ Killed Emperor
 Killed Maw
         Menu -> Tutorial
    =>   Tutorial -> Start Game
-   =>   Lake desolation -> Lake desolation -> Space time continuum
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Lower Lake Serene
    =>   Lower Lake Serene -> Lower Lake Serene -> Caves of Banishment (upper)
@@ -472,7 +490,9 @@ Killed Nightmare
 Killed Twins
         Menu -> Tutorial
    =>   Tutorial -> Start Game
-   =>   Lake desolation -> Lake desolation -> Space time continuum
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Forest
    =>   Forest -> Forest -> Castle Ramparts
@@ -519,7 +539,9 @@ Lake Desolation: Starter chest 1
 Lake Serene: Behind the vines
         Menu -> Tutorial
    =>   Tutorial -> Start Game
-   =>   Lake desolation -> Lake desolation -> Space time continuum
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Upper Lake Serene
    =>   Upper Lake Serene
@@ -541,7 +563,9 @@ Library: V terminal 2 (Lake Desolation Map)
 Royal Towers: Before Aelana
         Menu -> Tutorial
    =>   Tutorial -> Start Game
-   =>   Lake desolation -> Lake desolation -> Space time continuum
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Forest
    =>   Forest -> Forest -> Castle Ramparts
@@ -591,8 +615,8 @@ Varndagroth Towers (Right): Spider Hell
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
    =>   Library -> Library -> Varndagroth tower left
-   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (upper)
-   =>   Varndagroth tower right (upper) -> Varndagroth tower right (upper) -> Varndagroth tower right (elevator)
+   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (lower)
+   =>   Varndagroth tower right (lower) -> Varndagroth tower right (lower) -> Varndagroth tower right (elevator)
    =>   Varndagroth tower right (elevator)
 Varndagroth Towers: Bridge
         Menu -> Tutorial

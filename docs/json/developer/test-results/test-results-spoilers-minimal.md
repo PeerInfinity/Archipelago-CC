@@ -6,19 +6,19 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-21 03:25:28
+**Generated:** 2025-12-22 00:24:07
 
-**Source Data Created:** 2025-12-21T02:42:26.380436
+**Source Data Created:** 2025-12-21T23:39:43.004343
 
-**Source Data Last Updated:** 2025-12-21T02:42:26.380442
+**Source Data Last Updated:** 2025-12-21T23:39:43.004348
 
 ## Summary
 
 - **Total Games:** 73
 - **Passed:** 73 (100.0%)
 - **Failed:** 0 (0.0%)
-- **Games with Intermittent Failures:** 1
-- **Total Intermittent Failures:** 1
+- **Games with Intermittent Failures:** 0
+- **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
@@ -74,7 +74,7 @@
 | Noita | ✅ Passed | 0 | 0.15 | 0.15 | 🟢 Complete | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | 0 | 7.5 | 7.5 | 🟢 Complete | 5.9KB | ✅ |
 | Overcooked! 2 | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 26.1KB | 5.1KB |
-| Paint | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 7.2KB | ✅ |
+| Paint | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 8.4KB | ✅ |
 | Raft | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 12.0KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | ✅ | ✅ |
 | Saving Princess | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 3.2KB | ✅ |
@@ -103,15 +103,6 @@
 | Yacht Dice | ✅ Passed | 0 | 21.1 | 21.1 | 🟢 Complete | 0.9KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 10.8KB | ✅ |
 | shapez | ✅ Passed | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
-
-## Intermittent Failures
-
-These seeds were previously failing but passed during a retest run:
-
-| Template | Seed | Timestamp | Notes |
-|----------|------|-----------|-------|
-| Landstalker - The Treasures of King Nole | 1 | 2025-12-21 02:41 | Previously failed, now passing |
-
 
 ## Notes
 

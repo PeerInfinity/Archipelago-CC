@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, False_, Has, HasAll, HasAny, HasGroup, Or, True_
+from rule_builder import True_, False_, And, Compare, False_, Has, HasAll, HasAny, HasFromList, HasGroup, HelperCall, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -71,7 +71,7 @@ def _starcraft2worldgen_terran_air(state: "CollectionState", player: int) -> boo
 
 
 def _starcraft2worldgen_terran_air_anti_air(state: "CollectionState", player: int) -> bool:
-    return (state.has('Viking', player)) or ((state.has('Advanced Laser Technology (Wraith)', player)) and (state.has('Wraith', player))) or ((state.has('ATX Laser Battery (Battlecruiser)', player)) and (state.has('Battlecruiser', player))) or ((False) and ((state.has('Battlecruiser', player)) or (state.has('Valkyrie', player)) or (state.has('Wraith', player))) and ((True >= 2)))
+    return (state.has('Viking', player)) or ((state.has('Advanced Laser Technology (Wraith)', player)) and (state.has('Wraith', player))) or ((state.has('ATX Laser Battery (Battlecruiser)', player)) and (state.has('Battlecruiser', player))) or ((False) and ((state.has('Battlecruiser', player)) or (state.has('Valkyrie', player)) or (state.has('Wraith', player))) and ((False >= 2)))
 
 
 def _starcraft2worldgen_terran_basic_anti_air(state: "CollectionState", player: int) -> bool:
@@ -87,7 +87,7 @@ def _starcraft2worldgen_terran_common_unit(state: "CollectionState", player: int
 
 
 def _starcraft2worldgen_terran_competent_anti_air(state: "CollectionState", player: int) -> bool:
-    return (True) or (_starcraft2worldgen_terran_air_anti_air(state, player))
+    return (False) or (_starcraft2worldgen_terran_air_anti_air(state, player))
 
 
 def _starcraft2worldgen_terran_defense_rating(state: "CollectionState", player: int, zerg_enemy = None, air_enemy: bool = True) -> bool:
@@ -121,7 +121,7 @@ def _starcraft2worldgen_terran_early_tech(state: "CollectionState", player: int)
 
 
 def _starcraft2worldgen_terran_maw_requirement(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Battlecruiser', player)) and (((True >= 2)) or (state.has('ATX Laser Battery (Battlecruiser)', player)))) or ((_starcraft2worldgen_terran_air(state, player)) and (((state.has('Banshee', player)) or (state.has('Battlecruiser', player)) or (state.has('Goliath', player)) or (state.has('Thor', player)) or (state.has('Viking', player)) or (state.has('Warhound', player)) or (state.has('Wraith', player))) or ((state.has('Liberator', player)) and (state.has('Raid Artillery (Liberator)', player))) or ((state.has('Flechette Missiles (Valkyrie)', player)) and (state.has('Valkyrie', player))) or ((state.has('Marauder', player)) and (_starcraft2worldgen_terran_bio_heal(state, player)))) and (((state.has('Cyclone', player)) or (state.has('Goliath', player)) or (state.has('Viking', player))) or (((state.has('Battlecruiser', player)) or (state.has('Valkyrie', player)) or (state.has('Wraith', player))) and ((True >= 2))) or ((state.has('Progressive High Impact Payload (Thor)', player)) and (state.has('Thor', player)))) and (True) and (_starcraft2worldgen_terran_competent_anti_air(state, player)) and (_starcraft2worldgen_terran_sustainable_mech_heal(state, player)))
+    return ((state.has('Battlecruiser', player)) and (((False >= 2)) or (state.has('ATX Laser Battery (Battlecruiser)', player)))) or ((_starcraft2worldgen_terran_air(state, player)) and (((state.has('Banshee', player)) or (state.has('Battlecruiser', player)) or (state.has('Goliath', player)) or (state.has('Thor', player)) or (state.has('Viking', player)) or (state.has('Warhound', player)) or (state.has('Wraith', player))) or ((state.has('Liberator', player)) and (state.has('Raid Artillery (Liberator)', player))) or ((state.has('Flechette Missiles (Valkyrie)', player)) and (state.has('Valkyrie', player))) or ((state.has('Marauder', player)) and (_starcraft2worldgen_terran_bio_heal(state, player)))) and (((state.has('Cyclone', player)) or (state.has('Goliath', player)) or (state.has('Viking', player))) or (((state.has('Battlecruiser', player)) or (state.has('Valkyrie', player)) or (state.has('Wraith', player))) and ((False >= 2))) or ((state.has('Progressive High Impact Payload (Thor)', player)) and (state.has('Thor', player)))) and (False) and (_starcraft2worldgen_terran_competent_anti_air(state, player)) and (_starcraft2worldgen_terran_sustainable_mech_heal(state, player)))
 
 
 def _starcraft2worldgen_terran_moderate_anti_air(state: "CollectionState", player: int) -> bool:
@@ -1299,122 +1299,122 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Smash and Grab (Terran)", player),
-        True_()
+        (HasFromList('Beat Evacuation (Terran)', 'Beat Smash and Grab (Terran)', "Beat Haven's Fall (Terran)", 'Beat Belly of the Beast', 'Beat Zero Hour (Terran)', 'Beat Supernova (Terran)', 'Beat All-In (Terran)', 'Beat Piercing the Shroud', 'Beat Outbreak (Terran)', 'Beat Shatter the Sky (Terran)', 'Beat Ghost of a Chance', 'Beat Breakout', 'Beat The Dig (Terran)', 'Beat Liberation Day', 'Beat Cutthroat (Terran)', 'Beat The Outlaws (Terran)', 'Beat Safe Haven (Terran)', "Beat Devil's Playground (Terran)", 'Beat Gates of Hell (Terran)', 'Beat The Great Train Robbery (Terran)', 'Beat Welcome to the Jungle (Terran)', 'Beat Media Blitz (Terran)', 'Beat Maw of the Void (Terran)', 'Beat Engine of Destruction (Terran)', 'Beat The Moebius Factor (Terran)', count=2)) & (Has("Beat Evacuation (Terran)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Piercing the Shroud", player),
-        HasAll(['Beat Evacuation (Terran)'])
+        HasAll('Beat Evacuation (Terran)')
     )
 
     world.set_rule(
         multiworld.get_entrance("Liberation Day", player),
-        HasAll(['Beat Evacuation (Terran)'])
+        HasAll('Beat Evacuation (Terran)')
     )
 
     world.set_rule(
         multiworld.get_entrance("All-In (Terran)", player),
-        True_()
+        (HasFromList('Beat Evacuation (Terran)', 'Beat Smash and Grab (Terran)', "Beat Haven's Fall (Terran)", 'Beat Belly of the Beast', 'Beat Zero Hour (Terran)', 'Beat Supernova (Terran)', 'Beat All-In (Terran)', 'Beat Piercing the Shroud', 'Beat Outbreak (Terran)', 'Beat Shatter the Sky (Terran)', 'Beat Ghost of a Chance', 'Beat Breakout', 'Beat The Dig (Terran)', 'Beat Liberation Day', 'Beat Cutthroat (Terran)', 'Beat The Outlaws (Terran)', 'Beat Safe Haven (Terran)', "Beat Devil's Playground (Terran)", 'Beat Gates of Hell (Terran)', 'Beat The Great Train Robbery (Terran)', 'Beat Welcome to the Jungle (Terran)', 'Beat Media Blitz (Terran)', 'Beat Maw of the Void (Terran)', 'Beat Engine of Destruction (Terran)', 'Beat The Moebius Factor (Terran)', count=18)) & (Has("Beat Supernova (Terran)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("The Dig (Terran)", player),
-        True_()
+        (HasAll('Beat Supernova (Terran)')) & (Has("Beat Breakout"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Gates of Hell (Terran)", player),
-        True_()
+        (HasAll('Beat Supernova (Terran)')) & (Has("Beat Devil's Playground (Terran)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Maw of the Void (Terran)", player),
-        True_()
+        (HasAll('Beat Supernova (Terran)')) & (Has("Beat Media Blitz (Terran)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("The Moebius Factor (Terran)", player),
-        True_()
+        (HasAll('Beat Supernova (Terran)')) & (Has("Beat Engine of Destruction (Terran)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Haven's Fall (Terran)", player),
-        True_()
+        (HasFromList('Beat Evacuation (Terran)', 'Beat Smash and Grab (Terran)', "Beat Haven's Fall (Terran)", 'Beat Belly of the Beast', 'Beat Zero Hour (Terran)', 'Beat Supernova (Terran)', 'Beat All-In (Terran)', 'Beat Piercing the Shroud', 'Beat Outbreak (Terran)', 'Beat Shatter the Sky (Terran)', 'Beat Ghost of a Chance', 'Beat Breakout', 'Beat The Dig (Terran)', 'Beat Liberation Day', 'Beat Cutthroat (Terran)', 'Beat The Outlaws (Terran)', 'Beat Safe Haven (Terran)', "Beat Devil's Playground (Terran)", 'Beat Gates of Hell (Terran)', 'Beat The Great Train Robbery (Terran)', 'Beat Welcome to the Jungle (Terran)', 'Beat Media Blitz (Terran)', 'Beat Maw of the Void (Terran)', 'Beat Engine of Destruction (Terran)', 'Beat The Moebius Factor (Terran)', count=4)) & (Has("Beat Smash and Grab (Terran)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Outbreak (Terran)", player),
-        True_()
+        (HasAll('Beat Smash and Grab (Terran)')) & (Has("Beat Piercing the Shroud"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Cutthroat (Terran)", player),
-        True_()
+        (HasAll('Beat Smash and Grab (Terran)')) & (Has("Beat Liberation Day"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Belly of the Beast", player),
-        True_()
+        (HasFromList('Beat Evacuation (Terran)', 'Beat Smash and Grab (Terran)', "Beat Haven's Fall (Terran)", 'Beat Belly of the Beast', 'Beat Zero Hour (Terran)', 'Beat Supernova (Terran)', 'Beat All-In (Terran)', 'Beat Piercing the Shroud', 'Beat Outbreak (Terran)', 'Beat Shatter the Sky (Terran)', 'Beat Ghost of a Chance', 'Beat Breakout', 'Beat The Dig (Terran)', 'Beat Liberation Day', 'Beat Cutthroat (Terran)', 'Beat The Outlaws (Terran)', 'Beat Safe Haven (Terran)', "Beat Devil's Playground (Terran)", 'Beat Gates of Hell (Terran)', 'Beat The Great Train Robbery (Terran)', 'Beat Welcome to the Jungle (Terran)', 'Beat Media Blitz (Terran)', 'Beat Maw of the Void (Terran)', 'Beat Engine of Destruction (Terran)', 'Beat The Moebius Factor (Terran)', count=7)) & (Has("Beat Haven's Fall (Terran)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Shatter the Sky (Terran)", player),
-        True_()
+        (HasAll("Beat Haven's Fall (Terran)")) & (Has("Beat Outbreak (Terran)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("The Outlaws (Terran)", player),
-        True_()
+        (HasAll("Beat Haven's Fall (Terran)")) & (Has("Beat Cutthroat (Terran)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("The Great Train Robbery (Terran)", player),
-        HasAll(["Beat Haven's Fall (Terran)"])
+        HasAll("Beat Haven's Fall (Terran)")
     )
 
     world.set_rule(
         multiworld.get_entrance("Zero Hour (Terran)", player),
-        True_()
+        (HasFromList('Beat Evacuation (Terran)', 'Beat Smash and Grab (Terran)', "Beat Haven's Fall (Terran)", 'Beat Belly of the Beast', 'Beat Zero Hour (Terran)', 'Beat Supernova (Terran)', 'Beat All-In (Terran)', 'Beat Piercing the Shroud', 'Beat Outbreak (Terran)', 'Beat Shatter the Sky (Terran)', 'Beat Ghost of a Chance', 'Beat Breakout', 'Beat The Dig (Terran)', 'Beat Liberation Day', 'Beat Cutthroat (Terran)', 'Beat The Outlaws (Terran)', 'Beat Safe Haven (Terran)', "Beat Devil's Playground (Terran)", 'Beat Gates of Hell (Terran)', 'Beat The Great Train Robbery (Terran)', 'Beat Welcome to the Jungle (Terran)', 'Beat Media Blitz (Terran)', 'Beat Maw of the Void (Terran)', 'Beat Engine of Destruction (Terran)', 'Beat The Moebius Factor (Terran)', count=10)) & (Has("Beat Belly of the Beast"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ghost of a Chance", player),
-        True_()
+        (HasAll('Beat Belly of the Beast')) & (Has("Beat Shatter the Sky (Terran)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Safe Haven (Terran)", player),
-        True_()
+        (HasAll('Beat Belly of the Beast')) & (Has("Beat The Outlaws (Terran)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Welcome to the Jungle (Terran)", player),
-        True_()
+        (HasAll('Beat Belly of the Beast')) & (Has("Beat The Great Train Robbery (Terran)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Supernova (Terran)", player),
-        True_()
+        (HasFromList('Beat Evacuation (Terran)', 'Beat Smash and Grab (Terran)', "Beat Haven's Fall (Terran)", 'Beat Belly of the Beast', 'Beat Zero Hour (Terran)', 'Beat Supernova (Terran)', 'Beat All-In (Terran)', 'Beat Piercing the Shroud', 'Beat Outbreak (Terran)', 'Beat Shatter the Sky (Terran)', 'Beat Ghost of a Chance', 'Beat Breakout', 'Beat The Dig (Terran)', 'Beat Liberation Day', 'Beat Cutthroat (Terran)', 'Beat The Outlaws (Terran)', 'Beat Safe Haven (Terran)', "Beat Devil's Playground (Terran)", 'Beat Gates of Hell (Terran)', 'Beat The Great Train Robbery (Terran)', 'Beat Welcome to the Jungle (Terran)', 'Beat Media Blitz (Terran)', 'Beat Maw of the Void (Terran)', 'Beat Engine of Destruction (Terran)', 'Beat The Moebius Factor (Terran)', count=14)) & (Has("Beat Zero Hour (Terran)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Breakout", player),
-        True_()
+        (HasAll('Beat Zero Hour (Terran)')) & (Has("Beat Ghost of a Chance"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Devil's Playground (Terran)", player),
-        True_()
+        (HasAll('Beat Zero Hour (Terran)')) & (Has("Beat Safe Haven (Terran)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Media Blitz (Terran)", player),
-        True_()
+        (HasAll('Beat Zero Hour (Terran)')) & (Has("Beat Welcome to the Jungle (Terran)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Engine of Destruction (Terran)", player),
-        HasAll(['Beat Zero Hour (Terran)'])
+        HasAll('Beat Zero Hour (Terran)')
     )
     # Location rules
     world.set_rule(
@@ -1454,77 +1454,77 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): Victory", player),
-        And(True_(), Or(And(False_(), True_()), True_()))
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_early_tech, helper_name="terran_early_tech"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")))
     )
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): West Chrysalis", player),
-        Or(And(False_(), HasAny(['Banshee', 'Diamondback', 'Goliath', 'Viking'])), HasAny(['Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper']))
+        Or(And(False_(), HasAny('Banshee', 'Diamondback', 'Goliath', 'Viking')), HasAny('Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper'))
     )
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): East Chrysalis", player),
-        Or(And(False_(), HasAny(['Banshee', 'Diamondback', 'Goliath', 'Viking'])), HasAny(['Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper']))
+        Or(And(False_(), HasAny('Banshee', 'Diamondback', 'Goliath', 'Viking')), HasAny('Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper'))
     )
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): Flawless", player),
-        And(True_(), True_(), Or(And(False_(), True_()), True_()))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_early_tech, helper_name="terran_early_tech"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")))
     )
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): Western Zerg Base", player),
-        And(True_(), True_(), True_())
+        And(True_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"))
     )
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): Eastern Zerg Base", player),
-        And(True_(), True_(), True_())
+        And(True_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Evacuation (Terran)", player),
-        And(True_(), Or(And(False_(), True_()), True_()))
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_early_tech, helper_name="terran_early_tech"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Victory", player),
-        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
+        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Brutalisk Relic", player),
-        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
+        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: First Escape Relic", player),
-        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
+        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Second Escape Relic", player),
-        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
+        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Brutalisk", player),
-        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
+        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Fusion Reactor", player),
-        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
+        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
         multiworld.get_location("Piercing the Shroud: Escape Warbot", player),
-        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
+        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Piercing the Shroud", player),
-        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
+        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
@@ -1594,232 +1594,232 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Victory", player),
-        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Expansion Prisoners", player),
-        Or(False_(), True_())
+        Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_maw_requirement, helper_name="terran_maw_requirement"))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): South Close Prisoners", player),
-        Or(False_(), True_())
+        Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_maw_requirement, helper_name="terran_maw_requirement"))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): South Far Prisoners", player),
-        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): North Prisoners", player),
-        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Mothership", player),
-        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Expansion Rip Field Generator", player),
-        Or(False_(), True_())
+        Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_maw_requirement, helper_name="terran_maw_requirement"))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Middle Rip Field Generator", player),
-        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Southeast Rip Field Generator", player),
-        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Stargate Rip Field Generator", player),
-        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Northwest Rip Field Generator", player),
-        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): West Rip Field Generator", player),
-        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Southwest Rip Field Generator", player),
-        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Maw of the Void (Terran)", player),
-        Or(And(True_(), True_(), True_(), True_(), Or(And(True_(), HasAny(['Battlecruiser', 'Valkyrie', 'Wraith'])), HasAll(['Progressive High Impact Payload (Thor)', 'Thor']), HasAny(['Cyclone', 'Goliath', 'Viking'])), Or(And(True_(), Has('Marauder')), HasAll(['Flechette Missiles (Valkyrie)', 'Valkyrie']), HasAll(['Liberator', 'Raid Artillery (Liberator)']), HasAny(['Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith']))), And(Or(True_(), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): Victory", player),
-        And(True_(), True_())
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): South Relic", player),
-        And(True_(), True_())
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): East Relic", player),
-        And(True_(), True_())
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): Middle Base", player),
-        And(True_(), True_())
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): Southeast Base", player),
-        And(True_(), True_())
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beat Supernova (Terran)", player),
-        And(True_(), True_())
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6), True_())
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): Victory", player),
-        And(Or(And(True_(), HasAny(['Hercules', 'Medivac'])), True_()), Or(And(True_(), HasAny(['Hercules', 'Medivac'])), True_()))
+        And(Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HasAny('Hercules', 'Medivac')), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air")), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air"), HasAny('Hercules', 'Medivac')), HelperCall(helper_func=_starcraft2worldgen_terran_air_anti_air, helper_name="terran_air_anti_air")))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): 2nd Data Core", player),
-        Or(And(True_(), HasAny(['Hercules', 'Medivac'])), True_())
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HasAny('Hercules', 'Medivac')), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): South Rescue", player),
-        Or(False_(), HasAny(['Hercules', 'Medivac', 'Raven', 'Viking']))
+        Or(False_(), HasAny('Hercules', 'Medivac', 'Raven', 'Viking'))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): Wall Rescue", player),
-        Or(False_(), HasAny(['Hercules', 'Medivac', 'Raven', 'Viking']))
+        Or(False_(), HasAny('Hercules', 'Medivac', 'Raven', 'Viking'))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): Mid Rescue", player),
-        Or(False_(), HasAny(['Hercules', 'Medivac', 'Raven', 'Viking']))
+        Or(False_(), HasAny('Hercules', 'Medivac', 'Raven', 'Viking'))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): Nydus Roof Rescue", player),
-        Or(False_(), HasAny(['Hercules', 'Medivac', 'Raven', 'Viking']))
+        Or(False_(), HasAny('Hercules', 'Medivac', 'Raven', 'Viking'))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): Alive Inside Rescue", player),
-        Or(False_(), HasAny(['Hercules', 'Medivac', 'Raven', 'Viking']))
+        Or(False_(), HasAny('Hercules', 'Medivac', 'Raven', 'Viking'))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): Brutalisk", player),
-        And(Or(And(True_(), HasAny(['Hercules', 'Medivac'])), True_()), Or(And(True_(), HasAny(['Hercules', 'Medivac'])), True_()))
+        And(Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HasAny('Hercules', 'Medivac')), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air")), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air"), HasAny('Hercules', 'Medivac')), HelperCall(helper_func=_starcraft2worldgen_terran_air_anti_air, helper_name="terran_air_anti_air")))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): 3rd Data Core", player),
-        And(Or(And(True_(), HasAny(['Hercules', 'Medivac'])), True_()), Or(And(True_(), HasAny(['Hercules', 'Medivac'])), True_()))
+        And(Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HasAny('Hercules', 'Medivac')), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air")), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air"), HasAny('Hercules', 'Medivac')), HelperCall(helper_func=_starcraft2worldgen_terran_air_anti_air, helper_name="terran_air_anti_air")))
     )
 
     world.set_rule(
         multiworld.get_location("Beat The Moebius Factor (Terran)", player),
-        And(Or(And(True_(), HasAny(['Hercules', 'Medivac'])), True_()), Or(And(True_(), HasAny(['Hercules', 'Medivac'])), True_()))
+        And(Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HasAny('Hercules', 'Medivac')), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air")), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air"), HasAny('Hercules', 'Medivac')), HelperCall(helper_func=_starcraft2worldgen_terran_air_anti_air, helper_name="terran_air_anti_air")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Victory", player),
-        And(True_(), True_(), Or(And(False_(), True_()), True_()), Or(False_(), True_()))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Left Relic", player),
-        And(True_(), True_(), Or(False_(), True_()))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 6), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Right Ground Relic", player),
-        And(True_(), True_(), Or(False_(), True_()))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 6), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Right Cliff Relic", player),
-        And(True_(), True_(), Or(False_(), True_()))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 6), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Moebius Base", player),
-        Or(False_(), True_())
+        Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade"))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Door Outer Layer", player),
-        And(True_(), True_(), Or(False_(), True_()))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 6), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Door Thermal Barrier", player),
-        And(True_(), True_(), Or(And(False_(), True_()), True_()), Or(False_(), True_()))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Cutting Through the Core", player),
-        And(True_(), True_(), Or(And(False_(), True_()), True_()), Or(False_(), True_()))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Structure Access Imminent", player),
-        And(True_(), True_(), Or(And(False_(), True_()), True_()), Or(False_(), True_()))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Northwestern Protoss Base", player),
-        And(True_(), True_(), True_(), True_(), Or(False_(), True_()))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), True_(), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Northeastern Protoss Base", player),
-        And(True_(), True_(), True_(), True_(), Or(False_(), True_()))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), True_(), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Eastern Protoss Base", player),
-        And(True_(), True_(), True_(), True_())
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), True_(), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
     )
 
     world.set_rule(
         multiworld.get_location("Beat The Dig (Terran)", player),
-        And(True_(), True_(), Or(And(False_(), True_()), True_()), Or(False_(), True_()))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Great Train Robbery (Terran): Victory", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air"), True_())
     )
 
     world.set_rule(
         multiworld.get_location("The Great Train Robbery (Terran): Kill Team", player),
-        And(True_(), True_(), Or(False_(), True_()))
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air"), True_(), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit")))
     )
 
     world.set_rule(
         multiworld.get_location("The Great Train Robbery (Terran): Flawless", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air"), True_())
     )
 
     world.set_rule(
@@ -1829,167 +1829,167 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Great Train Robbery (Terran): 4 Trains Destroyed", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air"), True_())
     )
 
     world.set_rule(
         multiworld.get_location("The Great Train Robbery (Terran): 6 Trains Destroyed", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air"), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beat The Great Train Robbery (Terran)", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air"), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Cutthroat (Terran): Victory", player),
-        And(True_(), Or(False_(), True_()))
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")))
     )
 
     world.set_rule(
         multiworld.get_location("Cutthroat (Terran): Mira Han", player),
-        HasAny(['Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound'])
+        HasAny('Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound')
     )
 
     world.set_rule(
         multiworld.get_location("Cutthroat (Terran): North Relic", player),
-        HasAny(['Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound'])
+        HasAny('Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound')
     )
 
     world.set_rule(
         multiworld.get_location("Cutthroat (Terran): Southwest Relic", player),
-        HasAny(['Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound'])
+        HasAny('Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound')
     )
 
     world.set_rule(
         multiworld.get_location("Cutthroat (Terran): North Command Center", player),
-        HasAny(['Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound'])
+        HasAny('Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound')
     )
 
     world.set_rule(
         multiworld.get_location("Cutthroat (Terran): South Command Center", player),
-        HasAny(['Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound'])
+        HasAny('Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound')
     )
 
     world.set_rule(
         multiworld.get_location("Cutthroat (Terran): West Command Center", player),
-        HasAny(['Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound'])
+        HasAny('Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound')
     )
 
     world.set_rule(
         multiworld.get_location("Beat Cutthroat (Terran)", player),
-        And(True_(), Or(False_(), True_()))
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")))
     )
 
     world.set_rule(
         multiworld.get_location("Smash and Grab (Terran): Victory", player),
-        And(True_(), Or(And(False_(), True_()), True_()))
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")))
     )
 
     world.set_rule(
         multiworld.get_location("Smash and Grab (Terran): Second Relic", player),
-        Or(False_(), True_())
+        Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
     )
 
     world.set_rule(
         multiworld.get_location("Smash and Grab (Terran): Third Relic", player),
-        And(True_(), Or(And(False_(), True_()), True_()))
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")))
     )
 
     world.set_rule(
         multiworld.get_location("Smash and Grab (Terran): Fourth Relic", player),
-        And(True_(), Or(And(False_(), True_()), True_()))
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")))
     )
 
     world.set_rule(
         multiworld.get_location("Smash and Grab (Terran): First Forcefield Area Busted", player),
-        And(True_(), Or(And(False_(), True_()), True_()))
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")))
     )
 
     world.set_rule(
         multiworld.get_location("Smash and Grab (Terran): Second Forcefield Area Busted", player),
-        And(True_(), Or(And(False_(), True_()), True_()))
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")))
     )
 
     world.set_rule(
         multiworld.get_location("Smash and Grab (Terran): Defeat Kerrigan", player),
-        And(True_(), True_())
+        And(True_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Smash and Grab (Terran)", player),
-        And(True_(), Or(And(False_(), True_()), True_()))
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")))
     )
 
     world.set_rule(
         multiworld.get_location("The Outlaws (Terran): Victory", player),
-        Or(And(False_(), HasAny(['Banshee', 'Diamondback', 'Goliath', 'Viking'])), HasAny(['Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper']))
+        Or(And(False_(), HasAny('Banshee', 'Diamondback', 'Goliath', 'Viking')), HasAny('Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper'))
     )
 
     world.set_rule(
         multiworld.get_location("The Outlaws (Terran): Rebel Base", player),
-        Or(And(False_(), HasAny(['Banshee', 'Diamondback', 'Goliath', 'Viking'])), HasAny(['Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper']))
+        Or(And(False_(), HasAny('Banshee', 'Diamondback', 'Goliath', 'Viking')), HasAny('Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper'))
     )
 
     world.set_rule(
         multiworld.get_location("The Outlaws (Terran): North Resource Pickups", player),
-        Or(And(False_(), HasAny(['Banshee', 'Diamondback', 'Goliath', 'Viking'])), HasAny(['Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper']))
+        Or(And(False_(), HasAny('Banshee', 'Diamondback', 'Goliath', 'Viking')), HasAny('Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper'))
     )
 
     world.set_rule(
         multiworld.get_location("The Outlaws (Terran): Bunker", player),
-        Or(And(False_(), HasAny(['Banshee', 'Diamondback', 'Goliath', 'Viking'])), HasAny(['Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper']))
+        Or(And(False_(), HasAny('Banshee', 'Diamondback', 'Goliath', 'Viking')), HasAny('Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper'))
     )
 
     world.set_rule(
         multiworld.get_location("Beat The Outlaws (Terran)", player),
-        Or(And(False_(), HasAny(['Banshee', 'Diamondback', 'Goliath', 'Viking'])), HasAny(['Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper']))
+        Or(And(False_(), HasAny('Banshee', 'Diamondback', 'Goliath', 'Viking')), HasAny('Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper'))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): Victory", player),
-        And(True_(), Or(True_(), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): Left Infestor", player),
-        And(True_(), Or(True_(), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): Right Infestor", player),
-        And(True_(), Or(True_(), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): North Infested Command Center", player),
-        And(True_(), Or(True_(), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): South Infested Command Center", player),
-        And(True_(), Or(True_(), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): Northwest Bar", player),
-        And(True_(), Or(True_(), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): North Bar", player),
-        And(True_(), Or(True_(), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): South Bar", player),
-        And(True_(), Or(True_(), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Outbreak (Terran)", player),
-        And(True_(), Or(True_(), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
@@ -1999,7 +1999,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Haven's Fall (Terran): North Hive", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"))
     )
 
     world.set_rule(
@@ -2104,42 +2104,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Safe Haven (Terran): Victory", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"))
     )
 
     world.set_rule(
         multiworld.get_location("Safe Haven (Terran): North Nexus", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"))
     )
 
     world.set_rule(
         multiworld.get_location("Safe Haven (Terran): East Nexus", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"))
     )
 
     world.set_rule(
         multiworld.get_location("Safe Haven (Terran): South Nexus", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"))
     )
 
     world.set_rule(
         multiworld.get_location("Safe Haven (Terran): First Terror Fleet", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"))
     )
 
     world.set_rule(
         multiworld.get_location("Safe Haven (Terran): Second Terror Fleet", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"))
     )
 
     world.set_rule(
         multiworld.get_location("Safe Haven (Terran): Third Terror Fleet", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Safe Haven (Terran)", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"))
     )
 
     world.set_rule(
@@ -2149,7 +2149,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Engine of Destruction (Terran): Odin", player),
-        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
+        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
@@ -2159,7 +2159,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Engine of Destruction (Terran): Lab Devourer", player),
-        Or(And(True_(), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny(['Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)']))
+        Or(And(Compare(True_(), ">=", 2), HasGroup('Missions')), And(False_(), Has('Laser Targeting System (Marine)')), HasAny('Combat Shield (Marine)', 'Magrail Munitions (Marine)', 'Stabilizer Medpacks (Medic)'))
     )
 
     world.set_rule(
@@ -2309,77 +2309,77 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Belly of the Beast: Victory", player),
-        Or(False_(), True_())
+        Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_firebat_upgrade, helper_name="marine_medic_firebat_upgrade"))
     )
 
     world.set_rule(
         multiworld.get_location("Belly of the Beast: Second Charge", player),
-        Or(False_(), True_())
+        Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_firebat_upgrade, helper_name="marine_medic_firebat_upgrade"))
     )
 
     world.set_rule(
         multiworld.get_location("Belly of the Beast: Third Charge", player),
-        Or(False_(), True_())
+        Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_firebat_upgrade, helper_name="marine_medic_firebat_upgrade"))
     )
 
     world.set_rule(
         multiworld.get_location("Belly of the Beast: Third Group Rescued", player),
-        Or(False_(), True_())
+        Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_firebat_upgrade, helper_name="marine_medic_firebat_upgrade"))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Belly of the Beast", player),
-        Or(False_(), True_())
+        Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_firebat_upgrade, helper_name="marine_medic_firebat_upgrade"))
     )
 
     world.set_rule(
         multiworld.get_location("Ghost of a Chance: Victory", player),
-        Or(And(True_(), True_(), Or(True_(), True_()), HasAny(['C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'])), False_(), False_(), True_())
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_nova_anti_air_weapon, helper_name="nova_anti_air_weapon"), HelperCall(helper_func=_starcraft2worldgen_nova_ranged_weapon, helper_name="nova_ranged_weapon"), Or(HelperCall(helper_func=_starcraft2worldgen_nova_full_stealth, helper_name="nova_full_stealth"), HelperCall(helper_func=_starcraft2worldgen_nova_heal, helper_name="nova_heal")), HasAny('C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)')), False_(), False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Ghost of a Chance: Terrazine Tank", player),
-        Or(And(True_(), True_(), Or(True_(), True_()), HasAny(['C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'])), False_(), False_(), True_())
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_nova_anti_air_weapon, helper_name="nova_anti_air_weapon"), HelperCall(helper_func=_starcraft2worldgen_nova_ranged_weapon, helper_name="nova_ranged_weapon"), Or(HelperCall(helper_func=_starcraft2worldgen_nova_full_stealth, helper_name="nova_full_stealth"), HelperCall(helper_func=_starcraft2worldgen_nova_heal, helper_name="nova_heal")), HasAny('C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)')), False_(), False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Ghost of a Chance: Jorium Stockpile", player),
-        Or(And(True_(), True_(), Or(True_(), True_()), HasAny(['C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'])), False_(), False_(), True_())
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_nova_anti_air_weapon, helper_name="nova_anti_air_weapon"), HelperCall(helper_func=_starcraft2worldgen_nova_ranged_weapon, helper_name="nova_ranged_weapon"), Or(HelperCall(helper_func=_starcraft2worldgen_nova_full_stealth, helper_name="nova_full_stealth"), HelperCall(helper_func=_starcraft2worldgen_nova_heal, helper_name="nova_heal")), HasAny('C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)')), False_(), False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Ghost of a Chance: First Island Spectres", player),
-        Or(And(True_(), True_(), Or(True_(), True_()), HasAny(['C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'])), False_(), False_(), True_())
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_nova_anti_air_weapon, helper_name="nova_anti_air_weapon"), HelperCall(helper_func=_starcraft2worldgen_nova_ranged_weapon, helper_name="nova_ranged_weapon"), Or(HelperCall(helper_func=_starcraft2worldgen_nova_full_stealth, helper_name="nova_full_stealth"), HelperCall(helper_func=_starcraft2worldgen_nova_heal, helper_name="nova_heal")), HasAny('C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)')), False_(), False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Ghost of a Chance: Second Island Spectres", player),
-        Or(And(True_(), True_(), Or(True_(), True_()), HasAny(['C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'])), False_(), False_(), True_())
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_nova_anti_air_weapon, helper_name="nova_anti_air_weapon"), HelperCall(helper_func=_starcraft2worldgen_nova_ranged_weapon, helper_name="nova_ranged_weapon"), Or(HelperCall(helper_func=_starcraft2worldgen_nova_full_stealth, helper_name="nova_full_stealth"), HelperCall(helper_func=_starcraft2worldgen_nova_heal, helper_name="nova_heal")), HasAny('C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)')), False_(), False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Ghost of a Chance: Third Island Spectres", player),
-        Or(And(True_(), True_(), Or(True_(), True_()), HasAny(['C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'])), False_(), False_(), True_())
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_nova_anti_air_weapon, helper_name="nova_anti_air_weapon"), HelperCall(helper_func=_starcraft2worldgen_nova_ranged_weapon, helper_name="nova_ranged_weapon"), Or(HelperCall(helper_func=_starcraft2worldgen_nova_full_stealth, helper_name="nova_full_stealth"), HelperCall(helper_func=_starcraft2worldgen_nova_heal, helper_name="nova_heal")), HasAny('C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)')), False_(), False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beat Ghost of a Chance", player),
-        Or(And(True_(), True_(), Or(True_(), True_()), HasAny(['C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'])), False_(), False_(), True_())
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_nova_anti_air_weapon, helper_name="nova_anti_air_weapon"), HelperCall(helper_func=_starcraft2worldgen_nova_ranged_weapon, helper_name="nova_ranged_weapon"), Or(HelperCall(helper_func=_starcraft2worldgen_nova_full_stealth, helper_name="nova_full_stealth"), HelperCall(helper_func=_starcraft2worldgen_nova_heal, helper_name="nova_heal")), HasAny('C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)')), False_(), False_(), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Victory", player),
-        And(True_(), True_(), Or(False_(), True_()))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air")))
     )
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Second Group Rescued", player),
-        HasAny(['Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound'])
+        HasAny('Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound')
     )
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Third Group Rescued", player),
-        And(True_(), True_())
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
     )
 
     world.set_rule(
@@ -2404,55 +2404,55 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Ride's on its Way", player),
-        HasAny(['Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound'])
+        HasAny('Dominion Trooper', 'Goliath', 'Hellion', 'Marauder', 'Marine', 'Vulture', 'Warhound')
     )
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Hold Just a Little Longer", player),
-        And(True_(), True_())
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
     )
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Cavalry's on the Way", player),
-        And(True_(), True_())
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Zero Hour (Terran)", player),
-        And(True_(), True_(), Or(False_(), True_()))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air")))
     )
 
     world.set_rule(
         multiworld.get_location("Devil's Playground (Terran): Victory", player),
-        Or(And(True_(), Or(True_(), Has('Reaper'))), False_())
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air"), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper'))), False_())
     )
 
     world.set_rule(
         multiworld.get_location("Devil's Playground (Terran): Brutalisk", player),
-        Or(False_(), True_(), Has('Reaper'))
+        Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper'))
     )
 
     world.set_rule(
         multiworld.get_location("Devil's Playground (Terran): Southwest Reapers", player),
-        Or(False_(), True_(), Has('Reaper'))
+        Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper'))
     )
 
     world.set_rule(
         multiworld.get_location("Devil's Playground (Terran): Southeast Reapers", player),
-        Or(And(True_(), Or(True_(), Has('Reaper'))), False_())
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air"), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper'))), False_())
     )
 
     world.set_rule(
         multiworld.get_location("Devil's Playground (Terran): East Reapers", player),
-        And(True_(), Or(False_(), True_(), Has('Reaper')))
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Devil's Playground (Terran): Zerg Cleared", player),
-        And(True_(), Or(True_(), Has('Reaper')))
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Devil's Playground (Terran)", player),
-        Or(And(True_(), Or(True_(), Has('Reaper'))), False_())
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air"), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper'))), False_())
     )

@@ -1405,8 +1405,8 @@ Act Completion (Time Rift - Gallery) (Player1)
 Act Completion (Time Rift - Mafia of Cooks) (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 1
-   =>   Your Contract has Expired -> Subcon Forest - Finale: Connection 1
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   The Big Parade -> Subcon Forest - Finale: Connection 5
    =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Act Completion (Time Rift - Sewers) (Player1)
@@ -1496,8 +1496,8 @@ Alpine Skyline - Bird Pass Fork (Player1)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
+   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
    =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
    =>   Alpine Skyline Area (TIHS)
 Alpine Skyline - Goat Village: Below Hookpoint (Player1)
@@ -1506,8 +1506,8 @@ Alpine Skyline - Goat Village: Below Hookpoint (Player1)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
+   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
    =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
    =>   Alpine Skyline Area (TIHS)
 Alpine Skyline - Mystifying Time Mesa: Zipline (Player1)
@@ -1621,8 +1621,8 @@ Alpine Skyline - Windy Passage (Player1)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
+   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
    =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
    =>   Alpine Skyline Area (TIHS)
 Badge Seller - Item 1 (Player1)
@@ -2388,29 +2388,29 @@ Mafia Town - Wood Cage (Player1)
 Mafia of Cooks - Page: Below Dock (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 1
-   =>   Your Contract has Expired -> Subcon Forest - Finale: Connection 1
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   The Big Parade -> Subcon Forest - Finale: Connection 5
    =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Mafia of Cooks - Page: Beside Red Building (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 1
-   =>   Your Contract has Expired -> Subcon Forest - Finale: Connection 1
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   The Big Parade -> Subcon Forest - Finale: Connection 5
    =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Mafia of Cooks - Page: Fish Pile (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 1
-   =>   Your Contract has Expired -> Subcon Forest - Finale: Connection 1
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   The Big Parade -> Subcon Forest - Finale: Connection 5
    =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Mafia of Cooks - Page: Trash Mound (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 1
-   =>   Your Contract has Expired -> Subcon Forest - Finale: Connection 1
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   The Big Parade -> Subcon Forest - Finale: Connection 5
    =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Master Sword Pedestal (Player2)
@@ -3027,8 +3027,8 @@ TIHS Access (Player1)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
+   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
    =>   The Illness has Spread
 TOD Access (Player1)
         Menu -> Save File -> Spaceship
@@ -3239,8 +3239,8 @@ Waterfall Fairy - Left (Player2)
 Welcome to Mafia Town - Umbrella (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 1
-   =>   Your Contract has Expired -> Subcon Forest - Finale: Connection 1
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   The Big Parade -> Subcon Forest - Finale: Connection 5
    =>   Welcome to Mafia Town
 Windmill Cleared (Player1)
         Menu -> Save File -> Spaceship

@@ -4,7 +4,7 @@
 
 The `exporter/converter` module provides bidirectional conversion between two Archipelago rule JSON formats:
 
-- **Archipelago-CC format** - The AST-based rule representation used by this repository
+- **AST format** - The AST-based rule representation used by this repository
 - **Rule Builder format** - The declarative rule format from [PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048)
 
 This converter enables interoperability between the two systems and supports lossless round-trip conversion for compatible rule types.
@@ -17,10 +17,10 @@ This converter enables interoperability between the two systems and supports los
 # Auto-detect format and convert to opposite
 python -m exporter.converter input.json -o output.json
 
-# Explicitly convert Rule Builder -> Archipelago-CC
+# Explicitly convert Rule Builder -> AST
 python -m exporter.converter input.json -o output.json --format cc
 
-# Explicitly convert Archipelago-CC -> Rule Builder
+# Explicitly convert AST -> Rule Builder
 python -m exporter.converter input.json -o output.json --format rb
 
 # Verbose output with warnings
@@ -51,7 +51,7 @@ rb_data, warnings = convert_rules_file_to_rule_builder(cc_file_data)
 
 ## Format Comparison
 
-### Archipelago-CC Format
+### AST Format
 
 Rules use a `type` field to identify the rule kind:
 
@@ -100,7 +100,7 @@ Rules use a `rule` field with the class name, plus `options` and `args`/`childre
 
 ### Fully Bidirectional (Lossless Round-Trip)
 
-| Archipelago-CC | Rule Builder | Description |
+| AST | Rule Builder | Description |
 |----------------|--------------|-------------|
 | `constant` (true) | `True_` | Boolean true |
 | `constant` (false) | `False_` | Boolean false |
@@ -114,7 +114,7 @@ Rules use a `rule` field with the class name, plus `options` and `args`/`childre
 
 ### State Method Mappings
 
-| Archipelago-CC `state_method` | Rule Builder |
+| AST `state_method` | Rule Builder |
 |-------------------------------|--------------|
 | `has_all` | `HasAll` |
 | `has_any` | `HasAny` |
@@ -127,7 +127,7 @@ Rules use a `rule` field with the class name, plus `options` and `args`/`childre
 
 Some rule types don't have direct equivalents. These are preserved with metadata for potential round-trip:
 
-| Archipelago-CC | Conversion Notes |
+| AST | Conversion Notes |
 |----------------|------------------|
 | `not` | Preserved as custom `Not` rule (no RB equivalent) |
 | `helper` | Preserved as custom rule with original data |
@@ -185,7 +185,7 @@ python -m exporter.converter rules.json --format rb | jq '.regions'
 ```python
 from exporter.converter import convert_rule_builder_to_cc, convert_cc_to_rule_builder
 
-# Rule Builder -> Archipelago-CC
+# Rule Builder -> AST
 rb_rule = {
     "rule": "Has",
     "options": [],
@@ -194,7 +194,7 @@ rb_rule = {
 cc_rule, warnings = convert_rule_builder_to_cc(rb_rule)
 # Result: {"type": "item_check", "item": "Sword", "count": 2}
 
-# Archipelago-CC -> Rule Builder
+# AST -> Rule Builder
 cc_rule = {
     "type": "and",
     "conditions": [

@@ -677,6 +677,30 @@ class BaseGameExportHandler:
                 except Exception as e:
                     logger.warning(f"Failed to compute setting '{setting_name}': {e}")
 
+        # For worldgen worlds, load additional settings from _worldgen_settings.json
+        # This is needed because worldgen worlds don't have the original world's computed
+        # settings (like qp_items for OSRS) available at runtime
+        module_path = type(world).__module__
+        if module_path.endswith('_worldgen') or '_worldgen.' in module_path:
+            try:
+                from pathlib import Path
+                import json
+                parts = module_path.split('.')
+                if len(parts) >= 2:
+                    world_dir = parts[1]
+                    settings_path = Path('worlds') / world_dir / '_worldgen_settings.json'
+                    if settings_path.exists():
+                        with open(settings_path, 'r') as f:
+                            worldgen_settings = json.load(f)
+                        # Merge worldgen settings into settings_dict
+                        # Don't overwrite settings that are already set
+                        for key, value in worldgen_settings.items():
+                            if key not in settings_dict:
+                                settings_dict[key] = value
+                        logger.debug(f"Loaded {len(worldgen_settings)} settings from {settings_path}")
+            except Exception as e:
+                logger.warning(f"Failed to load worldgen settings: {e}")
+
         return settings_dict
         
     def get_game_info(self, world) -> Dict[str, Any]:
@@ -806,8 +830,14 @@ class BaseGameExportHandler:
         Returns:
             A dictionary of attributes to add to the region data
         """
-        # Base implementation returns no additional attributes
-        return {}
+        attributes = {}
+
+        # Check for dynamically_added attribute (set by worldgen for regions
+        # that were added after sphere calculation in the original world)
+        if getattr(region, 'dynamically_added', False):
+            attributes['dynamically_added'] = True
+
+        return attributes
 
     def get_location_attributes(self, location, world) -> Dict[str, Any]:
         """

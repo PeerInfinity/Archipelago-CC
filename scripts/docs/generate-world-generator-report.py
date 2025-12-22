@@ -148,6 +148,7 @@ def extract_processing_times(results: Dict) -> Dict[str, Dict[str, float]]:
     - world_gen: World generator time
     - test_gen: Test seed generation time
     - test_spoiler: Test spoiler test time
+    - cross_validation: Cross-validation time
     """
     template_results = results.get('results', {})
     times = {}
@@ -185,6 +186,11 @@ def extract_processing_times(results: Dict) -> Dict[str, Dict[str, float]]:
         test_spoiler = result.get('test_world', {}).get('spoiler_test', {})
         if test_spoiler.get('processing_time_seconds'):
             game_times['test_spoiler'] = test_spoiler['processing_time_seconds']
+
+        # Cross-validation time
+        cross_val = result.get('test_world', {}).get('cross_validation', {})
+        if cross_val.get('processing_time_seconds'):
+            game_times['cross_validation'] = cross_val['processing_time_seconds']
 
         if game_times:
             times[game_name] = game_times
@@ -225,7 +231,8 @@ def generate_time_summary_table(times: Dict[str, Dict[str, float]]) -> str:
         ('original_test', 'Original Test'),
         ('world_gen', 'World Gen'),
         ('test_gen', 'Test Gen'),
-        ('test_spoiler', 'Test Spoiler')
+        ('test_spoiler', 'Test Spoiler'),
+        ('cross_validation', 'Cross-Val')
     ]
 
     stats = {cat: compute_time_statistics(times, cat) for cat, _ in categories}
@@ -233,8 +240,8 @@ def generate_time_summary_table(times: Dict[str, Dict[str, float]]) -> str:
     lines = [
         "### Summary Statistics",
         "",
-        "| Metric | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler |",
-        "|--------|--------------|---------------|-----------|----------|--------------|",
+        "| Metric | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler | Cross-Val |",
+        "|--------|--------------|---------------|-----------|----------|--------------|-----------|",
     ]
 
     # Total row
@@ -275,7 +282,8 @@ def generate_slowest_fastest_table(times: Dict[str, Dict[str, float]]) -> str:
         ('original_test', 'Original Test'),
         ('world_gen', 'World Gen'),
         ('test_gen', 'Test Gen'),
-        ('test_spoiler', 'Test Spoiler')
+        ('test_spoiler', 'Test Spoiler'),
+        ('cross_validation', 'Cross-Val')
     ]
 
     stats = {cat: compute_time_statistics(times, cat) for cat, _ in categories}
@@ -283,8 +291,8 @@ def generate_slowest_fastest_table(times: Dict[str, Dict[str, float]]) -> str:
     lines = [
         "### Slowest and Fastest Games",
         "",
-        "| Metric | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler |",
-        "|--------|--------------|---------------|-----------|----------|--------------|",
+        "| Metric | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler | Cross-Val |",
+        "|--------|--------------|---------------|-----------|----------|--------------|-----------|",
     ]
 
     # Slowest row
@@ -316,14 +324,14 @@ def generate_processing_times_table(times: Dict[str, Dict[str, float]]) -> str:
     lines = [
         "### Individual Game Processing Times",
         "",
-        "| Game | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler |",
-        "|------|--------------|---------------|-----------|----------|--------------|",
+        "| Game | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler | Cross-Val |",
+        "|------|--------------|---------------|-----------|----------|--------------|-----------|",
     ]
 
     for game_name in sorted(times.keys()):
         game_times = times[game_name]
         row = f"| {game_name} |"
-        for cat in ['original_gen', 'original_test', 'world_gen', 'test_gen', 'test_spoiler']:
+        for cat in ['original_gen', 'original_test', 'world_gen', 'test_gen', 'test_spoiler', 'cross_validation']:
             if cat in game_times:
                 row += f" {game_times[cat]:.1f}s |"
             else:
@@ -341,7 +349,8 @@ def generate_top_10_section(times: Dict[str, Dict[str, float]]) -> str:
         ('original_test', 'Original Spoiler Test'),
         ('world_gen', 'World Generation'),
         ('test_gen', 'Test Seed Generation'),
-        ('test_spoiler', 'Test Spoiler Test')
+        ('test_spoiler', 'Test Spoiler Test'),
+        ('cross_validation', 'Cross-Validation')
     ]
 
     lines = [

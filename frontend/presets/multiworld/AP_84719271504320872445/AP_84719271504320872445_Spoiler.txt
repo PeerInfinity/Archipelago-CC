@@ -1442,10 +1442,9 @@ Act Completion (Time Rift - The Owl Express) (Player1)
    =>   Time Rift - The Owl Express
 Act Completion (Time Rift - Village) (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Time Rift - Pipe Portal - Entrance 2
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Time Rift - Pipe Portal - Entrance 3
    =>   Time Rift - Village
 Act Completion (Toilet of Doom) (Player1)
         Menu -> Save File -> Spaceship
@@ -2700,8 +2699,8 @@ Subcon Forest - Boss Arena Chest (Player1)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
    =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
-   =>   Dead Bird Studio Basement -> Mafia Town - Act 6: Connection 1
-   =>   Mail Delivery Service -> Mafia Town - Act 5: Connection 1
+   =>   Dead Bird Studio Basement -> Mafia Town - Act 7: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 5: Connection 2
    =>   Your Contract has Expired -> Subcon Forest Entrance YCHE
    =>   Subcon Forest Boss Arena
 Subcon Forest - Burning Forest Treehouse (Player1)

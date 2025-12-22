@@ -1,19 +1,19 @@
-# Comparison Report: JSON Rule Exporters
+# Comparison Report: JSON Rule Formats
 
 ## Overview
 
-This report compares two different approaches to exporting game rules to JSON in Archipelago:
+This report compares two different approaches to defining and exporting game rules to JSON in Archipelago:
 
-1. **This Repository (Archipelago-CC)**: A post-hoc AST-based rule analysis system
-2. **PR #5048 (ArchipelagoMW/Archipelago)**: A declarative rule builder pattern
+1. **AST Format**: A post-hoc AST-based rule analysis system
+2. **Rule Builder Format**: A declarative rule builder pattern (from [PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048))
 
-Both systems aim to convert game logic rules into a structured JSON format, but they take fundamentally different approaches.
+Archipelago-CC supports both formats. This document compares their architectures, strengths, and trade-offs.
 
 ---
 
 ## Architecture Comparison
 
-### Archipelago-CC: Post-Hoc AST Analysis
+### AST Format: Post-Hoc AST Analysis
 
 **Philosophy**: Analyze existing Python lambda rules after they're created by inspecting their AST (Abstract Syntax Tree)
 
@@ -36,7 +36,7 @@ Both systems aim to convert game logic rules into a structured JSON format, but 
 Rule Lambda -> Source Code -> AST Parse -> Node Visitation -> JSON Structure
 ```
 
-### PR #5048: Declarative Rule Builder
+### Rule Builder Format: Declarative Rule Builder
 
 **Philosophy**: Define rules using purpose-built classes that are inherently serializable
 
@@ -60,15 +60,15 @@ Rule Builder Classes -> Composition -> Resolution -> to_dict() -> JSON Structure
 
 ## Feature Comparison
 
-| Feature | Archipelago-CC (AST Analysis) | PR #5048 (Rule Builder) |
-|---------|-------------------------------|-------------------------|
+| Feature | AST Format | Rule Builder Format |
+|---------|------------|---------------------|
 | **When rules are defined** | Any lambda/function | Must use builder classes |
 | **Serialization method** | Post-hoc AST inspection | Built-in `to_dict()` |
 | **World code changes required** | None | Must use `RuleWorldMixin` |
 | **Backward compatibility** | Full - works with existing worlds | Requires world conversion |
 | **Caching** | Rule analysis cache by function ID | State cache in `CollectionState.rule_cache` |
 | **Game-specific handlers** | 80+ handler files | Custom rules inherit from base |
-| **Human-readable output** | Not built-in | `explain()` method |
+| **Human-readable output** | Via Rule Builder conversion | `explain()` method |
 | **Rule optimization** | Post-analysis cleanup | Instance reuse via equality |
 | **Type safety** | None | Generic typing support |
 
@@ -78,13 +78,13 @@ Rule Builder Classes -> Composition -> Resolution -> to_dict() -> JSON Structure
 
 ### 1. Rule Definition
 
-**Archipelago-CC** (existing worlds don't change):
+**AST Format** (existing worlds don't change):
 ```python
 # World defines rules as lambdas - no changes needed
 set_rule(location, lambda state: state.has("Sword") and state.has("Shield"))
 ```
 
-**PR #5048** (worlds must adopt builder pattern):
+**Rule Builder Format** (worlds must adopt builder pattern):
 ```python
 # World uses builder classes
 set_rule(location, Has("Sword") & Has("Shield"))
@@ -92,7 +92,7 @@ set_rule(location, Has("Sword") & Has("Shield"))
 
 ### 2. Serialization Output
 
-**Archipelago-CC** produces:
+**AST Format** produces:
 ```json
 {
   "type": "and",
@@ -103,7 +103,7 @@ set_rule(location, Has("Sword") & Has("Shield"))
 }
 ```
 
-**PR #5048** produces (similar structure via `to_dict()`):
+**Rule Builder Format** produces (similar structure via `to_dict()`):
 ```json
 {
   "type": "And",
@@ -116,7 +116,7 @@ set_rule(location, Has("Sword") & Has("Shield"))
 
 ### 3. Analysis Approach
 
-**Archipelago-CC** (`exporter/analyzer/ast_visitors.py:133-626`):
+**AST Format** (`exporter/analyzer/ast_visitors.py:133-626`):
 - Visits `ast.Call` nodes to identify `state.has()`, `state.can_reach()`, etc.
 - Filters special arguments (state, player, world)
 - Resolves closure variables and lambda defaults
@@ -129,21 +129,21 @@ if (func_info.get('type') == 'attribute' and
     method = func_info['attr']  # e.g., 'has', 'can_reach'
 ```
 
-**PR #5048**:
+**Rule Builder Format**:
 - No AST analysis needed - rules are data structures from the start
 - Uses `__call__` method for evaluation
 - Uses `to_dict()` method for serialization
 
 ### 4. Caching Mechanisms
 
-**Archipelago-CC** (`exporter/exporter.py:21-26`):
+**AST Format** (`exporter/exporter.py:21-26`):
 ```python
 # Module-level cache for rule analysis results
 _rule_analysis_cache: Dict[Tuple[int, int, Optional[int]], Any] = {}
 ```
 Cache key: `(id(rule_func), id(game_handler), player)`
 
-**PR #5048** (adds to `BaseClasses.py`):
+**Rule Builder Format** (adds to `BaseClasses.py`):
 ```python
 # Per-player rule cache in CollectionState
 self.rule_cache: dict[int, dict[int, bool]] = {}
@@ -153,9 +153,9 @@ self.rule_cache: dict[int, dict[int, bool]] = {}
 
 ### 5. Human-Readable Explanations
 
-**Archipelago-CC**: Not built-in; rules export as JSON only
+**AST Format**: Rules can be converted to Rule Builder format for explain support via `exporter/converter`
 
-**PR #5048**: Built-in `explain()` method:
+**Rule Builder Format**: Built-in `explain()` method:
 ```python
 rule = Has("Sword") & Has("Shield")
 print(rule.explain(state))  # "Have Sword AND Have Shield"
@@ -163,7 +163,7 @@ print(rule.explain(state))  # "Have Sword AND Have Shield"
 
 ### 6. Error Handling
 
-**Archipelago-CC** (`exporter/analyzer/analysis.py:78-95`):
+**AST Format** (`exporter/analyzer/analysis.py:78-95`):
 ```python
 # Returns error structure on recursion limit
 if current_seen_count >= 10:
@@ -174,13 +174,13 @@ if current_seen_count >= 10:
     }
 ```
 
-**PR #5048**: Compile-time validation when rules are composed
+**Rule Builder Format**: Compile-time validation when rules are composed
 
 ---
 
 ## Strengths and Weaknesses
 
-### Archipelago-CC (AST Analysis)
+### AST Format
 
 **Strengths**:
 - Works with ALL existing worlds without modification
@@ -192,9 +192,9 @@ if current_seen_count >= 10:
 - Complex implementation (2000+ lines of AST visitors)
 - Cannot analyze obfuscated or dynamic code
 - Source code extraction can fail in edge cases
-- No built-in human-readable explanations
+- Human-readable explanations require conversion to Rule Builder
 
-### PR #5048 (Rule Builder)
+### Rule Builder Format
 
 **Strengths**:
 - Clean, declarative API
@@ -212,13 +212,13 @@ if current_seen_count >= 10:
 
 ---
 
-## Integration Possibilities
+## How Archipelago-CC Uses Both Formats
 
-The two approaches are complementary:
+Archipelago-CC supports both formats and can convert between them:
 
-1. **Use AST Analysis for existing worlds**: Continue using Archipelago-CC's exporter for worlds that use traditional lambda rules
+1. **AST Format for existing worlds**: The exporter uses AST analysis for worlds that use traditional lambda rules
 
-2. **Support Rule Builder when available**: If PR #5048 is merged and worlds adopt it, the exporter could check for `to_dict()` method and use it directly:
+2. **Rule Builder Format when available**: The exporter checks for `to_dict()` method and uses it directly when available:
 
 ```python
 def analyze_rule(rule_func, ...):
@@ -230,19 +230,20 @@ def analyze_rule(rule_func, ...):
     return ast_analyze_rule(rule_func, ...)
 ```
 
+3. **Format conversion**: The `exporter/converter` module provides bidirectional conversion between the two formats, enabling features like human-readable explanations for AST-analyzed rules
+
 ---
 
 ## Summary
 
-| Aspect | Archipelago-CC | PR #5048 |
-|--------|----------------|----------|
+| Aspect | AST Format | Rule Builder Format |
+|--------|------------|---------------------|
 | **Approach** | Reverse-engineer lambdas | Declarative builders |
 | **Compatibility** | All existing worlds | Requires adoption |
 | **Complexity** | High (AST parsing) | Low (data classes) |
 | **Maintenance** | Game-specific handlers | Built-in rules |
-| **Status** | In production | Open PR (not merged) |
 
-The Archipelago-CC exporter solves the problem of extracting rules from existing code without requiring changes, while PR #5048's rule builder proposes a cleaner long-term solution that would require ecosystem-wide adoption.
+AST format excels at extracting rules from existing code without requiring changes, while Rule Builder format provides a cleaner approach for new worlds. Archipelago-CC supports both formats and can convert between them as needed.
 
 ---
 

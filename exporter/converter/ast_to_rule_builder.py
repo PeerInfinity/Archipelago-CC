@@ -157,7 +157,8 @@ class ASTToRuleBuilder:
             return self._restore_from_round_trip(rule)
 
         # Check if already in Rule Builder format
-        if 'rule' in rule and 'options' in rule:
+        # A rule is in Rule Builder format if it has 'rule' key but no 'type' key
+        if 'rule' in rule and 'type' not in rule:
             return rule
 
         rule_type = rule.get('type')
@@ -178,16 +179,16 @@ class ASTToRuleBuilder:
         Restore original Rule Builder format from round-trip metadata.
 
         This enables lossless B → A → B conversion.
+        Empty 'options' and 'args' fields are omitted to reduce JSON size.
         """
         rule_name = rule.get('name', 'Unknown')
         original_args = rule.get('_original_args', {})
 
         # Reconstruct the original Rule Builder format
-        result = {
-            'rule': rule_name,
-            'options': [],
-            'args': original_args
-        }
+        # Empty options and args are omitted
+        result: Dict[str, Any] = {'rule': rule_name}
+        if original_args:
+            result['args'] = original_args
 
         # Check if there were children (for composite rules)
         if 'args' in rule:
@@ -204,20 +205,30 @@ class ASTToRuleBuilder:
         return result
 
     def _make_rule(self, rule_name: str, args: Dict[str, Any], options: List[Dict] = None) -> Dict[str, Any]:
-        """Create a Rule Builder format rule."""
-        return {
-            'rule': rule_name,
-            'options': options or [],
-            'args': args
-        }
+        """Create a Rule Builder format rule.
+
+        Empty 'options' and 'args' fields are omitted to reduce JSON size.
+        """
+        result = {'rule': rule_name}
+        if options:
+            result['options'] = options
+        # Include args if non-empty (handles both dict and list)
+        if args:
+            result['args'] = args
+        return result
 
     def _make_composite_rule(self, rule_name: str, children: List[Dict], options: List[Dict] = None) -> Dict[str, Any]:
-        """Create a composite Rule Builder format rule (And/Or)."""
-        return {
+        """Create a composite Rule Builder format rule (And/Or).
+
+        Empty 'options' field is omitted to reduce JSON size.
+        """
+        result = {
             'rule': rule_name,
-            'options': options or [],
             'children': children
         }
+        if options:
+            result['options'] = options
+        return result
 
     def _make_custom_rule(self, rule_name: str, args: Dict[str, Any]) -> Dict[str, Any]:
         """Create a custom rule that preserves AST format data for round-trip."""
@@ -731,11 +742,10 @@ class ASTToRuleBuilder:
         If the helper was originally converted from Rule Builder format,
         restore it. Otherwise, convert to Rule Builder format with flattened args.
 
-        Output format:
+        Output format (empty 'options' and 'args' omitted):
             {
                 "rule": "helper_name",
-                "options": [],
-                "args": [arg1, arg2, ...],  # Flattened list, not nested
+                "args": [arg1, arg2, ...],  # Flattened list, not nested; omitted if empty
                 "_original_ast_type": "helper",
                 "_converted_from_cc": true
             }
@@ -754,13 +764,15 @@ class ASTToRuleBuilder:
         ]
 
         # Build flattened structure - args is a list at top level, not nested in a dict
-        return {
+        # Empty options and args are omitted to reduce JSON size
+        result: Dict[str, Any] = {
             'rule': helper_name,
-            'options': [],
-            'args': converted_args,
             '_original_ast_type': 'helper',
             '_converted_from_cc': True
         }
+        if converted_args:
+            result['args'] = converted_args
+        return result
 
     # -------------------------------------------------------------------------
     # Expression Converters (Limited Support)
@@ -993,7 +1005,6 @@ class ASTToRuleBuilder:
 
         return {
             'rule': 'AST_placement_search',
-            'options': [],
             'args': {
                 'item': item,
                 'player': player,
@@ -1018,7 +1029,6 @@ class ASTToRuleBuilder:
 
         return {
             'rule': 'AST_placement_lookup',
-            'options': [],
             'args': {
                 'location': location,
                 '_original_ast_type': 'placement_lookup'
@@ -1035,8 +1045,11 @@ class ASTToRuleBuilder:
         rule_type = rule.get('type', 'unknown')
         self.warnings.append(f"Unknown AST type '{rule_type}' preserved as custom rule")
 
-        # Preserve all fields except 'type'
-        args = {k: v for k, v in rule.items() if k != 'type'}
+        # Preserve all fields except 'type', and skip empty 'args' arrays
+        args = {
+            k: v for k, v in rule.items()
+            if k != 'type' and not (k == 'args' and isinstance(v, list) and len(v) == 0)
+        }
         args['_original_ast_type'] = rule_type
 
         return self._make_custom_rule(f'AST_{rule_type}', args)

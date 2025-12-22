@@ -49,6 +49,22 @@ class ASTVisitorMixin:
             self.game_handler.register_helper_usage(helper_name, helper_func)
             logging.debug(f"Registered helper usage: {helper_name}")
 
+    def _make_helper_rule(self, name: str, args: List[Any]) -> Dict[str, Any]:
+        """
+        Create a helper rule, omitting empty args to reduce JSON size.
+
+        Args:
+            name: The helper function name
+            args: The arguments to pass to the helper
+
+        Returns:
+            A helper rule dict with 'type', 'name', and optionally 'args'
+        """
+        result: Dict[str, Any] = {'type': 'helper', 'name': name}
+        if args:
+            result['args'] = args
+        return result
+
     def visit_Module(self, node):
         try:
             logging.debug(f"\n--- Starting Module Analysis ---")
@@ -440,11 +456,7 @@ class ASTVisitorMixin:
                                 logging.debug(f"Function {resolved_func_name} has dynamic for loops, preserving as helper")
                                 if hasattr(self.game_handler, 'register_helper_usage'):
                                     self.game_handler.register_helper_usage(resolved_func_name, resolved_func)
-                                return {
-                                    'type': 'helper',
-                                    'name': resolved_func_name,
-                                    'args': filtered_args
-                                }
+                                return self._make_helper_rule(resolved_func_name, filtered_args)
 
                             # Check if 'state' is passed as an argument using original AST nodes
                             has_state_arg = any(isinstance(arg, ast.Name) and arg.id == 'state' for arg in node.args)
@@ -497,11 +509,7 @@ class ASTVisitorMixin:
                                                 else:
                                                     logging.debug(f"Not caching {actual_func_name} - has params {extra_params}")
                                             # Return a helper call with original args (like manual preservation)
-                                            return {
-                                                'type': 'helper',
-                                                'name': actual_func_name,
-                                                'args': filtered_args
-                                            }
+                                            return self._make_helper_rule(actual_func_name, filtered_args)
                                     logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
                                     return recursive_result
                                 else:
@@ -523,11 +531,7 @@ class ASTVisitorMixin:
                  if self.game_handler and hasattr(self.game_handler, 'should_preserve_as_helper'):
                      if closure_func_name and self.game_handler.should_preserve_as_helper(closure_func_name):
                          logging.debug(f"Game handler requests preserving closure {closure_func_name} as helper, skipping recursive analysis")
-                         return {
-                             'type': 'helper',
-                             'name': closure_func_name,
-                             'args': filtered_args
-                         }
+                         return self._make_helper_rule(closure_func_name, filtered_args)
 
                  # --- Recursive analysis logic (enhanced for multiline lambdas) ---
                  try:
@@ -593,11 +597,7 @@ class ASTVisitorMixin:
                          logging.debug(f"Function {closure_func_name} has dynamic for loops, preserving as helper")
                          if hasattr(self.game_handler, 'register_helper_usage'):
                              self.game_handler.register_helper_usage(closure_func_name, actual_func)
-                         return {
-                             'type': 'helper',
-                             'name': closure_func_name,
-                             'args': filtered_args
-                         }
+                         return self._make_helper_rule(closure_func_name, filtered_args)
 
                      # Check if 'state' is passed as an argument (directly or indirectly)
                      has_state_arg = any(references_state(arg) for arg in node.args)
@@ -652,11 +652,7 @@ class ASTVisitorMixin:
                                           else:
                                               logging.debug(f"Not caching {closure_func_name} - has params {extra_params}")
                                       # Return a helper call with original args (like manual preservation)
-                                      return {
-                                          'type': 'helper',
-                                          'name': closure_func_name,
-                                          'args': filtered_args
-                                      }
+                                      return self._make_helper_rule(closure_func_name, filtered_args)
                               logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
                               return recursive_result # Return the detailed analysis result
                           else:
@@ -1122,11 +1118,7 @@ class ASTVisitorMixin:
                 return result
 
             # Create helper result with filtered args (no state/player in JSON)
-            result = {
-                'type': 'helper',
-                'name': func_name,
-                'args': filtered_args
-            }
+            result = self._make_helper_rule(func_name, filtered_args)
             logging.debug(f"Created helper result: {result}")
             # Register for automatic discovery
             self._register_helper_usage(func_name)
@@ -1409,11 +1401,7 @@ class ASTVisitorMixin:
 
                 # Create helper result with the captured arguments
                 # DO NOT recursively analyze - we want to capture the call AS IS with its arguments
-                result = {
-                    'type': 'helper',
-                    'name': method_name,
-                    'args': filtered_args
-                }
+                result = self._make_helper_rule(method_name, filtered_args)
                 logging.debug(f"Created helper result for self method: {result}")
                 # Register for automatic discovery
                 self._register_helper_usage(method_name)
@@ -1481,11 +1469,7 @@ class ASTVisitorMixin:
                 filtered_args = resolved_args
 
                 # Create helper result
-                result = {
-                    'type': 'helper',
-                    'name': method_name,
-                    'args': filtered_args
-                }
+                result = self._make_helper_rule(method_name, filtered_args)
                 logging.debug(f"Created helper result for logic method: {result}")
                 # Register for automatic discovery
                 self._register_helper_usage(method_name)
@@ -1606,11 +1590,7 @@ class ASTVisitorMixin:
                     filtered_args = resolved_args
 
                     # Create helper result
-                    result = {
-                        'type': 'helper',
-                        'name': method_name,
-                        'args': filtered_args
-                    }
+                    result = self._make_helper_rule(method_name, filtered_args)
                     logging.debug(f"Created helper result for module method: {result}")
                     # Register for automatic discovery
                     self._register_helper_usage(method_name)
@@ -1619,11 +1599,12 @@ class ASTVisitorMixin:
         # 3. Fallback for other types of calls (e.g., calling result of another function)
         logging.debug(f"Fallback function call type. func_info = {func_info}")
         filtered_args = self._filter_special_args(args_with_nodes)
-        result = {
+        result: Dict[str, Any] = {
             'type': 'function_call',
             'function': func_info,
-            'args': filtered_args
         }
+        if filtered_args:
+            result['args'] = filtered_args
         logging.debug(f"Fallback call result: {result}")
         return result # Return generic function call result
 

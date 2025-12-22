@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-21 03:25:28
+**Generated:** 2025-12-22 00:24:07
 
 ## Summary
 
@@ -74,7 +74,7 @@
 | Noita | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | ✅ Passed | 5 | 5 | 5.9KB | ✅ |
 | Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 26.1KB | 5.1KB |
-| Paint | ✅ Passed | ✅ Passed | 5 | 5 | 7.2KB | ✅ |
+| Paint | ✅ Passed | ✅ Passed | 5 | 5 | 8.4KB | ✅ |
 | Raft | ✅ Passed | ✅ Passed | 5 | 5 | 12.0KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | 5 | 5 | 3.2KB | ✅ |
