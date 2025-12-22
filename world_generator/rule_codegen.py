@@ -1402,9 +1402,16 @@ class RuleCodeGenerator:
             return repr(operand)
 
         op_type = operand.get('type', '')
+        rb_rule = operand.get('rule', '')
 
         if op_type == 'constant':
             return repr(operand.get('value'))
+
+        # Handle Rule Builder format Constant (different from type='constant')
+        # In Compare operands, Constant values should remain as numeric values, not converted to booleans
+        if rb_rule == 'Constant':
+            value = operand.get('args', {}).get('value')
+            return repr(value)
 
         if op_type == 'count_item':
             # Handle count_item type from rules.json export
@@ -1430,14 +1437,6 @@ class RuleCodeGenerator:
 
         if op_type == 'min':
             return self._convert_min(operand)
-
-        # Handle Rule Builder format Constant (for Compare operands)
-        # In Compare context, we want the actual numeric value, not True_()/False_()
-        rb_rule = operand.get('rule', '')
-        if rb_rule == 'Constant':
-            args = operand.get('args', {})
-            value = args.get('value')
-            return repr(value)
 
         # For other types, try to convert as a rule
         return self._convert_rule(operand)

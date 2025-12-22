@@ -9,7 +9,7 @@ import math
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, Has
+from rule_builder import True_, False_, And, CanReachLocation, Compare, Has, HelperCall
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -204,12 +204,9 @@ _HELPER_DEFINITIONS = {   'can_access_location': {   'body': {   'statements': [
                                                                                               'value': False}}],
                                                                  'test': {   'conditions': [   {   'name': 'need_laser_cutter',
                                                                                                    'type': 'name'},
-                                                                                               {   'condition': {   'count': {   'type': 'constant',
-                                                                                                                                 'value': 3},
-                                                                                                                    'item': 'Laser '
-                                                                                                                            'Cutter '
-                                                                                                                            'Fragment',
-                                                                                                                    'type': 'item_check'},
+                                                                                               {   'condition': {   'args': [   ],
+                                                                                                                    'name': 'has_laser_cutter',
+                                                                                                                    'type': 'helper'},
                                                                                                    'type': 'not'}],
                                                                              'type': 'and'},
                                                                  'type': 'if_statement'},
@@ -229,12 +226,9 @@ _HELPER_DEFINITIONS = {   'can_access_location': {   'body': {   'statements': [
                                                                                               'value': False}}],
                                                                  'test': {   'conditions': [   {   'name': 'need_propulsion_cannon',
                                                                                                    'type': 'name'},
-                                                                                               {   'condition': {   'count': {   'type': 'constant',
-                                                                                                                                 'value': 2},
-                                                                                                                    'item': 'Propulsion '
-                                                                                                                            'Cannon '
-                                                                                                                            'Fragment',
-                                                                                                                    'type': 'item_check'},
+                                                                                               {   'condition': {   'args': [   ],
+                                                                                                                    'name': 'has_propulsion_cannon',
+                                                                                                                    'type': 'helper'},
                                                                                                    'type': 'not'}],
                                                                              'type': 'and'},
                                                                  'type': 'if_statement'},
@@ -268,51 +262,14 @@ _HELPER_DEFINITIONS = {   'can_access_location': {   'body': {   'statements': [
                                                                                            'type': 'name'}}},
                                                              {   'name': 'need_radiation_suit',
                                                                  'type': 'assign',
-                                                                 'value': {   'statements': [   {   'name': '_h3_aurora_dist',
-                                                                                                    'type': 'assign',
-                                                                                                    'value': {   'args': [   {   'left': {   'left': {   'left': {   'left': {   'name': 'pos_x',
-                                                                                                                                                                                 'type': 'name'},
-                                                                                                                                                                     'op': '-',
-                                                                                                                                                                     'right': {   'type': 'constant',
-                                                                                                                                                                                  'value': 1038.0},
-                                                                                                                                                                     'type': 'binary_op'},
-                                                                                                                                                         'op': '**',
-                                                                                                                                                         'right': {   'type': 'constant',
-                                                                                                                                                                      'value': 2},
-                                                                                                                                                         'type': 'binary_op'},
-                                                                                                                                             'op': '+',
-                                                                                                                                             'right': {   'left': {   'name': 'pos_y',
-                                                                                                                                                                      'type': 'name'},
-                                                                                                                                                          'op': '**',
-                                                                                                                                                          'right': {   'type': 'constant',
-                                                                                                                                                                       'value': 2},
-                                                                                                                                                          'type': 'binary_op'},
-                                                                                                                                             'type': 'binary_op'},
-                                                                                                                                 'op': '+',
-                                                                                                                                 'right': {   'left': {   'left': {   'name': 'pos_z',
-                                                                                                                                                                      'type': 'name'},
-                                                                                                                                                          'op': '-',
-                                                                                                                                                          'right': {   'type': 'constant',
-                                                                                                                                                                       'value': -163.1},
-                                                                                                                                                          'type': 'binary_op'},
-                                                                                                                                              'op': '**',
-                                                                                                                                              'right': {   'type': 'constant',
-                                                                                                                                                           'value': 2},
-                                                                                                                                              'type': 'binary_op'},
-                                                                                                                                 'type': 'binary_op'}],
-                                                                                                                 'function': {   'attr': 'sqrt',
-                                                                                                                                 'object': {   'name': 'math',
-                                                                                                                                               'type': 'name'},
-                                                                                                                                 'type': 'attribute'},
-                                                                                                                 'type': 'function_call'}},
-                                                                                                {   'type': 'return',
-                                                                                                    'value': {   'left': {   'name': '_h3_aurora_dist',
-                                                                                                                             'type': 'name'},
-                                                                                                                 'op': '<',
-                                                                                                                 'right': {   'type': 'constant',
-                                                                                                                              'value': 950},
-                                                                                                                 'type': 'compare'}}],
-                                                                              'type': 'block'}},
+                                                                 'value': {   'args': [   {   'name': 'pos_x',
+                                                                                              'type': 'name'},
+                                                                                          {   'name': 'pos_y',
+                                                                                              'type': 'name'},
+                                                                                          {   'name': 'pos_z',
+                                                                                              'type': 'name'}],
+                                                                              'name': 'is_radiated',
+                                                                              'type': 'helper'}},
                                                              {   'body': [   {   'type': 'return',
                                                                                  'value': {   'type': 'constant',
                                                                                               'value': False}}],
@@ -361,11 +318,9 @@ _HELPER_DEFINITIONS = {   'can_access_location': {   'body': {   'statements': [
                                                                                                                                       'value': -200},
                                                                                                                          'type': 'compare'}],
                                                                                                    'type': 'or'},
-                                                                                               {   'condition': {   'count': {   'type': 'constant',
-                                                                                                                                 'value': 2},
-                                                                                                                    'item': 'Seaglide '
-                                                                                                                            'Fragment',
-                                                                                                                    'type': 'item_check'},
+                                                                                               {   'condition': {   'args': [   ],
+                                                                                                                    'name': 'has_seaglide',
+                                                                                                                    'type': 'helper'},
                                                                                                    'type': 'not'}],
                                                                              'type': 'and'},
                                                                  'type': 'if_statement'},
@@ -375,21 +330,9 @@ _HELPER_DEFINITIONS = {   'can_access_location': {   'body': {   'statements': [
                                                                                              'type': 'name'},
                                                                               'type': 'negate'}},
                                                              {   'type': 'return',
-                                                                 'value': {   'left': {   'left': {   'args': [],
-                                                                                                      'name': 'get_max_swim_depth',
-                                                                                                      'type': 'helper'},
-                                                                                          'op': '+',
-                                                                                          'right': {   'args': [   {   'args': [   ],
-                                                                                                                       'name': 'get_seamoth_max_depth',
-                                                                                                                       'type': 'helper'},
-                                                                                                                   {   'args': [   ],
-                                                                                                                       'name': 'get_cyclops_max_depth',
-                                                                                                                       'type': 'helper'},
-                                                                                                                   {   'args': [   ],
-                                                                                                                       'name': 'get_prawn_max_depth',
-                                                                                                                       'type': 'helper'}],
-                                                                                                       'type': 'max'},
-                                                                                          'type': 'binary_op'},
+                                                                 'value': {   'left': {   'args': [],
+                                                                                          'name': 'get_max_depth',
+                                                                                          'type': 'helper'},
                                                                               'op': '>=',
                                                                               'right': {   'name': 'depth',
                                                                                            'type': 'name'},
@@ -401,194 +344,32 @@ _HELPER_DEFINITIONS = {   'can_access_location': {   'body': {   'statements': [
                                                                                                 'value': 500},
                                                                                 'if_true': {   'type': 'constant',
                                                                                                'value': 900},
-                                                                                'test': {   'item': 'Cyclops Depth '
-                                                                                                    'Module MK1',
-                                                                                            'type': 'item_check'},
+                                                                                'test': {   'args': [],
+                                                                                            'name': 'has_cyclops_depth_module_mk1',
+                                                                                            'type': 'helper'},
                                                                                 'type': 'conditional'},
                                                                 'if_true': {'type': 'constant', 'value': 1300},
-                                                                'test': {   'conditions': [   {   'args': [],
-                                                                                                  'name': 'has_cyclops_depth_module_mk1',
-                                                                                                  'type': 'helper'},
-                                                                                              {   'args': [],
-                                                                                                  'name': 'has_modification_station',
-                                                                                                  'type': 'helper'}],
-                                                                            'type': 'and'},
+                                                                'test': {   'args': [],
+                                                                            'name': 'has_cyclops_depth_module_mk2',
+                                                                            'type': 'helper'},
                                                                 'type': 'conditional'},
                                                 'if_true': {'type': 'constant', 'value': 1700},
-                                                'test': {   'conditions': [   {   'args': [],
-                                                                                  'name': 'has_cyclops_depth_module_mk2',
-                                                                                  'type': 'helper'},
-                                                                              {   'args': [],
-                                                                                  'name': 'has_modification_station',
-                                                                                  'type': 'helper'}],
-                                                            'type': 'and'},
+                                                'test': {   'args': [],
+                                                            'name': 'has_cyclops_depth_module_mk3',
+                                                            'type': 'helper'},
                                                 'type': 'conditional'},
-                                 'test': {   'conditions': [   {   'args': [],
-                                                                   'name': 'has_cyclops_bridge',
-                                                                   'type': 'helper'},
-                                                               {   'args': [],
-                                                                   'name': 'has_cyclops_engine',
-                                                                   'type': 'helper'},
-                                                               {   'args': [],
-                                                                   'name': 'has_cyclops_hull',
-                                                                   'type': 'helper'},
-                                                               {   'args': [],
-                                                                   'name': 'has_mobile_vehicle_bay',
-                                                                   'type': 'helper'}],
-                                             'type': 'and'},
+                                 'test': {'args': [], 'name': 'has_cyclops', 'type': 'helper'},
                                  'type': 'conditional'},
-    'get_max_depth': {   'left': {   'statements': [   {   'name': '_h10_swim_rule',
-                                                           'type': 'assign',
-                                                           'value': {'type': 'constant', 'value': 0}},
-                                                       {   'name': '_h10_depth',
-                                                           'type': 'assign',
-                                                           'value': {   'index': {   'left': {   'name': '_h10_swim_rule',
-                                                                                                 'type': 'name'},
-                                                                                     'op': '%',
-                                                                                     'right': {   'type': 'constant',
-                                                                                                  'value': 3},
-                                                                                     'type': 'binary_op'},
-                                                                        'type': 'subscript',
-                                                                        'value': {   'type': 'constant',
-                                                                                     'value': [200, 400, 600]}}},
-                                                       {   'body': [   {   'body': [   {   'body': [   {   'name': '_h10_depth',
-                                                                                                           'op': '+=',
-                                                                                                           'type': 'assign',
-                                                                                                           'value': {   'type': 'constant',
-                                                                                                                        'value': 350}}],
-                                                                                           'orelse': [   {   'name': '_h10_depth',
-                                                                                                             'op': '+=',
-                                                                                                             'type': 'assign',
-                                                                                                             'value': {   'type': 'constant',
-                                                                                                                          'value': 200}}],
-                                                                                           'test': {   'args': [],
-                                                                                                       'name': 'has_ultra_high_capacity_tank',
-                                                                                                       'type': 'helper'},
-                                                                                           'type': 'if_statement'}],
-                                                                           'orelse': [   {   'body': [   {   'body': [   {   'name': '_h10_depth',
-                                                                                                                             'op': '+=',
-                                                                                                                             'type': 'assign',
-                                                                                                                             'value': {   'type': 'constant',
-                                                                                                                                          'value': 150}}],
-                                                                                                             'orelse': [   {   'body': [   {   'name': '_h10_depth',
-                                                                                                                                               'op': '+=',
-                                                                                                                                               'type': 'assign',
-                                                                                                                                               'value': {   'type': 'constant',
-                                                                                                                                                            'value': 75}}],
-                                                                                                                               'orelse': [   {   'name': '_h10_depth',
-                                                                                                                                                 'op': '+=',
-                                                                                                                                                 'type': 'assign',
-                                                                                                                                                 'value': {   'type': 'constant',
-                                                                                                                                                              'value': 50}}],
-                                                                                                                               'test': {   'args': [   ],
-                                                                                                                                           'name': 'has_lightweight_high_capacity_tank',
-                                                                                                                                           'type': 'helper'},
-                                                                                                                               'type': 'if_statement'}],
-                                                                                                             'test': {   'args': [   ],
-                                                                                                                         'name': 'has_ultra_high_capacity_tank',
-                                                                                                                         'type': 'helper'},
-                                                                                                             'type': 'if_statement'}],
-                                                                                             'orelse': [   {   'body': [   {   'name': '_h10_depth',
-                                                                                                                               'op': '+=',
-                                                                                                                               'type': 'assign',
-                                                                                                                               'value': {   'type': 'constant',
-                                                                                                                                            'value': 100}}],
-                                                                                                               'orelse': [   {   'body': [   {   'name': '_h10_depth',
-                                                                                                                                                 'op': '+=',
-                                                                                                                                                 'type': 'assign',
-                                                                                                                                                 'value': {   'type': 'constant',
-                                                                                                                                                              'value': 25}}],
-                                                                                                                                 'test': {   'args': [   ],
-                                                                                                                                             'name': 'has_lightweight_high_capacity_tank',
-                                                                                                                                             'type': 'helper'},
-                                                                                                                                 'type': 'if_statement'}],
-                                                                                                               'test': {   'args': [   ],
-                                                                                                                           'name': 'has_ultra_high_capacity_tank',
-                                                                                                                           'type': 'helper'},
-                                                                                                               'type': 'if_statement'}],
-                                                                                             'test': {   'args': [],
-                                                                                                         'name': 'has_ultra_glide_fins',
-                                                                                                         'type': 'helper'},
-                                                                                             'type': 'if_statement'}],
-                                                                           'test': {   'args': [],
-                                                                                       'name': 'has_seaglide',
-                                                                                       'type': 'helper'},
-                                                                           'type': 'if_statement'}],
-                                                           'test': {   'left': {   'name': '_h10_swim_rule',
-                                                                                   'type': 'name'},
-                                                                       'op': '>',
-                                                                       'right': {'type': 'constant', 'value': 2},
-                                                                       'type': 'compare'},
-                                                           'type': 'if_statement'},
-                                                       {   'type': 'return',
-                                                           'value': {'name': '_h10_depth', 'type': 'name'}}],
-                                     'type': 'block'},
+    'get_max_depth': {   'left': {'args': [], 'name': 'get_max_swim_depth', 'type': 'helper'},
                          'op': '+',
-                         'right': {   'args': [   {   'if_false': {'type': 'constant', 'value': 0},
-                                                      'if_true': {   'if_false': {   'if_false': {   'if_false': {   'type': 'constant',
-                                                                                                                     'value': 200},
-                                                                                                     'if_true': {   'type': 'constant',
-                                                                                                                    'value': 300},
-                                                                                                     'test': {   'args': [   ],
-                                                                                                                 'name': 'has_seamoth_depth_module_mk1',
-                                                                                                                 'type': 'helper'},
-                                                                                                     'type': 'conditional'},
-                                                                                     'if_true': {   'type': 'constant',
-                                                                                                    'value': 500},
-                                                                                     'test': {   'args': [],
-                                                                                                 'name': 'has_seamoth_depth_module_mk2',
-                                                                                                 'type': 'helper'},
-                                                                                     'type': 'conditional'},
-                                                                     'if_true': {'type': 'constant', 'value': 900},
-                                                                     'test': {   'args': [],
-                                                                                 'name': 'has_seamoth_depth_module_mk3',
-                                                                                 'type': 'helper'},
-                                                                     'type': 'conditional'},
-                                                      'test': {'args': [], 'name': 'has_seamoth', 'type': 'helper'},
-                                                      'type': 'conditional'},
-                                                  {   'if_false': {'type': 'constant', 'value': 0},
-                                                      'if_true': {   'if_false': {   'if_false': {   'if_false': {   'type': 'constant',
-                                                                                                                     'value': 500},
-                                                                                                     'if_true': {   'type': 'constant',
-                                                                                                                    'value': 900},
-                                                                                                     'test': {   'args': [   ],
-                                                                                                                 'name': 'has_cyclops_depth_module_mk1',
-                                                                                                                 'type': 'helper'},
-                                                                                                     'type': 'conditional'},
-                                                                                     'if_true': {   'type': 'constant',
-                                                                                                    'value': 1300},
-                                                                                     'test': {   'args': [],
-                                                                                                 'name': 'has_cyclops_depth_module_mk2',
-                                                                                                 'type': 'helper'},
-                                                                                     'type': 'conditional'},
-                                                                     'if_true': {'type': 'constant', 'value': 1700},
-                                                                     'test': {   'args': [],
-                                                                                 'name': 'has_cyclops_depth_module_mk3',
-                                                                                 'type': 'helper'},
-                                                                     'type': 'conditional'},
-                                                      'test': {'args': [], 'name': 'has_cyclops', 'type': 'helper'},
-                                                      'type': 'conditional'},
-                                                  {   'if_false': {'type': 'constant', 'value': 0},
-                                                      'if_true': {   'if_false': {   'if_false': {   'type': 'constant',
-                                                                                                     'value': 900},
-                                                                                     'if_true': {   'type': 'constant',
-                                                                                                    'value': 1300},
-                                                                                     'test': {   'args': [],
-                                                                                                 'name': 'has_prawn_depth_module_mk1',
-                                                                                                 'type': 'helper'},
-                                                                                     'type': 'conditional'},
-                                                                     'if_true': {'type': 'constant', 'value': 1700},
-                                                                     'test': {   'args': [],
-                                                                                 'name': 'has_prawn_depth_module_mk2',
-                                                                                 'type': 'helper'},
-                                                                     'type': 'conditional'},
-                                                      'test': {'args': [], 'name': 'has_prawn', 'type': 'helper'},
-                                                      'type': 'conditional'}],
+                         'right': {   'args': [   {'args': [], 'name': 'get_seamoth_max_depth', 'type': 'helper'},
+                                                  {'args': [], 'name': 'get_cyclops_max_depth', 'type': 'helper'},
+                                                  {'args': [], 'name': 'get_prawn_max_depth', 'type': 'helper'}],
                                       'type': 'max'},
                          'type': 'binary_op'},
     'get_max_swim_depth': {   'statements': [   {   'name': 'swim_rule',
                                                     'type': 'assign',
-                                                    'value': {'type': 'constant', 'value': 0}},
+                                                    'value': {'setting': 'swim_rule', 'type': 'setting_value'}},
                                                 {   'name': 'depth',
                                                     'type': 'assign',
                                                     'value': {   'index': {   'left': {   'name': 'swim_rule',
@@ -609,15 +390,9 @@ _HELPER_DEFINITIONS = {   'can_access_location': {   'body': {   'statements': [
                                                                                                       'type': 'assign',
                                                                                                       'value': {   'type': 'constant',
                                                                                                                    'value': 200}}],
-                                                                                    'test': {   'conditions': [   {   'args': [   ],
-                                                                                                                      'name': 'has_modification_station',
-                                                                                                                      'type': 'helper'},
-                                                                                                                  {   'item': 'Ultra '
-                                                                                                                              'High '
-                                                                                                                              'Capacity '
-                                                                                                                              'Tank',
-                                                                                                                      'type': 'item_check'}],
-                                                                                                'type': 'and'},
+                                                                                    'test': {   'args': [],
+                                                                                                'name': 'has_ultra_high_capacity_tank',
+                                                                                                'type': 'helper'},
                                                                                     'type': 'if_statement'}],
                                                                     'orelse': [   {   'body': [   {   'body': [   {   'name': 'depth',
                                                                                                                       'op': '+=',
@@ -634,25 +409,13 @@ _HELPER_DEFINITIONS = {   'can_access_location': {   'body': {   'statements': [
                                                                                                                                           'type': 'assign',
                                                                                                                                           'value': {   'type': 'constant',
                                                                                                                                                        'value': 50}}],
-                                                                                                                        'test': {   'conditions': [   {   'args': [   ],
-                                                                                                                                                          'name': 'has_modification_station',
-                                                                                                                                                          'type': 'helper'},
-                                                                                                                                                      {   'item': 'Lightweight '
-                                                                                                                                                                  'High '
-                                                                                                                                                                  'Capacity '
-                                                                                                                                                                  'Tank',
-                                                                                                                                                          'type': 'item_check'}],
-                                                                                                                                    'type': 'and'},
+                                                                                                                        'test': {   'args': [   ],
+                                                                                                                                    'name': 'has_lightweight_high_capacity_tank',
+                                                                                                                                    'type': 'helper'},
                                                                                                                         'type': 'if_statement'}],
-                                                                                                      'test': {   'conditions': [   {   'args': [   ],
-                                                                                                                                        'name': 'has_modification_station',
-                                                                                                                                        'type': 'helper'},
-                                                                                                                                    {   'item': 'Ultra '
-                                                                                                                                                'High '
-                                                                                                                                                'Capacity '
-                                                                                                                                                'Tank',
-                                                                                                                                        'type': 'item_check'}],
-                                                                                                                  'type': 'and'},
+                                                                                                      'test': {   'args': [   ],
+                                                                                                                  'name': 'has_ultra_high_capacity_tank',
+                                                                                                                  'type': 'helper'},
                                                                                                       'type': 'if_statement'}],
                                                                                       'orelse': [   {   'body': [   {   'name': 'depth',
                                                                                                                         'op': '+=',
@@ -664,39 +427,21 @@ _HELPER_DEFINITIONS = {   'can_access_location': {   'body': {   'statements': [
                                                                                                                                           'type': 'assign',
                                                                                                                                           'value': {   'type': 'constant',
                                                                                                                                                        'value': 25}}],
-                                                                                                                          'test': {   'conditions': [   {   'args': [   ],
-                                                                                                                                                            'name': 'has_modification_station',
-                                                                                                                                                            'type': 'helper'},
-                                                                                                                                                        {   'item': 'Lightweight '
-                                                                                                                                                                    'High '
-                                                                                                                                                                    'Capacity '
-                                                                                                                                                                    'Tank',
-                                                                                                                                                            'type': 'item_check'}],
-                                                                                                                                      'type': 'and'},
+                                                                                                                          'test': {   'args': [   ],
+                                                                                                                                      'name': 'has_lightweight_high_capacity_tank',
+                                                                                                                                      'type': 'helper'},
                                                                                                                           'type': 'if_statement'}],
-                                                                                                        'test': {   'conditions': [   {   'args': [   ],
-                                                                                                                                          'name': 'has_modification_station',
-                                                                                                                                          'type': 'helper'},
-                                                                                                                                      {   'item': 'Ultra '
-                                                                                                                                                  'High '
-                                                                                                                                                  'Capacity '
-                                                                                                                                                  'Tank',
-                                                                                                                                          'type': 'item_check'}],
-                                                                                                                    'type': 'and'},
+                                                                                                        'test': {   'args': [   ],
+                                                                                                                    'name': 'has_ultra_high_capacity_tank',
+                                                                                                                    'type': 'helper'},
                                                                                                         'type': 'if_statement'}],
-                                                                                      'test': {   'conditions': [   {   'args': [   ],
-                                                                                                                        'name': 'has_modification_station',
-                                                                                                                        'type': 'helper'},
-                                                                                                                    {   'item': 'Ultra '
-                                                                                                                                'Glide '
-                                                                                                                                'Fins',
-                                                                                                                        'type': 'item_check'}],
-                                                                                                  'type': 'and'},
+                                                                                      'test': {   'args': [],
+                                                                                                  'name': 'has_ultra_glide_fins',
+                                                                                                  'type': 'helper'},
                                                                                       'type': 'if_statement'}],
-                                                                    'test': {   'count': {   'type': 'constant',
-                                                                                             'value': 2},
-                                                                                'item': 'Seaglide Fragment',
-                                                                                'type': 'item_check'},
+                                                                    'test': {   'args': [],
+                                                                                'name': 'has_seaglide',
+                                                                                'type': 'helper'},
                                                                     'type': 'if_statement'}],
                                                     'test': {   'left': {'name': 'swim_rule', 'type': 'name'},
                                                                 'op': '>',
@@ -709,25 +454,15 @@ _HELPER_DEFINITIONS = {   'can_access_location': {   'body': {   'statements': [
                                'if_true': {   'if_false': {   'if_false': {'type': 'constant', 'value': 900},
                                                               'if_true': {'type': 'constant', 'value': 1300},
                                                               'test': {   'args': [],
-                                                                          'name': 'has_vehicle_upgrade_console',
+                                                                          'name': 'has_prawn_depth_module_mk1',
                                                                           'type': 'helper'},
                                                               'type': 'conditional'},
                                               'if_true': {'type': 'constant', 'value': 1700},
-                                              'test': {   'conditions': [   {   'args': [],
-                                                                                'name': 'has_prawn_depth_module_mk1',
-                                                                                'type': 'helper'},
-                                                                            {   'args': [],
-                                                                                'name': 'has_modification_station',
-                                                                                'type': 'helper'}],
-                                                          'type': 'and'},
+                                              'test': {   'args': [],
+                                                          'name': 'has_prawn_depth_module_mk2',
+                                                          'type': 'helper'},
                                               'type': 'conditional'},
-                               'test': {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
-                                                                 'item': 'Prawn Suit Fragment',
-                                                                 'type': 'item_check'},
-                                                             {   'args': [],
-                                                                 'name': 'has_mobile_vehicle_bay',
-                                                                 'type': 'helper'}],
-                                           'type': 'and'},
+                               'test': {'args': [], 'name': 'has_prawn', 'type': 'helper'},
                                'type': 'conditional'},
     'get_seamoth_max_depth': {   'if_false': {'type': 'constant', 'value': 0},
                                  'if_true': {   'if_false': {   'if_false': {   'if_false': {   'type': 'constant',
@@ -735,67 +470,43 @@ _HELPER_DEFINITIONS = {   'can_access_location': {   'body': {   'statements': [
                                                                                 'if_true': {   'type': 'constant',
                                                                                                'value': 300},
                                                                                 'test': {   'args': [],
-                                                                                            'name': 'has_vehicle_upgrade_console',
+                                                                                            'name': 'has_seamoth_depth_module_mk1',
                                                                                             'type': 'helper'},
                                                                                 'type': 'conditional'},
                                                                 'if_true': {'type': 'constant', 'value': 500},
-                                                                'test': {   'conditions': [   {   'args': [],
-                                                                                                  'name': 'has_seamoth_depth_module_mk1',
-                                                                                                  'type': 'helper'},
-                                                                                              {   'args': [],
-                                                                                                  'name': 'has_modification_station',
-                                                                                                  'type': 'helper'}],
-                                                                            'type': 'and'},
+                                                                'test': {   'args': [],
+                                                                            'name': 'has_seamoth_depth_module_mk2',
+                                                                            'type': 'helper'},
                                                                 'type': 'conditional'},
                                                 'if_true': {'type': 'constant', 'value': 900},
-                                                'test': {   'conditions': [   {   'args': [],
-                                                                                  'name': 'has_seamoth_depth_module_mk2',
-                                                                                  'type': 'helper'},
-                                                                              {   'args': [],
-                                                                                  'name': 'has_modification_station',
-                                                                                  'type': 'helper'}],
-                                                            'type': 'and'},
+                                                'test': {   'args': [],
+                                                            'name': 'has_seamoth_depth_module_mk3',
+                                                            'type': 'helper'},
                                                 'type': 'conditional'},
-                                 'test': {   'conditions': [   {   'count': {'type': 'constant', 'value': 3},
-                                                                   'item': 'Seamoth Fragment',
-                                                                   'type': 'item_check'},
-                                                               {   'args': [],
-                                                                   'name': 'has_mobile_vehicle_bay',
-                                                                   'type': 'helper'}],
-                                             'type': 'and'},
+                                 'test': {'args': [], 'name': 'has_seamoth', 'type': 'helper'},
                                  'type': 'conditional'},
-    'has_cyclops': {   'conditions': [   {   'count': {'type': 'constant', 'value': 3},
-                                             'item': 'Cyclops Bridge Fragment',
-                                             'type': 'item_check'},
-                                         {   'count': {'type': 'constant', 'value': 3},
-                                             'item': 'Cyclops Engine Fragment',
-                                             'type': 'item_check'},
-                                         {   'count': {'type': 'constant', 'value': 3},
-                                             'item': 'Cyclops Hull Fragment',
-                                             'type': 'item_check'},
-                                         {   'count': {'type': 'constant', 'value': 3},
-                                             'item': 'Mobile Vehicle Bay Fragment',
-                                             'type': 'item_check'}],
+    'has_cyclops': {   'conditions': [   {'args': [], 'name': 'has_cyclops_bridge', 'type': 'helper'},
+                                         {'args': [], 'name': 'has_cyclops_engine', 'type': 'helper'},
+                                         {'args': [], 'name': 'has_cyclops_hull', 'type': 'helper'},
+                                         {'args': [], 'name': 'has_mobile_vehicle_bay', 'type': 'helper'}],
                        'type': 'and'},
     'has_cyclops_bridge': {   'count': {'type': 'constant', 'value': 3},
                               'item': 'Cyclops Bridge Fragment',
                               'type': 'item_check'},
     'has_cyclops_depth_module_mk1': {'item': 'Cyclops Depth Module MK1', 'type': 'item_check'},
-    'has_cyclops_depth_module_mk2': {   'conditions': [   {'item': 'Cyclops Depth Module MK1', 'type': 'item_check'},
-                                                          {   'count': {'type': 'constant', 'value': 3},
-                                                              'item': 'Modification Station Fragment',
-                                                              'type': 'item_check'}],
+    'has_cyclops_depth_module_mk2': {   'conditions': [   {   'args': [],
+                                                              'name': 'has_cyclops_depth_module_mk1',
+                                                              'type': 'helper'},
+                                                          {   'args': [],
+                                                              'name': 'has_modification_station',
+                                                              'type': 'helper'}],
                                         'type': 'and'},
-    'has_cyclops_depth_module_mk3': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                    'name': 'has_cyclops_depth_module_mk1',
-                                                                                    'type': 'helper'},
-                                                                                {   'args': [],
-                                                                                    'name': 'has_modification_station',
-                                                                                    'type': 'helper'}],
-                                                              'type': 'and'},
-                                                          {   'count': {'type': 'constant', 'value': 3},
-                                                              'item': 'Modification Station Fragment',
-                                                              'type': 'item_check'}],
+    'has_cyclops_depth_module_mk3': {   'conditions': [   {   'args': [],
+                                                              'name': 'has_cyclops_depth_module_mk2',
+                                                              'type': 'helper'},
+                                                          {   'args': [],
+                                                              'name': 'has_modification_station',
+                                                              'type': 'helper'}],
                                         'type': 'and'},
     'has_cyclops_engine': {   'count': {'type': 'constant', 'value': 3},
                               'item': 'Cyclops Engine Fragment',
@@ -803,27 +514,15 @@ _HELPER_DEFINITIONS = {   'can_access_location': {   'body': {   'statements': [
     'has_cyclops_hull': {   'count': {'type': 'constant', 'value': 3},
                             'item': 'Cyclops Hull Fragment',
                             'type': 'item_check'},
-    'has_cyclops_shield': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                          'name': 'has_cyclops_bridge',
-                                                                          'type': 'helper'},
-                                                                      {   'args': [],
-                                                                          'name': 'has_cyclops_engine',
-                                                                          'type': 'helper'},
-                                                                      {   'args': [],
-                                                                          'name': 'has_cyclops_hull',
-                                                                          'type': 'helper'},
-                                                                      {   'args': [],
-                                                                          'name': 'has_mobile_vehicle_bay',
-                                                                          'type': 'helper'}],
-                                                    'type': 'and'},
+    'has_cyclops_shield': {   'conditions': [   {'args': [], 'name': 'has_cyclops', 'type': 'helper'},
                                                 {'item': 'Cyclops Shield Generator', 'type': 'item_check'}],
                               'type': 'and'},
     'has_laser_cutter': {   'count': {'type': 'constant', 'value': 3},
                             'item': 'Laser Cutter Fragment',
                             'type': 'item_check'},
-    'has_lightweight_high_capacity_tank': {   'conditions': [   {   'count': {'type': 'constant', 'value': 3},
-                                                                    'item': 'Modification Station Fragment',
-                                                                    'type': 'item_check'},
+    'has_lightweight_high_capacity_tank': {   'conditions': [   {   'args': [],
+                                                                    'name': 'has_modification_station',
+                                                                    'type': 'helper'},
                                                                 {   'item': 'Lightweight High Capacity Tank',
                                                                     'type': 'item_check'}],
                                               'type': 'and'},
@@ -837,19 +536,15 @@ _HELPER_DEFINITIONS = {   'can_access_location': {   'body': {   'statements': [
     'has_prawn': {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
                                            'item': 'Prawn Suit Fragment',
                                            'type': 'item_check'},
-                                       {   'count': {'type': 'constant', 'value': 3},
-                                           'item': 'Mobile Vehicle Bay Fragment',
-                                           'type': 'item_check'}],
+                                       {'args': [], 'name': 'has_mobile_vehicle_bay', 'type': 'helper'}],
                      'type': 'and'},
-    'has_prawn_depth_module_mk1': {   'conditions': [   {'item': 'Vehicle Upgrade Console', 'type': 'item_check'},
-                                                        {'args': [], 'name': 'has_moonpool', 'type': 'helper'}],
-                                      'type': 'and'},
+    'has_prawn_depth_module_mk1': {'args': [], 'name': 'has_vehicle_upgrade_console', 'type': 'helper'},
     'has_prawn_depth_module_mk2': {   'conditions': [   {   'args': [],
-                                                            'name': 'has_vehicle_upgrade_console',
+                                                            'name': 'has_prawn_depth_module_mk1',
                                                             'type': 'helper'},
-                                                        {   'count': {'type': 'constant', 'value': 3},
-                                                            'item': 'Modification Station Fragment',
-                                                            'type': 'item_check'}],
+                                                        {   'args': [],
+                                                            'name': 'has_modification_station',
+                                                            'type': 'helper'}],
                                       'type': 'and'},
     'has_propulsion_cannon': {   'count': {'type': 'constant', 'value': 2},
                                  'item': 'Propulsion Cannon Fragment',
@@ -858,45 +553,33 @@ _HELPER_DEFINITIONS = {   'can_access_location': {   'body': {   'statements': [
     'has_seamoth': {   'conditions': [   {   'count': {'type': 'constant', 'value': 3},
                                              'item': 'Seamoth Fragment',
                                              'type': 'item_check'},
-                                         {   'count': {'type': 'constant', 'value': 3},
-                                             'item': 'Mobile Vehicle Bay Fragment',
-                                             'type': 'item_check'}],
+                                         {'args': [], 'name': 'has_mobile_vehicle_bay', 'type': 'helper'}],
                        'type': 'and'},
-    'has_seamoth_depth_module_mk1': {   'conditions': [   {'item': 'Vehicle Upgrade Console', 'type': 'item_check'},
-                                                          {'args': [], 'name': 'has_moonpool', 'type': 'helper'}],
-                                        'type': 'and'},
+    'has_seamoth_depth_module_mk1': {'args': [], 'name': 'has_vehicle_upgrade_console', 'type': 'helper'},
     'has_seamoth_depth_module_mk2': {   'conditions': [   {   'args': [],
-                                                              'name': 'has_vehicle_upgrade_console',
+                                                              'name': 'has_seamoth_depth_module_mk1',
                                                               'type': 'helper'},
-                                                          {   'count': {'type': 'constant', 'value': 3},
-                                                              'item': 'Modification Station Fragment',
-                                                              'type': 'item_check'}],
+                                                          {   'args': [],
+                                                              'name': 'has_modification_station',
+                                                              'type': 'helper'}],
                                         'type': 'and'},
-    'has_seamoth_depth_module_mk3': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                    'name': 'has_seamoth_depth_module_mk1',
-                                                                                    'type': 'helper'},
-                                                                                {   'args': [],
-                                                                                    'name': 'has_modification_station',
-                                                                                    'type': 'helper'}],
-                                                              'type': 'and'},
-                                                          {   'count': {'type': 'constant', 'value': 3},
-                                                              'item': 'Modification Station Fragment',
-                                                              'type': 'item_check'}],
+    'has_seamoth_depth_module_mk3': {   'conditions': [   {   'args': [],
+                                                              'name': 'has_seamoth_depth_module_mk2',
+                                                              'type': 'helper'},
+                                                          {   'args': [],
+                                                              'name': 'has_modification_station',
+                                                              'type': 'helper'}],
                                         'type': 'and'},
-    'has_ultra_glide_fins': {   'conditions': [   {   'count': {'type': 'constant', 'value': 3},
-                                                      'item': 'Modification Station Fragment',
-                                                      'type': 'item_check'},
+    'has_ultra_glide_fins': {   'conditions': [   {'args': [], 'name': 'has_modification_station', 'type': 'helper'},
                                                   {'item': 'Ultra Glide Fins', 'type': 'item_check'}],
                                 'type': 'and'},
-    'has_ultra_high_capacity_tank': {   'conditions': [   {   'count': {'type': 'constant', 'value': 3},
-                                                              'item': 'Modification Station Fragment',
-                                                              'type': 'item_check'},
+    'has_ultra_high_capacity_tank': {   'conditions': [   {   'args': [],
+                                                              'name': 'has_modification_station',
+                                                              'type': 'helper'},
                                                           {'item': 'Ultra High Capacity Tank', 'type': 'item_check'}],
                                         'type': 'and'},
     'has_vehicle_upgrade_console': {   'conditions': [   {'item': 'Vehicle Upgrade Console', 'type': 'item_check'},
-                                                         {   'count': {'type': 'constant', 'value': 2},
-                                                             'item': 'Moonpool Fragment',
-                                                             'type': 'item_check'}],
+                                                         {'args': [], 'name': 'has_moonpool', 'type': 'helper'}],
                                        'type': 'and'},
     'is_radiated': {   'body': {   'statements': [   {   'name': 'aurora_dist',
                                                          'type': 'assign',
@@ -957,672 +640,672 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Blood Kelp Trench Wreck - Outside Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Blood Kelp Trench Wreck - Outside Databox', 'need_laser_cutter': False, 'position': {'x': -1234.3, 'y': -349.7, 'z': -396.0}},))
     )
 
     world.set_rule(
         multiworld.get_location("Blood Kelp Trench Wreck - Inside Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Blood Kelp Trench Wreck - Inside Databox', 'need_laser_cutter': False, 'position': {'x': -1208.0, 'y': -349.6, 'z': -383.0}},))
     )
 
     world.set_rule(
         multiworld.get_location("Blood Kelp Trench Wreck - PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Blood Kelp Trench Wreck - PDA', 'need_laser_cutter': False, 'position': {'x': -1210.6, 'y': -340.7, 'z': -393.4}},))
     )
 
     world.set_rule(
         multiworld.get_location("Bulb Zone West Wreck - Outside Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Bulb Zone West Wreck - Outside Databox', 'need_laser_cutter': False, 'position': {'x': 903.8, 'y': -220.3, 'z': 590.9}},))
     )
 
     world.set_rule(
         multiworld.get_location("Bulb Zone West Wreck - Under Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Bulb Zone West Wreck - Under Databox', 'need_laser_cutter': False, 'position': {'x': 910.9, 'y': -201.8, 'z': 623.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Bulb Zone West Wreck - Inside Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Bulb Zone West Wreck - Inside Databox', 'need_laser_cutter': True, 'position': {'x': 914.9, 'y': -202.1, 'z': 611.8}},))
     )
 
     world.set_rule(
         multiworld.get_location("Bulb Zone West Wreck - PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Bulb Zone West Wreck - PDA', 'need_laser_cutter': True, 'position': {'x': 912.6, 'y': -202.0, 'z': 609.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Bulb Zone East Wreck - Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Bulb Zone East Wreck - Databox', 'need_laser_cutter': False, 'position': {'x': 1327.1, 'y': -234.9, 'z': 575.8}},))
     )
 
     world.set_rule(
         multiworld.get_location("Dunes North Wreck - Outside Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Dunes North Wreck - Outside Databox', 'need_laser_cutter': False, 'position': {'x': -1407.7, 'y': -344.2, 'z': 721.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Dunes North Wreck - Office Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Dunes North Wreck - Office Databox', 'need_laser_cutter': False, 'position': {'x': -1393.9, 'y': -329.7, 'z': 733.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Dunes North Wreck - PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Dunes North Wreck - PDA', 'need_laser_cutter': False, 'position': {'x': -1396.3, 'y': -330.8, 'z': 730.0}},))
     )
 
     world.set_rule(
         multiworld.get_location("Dunes North Wreck - Cargo Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Dunes North Wreck - Cargo Databox', 'need_laser_cutter': True, 'position': {'x': -1409.8, 'y': -332.4, 'z': 706.9}},))
     )
 
     world.set_rule(
         multiworld.get_location("Dunes West Wreck - Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Dunes West Wreck - Databox', 'need_laser_cutter': False, 'position': {'x': -1626.2, 'y': -357.5, 'z': 99.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Dunes East Wreck - Outside Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Dunes East Wreck - Outside Databox', 'need_laser_cutter': False, 'position': {'x': -1196.3, 'y': -223.0, 'z': 12.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Dunes East Wreck - Inside Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Dunes East Wreck - Inside Databox', 'need_laser_cutter': False, 'position': {'x': -1206.4, 'y': -225.6, 'z': 4.0}},))
     )
 
     world.set_rule(
         multiworld.get_location("Grand Reef North Wreck - Outside Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Grand Reef North Wreck - Outside Databox', 'need_laser_cutter': False, 'position': {'x': -269.7, 'y': -262.8, 'z': -764.3}},))
     )
 
     world.set_rule(
         multiworld.get_location("Grand Reef North Wreck - Elevator Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Grand Reef North Wreck - Elevator Databox', 'need_laser_cutter': True, 'position': {'x': -285.8, 'y': -240.2, 'z': -786.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Grand Reef North Wreck - Bottom Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Grand Reef North Wreck - Bottom Databox', 'need_laser_cutter': False, 'position': {'x': -285.2, 'y': -262.4, 'z': -788.4}},))
     )
 
     world.set_rule(
         multiworld.get_location("Grand Reef North Wreck - Hangar PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Grand Reef North Wreck - Hangar PDA', 'need_laser_cutter': False, 'position': {'x': -272.5, 'y': -254.7, 'z': -788.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Grand Reef South Wreck - Trench Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Grand Reef South Wreck - Trench Databox', 'need_laser_cutter': False, 'position': {'x': -850.9, 'y': -473.2, 'z': -1414.6}},))
     )
 
     world.set_rule(
         multiworld.get_location("Grand Reef South Wreck - Comms Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Grand Reef South Wreck - Comms Databox', 'need_laser_cutter': True, 'position': {'x': -889.4, 'y': -433.8, 'z': -1424.8}},))
     )
 
     world.set_rule(
         multiworld.get_location("Grand Reef South Wreck - Outside Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Grand Reef South Wreck - Outside Databox', 'need_laser_cutter': False, 'position': {'x': -862.4, 'y': -437.5, 'z': -1444.1}},))
     )
 
     world.set_rule(
         multiworld.get_location("Grand Reef South Wreck - PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Grand Reef South Wreck - PDA', 'need_laser_cutter': False, 'position': {'x': -887.9, 'y': -446.0, 'z': -1422.7}},))
     )
 
     world.set_rule(
         multiworld.get_location("Grassy Plateaus South Wreck - Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Grassy Plateaus South Wreck - Databox', 'need_laser_cutter': False, 'position': {'x': -23.3, 'y': -105.8, 'z': -604.2}},))
     )
 
     world.set_rule(
         multiworld.get_location("Grassy Plateaus South Wreck - PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Grassy Plateaus South Wreck - PDA', 'need_laser_cutter': False, 'position': {'x': -27.3, 'y': -106.8, 'z': -607.2}},))
     )
 
     world.set_rule(
         multiworld.get_location("Grassy Plateaus East Wreck - Breach Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': True, 'name': 'Grassy Plateaus East Wreck - Breach Databox', 'need_laser_cutter': True, 'position': {'x': 313.9, 'y': -91.8, 'z': 432.6}},))
     )
 
     world.set_rule(
         multiworld.get_location("Grassy Plateaus East Wreck - Hangar Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': True, 'name': 'Grassy Plateaus East Wreck - Hangar Databox', 'need_laser_cutter': True, 'position': {'x': 319.4, 'y': -104.3, 'z': 441.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Grassy Plateaus West Wreck - Locker PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Grassy Plateaus West Wreck - Locker PDA', 'need_laser_cutter': False, 'position': {'x': -632.3, 'y': -75.0, 'z': -8.9}},))
     )
 
     world.set_rule(
         multiworld.get_location("Grassy Plateaus West Wreck - Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Grassy Plateaus West Wreck - Data Terminal', 'need_laser_cutter': False, 'position': {'x': -664.4, 'y': -97.8, 'z': -8.0}},))
     )
 
     world.set_rule(
         multiworld.get_location("Grassy Plateaus Southwest Wreck - Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Grassy Plateaus Southwest Wreck - Databox', 'need_laser_cutter': True, 'position': {'x': -421.4, 'y': -107.8, 'z': -266.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Safe Shallows Wreck - PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Safe Shallows Wreck - PDA', 'need_laser_cutter': False, 'position': {'x': -44.0, 'y': -29.1, 'z': -403.6}},))
     )
 
     world.set_rule(
         multiworld.get_location("Kelp Forest Wreck - Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Kelp Forest Wreck - Databox', 'need_laser_cutter': False, 'position': {'x': -317.6, 'y': -78.8, 'z': 247.4}},))
     )
 
     world.set_rule(
         multiworld.get_location("Kelp Forest Wreck - PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Kelp Forest Wreck - PDA', 'need_laser_cutter': False, 'position': {'x': 63.2, 'y': -38.5, 'z': 382.9}},))
     )
 
     world.set_rule(
         multiworld.get_location("Mountains West Wreck - Outside Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Mountains West Wreck - Outside Databox', 'need_laser_cutter': False, 'position': {'x': 740.3, 'y': -389.2, 'z': 1179.8}},))
     )
 
     world.set_rule(
         multiworld.get_location("Mountains West Wreck - Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Mountains West Wreck - Data Terminal', 'need_laser_cutter': True, 'position': {'x': 703.7, 'y': -365.9, 'z': 1199.3}},))
     )
 
     world.set_rule(
         multiworld.get_location("Mountains West Wreck - Hangar Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Mountains West Wreck - Hangar Databox', 'need_laser_cutter': True, 'position': {'x': 698.2, 'y': -350.8, 'z': 1186.9}},))
     )
 
     world.set_rule(
         multiworld.get_location("Mountains West Wreck - Office Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Mountains West Wreck - Office Databox', 'need_laser_cutter': False, 'position': {'x': 676.3, 'y': -343.6, 'z': 1204.6}},))
     )
 
     world.set_rule(
         multiworld.get_location("Mountains East Wreck - Comms Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Mountains East Wreck - Comms Databox', 'need_laser_cutter': False, 'position': {'x': 1068.5, 'y': -283.4, 'z': 1345.3}},))
     )
 
     world.set_rule(
         multiworld.get_location("Mountains East Wreck - Outside Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Mountains East Wreck - Outside Databox', 'need_laser_cutter': False, 'position': {'x': 1075.7, 'y': -288.9, 'z': 1321.8}},))
     )
 
     world.set_rule(
         multiworld.get_location("Northwestern Mushroom Forest Wreck - Cargo Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Northwestern Mushroom Forest Wreck - Cargo Databox', 'need_laser_cutter': True, 'position': {'x': -655.1, 'y': -109.6, 'z': 791.0}},))
     )
 
     world.set_rule(
         multiworld.get_location("Northwestern Mushroom Forest Wreck - Office Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Northwestern Mushroom Forest Wreck - Office Databox', 'need_laser_cutter': False, 'position': {'x': -663.4, 'y': -111.9, 'z': 777.9}},))
     )
 
     world.set_rule(
         multiworld.get_location("Northwestern Mushroom Forest Wreck - PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Northwestern Mushroom Forest Wreck - PDA', 'need_laser_cutter': False, 'position': {'x': -662.2, 'y': -113.4, 'z': 777.7}},))
     )
 
     world.set_rule(
         multiworld.get_location("Sea Treader's Path Wreck - Outside Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': "Sea Treader's Path Wreck - Outside Databox", 'need_laser_cutter': False, 'position': {'x': -1161.1, 'y': -191.7, 'z': -758.3}},))
     )
 
     world.set_rule(
         multiworld.get_location("Sea Treader's Path Wreck - Hangar Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': "Sea Treader's Path Wreck - Hangar Databox", 'need_laser_cutter': True, 'position': {'x': -1129.5, 'y': -155.2, 'z': -729.3}},))
     )
 
     world.set_rule(
         multiworld.get_location("Sea Treader's Path Wreck - Lobby Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': "Sea Treader's Path Wreck - Lobby Databox", 'need_laser_cutter': False, 'position': {'x': -1115.9, 'y': -175.3, 'z': -724.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Sea Treader's Path Wreck - PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': "Sea Treader's Path Wreck - PDA", 'need_laser_cutter': False, 'position': {'x': -1136.8, 'y': -157.0, 'z': -734.6}},))
     )
 
     world.set_rule(
         multiworld.get_location("Sparse Reef Wreck - Locker Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Sparse Reef Wreck - Locker Databox', 'need_laser_cutter': True, 'position': {'x': -789.8, 'y': -216.1, 'z': -711.0}},))
     )
 
     world.set_rule(
         multiworld.get_location("Sparse Reef Wreck - Outside Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Sparse Reef Wreck - Outside Databox', 'need_laser_cutter': False, 'position': {'x': -810.7, 'y': -209.3, 'z': -685.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Sparse Reef Wreck - Lab Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Sparse Reef Wreck - Lab Databox', 'need_laser_cutter': True, 'position': {'x': -795.5, 'y': -204.1, 'z': -774.7}},))
     )
 
     world.set_rule(
         multiworld.get_location("Underwater Islands Wreck - Outside Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Underwater Islands Wreck - Outside Databox', 'need_laser_cutter': False, 'position': {'x': -170.8, 'y': -187.6, 'z': 880.7}},))
     )
 
     world.set_rule(
         multiworld.get_location("Underwater Islands Wreck - Hangar Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Underwater Islands Wreck - Hangar Databox', 'need_laser_cutter': True, 'position': {'x': -138.4, 'y': -193.6, 'z': 888.7}},))
     )
 
     world.set_rule(
         multiworld.get_location("Underwater Islands Wreck - Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Underwater Islands Wreck - Data Terminal', 'need_laser_cutter': True, 'position': {'x': -130.7, 'y': -193.2, 'z': 883.3}},))
     )
 
     world.set_rule(
         multiworld.get_location("Underwater Islands Wreck - Cable Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Underwater Islands Wreck - Cable Databox', 'need_laser_cutter': False, 'position': {'x': -137.8, 'y': -193.4, 'z': 879.4}},))
     )
 
     world.set_rule(
         multiworld.get_location("Underwater Islands Wreck - Pipes Databox 1", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Underwater Islands Wreck - Pipes Databox 1', 'need_laser_cutter': False, 'need_propulsion_cannon': True, 'position': {'x': -124.4, 'y': -200.7, 'z': 853.0}},))
     )
 
     world.set_rule(
         multiworld.get_location("Underwater Islands Wreck - Pipes Databox 2", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Underwater Islands Wreck - Pipes Databox 2', 'need_laser_cutter': False, 'need_propulsion_cannon': True, 'position': {'x': -126.8, 'y': -201.1, 'z': 852.1}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Deep Grand Reef - Bedroom Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Deep Grand Reef - Bedroom Databox', 'need_laser_cutter': False, 'position': {'x': -643.8, 'y': -509.9, 'z': -941.9}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Deep Grand Reef - Observatory Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Deep Grand Reef - Observatory Databox', 'need_laser_cutter': False, 'position': {'x': -635.1, 'y': -502.7, 'z': -951.4}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Deep Grand Reef - Bedroom PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Deep Grand Reef - Bedroom PDA', 'need_laser_cutter': False, 'position': {'x': -645.8, 'y': -508.7, 'z': -943.0}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Deep Grand Reef - Outside PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Deep Grand Reef - Outside PDA', 'need_laser_cutter': False, 'position': {'x': -630.5, 'y': -511.1, 'z': -936.1}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Deep Grand Reef - Observatory PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Deep Grand Reef - Observatory PDA', 'need_laser_cutter': False, 'position': {'x': -647.7, 'y': -502.6, 'z': -935.8}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Deep Grand Reef - Lab PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Deep Grand Reef - Lab PDA', 'need_laser_cutter': False, 'position': {'x': -639.6, 'y': -505.9, 'z': -946.6}},))
     )
 
     world.set_rule(
         multiworld.get_location("Floating Island - Lake PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Floating Island - Lake PDA', 'need_laser_cutter': False, 'position': {'x': -707.2, 'y': 0.5, 'z': -1096.7}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Floating Island - Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Floating Island - Databox', 'need_laser_cutter': False, 'position': {'x': -765.7, 'y': 17.6, 'z': -1116.4}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Floating Island - Room PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Floating Island - Room PDA', 'need_laser_cutter': False, 'position': {'x': -754.9, 'y': 14.6, 'z': -1108.9}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Floating Island - Green Wall PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Floating Island - Green Wall PDA', 'need_laser_cutter': False, 'position': {'x': -765.3, 'y': 14.1, 'z': -1115.0}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Floating Island - Corridor PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Floating Island - Corridor PDA', 'need_laser_cutter': False, 'position': {'x': -758.6, 'y': 14.1, 'z': -1111.3}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Floating Island - North Observatory PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Floating Island - North Observatory PDA', 'need_laser_cutter': False, 'position': {'x': -805.4, 'y': 76.9, 'z': -1055.7}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Floating Island - South Observatory PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Floating Island - South Observatory PDA', 'need_laser_cutter': False, 'position': {'x': -715.9, 'y': 75.4, 'z': -1168.8}},))
     )
 
     world.set_rule(
         multiworld.get_location("Jellyshroom Cave - PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Jellyshroom Cave - PDA', 'need_laser_cutter': False, 'position': {'x': -540.5, 'y': -250.8, 'z': -83.4}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Jellyshroom Cave - Bedroom Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Jellyshroom Cave - Bedroom Databox', 'need_laser_cutter': False, 'position': {'x': 110.6, 'y': -264.9, 'z': -369.0}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Jellyshroom Cave - Detached PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Jellyshroom Cave - Detached PDA', 'need_laser_cutter': False, 'position': {'x': 80.6, 'y': -268.6, 'z': -358.3}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Jellyshroom Cave - Office PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Jellyshroom Cave - Office PDA', 'need_laser_cutter': False, 'position': {'x': 78.2, 'y': -265.0, 'z': -373.4}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Jellyshroom Cave - Locker PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Jellyshroom Cave - Locker PDA', 'need_laser_cutter': False, 'position': {'x': 85.1, 'y': -264.1, 'z': -372.8}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Jellyshroom Cave - Bedroom PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Jellyshroom Cave - Bedroom PDA', 'need_laser_cutter': False, 'position': {'x': 112.3, 'y': -264.9, 'z': -369.3}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Jellyshroom Cave - Observatory PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Jellyshroom Cave - Observatory PDA', 'need_laser_cutter': False, 'position': {'x': 95.5, 'y': -258.9, 'z': -366.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lifepod 2 - Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lifepod 2 - Databox', 'need_laser_cutter': False, 'position': {'x': -483.6, 'y': -504.7, 'z': 1326.6}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lifepod 2 - PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lifepod 2 - PDA', 'need_laser_cutter': False, 'position': {'x': -481.4, 'y': -503.6, 'z': 1324.1}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lifepod 3 - Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lifepod 3 - Databox', 'need_laser_cutter': False, 'position': {'x': -34.2, 'y': -22.4, 'z': 410.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lifepod 3 - PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lifepod 3 - PDA', 'need_laser_cutter': False, 'position': {'x': -33.8, 'y': -22.5, 'z': 408.8}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lifepod 4 - Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lifepod 4 - Databox', 'need_laser_cutter': False, 'position': {'x': 712.4, 'y': -3.4, 'z': 160.8}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lifepod 4 - PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lifepod 4 - PDA', 'need_laser_cutter': False, 'position': {'x': 712.0, 'y': -3.5, 'z': 161.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lifepod 6 - Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lifepod 6 - Databox', 'need_laser_cutter': False, 'position': {'x': 358.7, 'y': -117.1, 'z': 306.8}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lifepod 6 - Inside PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lifepod 6 - Inside PDA', 'need_laser_cutter': False, 'position': {'x': 361.8, 'y': -116.2, 'z': 309.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lifepod 6 - Outside PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lifepod 6 - Outside PDA', 'need_laser_cutter': False, 'position': {'x': 359.9, 'y': -117.0, 'z': 312.1}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lifepod 7 - PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lifepod 7 - PDA', 'need_laser_cutter': False, 'position': {'x': -56.0, 'y': -182.0, 'z': -1039.0}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lifepod 12 - Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lifepod 12 - Databox', 'need_laser_cutter': False, 'position': {'x': 1119.5, 'y': -271.7, 'z': 561.7}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lifepod 12 - PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lifepod 12 - PDA', 'need_laser_cutter': False, 'position': {'x': 1116.1, 'y': -271.3, 'z': 566.9}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lifepod 13 - Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lifepod 13 - Databox', 'need_laser_cutter': False, 'position': {'x': -926.4, 'y': -185.2, 'z': 501.8}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lifepod 13 - PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lifepod 13 - PDA', 'need_laser_cutter': False, 'position': {'x': -926.8, 'y': -184.4, 'z': 506.6}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lifepod 17 - PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lifepod 17 - PDA', 'need_laser_cutter': False, 'position': {'x': -514.5, 'y': -98.1, 'z': -56.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lifepod 19 - Databox", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lifepod 19 - Databox', 'need_laser_cutter': False, 'position': {'x': -809.8, 'y': -302.2, 'z': -876.9}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lifepod 19 - Outside PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lifepod 19 - Outside PDA', 'need_laser_cutter': False, 'position': {'x': -806.1, 'y': -294.1, 'z': -866.0}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lifepod 19 - Inside PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lifepod 19 - Inside PDA', 'need_laser_cutter': False, 'position': {'x': -810.5, 'y': -299.4, 'z': -873.1}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora Seamoth Bay - Upgrade Console", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora Seamoth Bay - Upgrade Console', 'need_laser_cutter': False, 'need_propulsion_cannon': True, 'position': {'x': 903.5, 'y': -0.2, 'z': 16.1}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora Drive Room - Upgrade Console", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora Drive Room - Upgrade Console', 'need_laser_cutter': False, 'need_propulsion_cannon': True, 'position': {'x': 872.5, 'y': 2.7, 'z': -0.7}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora Prawn Suit Bay - Upgrade Console", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora Prawn Suit Bay - Upgrade Console', 'need_laser_cutter': True, 'need_propulsion_cannon': True, 'position': {'x': 991.6, 'y': 3.2, 'z': -31.0}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora - Office PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora - Office PDA', 'need_laser_cutter': False, 'position': {'x': 952.1, 'y': 41.2, 'z': 113.9}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora - Corridor PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora - Corridor PDA', 'need_laser_cutter': False, 'position': {'x': 977.2, 'y': 39.1, 'z': 83.0}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora - Cargo Bay PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora - Cargo Bay PDA', 'need_laser_cutter': False, 'need_propulsion_cannon': True, 'position': {'x': 954.9, 'y': 11.2, 'z': 3.4}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora - Seamoth Bay PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora - Seamoth Bay PDA', 'need_laser_cutter': False, 'need_propulsion_cannon': True, 'position': {'x': 907.1, 'y': -1.5, 'z': 15.3}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora - Medkit Locker PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora - Medkit Locker PDA', 'need_laser_cutter': True, 'need_propulsion_cannon': True, 'position': {'x': 951.8, 'y': -2.3, 'z': -34.7}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora - Locker PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora - Locker PDA', 'need_laser_cutter': True, 'need_propulsion_cannon': True, 'position': {'x': 952.0, 'y': -3.7, 'z': -23.4}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora - Canteen PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora - Canteen PDA', 'need_laser_cutter': True, 'need_propulsion_cannon': True, 'position': {'x': 986.5, 'y': 9.6, 'z': -48.6}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora - Cabin 4 PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora - Cabin 4 PDA', 'need_laser_cutter': True, 'need_propulsion_cannon': True, 'position': {'x': 951.3, 'y': 11.2, 'z': -51.0}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora - Cabin 7 PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora - Cabin 7 PDA', 'need_laser_cutter': True, 'need_propulsion_cannon': True, 'position': {'x': 967.1, 'y': 10.4, 'z': -47.4}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora - Cabin 1 PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora - Cabin 1 PDA', 'need_laser_cutter': True, 'need_propulsion_cannon': True, 'position': {'x': 964.1, 'y': 11.1, 'z': -61.9}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora - Captain PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora - Captain PDA', 'need_laser_cutter': True, 'need_propulsion_cannon': True, 'position': {'x': 971.2, 'y': 10.8, 'z': -70.4}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora - Ring PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora - Ring PDA', 'need_laser_cutter': False, 'need_propulsion_cannon': True, 'position': {'x': 1033.6, 'y': -8.5, 'z': 16.2}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora - Lab PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora - Lab PDA', 'need_laser_cutter': False, 'need_propulsion_cannon': True, 'position': {'x': 1032.5, 'y': -7.8, 'z': 32.4}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora - Office Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora - Office Data Terminal', 'need_laser_cutter': False, 'position': {'x': 945.8, 'y': 40.8, 'z': 115.1}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora - Captain Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora - Captain Data Terminal', 'need_laser_cutter': True, 'need_propulsion_cannon': True, 'position': {'x': 974.8, 'y': 10.0, 'z': -77.0}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora - Battery Room Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora - Battery Room Data Terminal', 'need_laser_cutter': True, 'need_propulsion_cannon': True, 'position': {'x': 1040.8, 'y': -11.4, 'z': -3.4}},))
     )
 
     world.set_rule(
         multiworld.get_location("Aurora - Lab Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora - Lab Data Terminal', 'need_laser_cutter': False, 'need_propulsion_cannon': True, 'position': {'x': 1029.5, 'y': -8.7, 'z': 35.9}},))
     )
 
     world.set_rule(
         multiworld.get_location("Quarantine Enforcement Platform's - Upper Alien Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': "Quarantine Enforcement Platform's - Upper Alien Data Terminal", 'need_laser_cutter': False, 'position': {'x': 432.2, 'y': 3.0, 'z': 1193.2}},))
     )
 
     world.set_rule(
         multiworld.get_location("Quarantine Enforcement Platform's - Mid Alien Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': "Quarantine Enforcement Platform's - Mid Alien Data Terminal", 'need_laser_cutter': False, 'position': {'x': 474.4, 'y': -4.5, 'z': 1224.4}},))
     )
 
     world.set_rule(
         multiworld.get_location("Dunes Sanctuary - Alien Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Dunes Sanctuary - Alien Data Terminal', 'need_laser_cutter': False, 'position': {'x': -1224.2, 'y': -400.4, 'z': 1057.9}},))
     )
 
     world.set_rule(
         multiworld.get_location("Deep Sparse Reef Sanctuary - Alien Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Deep Sparse Reef Sanctuary - Alien Data Terminal', 'need_laser_cutter': False, 'position': {'x': -895.5, 'y': -311.6, 'z': -838.1}},))
     )
 
     world.set_rule(
         multiworld.get_location("Northern Blood Kelp Zone Sanctuary - Alien Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Northern Blood Kelp Zone Sanctuary - Alien Data Terminal', 'need_laser_cutter': False, 'position': {'x': -642.9, 'y': -563.5, 'z': 1485.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Lost River Laboratory Cache - Alien Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Lost River Laboratory Cache - Alien Data Terminal', 'need_laser_cutter': False, 'position': {'x': -1112.3, 'y': -687.3, 'z': -695.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Disease Research Facility - Upper Alien Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Disease Research Facility - Upper Alien Data Terminal', 'need_laser_cutter': False, 'position': {'x': -280.2, 'y': -804.3, 'z': 305.1}},))
     )
 
     world.set_rule(
         multiworld.get_location("Disease Research Facility - Mid Alien Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Disease Research Facility - Mid Alien Data Terminal', 'need_laser_cutter': False, 'position': {'x': -267.9, 'y': -806.6, 'z': 250.0}},))
     )
 
     world.set_rule(
         multiworld.get_location("Disease Research Facility - Lower Alien Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Disease Research Facility - Lower Alien Data Terminal', 'need_laser_cutter': False, 'position': {'x': -286.2, 'y': -815.6, 'z': 297.8}},))
     )
 
     world.set_rule(
         multiworld.get_location("Alien Thermal Plant - Entrance Alien Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Alien Thermal Plant - Entrance Alien Data Terminal', 'need_laser_cutter': False, 'position': {'x': -71.3, 'y': -1227.2, 'z': 104.8}},))
     )
 
     world.set_rule(
         multiworld.get_location("Alien Thermal Plant - Green Alien Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Alien Thermal Plant - Green Alien Data Terminal', 'need_laser_cutter': False, 'position': {'x': -38.7, 'y': -1226.6, 'z': 111.8}},))
     )
 
     world.set_rule(
         multiworld.get_location("Alien Thermal Plant - Yellow Alien Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Alien Thermal Plant - Yellow Alien Data Terminal', 'need_laser_cutter': False, 'position': {'x': -30.4, 'y': -1220.3, 'z': 111.8}},))
     )
 
     world.set_rule(
         multiworld.get_location("Primary Containment Facility's Antechamber - Alien Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': "Primary Containment Facility's Antechamber - Alien Data Terminal", 'need_laser_cutter': False, 'position': {'x': 245.8, 'y': -1430.6, 'z': -311.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Primary Containment Facility's Egg Laboratory - Alien Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': "Primary Containment Facility's Egg Laboratory - Alien Data Terminal", 'need_laser_cutter': False, 'position': {'x': 165.5, 'y': -1442.4, 'z': -385.8}},))
     )
 
     world.set_rule(
         multiworld.get_location("Primary Containment Facility's Pipe Room - Alien Data Terminal", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': "Primary Containment Facility's Pipe Room - Alien Data Terminal", 'need_laser_cutter': False, 'position': {'x': 348.7, 'y': -1443.5, 'z': -291.9}},))
     )
 
     world.set_rule(
         multiworld.get_location("Grassy Plateaus West Wreck - Beam PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Grassy Plateaus West Wreck - Beam PDA', 'need_laser_cutter': False, 'position': {'x': -641.8, 'y': -111.3, 'z': -19.7}},))
     )
 
     world.set_rule(
         multiworld.get_location("Floating Island - Cave Entrance PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Floating Island - Cave Entrance PDA', 'need_laser_cutter': False, 'position': {'x': -748.9, 'y': 14.4, 'z': -1179.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Degasi Seabase - Jellyshroom Cave - Outside PDA", player),
-        True_()
+        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Degasi Seabase - Jellyshroom Cave - Outside PDA', 'need_laser_cutter': False, 'position': {'x': 83.2, 'y': -276.4, 'z': -345.5}},))
     )
 
     world.set_rule(
         multiworld.get_location("Neptune Launch", player),
-        And(True_(), True_(), True_(), Has('Ion Battery'), Has('Ion Power Cell'), Has('Neptune Boosters'), Has('Neptune Cockpit'), Has('Neptune Fuel Reserve'), Has('Neptune Gantry'), Has('Neptune Launch Platform'))
+        And(Compare(HelperCall(helper_func=_subnauticaworldgen_get_max_depth, helper_name="get_max_depth"), ">=", 1444), HelperCall(helper_func=_subnauticaworldgen_has_cyclops_shield, helper_name="has_cyclops_shield"), HelperCall(helper_func=_subnauticaworldgen_has_mobile_vehicle_bay, helper_name="has_mobile_vehicle_bay"), Has('Ion Battery'), Has('Ion Power Cell'), Has('Neptune Boosters'), Has('Neptune Cockpit'), Has('Neptune Fuel Reserve'), Has('Neptune Gantry'), Has('Neptune Launch Platform'))
     )
 
     world.set_rule(
         multiworld.get_location("Disable Quarantine", player),
-        True_()
+        Compare(HelperCall(helper_func=_subnauticaworldgen_get_max_depth, helper_name="get_max_depth"), ">=", 1444)
     )
 
     world.set_rule(
         multiworld.get_location("Full Infection", player),
-        True_()
+        Compare(HelperCall(helper_func=_subnauticaworldgen_get_max_depth, helper_name="get_max_depth"), ">=", 900)
     )
 
     world.set_rule(
