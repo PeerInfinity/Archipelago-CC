@@ -501,6 +501,51 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Bowser's Castle Mini", player),
         And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))
     )
+    # Register indirect conditions for proper sphere calculation
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Birdo Flag"),
+        multiworld.get_entrance("Shop Chuckolator Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Enter Fungitown Flag"),
+        multiworld.get_entrance("Shop Chuckolator Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Mom Piranha Flag"),
+        multiworld.get_entrance("Shop Chuckolator Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Beanstar Complete Flag"),
+        multiworld.get_entrance("Shop Chuckolator Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Birdo Flag"),
+        multiworld.get_entrance("Shop Mom Piranha Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Enter Fungitown Flag"),
+        multiworld.get_entrance("Shop Mom Piranha Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Beanstar Complete Flag"),
+        multiworld.get_entrance("Shop Mom Piranha Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Birdo Flag"),
+        multiworld.get_entrance("Shop Enter Fungitown Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Beanstar Complete Flag"),
+        multiworld.get_entrance("Shop Enter Fungitown Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Shop Birdo Flag"),
+        multiworld.get_entrance("Shop Beanstar Complete Flag", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Fungitown Shop Birdo Flag"),
+        multiworld.get_entrance("Fungitown Shop Beanstar Complete Flag", player)
+    )
     # Location rules
     world.set_rule(
         multiworld.get_location("Hoohoo Village Hammer House Block", player),

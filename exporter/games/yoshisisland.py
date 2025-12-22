@@ -163,12 +163,29 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
         # Set assume_bidirectional_exits to false for Yoshi's Island
         settings_dict['assume_bidirectional_exits'] = False
 
-        # Helper to safely extract option values
+        # Default values for Yoshi's Island options (used for WorldGen worlds that lack these options)
+        # These match the defaults in the original Yoshi's Island world
+        OPTION_DEFAULTS = {
+            'stage_logic': 0,              # StageLogic.option_strict = Easy
+            'hidden_object_visibility': 1, # ObjectVis.option_hidden_visible
+            'shuffle_midrings': 0,         # Not shuffled (midring_start = True)
+            'item_logic': 0,               # Not enabled (consumable_logic = True)
+            'bowser_door_mode': 0,         # BowserDoor.option_door_1
+            'luigi_pieces_required': 25,   # Default pieces
+            'castle_clear_condition': 0,   # Default condition
+            'castle_open_condition': 5,    # Default condition
+        }
+
+        # Helper to safely extract option values with defaults
         def extract_option(option_name):
             option = getattr(world.options, option_name, None)
             # Check if the option has a 'value' attribute (like Option objects)
             # Otherwise, return the option itself (might be a direct value like bool/int)
-            return getattr(option, 'value', option)
+            value = getattr(option, 'value', option)
+            # If value is None, use the default
+            if value is None:
+                return OPTION_DEFAULTS.get(option_name)
+            return value
 
         # Yoshi's Island specific settings needed for helper functions
         if hasattr(world, 'options'):
@@ -215,19 +232,19 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
             if hasattr(world, 'boss_order') and world.boss_order:
                 settings_dict['boss_order'] = list(world.boss_order)
             else:
-                # Default boss order if not shuffled
+                # Default boss order if not shuffled (names must match actual location names)
                 settings_dict['boss_order'] = [
-                    "Burt the Bashful's Boss Room",
-                    "Salvo the Slime's Boss Room",
+                    "Burt The Bashful's Boss Room",
+                    "Salvo The Slime's Boss Room",
                     "Bigger Boo's Boss Room",
-                    "Roger the Potted Ghost's Boss Room",
+                    "Roger The Ghost's Boss Room",
                     "Prince Froggy's Boss Room",
                     "Naval Piranha's Boss Room",
                     "Marching Milde's Boss Room",
-                    "Hookbill the Koopa's Boss Room",
-                    "Sluggy the Unshaven's Boss Room",
-                    "Raphael the Raven's Boss Room",
-                    "Tap-Tap the Red Nose's Boss Room"
+                    "Hookbill The Koopa's Boss Room",
+                    "Sluggy The Unshaven's Boss Room",
+                    "Raphael The Raven's Boss Room",
+                    "Tap-Tap The Red Nose's Boss Room"
                 ]
 
             # Settings for BossReqs class (castle_access, castle_clear helpers)
