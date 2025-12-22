@@ -803,6 +803,105 @@ def extract_world_attributes(json_data: Dict[str, Any]) -> Dict[str, Any]:
     return world_attributes
 
 
+def find_required_items_in_rule(rule: Any) -> set:
+    """
+    Recursively find all item names that are required by Has/HasAll/HasAny rules.
+
+    Args:
+        rule: A rule definition (dict, list, or primitive)
+
+    Returns:
+        Set of item names required by the rule
+    """
+    required_items = set()
+
+    if rule is None:
+        return required_items
+
+    if isinstance(rule, dict):
+        rule_type = rule.get('rule', '')
+
+        # Handle Has, HasAll, HasAny, HasAllCounts, HasAnyCount rules
+        if rule_type == 'Has':
+            item_name = rule.get('args', {}).get('item_name')
+            if item_name:
+                required_items.add(item_name)
+        elif rule_type in ('HasAll', 'HasAny'):
+            item_names = rule.get('args', {}).get('item_names', [])
+            required_items.update(item_names)
+        elif rule_type in ('HasAllCounts', 'HasAnyCount'):
+            item_counts = rule.get('args', {}).get('item_counts', {})
+            required_items.update(item_counts.keys())
+        elif rule_type in ('HasFromList', 'HasFromListUnique'):
+            items = rule.get('args', {}).get('items', [])
+            required_items.update(items)
+
+        # Recursively search all dict values
+        for value in rule.values():
+            required_items.update(find_required_items_in_rule(value))
+
+    elif isinstance(rule, list):
+        for item in rule:
+            required_items.update(find_required_items_in_rule(item))
+
+    return required_items
+
+
+def promote_required_items_to_progression(
+    items: Dict[str, ItemData],
+    locations: Dict[str, 'LocationData'],
+    exits: Dict[str, 'ExitData']
+) -> None:
+    """
+    Promote items from 'useful' to 'progression' if they are required by access rules.
+
+    In Archipelago, state.has() and the Has rule only check prog_items, which only
+    contains items classified as 'progression'. If an item is required by a Has rule
+    but classified as 'useful', it will never satisfy the rule when collected.
+
+    This function finds all items referenced in Has/HasAll/HasAny rules and promotes
+    them from 'useful' to 'progression' to ensure accessibility works correctly.
+
+    Args:
+        items: Dict of item name to ItemData (modified in place)
+        locations: Dict of location name to LocationData
+        exits: Dict of exit name to ExitData
+    """
+    # Find all items required by location access rules
+    required_items = set()
+    for loc_data in locations.values():
+        if loc_data.access_rule:
+            required_items.update(find_required_items_in_rule(loc_data.access_rule))
+
+    # Find all items required by exit access rules
+    for exit_data in exits.values():
+        if exit_data.access_rule:
+            required_items.update(find_required_items_in_rule(exit_data.access_rule))
+
+    # Promote required items from 'useful' to 'progression'
+    promoted_count = 0
+    for item_name in required_items:
+        if item_name in items:
+            item_data = items[item_name]
+            if item_data.classification == 'useful':
+                # Create a new ItemData with progression classification
+                items[item_name] = ItemData(
+                    name=item_data.name,
+                    item_id=item_data.item_id,
+                    classification='progression',
+                    groups=item_data.groups,
+                    max_count=item_data.max_count,
+                    is_event=item_data.is_event,
+                    hint_text=item_data.hint_text,
+                )
+                promoted_count += 1
+
+    if promoted_count > 0:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.info(f"Promoted {promoted_count} items from 'useful' to 'progression' (required by access rules)")
+
+
 def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     """
     Extract all data from a JSON rules file.
@@ -820,6 +919,13 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     start_region = extract_start_region(json_data)
     itempool_counts = extract_itempool_counts(json_data)
     helpers = extract_helpers(json_data)
+
+    # Promote items required by access rules from 'useful' to 'progression'.
+    # This is necessary because state.has() only checks prog_items, which only
+    # contains items with ItemClassification.progression. Items classified as
+    # 'useful' won't be added to prog_items when collected, so Has rules
+    # checking for them will never pass.
+    promote_required_items_to_progression(items, locations, exits)
 
     # Get starting items from JSON
     starting_items = extract_starting_items(json_data)
