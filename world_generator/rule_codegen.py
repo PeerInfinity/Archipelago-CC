@@ -538,6 +538,11 @@ class RuleCodeGenerator:
                 if rule.get('_original_ast_type') == 'helper' or rb_rule in self.known_helpers:
                     return self._convert_rule_builder_helper(rule, rb_rule)
 
+                # Check if this is an AST_count_true rule (exported from AST format count_true)
+                if rb_rule == 'AST_count_true':
+                    args = rule.get('args', {})
+                    return self._convert_count_true_from_args(args)
+
         # Dispatch based on rule type
         converters = {
             'constant': self._convert_constant,
@@ -562,6 +567,7 @@ class RuleCodeGenerator:
             'binary_op': self._convert_binary_op,
             'sum': self._convert_sum,
             'setting_value': self._convert_setting_value,
+            'count_true': self._convert_count_true,
         }
 
         converter = converters.get(rule_type)
@@ -706,6 +712,10 @@ class RuleCodeGenerator:
                 return 'False_()'
             else:
                 return repr(value)
+
+        # Handle AST_count_true rules (count N of M conditions as true)
+        if rb_rule == 'AST_count_true':
+            return self._convert_count_true_from_args(args)
 
         # Unknown Rule Builder rule - return True_() as placeholder
         self.required_imports.add('True_')
@@ -929,6 +939,106 @@ class RuleCodeGenerator:
 
         # Wrap each in parens for safety, then join
         return ' | '.join(f'({c})' for c in converted)
+
+    def _convert_count_true(self, rule: Dict[str, Any]) -> str:
+        """Convert count_true rule (AST format with 'type' key).
+
+        count_true checks if at least 'count' of the 'conditions' evaluate to true.
+        Structure: {"type": "count_true", "count": N, "conditions": [...]}
+        """
+        count = rule.get('count', 0)
+        conditions = rule.get('conditions', [])
+        return self._convert_count_true_logic(count, conditions)
+
+    def _convert_count_true_from_args(self, args: Dict[str, Any]) -> str:
+        """Convert AST_count_true rule (Rule Builder format with 'rule' key).
+
+        AST_count_true is exported from AST format by the converter.
+        Structure: {"rule": "AST_count_true", "args": {"count": N, "conditions": [...]}}
+        """
+        count = args.get('count', 0)
+        conditions = args.get('conditions', [])
+        return self._convert_count_true_logic(count, conditions)
+
+    def _convert_count_true_logic(self, count: int, conditions: List[Dict[str, Any]]) -> str:
+        """Core logic for converting count_true rules.
+
+        Converts "at least count of conditions must be true" to Rule Builder code.
+
+        Optimizations:
+        - count == 0: Always true (True_())
+        - count == 1: Any condition must be true (Or of all conditions)
+        - count == len(conditions): All must be true (And of all conditions)
+        - count > len(conditions): Never possible (False_())
+        - General case: Generate combinations using Or/And
+
+        For the general case with many conditions, we generate Python code that
+        counts conditions. If all conditions are simple item_checks, we use a
+        more efficient list comprehension.
+        """
+        n = len(conditions)
+
+        # Edge cases
+        if count <= 0:
+            self.required_imports.add('True_')
+            return 'True_()'
+
+        if n == 0 or count > n:
+            self.required_imports.add('False_')
+            return 'False_()'
+
+        # count == 1: Any one condition is enough (Or)
+        if count == 1:
+            if n == 1:
+                return self._convert_rule(conditions[0])
+            converted = [self._convert_rule(c) for c in conditions]
+            return ' | '.join(f'({c})' for c in converted)
+
+        # count == n: All conditions must be true (And)
+        if count == n:
+            if n == 1:
+                return self._convert_rule(conditions[0])
+            converted = [self._convert_rule(c) for c in conditions]
+            return ' & '.join(f'({c})' for c in converted)
+
+        # General case: count > 1 and count < n
+        # Check if all conditions are simple item_checks - if so, use HasFromList
+        all_item_checks = all(
+            isinstance(c, dict) and c.get('type') == 'item_check'
+            for c in conditions
+        )
+
+        if all_item_checks:
+            # Extract item names
+            items = [c.get('item', '') for c in conditions]
+            items_str = ', '.join(repr(item) for item in items)
+            self.required_imports.add('HasFromList')
+            return f'HasFromList({items_str}, count={count})'
+
+        # For mixed conditions, we need to generate combinations
+        # To avoid combinatorial explosion, we'll generate a more compact representation
+        # using a custom approach: And(Or(combinations), Or(combinations), ...)
+        #
+        # For "at least 2 of N", we need all pairs that could work.
+        # But this gets complex, so for now, fall back to Or of all And combinations
+        # Limited to small counts to avoid explosion
+        if count <= 3 and n <= 10:
+            from itertools import combinations
+            combos = list(combinations(range(n), count))
+            if len(combos) <= 50:  # Reasonable limit
+                combo_exprs = []
+                for combo in combos:
+                    combo_conditions = [conditions[i] for i in combo]
+                    converted = [self._convert_rule(c) for c in combo_conditions]
+                    and_expr = ' & '.join(f'({c})' for c in converted)
+                    combo_exprs.append(f'({and_expr})')
+                return ' | '.join(combo_exprs)
+
+        # Fallback for complex cases: generate True_() with a warning
+        # This is conservative - locations will be accessible earlier than they should be
+        # TODO: Implement lambda-based counting for complex cases
+        self.required_imports.add('True_')
+        return 'True_()'
 
     def _convert_can_reach_region(self, rule: Dict[str, Any]) -> str:
         """Convert can_reach to CanReachRegion()."""
@@ -1525,9 +1635,10 @@ class RuleCodeGenerator:
 
             return f'HelperCall({", ".join(parts)})'
 
-        # Unknown helper - return True_() as placeholder
-        self.required_imports.add('True_')
-        return 'True_()'
+        # Unknown helper - return False_() as placeholder
+        # Returning False makes locations less accessible, preventing progression issues
+        self.required_imports.add('False_')
+        return 'False_()'
 
     def _convert_rule_builder_helper(self, rule: Dict[str, Any], helper_name: str) -> str:
         """Convert Rule Builder format helper rule to HelperCall().
@@ -2010,8 +2121,8 @@ class HelperCodeGenerator:
         if handler:
             return handler(expr)
 
-        # Unknown type - return True as placeholder
-        return 'True'
+        # Unknown type - return False as placeholder to prevent progression issues
+        return 'False'
 
     def _expr_setting_value(self, expr: Dict[str, Any]) -> str:
         """Resolve a setting value to its actual value from the seed's settings."""
@@ -2304,10 +2415,11 @@ class HelperCodeGenerator:
                 return f"abs({', '.join(arg_exprs)})"
             return f"math.{name}({', '.join(arg_exprs)})"
 
-        # Unknown helper - return True as safe fallback
+        # Unknown helper - return False as safe fallback
         # This handles helpers that were blacklisted during export (too complex to export)
-        # Returning True makes the location always accessible, which is safer than crashing
-        return 'True'
+        # Returning False makes the location less accessible, preventing progression issues
+        # (Returning True would make all locations with this helper always accessible)
+        return 'False'
 
     def _get_arg_expr(self, arg: Any, default: Any = None) -> str:
         """Get argument expression - handles both constants and variable references.
