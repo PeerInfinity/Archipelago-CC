@@ -697,6 +697,7 @@ class RuleCodeGenerator:
 
         if rb_rule == 'Constant':
             # Handle Constant rule
+            # Values can be booleans (True/False) or integers (0/1) representing boolean conditions
             value = args.get('value')
             if value is True:
                 self.required_imports.add('True_')
@@ -704,6 +705,15 @@ class RuleCodeGenerator:
             elif value is False:
                 self.required_imports.add('False_')
                 return 'False_()'
+            elif isinstance(value, int):
+                # Integer values represent boolean conditions (0 = false, non-zero = true)
+                # This handles cases like settings that resolve to 0/1 instead of False/True
+                if value:
+                    self.required_imports.add('True_')
+                    return 'True_()'
+                else:
+                    self.required_imports.add('False_')
+                    return 'False_()'
             else:
                 return repr(value)
 
