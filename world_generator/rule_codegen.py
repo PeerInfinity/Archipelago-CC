@@ -22,6 +22,7 @@ class RuleCodeGenerator:
         self.known_helpers: Set[str] = set()
         self.helper_bodies: Dict[str, Dict[str, Any]] = {}  # helper_name -> AST format body
         self._inline_counter: int = 0  # Counter for generating unique variable prefixes
+        self.door_colors: Dict[str, str] = {}  # SM door name -> color (for traverse helper)
 
     def reset(self) -> None:
         """Reset state for a new generation run."""
@@ -38,6 +39,14 @@ class RuleCodeGenerator:
         self.helper_params = helper_params or {}  # helper_name -> list of param names
         self.helper_defaults = helper_defaults or {}  # helper_name -> dict of param_name -> default_value
         self.placements = placements or {}  # location_name -> item_name
+
+    def set_door_colors(self, door_colors: Dict[str, str]) -> None:
+        """Set door color data for Super Metroid traverse helper.
+
+        Args:
+            door_colors: Mapping of door name to color (red, green, yellow, blue, etc.)
+        """
+        self.door_colors = door_colors or {}
 
     def _expand_helper_refs(self, rule: Dict[str, Any], visited: Set[str] = None, depth: int = 0) -> Dict[str, Any]:
         """
@@ -647,8 +656,9 @@ class RuleCodeGenerator:
         if rb_rule == 'Count':
             item_name = args.get('item_name', '')
             count = args.get('count', 1)
-            self.required_imports.add('Count')
-            return f'Count({repr(item_name)}, {count})'
+            self.required_imports.add('Compare')
+            self.required_imports.add('CountItem')
+            return f'Compare(CountItem({repr(item_name)}), ">=", {count})'
 
         if rb_rule == 'HasAll':
             items = args.get('items', [])
@@ -2224,9 +2234,524 @@ class RuleCodeGenerator:
 
             return f'HelperCall({", ".join(parts)})'
 
+        # Handle Super Metroid (VARIA) specific helpers
+        # These are embedded inline with _original_ast_type: "helper"
+        sm_result = self._convert_sm_helper(helper_name, args)
+        if sm_result is not None:
+            return sm_result
+
         # Unknown helper - return True_() as placeholder
         self.required_imports.add('True_')
         return 'True_()'
+
+    def _convert_sm_helper(self, helper_name: str, args: List[Any]) -> Optional[str]:
+        """Convert Super Metroid (VARIA) specific helper calls.
+
+        Super Metroid uses a custom boolean logic system with helpers like:
+        - evalSMBool(smbool, maxDiff): Evaluates an SMBool, just convert the first arg
+        - SMBool(bool_val): Wrapper around a boolean, just return the boolean
+        - wand(...): AND of multiple SMBool conditions
+        - wor(...): OR of multiple SMBool conditions
+        - haveItem(item_name): Check if player has an item
+        - traverse(door_name): Check if a door can be traversed (access points)
+        - Various technique helpers (e.g., knowsAlcatrazEscape): Return True for casual mode
+
+        Returns:
+            Converted Python code string, or None if not an SM helper
+        """
+        # SM item name mapping (VARIA names to Archipelago names)
+        SM_ITEM_MAP = {
+            'Morph': 'Morph Ball',
+            'Bomb': 'Bomb',
+            'SpringBall': 'Spring Ball',
+            'HiJump': 'Hi-Jump Boots',
+            'SpeedBooster': 'Speed Booster',
+            'SpaceJump': 'Space Jump',
+            'ScrewAttack': 'Screw Attack',
+            'Grapple': 'Grapple Beam',
+            'XRayScope': 'X-Ray Scope',
+            'Varia': 'Varia Suit',
+            'Gravity': 'Gravity Suit',
+            'Charge': 'Charge Beam',
+            'Ice': 'Ice Beam',
+            'Wave': 'Wave Beam',
+            'Spazer': 'Spazer',
+            'Plasma': 'Plasma Beam',
+            'Missile': 'Missile',
+            'Super': 'Super Missile',
+            'PowerBomb': 'Power Bomb',
+            'ETank': 'Energy Tank',
+            'Reserve': 'Reserve Tank',
+        }
+
+        # evalSMBool(smbool, maxDiff) - just evaluate the smbool, ignore maxDiff
+        if helper_name == 'evalSMBool':
+            if args:
+                return self._convert_rule(args[0])
+            return self._make_bool_constant(True)
+
+        # SMBool(bool_val) - return the boolean value
+        if helper_name == 'SMBool':
+            if args:
+                first_arg = args[0]
+                if isinstance(first_arg, dict):
+                    # Check for True_/False_ rule
+                    rule_val = first_arg.get('rule', '')
+                    if rule_val == 'True_':
+                        return self._make_bool_constant(True)
+                    elif rule_val == 'False_':
+                        return self._make_bool_constant(False)
+                    # Recursively convert the arg
+                    return self._convert_rule(first_arg)
+            return self._make_bool_constant(True)
+
+        # wand(...) - AND of conditions
+        if helper_name == 'wand':
+            if not args:
+                return self._make_bool_constant(True)
+            if len(args) == 1:
+                return self._convert_rule(args[0])
+            converted = [self._convert_rule(arg) for arg in args]
+            self.required_imports.add('And')
+            return f'And({", ".join(converted)})'
+
+        # wor(...) - OR of conditions
+        if helper_name == 'wor':
+            if not args:
+                return self._make_bool_constant(False)
+            if len(args) == 1:
+                return self._convert_rule(args[0])
+            converted = [self._convert_rule(arg) for arg in args]
+            self.required_imports.add('Or')
+            return f'Or({", ".join(converted)})'
+
+        # wnot(condition) - NOT of condition
+        if helper_name == 'wnot':
+            if args:
+                converted = self._convert_rule(args[0])
+                self.required_imports.add('Not')
+                return f'Not({converted})'
+            return self._make_bool_constant(False)
+
+        # haveItem(item_name) - check for item
+        if helper_name == 'haveItem':
+            if args:
+                first_arg = args[0]
+                item_name = None
+                if isinstance(first_arg, dict):
+                    if first_arg.get('rule') == 'Constant':
+                        item_name = first_arg.get('args', {}).get('value')
+                    elif first_arg.get('type') == 'constant':
+                        item_name = first_arg.get('value')
+                if item_name:
+                    # Map VARIA item name to Archipelago item name
+                    ap_item_name = SM_ITEM_MAP.get(item_name, item_name)
+                    item_escaped = self._escape_string(ap_item_name)
+                    self.required_imports.add('Has')
+                    return f'Has("{item_escaped}")'
+            return self._make_bool_constant(True)
+
+        # traverse(door_name) - door traversal based on door color
+        if helper_name == 'traverse':
+            if args:
+                first_arg = args[0]
+                door_name = None
+                if isinstance(first_arg, dict):
+                    if first_arg.get('rule') == 'Constant':
+                        door_name = first_arg.get('args', {}).get('value')
+                    elif first_arg.get('type') == 'constant':
+                        door_name = first_arg.get('value')
+                if door_name and door_name in self.door_colors:
+                    door_color = self.door_colors[door_name]
+                    # Check door accessibility based on color
+                    # Based on Python Door.traverse() implementation
+                    if door_color == 'grey':
+                        # Grey doors cannot be passed
+                        return self._make_bool_constant(False)
+                    elif door_color == 'red':
+                        # Red doors require missiles or supers
+                        self.required_imports.add('Or')
+                        self.required_imports.add('Has')
+                        return 'Or(Has("Missile"), Has("Super Missile"))'
+                    elif door_color == 'green':
+                        # Green doors require super missiles
+                        self.required_imports.add('Has')
+                        return 'Has("Super Missile")'
+                    elif door_color == 'yellow':
+                        # Yellow doors require power bombs + morph
+                        self.required_imports.add('And')
+                        self.required_imports.add('Has')
+                        return 'And(Has("Power Bomb"), Has("Morph Ball"))'
+                    elif door_color == 'wave':
+                        self.required_imports.add('Has')
+                        return 'Has("Wave Beam")'
+                    elif door_color == 'spazer':
+                        self.required_imports.add('Has')
+                        return 'Has("Spazer")'
+                    elif door_color == 'plasma':
+                        self.required_imports.add('Has')
+                        return 'Has("Plasma Beam")'
+                    elif door_color == 'ice':
+                        self.required_imports.add('Has')
+                        return 'Has("Ice Beam")'
+                    else:
+                        # Blue doors or any other - always passable
+                        return self._make_bool_constant(True)
+            # Door not found in door_colors - default to passable
+            return self._make_bool_constant(True)
+
+        # Technique helpers - in casual mode, all techniques are considered available
+        # These are skills like knowsAlcatrazEscape, knowsMockball, etc.
+        TECHNIQUE_HELPERS = {
+            'knowsAlcatrazEscape', 'knowsCeilingDBoost', 'knowsCrocPBsDBoost',
+            'knowsCrocPBsIce', 'knowsFirefleasWalljump', 'knowsGetAroundWallJump',
+            'knowsGravLessLevel3', 'knowsHiJumpMamaTurtle', 'knowsIceEscape',
+            'knowsIceMissileFromCroc', 'knowsKillPlasmaPiratesWithCharge',
+            'knowsKillPlasmaPiratesWithSpark', 'knowsMaridiaWallJumps',
+            'knowsMockball', 'knowsOldMBWithSpeed', 'knowsReverseGateGlitch',
+            'knowsReverseGateGlitchHiJumpLess', 'knowsRonPopeilScrew',
+            'knowsShortCharge', 'knowsSnailClip', 'knowsSpringBallJump',
+            'knowsSpringBallJumpFromWall', 'knowsXrayDboost', 'knowsXrayIce',
+        }
+        if helper_name in TECHNIQUE_HELPERS:
+            # In casual mode, techniques are available based on difficulty
+            # For now, assume all are available (True)
+            return self._make_bool_constant(True)
+
+        # Boss helpers - check if a boss is defeated
+        if helper_name == 'bossDead':
+            if args:
+                first_arg = args[0]
+                boss_name = None
+                if isinstance(first_arg, dict):
+                    if first_arg.get('rule') == 'Constant':
+                        boss_name = first_arg.get('args', {}).get('value')
+                    elif first_arg.get('type') == 'constant':
+                        boss_name = first_arg.get('value')
+                if boss_name:
+                    # Boss names are items in SM (e.g., "Kraid", "Phantoon", etc.)
+                    boss_escaped = self._escape_string(boss_name)
+                    self.required_imports.add('Has')
+                    return f'Has("{boss_escaped}")'
+            return self._make_bool_constant(True)
+
+        # canInfiniteBombJump requires knowsInfiniteBombJump technique
+        # Check settings to see if technique is enabled
+        if helper_name == 'canInfiniteBombJump':
+            knows = self.settings.get('knows', {})
+            ibj_enabled = knows.get('InfiniteBombJump', [False])[0] if isinstance(knows.get('InfiniteBombJump'), list) else False
+            if ibj_enabled:
+                self.required_imports.add('And')
+                self.required_imports.add('Has')
+                return 'And(Has("Bomb"), Has("Morph Ball"))'
+            return self._make_bool_constant(False)
+
+        # Ability helpers that check for specific item combinations
+        # 'and' = all items required, 'or' = any item works
+        ABILITY_HELPERS = {
+            # AND requirements (need all items)
+            'canUsePowerBombs': ('and', ['Power Bomb', 'Morph Ball']),
+            'canUseSpringBall': ('and', ['Spring Ball', 'Morph Ball']),
+            'canUseBombs': ('and', ['Bomb', 'Morph Ball']),
+            'canSpringBallJump': ('and', ['Spring Ball', 'Morph Ball']),
+            'canShortCharge': ('and', ['Speed Booster']),  # Simplified
+            'canSimpleShortCharge': ('and', ['Speed Booster']),
+            'canMockball': ('and', ['Morph Ball']),  # Simplified - needs morph
+            # OR requirements (any item works)
+            'canMorphJump': ('or', ['Morph Ball']),
+            'canFireChargedShots': ('or', ['Charge Beam']),
+            'canOpenGreenDoors': ('or', ['Super Missile']),
+            'canOpenRedDoors': ('or', ['Missile', 'Super Missile']),
+            'canOpenEyeDoors': ('or', ['Missile', 'Super Missile']),
+            'heatProof': ('or', ['Varia Suit']),
+            'canJumpUnderwater': ('or', ['Hi-Jump Boots', 'Gravity Suit', 'Space Jump']),
+        }
+        if helper_name in ABILITY_HELPERS:
+            mode, items = ABILITY_HELPERS[helper_name]
+            if len(items) == 1:
+                item_escaped = self._escape_string(items[0])
+                self.required_imports.add('Has')
+                return f'Has("{item_escaped}")'
+            elif mode == 'or':
+                item_checks = [f'Has("{self._escape_string(item)}")' for item in items]
+                self.required_imports.add('Has')
+                self.required_imports.add('Or')
+                return f'Or({", ".join(item_checks)})'
+            else:  # 'and'
+                item_checks = [f'Has("{self._escape_string(item)}")' for item in items]
+                self.required_imports.add('Has')
+                self.required_imports.add('And')
+                return f'And({", ".join(item_checks)})'
+
+        # Special case: canPassBombPassages = Or(canUseBombs, canUsePowerBombs)
+        # = Or(And(Morph, Bomb), And(Morph, Power Bomb))
+        # = And(Morph, Or(Bomb, Power Bomb))
+        if helper_name == 'canPassBombPassages':
+            self.required_imports.add('And')
+            self.required_imports.add('Or')
+            self.required_imports.add('Has')
+            return 'And(Has("Morph Ball"), Or(Has("Bomb"), Has("Power Bomb")))'
+
+        # Special case: canDestroyBombWalls = Or(canPassBombPassages, ScrewAttack)
+        if helper_name == 'canDestroyBombWalls':
+            self.required_imports.add('Or')
+            self.required_imports.add('And')
+            self.required_imports.add('Has')
+            return 'Or(And(Has("Morph Ball"), Or(Has("Bomb"), Has("Power Bomb"))), Has("Screw Attack"))'
+
+        # Special case: canOpenYellowDoors = canUsePowerBombs
+        if helper_name == 'canOpenYellowDoors':
+            self.required_imports.add('And')
+            self.required_imports.add('Has')
+            return 'And(Has("Power Bomb"), Has("Morph Ball"))'
+
+        # canPassTerminatorBombWall = Or(SpeedBooster, canDestroyBombWalls)
+        # Simplified: Or(SpeedBooster, And(Morph, Or(Bomb, PowerBomb)), ScrewAttack)
+        if helper_name == 'canPassTerminatorBombWall':
+            self.required_imports.add('Or')
+            self.required_imports.add('And')
+            self.required_imports.add('Has')
+            return 'Or(Has("Speed Booster"), And(Has("Morph Ball"), Or(Has("Bomb"), Has("Power Bomb"))), Has("Screw Attack"))'
+
+        # canPassCrateriaGreenPirates = Or(canPassBombPassages, haveMissileOrSuper, energyReserveCountOk(1), beams...)
+        # Simplified: Or(bombs, missiles/supers, energy tank, beams)
+        if helper_name == 'canPassCrateriaGreenPirates':
+            self.required_imports.add('Or')
+            self.required_imports.add('And')
+            self.required_imports.add('Has')
+            return 'Or(And(Has("Morph Ball"), Or(Has("Bomb"), Has("Power Bomb"))), Has("Missile"), Has("Super Missile"), Has("Energy Tank"), Has("Charge Beam"), Has("Ice Beam"), Has("Wave Beam"), Has("Spazer"), Has("Plasma Beam"), Has("Screw Attack"))'
+
+        # haveMissileOrSuper
+        if helper_name == 'haveMissileOrSuper':
+            self.required_imports.add('Or')
+            self.required_imports.add('Has')
+            return 'Or(Has("Missile"), Has("Super Missile"))'
+
+        # canFly = Or(SpaceJump, canInfiniteBombJump)
+        # Check if knowsInfiniteBombJump is enabled in settings
+        # If enabled, IBJ (Bomb + Morph) is a valid flight option
+        knows = self.settings.get('knows', {})
+        ibj_enabled = knows.get('InfiniteBombJump', [False])[0] if isinstance(knows.get('InfiniteBombJump'), list) else knows.get('InfiniteBombJump', False)
+        if helper_name == 'canFly':
+            if ibj_enabled:
+                self.required_imports.add('Or')
+                self.required_imports.add('And')
+                self.required_imports.add('Has')
+                return 'Or(Has("Space Jump"), And(Has("Bomb"), Has("Morph Ball")))'
+            else:
+                self.required_imports.add('Has')
+                return 'Has("Space Jump")'
+
+        # canEnterAndLeaveGauntlet - requires getting to gauntlet AND breaking walls
+        # Also requires energy for hard room (at least 1 reserve tank or energy)
+        # Uses knows settings to determine available techniques
+        if helper_name == 'canEnterAndLeaveGauntlet':
+            self.required_imports.add('And')
+            self.required_imports.add('Or')
+            self.required_imports.add('Has')
+
+            knows = self.settings.get('knows', {})
+            ibj_enabled = knows.get('InfiniteBombJump', [False])[0] if isinstance(knows.get('InfiniteBombJump'), list) else False
+            hijump_gauntlet = knows.get('HiJumpGauntletAccess', [False])[0] if isinstance(knows.get('HiJumpGauntletAccess'), list) else False
+            hijumpless_gauntlet = knows.get('HiJumpLessGauntletAccess', [False])[0] if isinstance(knows.get('HiJumpLessGauntletAccess'), list) else False
+
+            # Build access options
+            access_options = ['Has("Speed Booster")', 'Has("Space Jump")']
+            if ibj_enabled:
+                access_options.append('And(Has("Bomb"), Has("Morph Ball"))')
+            if hijump_gauntlet:
+                access_options.append('Has("Hi-Jump Boots")')
+            if hijumpless_gauntlet:
+                # Wall jump access - no extra items needed beyond basic movement
+                access_options.append('True_()')
+
+            # Build wall break options - all require energy due to energyReserveCountOkHardRoom
+            # Gauntlet is a hard room - bomb path especially needs more energy since you're exposed longer
+            wall_options = ['Has("Screw Attack")']
+            # PB path requires energy + PBs
+            self.required_imports.add('Compare')
+            self.required_imports.add('CountItem')
+            wall_options.append('And(Has("Power Bomb"), Has("Morph Ball"), Or(Has("Reserve Tank"), Compare(CountItem("Energy Tank"), ">=", 2)))')
+            if ibj_enabled:
+                # Bomb path requires MORE energy (exposed to damage longer) - need Reserve Tank + Energy Tank
+                wall_options.append('And(Has("Bomb"), Has("Morph Ball"), Has("Reserve Tank"), Has("Energy Tank"))')
+
+            access_str = ', '.join(access_options)
+            wall_str = ', '.join(wall_options)
+            return f'And(Or({access_str}), Or({wall_str}))'
+
+        # canEnterAndLeaveGauntletQty(nPB, nTanksSpark) - similar to canEnterAndLeaveGauntlet
+        # Reuse the same logic with knows settings
+        if helper_name == 'canEnterAndLeaveGauntletQty':
+            self.required_imports.add('And')
+            self.required_imports.add('Or')
+            self.required_imports.add('Has')
+
+            knows = self.settings.get('knows', {})
+            ibj_enabled = knows.get('InfiniteBombJump', [False])[0] if isinstance(knows.get('InfiniteBombJump'), list) else False
+            hijump_gauntlet = knows.get('HiJumpGauntletAccess', [False])[0] if isinstance(knows.get('HiJumpGauntletAccess'), list) else False
+            hijumpless_gauntlet = knows.get('HiJumpLessGauntletAccess', [False])[0] if isinstance(knows.get('HiJumpLessGauntletAccess'), list) else False
+
+            access_options = ['Has("Speed Booster")', 'Has("Space Jump")']
+            if ibj_enabled:
+                access_options.append('And(Has("Bomb"), Has("Morph Ball"))')
+            if hijump_gauntlet:
+                access_options.append('Has("Hi-Jump Boots")')
+            if hijumpless_gauntlet:
+                access_options.append('True_()')
+
+            wall_options = ['Has("Screw Attack")', 'And(Has("Power Bomb"), Has("Morph Ball"))']
+            if ibj_enabled:
+                wall_options.append('And(Has("Bomb"), Has("Morph Ball"))')
+
+            access_str = ', '.join(access_options)
+            wall_str = ', '.join(wall_options)
+            return f'And(Or({access_str}), Or({wall_str}))'
+
+        # canDoLowGauntlet = And(canShortCharge, canUsePowerBombs, itemCountOk('ETank', 1))
+        # Simplified: And(SpeedBooster, PowerBomb, Morph, EnergyTank)
+        if helper_name == 'canDoLowGauntlet':
+            self.required_imports.add('And')
+            self.required_imports.add('Has')
+            return 'And(Has("Speed Booster"), Has("Power Bomb"), Has("Morph Ball"), Has("Energy Tank"))'
+
+        # canAccessBillyMays = And(canUsePowerBombs, Or(technique, Gravity, SpaceJump))
+        # Simplified for casual: And(PowerBomb, Morph, Or(Gravity, SpaceJump))
+        # Note: technique (knowsBillyMays) is available in casual, so add True option
+        if helper_name == 'canAccessBillyMays':
+            self.required_imports.add('And')
+            self.required_imports.add('Has')
+            return 'And(Has("Power Bomb"), Has("Morph Ball"))'
+
+        # canAccessKraidsLair = And(Super, Or(HiJump, canFly, knowsEarlyKraid))
+        # knowsEarlyKraid is a technique which allows accessing Kraid without vertical movement upgrades
+        # canFly = Space Jump or IBJ (if enabled)
+        if helper_name == 'canAccessKraidsLair':
+            knows = self.settings.get('knows', {})
+            early_kraid = knows.get('EarlyKraid', [False])[0] if isinstance(knows.get('EarlyKraid'), list) else knows.get('EarlyKraid', False)
+            ibj_enabled = knows.get('InfiniteBombJump', [False])[0] if isinstance(knows.get('InfiniteBombJump'), list) else False
+
+            if early_kraid:
+                # With EarlyKraid technique, just need Super Missile
+                self.required_imports.add('Has')
+                return 'Has("Super Missile")'
+            else:
+                # Need Super + vertical movement (Hi-Jump, Space Jump, or IBJ if enabled)
+                self.required_imports.add('And')
+                self.required_imports.add('Or')
+                self.required_imports.add('Has')
+                options = ['Has("Hi-Jump Boots")', 'Has("Space Jump")']
+                if ibj_enabled:
+                    options.append('And(Has("Bomb"), Has("Morph Ball"))')
+                options_str = ', '.join(options)
+                return f'And(Has("Super Missile"), Or({options_str}))'
+
+        # canPassMoat = wor(canFly, Grapple, SpeedBooster, Gravity+HiJump, knowsMoatMafia, knowsSnailClip)
+        # For casual (no techniques): Or(SpaceJump, Grapple, SpeedBooster, Gravity+HiJump)
+        if helper_name == 'canPassMoat':
+            self.required_imports.add('Or')
+            self.required_imports.add('And')
+            self.required_imports.add('Has')
+            return 'Or(Has("Space Jump"), Has("Grapple Beam"), Has("Speed Booster"), And(Has("Gravity Suit"), Has("Hi-Jump Boots")))'
+
+        # canPassMoatReverse - similar but in reverse direction
+        if helper_name == 'canPassMoatReverse':
+            self.required_imports.add('Or')
+            self.required_imports.add('Has')
+            return 'Or(Has("Space Jump"), Has("Grapple Beam"), Has("Speed Booster"))'
+
+        # canPassMoatFromMoat
+        if helper_name == 'canPassMoatFromMoat':
+            self.required_imports.add('Or')
+            self.required_imports.add('Has')
+            return 'Or(Has("Space Jump"), Has("Grapple Beam"), Has("Speed Booster"))'
+
+        # canClimbRedTower = Or(canFly, HiJump, SpeedBooster, Ice, technique)
+        # For casual (no techniques/IBJ): Or(SpaceJump, HiJump, SpeedBooster, Ice)
+        if helper_name == 'canClimbRedTower':
+            self.required_imports.add('Or')
+            self.required_imports.add('Has')
+            return 'Or(Has("Space Jump"), Has("Hi-Jump Boots"), Has("Speed Booster"), Has("Ice Beam"))'
+
+        # canClimbBottomRedTower - similar
+        if helper_name == 'canClimbBottomRedTower':
+            self.required_imports.add('Or')
+            self.required_imports.add('Has')
+            return 'Or(Has("Space Jump"), Has("Hi-Jump Boots"), Has("Speed Booster"), Has("Ice Beam"))'
+
+        # canAccessEtecoons = wor(canUsePowerBombs, wand(knowsMoondance, canUseBombs, traverse))
+        # The technique (knowsMoondance) is typically not available in casual mode
+        # So only Power Bombs provide reliable access
+        if helper_name == 'canAccessEtecoons':
+            self.required_imports.add('And')
+            self.required_imports.add('Has')
+            return 'And(Has("Power Bomb"), Has("Morph Ball"))'
+
+        # canKillBeetoms = wor(Missile/Super, canUsePowerBombs, ScrewAttack)
+        if helper_name == 'canKillBeetoms':
+            self.required_imports.add('Or')
+            self.required_imports.add('And')
+            self.required_imports.add('Has')
+            return 'Or(Has("Missile"), Has("Super Missile"), And(Has("Power Bomb"), Has("Morph Ball")), Has("Screw Attack"))'
+
+        # canPassG4 - Gate of 4 bosses (Tourian entry)
+        # Requires defeating Kraid, Phantoon, Ridley, and Draygon
+        if helper_name == 'canPassG4':
+            self.required_imports.add('And')
+            self.required_imports.add('Has')
+            return 'And(Has("Kraid"), Has("Phantoon"), Has("Ridley"), Has("Draygon"))'
+
+        # Heat damage helpers - require Varia Suit to safely traverse heated areas
+        # canHellRun calculates energy requirements for heat rooms; conservative: require Varia
+        HEAT_HELPERS = {
+            'canHellRun', 'canHellRunBackFromSpeedBoosterMissile', 'canHellRunToSpeedBooster',
+            'canHellRunBackFromGrappleEscape', 'canHellRunToUpperNorfair', 'canHellRunBack',
+        }
+        if helper_name in HEAT_HELPERS:
+            self.required_imports.add('Has')
+            return 'Has("Varia Suit")'
+
+        # Complex ability helpers that need recursive rule conversion
+        # These are defined as methods in SM and have their own SMBool logic
+        # For casual mode, we return True for most of these as they're typically
+        # about movement techniques that are available if you have the right items
+        COMPLEX_ABILITY_HELPERS = {
+            'canGrappleEscape',  # canHellRun removed - now requires Varia
+            'canBlueGateGlitch', 'canGreenGateGlitch',
+            'canPassSpongeBath', 'canPassBowling', 'canPassCacatacAlley',
+            'canPassWorstRoom', 'canPassWorstRoomPirates', 'canPassLavaPit', 'canPassLavaPitReverse',
+            'canPassAmphitheaterReverse', 'canPassFrogSpeedwayRightToLeft', 'canPassNinjaPirates',
+            'canPassRedKiHunters', 'canPassCrateriaGreenPirates', 'canPassDachoraRoom',
+            'canPassTerminatorBombWall', 'canPassForgottenHighway', 'canPassThreeMuskateers',
+            'canPassWastelandDessgeegas', 'canPassLowerNorfairChozo', 'canPassBotwoonHallway',
+            'canDefeatBotwoon', 'canFightDraygon', 'canExitDraygon', 'canExitPreciousRoom',
+            'canGoUpMtEverest', 'canPassMtEverest',
+            'canClimbBubbleMountain', 'canClimbColosseum', 'canClimbWestSandHole',
+            'canTraverseSandPits', 'canAccessSandPits',  # canAccessEtecoons removed - implemented above
+            'canDoOuterMaridia', 'canBotwoonExitToColosseum',
+            'canColosseumToBotwoonExit', 'canEnterCathedral', 'canExitCathedral',
+            'canExitWaveBeam', 'canExitScrewAttackArea', 'canGetBackFromRidleyZone',
+            'canReachCacatacAlleyFromBotowoon',
+            'canAccessDoubleChamberItems', 'canAccessItemsInWestSandHole',
+            'canAccessShaktoolFromPantsRoom', 'canTraverseCrabTunnelLeftToRight',
+            'canTraverseWestSandHallLeftToRight', 'canExitCrabHole',
+            'canPassMaridiaToRedTowerNode', 'canPassRedTowerToMaridiaNode',
+            'canEnterNorfairReserveAreaFromBubbleMoutain',
+            'canEnterNorfairReserveAreaFromBubbleMoutainTop',
+            'canUseCrocRoomToChargeSpeed',  # Heat helpers removed - now require Varia
+            # canPassG4 removed - now requires 4 bosses
+            'enoughStuffCroc', 'enoughStuffGT', 'enoughStuffSporeSpawn',
+            'enoughStuffTourian', 'enoughStuffsDraygon', 'enoughStuffsKraid',
+            'enoughStuffsPhantoon', 'enoughStuffsRidley',
+            'energyReserveCountOk', 'energyReserveCountOkHardRoom', 'itemCountOk',
+            'divideByDmgReduction', 'getPiratesPseudoScrewCoeff', 'int',
+        }
+        if helper_name in COMPLEX_ABILITY_HELPERS:
+            # For casual mode, assume these are all achievable
+            return self._make_bool_constant(True)
+
+        # Not an SM helper
+        return None
 
     def _convert_placement_lookup(self, rule: Dict[str, Any]) -> str:
         """Convert placement_lookup to resolved placement data.
