@@ -110,7 +110,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Stairway to Audience", player),
-        HasAny(['Double', 'Roc Wing'])
+        HasAny('Double', 'Roc Wing')
     )
 
     world.set_rule(
@@ -210,7 +210,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Catacomb: Fleamen brain room - Lower", player),
-        HasAny(['Double', 'Roc Wing'])
+        HasAny('Double', 'Roc Wing')
     )
 
     world.set_rule(
@@ -235,7 +235,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Catacomb: Mummies' fake wall", player),
-        HasAny(['Double', 'Roc Wing'])
+        HasAny('Double', 'Roc Wing')
     )
 
     world.set_rule(
