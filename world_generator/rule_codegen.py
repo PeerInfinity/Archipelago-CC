@@ -519,6 +519,7 @@ class RuleCodeGenerator:
                     'HasFromList': 'has_from_list',
                     'HasFromListUnique': 'has_from_list_unique',
                     'Count': 'count_check',
+                    'CountItem': 'count_item',
                     'CanReachRegion': 'can_reach',
                     'CanReachLocation': 'location_check',
                     'CanReachEntrance': 'entrance_check',
