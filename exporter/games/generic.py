@@ -241,33 +241,38 @@ class GenericGameExportHandler(BaseGameExportHandler):
                 is_useful = False
                 is_trap = False
                 
+                # Try to get classification from item class
                 try:
                     item_class = getattr(world, 'item_name_to_item', {}).get(item_name)
                     if item_class and hasattr(item_class, 'classification'):
                         classification = item_class.classification
-                        is_advancement = classification == ItemClassification.progression
-                        is_useful = classification == ItemClassification.useful
-                        is_trap = classification == ItemClassification.trap
+                        # Use bitwise check for combined flags (e.g., progression_skip_balancing | useful)
+                        is_advancement = bool(classification & ItemClassification.progression)
+                        is_useful = bool(classification & ItemClassification.useful)
+                        is_trap = bool(classification & ItemClassification.trap)
                 except Exception as e:
                     logger.debug(f"Could not determine classification for {item_name}: {e}")
-                    # Fallback: check item pool if available
-                    if hasattr(world, 'multiworld'):
-                        for item in world.multiworld.itempool:
-                            if item.player == world.player and item.name == item_name:
-                                is_advancement = item.classification == ItemClassification.progression
-                                is_useful = item.classification == ItemClassification.useful
-                                is_trap = item.classification == ItemClassification.trap
+
+                # Fallback: check item pool if classification not determined
+                if not (is_advancement or is_useful or is_trap) and hasattr(world, 'multiworld'):
+                    for item in world.multiworld.itempool:
+                        if item.player == world.player and item.name == item_name:
+                            # Use bitwise check for combined flags
+                            is_advancement = bool(item.classification & ItemClassification.progression)
+                            is_useful = bool(item.classification & ItemClassification.useful)
+                            is_trap = bool(item.classification & ItemClassification.trap)
+                            break
+
+                    # Additional fallback: check placed items in locations
+                    if not (is_advancement or is_useful or is_trap):
+                        for location in world.multiworld.get_locations(world.player):
+                            if (location.item and location.item.player == world.player and
+                                location.item.name == item_name and location.item.code is not None):
+                                # Use bitwise check for combined flags
+                                is_advancement = bool(location.item.classification & ItemClassification.progression)
+                                is_useful = bool(location.item.classification & ItemClassification.useful)
+                                is_trap = bool(location.item.classification & ItemClassification.trap)
                                 break
-                        
-                        # Additional fallback: check placed items in locations
-                        if not (is_advancement or is_useful or is_trap):
-                            for location in world.multiworld.get_locations(world.player):
-                                if (location.item and location.item.player == world.player and 
-                                    location.item.name == item_name and location.item.code is not None):
-                                    is_advancement = location.item.classification == ItemClassification.progression
-                                    is_useful = location.item.classification == ItemClassification.useful
-                                    is_trap = location.item.classification == ItemClassification.trap
-                                    break
                 
                 # Get groups if available
                 groups = []
@@ -311,9 +316,10 @@ class GenericGameExportHandler(BaseGameExportHandler):
                             'name': item_name,
                             'id': None,
                             'groups': ['Event'],
-                            'advancement': location.item.classification == ItemClassification.progression,
-                            'useful': location.item.classification == ItemClassification.useful,
-                            'trap': location.item.classification == ItemClassification.trap,
+                            # Use bitwise check for combined flags
+                            'advancement': bool(location.item.classification & ItemClassification.progression),
+                            'useful': bool(location.item.classification & ItemClassification.useful),
+                            'trap': bool(location.item.classification & ItemClassification.trap),
                             'event': True,
                             'type': 'Event',
                             'max_count': 1
