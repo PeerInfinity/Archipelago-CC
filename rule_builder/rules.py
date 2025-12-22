@@ -2902,6 +2902,20 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             return f"Helper:{self.helper_name}({args_str})"
         return f"Helper:{self.helper_name}"
 
+    @override
+    def to_dict(self) -> dict[str, Any]:
+        """Returns a JSON compatible dict representation of this helper call.
+
+        This outputs the format expected by the frontend, matching the AST exporter format:
+        {"rule": "helper_name", "options": [], "args": [], "_original_ast_type": "helper"}
+        """
+        return {
+            "rule": self.helper_name,
+            "options": [o.to_dict() for o in self.options],
+            "args": list(self.args),
+            "_original_ast_type": "helper",
+        }
+
     class Resolved(Rule.Resolved):
         helper_func: Callable[..., bool] | None
         helper_name: str
@@ -2980,6 +2994,20 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             return {
                 "helper_name": self.helper_name,
                 "args": self.args,
+            }
+
+        @override
+        def to_dict(self) -> dict[str, Any]:
+            """Returns a JSON compatible dict representation of this resolved helper call.
+
+            This outputs the format expected by the frontend, matching the AST exporter format:
+            {"rule": "helper_name", "options": [], "args": [], "_original_ast_type": "helper"}
+            """
+            return {
+                "rule": self.helper_name,
+                "options": [],
+                "args": list(self.args),
+                "_original_ast_type": "helper",
             }
 
 

@@ -830,8 +830,14 @@ class BaseGameExportHandler:
         Returns:
             A dictionary of attributes to add to the region data
         """
-        # Base implementation returns no additional attributes
-        return {}
+        attributes = {}
+
+        # Check for dynamically_added attribute (set by worldgen for regions
+        # that were added after sphere calculation in the original world)
+        if getattr(region, 'dynamically_added', False):
+            attributes['dynamically_added'] = True
+
+        return attributes
 
     def get_location_attributes(self, location, world) -> Dict[str, Any]:
         """
