@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-22 00:24:07
+**Generated:** 2025-12-22 06:47:09
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 68 (93.2%)
-- **Failed:** 5 (6.8%)
+- **Passed:** 67 (91.8%)
+- **Failed:** 6 (8.2%)
 - **Skipped (Prerequisites):** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
-- **Second Pass Tested:** 73
-- **Second Pass Passed:** 68
+- **Second Pass Tested:** 72
+- **Second Pass Passed:** 67
 - **Second Pass Failed:** 5
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 24/68 (35.3% of passed)
-- **Passing with Generic Logic:** 59/68 (86.8% of passed)
-- **Passing with Both Generic:** 24/68 (35.3% of passed)
+- **Passing with Generic Exporter:** 24/67 (35.8% of passed)
+- **Passing with Generic Logic:** 59/67 (88.1% of passed)
+- **Passing with Both Generic:** 24/67 (35.8% of passed)
 
 ## Test Results
 
@@ -35,7 +35,7 @@
 | A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| Aquaria | ✅ Passed | ✅ Passed | 1 | 1 | 3.3KB | ✅ |
+| Aquaria | ✅ Passed | ✅ Passed | 1 | 1 | 3.4KB | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | 1 | 1 | 1.5KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 15.0KB | ✅ |
@@ -72,7 +72,7 @@
 | Metamath | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Muse Dash | ✅ Passed | ✅ Passed | 5 | 5 | 0.2KB | ✅ |
 | Noita | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Old School Runescape | ✅ Passed | ✅ Passed | 5 | 5 | 5.9KB | ✅ |
+| Old School Runescape | ✅ Passed | ✅ Passed | 5 | 5 | 6.2KB | ✅ |
 | Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 26.1KB | 5.1KB |
 | Paint | ✅ Passed | ✅ Passed | 5 | 5 | 8.4KB | ✅ |
 | Raft | ✅ Passed | ✅ Passed | 5 | 5 | 12.0KB | ✅ |
@@ -81,7 +81,7 @@
 | Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | ❌ Failed | 5 | 5 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 34.0KB | 86.3KB |
+| Starcraft 2 | ❌ Failed | — | 6 | 6 | 35.1KB | 86.3KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 20.6KB | 10.7KB |
 | Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 7.0KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 14.6KB | ✅ |
@@ -91,7 +91,7 @@
 | TOEM original | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | ❌ Failed | 6 | 6 | ✅ | ✅ |
 | Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 19.3KB | ✅ |
-| The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | 5.9KB | ✅ |
+| The Legend of Zelda | ✅ Passed | ✅ Passed | 6 | 6 | 5.9KB | ✅ |
 | The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 11.2KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 5.4KB | ✅ |
 | The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 28.4KB | ✅ |
@@ -101,7 +101,7 @@
 | Wargroove | ✅ Passed | ✅ Passed | 7 | 7 | 9.6KB | ✅ |
 | WebDevJourney | ✅ Passed | ❌ Failed | 7 | 7 | ✅ | ✅ |
 | Yacht Dice | ✅ Passed | ✅ Passed | 8 | 8 | 0.9KB | 285.0KB |
-| Yoshi's Island | ✅ Passed | ✅ Passed | 8 | 8 | 10.8KB | ✅ |
+| Yoshi's Island | ✅ Passed | ✅ Passed | 7 | 7 | 10.8KB | ✅ |
 | shapez | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
 
 ## Templates in Multiworld
@@ -519,7 +519,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Muse Dash.yaml |
 | 6 | Sonic Adventure 2 Battle.yaml |
 
-### Starcraft 2 ✅ (Split 2)
+### Starcraft 2 ❌ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -639,8 +639,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Factorio.yaml |
 | 4 | Lingo.yaml |
 | 5 | Noita.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | The Legend of Zelda.yaml |
+| 6 | The Legend of Zelda.yaml |
 
 ### The Messenger ✅ (Split 3)
 
@@ -760,9 +759,8 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Factorio.yaml |
 | 4 | Lingo.yaml |
 | 5 | Noita.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | Yoshi's Island.yaml |
+| 6 | The Legend of Zelda.yaml |
+| 7 | Yoshi's Island.yaml |
 
 ### shapez ✅ (Split 3)
 
@@ -778,6 +776,23 @@ Shows which templates were in the multiworld when each game was tested:
 | 8 | shapez.yaml |
 
 
+## Bisection Results
+
+When a multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
+
+### Starcraft 2 (Starcraft 2.yaml)
+
+**Failing pairs found:** 5
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| A Link to the Past.yaml | ❌ | ✅ | ✅ | ❌ |
+| Celeste 64.yaml | ❌ | ✅ | ✅ | ❌ |
+| Factorio.yaml | ❌ | ✅ | ✅ | ❌ |
+| Lingo.yaml | ❌ | ✅ | ✅ | ❌ |
+| Noita.yaml | ❌ | ✅ | ✅ | ❌ |
+
+
 ## Second Pass Results
 
 Templates tested in the first pass with fewer than the maximum number of players were retested (second pass) with the full multiworld.
@@ -785,7 +800,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Game Name | First Pass MW Size | Second Pass MW Size | Second Pass Player # | Second Pass Result |
 |-----------|-------------------|---------------------|---------------------|--------------------|
 | A Hat in Time | 1 | 8 | 1 | ✅ Passed |
-| A Link to the Past | 1 | 8 | 1 | ✅ Passed |
+| A Link to the Past | 1 | 7 | 1 | ✅ Passed |
 | A Short Hike | 1 | 8 | 1 | ✅ Passed |
 | APQuest | 1 | 7 | 1 | ✅ Passed |
 | Adventure | 1 | 7 | 1 | ✅ Passed |
@@ -795,7 +810,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Castlevania - Circle of the Moon | 1 | 7 | 1 | ✅ Passed |
 | Castlevania 64 | 1 | 7 | 1 | ❌ Failed |
 | Celeste (Open World) | 2 | 8 | 2 | ✅ Passed |
-| Celeste 64 | 2 | 8 | 2 | ✅ Passed |
+| Celeste 64 | 2 | 7 | 2 | ✅ Passed |
 | ChecksFinder | 2 | 8 | 2 | ✅ Passed |
 | ChocolateChipCookies | 2 | 7 | 2 | ✅ Passed |
 | Choo-Choo Charles | 2 | 7 | 2 | ✅ Passed |
@@ -805,7 +820,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | DOOM II | 2 | 7 | 2 | ✅ Passed |
 | Dark Souls III | 2 | 6 | 1 | ❌ Failed |
 | Donkey Kong Country 3 | 3 | 8 | 3 | ✅ Passed |
-| Factorio | 3 | 8 | 3 | ✅ Passed |
+| Factorio | 3 | 7 | 3 | ✅ Passed |
 | Faxanadu | 3 | 8 | 3 | ✅ Passed |
 | Final Fantasy Mystic Quest | 3 | 7 | 3 | ✅ Passed |
 | Heretic | 3 | 7 | 3 | ✅ Passed |
@@ -815,7 +830,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Kingdom Hearts 2 | 3 | 7 | 3 | ✅ Passed |
 | Kirby's Dream Land 3 | 3 | 5 | 1 | ✅ Passed |
 | Landstalker - The Treasures of King Nole | 4 | 8 | 4 | ✅ Passed |
-| Lingo | 4 | 8 | 4 | ✅ Passed |
+| Lingo | 4 | 7 | 4 | ✅ Passed |
 | Links Awakening DX | 4 | 8 | 4 | ✅ Passed |
 | Lufia II Ancient Cave | 4 | 7 | 4 | ✅ Passed |
 | Mario & Luigi Superstar Saga | 4 | 7 | 4 | ✅ Passed |
@@ -825,7 +840,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Meritous | 4 | 7 | 4 | ✅ Passed |
 | Metamath | 4 | 5 | 2 | ✅ Passed |
 | Muse Dash | 5 | 8 | 5 | ✅ Passed |
-| Noita | 5 | 8 | 5 | ✅ Passed |
+| Noita | 5 | 7 | 5 | ✅ Passed |
 | Old School Runescape | 5 | 8 | 5 | ✅ Passed |
 | Overcooked! 2 | 5 | 7 | 5 | ✅ Passed |
 | Paint | 5 | 7 | 5 | ✅ Passed |
@@ -835,7 +850,6 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Secret of Evermore | 5 | 7 | 5 | ✅ Passed |
 | Shivers | 5 | 5 | 3 | ❌ Failed |
 | Sonic Adventure 2 Battle | 6 | 8 | 6 | ✅ Passed |
-| Starcraft 2 | 6 | 8 | 6 | ✅ Passed |
 | Stardew Valley | 6 | 8 | 6 | ✅ Passed |
 | Subnautica | 6 | 7 | 6 | ✅ Passed |
 | Super Mario 64 | 6 | 7 | 6 | ✅ Passed |
@@ -845,7 +859,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | TOEM original | 6 | 7 | 6 | ✅ Passed |
 | TOEM rule builder | 6 | 4 | 3 | ❌ Failed |
 | Terraria | 7 | 8 | 7 | ✅ Passed |
-| The Legend of Zelda | 7 | 8 | 7 | ✅ Passed |
+| The Legend of Zelda | 6 | 7 | 6 | ✅ Passed |
 | The Messenger | 7 | 8 | 7 | ✅ Passed |
 | The Wind Waker | 7 | 7 | 7 | ✅ Passed |
 | The Witness | 7 | 7 | 7 | ✅ Passed |
@@ -855,7 +869,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Wargroove | 7 | 7 | 7 | ✅ Passed |
 | WebDevJourney | 7 | 3 | 3 | ❌ Failed |
 | Yacht Dice | 8 | 8 | 8 | ✅ Passed |
-| Yoshi's Island | 8 | 8 | 8 | ✅ Passed |
+| Yoshi's Island | 7 | 7 | 7 | ✅ Passed |
 | shapez | 8 | 8 | 8 | ✅ Passed |
 
 ### Second Pass Templates in Multiworld
@@ -884,9 +898,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Factorio.yaml |
 | 4 | Lingo.yaml |
 | 5 | Noita.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | Yoshi's Island.yaml |
+| 6 | The Legend of Zelda.yaml |
+| 7 | Yoshi's Island.yaml |
 
 #### A Short Hike ✅ (Split 3)
 
@@ -1007,9 +1020,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Factorio.yaml |
 | 4 | Lingo.yaml |
 | 5 | Noita.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | Yoshi's Island.yaml |
+| 6 | The Legend of Zelda.yaml |
+| 7 | Yoshi's Island.yaml |
 
 #### ChecksFinder ✅ (Split 3)
 
@@ -1129,9 +1141,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Factorio.yaml |
 | 4 | Lingo.yaml |
 | 5 | Noita.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | Yoshi's Island.yaml |
+| 6 | The Legend of Zelda.yaml |
+| 7 | Yoshi's Island.yaml |
 
 #### Faxanadu ✅ (Split 3)
 
@@ -1250,9 +1261,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Factorio.yaml |
 | 4 | Lingo.yaml |
 | 5 | Noita.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | Yoshi's Island.yaml |
+| 6 | The Legend of Zelda.yaml |
+| 7 | Yoshi's Island.yaml |
 
 #### Links Awakening DX ✅ (Split 3)
 
@@ -1371,9 +1381,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Factorio.yaml |
 | 4 | Lingo.yaml |
 | 5 | Noita.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | Yoshi's Island.yaml |
+| 6 | The Legend of Zelda.yaml |
+| 7 | Yoshi's Island.yaml |
 
 #### Old School Runescape ✅ (Split 3)
 
@@ -1482,19 +1491,6 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Sonic Adventure 2 Battle.yaml |
 | 7 | Terraria.yaml |
 | 8 | Yacht Dice.yaml |
-
-#### Starcraft 2 ✅ (Split 2)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past.yaml |
-| 2 | Celeste 64.yaml |
-| 3 | Factorio.yaml |
-| 4 | Lingo.yaml |
-| 5 | Noita.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | Yoshi's Island.yaml |
 
 #### Stardew Valley ✅ (Split 3)
 
@@ -1612,9 +1608,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Factorio.yaml |
 | 4 | Lingo.yaml |
 | 5 | Noita.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | Yoshi's Island.yaml |
+| 6 | The Legend of Zelda.yaml |
+| 7 | Yoshi's Island.yaml |
 
 #### The Messenger ✅ (Split 3)
 
@@ -1731,9 +1726,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Factorio.yaml |
 | 4 | Lingo.yaml |
 | 5 | Noita.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | Yoshi's Island.yaml |
+| 6 | The Legend of Zelda.yaml |
+| 7 | Yoshi's Island.yaml |
 
 #### shapez ✅ (Split 3)
 
