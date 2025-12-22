@@ -354,6 +354,24 @@ class TheMessengerWorldGenWorld(RuleWorldMixin, World):
         return TheMessengerWorldGenItem(name, data.classification, data.id, self.player)
 
 
+    def collect(self, state: "CollectionState", item: "Item") -> bool:
+        """Track Time Shard collection by adding Shards to state."""
+        change = super().collect(state, item)
+        if change and "Time Shard" in item.name:
+            # Extract shard value from item name (e.g., "Time Shard (100)" -> 100)
+            shard_value = int(item.name.strip("Time Shard ()")) if "(" in item.name else 1
+            state.add_item("Shards", self.player, shard_value)
+        return change
+
+    def remove(self, state: "CollectionState", item: "Item") -> bool:
+        """Track Time Shard removal by removing Shards from state."""
+        change = super().remove(state, item)
+        if change and "Time Shard" in item.name:
+            # Extract shard value from item name (e.g., "Time Shard (100)" -> 100)
+            shard_value = int(item.name.strip("Time Shard ()")) if "(" in item.name else 1
+            state.remove_item("Shards", self.player, shard_value)
+        return change
+
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
         return {
