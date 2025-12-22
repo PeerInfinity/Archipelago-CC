@@ -90,6 +90,58 @@ class SC2GameExportHandler(GenericGameExportHandler):
                             pass
         return closure_vars
 
+    def _get_simplified_helper(self, helper_name: str) -> Optional[Dict[str, Any]]:
+        """
+        Get simplified logic for blacklisted helpers.
+
+        Some helpers can't be fully exported because they call other blacklisted helpers
+        or use complex patterns. For these, we provide simplified approximations that
+        capture the most common accessibility paths.
+
+        Returns:
+            Simplified rule dict if available, None otherwise
+        """
+        # terran_competent_ground_to_air: Common paths include having Goliath or Cyclone
+        # Full logic: has(Goliath) OR (has_any(Marine, Dominion Trooper) AND bio_heal AND weapons >= 2)
+        #             OR (advanced_tactics AND (has(Cyclone) OR has_all(Thor, Payload)))
+        # We use has_any(Goliath, Cyclone, Thor) to cover multiple progression paths
+        if helper_name == 'terran_competent_ground_to_air':
+            return {
+                'type': 'or',
+                'conditions': [
+                    {'type': 'item_check', 'item': 'Goliath'},
+                    {'type': 'item_check', 'item': 'Cyclone'},
+                    {'type': 'item_check', 'item': 'Thor'}
+                ]
+            }
+
+        # protoss_competent_ground_to_air: Common path is Dragoon or Stalker
+        if helper_name == 'protoss_competent_ground_to_air':
+            return {
+                'type': 'or',
+                'conditions': [
+                    {'type': 'item_check', 'item': 'Dragoon'},
+                    {'type': 'item_check', 'item': 'Stalker'}
+                ]
+            }
+
+        # zerg_competent_ground_to_air: Common path is Hydralisk
+        if helper_name == 'zerg_competent_ground_to_air':
+            return {'type': 'item_check', 'item': 'Hydralisk'}
+
+        # terran_base_trasher: Requires competent_comp (complex) but simplified to
+        # having siege tank with jump jets as the most common path
+        if helper_name == 'terran_base_trasher':
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'item_check', 'item': 'Siege Tank'},
+                    {'type': 'item_check', 'item': 'Jump Jets (Siege Tank)'}
+                ]
+            }
+
+        # No simplified version available
+        return None
 
     def override_rule_analysis(self, rule_func: Callable, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """
@@ -105,9 +157,14 @@ class SC2GameExportHandler(GenericGameExportHandler):
         logger.debug(f"[SC2] override_rule_analysis called for '{rule_target_name}' with func_name='{func_name}'")
 
         # Check if this is a complex helper method that should not be expanded
-        # For blacklisted helpers, return True_ directly so worldgen produces matching rules
+        # For blacklisted helpers, use custom simplified logic where available,
+        # otherwise return True_ (overly permissive is safer than blocking progression)
         if func_name in self.HELPERS_TO_EXPORT_BLACKLIST:
-            logger.debug(f"[SC2] Blacklisted helper '{func_name}' - returning True_ for consistent worldgen")
+            simplified = self._get_simplified_helper(func_name)
+            if simplified:
+                logger.debug(f"[SC2] Blacklisted helper '{func_name}' - using simplified export")
+                return simplified
+            logger.debug(f"[SC2] Blacklisted helper '{func_name}' - returning True_ (no simplified version)")
             return {'type': 'constant', 'value': True}
 
         # Handle count_missions pattern (from CountMissionsEntryRule.to_lambda)
@@ -313,6 +370,10 @@ class SC2GameExportHandler(GenericGameExportHandler):
         if rule.get('type') == 'helper':
             helper_name = rule.get('name', '')
             if helper_name in self.HELPERS_TO_EXPORT_BLACKLIST:
+                simplified = self._get_simplified_helper(helper_name)
+                if simplified:
+                    logger.debug(f"[SC2] Blacklisted helper AST node '{helper_name}' - using simplified export")
+                    return simplified
                 logger.debug(f"[SC2] Blacklisted helper AST node '{helper_name}' - returning True_")
                 return {'type': 'constant', 'value': True}
 
@@ -339,6 +400,10 @@ class SC2GameExportHandler(GenericGameExportHandler):
 
                     # Check if this helper is blacklisted
                     if method_name in self.HELPERS_TO_EXPORT_BLACKLIST:
+                        simplified = self._get_simplified_helper(method_name)
+                        if simplified:
+                            logger.debug(f"[SC2] Blacklisted helper '{method_name}' - using simplified export")
+                            return simplified
                         logger.debug(f"[SC2] Blacklisted helper '{method_name}' - returning True_")
                         return {'type': 'constant', 'value': True}
 
@@ -406,6 +471,10 @@ class SC2GameExportHandler(GenericGameExportHandler):
                 if attr_name in known_helpers:
                     # Check if this helper is blacklisted
                     if attr_name in self.HELPERS_TO_EXPORT_BLACKLIST:
+                        simplified = self._get_simplified_helper(attr_name)
+                        if simplified:
+                            logger.debug(f"[SC2] Blacklisted helper '{attr_name}' - using simplified export")
+                            return simplified
                         logger.debug(f"[SC2] Blacklisted helper '{attr_name}' - returning True_")
                         return {'type': 'constant', 'value': True}
 
