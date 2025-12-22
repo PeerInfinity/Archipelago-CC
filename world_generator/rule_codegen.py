@@ -815,6 +815,11 @@ class RuleCodeGenerator:
             item_name = args.get('item_name', '')
             return self._make_count_item(item_name)
 
+        # Handle AST_count_item rule (from AST format, counts items for arithmetic)
+        if rb_rule == 'AST_count_item':
+            item_name = args.get('item', '')
+            return self._make_count_item(item_name)
+
         if rb_rule == 'AST_block':
             # Convert AST block to evaluated result
             return self._convert_ast_block(rule)
@@ -1556,6 +1561,11 @@ class RuleCodeGenerator:
         if rb_rule == 'Constant':
             value = operand.get('args', {}).get('value')
             return repr(value)
+
+        # Handle Rule Builder format AST_count_item (e.g., {"rule": "AST_count_item", "args": {"item": "Star"}})
+        if rb_rule == 'AST_count_item':
+            item_name = operand.get('args', {}).get('item', '')
+            return self._make_count_item(item_name)
 
         if op_type == 'count_item':
             # Handle count_item type from rules.json export
