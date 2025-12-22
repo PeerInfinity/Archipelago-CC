@@ -648,8 +648,9 @@ class RuleCodeGenerator:
         if rb_rule == 'Count':
             item_name = args.get('item_name', '')
             count = args.get('count', 1)
-            self.required_imports.add('Count')
-            return f'Count({repr(item_name)}, {count})'
+            self.required_imports.add('Compare')
+            self.required_imports.add('CountItem')
+            return f'Compare(CountItem({repr(item_name)}), ">=", {count})'
 
         if rb_rule == 'HasAll':
             items = args.get('items', [])
