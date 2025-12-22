@@ -530,6 +530,7 @@ class RuleCodeGenerator:
                     'Constant': 'constant',
                     'AST_all_of': 'ast_all_of',
                     'AST_any_of': 'ast_any_of',
+                    'Name': 'name',  # Option/setting references
                 }
                 rule_type = rb_to_type.get(rb_rule, '')
 
@@ -629,6 +630,9 @@ class RuleCodeGenerator:
         if rb_rule == 'Not':
             if children:
                 child_expr = self._convert_rule(children[0])
+            elif 'condition' in args:
+                # Handle Rule Builder format from AST exporter (args.condition)
+                child_expr = self._convert_rule(args['condition'])
             else:
                 child_expr = 'True_()'
                 self.required_imports.add('True_')
@@ -772,6 +776,23 @@ class RuleCodeGenerator:
         # Handle AST_count_true rules (count N of M conditions as true)
         if rb_rule == 'AST_count_true':
             return self._convert_count_true_from_args(args)
+
+        if rb_rule == 'Name':
+            # Convert Name rule to constant based on settings
+            # The name is in args.name for Rule Builder format
+            name = args.get('name', '')
+            if name in self.settings:
+                value = self.settings[name]
+                if value:
+                    self.required_imports.add('True_')
+                    return 'True_()'
+                else:
+                    self.required_imports.add('False_')
+                    return 'False_()'
+            # Unknown name - default to False (disables optional features)
+            # This is safe because Not(False) = True, making locations accessible
+            self.required_imports.add('False_')
+            return 'False_()'
 
         # Unknown Rule Builder rule - return True_() as placeholder
         self.required_imports.add('True_')
