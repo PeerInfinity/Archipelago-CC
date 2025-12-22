@@ -534,6 +534,8 @@ class RuleCodeGenerator:
                     'SettingValue': 'setting_value',
                     'Conditional': 'conditional',
                     'Name': 'name',  # Option/setting references
+                    'CountItem': 'count_item',  # Item count for arithmetic/comparisons
+                    'AST_min': 'min',  # Min operation from AST export
                 }
                 rule_type = rb_to_type.get(rb_rule, '')
 
@@ -814,6 +816,17 @@ class RuleCodeGenerator:
         if rb_rule == 'CountItem':
             item_name = args.get('item_name', '')
             return self._make_count_item(item_name)
+
+        # Handle AST_min rule (min operation from AST export)
+        if rb_rule == 'AST_min':
+            # The args are nested under args.args
+            min_args = args.get('args', [])
+            if len(min_args) >= 2:
+                self.required_imports.add('MinValue')
+                left_code = self._convert_arithmetic_operand(min_args[0])
+                right_code = self._convert_arithmetic_operand(min_args[1])
+                return f'MinValue({left_code}, {right_code})'
+            return 'MinValue(0, 0)'
 
         if rb_rule == 'AST_block':
             # Convert AST block to evaluated result
@@ -1516,6 +1529,16 @@ class RuleCodeGenerator:
         if rb_rule == 'CountItem':
             item_name = rb_args.get('item_name', '')
             return self._make_count_item(item_name)
+
+        if rb_rule == 'AST_min':
+            # Handle AST_min with nested args
+            min_args = rb_args.get('args', [])
+            if len(min_args) >= 2:
+                self.required_imports.add('MinValue')
+                left_code = self._convert_arithmetic_operand(min_args[0])
+                right_code = self._convert_arithmetic_operand(min_args[1])
+                return f'MinValue({left_code}, {right_code})'
+            return 'MinValue(0, 0)'
 
         # For other types, try to convert as a rule
         return self._convert_rule(operand)
