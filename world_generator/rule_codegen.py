@@ -698,17 +698,17 @@ class RuleCodeGenerator:
             return f'HasFromListUnique({items_str}, count={count})'
 
         if rb_rule == 'CanReachRegion':
-            region = args.get('region_name', '')
+            region = self._extract_constant_value(args.get('region_name', ''), '')
             self.required_imports.add('CanReachRegion')
             return f'CanReachRegion({repr(region)})'
 
         if rb_rule == 'CanReachLocation':
-            location = args.get('location_name', '')
+            location = self._extract_constant_value(args.get('location_name', ''), '')
             self.required_imports.add('CanReachLocation')
             return f'CanReachLocation({repr(location)})'
 
         if rb_rule == 'CanReachEntrance':
-            entrance = args.get('entrance_name', '')
+            entrance = self._extract_constant_value(args.get('entrance_name', ''), '')
             self.required_imports.add('CanReachEntrance')
             return f'CanReachEntrance({repr(entrance)})'
 
