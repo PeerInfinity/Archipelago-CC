@@ -575,11 +575,17 @@ class RuleCodeGenerator:
             'ast_all_of': self._convert_ast_all_of,
             'ast_any_of': self._convert_ast_any_of,
             'count_true': self._convert_count_true,
+            'block': self._convert_ast_block,
         }
 
         converter = converters.get(rule_type)
         if converter:
             return converter(rule)
+
+        # Check for AST_block in Rule Builder format
+        rb_rule = rule.get('rule', '')
+        if rb_rule == 'AST_block':
+            return self._convert_ast_block(rule)
 
         # Unknown rule type - return True_() as placeholder
         # Don't use inline comments as they break multi-line expressions
@@ -627,8 +633,11 @@ class RuleCodeGenerator:
             return f'Or({", ".join(child_exprs)})'
 
         if rb_rule == 'Not':
+            # Not can have child in children list or in args.condition
             if children:
                 child_expr = self._convert_rule(children[0])
+            elif 'condition' in args:
+                child_expr = self._convert_rule(args['condition'])
             else:
                 child_expr = 'True_()'
                 self.required_imports.add('True_')
@@ -772,6 +781,10 @@ class RuleCodeGenerator:
         # Handle AST_count_true rules (count N of M conditions as true)
         if rb_rule == 'AST_count_true':
             return self._convert_count_true_from_args(args)
+
+        if rb_rule == 'AST_block':
+            # Convert AST block to evaluated result
+            return self._convert_ast_block(rule)
 
         # Unknown Rule Builder rule - return True_() as placeholder
         self.required_imports.add('True_')
@@ -1548,6 +1561,251 @@ class RuleCodeGenerator:
         # Setting not found - return False as safe default
         self.required_imports.add('False_')
         return 'False_()'
+
+    def _convert_ast_block(self, rule: Dict[str, Any]) -> str:
+        """Convert an AST_block rule to Python Rule Builder expression.
+
+        AST_block represents Python code blocks with statements. Common patterns include:
+        - is_auto_scroll checks: assigns level_id, checks Cancel Auto Scroll, returns comparison
+        - has_level_progression checks: counts items with x2 multipliers
+
+        For worldgen worlds, we need to evaluate these blocks at generation time since
+        they often reference game options that won't exist at runtime.
+
+        Strategy:
+        1. Look for return statements and try to evaluate them
+        2. If the block references a missing setting_value, default to False
+        3. For unknown patterns, default to False (conservative - makes locations accessible)
+        """
+        args = rule.get('args', {})
+        statements = args.get('statements', [])
+
+        # Try to find and evaluate the block
+        return self._evaluate_ast_block_statements(statements)
+
+    def _evaluate_ast_block_statements(self, statements: List[Dict[str, Any]]) -> str:
+        """Evaluate a list of AST statements and return the result.
+
+        For blocks that reference missing settings (like sprite_data, auto_scroll_levels),
+        we default to True_() (accessible) since:
+        - Most setting checks are "is feature X enabled" type checks
+        - Defaulting to True means locations are accessible when we can't evaluate
+        - This matches the original game behavior with default settings
+        """
+        # Track variable assignments for substitution
+        local_vars: Dict[str, Any] = {}
+        # Track if block references missing settings
+        has_missing_settings = False
+
+        for stmt in statements:
+            stmt_type = stmt.get('type', '')
+
+            if stmt_type == 'assign':
+                # Track variable assignment
+                name = stmt.get('name', '')
+                value = stmt.get('value', {})
+                if value.get('type') == 'constant':
+                    local_vars[name] = value.get('value')
+                else:
+                    # Complex assignment - check if it references missing settings
+                    if self._references_missing_setting(value):
+                        has_missing_settings = True
+                        # For variables like 'sharks' that count from sprite_data,
+                        # assume 0 (no blocking elements)
+                        local_vars[name] = 0
+
+            elif stmt_type == 'if_statement':
+                # Try to evaluate if statements that return early
+                test = stmt.get('test', {})
+                body = stmt.get('body', [])
+
+                # Check for patterns like: if has_item or not variable
+                # If variable is 0 (our default), "not variable" is True
+                if self._can_evaluate_if_test(test, local_vars):
+                    test_result = self._evaluate_if_test(test, local_vars)
+                    if test_result:
+                        # If test is true, evaluate the body
+                        for body_stmt in body:
+                            if body_stmt.get('type') == 'return':
+                                return self._evaluate_ast_return_value(body_stmt.get('value', {}), local_vars)
+
+            elif stmt_type == 'return':
+                # Evaluate the return value
+                result = self._evaluate_ast_return_value(stmt.get('value', {}), local_vars)
+                # If the result is False and we have missing settings,
+                # that might be incorrect - but keep it for now
+                return result
+
+        # No return statement found or couldn't evaluate
+        # Default to True (accessible) when we can't determine
+        self.required_imports.add('True_')
+        return 'True_()'
+
+    def _references_missing_setting(self, value: Dict[str, Any]) -> bool:
+        """Check if an expression references a missing setting."""
+        if not isinstance(value, dict):
+            return False
+
+        if value.get('type') == 'setting_value':
+            setting_name = value.get('setting', '')
+            return setting_name not in self.settings
+
+        # Check nested structures
+        for v in value.values():
+            if isinstance(v, dict) and self._references_missing_setting(v):
+                return True
+            elif isinstance(v, list):
+                for item in v:
+                    if isinstance(item, dict) and self._references_missing_setting(item):
+                        return True
+        return False
+
+    def _can_evaluate_if_test(self, test: Dict[str, Any], local_vars: Dict[str, Any]) -> bool:
+        """Check if we can evaluate an if statement test."""
+        test_type = test.get('type', '')
+
+        if test_type == 'or':
+            # Can evaluate if any condition can be evaluated to True
+            conditions = test.get('conditions', [])
+            for cond in conditions:
+                if cond.get('type') == 'not':
+                    inner = cond.get('condition', {})
+                    if inner.get('type') == 'name' and inner.get('name') in local_vars:
+                        return True
+                elif cond.get('type') == 'item_check':
+                    return True
+            return False
+
+        if test_type == 'not':
+            inner = test.get('condition', {})
+            if inner.get('type') == 'name' and inner.get('name') in local_vars:
+                return True
+
+        return False
+
+    def _evaluate_if_test(self, test: Dict[str, Any], local_vars: Dict[str, Any]) -> bool:
+        """Evaluate an if statement test."""
+        test_type = test.get('type', '')
+
+        if test_type == 'or':
+            conditions = test.get('conditions', [])
+            for cond in conditions:
+                if cond.get('type') == 'not':
+                    inner = cond.get('condition', {})
+                    if inner.get('type') == 'name':
+                        var_name = inner.get('name')
+                        var_val = local_vars.get(var_name, 0)
+                        if not var_val:  # not 0 = True
+                            return True
+                # For item_check conditions, assume player doesn't have items
+                # This makes us continue to check other paths
+            return False
+
+        if test_type == 'not':
+            inner = test.get('condition', {})
+            if inner.get('type') == 'name':
+                var_name = inner.get('name')
+                var_val = local_vars.get(var_name, 0)
+                return not var_val
+
+        return False
+
+    def _evaluate_ast_return_value(self, value: Dict[str, Any], local_vars: Dict[str, Any]) -> str:
+        """Evaluate an AST return value expression."""
+        value_type = value.get('type', '')
+
+        if value_type == 'constant':
+            const_val = value.get('value')
+            if isinstance(const_val, bool):
+                self.required_imports.add('True_' if const_val else 'False_')
+                return 'True_()' if const_val else 'False_()'
+            return repr(const_val)
+
+        if value_type == 'compare':
+            # Comparison like: auto_scroll_levels[level_id] > 0
+            left = value.get('left', {})
+            op = value.get('op', '')
+            right = value.get('right', {})
+
+            # Check if this is a setting_value subscript comparison
+            if left.get('type') == 'subscript':
+                subscript_value = left.get('value', {})
+
+                # Check for setting_value (like auto_scroll_levels)
+                if subscript_value.get('type') == 'setting_value':
+                    setting_name = subscript_value.get('setting', '')
+
+                    # If the setting exists, try to evaluate
+                    if setting_name in self.settings:
+                        setting_data = self.settings[setting_name]
+                        # Get the index
+                        index = left.get('index', {})
+                        index_val = None
+                        if index.get('type') == 'constant':
+                            index_val = index.get('value')
+                        elif index.get('type') == 'name':
+                            index_val = local_vars.get(index.get('name'))
+
+                        if index_val is not None and isinstance(setting_data, (dict, list)):
+                            try:
+                                actual_value = setting_data[index_val] if isinstance(setting_data, dict) else setting_data[int(index_val)]
+                                right_val = right.get('value', 0) if right.get('type') == 'constant' else 0
+
+                                # Evaluate the comparison
+                                result = self._evaluate_comparison(actual_value, op, right_val)
+                                self.required_imports.add('True_' if result else 'False_')
+                                return 'True_()' if result else 'False_()'
+                            except (KeyError, IndexError, TypeError):
+                                pass
+
+                    # Setting not found or can't evaluate - default to False
+                    # For auto_scroll checks, False means no auto-scroll, which is the most accessible case
+                    self.required_imports.add('False_')
+                    return 'False_()'
+
+            # Try to evaluate other comparisons
+            left_val = self._try_evaluate_expr(left, local_vars)
+            right_val = self._try_evaluate_expr(right, local_vars)
+
+            if left_val is not None and right_val is not None:
+                result = self._evaluate_comparison(left_val, op, right_val)
+                self.required_imports.add('True_' if result else 'False_')
+                return 'True_()' if result else 'False_()'
+
+        # Can't evaluate - default to False (conservative for accessibility)
+        self.required_imports.add('False_')
+        return 'False_()'
+
+    def _try_evaluate_expr(self, expr: Dict[str, Any], local_vars: Dict[str, Any]) -> Any:
+        """Try to evaluate an expression to a constant value."""
+        expr_type = expr.get('type', '')
+
+        if expr_type == 'constant':
+            return expr.get('value')
+
+        if expr_type == 'name':
+            return local_vars.get(expr.get('name'))
+
+        return None
+
+    def _evaluate_comparison(self, left: Any, op: str, right: Any) -> bool:
+        """Evaluate a comparison operation."""
+        try:
+            if op == '>':
+                return left > right
+            elif op == '<':
+                return left < right
+            elif op == '>=':
+                return left >= right
+            elif op == '<=':
+                return left <= right
+            elif op == '==' or op == 'eq':
+                return left == right
+            elif op == '!=' or op == 'ne':
+                return left != right
+        except TypeError:
+            pass
+        return False
 
     def _convert_ast_all_of(self, rule: Dict[str, Any]) -> str:
         """Convert an AST_all_of rule to Python Rule Builder expression.
