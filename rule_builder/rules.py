@@ -3022,16 +3022,27 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
                 "_original_ast_type": "helper",
             }
             if self.args:
-                # Convert boolean args to AST format for frontend compatibility
-                exported_args = []
+                # Convert args to proper rule format for frontend compatibility
+                converted_args = []
                 for arg in self.args:
                     if arg is True:
-                        exported_args.append({"rule": "True_"})
+                        # Booleans use True_/False_ rules (required by shapez and others)
+                        converted_args.append({"rule": "True_"})
                     elif arg is False:
-                        exported_args.append({"rule": "False_"})
+                        converted_args.append({"rule": "False_"})
+                    elif isinstance(arg, (int, float, str)):
+                        # Other primitives wrap in Constant
+                        converted_args.append({
+                            "rule": "Constant",
+                            "args": {"value": arg},
+                        })
+                    elif isinstance(arg, dict):
+                        # Already a rule dict
+                        converted_args.append(arg)
                     else:
-                        exported_args.append(arg)
-                result["args"] = exported_args
+                        # Fallback for other types
+                        converted_args.append(arg)
+                result["args"] = converted_args
             return result
 
 
