@@ -21,3 +21,38 @@ Also added `terran_competent_anti_air` and `terran_moderate_anti_air` to the bla
 
 **Files modified:**
 - `exporter/games/sc2.py`: Changed blacklisted helper handling in 4 locations
+
+---
+
+### Issue 2: Helper function arguments not preserved during export
+
+**Status:** FIXED
+
+**Description:**
+When the exporter exports a location rule that calls a helper with arguments (e.g., `lambda state: logic.terran_competent_comp(state, 2)`), the arguments were not preserved in the exported rules.json.
+
+**Example:**
+```python
+# Victory uses upgrade_level=2
+lambda state: logic.terran_competent_comp(state, 2)
+```
+
+Was being exported as:
+```json
+{"rule": "terran_competent_comp"}
+```
+
+Instead of including the args.
+
+**Root cause:**
+The general analyzer pipeline was processing lambdas through multiple stages, and the args were being lost along the way. The issue was particularly problematic for blacklisted helpers called from lambdas.
+
+**Fix applied:**
+Added a new `_handle_blacklisted_helper_lambda` method in `exporter/games/sc2.py` that:
+1. Detects lambdas that are simple calls to blacklisted helpers
+2. Parses the lambda's AST directly
+3. Extracts the method name and arguments (filtering out state/player/world)
+4. Returns a properly formatted helper rule with args included
+
+**Files modified:**
+- `exporter/games/sc2.py`: Added `_handle_blacklisted_helper_lambda` method and integrated it into `override_rule_analysis`

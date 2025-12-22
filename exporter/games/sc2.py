@@ -123,7 +123,14 @@ class SC2GameExportHandler(GenericGameExportHandler):
 
         # Handle lambda patterns - could be BeatMissionsEntryRule or combined rules
         if func_name == '<lambda>':
-            # First try BeatMissionsEntryRule pattern (lambda with self.missions_to_beat)
+            # First try to handle lambdas that call blacklisted helpers with arguments
+            # e.g., lambda state: logic.terran_competent_comp(state, 2)
+            result = self._handle_blacklisted_helper_lambda(rule_func, rule_target_name)
+            if result:
+                logger.debug(f"[SC2] Blacklisted helper lambda handler returned result for '{rule_target_name}'")
+                return result
+
+            # Try BeatMissionsEntryRule pattern (lambda with self.missions_to_beat)
             result = self._handle_beat_missions_lambda(rule_func, rule_target_name)
             if result:
                 logger.debug(f"[SC2] BeatMissionsEntryRule handler returned result for '{rule_target_name}'")
@@ -136,6 +143,73 @@ class SC2GameExportHandler(GenericGameExportHandler):
                 return result
 
         return None
+
+    def _handle_blacklisted_helper_lambda(self, rule_func: Callable, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        """
+        Handle lambdas that are simple calls to blacklisted helpers with arguments.
+
+        Pattern: lambda state: logic.helper_name(state, arg1, arg2, ...)
+
+        Returns a helper rule with the args included so the JS implementation receives them.
+        """
+        import ast
+        import inspect
+
+        try:
+            source = inspect.getsource(rule_func)
+            tree = ast.parse(source.strip())
+        except Exception as e:
+            logger.debug(f"[SC2] Failed to parse lambda source for '{rule_target_name}': {e}")
+            return None
+
+        # Find the lambda in the AST
+        lambda_node = None
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Lambda):
+                lambda_node = node
+                break
+
+        if not lambda_node:
+            return None
+
+        # Check if the lambda body is a simple function call
+        if not isinstance(lambda_node.body, ast.Call):
+            return None
+
+        call = lambda_node.body
+
+        # Check if the function is an attribute access on 'logic'
+        if not isinstance(call.func, ast.Attribute):
+            return None
+
+        if not isinstance(call.func.value, ast.Name) or call.func.value.id != 'logic':
+            return None
+
+        method_name = call.func.attr
+
+        # Only handle blacklisted helpers
+        if method_name not in self.HELPERS_TO_EXPORT_BLACKLIST:
+            return None
+
+        # Extract non-state/player/world arguments
+        args = []
+        for arg in call.args:
+            # Skip state, player, world arguments
+            if isinstance(arg, ast.Name) and arg.id in ('state', 'player', 'world', 'self'):
+                continue
+
+            # Extract constant values
+            if isinstance(arg, ast.Constant):
+                args.append({'type': 'constant', 'value': arg.value})
+            elif isinstance(arg, ast.Num):  # Python 3.7 compatibility
+                args.append({'type': 'constant', 'value': arg.n})
+
+        logger.debug(f"[SC2] Extracted blacklisted helper lambda: {method_name} with args: {args}")
+
+        result = {'type': 'helper', 'name': method_name}
+        if args:
+            result['args'] = args
+        return result
 
     def _handle_count_missions_rule(self, rule_func: Callable, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """
