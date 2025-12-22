@@ -552,6 +552,17 @@ class RuleCodeGenerator:
                     args = rule.get('args', {})
                     return self._convert_count_true_from_args(args)
 
+                # Check if this is an AST_has_group rule (exported from AST format has_group)
+                if rb_rule == 'AST_has_group':
+                    args = rule.get('args', {})
+                    group = args.get('group', '')
+                    count = args.get('count')
+                    group_expr = repr(group)
+                    self.required_imports.add('HasGroup')
+                    if count is None or count == 1:
+                        return f'HasGroup({group_expr})'
+                    return f'HasGroup({group_expr}, {count})'
+
         # Dispatch based on rule type
         converters = {
             'constant': self._convert_constant,

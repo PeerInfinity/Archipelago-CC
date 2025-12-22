@@ -4769,6 +4769,13 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       return evaluateRule({ type: 'group_check', group: groupName, count }, context, depth + 1, localScope);
     }
 
+    // AST_has_group: converted from AST format has_group (used by custom export handlers)
+    case 'AST_has_group': {
+      const groupName = args.group;
+      const count = args.count ?? 1;
+      return evaluateRule({ type: 'group_check', group: groupName, count }, context, depth + 1, localScope);
+    }
+
     // Composite rules: And
     case 'And': {
       if (children.length === 0) return true;
