@@ -530,6 +530,9 @@ class RuleCodeGenerator:
                     'Constant': 'constant',
                     'AST_all_of': 'ast_all_of',
                     'AST_any_of': 'ast_any_of',
+                    'Arithmetic': 'binary_op',
+                    'SettingValue': 'setting_value',
+                    'Conditional': 'conditional',
                 }
                 rule_type = rb_to_type.get(rb_rule, '')
 
@@ -743,6 +746,34 @@ class RuleCodeGenerator:
                 'right': args.get('right', {})
             }
             return self._convert_compare(compare_rule)
+
+        if rb_rule == 'Arithmetic':
+            # Convert Rule Builder format Arithmetic to binary_op format
+            binary_op_rule = {
+                'type': 'binary_op',
+                'left': args.get('left', {}),
+                'op': args.get('op', '+'),
+                'right': args.get('right', {})
+            }
+            return self._convert_binary_op(binary_op_rule)
+
+        if rb_rule == 'SettingValue':
+            # Convert Rule Builder format SettingValue
+            setting_rule = {
+                'type': 'setting_value',
+                'setting': args.get('setting', '')
+            }
+            return self._convert_setting_value(setting_rule)
+
+        if rb_rule == 'Conditional':
+            # Convert Rule Builder format Conditional
+            conditional_rule = {
+                'type': 'conditional',
+                'test': args.get('test', {}),
+                'if_true': args.get('if_true', {}),
+                'if_false': args.get('if_false', {})
+            }
+            return self._convert_conditional(conditional_rule)
 
         if rb_rule == 'Constant':
             # Handle Constant rule
