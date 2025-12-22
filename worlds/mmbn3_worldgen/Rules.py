@@ -240,7 +240,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Yoka Overworld -> Secret Area", player),
-        And(True_(), Has('Hammer'))
+        And(CanReachRegion('Beach Overworld'), Has('Hammer'))
     )
 
     world.set_rule(
@@ -280,7 +280,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Beach Cyberworld -> Undernet", player),
-        And(True_(), Has('Press'))
+        And(CanReachRegion('Yoka Cyberworld'), Has('Press'))
     )
     # Location rules
     world.set_rule(
@@ -300,117 +300,117 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Numberman Code 09", player),
-        True_()
+        CanReachRegion('SciLab Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 10", player),
-        True_()
+        CanReachRegion('SciLab Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 11", player),
-        True_()
+        CanReachRegion('SciLab Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 12", player),
-        True_()
+        CanReachRegion('SciLab Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 13", player),
-        True_()
+        CanReachRegion('SciLab Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 14", player),
-        True_()
+        CanReachRegion('SciLab Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 15", player),
-        True_()
+        CanReachRegion('SciLab Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 16", player),
-        True_()
+        CanReachRegion('SciLab Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 17", player),
-        True_()
+        CanReachRegion('SciLab Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 18", player),
-        True_()
+        CanReachRegion('SciLab Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 19", player),
-        True_()
+        CanReachRegion('SciLab Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 20", player),
-        True_()
+        CanReachRegion('SciLab Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 21", player),
-        True_()
+        CanReachRegion('SciLab Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 22", player),
-        True_()
+        CanReachRegion('SciLab Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 23", player),
-        True_()
+        CanReachRegion('SciLab Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 24", player),
-        True_()
+        CanReachRegion('SciLab Overworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 25", player),
-        True_()
+        CanReachRegion('Yoka Cyberworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 26", player),
-        True_()
+        CanReachRegion('Yoka Cyberworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 27", player),
-        True_()
+        CanReachRegion('Yoka Cyberworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 28", player),
-        True_()
+        CanReachRegion('Yoka Cyberworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 29", player),
-        True_()
+        CanReachRegion('Yoka Cyberworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 30", player),
-        True_()
+        CanReachRegion('Yoka Cyberworld')
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 31", player),
-        True_()
+        CanReachRegion('Yoka Cyberworld')
     )
 
     world.set_rule(
@@ -515,7 +515,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Job: Legendary Tomes", player),
-        And(CanReachRegion('Beach Overworld'), CanReachRegion('Deep Undernet'), CanReachRegion('Undernet'), HasAll(['Magnum1 A', 'Press']))
+        And(CanReachRegion('Beach Overworld'), CanReachRegion('Deep Undernet'), CanReachRegion('Undernet'), HasAll('Magnum1 A', 'Press'))
     )
 
     world.set_rule(
