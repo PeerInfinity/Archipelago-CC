@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2025-12-22 06:47:09
+**Generated:** 2025-12-22 19:07:29
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -10,17 +10,17 @@ This chart shows processing times for each test phase. Times are in seconds. For
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Total | 369.5s | 885.5s | 1974.8s | 1515.8s |
-| Average | 5.1s | 12.1s | 27.1s | 20.8s |
+| Total | 376.4s | 889.2s | 1974.8s | 1515.8s |
+| Average | 5.1s | 12.0s | 27.1s | 20.8s |
 | Max | 27.3s | 73.9s | 300.1s | 119.3s |
-| Min | 3.1s | 5.5s | 5.6s | 12.2s |
+| Min | 3.1s | 3.8s | 5.6s | 12.2s |
 
 ## Slowest and Fastest Games
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
 | Slowest | Subnautica (27.3s) | Stardew Valley (73.9s) | Dark Souls III (300.1s) | Dark Souls III (119.3s) |
-| Fastest | Wargroove (3.1s) | Meritous (5.5s) | ChocolateChipCookies (5.6s) | Wargroove (12.2s) |
+| Fastest | Wargroove (3.1s) | Super Mario Land 2 WorldGen (3.8s) | ChocolateChipCookies (5.6s) | Wargroove (12.2s) |
 
 ## Individual Game Processing Times
 
@@ -82,6 +82,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 | Subnautica | 27.3s | 14.7s | 18.7s | 17.6s |
 | Super Mario 64 | 3.3s | 12.7s | 14.7s | 15.5s |
 | Super Mario Land 2 | 4.3s | 7.7s | 9.8s | 13.7s |
+| Super Mario Land 2 WorldGen | 6.9s | 3.8s | - | - |
 | Super Mario World | 4.6s | 6.7s | 11.7s | 14.4s |
 | Super Metroid | 12.1s | 10.7s | 15.6s | 17.5s |
 | TOEM original | 3.1s | 9.5s | 15.9s | 14.6s |

@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2025-12-22 06:47:09
+**Generated:** 2025-12-22 19:07:29
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -106,7 +106,7 @@ Of the 54 templates passing all 4 tests:
 | Stardew Valley WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 20.6KB | 10.7KB | 1100.3KB |
 | Subnautica WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 7.0KB | ✅ | 201.9KB |
 | Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.6KB | ✅ | 96.0KB |
-| Super Mario Land 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 14.0KB | ✅ | 691.1KB |
+| Super Mario Land 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 14.0KB | ✅ | 859.2KB |
 | Super Mario World WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 155.0KB |
 | Super Metroid WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 73.6KB | 114.6KB | 176.6KB |
 | TOEM original WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 109.3KB |
@@ -133,8 +133,8 @@ Of the 54 templates passing all 4 tests:
 | 3 | Starcraft 2 WorldGen | 1052.0KB |
 | 4 | Dark Souls III WorldGen | 1045.1KB |
 | 5 | Celeste (Open World) WorldGen | 1029.4KB |
-| 6 | Lingo WorldGen | 794.1KB |
-| 7 | Super Mario Land 2 WorldGen | 691.1KB |
+| 6 | Super Mario Land 2 WorldGen | 859.2KB |
+| 7 | Lingo WorldGen | 794.1KB |
 | 8 | Links Awakening DX WorldGen | 533.7KB |
 | 9 | Kirby's Dream Land 3 WorldGen | 437.3KB |
 | 10 | Kingdom Hearts WorldGen | 425.7KB |

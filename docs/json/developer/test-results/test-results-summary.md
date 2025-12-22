@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-22 06:47:09
+**Generated:** 2025-12-22 19:07:29
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -18,7 +18,7 @@ Additional test results:
 
 ### Individual Test Results
 
-- **Minimal Test:** 72/73 passed (98.6%)
+- **Minimal Test:** 72/74 passed (97.3%)
 - **Full Test:** 72/73 passed (98.6%)
 - **Multiclient Test:** 73/73 passed (100.0%)
 - **Multiworld Test:** 72/73 passed (98.6%)
@@ -32,11 +32,11 @@ Additional test results:
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 72/73 (98.6%)
-- **Templates passing 3 tests:** 0/73 (0.0%)
-- **Templates passing 2 tests:** 0/73 (0.0%)
-- **Templates passing 1 test:** 1/73 (1.4%)
-- **Templates passing 0 tests:** 0/73 (0.0%)
+- **Templates passing all 4 tests:** 72/74 (97.3%)
+- **Templates passing 3 tests:** 0/74 (0.0%)
+- **Templates passing 2 tests:** 0/74 (0.0%)
+- **Templates passing 1 test:** 1/74 (1.4%)
+- **Templates passing 0 tests:** 1/74 (1.4%)
 
 ### Generic Exporter/Logic Statistics
 
@@ -112,6 +112,7 @@ Of the 72 templates passing all 4 tests:
 | Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.0KB | ✅ | 206.6KB |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.6KB | ✅ | 89.4KB |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.0KB | ✅ | 934.3KB |
+| Super Mario Land 2 WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ❓ N/A | ❓ N/A | ❓ N/A | ✅ | ✅ | 859.2KB |
 | Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 176.6KB |
 | Super Metroid | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 73.6KB | 114.6KB | 607.2KB |
 | TOEM original | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ | 101.7KB |

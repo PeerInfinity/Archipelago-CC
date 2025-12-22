@@ -4,7 +4,7 @@ Filling Algorithm:               balanced
 Players:                         1
 Plando Options:                  connections, texts, bosses
 Game:                            Super Mario Land 2 WorldGen
-Location Count:                  59
+Location Count:                  53
 Progression Balancing:           50
 Accessibility:                   Full
 Local Items:                     
@@ -115,7 +115,6 @@ Playthrough:
   Macro Zone 1 - Secret Exit: Turtle Zone Progression
   Macro Zone Secret Course - Normal Exit: Pumpkin Zone Progression
   Mario Zone 1 - Midway Bell: Space Physics
-  Pumpkin Zone 2 - Secret Exit: Mushroom
   Pumpkin Zone 3 - Secret Exit: Macro Zone Secret 2
   Space Zone 1 - Normal Exit: Turtle Zone Progression
   Space Zone 1 - Secret Exit: Macro Zone Progression
@@ -129,6 +128,7 @@ Playthrough:
   Macro Zone 2 - Normal Exit: Pumpkin Zone Progression
   Mario's Castle - Wario: Wario Defeated
   Pumpkin Zone 2 - Normal Exit: Space Zone Progression
+  Pumpkin Zone 2 - Secret Exit: Mushroom
   Turtle Zone 2 - Normal Exit: Macro Zone Progression
   Turtle Zone 2 - Secret Exit: Hippo Bubble
 }

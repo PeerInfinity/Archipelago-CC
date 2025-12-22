@@ -6,17 +6,17 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-22 06:47:09
+**Generated:** 2025-12-22 19:07:29
 
 **Source Data Created:** 2025-12-22T06:03:40.601557
 
-**Source Data Last Updated:** 2025-12-22T06:03:40.601564
+**Source Data Last Updated:** 2025-12-22T19:07:28.268099
 
 ## Summary
 
-- **Total Games:** 73
-- **Passed:** 72 (98.6%)
-- **Failed:** 1 (1.4%)
+- **Total Games:** 74
+- **Passed:** 72 (97.3%)
+- **Failed:** 2 (2.7%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
@@ -86,6 +86,7 @@
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 7.0KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 14.0KB | ✅ |
+| Super Mario Land 2 WorldGen | ❌ Failed | 0 | 0 | 2.6 | 🔴 0.0% | ✅ | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
 | Super Metroid | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | 73.6KB | 114.6KB |
 | TOEM original | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
