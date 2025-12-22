@@ -519,6 +519,7 @@ class RuleCodeGenerator:
                     'HasFromList': 'has_from_list',
                     'HasFromListUnique': 'has_from_list_unique',
                     'Count': 'count_check',
+                    'CountItem': 'count_item',
                     'CanReachRegion': 'can_reach',
                     'CanReachLocation': 'location_check',
                     'CanReachEntrance': 'entrance_check',
@@ -530,6 +531,7 @@ class RuleCodeGenerator:
                     'Constant': 'constant',
                     'AST_all_of': 'ast_all_of',
                     'AST_any_of': 'ast_any_of',
+                    'AST_prog_item_count': 'prog_item_count',  # State counter items like coins
                     'Arithmetic': 'binary_op',
                     'SettingValue': 'setting_value',
                     'Conditional': 'conditional',
@@ -814,6 +816,13 @@ class RuleCodeGenerator:
         if rb_rule == 'CountItem':
             item_name = args.get('item_name', '')
             return self._make_count_item(item_name)
+
+        # Handle AST_prog_item_count rule (for state counter items like coins)
+        # This converts {"rule": "AST_prog_item_count", "args": {"key": " coins"}}
+        # to CountItem(" coins") for use in Compare expressions
+        if rb_rule == 'AST_prog_item_count':
+            key = args.get('key', '')
+            return self._make_count_item(key)
 
         if rb_rule == 'AST_block':
             # Convert AST block to evaluated result
