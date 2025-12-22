@@ -1,7 +1,7 @@
 {
   "A Hat in Time": {
     "exporter_path": "exporter/games/ahit.py",
-    "exporter_size": 11405,
+    "exporter_size": 11548,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -91,7 +91,7 @@
   },
   "Aquaria": {
     "exporter_path": "exporter/games/aquaria.py",
-    "exporter_size": 3341,
+    "exporter_size": 3463,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -127,7 +127,7 @@
   },
   "Bomb Rush Cyberfunk": {
     "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
-    "exporter_size": 1585,
+    "exporter_size": 6914,
     "game_logic_path": null,
     "game_logic_size": 41277,
     "has_custom_exporter": true,
@@ -820,7 +820,7 @@
   },
   "Old School Runescape": {
     "exporter_path": "exporter/games/osrs.py",
-    "exporter_size": 6056,
+    "exporter_size": 6362,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1036,7 +1036,7 @@
   },
   "Starcraft 2": {
     "exporter_path": "exporter/games/sc2.py",
-    "exporter_size": 34805,
+    "exporter_size": 39329,
     "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
     "game_logic_size": 88384,
     "has_custom_exporter": true,
@@ -1315,7 +1315,7 @@
   },
   "Timespinner": {
     "exporter_path": "exporter/games/timespinner.py",
-    "exporter_size": 4135,
+    "exporter_size": 4702,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1432,7 +1432,7 @@
   },
   "Yoshi's Island": {
     "exporter_path": "exporter/games/yoshisisland.py",
-    "exporter_size": 11075,
+    "exporter_size": 12071,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
