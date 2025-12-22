@@ -531,6 +531,7 @@ class RuleCodeGenerator:
                     'Constant': 'constant',
                     'AST_all_of': 'ast_all_of',
                     'AST_any_of': 'ast_any_of',
+                    'AST_prog_item_count': 'prog_item_count',  # State counter items like coins
                     'Arithmetic': 'binary_op',
                     'SettingValue': 'setting_value',
                     'Conditional': 'conditional',
@@ -852,6 +853,13 @@ class RuleCodeGenerator:
                 right_code = self._convert_arithmetic_operand(min_args[1])
                 return f'MinValue({left_code}, {right_code})'
             return 'MinValue(0, 0)'
+
+        # Handle AST_prog_item_count rule (for state counter items like coins)
+        # This converts {"rule": "AST_prog_item_count", "args": {"key": " coins"}}
+        # to CountItem(" coins") for use in Compare expressions
+        if rb_rule == 'AST_prog_item_count':
+            key = args.get('key', '')
+            return self._make_count_item(key)
 
         if rb_rule == 'AST_block':
             # Convert AST block to evaluated result
