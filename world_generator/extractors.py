@@ -113,8 +113,8 @@ def _param_is_used_in_body(param_name: str, body: Any) -> bool:
         return False
 
     if isinstance(body, dict):
-        # Check for explicit param reference (type: param_ref, variable, etc.)
-        if body.get('type') in ('param_ref', 'variable', 'param'):
+        # Check for explicit param reference (type: param_ref, variable, name, etc.)
+        if body.get('type') in ('param_ref', 'variable', 'param', 'name'):
             if body.get('name') == param_name or body.get('param') == param_name:
                 return True
         # Check if param name appears as a value

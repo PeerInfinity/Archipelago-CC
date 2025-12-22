@@ -8,6 +8,8 @@ that uses the Rule Builder pattern.
 import copy
 from typing import Any, Dict, List, Set, Tuple, Optional
 
+from world_generator.extractors import _param_is_used_in_body
+
 
 class RuleCodeGenerator:
     """Generates Python Rule Builder code from AST format rules."""
@@ -1556,6 +1558,9 @@ class RuleCodeGenerator:
                             arg_strs.append(repr(self.settings[setting]))
                         else:
                             arg_strs.append('None')
+                    elif arg_rule == 'Constant':
+                        # Handle Rule Builder format Constant: {"rule": "Constant", "args": {"value": ...}}
+                        arg_strs.append(repr(arg.get('args', {}).get('value')))
                     elif arg.get('type') == 'constant':
                         arg_strs.append(repr(arg.get('value')))
                     elif arg.get('type') == 'setting_value':
@@ -1751,9 +1756,15 @@ class HelperCodeGenerator:
                 else:
                     sig_params.append(f'{param} = {repr(default_val)}')
             else:
-                # No default provided - use None as default so callers can omit this arg
-                # This is needed when helper body is hardcoded/expanded and doesn't use the param
-                sig_params.append(f'{param} = None')
+                # No default provided - check if the parameter is used in the body
+                # If it's used, make it a required parameter (no default)
+                # If it's not used, use None as default so callers can omit this arg
+                if _param_is_used_in_body(param, body):
+                    # Parameter is used in body - make it required (no default)
+                    sig_params.append(f'{param}')
+                else:
+                    # Parameter is not used - add None default so it can be omitted
+                    sig_params.append(f'{param} = None')
 
         # Determine return type based on body structure
         return_type = "bool"
