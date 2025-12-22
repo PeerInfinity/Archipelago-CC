@@ -2908,11 +2908,21 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
 
         This outputs the format expected by the frontend, matching the AST exporter format:
         {"rule": "helper_name", "options": [], "args": [], "_original_ast_type": "helper"}
+
+        Args are wrapped in Constant format for frontend compatibility.
         """
+        # Wrap each arg in Constant format for frontend compatibility
+        wrapped_args = []
+        for arg in self.args:
+            wrapped_args.append({
+                "rule": "Constant",
+                "options": [],
+                "args": {"value": arg},
+            })
         return {
             "rule": self.helper_name,
             "options": [o.to_dict() for o in self.options],
-            "args": list(self.args),
+            "args": wrapped_args,
             "_original_ast_type": "helper",
         }
 
@@ -3002,11 +3012,21 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
 
             This outputs the format expected by the frontend, matching the AST exporter format:
             {"rule": "helper_name", "options": [], "args": [], "_original_ast_type": "helper"}
+
+            Args are wrapped in Constant format for frontend compatibility.
             """
+            # Wrap each arg in Constant format for frontend compatibility
+            wrapped_args = []
+            for arg in self.args:
+                wrapped_args.append({
+                    "rule": "Constant",
+                    "options": [],
+                    "args": {"value": arg},
+                })
             return {
                 "rule": self.helper_name,
                 "options": [],
-                "args": list(self.args),
+                "args": wrapped_args,
                 "_original_ast_type": "helper",
             }
 
