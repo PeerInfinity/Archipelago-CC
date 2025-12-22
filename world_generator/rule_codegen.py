@@ -516,6 +516,8 @@ class RuleCodeGenerator:
                     'HasAny': 'group_check',
                     'HasAllCounts': 'group_check',
                     'HasGroup': 'group_check',
+                    'HasFromList': 'has_from_list',
+                    'HasFromListUnique': 'has_from_list_unique',
                     'Count': 'count_check',
                     'CanReachRegion': 'can_reach',
                     'CanReachLocation': 'location_check',
@@ -666,6 +668,28 @@ class RuleCodeGenerator:
             group = args.get('group', '')
             self.required_imports.add('HasGroup')
             return f'HasGroup({repr(group)})'
+
+        if rb_rule == 'HasFromList':
+            items = args.get('items', [])
+            count = args.get('count', 1)
+            if not items:
+                self.required_imports.add('True_')
+                return 'True_()'
+            self.required_imports.add('HasFromList')
+            # HasFromList expects (*item_names: str, count: int = 1)
+            items_str = ', '.join(repr(item) for item in items)
+            return f'HasFromList({items_str}, count={count})'
+
+        if rb_rule == 'HasFromListUnique':
+            items = args.get('items', [])
+            count = args.get('count', 1)
+            if not items:
+                self.required_imports.add('True_')
+                return 'True_()'
+            self.required_imports.add('HasFromListUnique')
+            # HasFromListUnique expects (*item_names: str, count: int = 1)
+            items_str = ', '.join(repr(item) for item in items)
+            return f'HasFromListUnique({items_str}, count={count})'
 
         if rb_rule == 'CanReachRegion':
             region = args.get('region_name', '')
