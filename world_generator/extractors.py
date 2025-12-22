@@ -92,6 +92,7 @@ class RegionData:
     locations: List[str] = field(default_factory=list)
     exits: List[str] = field(default_factory=list)
     hint_text: Optional[str] = None  # Display name if different from name
+    dynamically_added: bool = False  # True if region was added after sphere calculation
 
 
 def _param_is_used_in_body(param_name: str, body: Any) -> bool:
@@ -380,12 +381,14 @@ def extract_regions(json_data: Dict[str, Any]) -> Tuple[Dict[str, RegionData], D
         location_names = [loc.get('name', '') for loc in region_info.get('locations', [])]
         exit_names = [exit_info.get('name', '') for exit_info in region_info.get('exits', [])]
         hint_text = region_info.get('hint_text')  # Only set if different from name
+        dynamically_added = region_info.get('dynamically_added', False)
 
         regions[region_name] = RegionData(
             name=region_name,
             locations=location_names,
             exits=exit_names,
             hint_text=hint_text,
+            dynamically_added=dynamically_added,
         )
 
         # Extract exits
