@@ -383,6 +383,13 @@ def extract_regions(json_data: Dict[str, Any]) -> Tuple[Dict[str, RegionData], D
         hint_text = region_info.get('hint_text')  # Only set if different from name
         dynamically_added = region_info.get('dynamically_added', False)
 
+        # Auto-mark regions with no locations and no exits as dynamically_added.
+        # The original world may filter these out (e.g., shapez does this).
+        # These regions exist in the rules.json because other regions have exits to them,
+        # but they won't appear in the sphere log because they have no content.
+        if not location_names and not exit_names:
+            dynamically_added = True
+
         regions[region_name] = RegionData(
             name=region_name,
             locations=location_names,
