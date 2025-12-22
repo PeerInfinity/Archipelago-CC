@@ -160,18 +160,29 @@
             "name": "Go To Firelink Shrine Bell Tower",
             "connected_region": "Firelink Shrine Bell Tower",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Tower Key",
+                "count": 1
+              }
             }
           },
           {
             "name": "Go To Kiln of the First Flame",
             "connected_region": "Kiln of the First Flame",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Cinders of a Lord - Abyss Watcher",
+                  "Cinders of a Lord - Aldrich",
+                  "Cinders of a Lord - Lothric Prince",
+                  "Cinders of a Lord - Yhorm the Giant",
+                  "Transposing Kiln"
+                ]
+              }
             }
           }
         ],
@@ -379,9 +390,12 @@
             "name": "FS: Lift Chamber Key - Leonhard",
             "id": 100020,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Pale Tongue",
+                "count": 1
+              }
             },
             "item": {
               "name": "Titanite Shard",
@@ -509,9 +523,12 @@
             "name": "FS: Alluring Skull - Mortician's Ashes",
             "id": 100028,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Mortician's Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Carthus Flame Arc",
@@ -526,9 +543,12 @@
             "name": "FS: Ember - Mortician's Ashes",
             "id": 100029,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Mortician's Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Eastern Helm",
@@ -543,9 +563,12 @@
             "name": "FS: Grave Key - Mortician's Ashes",
             "id": 100030,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Mortician's Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Gundyr's Helm",
@@ -559,9 +582,12 @@
             "name": "FS: Life Ring - Dreamchaser's Ashes",
             "id": 100031,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Dreamchaser's Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Rusted Gold Coin",
@@ -575,9 +601,12 @@
             "name": "FS: Hidden Blessing - Dreamchaser's Ashes",
             "id": 100032,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Dreamchaser's Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Lorian's Armor",
@@ -592,9 +621,12 @@
             "name": "FS: Lloyd's Shield Ring - Paladin's Ashes",
             "id": 100033,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Paladin's Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Med Heal",
@@ -608,9 +640,12 @@
             "name": "FS: Ember - Grave Warden's Ashes",
             "id": 100034,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Grave Warden's Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Court Sorcerer Hood",
@@ -625,9 +660,12 @@
             "name": "FS: Karla's Pointed Hat - Prisoner Chief's Ashes",
             "id": 100035,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Prisoner Chief's Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Large Titanite Shard",
@@ -641,9 +679,12 @@
             "name": "FS: Karla's Coat - Prisoner Chief's Ashes",
             "id": 100036,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Prisoner Chief's Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Ember",
@@ -657,9 +698,12 @@
             "name": "FS: Karla's Gloves - Prisoner Chief's Ashes",
             "id": 100037,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Prisoner Chief's Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Large Titanite Shard",
@@ -673,9 +717,12 @@
             "name": "FS: Karla's Trousers - Prisoner Chief's Ashes",
             "id": 100038,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Prisoner Chief's Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Profuse Sweat",
@@ -689,9 +736,12 @@
             "name": "FS: Xanthous Overcoat - Xanthous Ashes",
             "id": 100039,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Xanthous Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Cleric Blue Robe",
@@ -705,9 +755,12 @@
             "name": "FS: Xanthous Gloves - Xanthous Ashes",
             "id": 100040,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Xanthous Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Executioner Armor",
@@ -721,9 +774,12 @@
             "name": "FS: Xanthous Trousers - Xanthous Ashes",
             "id": 100041,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Xanthous Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Drakeblood Gauntlets",
@@ -737,9 +793,12 @@
             "name": "FS: Ember - Dragon Chaser's Ashes",
             "id": 100042,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Dragon Chaser's Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Drakeblood Greatsword",
@@ -754,9 +813,12 @@
             "name": "FS: Washing Pole - Easterner's Ashes",
             "id": 100043,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Easterner's Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Painting Guardian Gown",
@@ -770,9 +832,12 @@
             "name": "FS: Eastern Helm - Easterner's Ashes",
             "id": 100044,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Easterner's Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Loincloth",
@@ -786,9 +851,12 @@
             "name": "FS: Eastern Armor - Easterner's Ashes",
             "id": 100045,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Easterner's Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Chameleon",
@@ -802,9 +870,12 @@
             "name": "FS: Eastern Gauntlets - Easterner's Ashes",
             "id": 100046,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Easterner's Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Lightning Gem",
@@ -818,9 +889,12 @@
             "name": "FS: Eastern Leggings - Easterner's Ashes",
             "id": 100047,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Easterner's Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Tears of Denial",
@@ -834,9 +908,12 @@
             "name": "FS: Wood Grain Ring - Easterner's Ashes",
             "id": 100048,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Easterner's Ashes",
+                "count": 1
+              }
             },
             "item": {
               "name": "Sunless Leggings",
@@ -850,9 +927,14 @@
             "name": "FS: Vordt's Great Hammer - Ludleth for Vordt",
             "id": 100054,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of Boreal Valley Vordt",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Ring of Sacrifice",
@@ -867,9 +949,14 @@
             "name": "FS: Pontiff's Left Eye - Ludleth for Vordt",
             "id": 100055,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of Boreal Valley Vordt",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Spiked Shield",
@@ -884,9 +971,14 @@
             "name": "FS: Bountiful Sunlight - Ludleth for Rosaria",
             "id": 100056,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of Rosaria",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Twinkling Titanite",
@@ -901,9 +993,14 @@
             "name": "FS: Darkmoon Longbow - Ludleth for Aldrich",
             "id": 100057,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of Aldrich",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Homing Soulmass",
@@ -918,9 +1015,14 @@
             "name": "FS: Lifehunt Scythe - Ludleth for Aldrich",
             "id": 100058,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of Aldrich",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Sellsword Twinblades",
@@ -935,9 +1037,14 @@
             "name": "FS: Hollowslayer Greatsword - Ludleth for Greatwood",
             "id": 100059,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of the Rotted Greatwood",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Herald Gloves",
@@ -952,9 +1059,14 @@
             "name": "FS: Arstor's Spear - Ludleth for Greatwood",
             "id": 100060,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of the Rotted Greatwood",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Lightning Gem",
@@ -969,9 +1081,14 @@
             "name": "FS: Crystal Sage's Rapier - Ludleth for Sage",
             "id": 100061,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of a Crystal Sage",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Irithyll Straight Sword",
@@ -986,9 +1103,14 @@
             "name": "FS: Crystal Hail - Ludleth for Sage",
             "id": 100062,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of a Crystal Sage",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Yhorm's Great Machete",
@@ -1003,9 +1125,14 @@
             "name": "FS: Cleric's Candlestick - Ludleth for Deacons",
             "id": 100063,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of the Deacons of the Deep",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Twinkling Titanite",
@@ -1020,9 +1147,14 @@
             "name": "FS: Deep Soul - Ludleth for Deacons",
             "id": 100064,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of the Deacons of the Deep",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Hollow Gem",
@@ -1037,9 +1169,14 @@
             "name": "FS: Havel's Ring - Ludleth for Stray Demon",
             "id": 100065,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of a Stray Demon",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Dragon Head Stone",
@@ -1054,9 +1191,14 @@
             "name": "FS: Boulder Heave - Ludleth for Stray Demon",
             "id": 100066,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of a Stray Demon",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Rusted Coin",
@@ -1071,9 +1213,14 @@
             "name": "FS: Farron Greatsword - Ludleth for Abyss Watchers",
             "id": 100067,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of the Blood of the Wolf",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Raw Gem",
@@ -1088,9 +1235,14 @@
             "name": "FS: Wolf Knight's Greatsword - Ludleth for Abyss Watchers",
             "id": 100068,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of the Blood of the Wolf",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Clandestine Coat",
@@ -1105,9 +1257,14 @@
             "name": "FS: Wolnir's Holy Sword - Ludleth for Wolnir",
             "id": 100069,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of High Lord Wolnir",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Pickaxe",
@@ -1122,9 +1279,14 @@
             "name": "FS: Black Serpent - Ludleth for Wolnir",
             "id": 100070,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of High Lord Wolnir",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Sunlight Shield",
@@ -1139,9 +1301,14 @@
             "name": "FS: Demon's Greataxe - Ludleth for Fire Demon",
             "id": 100071,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of a Demon",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Red Tearstone Ring",
@@ -1156,9 +1323,14 @@
             "name": "FS: Demon's Fist - Ludleth for Fire Demon",
             "id": 100072,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of a Demon",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Homeward Bone",
@@ -1173,9 +1345,14 @@
             "name": "FS: Old King's Great Hammer - Ludleth for Old Demon King",
             "id": 100073,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of the Old Demon King",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Large Titanite Shard",
@@ -1190,9 +1367,14 @@
             "name": "FS: Chaos Bed Vestiges - Ludleth for Old Demon King",
             "id": 100074,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of the Old Demon King",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Flynn's Ring",
@@ -1207,9 +1389,14 @@
             "name": "FS: Greatsword of Judgment - Ludleth for Pontiff",
             "id": 100075,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of Pontiff Sulyvahn",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Crest Shield",
@@ -1224,9 +1411,14 @@
             "name": "FS: Profaned Greatsword - Ludleth for Pontiff",
             "id": 100076,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of Pontiff Sulyvahn",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Smough's Helm",
@@ -1241,9 +1433,14 @@
             "name": "FS: Yhorm's Great Machete - Ludleth for Yhorm",
             "id": 100077,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of Yhorm the Giant",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Titanite Scale",
@@ -1258,9 +1455,14 @@
             "name": "FS: Yhorm's Greatshield - Ludleth for Yhorm",
             "id": 100078,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of Yhorm the Giant",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Northern Armor",
@@ -1275,9 +1477,14 @@
             "name": "FS: Dancer's Enchanted Swords - Ludleth for Dancer",
             "id": 100079,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of the Dancer",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Great Scythe",
@@ -1292,9 +1499,14 @@
             "name": "FS: Soothing Sunlight - Ludleth for Dancer",
             "id": 100080,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of the Dancer",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Titanite Shard",
@@ -1309,9 +1521,14 @@
             "name": "FS: Dragonslayer Greataxe - Ludleth for Dragonslayer",
             "id": 100081,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of Dragonslayer Armour",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Plank Shield",
@@ -1326,9 +1543,14 @@
             "name": "FS: Dragonslayer Greatshield - Ludleth for Dragonslayer",
             "id": 100082,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of Dragonslayer Armour",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Outrider Knight Armor",
@@ -1343,9 +1565,14 @@
             "name": "FS: Moonlight Greatsword - Ludleth for Oceiros",
             "id": 100083,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of Consumed Oceiros",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Leonhard's Trousers",
@@ -1360,9 +1587,14 @@
             "name": "FS: White Dragon Breath - Ludleth for Oceiros",
             "id": 100084,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of Consumed Oceiros",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Titanite Shard",
@@ -1377,9 +1609,14 @@
             "name": "FS: Lorian's Greatsword - Ludleth for Princes",
             "id": 100085,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of the Twin Princes",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Large Titanite Shard",
@@ -1394,9 +1631,14 @@
             "name": "FS: Lothric's Holy Sword - Ludleth for Princes",
             "id": 100086,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of the Twin Princes",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Large Titanite Shard",
@@ -1411,9 +1653,14 @@
             "name": "FS: Gundyr's Halberd - Ludleth for Champion",
             "id": 100087,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of Champion Gundyr",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Bloodred Moss Clump",
@@ -1428,9 +1675,14 @@
             "name": "FS: Prisoner's Chain - Ludleth for Champion",
             "id": 100088,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of Champion Gundyr",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Hood of Prayer",
@@ -1445,9 +1697,14 @@
             "name": "FS: Storm Curved Sword - Ludleth for Nameless",
             "id": 100089,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of the Nameless King",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Alva Leggings",
@@ -1462,9 +1719,14 @@
             "name": "FS: Dragonslayer Swordspear - Ludleth for Nameless",
             "id": 100090,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of the Nameless King",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Old Sorcerer Hat",
@@ -1479,9 +1741,14 @@
             "name": "FS: Lightning Storm - Ludleth for Nameless",
             "id": 100091,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of the Nameless King",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Manikin Claws",
@@ -1496,9 +1763,14 @@
             "name": "FS: Firelink Greatsword - Ludleth for Cinder",
             "id": 100092,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of the Lords",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Titanite Scale",
@@ -1513,9 +1785,14 @@
             "name": "FS: Sunlight Spear - Ludleth for Cinder",
             "id": 100093,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Soul of the Lords",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Titanite Chunk",
@@ -1700,9 +1977,12 @@
             "name": "FSBT: Ring of Sacrifice - crow for Loretta's Bone",
             "id": 100112,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Loretta's Bone",
+                "count": 1
+              }
             },
             "item": {
               "name": "Caestus",
@@ -1802,9 +2082,12 @@
             "name": "FSBT: Sunlight Shield - crow for Mendicant's Staff",
             "id": 100118,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Mendicant's Staff",
+                "count": 1
+              }
             },
             "item": {
               "name": "Large Soul of a Nameless Soldier",
@@ -1819,9 +2102,12 @@
             "name": "FSBT: Hollow Gem - crow for Eleonora",
             "id": 100119,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Eleonora",
+                "count": 1
+              }
             },
             "item": {
               "name": "Large Titanite Shard",
@@ -1836,9 +2122,12 @@
             "name": "FSBT: Titanite Scale - crow for Blacksmith Hammer",
             "id": 100120,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Blacksmith Hammer",
+                "count": 1
+              }
             },
             "item": {
               "name": "Titanite Slab",
@@ -1870,9 +2159,12 @@
             "name": "FSBT: Titanite Slab - crow for Coiled Sword Fragment",
             "id": 100122,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Coiled Sword Fragment",
+                "count": 1
+              }
             },
             "item": {
               "name": "Ember x2",
@@ -1904,9 +2196,12 @@
             "name": "FSBT: Armor of the Sun - crow for Siegbr\u00e4u",
             "id": 100124,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Siegbr\u00e4u",
+                "count": 1
+              }
             },
             "item": {
               "name": "Hidden Blessing",
@@ -1989,9 +2284,12 @@
             "name": "FSBT: Iron Leggings - crow for Seed of a Giant Tree",
             "id": 100129,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Seed of a Giant Tree",
+                "count": 1
+              }
             },
             "item": {
               "name": "Ember",
@@ -2006,9 +2304,12 @@
             "name": "FSBT: Lightning Gem - crow for Xanthous Crown",
             "id": 100130,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Xanthous Crown",
+                "count": 1
+              }
             },
             "item": {
               "name": "Black Gauntlets",
@@ -2023,9 +2324,12 @@
             "name": "FSBT: Twinkling Titanite - crow for Large Leather Shield",
             "id": 100131,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Large Leather Shield",
+                "count": 1
+              }
             },
             "item": {
               "name": "Gold Pine Bundle x6",
@@ -2040,9 +2344,12 @@
             "name": "FSBT: Blessed Gem - crow for Moaning Shield",
             "id": 100132,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Moaning Shield",
+                "count": 1
+              }
             },
             "item": {
               "name": "Firebomb x3",
@@ -2062,27 +2369,48 @@
             "name": "Go To Undead Settlement",
             "connected_region": "Undead Settlement",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "HWL: Soul of Boreal Valley Vordt"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Small Lothric Banner",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Go To Lothric Castle",
             "connected_region": "Lothric Castle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "HWL: Soul of the Dancer"
+              }
             }
           },
           {
             "name": "Go To Greirat's Shop",
             "connected_region": "Greirat's Shop",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Cell Key",
+                "count": 1
+              }
             }
           }
         ],
@@ -2091,9 +2419,12 @@
             "name": "HWL: Soul of Boreal Valley Vordt",
             "id": 100133,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Storm Ruler",
+                "count": 1
+              }
             },
             "item": {
               "name": "Homeward Bone",
@@ -2107,9 +2438,12 @@
             "name": "HWL: Soul of the Dancer",
             "id": 100134,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Basin of Vows",
+                "count": 1
+              }
             },
             "item": {
               "name": "Giant's Coal",
@@ -2123,9 +2457,12 @@
             "name": "HWL: Basin of Vows - Emma",
             "id": 100135,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Small Doll",
+                "count": 1
+              }
             },
             "item": {
               "name": "Large Titanite Shard x3",
@@ -2959,9 +3296,12 @@
             "name": "HWL: Red Eye Orb - wall tower, miniboss",
             "id": 100187,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Lift Chamber Key",
+                "count": 1
+              }
             },
             "item": {
               "name": "Large Soul of a Deserted Corpse",
@@ -2997,9 +3337,15 @@
             "name": "Go To Road of Sacrifices",
             "connected_region": "Road of Sacrifices",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Pyromancy Flame",
+                  "Transposing Kiln",
+                  "US -> RS"
+                ]
+              }
             }
           }
         ],
@@ -3057,9 +3403,15 @@
             "name": "US: Old Sage's Blindfold - kill Cornyx",
             "id": 100192,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Carthus Pyromancy Tome",
+                  "Great Swamp Pyromancy Tome",
+                  "Izalith Pyromancy Tome"
+                ]
+              }
             },
             "item": {
               "name": "Large Soul of a Nameless Soldier",
@@ -3073,9 +3425,15 @@
             "name": "US: Cornyx's Garb - kill Cornyx",
             "id": 100193,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Carthus Pyromancy Tome",
+                  "Great Swamp Pyromancy Tome",
+                  "Izalith Pyromancy Tome"
+                ]
+              }
             },
             "item": {
               "name": "Soul of a Stray Demon",
@@ -3089,9 +3447,15 @@
             "name": "US: Cornyx's Wrap - kill Cornyx",
             "id": 100194,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Carthus Pyromancy Tome",
+                  "Great Swamp Pyromancy Tome",
+                  "Izalith Pyromancy Tome"
+                ]
+              }
             },
             "item": {
               "name": "Fire Gem",
@@ -3105,9 +3469,15 @@
             "name": "US: Cornyx's Skirt - kill Cornyx",
             "id": 100195,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Carthus Pyromancy Tome",
+                  "Great Swamp Pyromancy Tome",
+                  "Izalith Pyromancy Tome"
+                ]
+              }
             },
             "item": {
               "name": "Large Soul of a Crestfallen Knight",
@@ -3121,9 +3491,14 @@
             "name": "US: Tower Key - kill Irina",
             "id": 100196,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Braille Divine Tome of Carim",
+                  "Braille Divine Tome of Lothric"
+                ]
+              }
             },
             "item": {
               "name": "Hunter's Ring",
@@ -4837,9 +5212,12 @@
             "name": "FS: Poison Mist - Cornyx for Great Swamp Tome",
             "id": 100301,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Great Swamp Pyromancy Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Lucatiel's Mask",
@@ -4854,9 +5232,12 @@
             "name": "FS: Fire Orb - Cornyx for Great Swamp Tome",
             "id": 100302,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Great Swamp Pyromancy Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Titanite Chunk",
@@ -4871,9 +5252,12 @@
             "name": "FS: Profuse Sweat - Cornyx for Great Swamp Tome",
             "id": 100303,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Great Swamp Pyromancy Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heretic's Staff",
@@ -4888,9 +5272,12 @@
             "name": "FS: Bursting Fireball - Cornyx for Great Swamp Tome",
             "id": 100304,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Great Swamp Pyromancy Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Dusk Crown Ring",
@@ -4905,9 +5292,12 @@
             "name": "FS: Acid Surge - Cornyx for Carthus Tome",
             "id": 100305,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Carthus Pyromancy Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Painting Guardian's Curved Sword",
@@ -4922,9 +5312,12 @@
             "name": "FS: Carthus Flame Arc - Cornyx for Carthus Tome",
             "id": 100306,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Carthus Pyromancy Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Titanite Chunk",
@@ -4939,9 +5332,12 @@
             "name": "FS: Carthus Beacon - Cornyx for Carthus Tome",
             "id": 100307,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Carthus Pyromancy Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Skull Ring",
@@ -4956,9 +5352,12 @@
             "name": "FS: Great Chaos Fire Orb - Cornyx for Izalith Tome",
             "id": 100308,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Izalith Pyromancy Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Lothric's Holy Sword",
@@ -4973,9 +5372,12 @@
             "name": "FS: Chaos Storm - Cornyx for Izalith Tome",
             "id": 100309,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Izalith Pyromancy Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Titanite Chunk",
@@ -5070,9 +5472,12 @@
             "name": "FS: Med Heal - Irina for Tome of Carim",
             "id": 100315,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Braille Divine Tome of Carim",
+                "count": 1
+              }
             },
             "item": {
               "name": "Spider Shield",
@@ -5087,9 +5492,12 @@
             "name": "FS: Tears of Denial - Irina for Tome of Carim",
             "id": 100316,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Braille Divine Tome of Carim",
+                "count": 1
+              }
             },
             "item": {
               "name": "Ember",
@@ -5104,9 +5512,12 @@
             "name": "FS: Force - Irina for Tome of Carim",
             "id": 100317,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Braille Divine Tome of Carim",
+                "count": 1
+              }
             },
             "item": {
               "name": "Refined Gem",
@@ -5121,9 +5532,12 @@
             "name": "FS: Bountiful Light - Irina for Tome of Lothric",
             "id": 100318,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Braille Divine Tome of Lothric",
+                "count": 1
+              }
             },
             "item": {
               "name": "Sorcerer Trousers",
@@ -5138,9 +5552,12 @@
             "name": "FS: Magic Barrier - Irina for Tome of Lothric",
             "id": 100319,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Braille Divine Tome of Lothric",
+                "count": 1
+              }
             },
             "item": {
               "name": "Ember",
@@ -5155,9 +5572,12 @@
             "name": "FS: Blessed Weapon - Irina for Tome of Lothric",
             "id": 100320,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Braille Divine Tome of Lothric",
+                "count": 1
+              }
             },
             "item": {
               "name": "Fleshbite Ring",
@@ -5177,18 +5597,23 @@
             "name": "Go To Cathedral of the Deep",
             "connected_region": "Cathedral of the Deep",
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "RS: Soul of a Crystal Sage"
+              }
             }
           },
           {
             "name": "Go To Farron Keep",
             "connected_region": "Farron Keep",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "RS -> FK",
+                "count": 1
+              }
             }
           }
         ],
@@ -6357,9 +6782,16 @@
             "name": "FS: Pestilent Mist - Orbeck for any scroll",
             "id": 100393,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Ember",
@@ -6374,9 +6806,12 @@
             "name": "FS: Great Farron Dart - Orbeck for Sage's Scroll",
             "id": 100394,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Sage's Scroll",
+                "count": 1
+              }
             },
             "item": {
               "name": "Ricard's Rapier",
@@ -6391,9 +6826,12 @@
             "name": "FS: Farron Hail - Orbeck for Sage's Scroll",
             "id": 100395,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Sage's Scroll",
+                "count": 1
+              }
             },
             "item": {
               "name": "Uchigatana",
@@ -6408,9 +6846,12 @@
             "name": "FS: Homing Soulmass - Orbeck for Logan's Scroll",
             "id": 100396,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Logan's Scroll",
+                "count": 1
+              }
             },
             "item": {
               "name": "Xanthous Gloves",
@@ -6425,9 +6866,12 @@
             "name": "FS: Soul Spear - Orbeck for Logan's Scroll",
             "id": 100397,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Logan's Scroll",
+                "count": 1
+              }
             },
             "item": {
               "name": "Charcoal Pine Resin",
@@ -6442,9 +6886,12 @@
             "name": "FS: Homing Crystal Soulmass - Orbeck for Crystal Scroll",
             "id": 100398,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Crystal Scroll",
+                "count": 1
+              }
             },
             "item": {
               "name": "Dark Gem",
@@ -6459,9 +6906,12 @@
             "name": "FS: Crystal Soul Spear - Orbeck for Crystal Scroll",
             "id": 100399,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Crystal Scroll",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heysel Pick",
@@ -6476,9 +6926,12 @@
             "name": "FS: Crystal Magic Weapon - Orbeck for Crystal Scroll",
             "id": 100400,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Crystal Scroll",
+                "count": 1
+              }
             },
             "item": {
               "name": "Black Leggings",
@@ -6493,9 +6946,12 @@
             "name": "FS: Cast Light - Orbeck for Golden Scroll",
             "id": 100401,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Golden Scroll",
+                "count": 1
+              }
             },
             "item": {
               "name": "Titanite Slab",
@@ -6510,9 +6966,12 @@
             "name": "FS: Twisted Wall of Light - Orbeck for Golden Scroll",
             "id": 100402,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Golden Scroll",
+                "count": 1
+              }
             },
             "item": {
               "name": "Titanite Scale x3",
@@ -6527,9 +6986,12 @@
             "name": "FS: Hidden Weapon - Orbeck for Golden Scroll",
             "id": 100403,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Golden Scroll",
+                "count": 1
+              }
             },
             "item": {
               "name": "Titanite Scale x3",
@@ -6544,9 +7006,12 @@
             "name": "FS: Hidden Body - Orbeck for Golden Scroll",
             "id": 100404,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Golden Scroll",
+                "count": 1
+              }
             },
             "item": {
               "name": "Titanite Chunk x2",
@@ -6561,9 +7026,12 @@
             "name": "FS: Repair - Orbeck for Golden Scroll",
             "id": 100405,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Golden Scroll",
+                "count": 1
+              }
             },
             "item": {
               "name": "Farron Greatsword",
@@ -6578,9 +7046,16 @@
             "name": "FS: Clandestine Coat - shop with Orbeck's Ashes",
             "id": 100406,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Titanite Slab",
@@ -6595,9 +7070,16 @@
             "name": "FS: Young Dragon Ring - Orbeck for one scroll and buying three spells",
             "id": 100407,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Murakumo",
@@ -6729,9 +7211,16 @@
             "name": "FS: Morion Blade - Yuria for Orbeck's Ashes",
             "id": 100414,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Large Soul of a Weary Warrior",
@@ -6882,9 +7371,32 @@
             "name": "CD: Black Eye Orb - Rosaria from Leonhard's quest",
             "id": 100423,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Profaned Capital"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "HWL: Red Eye Orb - wall tower, miniboss"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Pale Tongue",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Lightning Storm",
@@ -6899,9 +7411,24 @@
             "name": "CD: Winged Spear - kill Patches",
             "id": 100424,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Rusted Gold Coin - don't forgive Patches"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Hidden Blessing - Patches after searching GA"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Bountiful Sunlight",
@@ -8217,9 +8744,24 @@
             "name": "FS: Rusted Gold Coin - don't forgive Patches",
             "id": 100504,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Cathedral of the Deep"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Firelink Shrine Bell Tower"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Large Soul of a Nameless Soldier",
@@ -8234,9 +8776,24 @@
             "name": "CD: Shotel - Patches",
             "id": 100505,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Cathedral of the Deep"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Firelink Shrine Bell Tower"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Court Sorcerer Robe",
@@ -8251,9 +8808,24 @@
             "name": "CD: Ember - Patches",
             "id": 100506,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Cathedral of the Deep"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Firelink Shrine Bell Tower"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Heal Aid",
@@ -8268,9 +8840,24 @@
             "name": "CD: Horsehoof Ring - Patches",
             "id": 100507,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Rusted Gold Coin - don't forgive Patches"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Hidden Blessing - Patches after searching GA"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Twinkling Titanite",
@@ -8290,9 +8877,11 @@
             "name": "Go To Catacombs of Carthus",
             "connected_region": "Catacombs of Carthus",
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "FK: Soul of the Blood of the Wolf"
+              }
             }
           }
         ],
@@ -8333,9 +8922,16 @@
             "name": "FK: Soul of the Blood of the Wolf",
             "id": 100510,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Throwing Knife x8",
@@ -8349,9 +8945,16 @@
             "name": "FK: Cinders of a Lord - Abyss Watcher",
             "id": 100511,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Estus Shard",
@@ -9449,9 +10052,16 @@
             "name": "FS: Hawkwood's Shield - gravestone after Hawkwood leaves",
             "id": 100580,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Brigand Gauntlets",
@@ -9482,9 +10092,16 @@
             "name": "FS: Farron Ring - Hawkwood",
             "id": 100582,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Blooming Purple Moss Clump x3",
@@ -9499,9 +10116,16 @@
             "name": "FS: Undead Legion Helm - shop after killing FK boss",
             "id": 100583,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Black Serpent",
@@ -9515,9 +10139,16 @@
             "name": "FS: Undead Legion Armor - shop after killing FK boss",
             "id": 100584,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Deep Gem",
@@ -9531,9 +10162,16 @@
             "name": "FS: Undead Legion Gauntlet - shop after killing FK boss",
             "id": 100585,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Morne's Great Hammer",
@@ -9547,9 +10185,16 @@
             "name": "FS: Undead Legion Leggings - shop after killing FK boss",
             "id": 100586,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAny",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Large Titanite Shard",
@@ -9563,9 +10208,11 @@
             "name": "FK: Havel's Helm - upper keep, after killing AP belfry roof NPC",
             "id": 100587,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Archdragon Peak"
+              }
             },
             "item": {
               "name": "Twinkling Titanite",
@@ -9580,9 +10227,11 @@
             "name": "FK: Havel's Armor - upper keep, after killing AP belfry roof NPC",
             "id": 100588,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Archdragon Peak"
+              }
             },
             "item": {
               "name": "Dragonslayer Gauntlets",
@@ -9597,9 +10246,11 @@
             "name": "FK: Havel's Gauntlets - upper keep, after killing AP belfry roof NPC",
             "id": 100589,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Archdragon Peak"
+              }
             },
             "item": {
               "name": "Magic Clutch Ring",
@@ -9614,9 +10265,11 @@
             "name": "FK: Havel's Leggings - upper keep, after killing AP belfry roof NPC",
             "id": 100590,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Archdragon Peak"
+              }
             },
             "item": {
               "name": "Dancer's Armor",
@@ -9636,9 +10289,25 @@
             "name": "Go To Irithyll of the Boreal Valley",
             "connected_region": "Irithyll of the Boreal Valley",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "CC: Soul of High Lord Wolnir"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Small Doll",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
@@ -11159,18 +11828,23 @@
             "name": "Go To Irithyll Dungeon",
             "connected_region": "Irithyll Dungeon",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "IBV -> ID",
+                "count": 1
+              }
             }
           },
           {
             "name": "Go To Anor Londo",
             "connected_region": "Anor Londo",
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "IBV: Soul of Pontiff Sulyvahn"
+              }
             }
           }
         ],
@@ -11179,9 +11853,25 @@
             "name": "IBV: Soul of Pontiff Sulyvahn",
             "id": 100684,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "US: Soul of the Rotted Greatwood"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Dreamchaser's Ashes",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Siegbr\u00e4u",
@@ -12292,9 +12982,11 @@
             "name": "IBV: Ring of the Evil Eye - Anri",
             "id": 100752,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "CD: Soul of the Deacons of the Deep"
+              }
             },
             "item": {
               "name": "Dragonslayer Greatarrow x5",
@@ -12309,9 +13001,25 @@
             "name": "FS: Mail Breaker - Sirris for killing Creighton",
             "id": 100753,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "US: Soul of the Rotted Greatwood"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Dreamchaser's Ashes",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Fallen Knight Gauntlets",
@@ -12326,9 +13034,25 @@
             "name": "FS: Silvercat Ring - Sirris for killing Creighton",
             "id": 100754,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "US: Soul of the Rotted Greatwood"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Dreamchaser's Ashes",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Elite Knight Leggings",
@@ -12343,9 +13067,25 @@
             "name": "IBV: Dragonslayer's Axe - Creighton drop",
             "id": 100755,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "US: Soul of the Rotted Greatwood"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Dreamchaser's Ashes",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Elite Knight Helm",
@@ -12360,9 +13100,25 @@
             "name": "IBV: Creighton's Steel Mask - bridge after killing Creighton",
             "id": 100756,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "US: Soul of the Rotted Greatwood"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Dreamchaser's Ashes",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Seek Guidance",
@@ -12377,9 +13133,25 @@
             "name": "IBV: Mirrah Chain Mail - bridge after killing Creighton",
             "id": 100757,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "US: Soul of the Rotted Greatwood"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Dreamchaser's Ashes",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Mail Breaker",
@@ -12394,9 +13166,25 @@
             "name": "IBV: Mirrah Chain Gloves - bridge after killing Creighton",
             "id": 100758,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "US: Soul of the Rotted Greatwood"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Dreamchaser's Ashes",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Ember",
@@ -12411,9 +13199,25 @@
             "name": "IBV: Mirrah Chain Leggings - bridge after killing Creighton",
             "id": 100759,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "US: Soul of the Rotted Greatwood"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Dreamchaser's Ashes",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Archdeacon Holy Garb",
@@ -12433,9 +13237,12 @@
             "name": "Go To Archdragon Peak",
             "connected_region": "Archdragon Peak",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Path of the Dragon",
+                "count": 1
+              }
             }
           },
           {
@@ -12451,9 +13258,12 @@
             "name": "Go To Karla's Shop",
             "connected_region": "Karla's Shop",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Jailer's Key Ring",
+                "count": 1
+              }
             }
           }
         ],
@@ -12462,9 +13272,25 @@
             "name": "ID: Titanite Slab - Siegward",
             "id": 100760,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "CD: Shotel - Patches"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Old Cell Key",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Repair Powder x2",
@@ -12648,9 +13474,12 @@
             "name": "ID: Bellowing Dragoncrest Ring - drop from B1 towards pit",
             "id": 100771,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Jailbreaker's Key",
+                "count": 1
+              }
             },
             "item": {
               "name": "Winged Knight Armor",
@@ -12947,9 +13776,12 @@
             "name": "ID: Covetous Gold Serpent Ring - Siegward's cell",
             "id": 100789,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Old Cell Key",
+                "count": 1
+              }
             },
             "item": {
               "name": "Firebomb x2",
@@ -13110,9 +13942,12 @@
             "name": "ID: Prisoner Chief's Ashes - B2 near, locked cell by stairs",
             "id": 100800,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Jailer's Key Ring",
+                "count": 1
+              }
             },
             "item": {
               "name": "Old Sage's Blindfold",
@@ -13898,9 +14733,24 @@
             "name": "PC: Siegbr\u00e4u - Siegward after killing boss",
             "id": 100849,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "ID: Titanite Slab - Siegward"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "PC: Soul of Yhorm the Giant"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Twinkling Titanite x2",
@@ -13915,9 +14765,24 @@
             "name": "PC: Storm Ruler - Siegward",
             "id": 100850,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "ID: Titanite Slab - Siegward"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "PC: Soul of Yhorm the Giant"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Twinkling Titanite x3",
@@ -13932,9 +14797,24 @@
             "name": "PC: Pierce Shield - Siegward",
             "id": 100851,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "ID: Titanite Slab - Siegward"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "PC: Soul of Yhorm the Giant"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Rusted Coin",
@@ -13987,9 +14867,25 @@
             "name": "AL: Yorshka's Chime - kill Yorshka",
             "id": 100854,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "US: Soul of the Rotted Greatwood"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Dreamchaser's Ashes",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Kukri x5",
@@ -14712,9 +15608,24 @@
             "name": "FS: Budding Green Blossom - shop after killing Creighton and AL boss",
             "id": 100899,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "AL: Soul of Aldrich"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Mail Breaker - Sirris for killing Creighton"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Hidden Weapon",
@@ -14729,9 +15640,24 @@
             "name": "FS: Sunset Shield - by grave after killing Hodrick w/Sirris",
             "id": 100900,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "AL: Soul of Aldrich"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Mail Breaker - Sirris for killing Creighton"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Twinkling Titanite x2",
@@ -14746,9 +15672,24 @@
             "name": "US: Sunset Helm - Pit of Hollows after killing Hodrick w/Sirris",
             "id": 100901,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "AL: Soul of Aldrich"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Mail Breaker - Sirris for killing Creighton"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Ring of the Evil Eye",
@@ -14763,9 +15704,24 @@
             "name": "US: Sunset Armor - pit of hollows after killing Hodrick w/Sirris",
             "id": 100902,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "AL: Soul of Aldrich"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Mail Breaker - Sirris for killing Creighton"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Dark Clutch Ring",
@@ -14780,9 +15736,24 @@
             "name": "US: Sunset Gauntlets - pit of hollows after killing Hodrick w/Sirris",
             "id": 100903,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "AL: Soul of Aldrich"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Mail Breaker - Sirris for killing Creighton"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Titanite Scale",
@@ -14797,9 +15768,24 @@
             "name": "US: Sunset Leggings - pit of hollows after killing Hodrick w/Sirris",
             "id": 100904,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "AL: Soul of Aldrich"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Mail Breaker - Sirris for killing Creighton"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Human Pine Resin x2",
@@ -14882,9 +15868,11 @@
             "name": "AL: Chameleon - tomb after marrying Anri",
             "id": 100909,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "CD: Soul of the Deacons of the Deep"
+              }
             },
             "item": {
               "name": "Shriving Stone",
@@ -14899,9 +15887,24 @@
             "name": "AL: Anri's Straight Sword - Anri quest",
             "id": 100910,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "AL: Soul of Aldrich"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "IBV: Ring of the Evil Eye - Anri"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Divine Blessing",
@@ -14916,9 +15919,12 @@
             "name": "FS: Leonhard's Garb - shop after killing Leonhard",
             "id": 100911,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Black Eye Orb",
+                "count": 1
+              }
             },
             "item": {
               "name": "Golden Falcon Shield",
@@ -14933,9 +15939,12 @@
             "name": "FS: Leonhard's Gauntlets - shop after killing Leonhard",
             "id": 100912,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Black Eye Orb",
+                "count": 1
+              }
             },
             "item": {
               "name": "Titanite Chunk",
@@ -14950,9 +15959,12 @@
             "name": "FS: Leonhard's Trousers - shop after killing Leonhard",
             "id": 100913,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Black Eye Orb",
+                "count": 1
+              }
             },
             "item": {
               "name": "Crystal Gem",
@@ -15031,9 +16043,12 @@
             "name": "AL: Crescent Moon Sword - Leonhard drop",
             "id": 100918,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Black Eye Orb",
+                "count": 1
+              }
             },
             "item": {
               "name": "Morne's Leggings",
@@ -15048,9 +16063,12 @@
             "name": "AL: Silver Mask - Leonhard drop",
             "id": 100919,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Black Eye Orb",
+                "count": 1
+              }
             },
             "item": {
               "name": "Soul of a Crestfallen Knight",
@@ -15065,9 +16083,12 @@
             "name": "AL: Soul of Rosaria - Leonhard drop",
             "id": 100920,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Black Eye Orb",
+                "count": 1
+              }
             },
             "item": {
               "name": "Lightning Clutch Ring",
@@ -15082,9 +16103,24 @@
             "name": "FS: Elite Knight Helm - shop after Anri quest",
             "id": 100921,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "AL: Soul of Aldrich"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "IBV: Ring of the Evil Eye - Anri"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Undead Bone Shard",
@@ -15098,9 +16134,24 @@
             "name": "FS: Elite Knight Armor - shop after Anri quest",
             "id": 100922,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "AL: Soul of Aldrich"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "IBV: Ring of the Evil Eye - Anri"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Twinkling Titanite",
@@ -15114,9 +16165,24 @@
             "name": "FS: Elite Knight Gauntlets - shop after Anri quest",
             "id": 100923,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "AL: Soul of Aldrich"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "IBV: Ring of the Evil Eye - Anri"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Poisonbite Ring",
@@ -15130,9 +16196,24 @@
             "name": "FS: Elite Knight Leggings - shop after Anri quest",
             "id": 100924,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "AL: Soul of Aldrich"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "IBV: Ring of the Evil Eye - Anri"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Estus Shard",
@@ -15151,18 +16232,42 @@
             "name": "Go To Consumed King's Garden",
             "connected_region": "Consumed King's Garden",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Pyromancy Flame",
+                  "Transposing Kiln"
+                ]
+              }
             }
           },
           {
             "name": "Go To Grand Archives",
             "connected_region": "Grand Archives",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "LC: Soul of Dragonslayer Armour"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Pyromancy Flame",
+                      "Transposing Kiln",
+                      "Grand Archives Key"
+                    ]
+                  }
+                }
+              ]
             }
           }
         ],
@@ -16230,9 +17335,24 @@
             "name": "LC: Gotthard Twinswords - by Grand Archives door, after PC and AL bosses",
             "id": 100991,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "AL: Cinders of a Lord - Aldrich"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "PC: Cinders of a Lord - Yhorm the Giant"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Sage Ring",
@@ -16246,9 +17366,24 @@
             "name": "LC: Grand Archives Key - by Grand Archives door, after PC and AL bosses",
             "id": 100992,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "AL: Cinders of a Lord - Aldrich"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "PC: Cinders of a Lord - Yhorm the Giant"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Carthus Pyromancy Tome",
@@ -16279,9 +17414,24 @@
             "name": "FS: Morne's Great Hammer - Eygon",
             "id": 100994,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FK: Soul of the Blood of the Wolf"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "LC: Soul of Dragonslayer Armour"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Drang Twinspears",
@@ -16295,9 +17445,24 @@
             "name": "FS: Moaning Shield - Eygon",
             "id": 100995,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FK: Soul of the Blood of the Wolf"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "LC: Soul of Dragonslayer Armour"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Spook",
@@ -16444,9 +17609,11 @@
             "name": "Go To Untended Graves",
             "connected_region": "Untended Graves",
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachLocation",
               "options": [],
-              "args": {}
+              "args": {
+                "location_name": "CKG: Soul of Consumed Oceiros"
+              }
             }
           }
         ],
@@ -16820,9 +17987,11 @@
             "name": "CKG: Drakeblood Helm - tomb, after killing AP mausoleum NPC",
             "id": 101028,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Archdragon Peak"
+              }
             },
             "item": {
               "name": "White Dragon Breath",
@@ -16837,9 +18006,11 @@
             "name": "CKG: Drakeblood Armor - tomb, after killing AP mausoleum NPC",
             "id": 101029,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Archdragon Peak"
+              }
             },
             "item": {
               "name": "Titanite Chunk",
@@ -16854,9 +18025,11 @@
             "name": "CKG: Drakeblood Gauntlets - tomb, after killing AP mausoleum NPC",
             "id": 101030,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Archdragon Peak"
+              }
             },
             "item": {
               "name": "Archdeacon's Great Staff",
@@ -16871,9 +18044,11 @@
             "name": "CKG: Drakeblood Leggings - tomb, after killing AP mausoleum NPC",
             "id": 101031,
             "access_rule": {
-              "rule": "True_",
+              "rule": "CanReachRegion",
               "options": [],
-              "args": {}
+              "args": {
+                "region_name": "Archdragon Peak"
+              }
             },
             "item": {
               "name": "Soul of a Crestfallen Knight",
@@ -18170,9 +19345,25 @@
             "name": "FS: Sunless Talisman - Sirris, kill GA boss",
             "id": 101110,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "US: Soul of the Rotted Greatwood"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Dreamchaser's Ashes",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Washing Pole",
@@ -18187,9 +19378,25 @@
             "name": "FS: Sunless Veil - shop, Sirris quest, kill GA boss",
             "id": 101111,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "US: Soul of the Rotted Greatwood"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Dreamchaser's Ashes",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Ember",
@@ -18204,9 +19411,25 @@
             "name": "FS: Sunless Armor - shop, Sirris quest, kill GA boss",
             "id": 101112,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "US: Soul of the Rotted Greatwood"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Dreamchaser's Ashes",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Replenishment",
@@ -18221,9 +19444,25 @@
             "name": "FS: Sunless Gauntlets - shop, Sirris quest, kill GA boss",
             "id": 101113,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "US: Soul of the Rotted Greatwood"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Dreamchaser's Ashes",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Homeward Bone",
@@ -18238,9 +19477,25 @@
             "name": "FS: Sunless Leggings - shop, Sirris quest, kill GA boss",
             "id": 101114,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "US: Soul of the Rotted Greatwood"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Dreamchaser's Ashes",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Titanite Chunk",
@@ -18255,9 +19510,24 @@
             "name": "FS: Hidden Blessing - Patches after searching GA",
             "id": 101115,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Ember - shop for Greirat's Ashes"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "CD: Shotel - Patches"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Shriving Stone",
@@ -18493,9 +19763,29 @@
             "name": "UG: Hornet Ring - environs, right of main path after killing FK boss",
             "id": 101129,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FK: Cinders of a Lord - Abyss Watcher"
+                  }
+                },
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Crystal Scroll",
+                      "Golden Scroll",
+                      "Logan's Scroll",
+                      "Sage's Scroll"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Porcine Shield",
@@ -18558,9 +19848,29 @@
             "name": "UG: Wolf Knight Helm - shop after killing FK boss",
             "id": 101135,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FK: Cinders of a Lord - Abyss Watcher"
+                  }
+                },
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Crystal Scroll",
+                      "Golden Scroll",
+                      "Logan's Scroll",
+                      "Sage's Scroll"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Black Knight Sword",
@@ -18575,9 +19885,29 @@
             "name": "UG: Wolf Knight Armor - shop after killing FK boss",
             "id": 101136,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FK: Cinders of a Lord - Abyss Watcher"
+                  }
+                },
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Crystal Scroll",
+                      "Golden Scroll",
+                      "Logan's Scroll",
+                      "Sage's Scroll"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Slumbering Dragoncrest Ring",
@@ -18592,9 +19922,29 @@
             "name": "UG: Wolf Knight Gauntlets - shop after killing FK boss",
             "id": 101137,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FK: Cinders of a Lord - Abyss Watcher"
+                  }
+                },
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Crystal Scroll",
+                      "Golden Scroll",
+                      "Logan's Scroll",
+                      "Sage's Scroll"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Faraam Armor",
@@ -18609,9 +19959,29 @@
             "name": "UG: Wolf Knight Leggings - shop after killing FK boss",
             "id": 101138,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FK: Cinders of a Lord - Abyss Watcher"
+                  }
+                },
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Crystal Scroll",
+                      "Golden Scroll",
+                      "Logan's Scroll",
+                      "Sage's Scroll"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "East-West Shield",
@@ -19598,9 +20968,25 @@
             "name": "FS: Hawkwood's Swordgrass - Andre after gesture in AP summit",
             "id": 101199,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Hawkwood's Shield - gravestone after Hawkwood leaves"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Twinkling Dragon Torso Stone",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Carthus Rouge",
@@ -19679,9 +21065,25 @@
             "name": "FK: Twinkling Dragon Head Stone - Hawkwood drop",
             "id": 101204,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Hawkwood's Shield - gravestone after Hawkwood leaves"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Twinkling Dragon Torso Stone",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Exploding Bolt x6",
@@ -19906,9 +21308,25 @@
             "name": "FS: Divine Blessing - Greirat from US",
             "id": 101483,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Undead Settlement"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Loretta's Bone",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Dragon Crest Shield",
@@ -19923,9 +21341,25 @@
             "name": "FS: Ember - Greirat from US",
             "id": 101484,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Undead Settlement"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Loretta's Bone",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Farron Dart",
@@ -19940,9 +21374,31 @@
             "name": "FS: Divine Blessing - Greirat from IBV",
             "id": 101485,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Irithyll of the Boreal Valley"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "CD: Shotel - Patches"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Divine Blessing - Greirat from US"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Titanite Scale",
@@ -19957,9 +21413,31 @@
             "name": "FS: Hidden Blessing - Greirat from IBV",
             "id": 101486,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Irithyll of the Boreal Valley"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "CD: Shotel - Patches"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Divine Blessing - Greirat from US"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Dark Blade",
@@ -19974,9 +21452,31 @@
             "name": "FS: Titanite Scale - Greirat from IBV",
             "id": 101487,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Irithyll of the Boreal Valley"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "CD: Shotel - Patches"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Divine Blessing - Greirat from US"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Nameless Knight Armor",
@@ -19991,9 +21491,31 @@
             "name": "FS: Twinkling Titanite - Greirat from IBV",
             "id": 101488,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Irithyll of the Boreal Valley"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "CD: Shotel - Patches"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Divine Blessing - Greirat from US"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Titanite Chunk",
@@ -20008,9 +21530,45 @@
             "name": "FS: Ember - shop for Greirat's Ashes",
             "id": 101489,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Grand Archives"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Divine Blessing - Greirat from IBV"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "options": [],
+                  "args": {
+                    "region_name": "Irithyll of the Boreal Valley"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "CD: Shotel - Patches"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "options": [],
+                  "args": {
+                    "location_name": "FS: Divine Blessing - Greirat from US"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Golden Ritual Spear",
@@ -20063,9 +21621,12 @@
             "name": "FS: Firestorm - Karla for Quelana Tome",
             "id": 101492,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Quelana Pyromancy Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Black Hand Hat",
@@ -20080,9 +21641,12 @@
             "name": "FS: Rapport - Karla for Quelana Tome",
             "id": 101493,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Quelana Pyromancy Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Large Club",
@@ -20097,9 +21661,12 @@
             "name": "FS: Fire Whip - Karla for Quelana Tome",
             "id": 101494,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Quelana Pyromancy Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Wolf Knight Armor",
@@ -20114,9 +21681,12 @@
             "name": "FS: Black Flame - Karla for Grave Warden Tome",
             "id": 101495,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Grave Warden Pyromancy Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Twinkling Titanite",
@@ -20131,9 +21701,12 @@
             "name": "FS: Black Fire Orb - Karla for Grave Warden Tome",
             "id": 101496,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Grave Warden Pyromancy Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Great Chaos Fire Orb",
@@ -20148,9 +21721,12 @@
             "name": "FS: Gnaw - Karla for Deep Braille Tome",
             "id": 101497,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Deep Braille Divine Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Twinkling Titanite x2",
@@ -20165,9 +21741,12 @@
             "name": "FS: Deep Protection - Karla for Deep Braille Tome",
             "id": 101498,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Deep Braille Divine Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Irithyll Rapier",
@@ -20182,9 +21761,12 @@
             "name": "FS: Vow of Silence - Karla for Londor Tome",
             "id": 101499,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Londor Braille Divine Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Sunset Leggings",
@@ -20199,9 +21781,12 @@
             "name": "FS: Dark Blade - Karla for Londor Tome",
             "id": 101500,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Londor Braille Divine Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Sacred Oath",
@@ -20216,9 +21801,12 @@
             "name": "FS: Dead Again - Karla for Londor Tome",
             "id": 101501,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Has",
               "options": [],
-              "args": {}
+              "args": {
+                "item_name": "Londor Braille Divine Tome",
+                "count": 1
+              }
             },
             "item": {
               "name": "Rusted Gold Coin",
@@ -20233,9 +21821,16 @@
             "name": "FS: Karla's Pointed Hat - kill Karla",
             "id": 101502,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Deep Braille Divine Tome",
+                  "Grave Warden Pyromancy Tome",
+                  "Londor Braille Divine Tome",
+                  "Quelana Pyromancy Tome"
+                ]
+              }
             },
             "item": {
               "name": "Twinkling Titanite x3",
@@ -20250,9 +21845,16 @@
             "name": "FS: Karla's Coat - kill Karla",
             "id": 101503,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Deep Braille Divine Tome",
+                  "Grave Warden Pyromancy Tome",
+                  "Londor Braille Divine Tome",
+                  "Quelana Pyromancy Tome"
+                ]
+              }
             },
             "item": {
               "name": "Spirit Tree Crest Shield",
@@ -20267,9 +21869,16 @@
             "name": "FS: Karla's Gloves - kill Karla",
             "id": 101504,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Deep Braille Divine Tome",
+                  "Grave Warden Pyromancy Tome",
+                  "Londor Braille Divine Tome",
+                  "Quelana Pyromancy Tome"
+                ]
+              }
             },
             "item": {
               "name": "Carthus Rouge x3",
@@ -20284,9 +21893,16 @@
             "name": "FS: Karla's Trousers - kill Karla",
             "id": 101505,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HasAll",
               "options": [],
-              "args": {}
+              "args": {
+                "items": [
+                  "Deep Braille Divine Tome",
+                  "Grave Warden Pyromancy Tome",
+                  "Londor Braille Divine Tome",
+                  "Quelana Pyromancy Tome"
+                ]
+              }
             },
             "item": {
               "name": "Shield of Want",
@@ -36914,7 +38530,7 @@
         "start_inventory": {},
         "start_location_hints": []
       },
-      "world_directory": "dark_souls_3_worldgen"
+      "world_directory": "dark_souls_3"
     }
   },
   "game_info": {
