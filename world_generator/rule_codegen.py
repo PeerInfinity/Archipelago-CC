@@ -2210,6 +2210,12 @@ class RuleCodeGenerator:
                             arg_strs.append(repr(self.settings[setting]))
                         else:
                             arg_strs.append('None')
+                    elif arg_rule == 'False_':
+                        # Handle Rule Builder format boolean False: {'rule': 'False_'}
+                        arg_strs.append('False')
+                    elif arg_rule == 'True_':
+                        # Handle Rule Builder format boolean True: {'rule': 'True_'}
+                        arg_strs.append('True')
                     else:
                         # For complex args, try to convert
                         arg_strs.append('None')
