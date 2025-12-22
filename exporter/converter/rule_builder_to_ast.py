@@ -666,11 +666,12 @@ class RuleBuilderToAST:
             else:
                 converted_args.append({'type': 'constant', 'value': arg})
 
-        result = {
+        result: Dict[str, Any] = {
             'type': 'helper',
             'name': helper_name,
-            'args': converted_args
         }
+        if converted_args:
+            result['args'] = converted_args
 
         # Include body_data if present - this allows the frontend to evaluate
         # helpers that are inlined in the rule rather than in the helpers dictionary
@@ -715,11 +716,12 @@ class RuleBuilderToAST:
             converted_children = [self._convert_rule(child) for child in children]
             args_list.append({'type': 'list', 'value': converted_children})
 
-        result = {
+        result: Dict[str, Any] = {
             'type': 'helper',
             'name': rule_name,
-            'args': args_list
         }
+        if args_list:
+            result['args'] = args_list
 
         # Add metadata for round-trip conversion
         result['_converted_from_rule_builder'] = True

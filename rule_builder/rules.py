@@ -559,15 +559,19 @@ class Rule(Generic[TWorld]):
         return self._instantiate(world)
 
     def to_dict(self) -> dict[str, Any]:
-        """Returns a JSON compatible dict representation of this rule"""
+        """Returns a JSON compatible dict representation of this rule.
+
+        Empty 'options' and 'args' fields are omitted to reduce JSON size.
+        """
+        result: dict[str, Any] = {"rule": self.__class__.__qualname__}
+        if self.options:
+            result["options"] = [o.to_dict() for o in self.options]
         args = {
             field.name: getattr(self, field.name, None) for field in dataclasses.fields(self) if field.name != "options"
         }
-        return {
-            "rule": self.__class__.__qualname__,
-            "options": [o.to_dict() for o in self.options],
-            "args": args,
-        }
+        if args:
+            result["args"] = args
+        return result
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any], world_cls: type[RuleWorldMixin]) -> Self:
@@ -714,13 +718,13 @@ class Rule(Generic[TWorld]):
             """Returns a JSON compatible dict representation of this resolved rule.
 
             This enables the exporter to serialize Rule Builder rules without
-            needing AST analysis.
+            needing AST analysis. Empty 'options' and 'args' are omitted.
             """
-            return {
-                "rule": self._rule_class_name,
-                "options": [],
-                "args": self._get_args_dict(),
-            }
+            result: dict[str, Any] = {"rule": self._rule_class_name}
+            args = self._get_args_dict()
+            if args:
+                result["args"] = args
+            return result
 
         def _get_args_dict(self) -> dict[str, Any]:
             """Override in subclasses to provide serializable args.
@@ -868,7 +872,6 @@ class NestedRule(Rule[TWorld], game="Archipelago"):
             """Override to serialize children instead of args."""
             return {
                 "rule": self._rule_class_name,
-                "options": [],
                 "children": [c.to_dict() for c in self.children],
             }
 
@@ -1029,7 +1032,6 @@ class WrapperRule(Rule[TWorld], game="Archipelago"):
             """Override to serialize child instead of args."""
             return {
                 "rule": self._rule_class_name,
-                "options": [],
                 "child": self.child.to_dict(),
             }
 
@@ -2906,15 +2908,18 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
     def to_dict(self) -> dict[str, Any]:
         """Returns a JSON compatible dict representation of this helper call.
 
-        This outputs the format expected by the frontend, matching the AST exporter format:
-        {"rule": "helper_name", "options": [], "args": [], "_original_ast_type": "helper"}
+        This outputs the format expected by the frontend, matching the AST exporter format.
+        Empty 'options' and 'args' are omitted.
         """
-        return {
+        result: dict[str, Any] = {
             "rule": self.helper_name,
-            "options": [o.to_dict() for o in self.options],
-            "args": list(self.args),
             "_original_ast_type": "helper",
         }
+        if self.options:
+            result["options"] = [o.to_dict() for o in self.options]
+        if self.args:
+            result["args"] = list(self.args)
+        return result
 
     class Resolved(Rule.Resolved):
         helper_func: Callable[..., bool] | None
@@ -3000,15 +3005,16 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
         def to_dict(self) -> dict[str, Any]:
             """Returns a JSON compatible dict representation of this resolved helper call.
 
-            This outputs the format expected by the frontend, matching the AST exporter format:
-            {"rule": "helper_name", "options": [], "args": [], "_original_ast_type": "helper"}
+            This outputs the format expected by the frontend, matching the AST exporter format.
+            Empty 'options' and 'args' are omitted.
             """
-            return {
+            result: dict[str, Any] = {
                 "rule": self.helper_name,
-                "options": [],
-                "args": list(self.args),
                 "_original_ast_type": "helper",
             }
+            if self.args:
+                result["args"] = list(self.args)
+            return result
 
 
 DEFAULT_RULES = {
