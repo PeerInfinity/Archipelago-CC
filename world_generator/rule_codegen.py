@@ -522,6 +522,7 @@ class RuleCodeGenerator:
                     'True_': 'constant',
                     'False_': 'constant',
                     'Helper': 'helper',
+                    'StateMethod': 'state_method',
                 }
                 rule_type = rb_to_type.get(rb_rule, '')
 
@@ -668,6 +669,14 @@ class RuleCodeGenerator:
             }
             return self._convert_helper(helper_rule)
 
+        if rb_rule == 'StateMethod':
+            # Convert to the format expected by _convert_state_method
+            state_rule = {
+                'method': args.get('method', ''),
+                'args': args.get('args', [])
+            }
+            return self._convert_state_method(state_rule)
+
         # Unknown Rule Builder rule - return True_() as placeholder
         self.required_imports.add('True_')
         return 'True_()'
@@ -748,6 +757,58 @@ class RuleCodeGenerator:
         if isinstance(value, dict):
             if value.get('type') == 'constant':
                 return value.get('value', default)
+            return default
+        return value if value is not None else default
+
+    def _extract_constant(self, value: Any, default: Any = None) -> Any:
+        """Extract constant value from complex expressions.
+
+        Handles constants, binary operations (like 'Axe' + 's' -> 'Axes'),
+        and subscript operations (like item_groups["Axes"]).
+        """
+        if isinstance(value, dict):
+            if value.get('type') == 'constant':
+                return value.get('value', default)
+            if value.get('type') == 'value':
+                return value.get('value', default)
+            if value.get('type') == 'set':
+                elements = value.get('elements', [])
+                return [self._extract_constant(elem, None) for elem in elements if self._extract_constant(elem, None) is not None]
+
+            # Handle binary operations on constants (e.g., 'Axe' + 's' -> 'Axes')
+            if value.get('type') in ('binary_op', 'binop'):
+                left = self._extract_constant(value.get('left', {}), None)
+                right = self._extract_constant(value.get('right', {}), None)
+                op = value.get('op', '+')
+                op_map = {'Add': '+', 'Sub': '-', 'Mult': '*', 'Div': '/', 'FloorDiv': '//'}
+                op = op_map.get(op, op)
+                if left is not None and right is not None:
+                    try:
+                        if op == '+':
+                            return left + right
+                        elif op == '-':
+                            return left - right
+                        elif op == '*':
+                            return left * right
+                        elif op == '/':
+                            return left / right
+                        elif op == '//':
+                            return left // right
+                    except TypeError:
+                        pass
+                return default
+
+            # Handle subscript (e.g., item_groups["Axes"])
+            if value.get('type') == 'subscript':
+                base_value = self._extract_constant(value.get('value', {}), None)
+                index = self._extract_constant(value.get('index', {}), None)
+                if base_value is not None and index is not None:
+                    try:
+                        return base_value[index]
+                    except (IndexError, KeyError, TypeError):
+                        pass
+                return default
+
             return default
         return value if value is not None else default
 
@@ -973,6 +1034,16 @@ class RuleCodeGenerator:
             # Unpack the items as separate arguments
             items_repr = ', '.join(repr(item) for item in items)
             return f'{class_name}({items_repr})'
+
+        # Handle 'subscript' type (e.g., item_groups["Axes"])
+        # This extracts the value using _extract_constant which handles
+        # subscript with binary_op index (like item_groups["Axe" + "s"])
+        if first_arg.get('type') == 'subscript':
+            items = self._extract_constant(first_arg, [])
+            if isinstance(items, list) and items:
+                items_repr = ', '.join(repr(item) for item in items)
+                return f'{class_name}({items_repr})'
+            # If extraction failed or returned empty, fall through to True_()
 
         # Unknown format - return True_ as safe fallback
         self.required_imports.add('True_')
@@ -2484,6 +2555,30 @@ class HelperCodeGenerator:
                 # Extract all elements from the set
                 elements = value.get('elements', [])
                 return [self._extract_constant(elem, None) for elem in elements if self._extract_constant(elem, None) is not None]
+
+            # Handle binary operations on constants (e.g., 'Axe' + 's' -> 'Axes')
+            if value.get('type') in ('binary_op', 'binop'):
+                left = self._extract_constant(value.get('left', {}), None)
+                right = self._extract_constant(value.get('right', {}), None)
+                op = value.get('op', '+')
+                # Map operator names to actual operators
+                op_map = {'Add': '+', 'Sub': '-', 'Mult': '*', 'Div': '/', 'FloorDiv': '//'}
+                op = op_map.get(op, op)
+                if left is not None and right is not None:
+                    try:
+                        if op == '+':
+                            return left + right
+                        elif op == '-':
+                            return left - right
+                        elif op == '*':
+                            return left * right
+                        elif op == '/':
+                            return left / right
+                        elif op == '//':
+                            return left // right
+                    except TypeError:
+                        pass
+                return default
 
             # Handle subscript on settings (e.g., self.boss_order[0])
             if value.get('type') == 'subscript':
