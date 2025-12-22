@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Or
+from rule_builder import True_, False_, And, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -374,1825 +374,1825 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("BaseUltraRocks", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra")
     )
 
     world.set_rule(
         multiworld.get_entrance("Chucklehuck Woods", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch")
     )
 
     world.set_rule(
         multiworld.get_entrance("BooStatue", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash")
     )
 
     world.set_rule(
         multiworld.get_entrance("Hooniversity", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini"))
     )
 
     world.set_rule(
         multiworld.get_entrance("TeeheeValley", player),
-        Or(True_(), True_())
+        Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Sewers", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose")
     )
 
     world.set_rule(
         multiworld.get_entrance("Airport", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder")
     )
 
     world.set_rule(
         multiworld.get_entrance("Theater", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash")
     )
 
     world.set_rule(
         multiworld.get_entrance("Surfable", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_surfable, helper_name="surfable")
     )
 
     world.set_rule(
         multiworld.get_entrance("Winkle", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash")
     )
 
     world.set_rule(
         multiworld.get_entrance("Beanbean Castle Town", player),
-        And(True_(), Or(True_(), True_(), True_()))
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder")))
     )
 
     world.set_rule(
         multiworld.get_entrance("Shop Chuckolator Flag", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), Or(True_(), True_(), True_(), True_()))
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_birdo_shop, helper_name="birdo_shop"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fungitown_shop, helper_name="fungitown_shop"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_piranha_shop, helper_name="piranha_shop"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_star_shop, helper_name="star_shop")))
     )
 
     world.set_rule(
         multiworld.get_entrance("Shop Mom Piranha Flag", player),
-        Or(True_(), Or(True_(), True_(), True_()))
+        Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_birdo_shop, helper_name="birdo_shop"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fungitown_shop, helper_name="fungitown_shop"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_star_shop, helper_name="star_shop")))
     )
 
     world.set_rule(
         multiworld.get_entrance("Shop Enter Fungitown Flag", player),
-        Or(True_(), Or(True_(), True_()))
+        Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fungitown, helper_name="fungitown"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_birdo_shop, helper_name="birdo_shop"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_star_shop, helper_name="star_shop")))
     )
 
     world.set_rule(
         multiworld.get_entrance("Shop Beanstar Complete Flag", player),
-        Or(And(True_(), True_(), True_()), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_castleTown, helper_name="castleTown"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_pieces, helper_name="pieces"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose")), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_birdo_shop, helper_name="birdo_shop"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Shop Birdo Flag", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_postJokes, helper_name="postJokes", args=('vanilla',)))
     )
 
     world.set_rule(
         multiworld.get_entrance("JokesEntrance", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire")
     )
 
     world.set_rule(
         multiworld.get_entrance("GwarharMain", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash"))
     )
 
     world.set_rule(
         multiworld.get_entrance("GwarharEntrance", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_membership, helper_name="membership"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Oasis  ", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_membership, helper_name="membership"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Fungitown", player),
-        And(True_(), True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_castleTown, helper_name="castleTown"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))
     )
 
     world.set_rule(
         multiworld.get_entrance("JokesMain", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"))
     )
 
     world.set_rule(
         multiworld.get_entrance("PostJokes", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_postJokes, helper_name="postJokes", args=('vanilla',))
     )
 
     world.set_rule(
         multiworld.get_entrance("Fungitown Shop Beanstar Complete Flag", player),
-        Or(True_(), True_())
+        Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fungitown_birdo_shop, helper_name="fungitown_birdo_shop"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_pieces, helper_name="pieces"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Fungitown Shop Birdo Flag", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_postJokes, helper_name="postJokes", args=('vanilla',)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Bowser's Castle Mini", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Hoohoo Village Hammer House Block", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Base Bridge Room Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Base Boostatue Room Block 2", player),
-        Or(True_(), True_())
+        Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super"))
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Base Boostatue Room Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Base Boostatue Room Digspot 2", player),
-        And(True_(), Or(True_(), True_()))
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super")))
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Summit Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Below Summit Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Past Hoohooros Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Hoohooros Room Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Hoohooros Room Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Before Hoohooros Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Room 2 Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Room 2 Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Base Room 1 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Village Eastside Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Village Super Hammer Cave Digspot", player),
-        And(True_(), Or(True_(), True_()))
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super")))
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Village Super Hammer Cave Block", player),
-        Or(True_(), True_())
+        Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super"))
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Village North Cave Room 2 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Base Minecart Cave Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Farm Room Digspot 1", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Farm Room Digspot 2", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Farm Room Digspot 3", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts NW Block", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts NW Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts W Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts W Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts W Digspot 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts SW Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts SW Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts SW Digspot 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts N Room 1 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts N Room 2 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts S Room 1 Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts S Room 1 Block", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra"))
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts S Room 1 Digspot 2", player),
-        And(And(True_(), True_()), True_())
+        And(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra")), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"))
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts S Room 2 Block 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts NE Digspot 1", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts NE Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts E Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts E Digspot 2", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts E Digspot 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts SE Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts SE Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts SE Digspot 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts North Beach Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts North Beach Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts North Beach Digspot 3", player),
-        And(True_(), Or(True_(), True_()))
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super")))
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts South Beach Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity West of Star Room Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity West of Star Room Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity West of Star Room 2 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity West of Star Room 3 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity West of Star Room 4 Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity West of Star Room 4 Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity West of Star Room 5 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Entrance to Mini Mario Room Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Entrance to Mini Mario Room Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Entrance to Mini Mario Room 2 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Mini Mario Puzzle Block", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Mini Mario Puzzle Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 4", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Fountain Room 2 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Past Hoohooros Connector Room Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Past Hoohooros Connector Room Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Secret Scroll 1", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Secret Scroll 2", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra"))
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Bean Fruit 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Bean Fruit 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Bean Fruit 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Bean Fruit 4", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super"))
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Bean Fruit 5", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_super, helper_name="super"))
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Bean Fruit 6", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Bean Fruit 7", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_teehee, helper_name="teehee"))
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Village Mole Behind Turtle", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Thunderhand Mole", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Super Hammer Upgrade", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Ultra Hammer Upgrade", player),
-        And(True_(), True_(), True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_castleTown, helper_name="castleTown"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_pieces, helper_name="pieces"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts NE Solo Mario Mole 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts NE Solo Mario Mole 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Solo Luigi Cave Mole", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Farm Room Mole Reward 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Farm Room Mole Reward 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts South of Hooniversity Guards Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts South of Hooniversity Guards Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts South of Hooniversity Guards Digspot 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Entrance to Hoohoo Mountain Base Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Entrance to Hoohoo Mountain Base Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Pipe 2 Room Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Pipe 4 Room Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Town Mini Mario Block 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Town Mini Mario Block 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Town Mini Mario Block 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Town Mini Mario Block 4", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Town Mini Mario Block 5", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini")
     )
 
     world.set_rule(
         multiworld.get_location("Chateau Room 1 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chateau Popple Fight Room Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chateau Barrel Room Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chateau Goblet Room Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Solo Luigi Cave Room 2 Block", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"))
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Solo Luigi Cave Room 3 Block 1", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"))
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Solo Luigi Cave Room 3 Block 2", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"))
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Room 2 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Pipe Room Block 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Pipe Room Block 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Pipe Room Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Pipe Room Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Room 4 Block 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Room 4 Block 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Room 4 Block 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Room 7 Block 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Room 7 Block 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Room 7 Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Room 7 Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Room 8 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods East of Chuckleroot Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 4", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods White Fruit Room Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods White Fruit Room Digspot 2", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini"))
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods White Fruit Room Digspot 3", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini"))
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Wiggler room Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Wiggler room Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 4", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 5", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 6", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Koopa Room Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Room 1 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Brooch Guards Room Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Brooch Guards Room Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Chateau Entrance Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Chateau Entrance Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Chateau Green Goblet", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"))
     )
 
     world.set_rule(
         multiworld.get_location("Chateau Red Goblet", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini"))
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods Red Chuckola Fruit", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini")
     )
 
     world.set_rule(
         multiworld.get_location("Chucklehuck Woods White Chuckola Fruit", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini"))
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Peach's Extra Dress", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_pieces, helper_name="pieces"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Fake Beanstar", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_pieces, helper_name="pieces"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Town Beanstone 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Town Beanstone 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Town Beanstone 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Town Beanstone 4", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Town Beanstone 5", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Town Beanstone 6", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Town Beanstone 7", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Town Beanstone 8", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Town Beanstone 9", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Town Beanstone 10", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Castle Town Beanstone Reward", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Starting Flag 1", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Starting Flag 2", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Starting Flag 1", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Starting Flag 2", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Starting Flag 3", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Chuckolator Flag 1", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Chuckolator Flag 2", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Chuckolator Flag 3", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Chuckolator Flag 1", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Chuckolator Flag 2", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Chuckolator Flag 3", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Mom Piranha Flag 1", player),
-        And(Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_()), Or(True_(), True_()))
+        And(Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose")), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose")))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Mom Piranha Flag 2", player),
-        And(Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_()), Or(True_(), True_()))
+        And(Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose")), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose")))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Mom Piranha Flag 3", player),
-        And(Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_()), Or(True_(), True_()))
+        And(Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose")), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose")))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Mom Piranha Flag 1", player),
-        And(Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_()), Or(True_(), True_()))
+        And(Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose")), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose")))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Mom Piranha Flag 2", player),
-        And(Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_()), Or(True_(), True_()))
+        And(Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose")), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose")))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Mom Piranha Flag 3", player),
-        And(Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_()), Or(True_(), True_()))
+        And(Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose")), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose")))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Trunkle Flag 1", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Trunkle Flag 2", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Trunkle Flag 3", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Trunkle Flag 1", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Trunkle Flag 2", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Trunkle Flag 3", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Beanstar Complete Flag 1", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Beanstar Complete Flag 2", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Beanstar Complete Flag 3", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Beanstar Complete Flag 1", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Beanstar Complete Flag 2", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Beanstar Complete Flag 3", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Birdo Flag 1", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Birdo Flag 2", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Badge Shop Birdo Flag 3", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Birdo Flag 1", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Birdo Flag 2", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Pants Shop Birdo Flag 3", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Oho Ocean North Whirlpool Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Oho Ocean North Whirlpool Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Oho Ocean Fire Puzzle Room Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Oho Ocean South Whirlpool Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Oho Ocean South Whirlpool Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Oho Ocean South Whirlpool Digspot 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Oho Ocean South Whirlpool Digspot 4", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Oho Ocean South Whirlpool Digspot 5", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Oho Ocean South Whirlpool Digspot 6", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Oho Ocean South Whirlpool Room 2 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Pipe Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Staircase Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Surf Beach Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Surf Beach Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Surf Beach Digspot 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Barrel Puzzle Entrance Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Barrel Puzzle Entrance Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Past Cackletta Room 2 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Basement Room 1 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Basement Room 2 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Popple Room Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Woohoo Hooniversity Popple Room Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Pipe Room Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Massage Parlor Entrance Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon First Underwater Area Room 1 Block", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon First Underwater Area Room 2 Block 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon First Underwater Area Room 2 Block 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Red Pearl Bean", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Green Pearl Bean", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))
     )
 
     world.set_rule(
         multiworld.get_location("Oho Ocean South Room 2 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Past Hermie Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon North of Spangle Room Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon West of Spangle Room Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 4 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 2 Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 2 Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Entrance to West Underwater Area Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 2 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Spangle Room Block", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Spangle Reward", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_spangle, helper_name="spangle")
     )
 
     world.set_rule(
         multiworld.get_location("Gwarhar Lagoon Spangle", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra")
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Room 1 Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Room 1 Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Room 1 Digspot 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Room 2 Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Room 2 Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Room 2 Digspot 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Block 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra")
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Block 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra")
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Digspot 1", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra"))
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Digspot 3", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_ultra, helper_name="ultra"))
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Before Trunkle Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Winkle Area Beanstar Room Block", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_winkle, helper_name="winkle")
     )
 
     world.set_rule(
         multiworld.get_location("Winkle Area Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Winkle Area Colloseum Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanstar Piece Winkle Area", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_winkle, helper_name="winkle")
     )
 
     world.set_rule(
         multiworld.get_location("Sewers Room 5 Block 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers")
     )
 
     world.set_rule(
         multiworld.get_location("Sewers Room 5 Block 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers")
     )
 
     world.set_rule(
         multiworld.get_location("Airport Entrance Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Airport Lobby Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Airport Westside Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Airport Westside Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Airport Westside Digspot 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Airport Westside Digspot 4", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Airport Westside Digspot 5", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Airport Center Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Airport Center Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Airport Center Digspot 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Airport Center Digspot 4", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Airport Center Digspot 5", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Airport Eastside Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Airport Eastside Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Airport Eastside Digspot 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Airport Eastside Digspot 4", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Airport Eastside Digspot 5", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End First Boiler Room Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End First Boiler Room Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Furnace Room 1 Block 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash")
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Furnace Room 1 Block 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash")
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Furnace Room 1 Block 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash")
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Northeast of Boiler Room 1 Block", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash")
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Northeast of Boiler Room 2 Block", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash")
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Northeast of Boiler Room 2 Digspot", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"))
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Northeast of Boiler Room 3 Digspot", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"))
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Second Floor East Room Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Final Split up Room Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Solo Luigi Room 1 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Solo Luigi Room 2 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Solo Mario Room 1 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Second Boiler Room Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Second Boiler Room Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Before Jojora Room Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Joke's End Jojora Room Digspot", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDash, helper_name="canDash"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"))
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Digspot 2 (Post-Birdo)", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Before Birdo Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Before Birdo Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Before Birdo Digspot 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Before Birdo Digspot 4", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Yoshi Theater Blue Yoshi", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_beanFruit, helper_name="beanFruit")
     )
 
     world.set_rule(
         multiworld.get_location("Yoshi Theater Red Yoshi", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_beanFruit, helper_name="beanFruit")
     )
 
     world.set_rule(
         multiworld.get_location("Yoshi Theater Green Yoshi", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_beanFruit, helper_name="beanFruit")
     )
 
     world.set_rule(
         multiworld.get_location("Yoshi Theater Yellow Yoshi", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_beanFruit, helper_name="beanFruit")
     )
 
     world.set_rule(
         multiworld.get_location("Yoshi Theater Purple Yoshi", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_beanFruit, helper_name="beanFruit")
     )
 
     world.set_rule(
         multiworld.get_location("Yoshi Theater Orange Yoshi", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_beanFruit, helper_name="beanFruit")
     )
 
     world.set_rule(
         multiworld.get_location("Yoshi Theater Azure Yoshi", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_beanFruit, helper_name="beanFruit")
     )
 
     world.set_rule(
         multiworld.get_location("Beanstar Piece Yoshi Theater", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_neon, helper_name="neon")
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Trunkle Room Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Badge Shop Starting Flag 1", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Badge Shop Starting Flag 2", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Badge Shop Starting Flag 3", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Pants Shop Starting Flag 1", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Pants Shop Starting Flag 2", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Pants Shop Starting Flag 3", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Badge Shop Beanstar Complete Flag 1", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Badge Shop Beanstar Complete Flag 2", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Pants Shop Beanstar Complete Flag 1", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Pants Shop Beanstar Complete Flag 2", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Pants Shop Birdo Flag 1", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Pants Shop Birdo Flag 2", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Badge Shop Birdo Flag 1", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Fungitown Badge Shop Birdo Flag 2", player),
-        Or(And(True_(), True_(), Or(True_(), True_(), True_())), True_())
+        Or(And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_brooch, helper_name="brooch"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fruits, helper_name="fruits"), Or(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_fire, helper_name="fire"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_hammers, helper_name="hammers"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder"))), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_rose, helper_name="rose"))
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Before Harhall Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Before Harhall Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts Boostatue Mole", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini"))
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts S Room 2 Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts S Room 2 Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts S Room 2 Digspot 3", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Oho Oasis West Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Oho Ocean Spike Room Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Oho Ocean Spike Room Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Oho Oasis Firebrand", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canMini, helper_name="canMini")
     )
 
     world.set_rule(
         multiworld.get_location("Oho Oasis Thunderhand", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Base Boostatue Room Digspot 3 (Right Side)", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Entrance To Hoohoo Mountain Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Upper Maze Room 2 Digspot 1", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Teehee Valley Upper Maze Room 2 Digspot 2", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Guffawha Ruins Block", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_thunder, helper_name="thunder")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Base Guffawha Ruins Entrance Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Hoohoo Mountain Base Teehee Valley Entrance Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Bowser's Castle Entrance Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Bowser's Castle Iggy & Morton Hallway Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Bowser's Castle Morton Room 1 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Bowser's Castle Lemmy Room 1 Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
 
     world.set_rule(
         multiworld.get_location("Bowser's Castle Wendy & Larry Hallway Digspot", player),
-        True_()
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canDig, helper_name="canDig")
     )
