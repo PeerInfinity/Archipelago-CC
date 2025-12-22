@@ -1723,6 +1723,12 @@ class RuleCodeGenerator:
                     return 'False_()'
                 # For other strings (like 'normal', 'light_and_darkness'), return as string literal
                 return repr(value)
+            # Handle integer values - convert to boolean rules based on truthiness
+            # This is needed because integer settings used in boolean contexts (like Not())
+            # require rule objects, not raw integers
+            elif isinstance(value, int):
+                self.required_imports.add('True_' if value else 'False_')
+                return 'True_()' if value else 'False_()'
             else:
                 return repr(value)
 
