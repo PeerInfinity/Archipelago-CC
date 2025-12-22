@@ -1725,16 +1725,7 @@
                                 "left": {
                                   "rule": "weapon_armor_upgrade_count",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -1848,16 +1839,7 @@
                             "left": {
                               "rule": "weapon_armor_upgrade_count",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -2000,16 +1982,7 @@
                                 "left": {
                                   "rule": "weapon_armor_upgrade_count",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -2123,16 +2096,7 @@
                             "left": {
                               "rule": "weapon_armor_upgrade_count",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -2213,16 +2177,7 @@
                                 "left": {
                                   "rule": "weapon_armor_upgrade_count",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -2336,16 +2291,7 @@
                             "left": {
                               "rule": "weapon_armor_upgrade_count",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -2426,16 +2372,7 @@
                                 "left": {
                                   "rule": "weapon_armor_upgrade_count",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -2549,16 +2486,7 @@
                             "left": {
                               "rule": "weapon_armor_upgrade_count",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -2663,16 +2591,7 @@
                                 "left": {
                                   "rule": "weapon_armor_upgrade_count",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -2786,16 +2705,7 @@
                             "left": {
                               "rule": "weapon_armor_upgrade_count",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -2876,16 +2786,7 @@
                                 "left": {
                                   "rule": "weapon_armor_upgrade_count",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -2999,16 +2900,7 @@
                             "left": {
                               "rule": "weapon_armor_upgrade_count",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -3089,16 +2981,7 @@
                                 "left": {
                                   "rule": "weapon_armor_upgrade_count",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -3212,16 +3095,7 @@
                             "left": {
                               "rule": "weapon_armor_upgrade_count",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -3302,16 +3176,7 @@
                                 "left": {
                                   "rule": "weapon_armor_upgrade_count",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -3425,16 +3290,7 @@
                             "left": {
                               "rule": "weapon_armor_upgrade_count",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -3515,16 +3371,7 @@
                                 "left": {
                                   "rule": "weapon_armor_upgrade_count",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -3638,16 +3485,7 @@
                             "left": {
                               "rule": "weapon_armor_upgrade_count",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -3728,16 +3566,7 @@
                                 "left": {
                                   "rule": "weapon_armor_upgrade_count",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -3851,16 +3680,7 @@
                             "left": {
                               "rule": "weapon_armor_upgrade_count",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -3941,16 +3761,7 @@
                                 "left": {
                                   "rule": "weapon_armor_upgrade_count",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -4064,16 +3875,7 @@
                             "left": {
                               "rule": "weapon_armor_upgrade_count",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -41782,13 +41584,7 @@
                 "type": "compare",
                 "left": {
                   "type": "helper",
-                  "name": "weapon_armor_upgrade_count",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Progressive Terran Ship Weapon"
-                    }
-                  ]
+                  "name": "weapon_armor_upgrade_count"
                 },
                 "op": ">=",
                 "right": {
@@ -41943,19 +41739,6 @@
               "name": "self"
             },
             "attr": "basic_terran_units"
-          }
-        ]
-      },
-      "terran_competent_anti_air": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "terran_competent_ground_to_air"
-          },
-          {
-            "type": "helper",
-            "name": "terran_air_anti_air"
           }
         ]
       },
@@ -42460,13 +42243,7 @@
                     "type": "compare",
                     "left": {
                       "type": "helper",
-                      "name": "weapon_armor_upgrade_count",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Progressive Terran Ship Weapon"
-                        }
-                      ]
+                      "name": "weapon_armor_upgrade_count"
                     },
                     "op": ">=",
                     "right": {
@@ -42610,13 +42387,7 @@
                         "type": "compare",
                         "left": {
                           "type": "helper",
-                          "name": "weapon_armor_upgrade_count",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "Progressive Terran Ship Weapon"
-                            }
-                          ]
+                          "name": "weapon_armor_upgrade_count"
                         },
                         "op": ">=",
                         "right": {
@@ -42652,115 +42423,6 @@
               {
                 "type": "helper",
                 "name": "terran_sustainable_mech_heal"
-              }
-            ]
-          }
-        ]
-      },
-      "terran_moderate_anti_air": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "terran_competent_anti_air"
-          },
-          {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Battlecruiser"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Cyclone"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Dominion Trooper"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Marine"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Thor"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Valkyrie"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Wraith"
-                  }
-                ]
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Medivac"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Siege Tank"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "compare",
-                    "left": {
-                      "type": "state_method",
-                      "method": "count",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Progressive Transport Hook (Siege Tank)"
-                        }
-                      ]
-                    },
-                    "op": ">=",
-                    "right": {
-                      "type": "constant",
-                      "value": 2
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": false
-                  },
-                  {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Ghost"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Liberator"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Spectre"
-                      }
-                    ]
-                  }
-                ]
               }
             ]
           }
