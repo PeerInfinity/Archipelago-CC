@@ -70,16 +70,39 @@ def _timespinnerworldgen_has_upwarddash(state: "CollectionState", player: int) -
 
 # Helper definitions for frontend evaluation
 # These are looked up by name instead of being inlined at every call site
-_HELPER_DEFINITIONS = {   'can_break_walls': {'type': 'constant', 'value': True},
-    'can_kill_all_3_bosses': {   'args': [   {   'elements': [   {'type': 'constant', 'value': 'Killed Aelana'},
-                                                                 {'type': 'constant', 'value': 'Killed Maw'},
-                                                                 {'type': 'constant', 'value': 'Killed Twins'}],
-                                                 'type': 'set'}],
-                                 'method': 'has_all',
-                                 'type': 'state_method'},
+_HELPER_DEFINITIONS = {   'can_break_walls': {   'if_false': {'type': 'constant', 'value': True},
+                           'if_true': {'item': 'Oculus Ring', 'type': 'item_check'},
+                           'test': {   'attr': 'flag_eye_spy',
+                                       'object': {'name': 'self', 'type': 'name'},
+                                       'type': 'attribute'},
+                           'type': 'conditional'},
+    'can_kill_all_3_bosses': {   'if_false': {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                     'value': 'Killed Aelana'},
+                                                                                 {   'type': 'constant',
+                                                                                     'value': 'Killed Maw'},
+                                                                                 {   'type': 'constant',
+                                                                                     'value': 'Killed Twins'}],
+                                                                 'type': 'set'}],
+                                                 'method': 'has_all',
+                                                 'type': 'state_method'},
+                                 'if_true': {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                                    'value': 'Laser Access A'},
+                                                                                {   'type': 'constant',
+                                                                                    'value': 'Laser Access I'},
+                                                                                {   'type': 'constant',
+                                                                                    'value': 'Laser Access M'}],
+                                                                'type': 'set'}],
+                                                'method': 'has_all',
+                                                'type': 'state_method'},
+                                 'test': {   'attr': 'flag_prism_break',
+                                             'object': {'name': 'self', 'type': 'name'},
+                                             'type': 'attribute'},
+                                 'type': 'conditional'},
     'can_teleport_to': {   'body': {   'if_false': {   'if_false': {   'if_false': {   'if_false': None,
-                                                                                       'if_true': {   'conditions': [   {   'left': {   'type': 'constant',
-                                                                                                                                        'value': 'GateRightPyramid'},
+                                                                                       'if_true': {   'conditions': [   {   'left': {   'attr': 'time_keys_unlock',
+                                                                                                                                        'object': {   'name': 'self',
+                                                                                                                                                      'type': 'name'},
+                                                                                                                                        'type': 'attribute'},
                                                                                                                             'op': '==',
                                                                                                                             'right': {   'name': 'gate',
                                                                                                                                          'type': 'name'},
@@ -96,8 +119,10 @@ _HELPER_DEFINITIONS = {   'can_break_walls': {'type': 'constant', 'value': True}
                                                                                                                 'value': 'Time'},
                                                                                                    'type': 'compare'},
                                                                                        'type': 'conditional'},
-                                                                       'if_true': {   'conditions': [   {   'left': {   'type': 'constant',
-                                                                                                                        'value': 'GateLakeSereneRight'},
+                                                                       'if_true': {   'conditions': [   {   'left': {   'attr': 'past_keys_unlock',
+                                                                                                                        'object': {   'name': 'self',
+                                                                                                                                      'type': 'name'},
+                                                                                                                        'type': 'attribute'},
                                                                                                             'op': '==',
                                                                                                             'right': {   'name': 'gate',
                                                                                                                          'type': 'name'},
@@ -114,8 +139,10 @@ _HELPER_DEFINITIONS = {   'can_break_walls': {'type': 'constant', 'value': True}
                                                                                                 'value': 'Past'},
                                                                                    'type': 'compare'},
                                                                        'type': 'conditional'},
-                                                       'if_true': {   'conditions': [   {   'left': {   'type': 'constant',
-                                                                                                        'value': 'GateSealedSirensCave'},
+                                                       'if_true': {   'conditions': [   {   'left': {   'attr': 'present_keys_unlock',
+                                                                                                        'object': {   'name': 'self',
+                                                                                                                      'type': 'name'},
+                                                                                                        'type': 'attribute'},
                                                                                             'op': '==',
                                                                                             'right': {   'name': 'gate',
                                                                                                          'type': 'name'},
@@ -129,32 +156,26 @@ _HELPER_DEFINITIONS = {   'can_break_walls': {'type': 'constant', 'value': True}
                                                                    'right': {'type': 'constant', 'value': 'Present'},
                                                                    'type': 'compare'},
                                                        'type': 'conditional'},
-                                       'if_true': {   'left': {'type': 'constant', 'value': 'GateLakeSereneRight'},
+                                       'if_true': {   'left': {   'attr': 'pyramid_keys_unlock',
+                                                                  'object': {'name': 'self', 'type': 'name'},
+                                                                  'type': 'attribute'},
                                                       'op': '==',
                                                       'right': {'name': 'gate', 'type': 'name'},
                                                       'type': 'compare'},
-                                       'test': {'condition': {'type': 'constant', 'value': False}, 'type': 'not'},
+                                       'test': {   'condition': {   'attr': 'flag_unchained_keys',
+                                                                    'object': {'name': 'self', 'type': 'name'},
+                                                                    'type': 'attribute'},
+                                                   'type': 'not'},
                                        'type': 'conditional'},
                            'params': ['era', 'gate']},
     'has_doublejump': {   'conditions': [   {'item': 'Celestial Sash', 'type': 'item_check'},
                                             {'item': 'Lightwall', 'type': 'item_check'},
                                             {'item': 'Succubus Hairpin', 'type': 'item_check'}],
                           'type': 'or'},
-    'has_doublejump_of_npc': {   'conditions': [   {   'conditions': [   {   'item': 'Celestial Sash',
-                                                                             'type': 'item_check'},
-                                                                         {'item': 'Lightwall', 'type': 'item_check'}],
-                                                       'type': 'or'},
+    'has_doublejump_of_npc': {   'conditions': [   {'name': 'has_upwarddash', 'type': 'helper'},
                                                    {   'conditions': [   {   'item': 'Timespinner Wheel',
                                                                              'type': 'item_check'},
-                                                                         {   'conditions': [   {   'item': 'Celestial '
-                                                                                                           'Sash',
-                                                                                                   'type': 'item_check'},
-                                                                                               {   'item': 'Lightwall',
-                                                                                                   'type': 'item_check'},
-                                                                                               {   'item': 'Succubus '
-                                                                                                           'Hairpin',
-                                                                                                   'type': 'item_check'}],
-                                                                             'type': 'or'}],
+                                                                         {'name': 'has_doublejump', 'type': 'helper'}],
                                                        'type': 'and'}],
                                  'type': 'or'},
     'has_fastjump_on_npc': {   'conditions': [   {'item': 'Talaria Attachment', 'type': 'item_check'},
@@ -165,30 +186,26 @@ _HELPER_DEFINITIONS = {   'can_break_walls': {'type': 'constant', 'value': True}
                                       {'item': 'Infernal Flames', 'type': 'item_check'},
                                       {'item': 'Pyro Ring', 'type': 'item_check'}],
                     'type': 'or'},
-    'has_forwarddash_doublejump': {   'conditions': [   {   'conditions': [   {   'item': 'Celestial Sash',
-                                                                                  'type': 'item_check'},
-                                                                              {   'item': 'Lightwall',
-                                                                                  'type': 'item_check'}],
-                                                            'type': 'or'},
+    'has_forwarddash_doublejump': {   'conditions': [   {'name': 'has_upwarddash', 'type': 'helper'},
                                                         {   'conditions': [   {   'item': 'Talaria Attachment',
                                                                                   'type': 'item_check'},
-                                                                              {   'conditions': [   {   'item': 'Celestial '
-                                                                                                                'Sash',
-                                                                                                        'type': 'item_check'},
-                                                                                                    {   'item': 'Lightwall',
-                                                                                                        'type': 'item_check'},
-                                                                                                    {   'item': 'Succubus '
-                                                                                                                'Hairpin',
-                                                                                                        'type': 'item_check'}],
-                                                                                  'type': 'or'}],
+                                                                              {   'name': 'has_doublejump',
+                                                                                  'type': 'helper'}],
                                                             'type': 'and'}],
                                       'type': 'or'},
     'has_keycard_A': {'item': 'Security Keycard A', 'type': 'item_check'},
-    'has_keycard_B': {   'args': [   {   'elements': [   {'type': 'constant', 'value': 'Security Keycard A'},
-                                                         {'type': 'constant', 'value': 'Security Keycard B'}],
-                                         'type': 'set'}],
-                         'method': 'has_any',
-                         'type': 'state_method'},
+    'has_keycard_B': {   'if_false': {   'args': [   {   'elements': [   {   'type': 'constant',
+                                                                             'value': 'Security Keycard A'},
+                                                                         {   'type': 'constant',
+                                                                             'value': 'Security Keycard B'}],
+                                                         'type': 'set'}],
+                                         'method': 'has_any',
+                                         'type': 'state_method'},
+                         'if_true': {'item': 'Security Keycard B', 'type': 'item_check'},
+                         'test': {   'attr': 'flag_specific_keycards',
+                                     'object': {'name': 'self', 'type': 'name'},
+                                     'type': 'attribute'},
+                         'type': 'conditional'},
     'has_pink': {   'conditions': [   {'item': 'Plasma Geyser', 'type': 'item_check'},
                                       {'item': 'Plasma Orb', 'type': 'item_check'},
                                       {'item': 'Royal Ring', 'type': 'item_check'}],
@@ -356,7 +373,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Main Lab -> The lab (upper)", player),
-        And(HelperCall(helper_func=_timespinnerworldgen_has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump"), Or(Not(True_()), Has('Lab Access Genza')))
+        And(HelperCall(helper_func=_timespinnerworldgen_has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump"), Or(Not(False_()), Has('Lab Access Genza')))
     )
 
     world.set_rule(
@@ -411,7 +428,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Forest -> Castle Ramparts", player),
-        Or(HelperCall(helper_func=_timespinnerworldgen_has_upwarddash, helper_name="has_upwarddash"), Not(True_()), Has('Drawbridge Key'))
+        Or(HelperCall(helper_func=_timespinnerworldgen_has_upwarddash, helper_name="has_upwarddash"), Not(False_()), Has('Drawbridge Key'))
     )
 
     world.set_rule(
@@ -486,7 +503,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Castle Keep -> Royal towers (lower)", player),
-        And(HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump"), Or(HelperCall(helper_func=_timespinnerworldgen_has_pink, helper_name="has_pink"), Not(True_())))
+        And(HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump"), Or(HelperCall(helper_func=_timespinnerworldgen_has_pink, helper_name="has_pink"), Not(False_())))
     )
 
     world.set_rule(
@@ -626,7 +643,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Ancient Pyramid (entrance)", player),
-        Or(And(False_(), Not(True_())), HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateGyre',)), HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateLeftPyramid',)))
+        Or(And(False_(), Not(False_())), HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateGyre',)), HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateLeftPyramid',)))
     )
 
     world.set_rule(
@@ -806,17 +823,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lab: Trash jump room", player),
-        Or(HelperCall(helper_func=_timespinnerworldgen_has_doublejump_of_npc, helper_name="has_doublejump_of_npc"), Not(True_()))
+        Or(HelperCall(helper_func=_timespinnerworldgen_has_doublejump_of_npc, helper_name="has_doublejump_of_npc"), Not(False_()))
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Experiment #13", player),
-        Or(Not(True_()), Has('Lab Access Experiment'))
+        Or(Not(False_()), Has('Lab Access Experiment'))
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Sentry platform terminal (Origins)", player),
-        And(Or(HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateDadsTower',)), Not(True_()), Has('Lab Access Genza')), Has('Tablet'))
+        And(Or(HelperCall(helper_func=_timespinnerworldgen_can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateDadsTower',)), Not(False_()), Has('Lab Access Genza')), Has('Tablet'))
     )
 
     world.set_rule(
@@ -831,7 +848,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lab: Dynamo Works", player),
-        Or(And(HelperCall(helper_func=_timespinnerworldgen_has_upwarddash, helper_name="has_upwarddash"), Has('Lab Access Dynamo')), Not(True_()))
+        Or(And(HelperCall(helper_func=_timespinnerworldgen_has_upwarddash, helper_name="has_upwarddash"), Has('Lab Access Dynamo')), Not(False_()))
     )
 
     world.set_rule(

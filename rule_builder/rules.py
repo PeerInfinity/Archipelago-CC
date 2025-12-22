@@ -2918,7 +2918,16 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
         if self.options:
             result["options"] = [o.to_dict() for o in self.options]
         if self.args:
-            result["args"] = list(self.args)
+            # Convert boolean args to AST format for frontend compatibility
+            exported_args = []
+            for arg in self.args:
+                if arg is True:
+                    exported_args.append({"rule": "True_"})
+                elif arg is False:
+                    exported_args.append({"rule": "False_"})
+                else:
+                    exported_args.append(arg)
+            result["args"] = exported_args
         return result
 
     class Resolved(Rule.Resolved):
@@ -3013,7 +3022,27 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
                 "_original_ast_type": "helper",
             }
             if self.args:
-                result["args"] = list(self.args)
+                # Convert args to proper rule format for frontend compatibility
+                converted_args = []
+                for arg in self.args:
+                    if arg is True:
+                        # Booleans use True_/False_ rules (required by shapez and others)
+                        converted_args.append({"rule": "True_"})
+                    elif arg is False:
+                        converted_args.append({"rule": "False_"})
+                    elif isinstance(arg, (int, float, str)):
+                        # Other primitives wrap in Constant
+                        converted_args.append({
+                            "rule": "Constant",
+                            "args": {"value": arg},
+                        })
+                    elif isinstance(arg, dict):
+                        # Already a rule dict
+                        converted_args.append(arg)
+                    else:
+                        # Fallback for other types
+                        converted_args.append(arg)
+                result["args"] = converted_args
             return result
 
 

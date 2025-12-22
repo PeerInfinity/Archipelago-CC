@@ -519,6 +519,7 @@ class RuleCodeGenerator:
                     'HasFromList': 'has_from_list',
                     'HasFromListUnique': 'has_from_list_unique',
                     'Count': 'count_check',
+                    'CountItem': 'count_item',
                     'CanReachRegion': 'can_reach',
                     'CanReachLocation': 'location_check',
                     'CanReachEntrance': 'entrance_check',
@@ -530,10 +531,13 @@ class RuleCodeGenerator:
                     'Constant': 'constant',
                     'AST_all_of': 'ast_all_of',
                     'AST_any_of': 'ast_any_of',
+                    'AST_prog_item_count': 'prog_item_count',  # State counter items like coins
                     'Arithmetic': 'binary_op',
                     'SettingValue': 'setting_value',
                     'Conditional': 'conditional',
                     'Name': 'name',  # Option/setting references
+                    'CountItem': 'count_item',  # Item count for arithmetic/comparisons
+                    'AST_min': 'min',  # Min operation from AST export
                 }
                 rule_type = rb_to_type.get(rb_rule, '')
 
@@ -551,6 +555,26 @@ class RuleCodeGenerator:
                 if rb_rule == 'AST_count_true':
                     args = rule.get('args', {})
                     return self._convert_count_true_from_args(args)
+
+                # Check if this is an AST_comparison rule (comparison operators from AST format)
+                if rb_rule == 'AST_comparison':
+                    args = rule.get('args', {})
+                    compare_rule = {
+                        'type': 'compare',
+                        'left': args.get('left', {}),
+                        'op': args.get('op', ''),
+                        'right': args.get('right', {})
+                    }
+                    return self._convert_compare(compare_rule)
+
+                # Check if this is an AST_setting_value rule (setting references from AST format)
+                if rb_rule == 'AST_setting_value':
+                    args = rule.get('args', {})
+                    setting_rule = {
+                        'type': 'setting_value',
+                        'setting': args.get('setting', '')
+                    }
+                    return self._convert_setting_value(setting_rule)
 
         # Dispatch based on rule type
         converters = {
@@ -609,6 +633,9 @@ class RuleCodeGenerator:
         if rb_rule == 'Has':
             item_name = args.get('item_name', '')
             count = args.get('count', 1)
+            # count=0 means "always true" (no items required)
+            if count <= 0:
+                return self._make_bool_constant(True)
             self.required_imports.add('Has')
             if count > 1:
                 return f'Has({repr(item_name)}, {count})'
@@ -647,8 +674,9 @@ class RuleCodeGenerator:
         if rb_rule == 'Count':
             item_name = args.get('item_name', '')
             count = args.get('count', 1)
-            self.required_imports.add('Count')
-            return f'Count({repr(item_name)}, {count})'
+            self.required_imports.add('Compare')
+            self.required_imports.add('CountItem')
+            return f'Compare(CountItem({repr(item_name)}), ">=", {count})'
 
         if rb_rule == 'HasAll':
             items = args.get('items', [])
@@ -813,6 +841,29 @@ class RuleCodeGenerator:
         # Handle CountItem rule (item count for comparisons)
         if rb_rule == 'CountItem':
             item_name = args.get('item_name', '')
+            return self._make_count_item(item_name)
+
+        # Handle AST_min rule (min operation from AST export)
+        if rb_rule == 'AST_min':
+            # The args are nested under args.args
+            min_args = args.get('args', [])
+            if len(min_args) >= 2:
+                self.required_imports.add('MinValue')
+                left_code = self._convert_arithmetic_operand(min_args[0])
+                right_code = self._convert_arithmetic_operand(min_args[1])
+                return f'MinValue({left_code}, {right_code})'
+            return 'MinValue(0, 0)'
+
+        # Handle AST_prog_item_count rule (for state counter items like coins)
+        # This converts {"rule": "AST_prog_item_count", "args": {"key": " coins"}}
+        # to CountItem(" coins") for use in Compare expressions
+        if rb_rule == 'AST_prog_item_count':
+            key = args.get('key', '')
+            return self._make_count_item(key)
+
+        # Handle AST_count_item rule (from AST format, counts items for arithmetic)
+        if rb_rule == 'AST_count_item':
+            item_name = args.get('item', '')
             return self._make_count_item(item_name)
 
         if rb_rule == 'AST_block':
@@ -1517,6 +1568,16 @@ class RuleCodeGenerator:
             item_name = rb_args.get('item_name', '')
             return self._make_count_item(item_name)
 
+        if rb_rule == 'AST_min':
+            # Handle AST_min with nested args
+            min_args = rb_args.get('args', [])
+            if len(min_args) >= 2:
+                self.required_imports.add('MinValue')
+                left_code = self._convert_arithmetic_operand(min_args[0])
+                right_code = self._convert_arithmetic_operand(min_args[1])
+                return f'MinValue({left_code}, {right_code})'
+            return 'MinValue(0, 0)'
+
         # For other types, try to convert as a rule
         return self._convert_rule(operand)
 
@@ -1556,6 +1617,11 @@ class RuleCodeGenerator:
         if rb_rule == 'Constant':
             value = operand.get('args', {}).get('value')
             return repr(value)
+
+        # Handle Rule Builder format AST_count_item (e.g., {"rule": "AST_count_item", "args": {"item": "Star"}})
+        if rb_rule == 'AST_count_item':
+            item_name = operand.get('args', {}).get('item', '')
+            return self._make_count_item(item_name)
 
         if op_type == 'count_item':
             # Handle count_item type from rules.json export
@@ -2210,6 +2276,12 @@ class RuleCodeGenerator:
                             arg_strs.append(repr(self.settings[setting]))
                         else:
                             arg_strs.append('None')
+                    elif arg_rule == 'False_':
+                        # Handle Rule Builder format boolean False: {'rule': 'False_'}
+                        arg_strs.append('False')
+                    elif arg_rule == 'True_':
+                        # Handle Rule Builder format boolean True: {'rule': 'True_'}
+                        arg_strs.append('True')
                     else:
                         # For complex args, try to convert
                         arg_strs.append('None')

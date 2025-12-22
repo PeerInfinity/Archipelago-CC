@@ -16,684 +16,84 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _stardewvalleyworldgen_has_quality_fertilizer(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 16)) or ((state.has('Farming Level', player, 9)) and (True) and (_stardewvalleyworldgen_has_any_fish(state, player)))
-
-
-def _stardewvalleyworldgen_has_summer_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Foraging Level', player, 4)) and (_stardewvalleyworldgen_has_spice_berry(state, player)) and (_stardewvalleyworldgen_has_grape(state, player)) and (state.has('Summer', player))
-
-
-def _stardewvalleyworldgen_has_fairy_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fairy Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_bok_choy(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_bok_choy_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_tomato_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Tomato Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_cranberry_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Cranberry Seeds', player)) and (state.has('Fall', player)) and ((state.has('Shipping Bin', player)) or ((True) and (True)) or ((True) and (False)) or ((True) and (False)) or ((True) and (False))) and (True)
-
-
-def _stardewvalleyworldgen_has_mayonnaise_machine(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 2)) and (True) and (True) and (_stardewvalleyworldgen_has_earth_crystal(state, player)) and (state.has('Copper Bar (Logic event)', player))
-
-
-def _stardewvalleyworldgen_has_tea_leaves(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 8)) and (_stardewvalleyworldgen_has_tea_sapling(state, player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_dorado(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Summer', player))
-
-
-def _stardewvalleyworldgen_has_spring_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Foraging Level', player)) and (state.has('Spring', player)) and (state.has('Spring', player)) and (state.has('Spring', player)) and (state.has('Spring', player))
-
-
-def _stardewvalleyworldgen_has_lionfish(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((False) or (False))
-
-
-def _stardewvalleyworldgen_has_large_egg(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (False) and (True) and (False) and (True) and (False))) and (True) and (state.has('Silo', player))
-
-
-def _stardewvalleyworldgen_has_ancient_fruit(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Ancient Seeds', player)) or (state.has('Ancient Seeds Recipe', player))) and (False) and (_stardewvalleyworldgen_has_seed_maker(state, player))
-
-
-def _stardewvalleyworldgen_has_hops_starter(state: "CollectionState", player: int) -> bool:
-    return (state.has('Hops Starter', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_omni_geode(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Pan', player, 2)) or (state.has('Rusty Key', player)) or (False) or (False) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_octopus(state, player))) or (False)
-
-
-def _stardewvalleyworldgen_has_goblin_problem(state: "CollectionState", player: int) -> bool:
-    return (False) and ((state.has('Progressive Fishing Rod', player)) or (_stardewvalleyworldgen_has_void_mayonnaise(state, player)))
-
-
-def _stardewvalleyworldgen_has_fossilized_ribs(state: "CollectionState", player: int) -> bool:
-    return (state.has('Open Professor Snail Cave', player)) and (False)
-
-
-def _stardewvalleyworldgen_has_monster_compendium(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Received Progression Percent', player, 16)) and (((False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((False) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((False) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((False) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((False) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((False) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((False) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((False) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((False) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False))
-
-
-def _stardewvalleyworldgen_has_sweet_gem_berry(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_rare_seed(state, player))
-
-
-def _stardewvalleyworldgen_has_fish_smoker(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 2)) and (_stardewvalleyworldgen_has_hardwood(state, player)) and (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Progressive Fishing Rod', player, 2)) and (_stardewvalleyworldgen_has_cave_jelly(state, player))
-
-
-def _stardewvalleyworldgen_has_mango(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (False) and (_stardewvalleyworldgen_has_mango_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_coffee_bean_starter(state: "CollectionState", player: int) -> bool:
-    return (state.has('Coffee Bean', player)) and (state.has('Received Progression Percent', player, 16)) and (False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player))) and (False)
-
-
-def _stardewvalleyworldgen_has_pineapple_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Pineapple Seeds', player)) and (True) and (True) and (False) and (False)
-
-
-def _stardewvalleyworldgen_has_wheat(state: "CollectionState", player: int) -> bool:
-    return ((False) or (False)) and (_stardewvalleyworldgen_has_wheat_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_keg(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 8)) and (True) and (state.has('Copper Bar (Logic event)', player)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_tapper(state, player))
-
-
-def _stardewvalleyworldgen_has_blobfish(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))
-
-
-def _stardewvalleyworldgen_has_crab_pot(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))
-
-
-def _stardewvalleyworldgen_has_chicken_egg(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_egg(state, player)) or (_stardewvalleyworldgen_has_egg_brown(state, player)) or (_stardewvalleyworldgen_has_large_egg(state, player)) or (_stardewvalleyworldgen_has_large_egg_brown(state, player))
-
-
-def _stardewvalleyworldgen_has_powdermelon_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Powdermelon Seeds', player)) and (True) and (True) and (state.has('Foraging Level', player)) and (False)
-
-
-def _stardewvalleyworldgen_has_slime_egg_press(state: "CollectionState", player: int) -> bool:
-    return (state.has('Combat Level', player, 6)) and (_stardewvalleyworldgen_has_coal(state, player)) and (_stardewvalleyworldgen_has_fire_quartz(state, player)) and (_stardewvalleyworldgen_has_battery_pack(state, player))
-
-
-def _stardewvalleyworldgen_has_blackberry(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fall', player)) or (state.has('Fruit Bats', player))
-
-
-def _stardewvalleyworldgen_has_aquamarine(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((False) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_void_mayonnaise(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_mayonnaise_machine(state, player)) and (_stardewvalleyworldgen_has_void_egg_starter(state, player))
-
-
-def _stardewvalleyworldgen_has_woodcutter_s_weekly(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (False)
-
-
-def _stardewvalleyworldgen_has_jack_be_nimble_jack_be_thick(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Received Progression Percent', player, 4)) and (True)) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False))
-
-
-def _stardewvalleyworldgen_has_jade(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((False) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_lingcod(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Winter', player))
-
-
-def _stardewvalleyworldgen_has_cave_jelly(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (False)
-
-
-def _stardewvalleyworldgen_has_lobster(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))
-
-
-def _stardewvalleyworldgen_has_wild_plum(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fall', player)) or (state.has('Fruit Bats', player))
-
-
-def _stardewvalleyworldgen_has_tilapia(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_beet_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Beet Seeds', player)) and (state.has('Fall', player)) and (True) and (False)
-
-
-def _stardewvalleyworldgen_has_stingray(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (False)
-
-
-def _stardewvalleyworldgen_has_stardew_valley_almanac(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (False)
-
-
-def _stardewvalleyworldgen_has_common_mushroom(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fall', player)) or (state.has('Mushroom Boxes', player)) or ((state.has('Spring', player)) and (False))
-
-
-def _stardewvalleyworldgen_has_spice_berry(state: "CollectionState", player: int) -> bool:
-    return (state.has('Summer', player)) or (state.has('Fruit Bats', player))
-
-
-def _stardewvalleyworldgen_has_amaranth_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Amaranth Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_largemouth_bass(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4))
-
-
-def _stardewvalleyworldgen_has_recycling_machine(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fishing Level', player, 4)) and (True) and (True) and (state.has('Iron Bar (Logic event)', player))
-
-
-def _stardewvalleyworldgen_has_cherry_bomb(state: "CollectionState", player: int) -> bool:
-    return (state.has('Mining Level', player)) and (state.has('Copper Ore (Logic event)', player)) and (_stardewvalleyworldgen_has_coal(state, player))
-
-
-def _stardewvalleyworldgen_has_crimsonfish(state: "CollectionState", player: int) -> bool:
-    return (state.has('Summer', player)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (False)
-
-
-def _stardewvalleyworldgen_has_tulip_bulb(state: "CollectionState", player: int) -> bool:
-    return (state.has('Tulip Bulb', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_apple_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Apple Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_emerald(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((False) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_blue_discus(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (False)
-
-
-def _stardewvalleyworldgen_has_sunflower(state: "CollectionState", player: int) -> bool:
-    return ((False) or (False)) and (_stardewvalleyworldgen_has_sunflower_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_pearl(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_blobfish(state, player))) or (_stardewvalleyworldgen_has_artifact_trove(state, player))
-
-
-def _stardewvalleyworldgen_has_cranberry_candy(state: "CollectionState", player: int) -> bool:
-    return (state.has('The Queen of Sauce', player)) and (state.has('Winter', player)) and (False) and (_stardewvalleyworldgen_has_apple(state, player)) and (_stardewvalleyworldgen_has_cranberries(state, player)) and (True)
-
-
-def _stardewvalleyworldgen_has_duck_feather(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 2)) and (True) and (True) and (state.has('Silo', player))
-
-
-def _stardewvalleyworldgen_has_mining_monthly(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (False)
-
-
-def _stardewvalleyworldgen_has_summer_squash_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Summer Squash Seeds', player)) and (True) and (True) and (True) and (False)
-
-
-def _stardewvalleyworldgen_has_peach_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Peach Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_jotpk_big_buff(state: "CollectionState", player: int) -> bool:
-    return False
-
-
-def _stardewvalleyworldgen_has_pineapple(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_pineapple_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_rice_shoot(state: "CollectionState", player: int) -> bool:
-    return (state.has('Rice Shoot', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_combat_quarterly(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (False)
-
-
-def _stardewvalleyworldgen_has_walleye(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Fall', player))
-
-
-def _stardewvalleyworldgen_has_corn_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Corn Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_price_catalogue(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (False)
-
-
-def _stardewvalleyworldgen_has_jotpk_max_buff(state: "CollectionState", player: int) -> bool:
-    return False
+def _stardewvalleyworldgen_has_amaranth(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_amaranth_seeds(state, player))
 
 
 def _stardewvalleyworldgen_has_ruby(state: "CollectionState", player: int) -> bool:
     return (state.has('Received Progression Percent', player, 28)) and ((False) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
 
 
-def _stardewvalleyworldgen_has_explosive_ammo(state: "CollectionState", player: int) -> bool:
-    return (state.has('Combat Level', player, 8)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_coal(state, player))
+def _stardewvalleyworldgen_has_magma_geode(state: "CollectionState", player: int) -> bool:
+    return (False) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_lava_eel(state, player)))
 
 
-def _stardewvalleyworldgen_has_potato(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_potato_seeds(state, player))
+def _stardewvalleyworldgen_has_mango_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Mango Sapling', player)) and (state.has('Received Progression Percent', player)) and (True) and (True) and (False) and (False)
 
 
-def _stardewvalleyworldgen_has_lava_eel(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (False)
+def _stardewvalleyworldgen_has_spring_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Foraging Level', player)) and (state.has('Spring', player)) and (state.has('Spring', player)) and (state.has('Spring', player)) and (state.has('Spring', player))
 
 
-def _stardewvalleyworldgen_has_cranberries(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_cranberry_seeds(state, player))
+def _stardewvalleyworldgen_has_shad(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))
 
 
-def _stardewvalleyworldgen_has_horse_the_book(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 6)) and (True) and (False)
-
-
-def _stardewvalleyworldgen_has_purple_mushroom(state: "CollectionState", player: int) -> bool:
-    return (state.has('Mushroom Boxes', player)) or (False) or (False)
-
-
-def _stardewvalleyworldgen_has_bat_wing(state: "CollectionState", player: int) -> bool:
-    return (False) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (False))
-
-
-def _stardewvalleyworldgen_has_lightning_rod(state: "CollectionState", player: int) -> bool:
-    return (state.has('Foraging Level', player, 6)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_refined_quartz(state, player)) and (_stardewvalleyworldgen_has_bat_wing(state, player))
-
-
-def _stardewvalleyworldgen_has_red_cabbage_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Red Cabbage Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_cauliflower_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Cauliflower Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_fossilized_spine(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and (False)
-
-
-def _stardewvalleyworldgen_has_apricot(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (False) and (_stardewvalleyworldgen_has_apricot_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_sunflower_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Sunflower Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_bok_choy_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Bok Choy Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_any_fish(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (False)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.has('Summer', player))) or ((state.has('Winter', player)) and (state.has('Progressive Fishing Rod', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Fall', player))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (False)) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Summer', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (False)) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Fall', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (False)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Fall', player))) or ((state.has('Summer', player)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (False)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Spring', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (False)) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (False)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((False) or (False))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (False)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (False)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (False)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((False) or (False))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (False)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (False)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (False))
-
-
-def _stardewvalleyworldgen_has_bone_fragment(state: "CollectionState", player: int) -> bool:
-    return (False) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3))))
-
-
-def _stardewvalleyworldgen_has_super_cucumber(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and ((state.has('Summer', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_topaz(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((False) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_orange_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Orange Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_battery_pack(state: "CollectionState", player: int) -> bool:
-    return ((_stardewvalleyworldgen_has_lightning_rod(state, player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or (_stardewvalleyworldgen_has_solar_panel(state, player))
-
-
-def _stardewvalleyworldgen_has_large_egg_brown(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (False) and (True) and (False) and (True) and (False))) and (True) and (state.has('Silo', player))
-
-
-def _stardewvalleyworldgen_has_taro_root(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_taro_tuber(state, player))
-
-
-def _stardewvalleyworldgen_has_hardwood(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Axe', player)) and ((False) or (False))
-
-
-def _stardewvalleyworldgen_has_squid(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))
-
-
-def _stardewvalleyworldgen_has_blueberry_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Blueberry Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_ol_slitherlegs(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 6)) and (True) and (False)
-
-
-def _stardewvalleyworldgen_has_the_art_o_crabbing(state: "CollectionState", player: int) -> bool:
-    return (state.has("Book: The Art O' Crabbing", player)) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False))
-
-
-def _stardewvalleyworldgen_has_oil_maker(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 8)) and (False) and (_stardewvalleyworldgen_has_hardwood(state, player)) and (state.has('Gold Bar (Logic event)', player))
-
-
-def _stardewvalleyworldgen_has_parsnip(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_parsnip_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_flute_block(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fall', player)) and (True) and (True) and (state.has('Copper Ore (Logic event)', player)) and (True)
-
-
-def _stardewvalleyworldgen_has_taro_tuber(state: "CollectionState", player: int) -> bool:
-    return (state.has('Taro Tuber', player)) and (True) and (True) and (_stardewvalleyworldgen_has_bone_fragment(state, player)) and (False)
-
-
-def _stardewvalleyworldgen_has_apple(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (False) and (_stardewvalleyworldgen_has_apple_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_blueberry(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_blueberry_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_cactus_fruit(state: "CollectionState", player: int) -> bool:
-    return (False) or (((False) or (False)) and (_stardewvalleyworldgen_has_cactus_seeds(state, player)))
-
-
-def _stardewvalleyworldgen_has_preserves_jar(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 4)) and (True) and (True) and (_stardewvalleyworldgen_has_coal(state, player))
-
-
-def _stardewvalleyworldgen_has_broken_cd(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))
-
-
-def _stardewvalleyworldgen_has_sashimi(state: "CollectionState", player: int) -> bool:
-    return (state.has('Winter', player)) and (True) and (False) and (_stardewvalleyworldgen_has_any_fish(state, player))
-
-
-def _stardewvalleyworldgen_has_pickles_tea_leaves(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_tea_leaves(state, player)) and (_stardewvalleyworldgen_has_preserves_jar(state, player))
-
-
-def _stardewvalleyworldgen_has_wheat_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Wheat Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_grape(state: "CollectionState", player: int) -> bool:
-    return (state.has('Summer', player)) or ((False) and (_stardewvalleyworldgen_has_grape_starter(state, player)))
-
-
-def _stardewvalleyworldgen_has_red_cabbage(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_red_cabbage_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_kale_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Kale Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_pepper_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Pepper Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_friendship_101(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Received Progression Percent', player, 16)) and (True) and (state.has('Received Progression Percent', player, 8))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False))
-
-
-def _stardewvalleyworldgen_has_pufferfish(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Summer', player))
-
-
-def _stardewvalleyworldgen_has_tea_sapling(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Winter', player)) and (True) and (False) and (_stardewvalleyworldgen_has_summer_seeds(state, player)) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (False) and (_stardewvalleyworldgen_has_spring_seeds(state, player)) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (False) and (_stardewvalleyworldgen_has_fall_seeds(state, player)) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (False) and (_stardewvalleyworldgen_has_winter_seeds(state, player)) and (True) and (True))
-
-
-def _stardewvalleyworldgen_has_scarecrow(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player)) and (True) and (_stardewvalleyworldgen_has_coal(state, player)) and (True)
-
-
-def _stardewvalleyworldgen_has_fire_quartz(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Pan', player, 4)) or (False) or ((_stardewvalleyworldgen_has_magma_geode(state, player)) and (_stardewvalleyworldgen_has_omni_geode(state, player)) and (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_duck_egg(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 2)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_pomegranate(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (False) and (_stardewvalleyworldgen_has_pomegranate_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_starfruit(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_starfruit_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_winter_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Foraging Level', player, 7)) and (state.has('Winter', player)) and (state.has('Winter', player)) and (state.has('Winter', player)) and (state.has('Winter', player))
-
-
-def _stardewvalleyworldgen_has_jazz_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Jazz Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_pumpkin_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Pumpkin Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_solar_essence(state: "CollectionState", player: int) -> bool:
-    return (False) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (False))
-
-
-def _stardewvalleyworldgen_has_moss(state: "CollectionState", player: int) -> bool:
-    return (state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player))
-
-
-def _stardewvalleyworldgen_has_ancient_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Ancient Seeds Recipe', player)) and (state.has('Received Progression Percent', player, 20))
-
-
-def _stardewvalleyworldgen_has_cherry_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Cherry Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_halibut(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Winter', player)))
-
-
-def _stardewvalleyworldgen_has_rhubarb_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Rhubarb Seeds', player)) and (state.has('Spring', player)) and (True) and (False)
-
-
-def _stardewvalleyworldgen_has_wool(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 3)) and (True) and (True)) or ((state.has('Shipping Bin', player)) and (state.has('Progressive Barn', player, 3)) and (True) and (True))
-
-
-def _stardewvalleyworldgen_has_way_of_the_wind_pt_1(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 3)) and (True) and (False)
-
-
-def _stardewvalleyworldgen_has_queen_of_sauce_cookbook(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 12)) and (state.has('Progressive Slingshot', player)) and (state.has('Progressive Pickaxe', player, 4)) and (state.has('Combat Level', player, 8)) and (state.has('Mining Level', player, 8)) and (state.has('Fishing Level', player, 10)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Open Professor Snail Cave', player)) and (True) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (_stardewvalleyworldgen_has_banana(state, player)) and (_stardewvalleyworldgen_has_amethyst(state, player)) and (_stardewvalleyworldgen_has_aquamarine(state, player)) and (_stardewvalleyworldgen_has_emerald(state, player)) and (_stardewvalleyworldgen_has_ruby(state, player)) and (_stardewvalleyworldgen_has_topaz(state, player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5))) and (False) and (_stardewvalleyworldgen_has_flute_block(state, player)) and (_stardewvalleyworldgen_has_melon_seeds(state, player)) and (_stardewvalleyworldgen_has_wheat_seeds(state, player)) and (_stardewvalleyworldgen_has_garlic_seeds(state, player)) and (False) and (False) and (_stardewvalleyworldgen_has_fossilized_ribs(state, player)) and (False) and (_stardewvalleyworldgen_has_fossilized_spine(state, player)) and (_stardewvalleyworldgen_has_fossilized_tail(state, player)) and (False) and (False) and (False) and (False) and (False) and (False) and (False)
-
-
-def _stardewvalleyworldgen_has_broken_glasses(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))
-
-
-def _stardewvalleyworldgen_has_any_egg(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_chicken_egg(state, player)) or (_stardewvalleyworldgen_has_duck_egg(state, player))
-
-
-def _stardewvalleyworldgen_has_sardine(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)) or (state.has('Winter', player)))
-
-
-def _stardewvalleyworldgen_has_truffle(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 4)) and (state.has('Progressive Barn', player, 3)) and (True) and (True) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_starfruit_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Starfruit Seeds', player)) and (state.has('Summer', player)) and ((state.has('Shipping Bin', player)) or ((True) and (True)) or ((True) and (False)) or ((True) and (False)) or ((True) and (False))) and (False)
-
-
-def _stardewvalleyworldgen_has_raccoon_journal(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False)) or ((state.has('Received Progression Percent', player, 2)) and (True) and (True) and (True) and (False))
-
-
-def _stardewvalleyworldgen_has_diamond(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((False) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_pancakes(state: "CollectionState", player: int) -> bool:
-    return (state.has('The Queen of Sauce', player)) and (state.has('Summer', player)) and (False) and (_stardewvalleyworldgen_has_chicken_egg(state, player)) and (True)
-
-
-def _stardewvalleyworldgen_has_jotpk_medium_buff(state: "CollectionState", player: int) -> bool:
-    return False
-
-
-def _stardewvalleyworldgen_has_the_alleyway_buffet(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Progressive Axe', player, 2)) and (state.has('Progressive Pickaxe', player, 2))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False))
-
-
-def _stardewvalleyworldgen_has_animal_catalogue(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 16)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_legend(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Spring', player))
-
-
-def _stardewvalleyworldgen_has_artichoke_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Artichoke Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_broccoli_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Broccoli Seeds', player)) and (True) and (True) and (_stardewvalleyworldgen_has_moss(state, player)) and (False)
-
-
-def _stardewvalleyworldgen_has_banana(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (False) and (_stardewvalleyworldgen_has_banana_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_banana_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Banana Sapling', player)) and (True) and (True) and (False) and (False)
+def _stardewvalleyworldgen_has_earth_crystal(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Pan', player, 4)) or (False) or ((False) and (_stardewvalleyworldgen_has_omni_geode(state, player)) and (_stardewvalleyworldgen_has_fishing_chest(state, player)))
 
 
 def _stardewvalleyworldgen_has_furnace(state: "CollectionState", player: int) -> bool:
     return (state.has('Mining Level', player)) and (False) and (state.has('Copper Ore (Logic event)', player)) and (True)
 
 
-def _stardewvalleyworldgen_has_spangle_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Spangle Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+def _stardewvalleyworldgen_has_keg(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 8)) and (True) and (state.has('Copper Bar (Logic event)', player)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_tapper(state, player))
 
 
-def _stardewvalleyworldgen_has_quality_bobber(state: "CollectionState", player: int) -> bool:
-    return (state.has('Quality Bobber Recipe', player)) and (state.has('Copper Bar (Logic event)', player)) and (True) and (_stardewvalleyworldgen_has_solar_essence(state, player))
+def _stardewvalleyworldgen_has_rare_seed(state: "CollectionState", player: int) -> bool:
+    return (state.has('Rare Seed', player)) and ((state.has('Spring', player)) or (state.has('Summer', player))) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (False) and (True) and (False) and (True) and (False))) and (False)
 
 
-def _stardewvalleyworldgen_has_void_essence(state: "CollectionState", player: int) -> bool:
-    return (False) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (False))
+def _stardewvalleyworldgen_has_monster_compendium(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Received Progression Percent', player, 16)) and (((False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((False) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((False) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((False) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((False) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((False) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((False) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((False) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((False) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((False) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False))
 
 
-def _stardewvalleyworldgen_has_grape_starter(state: "CollectionState", player: int) -> bool:
-    return (state.has('Grape Starter', player)) and (state.has('Fall', player)) and (True) and (True)
+def _stardewvalleyworldgen_has_stardew_valley_almanac(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (False)
 
 
-def _stardewvalleyworldgen_has_orange(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (False) and (_stardewvalleyworldgen_has_orange_sapling(state, player))
+def _stardewvalleyworldgen_has_truffle(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 4)) and (state.has('Progressive Barn', player, 3)) and (True) and (True) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))
 
 
-def _stardewvalleyworldgen_has_truffle_oil(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_truffle(state, player)) and (_stardewvalleyworldgen_has_oil_maker(state, player))
+def _stardewvalleyworldgen_has_bait(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fishing Level', player, 2)) and (False)
 
 
-def _stardewvalleyworldgen_has_jewels_of_the_sea(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Received Progression Percent', player, 20)) and (_stardewvalleyworldgen_has_fishing_chest(state, player))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False))
+def _stardewvalleyworldgen_has_pineapple(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_pineapple_seeds(state, player))
 
 
-def _stardewvalleyworldgen_has_rabbit_s_foot(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 3)) and (True) and (True) and (state.has('Silo', player))
+def _stardewvalleyworldgen_has_apricot(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (False) and (_stardewvalleyworldgen_has_apricot_sapling(state, player))
 
 
-def _stardewvalleyworldgen_has_void_salmon(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (False)
+def _stardewvalleyworldgen_has_strawberry_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Strawberry Seeds', player)) and (state.has('Spring', player)) and (True) and (False)
 
 
-def _stardewvalleyworldgen_has_carrot_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Carrot Seeds', player)) and (True) and (True) and (state.has('Foraging Level', player)) and (False)
+def _stardewvalleyworldgen_has_starfruit_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Starfruit Seeds', player)) and (state.has('Summer', player)) and ((state.has('Shipping Bin', player)) or ((True) and (True)) or ((True) and (False)) or ((True) and (False)) or ((True) and (False))) and (False)
 
 
-def _stardewvalleyworldgen_has_bullhead(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3))
+def _stardewvalleyworldgen_has_pancakes(state: "CollectionState", player: int) -> bool:
+    return (state.has('The Queen of Sauce', player)) and (state.has('Summer', player)) and (False) and (_stardewvalleyworldgen_has_chicken_egg(state, player)) and (True)
 
 
-def _stardewvalleyworldgen_has_kale(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_kale_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_seaweed(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and (False)
-
-
-def _stardewvalleyworldgen_has_solar_panel(state: "CollectionState", player: int) -> bool:
-    return (state.has('Solar Panel Recipe', player)) and (_stardewvalleyworldgen_has_refined_quartz(state, player)) and (state.has('Iron Bar (Logic event)', player)) and (state.has('Gold Bar (Logic event)', player))
-
-
-def _stardewvalleyworldgen_has_midnight_carp(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Fall', player)) or (state.has('Winter', player)))
-
-
-def _stardewvalleyworldgen_has_void_egg_starter(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Shipping Bin', player)) and (False)) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_void_salmon(state, player)))
-
-
-def _stardewvalleyworldgen_has_bomb(state: "CollectionState", player: int) -> bool:
-    return (state.has('Mining Level', player, 6)) and (state.has('Iron Ore (Logic event)', player)) and (_stardewvalleyworldgen_has_coal(state, player))
-
-
-def _stardewvalleyworldgen_has_golden_pumpkin(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fall', player)) or (_stardewvalleyworldgen_has_artifact_trove(state, player))
-
-
-def _stardewvalleyworldgen_has_tree_fertilizer(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Foraging Level', player, 7)) and (True) and (True)) or ((state.has('Foraging Level', player, 7)) and (True) and (True))
+def _stardewvalleyworldgen_has_deluxe_fertilizer(state: "CollectionState", player: int) -> bool:
+    return (state.has('Deluxe Fertilizer Recipe', player)) and (state.has('Iridium Bar (Logic event)', player)) and (True)
 
 
 def _stardewvalleyworldgen_has_egg(state: "CollectionState", player: int) -> bool:
@@ -704,288 +104,888 @@ def _stardewvalleyworldgen_has_juice_potato(state: "CollectionState", player: in
     return (_stardewvalleyworldgen_has_potato(state, player)) and (_stardewvalleyworldgen_has_keg(state, player))
 
 
-def _stardewvalleyworldgen_has_fall_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Foraging Level', player, 6)) and (_stardewvalleyworldgen_has_common_mushroom(state, player)) and (_stardewvalleyworldgen_has_wild_plum(state, player)) and (state.has('Fall', player)) and (_stardewvalleyworldgen_has_blackberry(state, player))
+def _stardewvalleyworldgen_has_fish_smoker(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 2)) and (_stardewvalleyworldgen_has_hardwood(state, player)) and (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Progressive Fishing Rod', player, 2)) and (_stardewvalleyworldgen_has_cave_jelly(state, player))
 
 
-def _stardewvalleyworldgen_has_pomegranate_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Pomegranate Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
+def _stardewvalleyworldgen_has_blobfish(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))
 
 
-def _stardewvalleyworldgen_has_dwarvish_safety_manual(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Shipping Bin', player)) and (True) and (False)) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False))
+def _stardewvalleyworldgen_has_grape(state: "CollectionState", player: int) -> bool:
+    return (state.has('Summer', player)) or ((False) and (_stardewvalleyworldgen_has_grape_starter(state, player)))
 
 
-def _stardewvalleyworldgen_has_hot_pepper(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_pepper_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_coal(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Pan', player)) or (False)
-
-
-def _stardewvalleyworldgen_has_parsnip_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Parsnip Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_potato_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Potato Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_strawberry_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Strawberry Seeds', player)) and (state.has('Spring', player)) and (True) and (False)
-
-
-def _stardewvalleyworldgen_has_magma_geode(state: "CollectionState", player: int) -> bool:
-    return (False) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_lava_eel(state, player)))
-
-
-def _stardewvalleyworldgen_has_rainbow_trout(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Summer', player))
-
-
-def _stardewvalleyworldgen_has_salmon(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Fall', player))
-
-
-def _stardewvalleyworldgen_has_way_of_the_wind_pt_2(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 8)) and (state.has('Power: Way Of The Wind pt. 1', player)) and (True) and (False)
-
-
-def _stardewvalleyworldgen_has_beet(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_beet_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_refined_quartz(state: "CollectionState", player: int) -> bool:
-    return ((_stardewvalleyworldgen_has_furnace(state, player)) and (False)) or ((_stardewvalleyworldgen_has_furnace(state, player)) and (_stardewvalleyworldgen_has_fire_quartz(state, player))) or ((_stardewvalleyworldgen_has_recycling_machine(state, player)) and ((_stardewvalleyworldgen_has_broken_cd(state, player)) or (_stardewvalleyworldgen_has_broken_glasses(state, player))))
-
-
-def _stardewvalleyworldgen_has_tapper(state: "CollectionState", player: int) -> bool:
-    return (state.has('Foraging Level', player, 4)) and (True) and (state.has('Copper Bar (Logic event)', player))
-
-
-def _stardewvalleyworldgen_has_poppy_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Poppy Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_seed_maker(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 9)) and (True) and (_stardewvalleyworldgen_has_coal(state, player)) and (state.has('Gold Bar (Logic event)', player))
-
-
-def _stardewvalleyworldgen_has_fossilized_tail(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Pan', player)) and (False)
-
-
-def _stardewvalleyworldgen_has_woody_s_secret(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Progressive Axe', player, 2)) and (state.has('Foraging Level', player, 5))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False))
-
-
-def _stardewvalleyworldgen_has_the_diamond_hunter(state: "CollectionState", player: int) -> bool:
-    return (True) and (True) and (_stardewvalleyworldgen_has_diamond(state, player)) and (False)
-
-
-def _stardewvalleyworldgen_has_pumpkin(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_pumpkin_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_cloth(state: "CollectionState", player: int) -> bool:
-    return ((_stardewvalleyworldgen_has_wool(state, player)) and (_stardewvalleyworldgen_has_loom(state, player))) or ((False) and (_stardewvalleyworldgen_has_aquamarine(state, player)))
-
-
-def _stardewvalleyworldgen_has_fishing_chest(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 6))
-
-
-def _stardewvalleyworldgen_has_chanterelle(state: "CollectionState", player: int) -> bool:
-    return (state.has('Mushroom Boxes', player)) or ((state.has('Fall', player)) and (False))
-
-
-def _stardewvalleyworldgen_has_mango_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Mango Sapling', player)) and (state.has('Received Progression Percent', player)) and (True) and (True) and (False) and (False)
-
-
-def _stardewvalleyworldgen_has_bee_house(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 3)) and (True) and (_stardewvalleyworldgen_has_coal(state, player)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_tapper(state, player))
-
-
-def _stardewvalleyworldgen_has_egg_brown(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (False) and (True) and (False) and (True) and (False))) and (True)
-
-
-def _stardewvalleyworldgen_has_pina_colada(state: "CollectionState", player: int) -> bool:
-    return (False) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (False) and (True) and (False) and (True) and (False)))
-
-
-def _stardewvalleyworldgen_has_jotpk_small_buff(state: "CollectionState", player: int) -> bool:
-    return False
-
-
-def _stardewvalleyworldgen_has_artifact_trove(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_omni_geode(state, player)) and (False)
-
-
-def _stardewvalleyworldgen_has_octopus(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.has('Summer', player))
-
-
-def _stardewvalleyworldgen_has_earth_crystal(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Pan', player, 4)) or (False) or ((False) and (_stardewvalleyworldgen_has_omni_geode(state, player)) and (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_deluxe_fertilizer(state: "CollectionState", player: int) -> bool:
-    return (state.has('Deluxe Fertilizer Recipe', player)) and (state.has('Iridium Bar (Logic event)', player)) and (True)
-
-
-def _stardewvalleyworldgen_has_eggplant_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Eggplant Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_honey(state: "CollectionState", player: int) -> bool:
-    return (False) or ((_stardewvalleyworldgen_has_bee_house(state, player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player))))
-
-
-def _stardewvalleyworldgen_has_peach(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (False) and (_stardewvalleyworldgen_has_peach_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_bait(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fishing Level', player, 2)) and (False)
-
-
-def _stardewvalleyworldgen_has_albacore(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))
-
-
-def _stardewvalleyworldgen_has_powdermelon(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_powdermelon_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_garlic_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Garlic Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+def _stardewvalleyworldgen_has_red_cabbage(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_red_cabbage_seeds(state, player))
 
 
 def _stardewvalleyworldgen_has_prismatic_shard(state: "CollectionState", player: int) -> bool:
     return (state.has('Received Progression Percent', player, 40)) and (False)
 
 
-def _stardewvalleyworldgen_has_treasure_appraisal_guide(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Received Progression Percent', player, 48)) and (True) and (_stardewvalleyworldgen_has_artifact_trove(state, player))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False))
+def _stardewvalleyworldgen_has_artifact_trove(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_omni_geode(state, player)) and (False)
+
+
+def _stardewvalleyworldgen_has_the_diamond_hunter(state: "CollectionState", player: int) -> bool:
+    return (True) and (True) and (_stardewvalleyworldgen_has_diamond(state, player)) and (False)
+
+
+def _stardewvalleyworldgen_has_price_catalogue(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (False)
+
+
+def _stardewvalleyworldgen_has_bone_fragment(state: "CollectionState", player: int) -> bool:
+    return (False) or ((False) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3))))
+
+
+def _stardewvalleyworldgen_has_animal_catalogue(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 16)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_coffee_bean_starter(state: "CollectionState", player: int) -> bool:
+    return (state.has('Coffee Bean', player)) and (state.has('Received Progression Percent', player, 16)) and (False) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player))) and (False)
+
+
+def _stardewvalleyworldgen_has_book_of_stars(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (False)
+
+
+def _stardewvalleyworldgen_has_beet_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Beet Seeds', player)) and (state.has('Fall', player)) and (True) and (False)
+
+
+def _stardewvalleyworldgen_has_seaweed(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and (False)
+
+
+def _stardewvalleyworldgen_has_seed_maker(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 9)) and (True) and (_stardewvalleyworldgen_has_coal(state, player)) and (state.has('Gold Bar (Logic event)', player))
+
+
+def _stardewvalleyworldgen_has_albacore(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))
+
+
+def _stardewvalleyworldgen_has_cherry_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Cherry Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_jazz_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Jazz Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_quality_fertilizer(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 16)) or ((state.has('Farming Level', player, 9)) and (True) and (_stardewvalleyworldgen_has_any_fish(state, player)))
 
 
 def _stardewvalleyworldgen_has_pale_ale(state: "CollectionState", player: int) -> bool:
     return (_stardewvalleyworldgen_has_hops(state, player)) and (_stardewvalleyworldgen_has_keg(state, player))
 
 
-def _stardewvalleyworldgen_has_cherry(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (False) and (_stardewvalleyworldgen_has_cherry_sapling(state, player))
+def _stardewvalleyworldgen_has_honey(state: "CollectionState", player: int) -> bool:
+    return (False) or ((_stardewvalleyworldgen_has_bee_house(state, player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player))))
 
 
-def _stardewvalleyworldgen_has_cauliflower(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_cauliflower_seeds(state, player))
+def _stardewvalleyworldgen_has_jotpk_small_buff(state: "CollectionState", player: int) -> bool:
+    return False
 
 
-def _stardewvalleyworldgen_has_anchovy(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))
+def _stardewvalleyworldgen_has_lava_eel(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (False)
 
 
-def _stardewvalleyworldgen_has_amethyst(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((False) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_loom(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 7)) and (True) and (True) and (_stardewvalleyworldgen_has_tapper(state, player))
-
-
-def _stardewvalleyworldgen_has_rhubarb(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_rhubarb_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_cactus_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Cactus Seeds', player)) and (True) and (True) and (False)
-
-
-def _stardewvalleyworldgen_has_rat_problem(state: "CollectionState", player: int) -> bool:
-    return (True) and (True)
-
-
-def _stardewvalleyworldgen_has_bait_and_bobber(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (False)
-
-
-def _stardewvalleyworldgen_has_apricot_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Apricot Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_strawberry(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_strawberry_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_rare_seed(state: "CollectionState", player: int) -> bool:
-    return (state.has('Rare Seed', player)) and ((state.has('Spring', player)) or (state.has('Summer', player))) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (False) and (True) and (False) and (True) and (False))) and (False)
-
-
-def _stardewvalleyworldgen_has_melon(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_melon_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_hops(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_hops_starter(state, player))
-
-
-def _stardewvalleyworldgen_has_amaranth(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_amaranth_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_dried_mushrooms_magma_cap(state: "CollectionState", player: int) -> bool:
-    return (False) and (_stardewvalleyworldgen_has_dehydrator(state, player))
-
-
-def _stardewvalleyworldgen_has_book_of_mysteries(state: "CollectionState", player: int) -> bool:
-    return (state.has('Power: Book of Mysteries', player)) and (state.has('Received Progression Percent', player, 8)) and (True) and (state.has("Mr Qi's Plane Ride", player))
-
-
-def _stardewvalleyworldgen_has_rhubarb_pie(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fall', player)) and (True) and (False) and (_stardewvalleyworldgen_has_rhubarb(state, player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_yam_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Yam Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_eel(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_dehydrator(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 2)) and (True) and (True) and (_stardewvalleyworldgen_has_fire_quartz(state, player))
-
-
-def _stardewvalleyworldgen_has_shad(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_radish_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Radish Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+def _stardewvalleyworldgen_has_quality_bobber(state: "CollectionState", player: int) -> bool:
+    return (state.has('Quality Bobber Recipe', player)) and (state.has('Copper Bar (Logic event)', player)) and (True) and (_stardewvalleyworldgen_has_solar_essence(state, player))
 
 
 def _stardewvalleyworldgen_has_salmonberry(state: "CollectionState", player: int) -> bool:
     return (state.has('Spring', player)) or (state.has('Fruit Bats', player))
 
 
+def _stardewvalleyworldgen_has_sunflower_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Sunflower Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_kale_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Kale Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_bat_wing(state: "CollectionState", player: int) -> bool:
+    return (False) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (False))
+
+
+def _stardewvalleyworldgen_has_yam_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Yam Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_cloth(state: "CollectionState", player: int) -> bool:
+    return ((_stardewvalleyworldgen_has_wool(state, player)) and (_stardewvalleyworldgen_has_loom(state, player))) or ((False) and (_stardewvalleyworldgen_has_aquamarine(state, player)))
+
+
+def _stardewvalleyworldgen_has_any_fish(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (False)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.has('Summer', player))) or ((state.has('Winter', player)) and (state.has('Progressive Fishing Rod', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Fall', player))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (False)) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Summer', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (False)) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Fall', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (False)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Fall', player))) or ((state.has('Summer', player)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (False)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Spring', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (False)) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (False)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((False) or (False))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (False)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (False)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (False)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((False) or (False))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (False)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (False)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (False))
+
+
+def _stardewvalleyworldgen_has_winter_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Foraging Level', player, 7)) and (state.has('Winter', player)) and (state.has('Winter', player)) and (state.has('Winter', player)) and (state.has('Winter', player))
+
+
+def _stardewvalleyworldgen_has_stingray(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (False)
+
+
+def _stardewvalleyworldgen_has_pickles_tea_leaves(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_tea_leaves(state, player)) and (_stardewvalleyworldgen_has_preserves_jar(state, player))
+
+
+def _stardewvalleyworldgen_has_woodcutter_s_weekly(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (False)
+
+
+def _stardewvalleyworldgen_has_sweet_gem_berry(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_rare_seed(state, player))
+
+
+def _stardewvalleyworldgen_has_pomegranate_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Pomegranate Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_apricot_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Apricot Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_potato_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Potato Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_orange(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (False) and (_stardewvalleyworldgen_has_orange_sapling(state, player))
+
+
+def _stardewvalleyworldgen_has_spice_berry(state: "CollectionState", player: int) -> bool:
+    return (state.has('Summer', player)) or (state.has('Fruit Bats', player))
+
+
+def _stardewvalleyworldgen_has_jotpk_big_buff(state: "CollectionState", player: int) -> bool:
+    return False
+
+
+def _stardewvalleyworldgen_has_bok_choy_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Bok Choy Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
 def _stardewvalleyworldgen_has_bean_starter(state: "CollectionState", player: int) -> bool:
     return (state.has('Bean Starter', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_powdermelon_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Powdermelon Seeds', player)) and (True) and (True) and (state.has('Foraging Level', player)) and (False)
+
+
+def _stardewvalleyworldgen_has_super_cucumber(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and ((state.has('Summer', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_corn_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Corn Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_mango(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (False) and (_stardewvalleyworldgen_has_mango_sapling(state, player))
+
+
+def _stardewvalleyworldgen_has_friendship_101(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Received Progression Percent', player, 16)) and (True) and (state.has('Received Progression Percent', player, 8))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False))
+
+
+def _stardewvalleyworldgen_has_broken_cd(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))
+
+
+def _stardewvalleyworldgen_has_melon(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_melon_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_kale(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_kale_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_peach(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (False) and (_stardewvalleyworldgen_has_peach_sapling(state, player))
+
+
+def _stardewvalleyworldgen_has_solar_panel(state: "CollectionState", player: int) -> bool:
+    return (state.has('Solar Panel Recipe', player)) and (_stardewvalleyworldgen_has_refined_quartz(state, player)) and (state.has('Iron Bar (Logic event)', player)) and (state.has('Gold Bar (Logic event)', player))
+
+
+def _stardewvalleyworldgen_has_pepper_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Pepper Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_taro_tuber(state: "CollectionState", player: int) -> bool:
+    return (state.has('Taro Tuber', player)) and (True) and (True) and (_stardewvalleyworldgen_has_bone_fragment(state, player)) and (False)
+
+
+def _stardewvalleyworldgen_has_truffle_oil(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_truffle(state, player)) and (_stardewvalleyworldgen_has_oil_maker(state, player))
+
+
+def _stardewvalleyworldgen_has_rice_shoot(state: "CollectionState", player: int) -> bool:
+    return (state.has('Rice Shoot', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_scarecrow(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player)) and (True) and (_stardewvalleyworldgen_has_coal(state, player)) and (True)
+
+
+def _stardewvalleyworldgen_has_mining_monthly(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (False)
+
+
+def _stardewvalleyworldgen_has_loom(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 7)) and (True) and (True) and (_stardewvalleyworldgen_has_tapper(state, player))
+
+
+def _stardewvalleyworldgen_has_salmon(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Fall', player))
+
+
+def _stardewvalleyworldgen_has_duck_egg(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 2)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_the_alleyway_buffet(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Progressive Axe', player, 2)) and (state.has('Progressive Pickaxe', player, 2))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False))
+
+
+def _stardewvalleyworldgen_has_cauliflower_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Cauliflower Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_fossilized_tail(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Pan', player)) and (False)
+
+
+def _stardewvalleyworldgen_has_lingcod(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Winter', player))
+
+
+def _stardewvalleyworldgen_has_diamond(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((False) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
+
+
+def _stardewvalleyworldgen_has_aquamarine(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((False) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
+
+
+def _stardewvalleyworldgen_has_crab_pot(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))
+
+
+def _stardewvalleyworldgen_has_poppy_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Poppy Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_way_of_the_wind_pt_2(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 8)) and (state.has('Power: Way Of The Wind pt. 1', player)) and (True) and (False)
 
 
 def _stardewvalleyworldgen_has_melon_seeds(state: "CollectionState", player: int) -> bool:
     return (state.has('Melon Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
 
 
+def _stardewvalleyworldgen_has_dwarvish_safety_manual(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Shipping Bin', player)) and (True) and (False)) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False))
+
+
+def _stardewvalleyworldgen_has_crimsonfish(state: "CollectionState", player: int) -> bool:
+    return (state.has('Summer', player)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (False)
+
+
+def _stardewvalleyworldgen_has_wheat_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Wheat Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_banana(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (False) and (_stardewvalleyworldgen_has_banana_sapling(state, player))
+
+
+def _stardewvalleyworldgen_has_squid(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))
+
+
+def _stardewvalleyworldgen_has_treasure_appraisal_guide(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Received Progression Percent', player, 48)) and (True) and (_stardewvalleyworldgen_has_artifact_trove(state, player))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False))
+
+
+def _stardewvalleyworldgen_has_hops_starter(state: "CollectionState", player: int) -> bool:
+    return (state.has('Hops Starter', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_halibut(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Winter', player)))
+
+
+def _stardewvalleyworldgen_has_solar_essence(state: "CollectionState", player: int) -> bool:
+    return (False) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (False))
+
+
+def _stardewvalleyworldgen_has_jade(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((False) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
+
+
+def _stardewvalleyworldgen_has_ol_slitherlegs(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 6)) and (True) and (False)
+
+
+def _stardewvalleyworldgen_has_pina_colada(state: "CollectionState", player: int) -> bool:
+    return (False) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (False) and (True) and (False) and (True) and (False)))
+
+
+def _stardewvalleyworldgen_has_blackberry(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fall', player)) or (state.has('Fruit Bats', player))
+
+
+def _stardewvalleyworldgen_has_rat_problem(state: "CollectionState", player: int) -> bool:
+    return (True) and (True)
+
+
+def _stardewvalleyworldgen_has_tree_fertilizer(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Foraging Level', player, 7)) and (True) and (True)) or ((state.has('Foraging Level', player, 7)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_orange_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Orange Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_mayonnaise_machine(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 2)) and (True) and (True) and (_stardewvalleyworldgen_has_earth_crystal(state, player)) and (state.has('Copper Bar (Logic event)', player))
+
+
+def _stardewvalleyworldgen_has_coal(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Pan', player)) or (False)
+
+
+def _stardewvalleyworldgen_has_common_mushroom(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fall', player)) or (state.has('Mushroom Boxes', player)) or ((state.has('Spring', player)) and (False))
+
+
+def _stardewvalleyworldgen_has_queen_of_sauce_cookbook(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 12)) and (state.has('Progressive Slingshot', player)) and (state.has('Progressive Pickaxe', player, 4)) and (state.has('Combat Level', player, 8)) and (state.has('Mining Level', player, 8)) and (state.has('Fishing Level', player, 10)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Open Professor Snail Cave', player)) and (True) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (False) and (_stardewvalleyworldgen_has_banana(state, player)) and (_stardewvalleyworldgen_has_amethyst(state, player)) and (_stardewvalleyworldgen_has_aquamarine(state, player)) and (_stardewvalleyworldgen_has_emerald(state, player)) and (_stardewvalleyworldgen_has_ruby(state, player)) and (_stardewvalleyworldgen_has_topaz(state, player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5))) and (False) and (_stardewvalleyworldgen_has_flute_block(state, player)) and (_stardewvalleyworldgen_has_melon_seeds(state, player)) and (_stardewvalleyworldgen_has_wheat_seeds(state, player)) and (_stardewvalleyworldgen_has_garlic_seeds(state, player)) and (False) and (False) and (_stardewvalleyworldgen_has_fossilized_ribs(state, player)) and (False) and (_stardewvalleyworldgen_has_fossilized_spine(state, player)) and (_stardewvalleyworldgen_has_fossilized_tail(state, player)) and (False) and (False) and (False) and (False) and (False) and (False) and (False)
+
+
+def _stardewvalleyworldgen_has_cave_jelly(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (False)
+
+
+def _stardewvalleyworldgen_has_void_essence(state: "CollectionState", player: int) -> bool:
+    return (False) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (False))
+
+
+def _stardewvalleyworldgen_has_void_mayonnaise(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_mayonnaise_machine(state, player)) and (_stardewvalleyworldgen_has_void_egg_starter(state, player))
+
+
+def _stardewvalleyworldgen_has_sardine(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)) or (state.has('Winter', player)))
+
+
+def _stardewvalleyworldgen_has_tomato_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Tomato Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_jewels_of_the_sea(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Received Progression Percent', player, 20)) and (_stardewvalleyworldgen_has_fishing_chest(state, player))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False))
+
+
+def _stardewvalleyworldgen_has_rhubarb(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_rhubarb_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_rhubarb_pie(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fall', player)) and (True) and (False) and (_stardewvalleyworldgen_has_rhubarb(state, player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_peach_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Peach Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_fishing_chest(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 6))
+
+
+def _stardewvalleyworldgen_has_large_egg_brown(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (False) and (True) and (False) and (True) and (False))) and (True) and (state.has('Silo', player))
+
+
+def _stardewvalleyworldgen_has_hardwood(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Axe', player)) and ((False) or (False))
+
+
+def _stardewvalleyworldgen_has_parsnip(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_parsnip_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_lobster(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))
+
+
+def _stardewvalleyworldgen_has_explosive_ammo(state: "CollectionState", player: int) -> bool:
+    return (state.has('Combat Level', player, 8)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_coal(state, player))
+
+
+def _stardewvalleyworldgen_has_goblin_problem(state: "CollectionState", player: int) -> bool:
+    return (False) and ((state.has('Progressive Fishing Rod', player)) or (_stardewvalleyworldgen_has_void_mayonnaise(state, player)))
+
+
+def _stardewvalleyworldgen_has_hops(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_hops_starter(state, player))
+
+
+def _stardewvalleyworldgen_has_blueberry(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_blueberry_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_cranberry_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Cranberry Seeds', player)) and (state.has('Fall', player)) and ((state.has('Shipping Bin', player)) or ((True) and (True)) or ((True) and (False)) or ((True) and (False)) or ((True) and (False))) and (True)
+
+
+def _stardewvalleyworldgen_has_void_egg_starter(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Shipping Bin', player)) and (False)) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_void_salmon(state, player)))
+
+
+def _stardewvalleyworldgen_has_fall_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Foraging Level', player, 6)) and (_stardewvalleyworldgen_has_common_mushroom(state, player)) and (_stardewvalleyworldgen_has_wild_plum(state, player)) and (state.has('Fall', player)) and (_stardewvalleyworldgen_has_blackberry(state, player))
+
+
+def _stardewvalleyworldgen_has_tapper(state: "CollectionState", player: int) -> bool:
+    return (state.has('Foraging Level', player, 4)) and (True) and (state.has('Copper Bar (Logic event)', player))
+
+
+def _stardewvalleyworldgen_has_bok_choy(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_bok_choy_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_grape_starter(state: "CollectionState", player: int) -> bool:
+    return (state.has('Grape Starter', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_octopus(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.has('Summer', player))
+
+
+def _stardewvalleyworldgen_has_cranberry_candy(state: "CollectionState", player: int) -> bool:
+    return (state.has('The Queen of Sauce', player)) and (state.has('Winter', player)) and (False) and (_stardewvalleyworldgen_has_apple(state, player)) and (_stardewvalleyworldgen_has_cranberries(state, player)) and (True)
+
+
+def _stardewvalleyworldgen_has_flute_block(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fall', player)) and (True) and (True) and (state.has('Copper Ore (Logic event)', player)) and (True)
+
+
+def _stardewvalleyworldgen_has_largemouth_bass(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4))
+
+
+def _stardewvalleyworldgen_has_starfruit(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_starfruit_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_taro_root(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_taro_tuber(state, player))
+
+
+def _stardewvalleyworldgen_has_fossilized_spine(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and (False)
+
+
+def _stardewvalleyworldgen_has_any_egg(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_chicken_egg(state, player)) or (_stardewvalleyworldgen_has_duck_egg(state, player))
+
+
+def _stardewvalleyworldgen_has_preserves_jar(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 4)) and (True) and (True) and (_stardewvalleyworldgen_has_coal(state, player))
+
+
+def _stardewvalleyworldgen_has_garlic_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Garlic Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_bee_house(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 3)) and (True) and (_stardewvalleyworldgen_has_coal(state, player)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_tapper(state, player))
+
+
+def _stardewvalleyworldgen_has_raccoon_journal(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False)) or ((state.has('Received Progression Percent', player, 2)) and (True) and (True) and (True) and (False))
+
+
+def _stardewvalleyworldgen_has_cactus_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Cactus Seeds', player)) and (True) and (True) and (False)
+
+
+def _stardewvalleyworldgen_has_blue_discus(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (False)
+
+
+def _stardewvalleyworldgen_has_powdermelon(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_powdermelon_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_parsnip_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Parsnip Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_jack_be_nimble_jack_be_thick(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Received Progression Percent', player, 4)) and (True)) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False))
+
+
+def _stardewvalleyworldgen_has_horse_the_book(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 6)) and (True) and (False)
+
+
+def _stardewvalleyworldgen_has_chanterelle(state: "CollectionState", player: int) -> bool:
+    return (state.has('Mushroom Boxes', player)) or ((state.has('Fall', player)) and (False))
+
+
+def _stardewvalleyworldgen_has_strawberry(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_strawberry_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_cherry_bomb(state: "CollectionState", player: int) -> bool:
+    return (state.has('Mining Level', player)) and (state.has('Copper Ore (Logic event)', player)) and (_stardewvalleyworldgen_has_coal(state, player))
+
+
+def _stardewvalleyworldgen_has_potato(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_potato_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_red_cabbage_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Red Cabbage Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_battery_pack(state: "CollectionState", player: int) -> bool:
+    return ((_stardewvalleyworldgen_has_lightning_rod(state, player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or (_stardewvalleyworldgen_has_solar_panel(state, player))
+
+
 def _stardewvalleyworldgen_has_smallmouth_bass(state: "CollectionState", player: int) -> bool:
     return (state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))
 
 
-def _stardewvalleyworldgen_has_book_of_stars(state: "CollectionState", player: int) -> bool:
+def _stardewvalleyworldgen_has_the_art_o_crabbing(state: "CollectionState", player: int) -> bool:
+    return (state.has("Book: The Art O' Crabbing", player)) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False))
+
+
+def _stardewvalleyworldgen_has_apple_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Apple Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_fairy_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fairy Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_jotpk_max_buff(state: "CollectionState", player: int) -> bool:
+    return False
+
+
+def _stardewvalleyworldgen_has_purple_mushroom(state: "CollectionState", player: int) -> bool:
+    return (state.has('Mushroom Boxes', player)) or (False) or (False)
+
+
+def _stardewvalleyworldgen_has_pufferfish(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Summer', player))
+
+
+def _stardewvalleyworldgen_has_chicken_egg(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_egg(state, player)) or (_stardewvalleyworldgen_has_egg_brown(state, player)) or (_stardewvalleyworldgen_has_large_egg(state, player)) or (_stardewvalleyworldgen_has_large_egg_brown(state, player))
+
+
+def _stardewvalleyworldgen_has_dehydrator(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 2)) and (True) and (True) and (_stardewvalleyworldgen_has_fire_quartz(state, player))
+
+
+def _stardewvalleyworldgen_has_topaz(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((False) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
+
+
+def _stardewvalleyworldgen_has_cranberries(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_cranberry_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_fossilized_ribs(state: "CollectionState", player: int) -> bool:
+    return (state.has('Open Professor Snail Cave', player)) and (False)
+
+
+def _stardewvalleyworldgen_has_dried_mushrooms_magma_cap(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_dehydrator(state, player))
+
+
+def _stardewvalleyworldgen_has_pearl(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_blobfish(state, player))) or (_stardewvalleyworldgen_has_artifact_trove(state, player))
+
+
+def _stardewvalleyworldgen_has_fire_quartz(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Pan', player, 4)) or (False) or ((_stardewvalleyworldgen_has_magma_geode(state, player)) and (_stardewvalleyworldgen_has_omni_geode(state, player)) and (_stardewvalleyworldgen_has_fishing_chest(state, player)))
+
+
+def _stardewvalleyworldgen_has_artichoke_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Artichoke Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_cherry(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (False) and (_stardewvalleyworldgen_has_cherry_sapling(state, player))
+
+
+def _stardewvalleyworldgen_has_tulip_bulb(state: "CollectionState", player: int) -> bool:
+    return (state.has('Tulip Bulb', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_cauliflower(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_cauliflower_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_summer_squash_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Summer Squash Seeds', player)) and (True) and (True) and (True) and (False)
+
+
+def _stardewvalleyworldgen_has_bomb(state: "CollectionState", player: int) -> bool:
+    return (state.has('Mining Level', player, 6)) and (state.has('Iron Ore (Logic event)', player)) and (_stardewvalleyworldgen_has_coal(state, player))
+
+
+def _stardewvalleyworldgen_has_eggplant_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Eggplant Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_omni_geode(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Pan', player, 2)) or (state.has('Rusty Key', player)) or (False) or (False) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_octopus(state, player))) or (False)
+
+
+def _stardewvalleyworldgen_has_apple(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (False) and (_stardewvalleyworldgen_has_apple_sapling(state, player))
+
+
+def _stardewvalleyworldgen_has_combat_quarterly(state: "CollectionState", player: int) -> bool:
     return (state.has('Shipping Bin', player)) and (True) and (False)
+
+
+def _stardewvalleyworldgen_has_egg_brown(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (False) and (True) and (False) and (True) and (False))) and (True)
+
+
+def _stardewvalleyworldgen_has_ancient_fruit(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Ancient Seeds', player)) or (state.has('Ancient Seeds Recipe', player))) and (False) and (_stardewvalleyworldgen_has_seed_maker(state, player))
+
+
+def _stardewvalleyworldgen_has_slime_egg_press(state: "CollectionState", player: int) -> bool:
+    return (state.has('Combat Level', player, 6)) and (_stardewvalleyworldgen_has_coal(state, player)) and (_stardewvalleyworldgen_has_fire_quartz(state, player)) and (_stardewvalleyworldgen_has_battery_pack(state, player))
+
+
+def _stardewvalleyworldgen_has_ancient_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Ancient Seeds Recipe', player)) and (state.has('Received Progression Percent', player, 20))
+
+
+def _stardewvalleyworldgen_has_radish_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Radish Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_rainbow_trout(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Summer', player))
+
+
+def _stardewvalleyworldgen_has_bait_and_bobber(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (False)
+
+
+def _stardewvalleyworldgen_has_tilapia(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_carrot_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Carrot Seeds', player)) and (True) and (True) and (state.has('Foraging Level', player)) and (False)
+
+
+def _stardewvalleyworldgen_has_broken_glasses(state: "CollectionState", player: int) -> bool:
+    return (_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))
+
+
+def _stardewvalleyworldgen_has_lionfish(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((False) or (False))
+
+
+def _stardewvalleyworldgen_has_cactus_fruit(state: "CollectionState", player: int) -> bool:
+    return (False) or (((False) or (False)) and (_stardewvalleyworldgen_has_cactus_seeds(state, player)))
+
+
+def _stardewvalleyworldgen_has_oil_maker(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 8)) and (False) and (_stardewvalleyworldgen_has_hardwood(state, player)) and (state.has('Gold Bar (Logic event)', player))
+
+
+def _stardewvalleyworldgen_has_pineapple_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Pineapple Seeds', player)) and (True) and (True) and (False) and (False)
+
+
+def _stardewvalleyworldgen_has_sunflower(state: "CollectionState", player: int) -> bool:
+    return ((False) or (False)) and (_stardewvalleyworldgen_has_sunflower_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_tea_sapling(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Winter', player)) and (True) and (False) and (_stardewvalleyworldgen_has_summer_seeds(state, player)) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (False) and (_stardewvalleyworldgen_has_spring_seeds(state, player)) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (False) and (_stardewvalleyworldgen_has_fall_seeds(state, player)) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (False) and (_stardewvalleyworldgen_has_winter_seeds(state, player)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_hot_pepper(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_pepper_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_anchovy(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_eel(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_pomegranate(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (False) and (_stardewvalleyworldgen_has_pomegranate_sapling(state, player))
+
+
+def _stardewvalleyworldgen_has_sashimi(state: "CollectionState", player: int) -> bool:
+    return (state.has('Winter', player)) and (True) and (False) and (_stardewvalleyworldgen_has_any_fish(state, player))
+
+
+def _stardewvalleyworldgen_has_pumpkin(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_pumpkin_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_large_egg(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (False) and (True) and (False) and (True) and (False))) and (True) and (state.has('Silo', player))
+
+
+def _stardewvalleyworldgen_has_way_of_the_wind_pt_1(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 3)) and (True) and (False)
+
+
+def _stardewvalleyworldgen_has_refined_quartz(state: "CollectionState", player: int) -> bool:
+    return ((_stardewvalleyworldgen_has_furnace(state, player)) and (False)) or ((_stardewvalleyworldgen_has_furnace(state, player)) and (_stardewvalleyworldgen_has_fire_quartz(state, player))) or ((_stardewvalleyworldgen_has_recycling_machine(state, player)) and ((_stardewvalleyworldgen_has_broken_cd(state, player)) or (_stardewvalleyworldgen_has_broken_glasses(state, player))))
+
+
+def _stardewvalleyworldgen_has_emerald(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((False) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
+
+
+def _stardewvalleyworldgen_has_wool(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 3)) and (True) and (True)) or ((state.has('Shipping Bin', player)) and (state.has('Progressive Barn', player, 3)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_beet(state: "CollectionState", player: int) -> bool:
+    return (False) and (_stardewvalleyworldgen_has_beet_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_summer_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Foraging Level', player, 4)) and (_stardewvalleyworldgen_has_spice_berry(state, player)) and (_stardewvalleyworldgen_has_grape(state, player)) and (state.has('Summer', player))
+
+
+def _stardewvalleyworldgen_has_rhubarb_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Rhubarb Seeds', player)) and (state.has('Spring', player)) and (True) and (False)
+
+
+def _stardewvalleyworldgen_has_amaranth_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Amaranth Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_wild_plum(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fall', player)) or (state.has('Fruit Bats', player))
+
+
+def _stardewvalleyworldgen_has_wheat(state: "CollectionState", player: int) -> bool:
+    return ((False) or (False)) and (_stardewvalleyworldgen_has_wheat_seeds(state, player))
+
+
+def _stardewvalleyworldgen_has_midnight_carp(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Fall', player)) or (state.has('Winter', player)))
+
+
+def _stardewvalleyworldgen_has_tea_leaves(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 8)) and (_stardewvalleyworldgen_has_tea_sapling(state, player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_blueberry_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Blueberry Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_lightning_rod(state: "CollectionState", player: int) -> bool:
+    return (state.has('Foraging Level', player, 6)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_refined_quartz(state, player)) and (_stardewvalleyworldgen_has_bat_wing(state, player))
+
+
+def _stardewvalleyworldgen_has_dorado(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Summer', player))
+
+
+def _stardewvalleyworldgen_has_woody_s_secret(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Progressive Axe', player, 2)) and (state.has('Foraging Level', player, 5))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (False))
+
+
+def _stardewvalleyworldgen_has_legend(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Spring', player))
+
+
+def _stardewvalleyworldgen_has_jotpk_medium_buff(state: "CollectionState", player: int) -> bool:
+    return False
+
+
+def _stardewvalleyworldgen_has_bullhead(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3))
+
+
+def _stardewvalleyworldgen_has_moss(state: "CollectionState", player: int) -> bool:
+    return (state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player))
+
+
+def _stardewvalleyworldgen_has_void_salmon(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (False)
+
+
+def _stardewvalleyworldgen_has_duck_feather(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 2)) and (True) and (True) and (state.has('Silo', player))
+
+
+def _stardewvalleyworldgen_has_pumpkin_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Pumpkin Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_book_of_mysteries(state: "CollectionState", player: int) -> bool:
+    return (state.has('Power: Book of Mysteries', player)) and (state.has('Received Progression Percent', player, 8)) and (True) and (state.has("Mr Qi's Plane Ride", player))
+
+
+def _stardewvalleyworldgen_has_golden_pumpkin(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fall', player)) or (_stardewvalleyworldgen_has_artifact_trove(state, player))
+
+
+def _stardewvalleyworldgen_has_recycling_machine(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fishing Level', player, 4)) and (True) and (True) and (state.has('Iron Bar (Logic event)', player))
+
+
+def _stardewvalleyworldgen_has_banana_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Banana Sapling', player)) and (True) and (True) and (False) and (False)
+
+
+def _stardewvalleyworldgen_has_walleye(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Fall', player))
+
+
+def _stardewvalleyworldgen_has_spangle_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Spangle Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_amethyst(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((False) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
+
+
+def _stardewvalleyworldgen_has_rabbit_s_foot(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 3)) and (True) and (True) and (state.has('Silo', player))
+
+
+def _stardewvalleyworldgen_has_broccoli_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Broccoli Seeds', player)) and (True) and (True) and (_stardewvalleyworldgen_has_moss(state, player)) and (False)
 
 
 # Helper definitions for frontend evaluation
@@ -1001,11 +1001,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                               'type': 'or'}],
                         'type': 'and'},
     'has_amaranth': {   'conditions': [   {'region': 'Fall Farming', 'type': 'region_check'},
-                                          {   'conditions': [   {'item': 'Amaranth Seeds', 'type': 'item_check'},
-                                                                {'item': 'Fall', 'type': 'item_check'},
-                                                                {'type': 'constant', 'value': True},
-                                                                {'type': 'constant', 'value': True}],
-                                              'type': 'and'}],
+                                          {'name': 'has_amaranth_seeds', 'type': 'helper'}],
                         'type': 'and'},
     'has_amaranth_seeds': {   'conditions': [   {'item': 'Amaranth Seeds', 'type': 'item_check'},
                                                 {'item': 'Fall', 'type': 'item_check'},
@@ -1017,16 +1013,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                               'type': 'item_check'},
                                           {   'conditions': [   {   'region': 'The Mines - Floor 20',
                                                                     'type': 'region_check'},
-                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                       'value': 4},
-                                                                                          'item': 'Progressive Fishing '
-                                                                                                  'Rod',
-                                                                                          'type': 'item_check'},
-                                                                                      {   'count': {   'type': 'constant',
-                                                                                                       'value': 6},
-                                                                                          'item': 'Fishing Level',
-                                                                                          'type': 'item_check'}],
-                                                                    'type': 'and'}],
+                                                                {'name': 'has_fishing_chest', 'type': 'helper'}],
                                               'type': 'or'}],
                         'type': 'and'},
     'has_anchovy': {   'conditions': [   {'item': 'Progressive Fishing Rod', 'type': 'item_check'},
@@ -1039,14 +1026,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                          'type': 'item_check'}],
                                                    'type': 'or'},
                                                {'region': 'Greenhouse', 'type': 'region_check'},
-                                               {   'conditions': [   {   'count': {'type': 'constant', 'value': 9},
-                                                                         'item': 'Farming Level',
-                                                                         'type': 'item_check'},
-                                                                     {'type': 'constant', 'value': True},
-                                                                     {'name': 'has_coal', 'type': 'helper'},
-                                                                     {   'item': 'Gold Bar (Logic event)',
-                                                                         'type': 'item_check'}],
-                                                   'type': 'and'}],
+                                               {'name': 'has_seed_maker', 'type': 'helper'}],
                              'type': 'and'},
     'has_ancient_seeds': {   'conditions': [   {'item': 'Ancient Seeds Recipe', 'type': 'item_check'},
                                                {   'count': {'type': 'constant', 'value': 20},
@@ -1060,18 +1040,8 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                   {'type': 'constant', 'value': True},
                                                   {'type': 'constant', 'value': True}],
                                 'type': 'and'},
-    'has_any_egg': {   'conditions': [   {   'conditions': [   {'name': 'has_egg', 'type': 'helper'},
-                                                               {'name': 'has_egg_brown', 'type': 'helper'},
-                                                               {'name': 'has_large_egg', 'type': 'helper'},
-                                                               {'name': 'has_large_egg_brown', 'type': 'helper'}],
-                                             'type': 'or'},
-                                         {   'conditions': [   {'item': 'Shipping Bin', 'type': 'item_check'},
-                                                               {   'count': {'type': 'constant', 'value': 2},
-                                                                   'item': 'Progressive Coop',
-                                                                   'type': 'item_check'},
-                                                               {'type': 'constant', 'value': True},
-                                                               {'type': 'constant', 'value': True}],
-                                             'type': 'and'}],
+    'has_any_egg': {   'conditions': [   {'name': 'has_chicken_egg', 'type': 'helper'},
+                                         {'name': 'has_duck_egg', 'type': 'helper'}],
                        'type': 'or'},
     'has_any_fish': {   'conditions': [   {'item': 'Progressive Fishing Rod', 'type': 'item_check'},
                                           {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
@@ -1489,325 +1459,35 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                     'type': 'item_check'},
                                                                 {'region': 'Sewer', 'type': 'region_check'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'item': 'Shipping '
-                                                                                                                        'Bin',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'},
-                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'type': 'constant',
-                                                                                                                'value': True},
-                                                                                                            {   'item': 'Iron '
-                                                                                                                        'Bar '
-                                                                                                                        '(Logic '
-                                                                                                                        'event)',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'}],
-                                                                    'type': 'or'},
-                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                       'value': 2},
-                                                                                          'item': 'Fishing Level',
-                                                                                          'type': 'item_check'},
-                                                                                      {   'region': 'The Mines - Floor '
-                                                                                                    '5',
-                                                                                          'type': 'region_check'}],
-                                                                    'type': 'and'}],
+                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
+                                                                {'name': 'has_bait', 'type': 'helper'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'item': 'Shipping '
-                                                                                                                        'Bin',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'},
-                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'type': 'constant',
-                                                                                                                'value': True},
-                                                                                                            {   'item': 'Iron '
-                                                                                                                        'Bar '
-                                                                                                                        '(Logic '
-                                                                                                                        'event)',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'}],
-                                                                    'type': 'or'},
-                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                       'value': 2},
-                                                                                          'item': 'Fishing Level',
-                                                                                          'type': 'item_check'},
-                                                                                      {   'region': 'The Mines - Floor '
-                                                                                                    '5',
-                                                                                          'type': 'region_check'}],
-                                                                    'type': 'and'}],
+                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
+                                                                {'name': 'has_bait', 'type': 'helper'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'item': 'Shipping '
-                                                                                                                        'Bin',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'},
-                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'type': 'constant',
-                                                                                                                'value': True},
-                                                                                                            {   'item': 'Iron '
-                                                                                                                        'Bar '
-                                                                                                                        '(Logic '
-                                                                                                                        'event)',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'}],
-                                                                    'type': 'or'},
-                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                       'value': 2},
-                                                                                          'item': 'Fishing Level',
-                                                                                          'type': 'item_check'},
-                                                                                      {   'region': 'The Mines - Floor '
-                                                                                                    '5',
-                                                                                          'type': 'region_check'}],
-                                                                    'type': 'and'}],
+                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
+                                                                {'name': 'has_bait', 'type': 'helper'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'item': 'Shipping '
-                                                                                                                        'Bin',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'},
-                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'type': 'constant',
-                                                                                                                'value': True},
-                                                                                                            {   'item': 'Iron '
-                                                                                                                        'Bar '
-                                                                                                                        '(Logic '
-                                                                                                                        'event)',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'}],
-                                                                    'type': 'or'},
-                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                       'value': 2},
-                                                                                          'item': 'Fishing Level',
-                                                                                          'type': 'item_check'},
-                                                                                      {   'region': 'The Mines - Floor '
-                                                                                                    '5',
-                                                                                          'type': 'region_check'}],
-                                                                    'type': 'and'}],
+                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
+                                                                {'name': 'has_bait', 'type': 'helper'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'item': 'Shipping '
-                                                                                                                        'Bin',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'},
-                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'type': 'constant',
-                                                                                                                'value': True},
-                                                                                                            {   'item': 'Iron '
-                                                                                                                        'Bar '
-                                                                                                                        '(Logic '
-                                                                                                                        'event)',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'}],
-                                                                    'type': 'or'},
-                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                       'value': 2},
-                                                                                          'item': 'Fishing Level',
-                                                                                          'type': 'item_check'},
-                                                                                      {   'region': 'The Mines - Floor '
-                                                                                                    '5',
-                                                                                          'type': 'region_check'}],
-                                                                    'type': 'and'}],
+                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
+                                                                {'name': 'has_bait', 'type': 'helper'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'item': 'Shipping '
-                                                                                                                        'Bin',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'},
-                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'type': 'constant',
-                                                                                                                'value': True},
-                                                                                                            {   'item': 'Iron '
-                                                                                                                        'Bar '
-                                                                                                                        '(Logic '
-                                                                                                                        'event)',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'}],
-                                                                    'type': 'or'},
-                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                       'value': 2},
-                                                                                          'item': 'Fishing Level',
-                                                                                          'type': 'item_check'},
-                                                                                      {   'region': 'The Mines - Floor '
-                                                                                                    '5',
-                                                                                          'type': 'region_check'}],
-                                                                    'type': 'and'}],
+                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
+                                                                {'name': 'has_bait', 'type': 'helper'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'item': 'Shipping '
-                                                                                                                        'Bin',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'},
-                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'type': 'constant',
-                                                                                                                'value': True},
-                                                                                                            {   'item': 'Iron '
-                                                                                                                        'Bar '
-                                                                                                                        '(Logic '
-                                                                                                                        'event)',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'}],
-                                                                    'type': 'or'},
-                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                       'value': 2},
-                                                                                          'item': 'Fishing Level',
-                                                                                          'type': 'item_check'},
-                                                                                      {   'region': 'The Mines - Floor '
-                                                                                                    '5',
-                                                                                          'type': 'region_check'}],
-                                                                    'type': 'and'}],
+                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
+                                                                {'name': 'has_bait', 'type': 'helper'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'item': 'Shipping '
-                                                                                                                        'Bin',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'},
-                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'type': 'constant',
-                                                                                                                'value': True},
-                                                                                                            {   'item': 'Iron '
-                                                                                                                        'Bar '
-                                                                                                                        '(Logic '
-                                                                                                                        'event)',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'}],
-                                                                    'type': 'or'},
-                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                       'value': 2},
-                                                                                          'item': 'Fishing Level',
-                                                                                          'type': 'item_check'},
-                                                                                      {   'region': 'The Mines - Floor '
-                                                                                                    '5',
-                                                                                          'type': 'region_check'}],
-                                                                    'type': 'and'}],
+                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
+                                                                {'name': 'has_bait', 'type': 'helper'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'item': 'Shipping '
-                                                                                                                        'Bin',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'},
-                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'type': 'constant',
-                                                                                                                'value': True},
-                                                                                                            {   'item': 'Iron '
-                                                                                                                        'Bar '
-                                                                                                                        '(Logic '
-                                                                                                                        'event)',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'}],
-                                                                    'type': 'or'},
-                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                       'value': 2},
-                                                                                          'item': 'Fishing Level',
-                                                                                          'type': 'item_check'},
-                                                                                      {   'region': 'The Mines - Floor '
-                                                                                                    '5',
-                                                                                          'type': 'region_check'}],
-                                                                    'type': 'and'}],
+                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
+                                                                {'name': 'has_bait', 'type': 'helper'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'item': 'Shipping '
-                                                                                                                        'Bin',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'},
-                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                             'value': 3},
-                                                                                                                'item': 'Fishing '
-                                                                                                                        'Level',
-                                                                                                                'type': 'item_check'},
-                                                                                                            {   'type': 'constant',
-                                                                                                                'value': True},
-                                                                                                            {   'item': 'Iron '
-                                                                                                                        'Bar '
-                                                                                                                        '(Logic '
-                                                                                                                        'event)',
-                                                                                                                'type': 'item_check'}],
-                                                                                          'type': 'and'}],
-                                                                    'type': 'or'},
-                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                       'value': 2},
-                                                                                          'item': 'Fishing Level',
-                                                                                          'type': 'item_check'},
-                                                                                      {   'region': 'The Mines - Floor '
-                                                                                                    '5',
-                                                                                          'type': 'region_check'}],
-                                                                    'type': 'and'}],
+                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
+                                                                {'name': 'has_bait', 'type': 'helper'}],
                                               'type': 'and'},
                                           {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
                                                                     'item': 'Progressive Fishing Rod',
@@ -1899,11 +1579,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                            'item': 'Received Progression Percent',
                                            'type': 'item_check'},
                                        {'region': 'Fall Farming', 'type': 'region_check'},
-                                       {   'conditions': [   {'item': 'Apple Sapling', 'type': 'item_check'},
-                                                             {'item': 'Shipping Bin', 'type': 'item_check'},
-                                                             {'type': 'constant', 'value': True},
-                                                             {'type': 'constant', 'value': True}],
-                                           'type': 'and'}],
+                                       {'name': 'has_apple_sapling', 'type': 'helper'}],
                      'type': 'and'},
     'has_apple_sapling': {   'conditions': [   {'item': 'Apple Sapling', 'type': 'item_check'},
                                                {'item': 'Shipping Bin', 'type': 'item_check'},
@@ -1914,11 +1590,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                              'item': 'Received Progression Percent',
                                              'type': 'item_check'},
                                          {'region': 'Spring Farming', 'type': 'region_check'},
-                                         {   'conditions': [   {'item': 'Apricot Sapling', 'type': 'item_check'},
-                                                               {'item': 'Shipping Bin', 'type': 'item_check'},
-                                                               {'type': 'constant', 'value': True},
-                                                               {'type': 'constant', 'value': True}],
-                                             'type': 'and'}],
+                                         {'name': 'has_apricot_sapling', 'type': 'helper'}],
                        'type': 'and'},
     'has_apricot_sapling': {   'conditions': [   {'item': 'Apricot Sapling', 'type': 'item_check'},
                                                  {'item': 'Shipping Bin', 'type': 'item_check'},
@@ -1930,16 +1602,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                 'type': 'item_check'},
                                             {   'conditions': [   {   'region': 'The Mines - Floor 60',
                                                                       'type': 'region_check'},
-                                                                  {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                         'value': 4},
-                                                                                            'item': 'Progressive '
-                                                                                                    'Fishing Rod',
-                                                                                            'type': 'item_check'},
-                                                                                        {   'count': {   'type': 'constant',
-                                                                                                         'value': 6},
-                                                                                            'item': 'Fishing Level',
-                                                                                            'type': 'item_check'}],
-                                                                      'type': 'and'}],
+                                                                  {'name': 'has_fishing_chest', 'type': 'helper'}],
                                                 'type': 'or'}],
                           'type': 'and'},
     'has_artichoke_seeds': {   'conditions': [   {'item': 'Artichoke Seeds', 'type': 'item_check'},
@@ -1947,21 +1610,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                  {'type': 'constant', 'value': True},
                                                  {'type': 'constant', 'value': True}],
                                'type': 'and'},
-    'has_artifact_trove': {   'conditions': [   {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
-                                                                          'item': 'Progressive Pan',
-                                                                          'type': 'item_check'},
-                                                                      {'item': 'Rusty Key', 'type': 'item_check'},
-                                                                      {   'region': 'The Mines - Floor 45',
-                                                                          'type': 'region_check'},
-                                                                      {'region': 'Desert', 'type': 'region_check'},
-                                                                      {   'conditions': [   {   'item': 'Fish Pond',
-                                                                                                'type': 'item_check'},
-                                                                                            {   'name': 'has_octopus',
-                                                                                                'type': 'helper'}],
-                                                                          'type': 'and'},
-                                                                      {   'region': 'Volcano - Floor 10',
-                                                                          'type': 'region_check'}],
-                                                    'type': 'or'},
+    'has_artifact_trove': {   'conditions': [   {'name': 'has_omni_geode', 'type': 'helper'},
                                                 {'region': 'Desert', 'type': 'region_check'}],
                               'type': 'and'},
     'has_bait': {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
@@ -1977,12 +1626,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                             'item': 'Received Progression Percent',
                                             'type': 'item_check'},
                                         {'region': 'Summer Farming', 'type': 'region_check'},
-                                        {   'conditions': [   {'item': 'Banana Sapling', 'type': 'item_check'},
-                                                              {'type': 'constant', 'value': True},
-                                                              {'type': 'constant', 'value': True},
-                                                              {'region': 'Volcano - Floor 10', 'type': 'region_check'},
-                                                              {'region': 'Island Trader', 'type': 'region_check'}],
-                                            'type': 'and'}],
+                                        {'name': 'has_banana_sapling', 'type': 'helper'}],
                       'type': 'and'},
     'has_banana_sapling': {   'conditions': [   {'item': 'Banana Sapling', 'type': 'item_check'},
                                                 {'type': 'constant', 'value': True},
@@ -2020,18 +1664,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                 {'region': 'Skull Cavern', 'type': 'region_check'}],
                                               'type': 'and'}],
                         'type': 'or'},
-    'has_battery_pack': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                           'value': 6},
-                                                                                              'item': 'Foraging Level',
-                                                                                              'type': 'item_check'},
-                                                                                          {   'item': 'Iron Bar (Logic '
-                                                                                                      'event)',
-                                                                                              'type': 'item_check'},
-                                                                                          {   'name': 'has_refined_quartz',
-                                                                                              'type': 'helper'},
-                                                                                          {   'name': 'has_bat_wing',
-                                                                                              'type': 'helper'}],
-                                                                        'type': 'and'},
+    'has_battery_pack': {   'conditions': [   {   'conditions': [   {'name': 'has_lightning_rod', 'type': 'helper'},
                                                                     {   'conditions': [   {   'item': 'Spring',
                                                                                               'type': 'item_check'},
                                                                                           {   'item': 'Summer',
@@ -2040,14 +1673,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                                               'type': 'item_check'}],
                                                                         'type': 'or'}],
                                                   'type': 'and'},
-                                              {   'conditions': [   {   'item': 'Solar Panel Recipe',
-                                                                        'type': 'item_check'},
-                                                                    {'name': 'has_refined_quartz', 'type': 'helper'},
-                                                                    {   'item': 'Iron Bar (Logic event)',
-                                                                        'type': 'item_check'},
-                                                                    {   'item': 'Gold Bar (Logic event)',
-                                                                        'type': 'item_check'}],
-                                                  'type': 'and'}],
+                                              {'name': 'has_solar_panel', 'type': 'helper'}],
                             'type': 'or'},
     'has_bean_starter': {   'conditions': [   {'item': 'Bean Starter', 'type': 'item_check'},
                                               {'item': 'Spring', 'type': 'item_check'},
@@ -2058,25 +1684,12 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                'item': 'Farming Level',
                                                'type': 'item_check'},
                                            {'type': 'constant', 'value': True},
-                                           {   'conditions': [   {'item': 'Progressive Pan', 'type': 'item_check'},
-                                                                 {   'region': 'The Mines - Floor 45',
-                                                                     'type': 'region_check'}],
-                                               'type': 'or'},
+                                           {'name': 'has_coal', 'type': 'helper'},
                                            {'item': 'Iron Bar (Logic event)', 'type': 'item_check'},
-                                           {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
-                                                                     'item': 'Foraging Level',
-                                                                     'type': 'item_check'},
-                                                                 {'type': 'constant', 'value': True},
-                                                                 {   'item': 'Copper Bar (Logic event)',
-                                                                     'type': 'item_check'}],
-                                               'type': 'and'}],
+                                           {'name': 'has_tapper', 'type': 'helper'}],
                          'type': 'and'},
     'has_beet': {   'conditions': [   {'region': 'Fall Farming', 'type': 'region_check'},
-                                      {   'conditions': [   {'item': 'Beet Seeds', 'type': 'item_check'},
-                                                            {'item': 'Fall', 'type': 'item_check'},
-                                                            {'type': 'constant', 'value': True},
-                                                            {'region': 'Oasis', 'type': 'region_check'}],
-                                          'type': 'and'}],
+                                      {'name': 'has_beet_seeds', 'type': 'helper'}],
                     'type': 'and'},
     'has_beet_seeds': {   'conditions': [   {'item': 'Beet Seeds', 'type': 'item_check'},
                                             {'item': 'Fall', 'type': 'item_check'},
@@ -2103,11 +1716,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                              {'region': 'Island West', 'type': 'region_check'}],
                            'type': 'and'},
     'has_blueberry': {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
-                                           {   'conditions': [   {'item': 'Blueberry Seeds', 'type': 'item_check'},
-                                                                 {'item': 'Summer', 'type': 'item_check'},
-                                                                 {'type': 'constant', 'value': True},
-                                                                 {'type': 'constant', 'value': True}],
-                                               'type': 'and'}],
+                                           {'name': 'has_blueberry_seeds', 'type': 'helper'}],
                          'type': 'and'},
     'has_blueberry_seeds': {   'conditions': [   {'item': 'Blueberry Seeds', 'type': 'item_check'},
                                                  {'item': 'Summer', 'type': 'item_check'},
@@ -2115,11 +1724,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                  {'type': 'constant', 'value': True}],
                                'type': 'and'},
     'has_bok_choy': {   'conditions': [   {'region': 'Fall Farming', 'type': 'region_check'},
-                                          {   'conditions': [   {'item': 'Bok Choy Seeds', 'type': 'item_check'},
-                                                                {'item': 'Fall', 'type': 'item_check'},
-                                                                {'type': 'constant', 'value': True},
-                                                                {'type': 'constant', 'value': True}],
-                                              'type': 'and'}],
+                                          {'name': 'has_bok_choy_seeds', 'type': 'helper'}],
                         'type': 'and'},
     'has_bok_choy_seeds': {   'conditions': [   {'item': 'Bok Choy Seeds', 'type': 'item_check'},
                                                 {'item': 'Fall', 'type': 'item_check'},
@@ -2130,9 +1735,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                           'item': 'Mining Level',
                                           'type': 'item_check'},
                                       {'item': 'Iron Ore (Logic event)', 'type': 'item_check'},
-                                      {   'conditions': [   {'item': 'Progressive Pan', 'type': 'item_check'},
-                                                            {'region': 'The Mines - Floor 45', 'type': 'region_check'}],
-                                          'type': 'or'}],
+                                      {'name': 'has_coal', 'type': 'helper'}],
                     'type': 'and'},
     'has_bone_fragment': {   'conditions': [   {'region': 'Dig Site', 'type': 'region_check'},
                                                {   'conditions': [   {   'region': 'The Mines - Floor 100',
@@ -2174,61 +1777,14 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_broccoli_seeds': {   'conditions': [   {'item': 'Broccoli Seeds', 'type': 'item_check'},
                                                 {'type': 'constant', 'value': True},
                                                 {'type': 'constant', 'value': True},
-                                                {   'conditions': [   {'item': 'Spring', 'type': 'item_check'},
-                                                                      {'item': 'Summer', 'type': 'item_check'},
-                                                                      {'item': 'Fall', 'type': 'item_check'}],
-                                                    'type': 'or'},
+                                                {'name': 'has_moss', 'type': 'helper'},
                                                 {'region': 'Raccoon Shop', 'type': 'region_check'}],
                               'type': 'and'},
-    'has_broken_cd': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                        'value': 3},
-                                                                                           'item': 'Fishing Level',
-                                                                                           'type': 'item_check'},
-                                                                                       {   'item': 'Shipping Bin',
-                                                                                           'type': 'item_check'}],
-                                                                     'type': 'and'},
-                                                                 {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                        'value': 3},
-                                                                                           'item': 'Fishing Level',
-                                                                                           'type': 'item_check'},
-                                                                                       {   'type': 'constant',
-                                                                                           'value': True},
-                                                                                       {   'item': 'Iron Bar (Logic '
-                                                                                                   'event)',
-                                                                                           'type': 'item_check'}],
-                                                                     'type': 'and'}],
-                                               'type': 'or'},
-                                           {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
-                                                                     'item': 'Fishing Level',
-                                                                     'type': 'item_check'},
-                                                                 {   'region': 'The Mines - Floor 5',
-                                                                     'type': 'region_check'}],
-                                               'type': 'and'}],
+    'has_broken_cd': {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
+                                           {'name': 'has_bait', 'type': 'helper'}],
                          'type': 'and'},
-    'has_broken_glasses': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                             'value': 3},
-                                                                                                'item': 'Fishing Level',
-                                                                                                'type': 'item_check'},
-                                                                                            {   'item': 'Shipping Bin',
-                                                                                                'type': 'item_check'}],
-                                                                          'type': 'and'},
-                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                             'value': 3},
-                                                                                                'item': 'Fishing Level',
-                                                                                                'type': 'item_check'},
-                                                                                            {   'type': 'constant',
-                                                                                                'value': True},
-                                                                                            {   'item': 'Iron Bar '
-                                                                                                        '(Logic event)',
-                                                                                                'type': 'item_check'}],
-                                                                          'type': 'and'}],
-                                                    'type': 'or'},
-                                                {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
-                                                                          'item': 'Fishing Level',
-                                                                          'type': 'item_check'},
-                                                                      {   'region': 'The Mines - Floor 5',
-                                                                          'type': 'region_check'}],
-                                                    'type': 'and'}],
+    'has_broken_glasses': {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
+                                                {'name': 'has_bait', 'type': 'helper'}],
                               'type': 'and'},
     'has_bullhead': {   'conditions': [   {'item': 'Progressive Fishing Rod', 'type': 'item_check'},
                                           {   'count': {'type': 'constant', 'value': 3},
@@ -2241,15 +1797,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                                           {   'region': 'Island West',
                                                                                               'type': 'region_check'}],
                                                                         'type': 'or'},
-                                                                    {   'conditions': [   {   'item': 'Cactus Seeds',
-                                                                                              'type': 'item_check'},
-                                                                                          {   'type': 'constant',
-                                                                                              'value': True},
-                                                                                          {   'type': 'constant',
-                                                                                              'value': True},
-                                                                                          {   'region': 'Oasis',
-                                                                                              'type': 'region_check'}],
-                                                                        'type': 'and'}],
+                                                                    {'name': 'has_cactus_seeds', 'type': 'helper'}],
                                                   'type': 'and'}],
                             'type': 'or'},
     'has_cactus_seeds': {   'conditions': [   {'item': 'Cactus Seeds', 'type': 'item_check'},
@@ -2264,11 +1812,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                               {'region': 'Raccoon Shop', 'type': 'region_check'}],
                             'type': 'and'},
     'has_cauliflower': {   'conditions': [   {'region': 'Spring Farming', 'type': 'region_check'},
-                                             {   'conditions': [   {'item': 'Cauliflower Seeds', 'type': 'item_check'},
-                                                                   {'item': 'Spring', 'type': 'item_check'},
-                                                                   {'type': 'constant', 'value': True},
-                                                                   {'type': 'constant', 'value': True}],
-                                                 'type': 'and'}],
+                                             {'name': 'has_cauliflower_seeds', 'type': 'helper'}],
                            'type': 'and'},
     'has_cauliflower_seeds': {   'conditions': [   {'item': 'Cauliflower Seeds', 'type': 'item_check'},
                                                    {'item': 'Spring', 'type': 'item_check'},
@@ -2289,196 +1833,27 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                             'item': 'Received Progression Percent',
                                             'type': 'item_check'},
                                         {'region': 'Spring Farming', 'type': 'region_check'},
-                                        {   'conditions': [   {'item': 'Cherry Sapling', 'type': 'item_check'},
-                                                              {'item': 'Shipping Bin', 'type': 'item_check'},
-                                                              {'type': 'constant', 'value': True},
-                                                              {'type': 'constant', 'value': True}],
-                                            'type': 'and'}],
+                                        {'name': 'has_cherry_sapling', 'type': 'helper'}],
                       'type': 'and'},
     'has_cherry_bomb': {   'conditions': [   {'item': 'Mining Level', 'type': 'item_check'},
                                              {'item': 'Copper Ore (Logic event)', 'type': 'item_check'},
-                                             {   'conditions': [   {'item': 'Progressive Pan', 'type': 'item_check'},
-                                                                   {   'region': 'The Mines - Floor 45',
-                                                                       'type': 'region_check'}],
-                                                 'type': 'or'}],
+                                             {'name': 'has_coal', 'type': 'helper'}],
                            'type': 'and'},
     'has_cherry_sapling': {   'conditions': [   {'item': 'Cherry Sapling', 'type': 'item_check'},
                                                 {'item': 'Shipping Bin', 'type': 'item_check'},
                                                 {'type': 'constant', 'value': True},
                                                 {'type': 'constant', 'value': True}],
                               'type': 'and'},
-    'has_chicken_egg': {   'conditions': [   {   'conditions': [   {'item': 'Progressive Coop', 'type': 'item_check'},
-                                                                   {'type': 'constant', 'value': True},
-                                                                   {   'conditions': [   {   'item': 'Shipping Bin',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'conditions': [   {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'region': 'Fishing',
-                                                                                                                   'type': 'region_check'},
-                                                                                                               {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'region': 'The '
-                                                                                                                             'Mines '
-                                                                                                                             '- '
-                                                                                                                             'Floor '
-                                                                                                                             '5',
-                                                                                                                   'type': 'region_check'},
-                                                                                                               {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'region': 'Secret '
-                                                                                                                             'Woods',
-                                                                                                                   'type': 'region_check'}],
-                                                                                             'type': 'and'}],
-                                                                       'type': 'or'},
-                                                                   {'type': 'constant', 'value': True}],
-                                                 'type': 'and'},
-                                             {   'conditions': [   {'item': 'Progressive Coop', 'type': 'item_check'},
-                                                                   {'type': 'constant', 'value': True},
-                                                                   {   'conditions': [   {   'item': 'Shipping Bin',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'conditions': [   {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'region': 'Fishing',
-                                                                                                                   'type': 'region_check'},
-                                                                                                               {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'region': 'The '
-                                                                                                                             'Mines '
-                                                                                                                             '- '
-                                                                                                                             'Floor '
-                                                                                                                             '5',
-                                                                                                                   'type': 'region_check'},
-                                                                                                               {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'region': 'Secret '
-                                                                                                                             'Woods',
-                                                                                                                   'type': 'region_check'}],
-                                                                                             'type': 'and'}],
-                                                                       'type': 'or'},
-                                                                   {'type': 'constant', 'value': True}],
-                                                 'type': 'and'},
-                                             {   'conditions': [   {'item': 'Progressive Coop', 'type': 'item_check'},
-                                                                   {'type': 'constant', 'value': True},
-                                                                   {   'conditions': [   {   'item': 'Shipping Bin',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'conditions': [   {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'region': 'Fishing',
-                                                                                                                   'type': 'region_check'},
-                                                                                                               {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'region': 'The '
-                                                                                                                             'Mines '
-                                                                                                                             '- '
-                                                                                                                             'Floor '
-                                                                                                                             '5',
-                                                                                                                   'type': 'region_check'},
-                                                                                                               {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'region': 'Secret '
-                                                                                                                             'Woods',
-                                                                                                                   'type': 'region_check'}],
-                                                                                             'type': 'and'}],
-                                                                       'type': 'or'},
-                                                                   {'type': 'constant', 'value': True},
-                                                                   {'item': 'Silo', 'type': 'item_check'}],
-                                                 'type': 'and'},
-                                             {   'conditions': [   {'item': 'Progressive Coop', 'type': 'item_check'},
-                                                                   {'type': 'constant', 'value': True},
-                                                                   {   'conditions': [   {   'item': 'Shipping Bin',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'conditions': [   {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'region': 'Fishing',
-                                                                                                                   'type': 'region_check'},
-                                                                                                               {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'region': 'The '
-                                                                                                                             'Mines '
-                                                                                                                             '- '
-                                                                                                                             'Floor '
-                                                                                                                             '5',
-                                                                                                                   'type': 'region_check'},
-                                                                                                               {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'region': 'Secret '
-                                                                                                                             'Woods',
-                                                                                                                   'type': 'region_check'}],
-                                                                                             'type': 'and'}],
-                                                                       'type': 'or'},
-                                                                   {'type': 'constant', 'value': True},
-                                                                   {'item': 'Silo', 'type': 'item_check'}],
-                                                 'type': 'and'}],
+    'has_chicken_egg': {   'conditions': [   {'name': 'has_egg', 'type': 'helper'},
+                                             {'name': 'has_egg_brown', 'type': 'helper'},
+                                             {'name': 'has_large_egg', 'type': 'helper'},
+                                             {'name': 'has_large_egg_brown', 'type': 'helper'}],
                            'type': 'or'},
-    'has_cloth': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'item': 'Shipping '
-                                                                                                                     'Bin',
-                                                                                                             'type': 'item_check'},
-                                                                                                         {   'count': {   'type': 'constant',
-                                                                                                                          'value': 3},
-                                                                                                             'item': 'Progressive '
-                                                                                                                     'Coop',
-                                                                                                             'type': 'item_check'},
-                                                                                                         {   'type': 'constant',
-                                                                                                             'value': True},
-                                                                                                         {   'type': 'constant',
-                                                                                                             'value': True}],
-                                                                                       'type': 'and'},
-                                                                                   {   'conditions': [   {   'item': 'Shipping '
-                                                                                                                     'Bin',
-                                                                                                             'type': 'item_check'},
-                                                                                                         {   'count': {   'type': 'constant',
-                                                                                                                          'value': 3},
-                                                                                                             'item': 'Progressive '
-                                                                                                                     'Barn',
-                                                                                                             'type': 'item_check'},
-                                                                                                         {   'type': 'constant',
-                                                                                                             'value': True},
-                                                                                                         {   'type': 'constant',
-                                                                                                             'value': True}],
-                                                                                       'type': 'and'}],
-                                                                 'type': 'or'},
-                                                             {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                    'value': 7},
-                                                                                       'item': 'Farming Level',
-                                                                                       'type': 'item_check'},
-                                                                                   {'type': 'constant', 'value': True},
-                                                                                   {'type': 'constant', 'value': True},
-                                                                                   {   'name': 'has_tapper',
-                                                                                       'type': 'helper'}],
-                                                                 'type': 'and'}],
+    'has_cloth': {   'conditions': [   {   'conditions': [   {'name': 'has_wool', 'type': 'helper'},
+                                                             {'name': 'has_loom', 'type': 'helper'}],
                                            'type': 'and'},
                                        {   'conditions': [   {'region': 'Desert', 'type': 'region_check'},
-                                                             {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                    'value': 28},
-                                                                                       'item': 'Received Progression '
-                                                                                               'Percent',
-                                                                                       'type': 'item_check'},
-                                                                                   {   'conditions': [   {   'region': 'The '
-                                                                                                                       'Mines '
-                                                                                                                       '- '
-                                                                                                                       'Floor '
-                                                                                                                       '60',
-                                                                                                             'type': 'region_check'},
-                                                                                                         {   'name': 'has_fishing_chest',
-                                                                                                             'type': 'helper'}],
-                                                                                       'type': 'or'}],
-                                                                 'type': 'and'}],
+                                                             {'name': 'has_aquamarine', 'type': 'helper'}],
                                            'type': 'and'}],
                      'type': 'or'},
     'has_coal': {   'conditions': [   {'item': 'Progressive Pan', 'type': 'item_check'},
@@ -2542,54 +1917,13 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                               'type': 'and'}],
                         'type': 'or'},
     'has_cranberries': {   'conditions': [   {'region': 'Fall Farming', 'type': 'region_check'},
-                                             {   'conditions': [   {'item': 'Cranberry Seeds', 'type': 'item_check'},
-                                                                   {'item': 'Fall', 'type': 'item_check'},
-                                                                   {   'conditions': [   {   'item': 'Shipping Bin',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'conditions': [   {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'type': 'constant',
-                                                                                                                   'value': True}],
-                                                                                             'type': 'and'},
-                                                                                         {   'conditions': [   {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'region': 'Fishing',
-                                                                                                                   'type': 'region_check'}],
-                                                                                             'type': 'and'},
-                                                                                         {   'conditions': [   {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'region': 'The '
-                                                                                                                             'Mines '
-                                                                                                                             '- '
-                                                                                                                             'Floor '
-                                                                                                                             '5',
-                                                                                                                   'type': 'region_check'}],
-                                                                                             'type': 'and'},
-                                                                                         {   'conditions': [   {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                               {   'region': 'Secret '
-                                                                                                                             'Woods',
-                                                                                                                   'type': 'region_check'}],
-                                                                                             'type': 'and'}],
-                                                                       'type': 'or'},
-                                                                   {'type': 'constant', 'value': True}],
-                                                 'type': 'and'}],
+                                             {'name': 'has_cranberry_seeds', 'type': 'helper'}],
                            'type': 'and'},
     'has_cranberry_candy': {   'conditions': [   {'item': 'The Queen of Sauce', 'type': 'item_check'},
                                                  {'item': 'Winter', 'type': 'item_check'},
                                                  {'region': 'Kitchen', 'type': 'region_check'},
-                                                 {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
-                                                                           'item': 'Received Progression Percent',
-                                                                           'type': 'item_check'},
-                                                                       {   'region': 'Fall Farming',
-                                                                           'type': 'region_check'},
-                                                                       {'name': 'has_apple_sapling', 'type': 'helper'}],
-                                                     'type': 'and'},
-                                                 {   'conditions': [   {   'region': 'Fall Farming',
-                                                                           'type': 'region_check'},
-                                                                       {   'name': 'has_cranberry_seeds',
-                                                                           'type': 'helper'}],
-                                                     'type': 'and'},
+                                                 {'name': 'has_apple', 'type': 'helper'},
+                                                 {'name': 'has_cranberries', 'type': 'helper'},
                                                  {'type': 'constant', 'value': True}],
                                'type': 'and'},
     'has_cranberry_seeds': {   'conditions': [   {'item': 'Cranberry Seeds', 'type': 'item_check'},
@@ -2635,19 +1969,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                 'type': 'item_check'},
                                             {'type': 'constant', 'value': True},
                                             {'type': 'constant', 'value': True},
-                                            {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
-                                                                      'item': 'Progressive Pan',
-                                                                      'type': 'item_check'},
-                                                                  {   'region': 'The Mines - Floor 100',
-                                                                      'type': 'region_check'},
-                                                                  {   'conditions': [   {   'name': 'has_magma_geode',
-                                                                                            'type': 'helper'},
-                                                                                        {   'name': 'has_omni_geode',
-                                                                                            'type': 'helper'},
-                                                                                        {   'name': 'has_fishing_chest',
-                                                                                            'type': 'helper'}],
-                                                                      'type': 'and'}],
-                                                'type': 'or'}],
+                                            {'name': 'has_fire_quartz', 'type': 'helper'}],
                           'type': 'and'},
     'has_deluxe_fertilizer': {   'conditions': [   {'item': 'Deluxe Fertilizer Recipe', 'type': 'item_check'},
                                                    {'item': 'Iridium Bar (Logic event)', 'type': 'item_check'},
@@ -2658,16 +1980,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                              'type': 'item_check'},
                                          {   'conditions': [   {   'region': 'The Mines - Floor 60',
                                                                    'type': 'region_check'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 6},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'}],
+                                                               {'name': 'has_fishing_chest', 'type': 'helper'}],
                                              'type': 'or'}],
                        'type': 'and'},
     'has_dorado': {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
@@ -2679,18 +1992,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                         {'item': 'Summer', 'type': 'item_check'}],
                       'type': 'and'},
     'has_dried_mushrooms_magma_cap': {   'conditions': [   {'region': 'Volcano - Floor 5', 'type': 'region_check'},
-                                                           {   'conditions': [   {   'item': 'Shipping Bin',
-                                                                                     'type': 'item_check'},
-                                                                                 {   'count': {   'type': 'constant',
-                                                                                                  'value': 2},
-                                                                                     'item': 'Received Progression '
-                                                                                             'Percent',
-                                                                                     'type': 'item_check'},
-                                                                                 {'type': 'constant', 'value': True},
-                                                                                 {'type': 'constant', 'value': True},
-                                                                                 {   'name': 'has_fire_quartz',
-                                                                                     'type': 'helper'}],
-                                                               'type': 'and'}],
+                                                           {'name': 'has_dehydrator', 'type': 'helper'}],
                                          'type': 'and'},
     'has_duck_egg': {   'conditions': [   {'item': 'Shipping Bin', 'type': 'item_check'},
                                           {   'count': {'type': 'constant', 'value': 2},
@@ -2731,38 +2033,8 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                {'region': 'The Mines - Floor 20', 'type': 'region_check'},
                                                {   'conditions': [   {   'region': 'The Mines - Floor 5',
                                                                          'type': 'region_check'},
-                                                                     {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                            'value': 2},
-                                                                                               'item': 'Progressive '
-                                                                                                       'Pan',
-                                                                                               'type': 'item_check'},
-                                                                                           {   'item': 'Rusty Key',
-                                                                                               'type': 'item_check'},
-                                                                                           {   'region': 'The Mines - '
-                                                                                                         'Floor 45',
-                                                                                               'type': 'region_check'},
-                                                                                           {   'region': 'Desert',
-                                                                                               'type': 'region_check'},
-                                                                                           {   'conditions': [   {   'item': 'Fish '
-                                                                                                                             'Pond',
-                                                                                                                     'type': 'item_check'},
-                                                                                                                 {   'name': 'has_octopus',
-                                                                                                                     'type': 'helper'}],
-                                                                                               'type': 'and'},
-                                                                                           {   'region': 'Volcano - '
-                                                                                                         'Floor 10',
-                                                                                               'type': 'region_check'}],
-                                                                         'type': 'or'},
-                                                                     {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                            'value': 4},
-                                                                                               'item': 'Progressive '
-                                                                                                       'Fishing Rod',
-                                                                                               'type': 'item_check'},
-                                                                                           {   'count': {   'type': 'constant',
-                                                                                                            'value': 6},
-                                                                                               'item': 'Fishing Level',
-                                                                                               'type': 'item_check'}],
-                                                                         'type': 'and'}],
+                                                                     {'name': 'has_omni_geode', 'type': 'helper'},
+                                                                     {'name': 'has_fishing_chest', 'type': 'helper'}],
                                                    'type': 'and'}],
                              'type': 'or'},
     'has_eel': {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
@@ -2827,26 +2099,14 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                              'type': 'item_check'},
                                          {   'conditions': [   {   'region': 'The Mines - Floor 100',
                                                                    'type': 'region_check'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 6},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'}],
+                                                               {'name': 'has_fishing_chest', 'type': 'helper'}],
                                              'type': 'or'}],
                        'type': 'and'},
     'has_explosive_ammo': {   'conditions': [   {   'count': {'type': 'constant', 'value': 8},
                                                     'item': 'Combat Level',
                                                     'type': 'item_check'},
                                                 {'item': 'Iron Bar (Logic event)', 'type': 'item_check'},
-                                                {   'conditions': [   {'item': 'Progressive Pan', 'type': 'item_check'},
-                                                                      {   'region': 'The Mines - Floor 45',
-                                                                          'type': 'region_check'}],
-                                                    'type': 'or'}],
+                                                {'name': 'has_coal', 'type': 'helper'}],
                               'type': 'and'},
     'has_fairy_seeds': {   'conditions': [   {'item': 'Fairy Seeds', 'type': 'item_check'},
                                              {'item': 'Fall', 'type': 'item_check'},
@@ -2856,92 +2116,32 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_fall_seeds': {   'conditions': [   {   'count': {'type': 'constant', 'value': 6},
                                                 'item': 'Foraging Level',
                                                 'type': 'item_check'},
-                                            {   'conditions': [   {'item': 'Fall', 'type': 'item_check'},
-                                                                  {'item': 'Mushroom Boxes', 'type': 'item_check'},
-                                                                  {   'conditions': [   {   'item': 'Spring',
-                                                                                            'type': 'item_check'},
-                                                                                        {   'region': 'Secret Woods',
-                                                                                            'type': 'region_check'}],
-                                                                      'type': 'and'}],
-                                                'type': 'or'},
-                                            {   'conditions': [   {'item': 'Fall', 'type': 'item_check'},
-                                                                  {'item': 'Fruit Bats', 'type': 'item_check'}],
-                                                'type': 'or'},
+                                            {'name': 'has_common_mushroom', 'type': 'helper'},
+                                            {'name': 'has_wild_plum', 'type': 'helper'},
                                             {'item': 'Fall', 'type': 'item_check'},
-                                            {   'conditions': [   {'item': 'Fall', 'type': 'item_check'},
-                                                                  {'item': 'Fruit Bats', 'type': 'item_check'}],
-                                                'type': 'or'}],
+                                            {'name': 'has_blackberry', 'type': 'helper'}],
                           'type': 'and'},
     'has_fire_quartz': {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
                                                  'item': 'Progressive Pan',
                                                  'type': 'item_check'},
                                              {'region': 'The Mines - Floor 100', 'type': 'region_check'},
-                                             {   'conditions': [   {   'conditions': [   {   'region': 'The Mines - '
-                                                                                                       'Floor 85',
-                                                                                             'type': 'region_check'},
-                                                                                         {   'conditions': [   {   'item': 'Fish '
-                                                                                                                           'Pond',
-                                                                                                                   'type': 'item_check'},
-                                                                                                               {   'name': 'has_lava_eel',
-                                                                                                                   'type': 'helper'}],
-                                                                                             'type': 'and'}],
-                                                                       'type': 'or'},
-                                                                   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                          'value': 2},
-                                                                                             'item': 'Progressive Pan',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'item': 'Rusty Key',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'region': 'The Mines - '
-                                                                                                       'Floor 45',
-                                                                                             'type': 'region_check'},
-                                                                                         {   'region': 'Desert',
-                                                                                             'type': 'region_check'},
-                                                                                         {   'conditions': [   {   'item': 'Fish '
-                                                                                                                           'Pond',
-                                                                                                                   'type': 'item_check'},
-                                                                                                               {   'name': 'has_octopus',
-                                                                                                                   'type': 'helper'}],
-                                                                                             'type': 'and'},
-                                                                                         {   'region': 'Volcano - '
-                                                                                                       'Floor 10',
-                                                                                             'type': 'region_check'}],
-                                                                       'type': 'or'},
-                                                                   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                          'value': 4},
-                                                                                             'item': 'Progressive '
-                                                                                                     'Fishing Rod',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'count': {   'type': 'constant',
-                                                                                                          'value': 6},
-                                                                                             'item': 'Fishing Level',
-                                                                                             'type': 'item_check'}],
-                                                                       'type': 'and'}],
+                                             {   'conditions': [   {'name': 'has_magma_geode', 'type': 'helper'},
+                                                                   {'name': 'has_omni_geode', 'type': 'helper'},
+                                                                   {'name': 'has_fishing_chest', 'type': 'helper'}],
                                                  'type': 'and'}],
                            'type': 'or'},
     'has_fish_smoker': {   'conditions': [   {'item': 'Shipping Bin', 'type': 'item_check'},
                                              {   'count': {'type': 'constant', 'value': 2},
                                                  'item': 'Received Progression Percent',
                                                  'type': 'item_check'},
-                                             {   'conditions': [   {'item': 'Progressive Axe', 'type': 'item_check'},
-                                                                   {   'conditions': [   {   'region': 'Secret Woods',
-                                                                                             'type': 'region_check'},
-                                                                                         {   'region': 'Island West',
-                                                                                             'type': 'region_check'}],
-                                                                       'type': 'or'}],
-                                                 'type': 'and'},
+                                             {'name': 'has_hardwood', 'type': 'helper'},
                                              {   'count': {'type': 'constant', 'value': 2},
                                                  'item': 'Progressive Fishing Rod',
                                                  'type': 'item_check'},
                                              {   'count': {'type': 'constant', 'value': 2},
                                                  'item': 'Progressive Fishing Rod',
                                                  'type': 'item_check'},
-                                             {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
-                                                                       'item': 'Progressive Fishing Rod',
-                                                                       'type': 'item_check'},
-                                                                   {   'region': 'The Mines - Floor 100',
-                                                                       'type': 'region_check'}],
-                                                 'type': 'and'}],
+                                             {'name': 'has_cave_jelly', 'type': 'helper'}],
                            'type': 'and'},
     'has_fishing_chest': {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
                                                    'item': 'Progressive Fishing Rod',
@@ -2995,27 +2195,16 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_goblin_problem': {   'conditions': [   {'region': "Witch's Swamp", 'type': 'region_check'},
                                                 {   'conditions': [   {   'item': 'Progressive Fishing Rod',
                                                                           'type': 'item_check'},
-                                                                      {   'conditions': [   {   'name': 'has_mayonnaise_machine',
-                                                                                                'type': 'helper'},
-                                                                                            {   'name': 'has_void_egg_starter',
-                                                                                                'type': 'helper'}],
-                                                                          'type': 'and'}],
+                                                                      {   'name': 'has_void_mayonnaise',
+                                                                          'type': 'helper'}],
                                                     'type': 'or'}],
                               'type': 'and'},
     'has_golden_pumpkin': {   'conditions': [   {'item': 'Fall', 'type': 'item_check'},
-                                                {   'conditions': [   {'name': 'has_omni_geode', 'type': 'helper'},
-                                                                      {'region': 'Desert', 'type': 'region_check'}],
-                                                    'type': 'and'}],
+                                                {'name': 'has_artifact_trove', 'type': 'helper'}],
                               'type': 'or'},
     'has_grape': {   'conditions': [   {'item': 'Summer', 'type': 'item_check'},
                                        {   'conditions': [   {'region': 'Fall Farming', 'type': 'region_check'},
-                                                             {   'conditions': [   {   'item': 'Grape Starter',
-                                                                                       'type': 'item_check'},
-                                                                                   {   'item': 'Fall',
-                                                                                       'type': 'item_check'},
-                                                                                   {'type': 'constant', 'value': True},
-                                                                                   {'type': 'constant', 'value': True}],
-                                                                 'type': 'and'}],
+                                                             {'name': 'has_grape_starter', 'type': 'helper'}],
                                            'type': 'and'}],
                      'type': 'or'},
     'has_grape_starter': {   'conditions': [   {'item': 'Grape Starter', 'type': 'item_check'},
@@ -3040,18 +2229,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                               'type': 'or'}],
                         'type': 'and'},
     'has_honey': {   'conditions': [   {'region': 'Oasis', 'type': 'region_check'},
-                                       {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                    'value': 3},
-                                                                                       'item': 'Farming Level',
-                                                                                       'type': 'item_check'},
-                                                                                   {'type': 'constant', 'value': True},
-                                                                                   {   'name': 'has_coal',
-                                                                                       'type': 'helper'},
-                                                                                   {   'item': 'Iron Bar (Logic event)',
-                                                                                       'type': 'item_check'},
-                                                                                   {   'name': 'has_tapper',
-                                                                                       'type': 'helper'}],
-                                                                 'type': 'and'},
+                                       {   'conditions': [   {'name': 'has_bee_house', 'type': 'helper'},
                                                              {   'conditions': [   {   'item': 'Spring',
                                                                                        'type': 'item_check'},
                                                                                    {   'item': 'Summer',
@@ -3062,11 +2240,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                            'type': 'and'}],
                      'type': 'or'},
     'has_hops': {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
-                                      {   'conditions': [   {'item': 'Hops Starter', 'type': 'item_check'},
-                                                            {'item': 'Summer', 'type': 'item_check'},
-                                                            {'type': 'constant', 'value': True},
-                                                            {'type': 'constant', 'value': True}],
-                                          'type': 'and'}],
+                                      {'name': 'has_hops_starter', 'type': 'helper'}],
                     'type': 'and'},
     'has_hops_starter': {   'conditions': [   {'item': 'Hops Starter', 'type': 'item_check'},
                                               {'item': 'Summer', 'type': 'item_check'},
@@ -3081,11 +2255,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                 {'region': 'Bookseller Year 1 Books', 'type': 'region_check'}],
                               'type': 'and'},
     'has_hot_pepper': {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
-                                            {   'conditions': [   {'item': 'Pepper Seeds', 'type': 'item_check'},
-                                                                  {'item': 'Summer', 'type': 'item_check'},
-                                                                  {'type': 'constant', 'value': True},
-                                                                  {'type': 'constant', 'value': True}],
-                                                'type': 'and'}],
+                                            {'name': 'has_pepper_seeds', 'type': 'helper'}],
                           'type': 'and'},
     'has_jack_be_nimble_jack_be_thick': {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
                                                                                                      'value': 4},
@@ -3112,15 +2282,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                           'item': 'Received Progression Percent',
                                           'type': 'item_check'},
                                       {   'conditions': [   {'region': 'The Mines - Floor 60', 'type': 'region_check'},
-                                                            {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                   'value': 4},
-                                                                                      'item': 'Progressive Fishing Rod',
-                                                                                      'type': 'item_check'},
-                                                                                  {   'count': {   'type': 'constant',
-                                                                                                   'value': 6},
-                                                                                      'item': 'Fishing Level',
-                                                                                      'type': 'item_check'}],
-                                                                'type': 'and'}],
+                                                            {'name': 'has_fishing_chest', 'type': 'helper'}],
                                           'type': 'or'}],
                     'type': 'and'},
     'has_jazz_seeds': {   'conditions': [   {'item': 'Jazz Seeds', 'type': 'item_check'},
@@ -3131,18 +2293,8 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_jewels_of_the_sea': {   'conditions': [   {   'conditions': [   {   'count': {'type': 'constant', 'value': 20},
                                                                              'item': 'Received Progression Percent',
                                                                              'type': 'item_check'},
-                                                                         {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                'value': 4},
-                                                                                                   'item': 'Progressive '
-                                                                                                           'Fishing '
-                                                                                                           'Rod',
-                                                                                                   'type': 'item_check'},
-                                                                                               {   'count': {   'type': 'constant',
-                                                                                                                'value': 6},
-                                                                                                   'item': 'Fishing '
-                                                                                                           'Level',
-                                                                                                   'type': 'item_check'}],
-                                                                             'type': 'and'}],
+                                                                         {   'name': 'has_fishing_chest',
+                                                                             'type': 'helper'}],
                                                        'type': 'and'},
                                                    {   'conditions': [   {'item': 'Shipping Bin', 'type': 'item_check'},
                                                                          {   'count': {'type': 'constant', 'value': 5},
@@ -3189,27 +2341,11 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                              'JotPK: Increased Drop Rate']}],
                                 'name': 'total_received',
                                 'type': 'helper'},
-    'has_juice_potato': {   'conditions': [   {   'conditions': [   {   'region': 'Spring Farming',
-                                                                        'type': 'region_check'},
-                                                                    {'name': 'has_potato_seeds', 'type': 'helper'}],
-                                                  'type': 'and'},
-                                              {   'conditions': [   {   'count': {'type': 'constant', 'value': 8},
-                                                                        'item': 'Farming Level',
-                                                                        'type': 'item_check'},
-                                                                    {'type': 'constant', 'value': True},
-                                                                    {   'item': 'Copper Bar (Logic event)',
-                                                                        'type': 'item_check'},
-                                                                    {   'item': 'Iron Bar (Logic event)',
-                                                                        'type': 'item_check'},
-                                                                    {'name': 'has_tapper', 'type': 'helper'}],
-                                                  'type': 'and'}],
+    'has_juice_potato': {   'conditions': [   {'name': 'has_potato', 'type': 'helper'},
+                                              {'name': 'has_keg', 'type': 'helper'}],
                             'type': 'and'},
     'has_kale': {   'conditions': [   {'region': 'Spring Farming', 'type': 'region_check'},
-                                      {   'conditions': [   {'item': 'Kale Seeds', 'type': 'item_check'},
-                                                            {'item': 'Spring', 'type': 'item_check'},
-                                                            {'type': 'constant', 'value': True},
-                                                            {'type': 'constant', 'value': True}],
-                                          'type': 'and'}],
+                                      {'name': 'has_kale_seeds', 'type': 'helper'}],
                     'type': 'and'},
     'has_kale_seeds': {   'conditions': [   {'item': 'Kale Seeds', 'type': 'item_check'},
                                             {'item': 'Spring', 'type': 'item_check'},
@@ -3222,12 +2358,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                      {'type': 'constant', 'value': True},
                                      {'item': 'Copper Bar (Logic event)', 'type': 'item_check'},
                                      {'item': 'Iron Bar (Logic event)', 'type': 'item_check'},
-                                     {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
-                                                               'item': 'Foraging Level',
-                                                               'type': 'item_check'},
-                                                           {'type': 'constant', 'value': True},
-                                                           {'item': 'Copper Bar (Logic event)', 'type': 'item_check'}],
-                                         'type': 'and'}],
+                                     {'name': 'has_tapper', 'type': 'helper'}],
                    'type': 'and'},
     'has_large_egg': {   'conditions': [   {'item': 'Progressive Coop', 'type': 'item_check'},
                                            {'type': 'constant', 'value': True},
@@ -3307,66 +2438,8 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                    'item': 'Foraging Level',
                                                    'type': 'item_check'},
                                                {'item': 'Iron Bar (Logic event)', 'type': 'item_check'},
-                                               {   'conditions': [   {   'conditions': [   {   'name': 'has_furnace',
-                                                                                               'type': 'helper'},
-                                                                                           {   'region': 'The Mines - '
-                                                                                                         'Floor 20',
-                                                                                               'type': 'region_check'}],
-                                                                         'type': 'and'},
-                                                                     {   'conditions': [   {   'name': 'has_furnace',
-                                                                                               'type': 'helper'},
-                                                                                           {   'name': 'has_fire_quartz',
-                                                                                               'type': 'helper'}],
-                                                                         'type': 'and'},
-                                                                     {   'conditions': [   {   'name': 'has_recycling_machine',
-                                                                                               'type': 'helper'},
-                                                                                           {   'conditions': [   {   'name': 'has_broken_cd',
-                                                                                                                     'type': 'helper'},
-                                                                                                                 {   'name': 'has_broken_glasses',
-                                                                                                                     'type': 'helper'}],
-                                                                                               'type': 'or'}],
-                                                                         'type': 'and'}],
-                                                   'type': 'or'},
-                                               {   'conditions': [   {   'region': 'The Mines - Floor 45',
-                                                                         'type': 'region_check'},
-                                                                     {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                            'value': 3},
-                                                                                               'item': 'Progressive '
-                                                                                                       'Pickaxe',
-                                                                                               'type': 'item_check'},
-                                                                                           {   'count': {   'type': 'constant',
-                                                                                                            'value': 6},
-                                                                                               'item': 'Combat Level',
-                                                                                               'type': 'item_check'},
-                                                                                           {   'count': {   'type': 'constant',
-                                                                                                            'value': 6},
-                                                                                               'item': 'Mining Level',
-                                                                                               'type': 'item_check'},
-                                                                                           {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                  'value': 4},
-                                                                                                                     'item': 'Progressive '
-                                                                                                                             'Weapon',
-                                                                                                                     'type': 'item_check'},
-                                                                                                                 {   'count': {   'type': 'constant',
-                                                                                                                                  'value': 4},
-                                                                                                                     'item': 'Progressive '
-                                                                                                                             'Sword',
-                                                                                                                     'type': 'item_check'},
-                                                                                                                 {   'count': {   'type': 'constant',
-                                                                                                                                  'value': 4},
-                                                                                                                     'item': 'Progressive '
-                                                                                                                             'Club',
-                                                                                                                     'type': 'item_check'},
-                                                                                                                 {   'count': {   'type': 'constant',
-                                                                                                                                  'value': 4},
-                                                                                                                     'item': 'Progressive '
-                                                                                                                             'Dagger',
-                                                                                                                     'type': 'item_check'}],
-                                                                                               'type': 'or'},
-                                                                                           {   'region': 'Skull Cavern',
-                                                                                               'type': 'region_check'}],
-                                                                         'type': 'and'}],
-                                                   'type': 'or'}],
+                                               {'name': 'has_refined_quartz', 'type': 'helper'},
+                                               {'name': 'has_bat_wing', 'type': 'helper'}],
                              'type': 'and'},
     'has_lingcod': {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
                                              'item': 'Progressive Fishing Rod',
@@ -3386,73 +2459,26 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                 {'region': 'Island West', 'type': 'region_check'}],
                                               'type': 'or'}],
                         'type': 'and'},
-    'has_lobster': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 3},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'item': 'Shipping Bin',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 3},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'type': 'constant',
-                                                                                         'value': True},
-                                                                                     {   'item': 'Iron Bar (Logic '
-                                                                                                 'event)',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'}],
-                                             'type': 'or'},
-                                         {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
-                                                                   'item': 'Fishing Level',
-                                                                   'type': 'item_check'},
-                                                               {   'region': 'The Mines - Floor 5',
-                                                                   'type': 'region_check'}],
-                                             'type': 'and'}],
+    'has_lobster': {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
+                                         {'name': 'has_bait', 'type': 'helper'}],
                        'type': 'and'},
     'has_loom': {   'conditions': [   {   'count': {'type': 'constant', 'value': 7},
                                           'item': 'Farming Level',
                                           'type': 'item_check'},
                                       {'type': 'constant', 'value': True},
                                       {'type': 'constant', 'value': True},
-                                      {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
-                                                                'item': 'Foraging Level',
-                                                                'type': 'item_check'},
-                                                            {'type': 'constant', 'value': True},
-                                                            {'item': 'Copper Bar (Logic event)', 'type': 'item_check'}],
-                                          'type': 'and'}],
+                                      {'name': 'has_tapper', 'type': 'helper'}],
                     'type': 'and'},
     'has_magma_geode': {   'conditions': [   {'region': 'The Mines - Floor 85', 'type': 'region_check'},
                                              {   'conditions': [   {'item': 'Fish Pond', 'type': 'item_check'},
-                                                                   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                          'value': 4},
-                                                                                             'item': 'Progressive '
-                                                                                                     'Fishing Rod',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'count': {   'type': 'constant',
-                                                                                                          'value': 8},
-                                                                                             'item': 'Fishing Level',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'region': 'The Mines - '
-                                                                                                       'Floor 100',
-                                                                                             'type': 'region_check'}],
-                                                                       'type': 'and'}],
+                                                                   {'name': 'has_lava_eel', 'type': 'helper'}],
                                                  'type': 'and'}],
                            'type': 'or'},
     'has_mango': {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
                                            'item': 'Received Progression Percent',
                                            'type': 'item_check'},
                                        {'region': 'Summer Farming', 'type': 'region_check'},
-                                       {   'conditions': [   {'item': 'Mango Sapling', 'type': 'item_check'},
-                                                             {   'count': {'type': 'constant', 'value': 1},
-                                                                 'item': 'Received Progression Percent',
-                                                                 'type': 'item_check'},
-                                                             {'type': 'constant', 'value': True},
-                                                             {'type': 'constant', 'value': True},
-                                                             {'region': 'Island West', 'type': 'region_check'},
-                                                             {'region': 'Island Trader', 'type': 'region_check'}],
-                                           'type': 'and'}],
+                                       {'name': 'has_mango_sapling', 'type': 'helper'}],
                      'type': 'and'},
     'has_mango_sapling': {   'conditions': [   {'item': 'Mango Sapling', 'type': 'item_check'},
                                                {   'count': {'type': 'constant', 'value': 1},
@@ -3468,29 +2494,11 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                         'type': 'item_check'},
                                                     {'type': 'constant', 'value': True},
                                                     {'type': 'constant', 'value': True},
-                                                    {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
-                                                                              'item': 'Progressive Pan',
-                                                                              'type': 'item_check'},
-                                                                          {   'region': 'The Mines - Floor 20',
-                                                                              'type': 'region_check'},
-                                                                          {   'conditions': [   {   'region': 'The '
-                                                                                                              'Mines - '
-                                                                                                              'Floor 5',
-                                                                                                    'type': 'region_check'},
-                                                                                                {   'name': 'has_omni_geode',
-                                                                                                    'type': 'helper'},
-                                                                                                {   'name': 'has_fishing_chest',
-                                                                                                    'type': 'helper'}],
-                                                                              'type': 'and'}],
-                                                        'type': 'or'},
+                                                    {'name': 'has_earth_crystal', 'type': 'helper'},
                                                     {'item': 'Copper Bar (Logic event)', 'type': 'item_check'}],
                                   'type': 'and'},
     'has_melon': {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
-                                       {   'conditions': [   {'item': 'Melon Seeds', 'type': 'item_check'},
-                                                             {'item': 'Summer', 'type': 'item_check'},
-                                                             {'type': 'constant', 'value': True},
-                                                             {'type': 'constant', 'value': True}],
-                                           'type': 'and'}],
+                                       {'name': 'has_melon_seeds', 'type': 'helper'}],
                      'type': 'and'},
     'has_melon_seeds': {   'conditions': [   {'item': 'Melon Seeds', 'type': 'item_check'},
                                              {'item': 'Summer', 'type': 'item_check'},
@@ -4811,13 +3819,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                'item': 'Farming Level',
                                                'type': 'item_check'},
                                            {'region': 'The Mines - Floor 5', 'type': 'region_check'},
-                                           {   'conditions': [   {'item': 'Progressive Axe', 'type': 'item_check'},
-                                                                 {   'conditions': [   {   'region': 'Secret Woods',
-                                                                                           'type': 'region_check'},
-                                                                                       {   'region': 'Island West',
-                                                                                           'type': 'region_check'}],
-                                                                     'type': 'or'}],
-                                               'type': 'and'},
+                                           {'name': 'has_hardwood', 'type': 'helper'},
                                            {'item': 'Gold Bar (Logic event)', 'type': 'item_check'}],
                          'type': 'and'},
     'has_ol_slitherlegs': {   'conditions': [   {'item': 'Shipping Bin', 'type': 'item_check'},
@@ -4834,18 +3836,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                             {'region': 'The Mines - Floor 45', 'type': 'region_check'},
                                             {'region': 'Desert', 'type': 'region_check'},
                                             {   'conditions': [   {'item': 'Fish Pond', 'type': 'item_check'},
-                                                                  {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                         'value': 4},
-                                                                                            'item': 'Progressive '
-                                                                                                    'Fishing Rod',
-                                                                                            'type': 'item_check'},
-                                                                                        {   'count': {   'type': 'constant',
-                                                                                                         'value': 8},
-                                                                                            'item': 'Fishing Level',
-                                                                                            'type': 'item_check'},
-                                                                                        {   'item': 'Summer',
-                                                                                            'type': 'item_check'}],
-                                                                      'type': 'and'}],
+                                                                  {'name': 'has_octopus', 'type': 'helper'}],
                                                 'type': 'and'},
                                             {'region': 'Volcano - Floor 10', 'type': 'region_check'}],
                           'type': 'or'},
@@ -4853,47 +3844,23 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                             'item': 'Received Progression Percent',
                                             'type': 'item_check'},
                                         {'region': 'Summer Farming', 'type': 'region_check'},
-                                        {   'conditions': [   {'item': 'Orange Sapling', 'type': 'item_check'},
-                                                              {'item': 'Shipping Bin', 'type': 'item_check'},
-                                                              {'type': 'constant', 'value': True},
-                                                              {'type': 'constant', 'value': True}],
-                                            'type': 'and'}],
+                                        {'name': 'has_orange_sapling', 'type': 'helper'}],
                       'type': 'and'},
     'has_orange_sapling': {   'conditions': [   {'item': 'Orange Sapling', 'type': 'item_check'},
                                                 {'item': 'Shipping Bin', 'type': 'item_check'},
                                                 {'type': 'constant', 'value': True},
                                                 {'type': 'constant', 'value': True}],
                               'type': 'and'},
-    'has_pale_ale': {   'conditions': [   {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
-                                                                {'name': 'has_hops_starter', 'type': 'helper'}],
-                                              'type': 'and'},
-                                          {   'conditions': [   {   'count': {'type': 'constant', 'value': 8},
-                                                                    'item': 'Farming Level',
-                                                                    'type': 'item_check'},
-                                                                {'type': 'constant', 'value': True},
-                                                                {   'item': 'Copper Bar (Logic event)',
-                                                                    'type': 'item_check'},
-                                                                {   'item': 'Iron Bar (Logic event)',
-                                                                    'type': 'item_check'},
-                                                                {'name': 'has_tapper', 'type': 'helper'}],
-                                              'type': 'and'}],
+    'has_pale_ale': {   'conditions': [{'name': 'has_hops', 'type': 'helper'}, {'name': 'has_keg', 'type': 'helper'}],
                         'type': 'and'},
     'has_pancakes': {   'conditions': [   {'item': 'The Queen of Sauce', 'type': 'item_check'},
                                           {'item': 'Summer', 'type': 'item_check'},
                                           {'region': 'Kitchen', 'type': 'region_check'},
-                                          {   'conditions': [   {'name': 'has_egg', 'type': 'helper'},
-                                                                {'name': 'has_egg_brown', 'type': 'helper'},
-                                                                {'name': 'has_large_egg', 'type': 'helper'},
-                                                                {'name': 'has_large_egg_brown', 'type': 'helper'}],
-                                              'type': 'or'},
+                                          {'name': 'has_chicken_egg', 'type': 'helper'},
                                           {'type': 'constant', 'value': True}],
                         'type': 'and'},
     'has_parsnip': {   'conditions': [   {'region': 'Spring Farming', 'type': 'region_check'},
-                                         {   'conditions': [   {'item': 'Parsnip Seeds', 'type': 'item_check'},
-                                                               {'item': 'Spring', 'type': 'item_check'},
-                                                               {'type': 'constant', 'value': True},
-                                                               {'type': 'constant', 'value': True}],
-                                             'type': 'and'}],
+                                         {'name': 'has_parsnip_seeds', 'type': 'helper'}],
                        'type': 'and'},
     'has_parsnip_seeds': {   'conditions': [   {'item': 'Parsnip Seeds', 'type': 'item_check'},
                                                {'item': 'Spring', 'type': 'item_check'},
@@ -4904,11 +3871,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                            'item': 'Received Progression Percent',
                                            'type': 'item_check'},
                                        {'region': 'Summer Farming', 'type': 'region_check'},
-                                       {   'conditions': [   {'item': 'Peach Sapling', 'type': 'item_check'},
-                                                             {'item': 'Shipping Bin', 'type': 'item_check'},
-                                                             {'type': 'constant', 'value': True},
-                                                             {'type': 'constant', 'value': True}],
-                                           'type': 'and'}],
+                                       {'name': 'has_peach_sapling', 'type': 'helper'}],
                      'type': 'and'},
     'has_peach_sapling': {   'conditions': [   {'item': 'Peach Sapling', 'type': 'item_check'},
                                                {'item': 'Shipping Bin', 'type': 'item_check'},
@@ -4916,47 +3879,17 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                {'type': 'constant', 'value': True}],
                              'type': 'and'},
     'has_pearl': {   'conditions': [   {   'conditions': [   {'item': 'Fish Pond', 'type': 'item_check'},
-                                                             {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                    'value': 2},
-                                                                                       'item': 'Progressive Fishing '
-                                                                                               'Rod',
-                                                                                       'type': 'item_check'},
-                                                                                   {   'count': {   'type': 'constant',
-                                                                                                    'value': 6},
-                                                                                       'item': 'Fishing Level',
-                                                                                       'type': 'item_check'},
-                                                                                   {   'item': 'Winter',
-                                                                                       'type': 'item_check'}],
-                                                                 'type': 'and'}],
+                                                             {'name': 'has_blobfish', 'type': 'helper'}],
                                            'type': 'and'},
-                                       {   'conditions': [   {'name': 'has_omni_geode', 'type': 'helper'},
-                                                             {'region': 'Desert', 'type': 'region_check'}],
-                                           'type': 'and'}],
+                                       {'name': 'has_artifact_trove', 'type': 'helper'}],
                      'type': 'or'},
     'has_pepper_seeds': {   'conditions': [   {'item': 'Pepper Seeds', 'type': 'item_check'},
                                               {'item': 'Summer', 'type': 'item_check'},
                                               {'type': 'constant', 'value': True},
                                               {'type': 'constant', 'value': True}],
                             'type': 'and'},
-    'has_pickles_tea_leaves': {   'conditions': [   {   'conditions': [   {   'count': {'type': 'constant', 'value': 8},
-                                                                              'item': 'Received Progression Percent',
-                                                                              'type': 'item_check'},
-                                                                          {'name': 'has_tea_sapling', 'type': 'helper'},
-                                                                          {   'conditions': [   {   'item': 'Spring',
-                                                                                                    'type': 'item_check'},
-                                                                                                {   'item': 'Summer',
-                                                                                                    'type': 'item_check'},
-                                                                                                {   'item': 'Fall',
-                                                                                                    'type': 'item_check'}],
-                                                                              'type': 'or'}],
-                                                        'type': 'and'},
-                                                    {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
-                                                                              'item': 'Farming Level',
-                                                                              'type': 'item_check'},
-                                                                          {'type': 'constant', 'value': True},
-                                                                          {'type': 'constant', 'value': True},
-                                                                          {'name': 'has_coal', 'type': 'helper'}],
-                                                        'type': 'and'}],
+    'has_pickles_tea_leaves': {   'conditions': [   {'name': 'has_tea_leaves', 'type': 'helper'},
+                                                    {'name': 'has_preserves_jar', 'type': 'helper'}],
                                   'type': 'and'},
     'has_pina_colada': {   'conditions': [   {'region': 'Island Resort', 'type': 'region_check'},
                                              {   'conditions': [   {'item': 'Shipping Bin', 'type': 'item_check'},
@@ -4981,13 +3914,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                  'type': 'or'}],
                            'type': 'and'},
     'has_pineapple': {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
-                                           {   'conditions': [   {'item': 'Pineapple Seeds', 'type': 'item_check'},
-                                                                 {'type': 'constant', 'value': True},
-                                                                 {'type': 'constant', 'value': True},
-                                                                 {   'region': 'Volcano - Floor 5',
-                                                                     'type': 'region_check'},
-                                                                 {'region': 'Island Trader', 'type': 'region_check'}],
-                                               'type': 'and'}],
+                                           {'name': 'has_pineapple_seeds', 'type': 'helper'}],
                          'type': 'and'},
     'has_pineapple_seeds': {   'conditions': [   {'item': 'Pineapple Seeds', 'type': 'item_check'},
                                                  {'type': 'constant', 'value': True},
@@ -4999,12 +3926,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                  'item': 'Received Progression Percent',
                                                  'type': 'item_check'},
                                              {'region': 'Fall Farming', 'type': 'region_check'},
-                                             {   'conditions': [   {   'item': 'Pomegranate Sapling',
-                                                                       'type': 'item_check'},
-                                                                   {'item': 'Shipping Bin', 'type': 'item_check'},
-                                                                   {'type': 'constant', 'value': True},
-                                                                   {'type': 'constant', 'value': True}],
-                                                 'type': 'and'}],
+                                             {'name': 'has_pomegranate_sapling', 'type': 'helper'}],
                            'type': 'and'},
     'has_pomegranate_sapling': {   'conditions': [   {'item': 'Pomegranate Sapling', 'type': 'item_check'},
                                                      {'item': 'Shipping Bin', 'type': 'item_check'},
@@ -5017,11 +3939,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                              {'type': 'constant', 'value': True}],
                            'type': 'and'},
     'has_potato': {   'conditions': [   {'region': 'Spring Farming', 'type': 'region_check'},
-                                        {   'conditions': [   {'item': 'Potato Seeds', 'type': 'item_check'},
-                                                              {'item': 'Spring', 'type': 'item_check'},
-                                                              {'type': 'constant', 'value': True},
-                                                              {'type': 'constant', 'value': True}],
-                                            'type': 'and'}],
+                                        {'name': 'has_potato_seeds', 'type': 'helper'}],
                       'type': 'and'},
     'has_potato_seeds': {   'conditions': [   {'item': 'Potato Seeds', 'type': 'item_check'},
                                               {'item': 'Spring', 'type': 'item_check'},
@@ -5029,12 +3947,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                               {'type': 'constant', 'value': True}],
                             'type': 'and'},
     'has_powdermelon': {   'conditions': [   {'region': 'Winter Farming', 'type': 'region_check'},
-                                             {   'conditions': [   {'item': 'Powdermelon Seeds', 'type': 'item_check'},
-                                                                   {'type': 'constant', 'value': True},
-                                                                   {'type': 'constant', 'value': True},
-                                                                   {'item': 'Foraging Level', 'type': 'item_check'},
-                                                                   {'region': 'Raccoon Shop', 'type': 'region_check'}],
-                                                 'type': 'and'}],
+                                             {'name': 'has_powdermelon_seeds', 'type': 'helper'}],
                            'type': 'and'},
     'has_powdermelon_seeds': {   'conditions': [   {'item': 'Powdermelon Seeds', 'type': 'item_check'},
                                                    {'type': 'constant', 'value': True},
@@ -5047,10 +3960,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                    'type': 'item_check'},
                                                {'type': 'constant', 'value': True},
                                                {'type': 'constant', 'value': True},
-                                               {   'conditions': [   {'item': 'Progressive Pan', 'type': 'item_check'},
-                                                                     {   'region': 'The Mines - Floor 45',
-                                                                         'type': 'region_check'}],
-                                                   'type': 'or'}],
+                                               {'name': 'has_coal', 'type': 'helper'}],
                              'type': 'and'},
     'has_price_catalogue': {   'conditions': [   {'item': 'Shipping Bin', 'type': 'item_check'},
                                                  {'type': 'constant', 'value': True},
@@ -5070,11 +3980,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                             {'item': 'Summer', 'type': 'item_check'}],
                           'type': 'and'},
     'has_pumpkin': {   'conditions': [   {'region': 'Fall Farming', 'type': 'region_check'},
-                                         {   'conditions': [   {'item': 'Pumpkin Seeds', 'type': 'item_check'},
-                                                               {'item': 'Fall', 'type': 'item_check'},
-                                                               {'type': 'constant', 'value': True},
-                                                               {'type': 'constant', 'value': True}],
-                                             'type': 'and'}],
+                                         {'name': 'has_pumpkin_seeds', 'type': 'helper'}],
                        'type': 'and'},
     'has_pumpkin_seeds': {   'conditions': [   {'item': 'Pumpkin Seeds', 'type': 'item_check'},
                                                {'item': 'Fall', 'type': 'item_check'},
@@ -5088,47 +3994,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_quality_bobber': {   'conditions': [   {'item': 'Quality Bobber Recipe', 'type': 'item_check'},
                                                 {'item': 'Copper Bar (Logic event)', 'type': 'item_check'},
                                                 {'type': 'constant', 'value': True},
-                                                {   'conditions': [   {   'region': 'The Mines - Floor 45',
-                                                                          'type': 'region_check'},
-                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                             'value': 3},
-                                                                                                'item': 'Progressive '
-                                                                                                        'Pickaxe',
-                                                                                                'type': 'item_check'},
-                                                                                            {   'count': {   'type': 'constant',
-                                                                                                             'value': 6},
-                                                                                                'item': 'Combat Level',
-                                                                                                'type': 'item_check'},
-                                                                                            {   'count': {   'type': 'constant',
-                                                                                                             'value': 6},
-                                                                                                'item': 'Mining Level',
-                                                                                                'type': 'item_check'},
-                                                                                            {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                   'value': 4},
-                                                                                                                      'item': 'Progressive '
-                                                                                                                              'Weapon',
-                                                                                                                      'type': 'item_check'},
-                                                                                                                  {   'count': {   'type': 'constant',
-                                                                                                                                   'value': 4},
-                                                                                                                      'item': 'Progressive '
-                                                                                                                              'Sword',
-                                                                                                                      'type': 'item_check'},
-                                                                                                                  {   'count': {   'type': 'constant',
-                                                                                                                                   'value': 4},
-                                                                                                                      'item': 'Progressive '
-                                                                                                                              'Club',
-                                                                                                                      'type': 'item_check'},
-                                                                                                                  {   'count': {   'type': 'constant',
-                                                                                                                                   'value': 4},
-                                                                                                                      'item': 'Progressive '
-                                                                                                                              'Dagger',
-                                                                                                                      'type': 'item_check'}],
-                                                                                                'type': 'or'},
-                                                                                            {   'region': 'Skull '
-                                                                                                          'Cavern',
-                                                                                                'type': 'region_check'}],
-                                                                          'type': 'and'}],
-                                                    'type': 'or'}],
+                                                {'name': 'has_solar_essence', 'type': 'helper'}],
                               'type': 'and'},
     'has_quality_fertilizer': {   'conditions': [   {   'count': {'type': 'constant', 'value': 16},
                                                         'item': 'Received Progression Percent',
@@ -5137,853 +4003,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                               'item': 'Farming Level',
                                                                               'type': 'item_check'},
                                                                           {'type': 'constant', 'value': True},
-                                                                          {   'conditions': [   {   'item': 'Progressive '
-                                                                                                            'Fishing '
-                                                                                                            'Rod',
-                                                                                                    'type': 'item_check'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 5},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Fall',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Winter',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Spring',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Fall',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 3},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Spring',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Summer',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Fall',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 6},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Spring',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Fall',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 6},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Summer',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 6},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Spring',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Fall',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Spring',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Summer',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'region': 'Waterfall',
-                                                                                                                          'type': 'region_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Spring',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Summer',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Winter',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Spring',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Winter',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 7},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Winter',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Fall',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Winter',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 8},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Summer',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'item': 'Winter',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 5},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Summer',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Winter',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 7},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Summer',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 3},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Summer',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Summer',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Winter',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Summer',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Fall',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Fall',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Spring',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Fall',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Winter',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Fall',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Winter',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 3},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Spring',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Summer',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Fall',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'region': 'Mutant '
-                                                                                                                                    'Bug '
-                                                                                                                                    'Lair',
-                                                                                                                          'type': 'region_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Spring',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Fall',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 6},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Winter',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 6},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Summer',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Winter',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Spring',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Summer',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 7},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Summer',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Fall',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 5},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Fall',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Winter',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Summer',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Fall',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 6},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Summer',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Winter',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 7},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'region': "Witch's "
-                                                                                                                                    'Swamp',
-                                                                                                                          'type': 'region_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 3},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Fall',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'region': 'Secret '
-                                                                                                                                    'Woods',
-                                                                                                                          'type': 'region_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 6},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Winter',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Winter',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 5},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Winter',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 10},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Fall',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'item': 'Summer',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 10},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'region': 'Tide '
-                                                                                                                                    'Pools',
-                                                                                                                          'type': 'region_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 10},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Winter',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 10},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Spring',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 10},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'region': 'Sewer',
-                                                                                                                          'type': 'region_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                                                          'type': 'helper'},
-                                                                                                                      {   'name': 'has_bait',
-                                                                                                                          'type': 'helper'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                                                          'type': 'helper'},
-                                                                                                                      {   'name': 'has_bait',
-                                                                                                                          'type': 'helper'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                                                          'type': 'helper'},
-                                                                                                                      {   'name': 'has_bait',
-                                                                                                                          'type': 'helper'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                                                          'type': 'helper'},
-                                                                                                                      {   'name': 'has_bait',
-                                                                                                                          'type': 'helper'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                                                          'type': 'helper'},
-                                                                                                                      {   'name': 'has_bait',
-                                                                                                                          'type': 'helper'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                                                          'type': 'helper'},
-                                                                                                                      {   'name': 'has_bait',
-                                                                                                                          'type': 'helper'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                                                          'type': 'helper'},
-                                                                                                                      {   'name': 'has_bait',
-                                                                                                                          'type': 'helper'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                                                          'type': 'helper'},
-                                                                                                                      {   'name': 'has_bait',
-                                                                                                                          'type': 'helper'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                                                          'type': 'helper'},
-                                                                                                                      {   'name': 'has_bait',
-                                                                                                                          'type': 'helper'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                                                          'type': 'helper'},
-                                                                                                                      {   'name': 'has_bait',
-                                                                                                                          'type': 'helper'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 5},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'region': 'Island '
-                                                                                                                                    'West',
-                                                                                                                          'type': 'region_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'region': 'Island '
-                                                                                                                                                          'South',
-                                                                                                                                                'type': 'region_check'},
-                                                                                                                                            {   'region': 'Island '
-                                                                                                                                                          'West',
-                                                                                                                                                'type': 'region_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 7},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'region': 'Pirate '
-                                                                                                                                    'Cove',
-                                                                                                                          'type': 'region_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 5},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'region': 'Desert',
-                                                                                                                          'type': 'region_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 8},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'region': 'Desert',
-                                                                                                                          'type': 'region_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'region': 'The '
-                                                                                                                                                          'Mines '
-                                                                                                                                                          '- '
-                                                                                                                                                          'Floor '
-                                                                                                                                                          '20',
-                                                                                                                                                'type': 'region_check'},
-                                                                                                                                            {   'region': 'The '
-                                                                                                                                                          'Mines '
-                                                                                                                                                          '- '
-                                                                                                                                                          'Floor '
-                                                                                                                                                          '60',
-                                                                                                                                                'type': 'region_check'}],
-                                                                                                                          'type': 'or'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 7},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'region': 'The '
-                                                                                                                                    'Mines '
-                                                                                                                                    '- '
-                                                                                                                                    'Floor '
-                                                                                                                                    '60',
-                                                                                                                          'type': 'region_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 4},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 8},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'region': 'The '
-                                                                                                                                    'Mines '
-                                                                                                                                    '- '
-                                                                                                                                    'Floor '
-                                                                                                                                    '100',
-                                                                                                                          'type': 'region_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'item': 'Progressive '
-                                                                                                                                  'Fishing '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'count': {   'type': 'constant',
-                                                                                                                                       'value': 5},
-                                                                                                                          'item': 'Fishing '
-                                                                                                                                  'Level',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'region': 'The '
-                                                                                                                                    'Mines '
-                                                                                                                                    '- '
-                                                                                                                                    'Floor '
-                                                                                                                                    '20',
-                                                                                                                          'type': 'region_check'}],
-                                                                                                    'type': 'and'}],
-                                                                              'type': 'or'}],
+                                                                          {'name': 'has_any_fish', 'type': 'helper'}],
                                                         'type': 'and'}],
                                   'type': 'or'},
     'has_queen_of_sauce_cookbook': {   'conditions': [   {'item': 'Shipping Bin', 'type': 'item_check'},
@@ -6025,91 +4045,12 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                          {'region': 'Island Southeast', 'type': 'region_check'},
                                                          {'region': 'Field Office', 'type': 'region_check'},
                                                          {'region': 'Pirate Cove', 'type': 'region_check'},
-                                                         {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                'value': 4},
-                                                                                   'item': 'Received Progression '
-                                                                                           'Percent',
-                                                                                   'type': 'item_check'},
-                                                                               {   'region': 'Summer Farming',
-                                                                                   'type': 'region_check'},
-                                                                               {   'name': 'has_banana_sapling',
-                                                                                   'type': 'helper'}],
-                                                             'type': 'and'},
-                                                         {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                'value': 28},
-                                                                                   'item': 'Received Progression '
-                                                                                           'Percent',
-                                                                                   'type': 'item_check'},
-                                                                               {   'conditions': [   {   'region': 'The '
-                                                                                                                   'Mines '
-                                                                                                                   '- '
-                                                                                                                   'Floor '
-                                                                                                                   '20',
-                                                                                                         'type': 'region_check'},
-                                                                                                     {   'name': 'has_fishing_chest',
-                                                                                                         'type': 'helper'}],
-                                                                                   'type': 'or'}],
-                                                             'type': 'and'},
-                                                         {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                'value': 28},
-                                                                                   'item': 'Received Progression '
-                                                                                           'Percent',
-                                                                                   'type': 'item_check'},
-                                                                               {   'conditions': [   {   'region': 'The '
-                                                                                                                   'Mines '
-                                                                                                                   '- '
-                                                                                                                   'Floor '
-                                                                                                                   '60',
-                                                                                                         'type': 'region_check'},
-                                                                                                     {   'name': 'has_fishing_chest',
-                                                                                                         'type': 'helper'}],
-                                                                                   'type': 'or'}],
-                                                             'type': 'and'},
-                                                         {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                'value': 28},
-                                                                                   'item': 'Received Progression '
-                                                                                           'Percent',
-                                                                                   'type': 'item_check'},
-                                                                               {   'conditions': [   {   'region': 'The '
-                                                                                                                   'Mines '
-                                                                                                                   '- '
-                                                                                                                   'Floor '
-                                                                                                                   '100',
-                                                                                                         'type': 'region_check'},
-                                                                                                     {   'name': 'has_fishing_chest',
-                                                                                                         'type': 'helper'}],
-                                                                                   'type': 'or'}],
-                                                             'type': 'and'},
-                                                         {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                'value': 28},
-                                                                                   'item': 'Received Progression '
-                                                                                           'Percent',
-                                                                                   'type': 'item_check'},
-                                                                               {   'conditions': [   {   'region': 'The '
-                                                                                                                   'Mines '
-                                                                                                                   '- '
-                                                                                                                   'Floor '
-                                                                                                                   '100',
-                                                                                                         'type': 'region_check'},
-                                                                                                     {   'name': 'has_fishing_chest',
-                                                                                                         'type': 'helper'}],
-                                                                                   'type': 'or'}],
-                                                             'type': 'and'},
-                                                         {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                'value': 28},
-                                                                                   'item': 'Received Progression '
-                                                                                           'Percent',
-                                                                                   'type': 'item_check'},
-                                                                               {   'conditions': [   {   'region': 'The '
-                                                                                                                   'Mines '
-                                                                                                                   '- '
-                                                                                                                   'Floor '
-                                                                                                                   '20',
-                                                                                                         'type': 'region_check'},
-                                                                                                     {   'name': 'has_fishing_chest',
-                                                                                                         'type': 'helper'}],
-                                                                                   'type': 'or'}],
-                                                             'type': 'and'},
+                                                         {'name': 'has_banana', 'type': 'helper'},
+                                                         {'name': 'has_amethyst', 'type': 'helper'},
+                                                         {'name': 'has_aquamarine', 'type': 'helper'},
+                                                         {'name': 'has_emerald', 'type': 'helper'},
+                                                         {'name': 'has_ruby', 'type': 'helper'},
+                                                         {'name': 'has_topaz', 'type': 'helper'},
                                                          {   'conditions': [   {   'count': {   'type': 'constant',
                                                                                                 'value': 5},
                                                                                    'item': 'Progressive Weapon',
@@ -6128,53 +4069,16 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                                    'type': 'item_check'}],
                                                              'type': 'or'},
                                                          {'region': 'Kitchen', 'type': 'region_check'},
-                                                         {   'conditions': [   {'item': 'Fall', 'type': 'item_check'},
-                                                                               {'type': 'constant', 'value': True},
-                                                                               {'type': 'constant', 'value': True},
-                                                                               {   'item': 'Copper Ore (Logic event)',
-                                                                                   'type': 'item_check'},
-                                                                               {'type': 'constant', 'value': True}],
-                                                             'type': 'and'},
-                                                         {   'conditions': [   {   'item': 'Melon Seeds',
-                                                                                   'type': 'item_check'},
-                                                                               {'item': 'Summer', 'type': 'item_check'},
-                                                                               {'type': 'constant', 'value': True},
-                                                                               {'type': 'constant', 'value': True}],
-                                                             'type': 'and'},
-                                                         {   'conditions': [   {   'item': 'Wheat Seeds',
-                                                                                   'type': 'item_check'},
-                                                                               {   'conditions': [   {   'item': 'Summer',
-                                                                                                         'type': 'item_check'},
-                                                                                                     {   'item': 'Fall',
-                                                                                                         'type': 'item_check'}],
-                                                                                   'type': 'or'},
-                                                                               {'type': 'constant', 'value': True},
-                                                                               {'type': 'constant', 'value': True}],
-                                                             'type': 'and'},
-                                                         {   'conditions': [   {   'item': 'Garlic Seeds',
-                                                                                   'type': 'item_check'},
-                                                                               {'item': 'Spring', 'type': 'item_check'},
-                                                                               {'type': 'constant', 'value': True},
-                                                                               {'type': 'constant', 'value': True}],
-                                                             'type': 'and'},
+                                                         {'name': 'has_flute_block', 'type': 'helper'},
+                                                         {'name': 'has_melon_seeds', 'type': 'helper'},
+                                                         {'name': 'has_wheat_seeds', 'type': 'helper'},
+                                                         {'name': 'has_garlic_seeds', 'type': 'helper'},
                                                          {'region': 'Field Office', 'type': 'region_check'},
                                                          {'region': 'Dig Site', 'type': 'region_check'},
-                                                         {   'conditions': [   {   'item': 'Open Professor Snail Cave',
-                                                                                   'type': 'item_check'},
-                                                                               {   'region': 'Island South',
-                                                                                   'type': 'region_check'}],
-                                                             'type': 'and'},
+                                                         {'name': 'has_fossilized_ribs', 'type': 'helper'},
                                                          {'region': 'Island North', 'type': 'region_check'},
-                                                         {   'conditions': [   {   'item': 'Progressive Fishing Rod',
-                                                                                   'type': 'item_check'},
-                                                                               {   'region': 'Dig Site',
-                                                                                   'type': 'region_check'}],
-                                                             'type': 'and'},
-                                                         {   'conditions': [   {   'item': 'Progressive Pan',
-                                                                                   'type': 'item_check'},
-                                                                               {   'region': 'Dig Site',
-                                                                                   'type': 'region_check'}],
-                                                             'type': 'and'},
+                                                         {'name': 'has_fossilized_spine', 'type': 'helper'},
+                                                         {'name': 'has_fossilized_tail', 'type': 'helper'},
                                                          {'region': 'Field Office', 'type': 'region_check'},
                                                          {'region': 'Dig Site', 'type': 'region_check'},
                                                          {'region': 'Island West', 'type': 'region_check'},
@@ -6256,97 +4160,36 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                    {'item': 'Iron Bar (Logic event)', 'type': 'item_check'}],
                                  'type': 'and'},
     'has_red_cabbage': {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
-                                             {   'conditions': [   {'item': 'Red Cabbage Seeds', 'type': 'item_check'},
-                                                                   {'item': 'Summer', 'type': 'item_check'},
-                                                                   {'type': 'constant', 'value': True},
-                                                                   {'type': 'constant', 'value': True}],
-                                                 'type': 'and'}],
+                                             {'name': 'has_red_cabbage_seeds', 'type': 'helper'}],
                            'type': 'and'},
     'has_red_cabbage_seeds': {   'conditions': [   {'item': 'Red Cabbage Seeds', 'type': 'item_check'},
                                                    {'item': 'Summer', 'type': 'item_check'},
                                                    {'type': 'constant', 'value': True},
                                                    {'type': 'constant', 'value': True}],
                                  'type': 'and'},
-    'has_refined_quartz': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'item': 'Mining Level',
-                                                                                                'type': 'item_check'},
-                                                                                            {   'region': 'The Mines - '
-                                                                                                          'Floor 5',
-                                                                                                'type': 'region_check'},
-                                                                                            {   'item': 'Copper Ore '
-                                                                                                        '(Logic event)',
-                                                                                                'type': 'item_check'},
-                                                                                            {   'type': 'constant',
-                                                                                                'value': True}],
-                                                                          'type': 'and'},
+    'has_refined_quartz': {   'conditions': [   {   'conditions': [   {'name': 'has_furnace', 'type': 'helper'},
                                                                       {   'region': 'The Mines - Floor 20',
                                                                           'type': 'region_check'}],
                                                     'type': 'and'},
-                                                {   'conditions': [   {   'conditions': [   {   'item': 'Mining Level',
-                                                                                                'type': 'item_check'},
-                                                                                            {   'region': 'The Mines - '
-                                                                                                          'Floor 5',
-                                                                                                'type': 'region_check'},
-                                                                                            {   'item': 'Copper Ore '
-                                                                                                        '(Logic event)',
-                                                                                                'type': 'item_check'},
-                                                                                            {   'type': 'constant',
-                                                                                                'value': True}],
-                                                                          'type': 'and'},
-                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                             'value': 4},
-                                                                                                'item': 'Progressive '
-                                                                                                        'Pan',
-                                                                                                'type': 'item_check'},
-                                                                                            {   'region': 'The Mines - '
-                                                                                                          'Floor 100',
-                                                                                                'type': 'region_check'},
-                                                                                            {   'conditions': [   {   'name': 'has_magma_geode',
-                                                                                                                      'type': 'helper'},
-                                                                                                                  {   'name': 'has_omni_geode',
-                                                                                                                      'type': 'helper'},
-                                                                                                                  {   'name': 'has_fishing_chest',
-                                                                                                                      'type': 'helper'}],
-                                                                                                'type': 'and'}],
-                                                                          'type': 'or'}],
+                                                {   'conditions': [   {'name': 'has_furnace', 'type': 'helper'},
+                                                                      {'name': 'has_fire_quartz', 'type': 'helper'}],
                                                     'type': 'and'},
-                                                {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                             'value': 4},
-                                                                                                'item': 'Fishing Level',
-                                                                                                'type': 'item_check'},
-                                                                                            {   'type': 'constant',
-                                                                                                'value': True},
-                                                                                            {   'type': 'constant',
-                                                                                                'value': True},
-                                                                                            {   'item': 'Iron Bar '
-                                                                                                        '(Logic event)',
-                                                                                                'type': 'item_check'}],
-                                                                          'type': 'and'},
-                                                                      {   'conditions': [   {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                                                      'type': 'helper'},
-                                                                                                                  {   'name': 'has_bait',
-                                                                                                                      'type': 'helper'}],
-                                                                                                'type': 'and'},
-                                                                                            {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                                                      'type': 'helper'},
-                                                                                                                  {   'name': 'has_bait',
-                                                                                                                      'type': 'helper'}],
-                                                                                                'type': 'and'}],
+                                                {   'conditions': [   {   'name': 'has_recycling_machine',
+                                                                          'type': 'helper'},
+                                                                      {   'conditions': [   {   'name': 'has_broken_cd',
+                                                                                                'type': 'helper'},
+                                                                                            {   'name': 'has_broken_glasses',
+                                                                                                'type': 'helper'}],
                                                                           'type': 'or'}],
                                                     'type': 'and'}],
                               'type': 'or'},
     'has_rhubarb': {   'conditions': [   {'region': 'Spring Farming', 'type': 'region_check'},
-                                         {   'conditions': [   {'item': 'Rhubarb Seeds', 'type': 'item_check'},
-                                                               {'item': 'Spring', 'type': 'item_check'},
-                                                               {'type': 'constant', 'value': True},
-                                                               {'region': 'Oasis', 'type': 'region_check'}],
-                                             'type': 'and'}],
+                                         {'name': 'has_rhubarb_seeds', 'type': 'helper'}],
                        'type': 'and'},
     'has_rhubarb_pie': {   'conditions': [   {'item': 'Fall', 'type': 'item_check'},
                                              {'type': 'constant', 'value': True},
                                              {'region': 'Kitchen', 'type': 'region_check'},
-                                             {   'conditions': [   {'region': 'Spring Farming', 'type': 'region_check'},
-                                                                   {'name': 'has_rhubarb_seeds', 'type': 'helper'}],
-                                                 'type': 'and'},
+                                             {'name': 'has_rhubarb', 'type': 'helper'},
                                              {'type': 'constant', 'value': True},
                                              {'type': 'constant', 'value': True}],
                            'type': 'and'},
@@ -6364,15 +4207,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                           'item': 'Received Progression Percent',
                                           'type': 'item_check'},
                                       {   'conditions': [   {'region': 'The Mines - Floor 100', 'type': 'region_check'},
-                                                            {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                   'value': 4},
-                                                                                      'item': 'Progressive Fishing Rod',
-                                                                                      'type': 'item_check'},
-                                                                                  {   'count': {   'type': 'constant',
-                                                                                                   'value': 6},
-                                                                                      'item': 'Fishing Level',
-                                                                                      'type': 'item_check'}],
-                                                                'type': 'and'}],
+                                                            {'name': 'has_fishing_chest', 'type': 'helper'}],
                                           'type': 'or'}],
                     'type': 'and'},
     'has_salmon': {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
@@ -6395,743 +4230,11 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_sashimi': {   'conditions': [   {'item': 'Winter', 'type': 'item_check'},
                                          {'type': 'constant', 'value': True},
                                          {'region': 'Kitchen', 'type': 'region_check'},
-                                         {   'conditions': [   {   'item': 'Progressive Fishing Rod',
-                                                                   'type': 'item_check'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 5},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Fall',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Winter',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Spring',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Fall',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 3},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Spring',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Summer',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Fall',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 6},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Spring',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Fall',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 6},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'item': 'Summer',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 6},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Spring',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Fall',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Spring',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Summer',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'region': 'Waterfall',
-                                                                                         'type': 'region_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Spring',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Summer',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Winter',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Spring',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Winter',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 7},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'item': 'Winter',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Fall',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Winter',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 8},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'item': 'Summer',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'item': 'Winter',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 5},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Summer',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Winter',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 7},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'item': 'Summer',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 3},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'item': 'Summer',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Summer',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Winter',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Summer',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Fall',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'item': 'Fall',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Spring',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Fall',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Winter',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Fall',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Winter',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 3},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Spring',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Summer',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Fall',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'region': 'Mutant Bug Lair',
-                                                                                         'type': 'region_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Spring',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Fall',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 6},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'item': 'Winter',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 6},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Summer',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Winter',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Spring',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Summer',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 7},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Summer',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Fall',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 5},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Fall',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Winter',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Summer',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Fall',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 6},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'item': 'Summer',
-                                                                                                               'type': 'item_check'},
-                                                                                                           {   'item': 'Winter',
-                                                                                                               'type': 'item_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 7},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'region': "Witch's Swamp",
-                                                                                         'type': 'region_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 3},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'item': 'Fall',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'region': 'Secret Woods',
-                                                                                         'type': 'region_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 6},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'item': 'Winter',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'item': 'Winter',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 5},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'item': 'Winter',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 10},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'item': 'Fall',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'item': 'Summer',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 10},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'region': 'Tide Pools',
-                                                                                         'type': 'region_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 10},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'item': 'Winter',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 10},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'item': 'Spring',
-                                                                                         'type': 'item_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 10},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'region': 'Sewer',
-                                                                                         'type': 'region_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                         'type': 'helper'},
-                                                                                     {   'name': 'has_bait',
-                                                                                         'type': 'helper'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                         'type': 'helper'},
-                                                                                     {   'name': 'has_bait',
-                                                                                         'type': 'helper'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                         'type': 'helper'},
-                                                                                     {   'name': 'has_bait',
-                                                                                         'type': 'helper'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                         'type': 'helper'},
-                                                                                     {   'name': 'has_bait',
-                                                                                         'type': 'helper'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                         'type': 'helper'},
-                                                                                     {   'name': 'has_bait',
-                                                                                         'type': 'helper'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                         'type': 'helper'},
-                                                                                     {   'name': 'has_bait',
-                                                                                         'type': 'helper'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                         'type': 'helper'},
-                                                                                     {   'name': 'has_bait',
-                                                                                         'type': 'helper'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                         'type': 'helper'},
-                                                                                     {   'name': 'has_bait',
-                                                                                         'type': 'helper'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                         'type': 'helper'},
-                                                                                     {   'name': 'has_bait',
-                                                                                         'type': 'helper'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'name': 'has_crab_pot',
-                                                                                         'type': 'helper'},
-                                                                                     {   'name': 'has_bait',
-                                                                                         'type': 'helper'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 5},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'region': 'Island West',
-                                                                                         'type': 'region_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'region': 'Island '
-                                                                                                                         'South',
-                                                                                                               'type': 'region_check'},
-                                                                                                           {   'region': 'Island '
-                                                                                                                         'West',
-                                                                                                               'type': 'region_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 7},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'region': 'Pirate Cove',
-                                                                                         'type': 'region_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 5},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'region': 'Desert',
-                                                                                         'type': 'region_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 8},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'region': 'Desert',
-                                                                                         'type': 'region_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'conditions': [   {   'region': 'The '
-                                                                                                                         'Mines '
-                                                                                                                         '- '
-                                                                                                                         'Floor '
-                                                                                                                         '20',
-                                                                                                               'type': 'region_check'},
-                                                                                                           {   'region': 'The '
-                                                                                                                         'Mines '
-                                                                                                                         '- '
-                                                                                                                         'Floor '
-                                                                                                                         '60',
-                                                                                                               'type': 'region_check'}],
-                                                                                         'type': 'or'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 7},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'region': 'The Mines - Floor '
-                                                                                                   '60',
-                                                                                         'type': 'region_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 4},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 8},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'region': 'The Mines - Floor '
-                                                                                                   '100',
-                                                                                         'type': 'region_check'}],
-                                                                   'type': 'and'},
-                                                               {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                      'value': 2},
-                                                                                         'item': 'Progressive Fishing '
-                                                                                                 'Rod',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'count': {   'type': 'constant',
-                                                                                                      'value': 5},
-                                                                                         'item': 'Fishing Level',
-                                                                                         'type': 'item_check'},
-                                                                                     {   'region': 'The Mines - Floor '
-                                                                                                   '20',
-                                                                                         'type': 'region_check'}],
-                                                                   'type': 'and'}],
-                                             'type': 'or'}],
+                                         {'name': 'has_any_fish', 'type': 'helper'}],
                        'type': 'and'},
     'has_scarecrow': {   'conditions': [   {'item': 'Farming Level', 'type': 'item_check'},
                                            {'type': 'constant', 'value': True},
-                                           {   'conditions': [   {'item': 'Progressive Pan', 'type': 'item_check'},
-                                                                 {   'region': 'The Mines - Floor 45',
-                                                                     'type': 'region_check'}],
-                                               'type': 'or'},
+                                           {'name': 'has_coal', 'type': 'helper'},
                                            {'type': 'constant', 'value': True}],
                          'type': 'and'},
     'has_seaweed': {   'conditions': [   {'item': 'Progressive Fishing Rod', 'type': 'item_check'},
@@ -7141,10 +4244,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                 'item': 'Farming Level',
                                                 'type': 'item_check'},
                                             {'type': 'constant', 'value': True},
-                                            {   'conditions': [   {'item': 'Progressive Pan', 'type': 'item_check'},
-                                                                  {   'region': 'The Mines - Floor 45',
-                                                                      'type': 'region_check'}],
-                                                'type': 'or'},
+                                            {'name': 'has_coal', 'type': 'helper'},
                                             {'item': 'Gold Bar (Logic event)', 'type': 'item_check'}],
                           'type': 'and'},
     'has_shad': {   'conditions': [   {'item': 'Progressive Fishing Rod', 'type': 'item_check'},
@@ -7159,36 +4259,9 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_slime_egg_press': {   'conditions': [   {   'count': {'type': 'constant', 'value': 6},
                                                      'item': 'Combat Level',
                                                      'type': 'item_check'},
-                                                 {   'conditions': [   {   'item': 'Progressive Pan',
-                                                                           'type': 'item_check'},
-                                                                       {   'region': 'The Mines - Floor 45',
-                                                                           'type': 'region_check'}],
-                                                     'type': 'or'},
-                                                 {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
-                                                                           'item': 'Progressive Pan',
-                                                                           'type': 'item_check'},
-                                                                       {   'region': 'The Mines - Floor 100',
-                                                                           'type': 'region_check'},
-                                                                       {   'conditions': [   {   'name': 'has_magma_geode',
-                                                                                                 'type': 'helper'},
-                                                                                             {   'name': 'has_omni_geode',
-                                                                                                 'type': 'helper'},
-                                                                                             {   'name': 'has_fishing_chest',
-                                                                                                 'type': 'helper'}],
-                                                                           'type': 'and'}],
-                                                     'type': 'or'},
-                                                 {   'conditions': [   {   'conditions': [   {   'name': 'has_lightning_rod',
-                                                                                                 'type': 'helper'},
-                                                                                             {   'conditions': [   {   'item': 'Spring',
-                                                                                                                       'type': 'item_check'},
-                                                                                                                   {   'item': 'Summer',
-                                                                                                                       'type': 'item_check'},
-                                                                                                                   {   'item': 'Fall',
-                                                                                                                       'type': 'item_check'}],
-                                                                                                 'type': 'or'}],
-                                                                           'type': 'and'},
-                                                                       {'name': 'has_solar_panel', 'type': 'helper'}],
-                                                     'type': 'or'}],
+                                                 {'name': 'has_coal', 'type': 'helper'},
+                                                 {'name': 'has_fire_quartz', 'type': 'helper'},
+                                                 {'name': 'has_battery_pack', 'type': 'helper'}],
                                'type': 'and'},
     'has_smallmouth_bass': {   'conditions': [   {'item': 'Progressive Fishing Rod', 'type': 'item_check'},
                                                  {   'conditions': [   {'item': 'Spring', 'type': 'item_check'},
@@ -7231,26 +4304,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                    'type': 'and'}],
                              'type': 'or'},
     'has_solar_panel': {   'conditions': [   {'item': 'Solar Panel Recipe', 'type': 'item_check'},
-                                             {   'conditions': [   {   'conditions': [   {   'name': 'has_furnace',
-                                                                                             'type': 'helper'},
-                                                                                         {   'region': 'The Mines - '
-                                                                                                       'Floor 20',
-                                                                                             'type': 'region_check'}],
-                                                                       'type': 'and'},
-                                                                   {   'conditions': [   {   'name': 'has_furnace',
-                                                                                             'type': 'helper'},
-                                                                                         {   'name': 'has_fire_quartz',
-                                                                                             'type': 'helper'}],
-                                                                       'type': 'and'},
-                                                                   {   'conditions': [   {   'name': 'has_recycling_machine',
-                                                                                             'type': 'helper'},
-                                                                                         {   'conditions': [   {   'name': 'has_broken_cd',
-                                                                                                                   'type': 'helper'},
-                                                                                                               {   'name': 'has_broken_glasses',
-                                                                                                                   'type': 'helper'}],
-                                                                                             'type': 'or'}],
-                                                                       'type': 'and'}],
-                                                 'type': 'or'},
+                                             {'name': 'has_refined_quartz', 'type': 'helper'},
                                              {'item': 'Iron Bar (Logic event)', 'type': 'item_check'},
                                              {'item': 'Gold Bar (Logic event)', 'type': 'item_check'}],
                            'type': 'and'},
@@ -7282,38 +4336,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                             'type': 'region_check'}],
                                       'type': 'and'},
     'has_starfruit': {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
-                                           {   'conditions': [   {'item': 'Starfruit Seeds', 'type': 'item_check'},
-                                                                 {'item': 'Summer', 'type': 'item_check'},
-                                                                 {   'conditions': [   {   'item': 'Shipping Bin',
-                                                                                           'type': 'item_check'},
-                                                                                       {   'conditions': [   {   'type': 'constant',
-                                                                                                                 'value': True},
-                                                                                                             {   'type': 'constant',
-                                                                                                                 'value': True}],
-                                                                                           'type': 'and'},
-                                                                                       {   'conditions': [   {   'type': 'constant',
-                                                                                                                 'value': True},
-                                                                                                             {   'region': 'Fishing',
-                                                                                                                 'type': 'region_check'}],
-                                                                                           'type': 'and'},
-                                                                                       {   'conditions': [   {   'type': 'constant',
-                                                                                                                 'value': True},
-                                                                                                             {   'region': 'The '
-                                                                                                                           'Mines '
-                                                                                                                           '- '
-                                                                                                                           'Floor '
-                                                                                                                           '5',
-                                                                                                                 'type': 'region_check'}],
-                                                                                           'type': 'and'},
-                                                                                       {   'conditions': [   {   'type': 'constant',
-                                                                                                                 'value': True},
-                                                                                                             {   'region': 'Secret '
-                                                                                                                           'Woods',
-                                                                                                                 'type': 'region_check'}],
-                                                                                           'type': 'and'}],
-                                                                     'type': 'or'},
-                                                                 {'region': 'Oasis', 'type': 'region_check'}],
-                                               'type': 'and'}],
+                                           {'name': 'has_starfruit_seeds', 'type': 'helper'}],
                          'type': 'and'},
     'has_starfruit_seeds': {   'conditions': [   {'item': 'Starfruit Seeds', 'type': 'item_check'},
                                                  {'item': 'Summer', 'type': 'item_check'},
@@ -7352,11 +4375,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                           {'region': 'Pirate Cove', 'type': 'region_check'}],
                         'type': 'and'},
     'has_strawberry': {   'conditions': [   {'region': 'Spring Farming', 'type': 'region_check'},
-                                            {   'conditions': [   {'item': 'Strawberry Seeds', 'type': 'item_check'},
-                                                                  {'item': 'Spring', 'type': 'item_check'},
-                                                                  {'type': 'constant', 'value': True},
-                                                                  {'region': 'Egg Festival', 'type': 'region_check'}],
-                                                'type': 'and'}],
+                                            {'name': 'has_strawberry_seeds', 'type': 'helper'}],
                           'type': 'and'},
     'has_strawberry_seeds': {   'conditions': [   {'item': 'Strawberry Seeds', 'type': 'item_check'},
                                                   {'item': 'Spring', 'type': 'item_check'},
@@ -7366,16 +4385,8 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_summer_seeds': {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
                                                   'item': 'Foraging Level',
                                                   'type': 'item_check'},
-                                              {   'conditions': [   {'item': 'Summer', 'type': 'item_check'},
-                                                                    {'item': 'Fruit Bats', 'type': 'item_check'}],
-                                                  'type': 'or'},
-                                              {   'conditions': [   {'item': 'Summer', 'type': 'item_check'},
-                                                                    {   'conditions': [   {   'region': 'Fall Farming',
-                                                                                              'type': 'region_check'},
-                                                                                          {   'name': 'has_grape_starter',
-                                                                                              'type': 'helper'}],
-                                                                        'type': 'and'}],
-                                                  'type': 'or'},
+                                              {'name': 'has_spice_berry', 'type': 'helper'},
+                                              {'name': 'has_grape', 'type': 'helper'},
                                               {'item': 'Summer', 'type': 'item_check'}],
                             'type': 'and'},
     'has_summer_squash_seeds': {   'conditions': [   {'item': 'Summer Squash Seeds', 'type': 'item_check'},
@@ -7387,15 +4398,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_sunflower': {   'conditions': [   {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
                                                                  {'region': 'Fall Farming', 'type': 'region_check'}],
                                                'type': 'or'},
-                                           {   'conditions': [   {'item': 'Sunflower Seeds', 'type': 'item_check'},
-                                                                 {   'conditions': [   {   'item': 'Summer',
-                                                                                           'type': 'item_check'},
-                                                                                       {   'item': 'Fall',
-                                                                                           'type': 'item_check'}],
-                                                                     'type': 'or'},
-                                                                 {'type': 'constant', 'value': True},
-                                                                 {'type': 'constant', 'value': True}],
-                                               'type': 'and'}],
+                                           {'name': 'has_sunflower_seeds', 'type': 'helper'}],
                          'type': 'and'},
     'has_sunflower_seeds': {   'conditions': [   {'item': 'Sunflower Seeds', 'type': 'item_check'},
                                                  {   'conditions': [   {'item': 'Summer', 'type': 'item_check'},
@@ -7415,40 +4418,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                     'type': 'or'}],
                               'type': 'and'},
     'has_sweet_gem_berry': {   'conditions': [   {'region': 'Fall Farming', 'type': 'region_check'},
-                                                 {   'conditions': [   {'item': 'Rare Seed', 'type': 'item_check'},
-                                                                       {   'conditions': [   {   'item': 'Spring',
-                                                                                                 'type': 'item_check'},
-                                                                                             {   'item': 'Summer',
-                                                                                                 'type': 'item_check'}],
-                                                                           'type': 'or'},
-                                                                       {   'conditions': [   {   'item': 'Shipping Bin',
-                                                                                                 'type': 'item_check'},
-                                                                                             {   'conditions': [   {   'type': 'constant',
-                                                                                                                       'value': True},
-                                                                                                                   {   'type': 'constant',
-                                                                                                                       'value': True},
-                                                                                                                   {   'type': 'constant',
-                                                                                                                       'value': True},
-                                                                                                                   {   'region': 'Fishing',
-                                                                                                                       'type': 'region_check'},
-                                                                                                                   {   'type': 'constant',
-                                                                                                                       'value': True},
-                                                                                                                   {   'region': 'The '
-                                                                                                                                 'Mines '
-                                                                                                                                 '- '
-                                                                                                                                 'Floor '
-                                                                                                                                 '5',
-                                                                                                                       'type': 'region_check'},
-                                                                                                                   {   'type': 'constant',
-                                                                                                                       'value': True},
-                                                                                                                   {   'region': 'Secret '
-                                                                                                                                 'Woods',
-                                                                                                                       'type': 'region_check'}],
-                                                                                                 'type': 'and'}],
-                                                                           'type': 'or'},
-                                                                       {   'region': 'Traveling Cart',
-                                                                           'type': 'region_check'}],
-                                                     'type': 'and'}],
+                                                 {'name': 'has_rare_seed', 'type': 'helper'}],
                                'type': 'and'},
     'has_tapper': {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
                                             'item': 'Foraging Level',
@@ -7457,101 +4427,18 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                         {'item': 'Copper Bar (Logic event)', 'type': 'item_check'}],
                       'type': 'and'},
     'has_taro_root': {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
-                                           {   'conditions': [   {'item': 'Taro Tuber', 'type': 'item_check'},
-                                                                 {'type': 'constant', 'value': True},
-                                                                 {'type': 'constant', 'value': True},
-                                                                 {'name': 'has_bone_fragment', 'type': 'helper'},
-                                                                 {'region': 'Island Trader', 'type': 'region_check'}],
-                                               'type': 'and'}],
+                                           {'name': 'has_taro_tuber', 'type': 'helper'}],
                          'type': 'and'},
     'has_taro_tuber': {   'conditions': [   {'item': 'Taro Tuber', 'type': 'item_check'},
                                             {'type': 'constant', 'value': True},
                                             {'type': 'constant', 'value': True},
-                                            {   'conditions': [   {'region': 'Dig Site', 'type': 'region_check'},
-                                                                  {   'conditions': [   {   'region': 'The Mines - '
-                                                                                                      'Floor 100',
-                                                                                            'type': 'region_check'},
-                                                                                        {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                                               'value': 3},
-                                                                                                                  'item': 'Progressive '
-                                                                                                                          'Weapon',
-                                                                                                                  'type': 'item_check'},
-                                                                                                              {   'count': {   'type': 'constant',
-                                                                                                                               'value': 3},
-                                                                                                                  'item': 'Progressive '
-                                                                                                                          'Sword',
-                                                                                                                  'type': 'item_check'},
-                                                                                                              {   'count': {   'type': 'constant',
-                                                                                                                               'value': 3},
-                                                                                                                  'item': 'Progressive '
-                                                                                                                          'Club',
-                                                                                                                  'type': 'item_check'},
-                                                                                                              {   'count': {   'type': 'constant',
-                                                                                                                               'value': 3},
-                                                                                                                  'item': 'Progressive '
-                                                                                                                          'Dagger',
-                                                                                                                  'type': 'item_check'}],
-                                                                                            'type': 'or'}],
-                                                                      'type': 'and'}],
-                                                'type': 'or'},
+                                            {'name': 'has_bone_fragment', 'type': 'helper'},
                                             {'region': 'Island Trader', 'type': 'region_check'}],
                           'type': 'and'},
     'has_tea_leaves': {   'conditions': [   {   'count': {'type': 'constant', 'value': 8},
                                                 'item': 'Received Progression Percent',
                                                 'type': 'item_check'},
-                                            {   'conditions': [   {   'conditions': [   {   'item': 'Winter',
-                                                                                            'type': 'item_check'},
-                                                                                        {   'type': 'constant',
-                                                                                            'value': True},
-                                                                                        {   'region': 'Sunroom',
-                                                                                            'type': 'region_check'},
-                                                                                        {   'name': 'has_summer_seeds',
-                                                                                            'type': 'helper'},
-                                                                                        {   'type': 'constant',
-                                                                                            'value': True},
-                                                                                        {   'type': 'constant',
-                                                                                            'value': True}],
-                                                                      'type': 'and'},
-                                                                  {   'conditions': [   {   'item': 'Winter',
-                                                                                            'type': 'item_check'},
-                                                                                        {   'type': 'constant',
-                                                                                            'value': True},
-                                                                                        {   'region': 'Sunroom',
-                                                                                            'type': 'region_check'},
-                                                                                        {   'name': 'has_spring_seeds',
-                                                                                            'type': 'helper'},
-                                                                                        {   'type': 'constant',
-                                                                                            'value': True},
-                                                                                        {   'type': 'constant',
-                                                                                            'value': True}],
-                                                                      'type': 'and'},
-                                                                  {   'conditions': [   {   'item': 'Winter',
-                                                                                            'type': 'item_check'},
-                                                                                        {   'type': 'constant',
-                                                                                            'value': True},
-                                                                                        {   'region': 'Sunroom',
-                                                                                            'type': 'region_check'},
-                                                                                        {   'name': 'has_fall_seeds',
-                                                                                            'type': 'helper'},
-                                                                                        {   'type': 'constant',
-                                                                                            'value': True},
-                                                                                        {   'type': 'constant',
-                                                                                            'value': True}],
-                                                                      'type': 'and'},
-                                                                  {   'conditions': [   {   'item': 'Winter',
-                                                                                            'type': 'item_check'},
-                                                                                        {   'type': 'constant',
-                                                                                            'value': True},
-                                                                                        {   'region': 'Sunroom',
-                                                                                            'type': 'region_check'},
-                                                                                        {   'name': 'has_winter_seeds',
-                                                                                            'type': 'helper'},
-                                                                                        {   'type': 'constant',
-                                                                                            'value': True},
-                                                                                        {   'type': 'constant',
-                                                                                            'value': True}],
-                                                                      'type': 'and'}],
-                                                'type': 'or'},
+                                            {'name': 'has_tea_sapling', 'type': 'helper'},
                                             {   'conditions': [   {'item': 'Spring', 'type': 'item_check'},
                                                                   {'item': 'Summer', 'type': 'item_check'},
                                                                   {'item': 'Fall', 'type': 'item_check'}],
@@ -7560,72 +4447,28 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_tea_sapling': {   'conditions': [   {   'conditions': [   {'item': 'Winter', 'type': 'item_check'},
                                                                    {'type': 'constant', 'value': True},
                                                                    {'region': 'Sunroom', 'type': 'region_check'},
-                                                                   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                          'value': 4},
-                                                                                             'item': 'Foraging Level',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'name': 'has_spice_berry',
-                                                                                             'type': 'helper'},
-                                                                                         {   'name': 'has_grape',
-                                                                                             'type': 'helper'},
-                                                                                         {   'item': 'Summer',
-                                                                                             'type': 'item_check'}],
-                                                                       'type': 'and'},
+                                                                   {'name': 'has_summer_seeds', 'type': 'helper'},
                                                                    {'type': 'constant', 'value': True},
                                                                    {'type': 'constant', 'value': True}],
                                                  'type': 'and'},
                                              {   'conditions': [   {'item': 'Winter', 'type': 'item_check'},
                                                                    {'type': 'constant', 'value': True},
                                                                    {'region': 'Sunroom', 'type': 'region_check'},
-                                                                   {   'conditions': [   {   'item': 'Foraging Level',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'item': 'Spring',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'item': 'Spring',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'item': 'Spring',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'item': 'Spring',
-                                                                                             'type': 'item_check'}],
-                                                                       'type': 'and'},
+                                                                   {'name': 'has_spring_seeds', 'type': 'helper'},
                                                                    {'type': 'constant', 'value': True},
                                                                    {'type': 'constant', 'value': True}],
                                                  'type': 'and'},
                                              {   'conditions': [   {'item': 'Winter', 'type': 'item_check'},
                                                                    {'type': 'constant', 'value': True},
                                                                    {'region': 'Sunroom', 'type': 'region_check'},
-                                                                   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                          'value': 6},
-                                                                                             'item': 'Foraging Level',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'name': 'has_common_mushroom',
-                                                                                             'type': 'helper'},
-                                                                                         {   'name': 'has_wild_plum',
-                                                                                             'type': 'helper'},
-                                                                                         {   'item': 'Fall',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'name': 'has_blackberry',
-                                                                                             'type': 'helper'}],
-                                                                       'type': 'and'},
+                                                                   {'name': 'has_fall_seeds', 'type': 'helper'},
                                                                    {'type': 'constant', 'value': True},
                                                                    {'type': 'constant', 'value': True}],
                                                  'type': 'and'},
                                              {   'conditions': [   {'item': 'Winter', 'type': 'item_check'},
                                                                    {'type': 'constant', 'value': True},
                                                                    {'region': 'Sunroom', 'type': 'region_check'},
-                                                                   {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                          'value': 7},
-                                                                                             'item': 'Foraging Level',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'item': 'Winter',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'item': 'Winter',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'item': 'Winter',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'item': 'Winter',
-                                                                                             'type': 'item_check'}],
-                                                                       'type': 'and'},
+                                                                   {'name': 'has_winter_seeds', 'type': 'helper'},
                                                                    {'type': 'constant', 'value': True},
                                                                    {'type': 'constant', 'value': True}],
                                                  'type': 'and'}],
@@ -7663,19 +4506,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                   'type': 'or'},
     'has_the_diamond_hunter': {   'conditions': [   {'type': 'constant', 'value': True},
                                                     {'type': 'constant', 'value': True},
-                                                    {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                           'value': 28},
-                                                                              'item': 'Received Progression Percent',
-                                                                              'type': 'item_check'},
-                                                                          {   'conditions': [   {   'region': 'The '
-                                                                                                              'Mines - '
-                                                                                                              'Floor '
-                                                                                                              '60',
-                                                                                                    'type': 'region_check'},
-                                                                                                {   'name': 'has_fishing_chest',
-                                                                                                    'type': 'helper'}],
-                                                                              'type': 'or'}],
-                                                        'type': 'and'},
+                                                    {'name': 'has_diamond', 'type': 'helper'},
                                                     {'region': 'Volcano Dwarf Shop', 'type': 'region_check'}],
                                   'type': 'and'},
     'has_tilapia': {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
@@ -7697,16 +4528,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                            'item': 'Received Progression Percent',
                                            'type': 'item_check'},
                                        {   'conditions': [   {'region': 'The Mines - Floor 20', 'type': 'region_check'},
-                                                             {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                    'value': 4},
-                                                                                       'item': 'Progressive Fishing '
-                                                                                               'Rod',
-                                                                                       'type': 'item_check'},
-                                                                                   {   'count': {   'type': 'constant',
-                                                                                                    'value': 6},
-                                                                                       'item': 'Fishing Level',
-                                                                                       'type': 'item_check'}],
-                                                                 'type': 'and'}],
+                                                             {'name': 'has_fishing_chest', 'type': 'helper'}],
                                            'type': 'or'}],
                      'type': 'and'},
     'has_treasure_appraisal_guide': {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
@@ -7715,11 +4537,8 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                                             'Percent',
                                                                                     'type': 'item_check'},
                                                                                 {'type': 'constant', 'value': True},
-                                                                                {   'conditions': [   {   'name': 'has_omni_geode',
-                                                                                                          'type': 'helper'},
-                                                                                                      {   'region': 'Desert',
-                                                                                                          'type': 'region_check'}],
-                                                                                    'type': 'and'}],
+                                                                                {   'name': 'has_artifact_trove',
+                                                                                    'type': 'helper'}],
                                                               'type': 'and'},
                                                           {   'conditions': [   {   'item': 'Shipping Bin',
                                                                                     'type': 'item_check'},
@@ -7760,32 +4579,8 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                {'item': 'Fall', 'type': 'item_check'}],
                                              'type': 'or'}],
                        'type': 'and'},
-    'has_truffle_oil': {   'conditions': [   {   'conditions': [   {'item': 'Shipping Bin', 'type': 'item_check'},
-                                                                   {   'count': {'type': 'constant', 'value': 4},
-                                                                       'item': 'Received Progression Percent',
-                                                                       'type': 'item_check'},
-                                                                   {   'count': {'type': 'constant', 'value': 3},
-                                                                       'item': 'Progressive Barn',
-                                                                       'type': 'item_check'},
-                                                                   {'type': 'constant', 'value': True},
-                                                                   {'type': 'constant', 'value': True},
-                                                                   {   'conditions': [   {   'item': 'Spring',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'item': 'Summer',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'item': 'Fall',
-                                                                                             'type': 'item_check'}],
-                                                                       'type': 'or'}],
-                                                 'type': 'and'},
-                                             {   'conditions': [   {   'count': {'type': 'constant', 'value': 8},
-                                                                       'item': 'Farming Level',
-                                                                       'type': 'item_check'},
-                                                                   {   'region': 'The Mines - Floor 5',
-                                                                       'type': 'region_check'},
-                                                                   {'name': 'has_hardwood', 'type': 'helper'},
-                                                                   {   'item': 'Gold Bar (Logic event)',
-                                                                       'type': 'item_check'}],
-                                                 'type': 'and'}],
+    'has_truffle_oil': {   'conditions': [   {'name': 'has_truffle', 'type': 'helper'},
+                                             {'name': 'has_oil_maker', 'type': 'helper'}],
                            'type': 'and'},
     'has_tulip_bulb': {   'conditions': [   {'item': 'Tulip Bulb', 'type': 'item_check'},
                                             {'item': 'Spring', 'type': 'item_check'},
@@ -7796,20 +4591,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                         {'region': 'Sewer', 'type': 'region_check'}],
                                                       'type': 'and'},
                                                   {   'conditions': [   {'item': 'Fish Pond', 'type': 'item_check'},
-                                                                        {   'conditions': [   {   'count': {   'type': 'constant',
-                                                                                                               'value': 4},
-                                                                                                  'item': 'Progressive '
-                                                                                                          'Fishing Rod',
-                                                                                                  'type': 'item_check'},
-                                                                                              {   'count': {   'type': 'constant',
-                                                                                                               'value': 7},
-                                                                                                  'item': 'Fishing '
-                                                                                                          'Level',
-                                                                                                  'type': 'item_check'},
-                                                                                              {   'region': "Witch's "
-                                                                                                            'Swamp',
-                                                                                                  'type': 'region_check'}],
-                                                                            'type': 'and'}],
+                                                                        {'name': 'has_void_salmon', 'type': 'helper'}],
                                                       'type': 'and'}],
                                 'type': 'or'},
     'has_void_essence': {   'conditions': [   {'region': 'The Mines - Floor 85', 'type': 'region_check'},
@@ -7846,26 +4628,8 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                     {'region': 'Skull Cavern', 'type': 'region_check'}],
                                                   'type': 'and'}],
                             'type': 'or'},
-    'has_void_mayonnaise': {   'conditions': [   {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
-                                                                           'item': 'Farming Level',
-                                                                           'type': 'item_check'},
-                                                                       {'type': 'constant', 'value': True},
-                                                                       {'type': 'constant', 'value': True},
-                                                                       {'name': 'has_earth_crystal', 'type': 'helper'},
-                                                                       {   'item': 'Copper Bar (Logic event)',
-                                                                           'type': 'item_check'}],
-                                                     'type': 'and'},
-                                                 {   'conditions': [   {   'conditions': [   {   'item': 'Shipping Bin',
-                                                                                                 'type': 'item_check'},
-                                                                                             {   'region': 'Sewer',
-                                                                                                 'type': 'region_check'}],
-                                                                           'type': 'and'},
-                                                                       {   'conditions': [   {   'item': 'Fish Pond',
-                                                                                                 'type': 'item_check'},
-                                                                                             {   'name': 'has_void_salmon',
-                                                                                                 'type': 'helper'}],
-                                                                           'type': 'and'}],
-                                                     'type': 'or'}],
+    'has_void_mayonnaise': {   'conditions': [   {'name': 'has_mayonnaise_machine', 'type': 'helper'},
+                                                 {'name': 'has_void_egg_starter', 'type': 'helper'}],
                                'type': 'and'},
     'has_void_salmon': {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
                                                  'item': 'Progressive Fishing Rod',
@@ -7899,15 +4663,7 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_wheat': {   'conditions': [   {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
                                                              {'region': 'Fall Farming', 'type': 'region_check'}],
                                            'type': 'or'},
-                                       {   'conditions': [   {'item': 'Wheat Seeds', 'type': 'item_check'},
-                                                             {   'conditions': [   {   'item': 'Summer',
-                                                                                       'type': 'item_check'},
-                                                                                   {   'item': 'Fall',
-                                                                                       'type': 'item_check'}],
-                                                                 'type': 'or'},
-                                                             {'type': 'constant', 'value': True},
-                                                             {'type': 'constant', 'value': True}],
-                                           'type': 'and'}],
+                                       {'name': 'has_wheat_seeds', 'type': 'helper'}],
                      'type': 'and'},
     'has_wheat_seeds': {   'conditions': [   {'item': 'Wheat Seeds', 'type': 'item_check'},
                                              {   'conditions': [   {'item': 'Summer', 'type': 'item_check'},
