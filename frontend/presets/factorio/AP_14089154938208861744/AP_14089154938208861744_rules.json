@@ -21,7 +21,6 @@
             "id": 131306,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -39,32 +38,27 @@
             "id": 135416,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -84,7 +78,6 @@
             "id": 131869,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -102,32 +95,27 @@
             "id": 135193,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -147,7 +135,6 @@
             "id": 132398,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated logistic-science-pack"
               }
@@ -165,18 +152,15 @@
             "id": 134499,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -196,18 +180,15 @@
             "id": 133995,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -227,7 +208,6 @@
             "id": 131828,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -245,18 +225,15 @@
             "id": 133482,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -276,32 +253,27 @@
             "id": 134597,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -321,18 +293,15 @@
             "id": 132486,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -352,32 +321,27 @@
             "id": 134372,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -397,32 +361,27 @@
             "id": 134092,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -442,39 +401,33 @@
             "id": 137012,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -494,32 +447,27 @@
             "id": 134237,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -539,18 +487,15 @@
             "id": 135022,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -570,25 +515,21 @@
             "id": 133110,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -608,18 +549,15 @@
             "id": 134890,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -639,18 +577,15 @@
             "id": 132249,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -670,7 +605,6 @@
             "id": 131168,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -688,18 +622,15 @@
             "id": 132704,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -719,25 +650,21 @@
             "id": 134043,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -757,18 +684,15 @@
             "id": 132758,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -788,18 +712,15 @@
             "id": 134567,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -819,25 +740,21 @@
             "id": 134806,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -857,7 +774,6 @@
             "id": 131212,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -875,18 +791,15 @@
             "id": 132753,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -906,18 +819,15 @@
             "id": 132720,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -937,7 +847,6 @@
             "id": 131530,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -955,7 +864,6 @@
             "id": 131126,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -973,7 +881,6 @@
             "id": 135184,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated production-science-pack"
               }
@@ -991,18 +898,15 @@
             "id": 132339,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -1022,32 +926,27 @@
             "id": 135287,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -1067,32 +966,27 @@
             "id": 135405,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -1112,32 +1006,27 @@
             "id": 134090,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -1157,18 +1046,15 @@
             "id": 132483,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -1188,7 +1074,6 @@
             "id": 132572,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated logistic-science-pack"
               }
@@ -1206,18 +1091,15 @@
             "id": 133791,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -1237,18 +1119,15 @@
             "id": 133875,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -1268,7 +1147,6 @@
             "id": 132594,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated logistic-science-pack"
               }
@@ -1286,7 +1164,6 @@
             "id": 131840,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -1304,32 +1181,27 @@
             "id": 136077,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -1349,32 +1221,27 @@
             "id": 134081,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -1394,32 +1261,27 @@
             "id": 134917,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -1439,25 +1301,21 @@
             "id": 134668,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -1477,25 +1335,21 @@
             "id": 134442,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -1515,32 +1369,27 @@
             "id": 136068,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -1560,7 +1409,6 @@
             "id": 132724,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated logistic-science-pack"
               }
@@ -1578,32 +1426,27 @@
             "id": 134342,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -1623,18 +1466,15 @@
             "id": 132342,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -1654,7 +1494,6 @@
             "id": 133198,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated military-science-pack"
               }
@@ -1672,18 +1511,15 @@
             "id": 132142,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -1703,18 +1539,15 @@
             "id": 132968,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -1734,32 +1567,27 @@
             "id": 134764,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -1779,7 +1607,6 @@
             "id": 131704,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -1797,32 +1624,27 @@
             "id": 135040,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -1842,7 +1664,6 @@
             "id": 131147,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -1860,25 +1681,21 @@
             "id": 133788,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -1898,7 +1715,6 @@
             "id": 131951,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -1916,18 +1732,15 @@
             "id": 135770,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -1947,7 +1760,6 @@
             "id": 131282,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -1965,25 +1777,21 @@
             "id": 136742,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -2003,32 +1811,27 @@
             "id": 135802,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -2048,18 +1851,15 @@
             "id": 132340,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -2079,25 +1879,21 @@
             "id": 135822,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -2117,7 +1913,6 @@
             "id": 131825,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -2135,18 +1930,15 @@
             "id": 132931,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -2166,32 +1958,27 @@
             "id": 136143,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -2211,18 +1998,15 @@
             "id": 132539,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -2242,25 +2026,21 @@
             "id": 135531,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -2280,25 +2060,21 @@
             "id": 134023,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -2318,25 +2094,21 @@
             "id": 133955,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -2356,25 +2128,21 @@
             "id": 135067,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -2394,39 +2162,33 @@
             "id": 135676,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -2446,46 +2208,39 @@
             "id": 136267,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -2505,25 +2260,21 @@
             "id": 135383,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -2543,18 +2294,15 @@
             "id": 134897,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -2574,25 +2322,21 @@
             "id": 133771,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -2612,7 +2356,6 @@
             "id": 132054,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -2630,18 +2373,15 @@
             "id": 134022,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -2661,7 +2401,6 @@
             "id": 133066,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated logistic-science-pack"
               }
@@ -2679,7 +2418,6 @@
             "id": 131151,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -2697,18 +2435,15 @@
             "id": 132971,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -2728,39 +2463,33 @@
             "id": 135911,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -2780,39 +2509,33 @@
             "id": 135801,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -2832,7 +2555,6 @@
             "id": 131546,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -2850,46 +2572,39 @@
             "id": 136259,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -2909,7 +2624,6 @@
             "id": 131197,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -2927,25 +2641,21 @@
             "id": 134474,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -2965,7 +2675,6 @@
             "id": 132025,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -2983,32 +2692,27 @@
             "id": 136214,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -3028,18 +2732,15 @@
             "id": 134895,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -3059,18 +2760,15 @@
             "id": 134477,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -3090,25 +2788,21 @@
             "id": 133309,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -3128,25 +2822,21 @@
             "id": 133094,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -3166,39 +2856,33 @@
             "id": 135200,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -3218,7 +2902,6 @@
             "id": 132577,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated logistic-science-pack"
               }
@@ -3236,18 +2919,15 @@
             "id": 132655,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -3267,32 +2947,27 @@
             "id": 134418,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -3312,25 +2987,21 @@
             "id": 133535,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -3350,18 +3021,15 @@
             "id": 135468,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -3381,7 +3049,6 @@
             "id": 132022,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -3399,25 +3066,21 @@
             "id": 133279,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -3437,7 +3100,6 @@
             "id": 131150,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -3455,25 +3117,21 @@
             "id": 134671,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -3493,39 +3151,33 @@
             "id": 136684,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -3545,25 +3197,21 @@
             "id": 136562,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -3583,32 +3231,27 @@
             "id": 135247,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -3628,7 +3271,6 @@
             "id": 131782,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -3646,18 +3288,15 @@
             "id": 133870,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -3677,32 +3316,27 @@
             "id": 135760,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -3722,32 +3356,27 @@
             "id": 136001,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -3767,7 +3396,6 @@
             "id": 132714,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated logistic-science-pack"
               }
@@ -3785,32 +3413,27 @@
             "id": 135328,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -3830,18 +3453,15 @@
             "id": 132854,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -3861,39 +3481,33 @@
             "id": 136335,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -3913,25 +3527,21 @@
             "id": 136812,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -3951,18 +3561,15 @@
             "id": 132584,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -3982,18 +3589,15 @@
             "id": 133623,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -4013,18 +3617,15 @@
             "id": 132959,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -4044,39 +3645,33 @@
             "id": 136158,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -4096,18 +3691,15 @@
             "id": 132543,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -4127,32 +3719,27 @@
             "id": 134404,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -4172,7 +3759,6 @@
             "id": 131266,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -4190,25 +3776,21 @@
             "id": 134194,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -4228,32 +3810,27 @@
             "id": 135101,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -4273,7 +3850,6 @@
             "id": 131565,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -4291,25 +3867,21 @@
             "id": 136183,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -4329,39 +3901,33 @@
             "id": 136643,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -4381,39 +3947,33 @@
             "id": 135539,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -4433,7 +3993,6 @@
             "id": 132722,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated logistic-science-pack"
               }
@@ -4451,25 +4010,21 @@
             "id": 133132,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -4489,39 +4044,33 @@
             "id": 136803,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -4541,18 +4090,15 @@
             "id": 134949,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -4572,32 +4118,27 @@
             "id": 134344,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -4617,18 +4158,15 @@
             "id": 135628,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -4648,32 +4186,27 @@
             "id": 136642,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -4693,18 +4226,15 @@
             "id": 134746,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -4724,46 +4254,39 @@
             "id": 136437,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -4783,18 +4306,15 @@
             "id": 134891,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
@@ -4814,25 +4334,21 @@
             "id": 133802,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -4852,25 +4368,21 @@
             "id": 133387,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -4890,25 +4402,21 @@
             "id": 133148,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -4928,25 +4436,21 @@
             "id": 133606,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -4966,25 +4470,21 @@
             "id": 133743,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -5004,7 +4504,6 @@
             "id": 131401,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -5022,25 +4521,21 @@
             "id": 135666,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -5060,32 +4555,27 @@
             "id": 136472,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -5105,18 +4595,15 @@
             "id": 135365,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -5136,25 +4623,21 @@
             "id": 134595,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -5174,32 +4657,27 @@
             "id": 136866,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -5219,32 +4697,27 @@
             "id": 134995,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -5264,7 +4737,6 @@
             "id": 131229,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -5282,46 +4754,39 @@
             "id": 136387,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -5341,32 +4806,27 @@
             "id": 135423,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -5386,7 +4846,6 @@
             "id": 132005,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -5404,32 +4863,27 @@
             "id": 134717,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -5449,7 +4903,6 @@
             "id": 131179,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -5467,32 +4920,27 @@
             "id": 136020,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -5512,18 +4960,15 @@
             "id": 132325,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -5543,25 +4988,21 @@
             "id": 133175,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -5581,18 +5022,15 @@
             "id": 132864,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -5612,46 +5050,39 @@
             "id": 136136,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -5671,32 +5102,27 @@
             "id": 136065,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -5716,39 +5142,33 @@
             "id": 135142,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
@@ -5768,7 +5188,6 @@
             "id": 131102,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -5786,25 +5205,21 @@
             "id": 133112,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -5824,7 +5239,6 @@
             "id": 131724,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -5842,7 +5256,6 @@
             "id": 132068,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -5860,25 +5273,21 @@
             "id": 136162,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -5898,7 +5307,6 @@
             "id": 131265,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -5916,7 +5324,6 @@
             "id": 132561,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated logistic-science-pack"
               }
@@ -5934,25 +5341,21 @@
             "id": 133863,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
@@ -5972,39 +5375,33 @@
             "id": 136750,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -6024,7 +5421,6 @@
             "id": 132408,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated logistic-science-pack"
               }
@@ -6042,46 +5438,39 @@
             "id": 136751,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated military-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated production-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated utility-science-pack"
                   }
@@ -6101,18 +5490,15 @@
             "id": 132833,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated automation-science-pack"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Automated logistic-science-pack"
                   }
@@ -6132,7 +5518,6 @@
             "id": 131570,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated automation-science-pack"
               }
@@ -6150,7 +5535,6 @@
             "id": 132639,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Automated logistic-science-pack"
               }
@@ -6168,74 +5552,63 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "advanced-circuit"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "advanced-material-processing-2"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "advanced-oil-processing"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "engine"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "flamethrower"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "night-vision-equipment"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "oil-processing"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "plastics"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "rocket-silo"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "steel-processing"
                   }
@@ -6255,7 +5628,6 @@
             "id": null,
             "access_rule": {
               "rule": "AST_all_of",
-              "options": [],
               "args": {
                 "element_rule": {
                   "type": "item_check",
@@ -6970,7 +6342,6 @@
             "id": null,
             "access_rule": {
               "rule": "AST_all_of",
-              "options": [],
               "args": {
                 "element_rule": {
                   "type": "item_check",
@@ -7685,7 +7056,6 @@
             "id": null,
             "access_rule": {
               "rule": "AST_all_of",
-              "options": [],
               "args": {
                 "element_rule": {
                   "type": "item_check",
@@ -8400,7 +7770,6 @@
             "id": null,
             "access_rule": {
               "rule": "AST_all_of",
-              "options": [],
               "args": {
                 "element_rule": {
                   "type": "item_check",
@@ -9115,7 +8484,6 @@
             "id": null,
             "access_rule": {
               "rule": "AST_all_of",
-              "options": [],
               "args": {
                 "element_rule": {
                   "type": "item_check",
@@ -9830,7 +9198,6 @@
             "id": null,
             "access_rule": {
               "rule": "AST_all_of",
-              "options": [],
               "args": {
                 "element_rule": {
                   "type": "item_check",

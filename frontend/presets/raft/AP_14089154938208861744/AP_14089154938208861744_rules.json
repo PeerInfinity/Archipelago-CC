@@ -19,81 +19,63 @@
             "name": "RaftToResearchTable",
             "connected_region": "ResearchTable",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "RaftToRadioTower",
             "connected_region": "RadioTower",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "RaftToVasagatan",
             "connected_region": "Vasagatan",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "RaftToBalboaIsland",
             "connected_region": "BalboaIsland",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "RaftToCaravanIsland",
             "connected_region": "CaravanIsland",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "RaftToTangaroa",
             "connected_region": "Tangaroa",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "RaftToVaruna Point",
             "connected_region": "Varuna Point",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "RaftToTemperance",
             "connected_region": "Temperance",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "RaftToUtopia",
             "connected_region": "Utopia",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -108,19 +90,14 @@
             "id": 48001,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_access_balboa_island",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -139,8 +116,6 @@
             "id": 48002,
             "access_rule": {
               "rule": "raft_can_smelt_items",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -156,9 +131,7 @@
             "name": "Birds nest",
             "id": 48003,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "progressive-grill",
@@ -173,8 +146,6 @@
             "id": 48004,
             "access_rule": {
               "rule": "raft_can_smelt_items",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -191,19 +162,14 @@
             "id": 48005,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_smelt_items",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -222,8 +188,6 @@
             "id": 48006,
             "access_rule": {
               "rule": "raft_can_smelt_items",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -240,8 +204,6 @@
             "id": 48007,
             "access_rule": {
               "rule": "raft_can_smelt_items",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -258,19 +220,14 @@
             "id": 48008,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_craft_hinge",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -289,19 +246,14 @@
             "id": 48009,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_craft_bolt",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -320,8 +272,6 @@
             "id": 48010,
             "access_rule": {
               "rule": "raft_can_smelt_items",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -337,9 +287,7 @@
             "name": "Clay bowl",
             "id": 48011,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "progressive-spear",
@@ -354,19 +302,14 @@
             "id": 48012,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_big_islands_available",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -385,26 +328,19 @@
             "id": 48013,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_craft_bolt",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_craft_plasticBottle",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -423,8 +359,6 @@
             "id": 48014,
             "access_rule": {
               "rule": "raft_can_craft_bolt",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -441,19 +375,14 @@
             "id": 48015,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_craft_plasticBottle",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -472,19 +401,14 @@
             "id": 48016,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_craft_bolt",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_craft_circuitBoard",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -503,8 +427,6 @@
             "id": 48017,
             "access_rule": {
               "rule": "raft_can_smelt_items",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -521,26 +443,19 @@
             "id": 48018,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_craft_bolt",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -559,26 +474,19 @@
             "id": 48019,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_craft_bolt",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_craft_circuitBoard",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -597,19 +505,14 @@
             "id": 48020,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_craft_hinge",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -628,8 +531,6 @@
             "id": 48021,
             "access_rule": {
               "rule": "raft_can_smelt_items",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -646,19 +547,14 @@
             "id": 48022,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_craft_bolt",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -677,8 +573,6 @@
             "id": 48023,
             "access_rule": {
               "rule": "raft_can_craft_hinge",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -694,9 +588,7 @@
             "name": "Smelter",
             "id": 48024,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Resource Pack: 3 Scrap",
@@ -710,9 +602,7 @@
             "name": "Paint mill",
             "id": 48025,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Circuit board",
@@ -727,19 +617,14 @@
             "id": 48026,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_big_islands_available",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_craft_birdNest",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -758,8 +643,6 @@
             "id": 48027,
             "access_rule": {
               "rule": "raft_can_craft_bolt",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -776,8 +659,6 @@
             "id": 48028,
             "access_rule": {
               "rule": "raft_can_craft_bolt",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -794,8 +675,6 @@
             "id": 48029,
             "access_rule": {
               "rule": "raft_can_craft_bolt",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -812,19 +691,14 @@
             "id": 48030,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_craft_bolt",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -843,19 +717,14 @@
             "id": 48031,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_craft_bolt",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -873,9 +742,7 @@
             "name": "Scarecrow",
             "id": 48032,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Resource Pack: 3 Plank",
@@ -890,30 +757,22 @@
             "id": 48033,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_smelt_items",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "raft_big_islands_available",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "raft_can_craft_birdNest",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -934,19 +793,14 @@
             "id": 48034,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_craft_bolt",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -965,19 +819,14 @@
             "id": 48035,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_find_titanium",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -995,9 +844,7 @@
             "name": "Bucket",
             "id": 48036,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "progressive-crop-plot",
@@ -1011,9 +858,7 @@
             "name": "Collection net",
             "id": 48037,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Trashcan",
@@ -1028,19 +873,14 @@
             "id": 48038,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_big_islands_available",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_craft_birdNest",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1059,8 +899,6 @@
             "id": 48039,
             "access_rule": {
               "rule": "raft_can_smelt_items",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1077,8 +915,6 @@
             "id": 48040,
             "access_rule": {
               "rule": "raft_can_get_dirt",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1094,9 +930,7 @@
             "name": "Stone arrow",
             "id": 48041,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Firework",
@@ -1110,9 +944,7 @@
             "name": "Medium crop plot",
             "id": 48042,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "progressive-metals",
@@ -1126,9 +958,7 @@
             "name": "Lantern",
             "id": 48043,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "progressive-bow",
@@ -1142,9 +972,7 @@
             "name": "Small trophy board",
             "id": 48044,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "progressive-engine",
@@ -1158,9 +986,7 @@
             "name": "Medium trophy board",
             "id": 48045,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bolt",
@@ -1174,9 +1000,7 @@
             "name": "Large trophy board",
             "id": 48046,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Resource Pack: 5 CopperOre",
@@ -1191,23 +1015,17 @@
             "id": 48047,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "raft_can_capture_animals",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "raft_can_craft_shears",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -1215,8 +1033,6 @@
                 },
                 {
                   "rule": "raft_big_islands_available",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1235,23 +1051,17 @@
             "id": 48048,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "raft_can_capture_animals",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "raft_can_craft_shears",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -1259,8 +1069,6 @@
                 },
                 {
                   "rule": "raft_big_islands_available",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1279,23 +1087,17 @@
             "id": 48049,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "raft_can_capture_animals",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "raft_can_craft_shears",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -1303,8 +1105,6 @@
                 },
                 {
                   "rule": "raft_big_islands_available",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1323,23 +1123,17 @@
             "id": 48050,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "raft_can_capture_animals",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "raft_can_craft_shears",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -1347,8 +1141,6 @@
                 },
                 {
                   "rule": "raft_big_islands_available",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1367,23 +1159,17 @@
             "id": 48051,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "raft_can_access_balboa_island",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "raft_can_smelt_items",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -1391,8 +1177,6 @@
                 },
                 {
                   "rule": "raft_can_craft_hinge",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1411,19 +1195,14 @@
             "id": 48052,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_access_balboa_island",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_capture_animals",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1442,8 +1221,6 @@
             "id": 48053,
             "access_rule": {
               "rule": "raft_can_capture_animals",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1466,8 +1243,6 @@
             "id": 48054,
             "access_rule": {
               "rule": "raft_can_access_radio_tower",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1484,8 +1259,6 @@
             "id": 48055,
             "access_rule": {
               "rule": "raft_can_access_radio_tower",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1502,8 +1275,6 @@
             "id": 48056,
             "access_rule": {
               "rule": "raft_can_access_radio_tower",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1520,8 +1291,6 @@
             "id": 48057,
             "access_rule": {
               "rule": "raft_can_access_radio_tower",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1538,8 +1307,6 @@
             "id": 48058,
             "access_rule": {
               "rule": "raft_can_access_radio_tower",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1556,8 +1323,6 @@
             "id": 48059,
             "access_rule": {
               "rule": "raft_can_access_radio_tower",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1574,8 +1339,6 @@
             "id": 48060,
             "access_rule": {
               "rule": "raft_can_access_radio_tower",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1592,8 +1355,6 @@
             "id": 48061,
             "access_rule": {
               "rule": "raft_can_access_radio_tower",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1616,8 +1377,6 @@
             "id": 48062,
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1634,8 +1393,6 @@
             "id": 48063,
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1652,8 +1409,6 @@
             "id": 48064,
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1670,8 +1425,6 @@
             "id": 48065,
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1688,8 +1441,6 @@
             "id": 48066,
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1706,8 +1457,6 @@
             "id": 48067,
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1724,8 +1473,6 @@
             "id": 48068,
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1742,8 +1489,6 @@
             "id": 48069,
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1760,8 +1505,6 @@
             "id": 48070,
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1778,8 +1521,6 @@
             "id": 48071,
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1796,8 +1537,6 @@
             "id": 48072,
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1814,8 +1553,6 @@
             "id": 48073,
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1832,8 +1569,6 @@
             "id": 48074,
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1856,8 +1591,6 @@
             "id": 48075,
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1874,8 +1607,6 @@
             "id": 48076,
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1892,8 +1623,6 @@
             "id": 48077,
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1910,8 +1639,6 @@
             "id": 48078,
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -1928,19 +1655,14 @@
             "id": 48079,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_access_balboa_island",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_craft_machete",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1959,19 +1681,14 @@
             "id": 48080,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_access_balboa_island",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_craft_machete",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1990,19 +1707,14 @@
             "id": 48081,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_access_balboa_island",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_craft_machete",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2021,8 +1733,6 @@
             "id": 48082,
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2039,8 +1749,6 @@
             "id": 48083,
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2057,8 +1765,6 @@
             "id": 48084,
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2075,8 +1781,6 @@
             "id": 48085,
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2093,19 +1797,14 @@
             "id": 48086,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_access_balboa_island",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_craft_machete",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2124,8 +1823,6 @@
             "id": 48087,
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2142,8 +1839,6 @@
             "id": 48088,
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2160,8 +1855,6 @@
             "id": 48089,
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2178,8 +1871,6 @@
             "id": 48090,
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2196,8 +1887,6 @@
             "id": 48091,
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2214,8 +1903,6 @@
             "id": 48155,
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2238,8 +1925,6 @@
             "id": 48092,
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2256,8 +1941,6 @@
             "id": 48093,
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2274,8 +1957,6 @@
             "id": 48094,
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2292,8 +1973,6 @@
             "id": 48095,
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2310,8 +1989,6 @@
             "id": 48096,
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2328,8 +2005,6 @@
             "id": 48097,
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2346,8 +2021,6 @@
             "id": 48098,
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2364,8 +2037,6 @@
             "id": 48099,
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2382,8 +2053,6 @@
             "id": 48100,
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2400,8 +2069,6 @@
             "id": 48101,
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2418,8 +2085,6 @@
             "id": 48102,
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2436,23 +2101,17 @@
             "id": 48103,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "raft_big_islands_available",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "raft_can_smelt_items",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -2460,8 +2119,6 @@
                 },
                 {
                   "rule": "raft_can_access_caravan_island",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2480,19 +2137,14 @@
             "id": 48104,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_access_caravan_island",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_craft_ziplineTool",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2511,19 +2163,14 @@
             "id": 48105,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_access_caravan_island",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_craft_ziplineTool",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2542,8 +2189,6 @@
             "id": 48106,
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2566,8 +2211,6 @@
             "id": 48107,
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2584,8 +2227,6 @@
             "id": 48108,
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2602,8 +2243,6 @@
             "id": 48109,
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2620,8 +2259,6 @@
             "id": 48110,
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2638,8 +2275,6 @@
             "id": 48111,
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2656,8 +2291,6 @@
             "id": 48112,
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2674,8 +2307,6 @@
             "id": 48113,
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2692,8 +2323,6 @@
             "id": 48114,
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2710,8 +2339,6 @@
             "id": 48115,
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2728,8 +2355,6 @@
             "id": 48116,
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2746,8 +2371,6 @@
             "id": 48117,
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2764,8 +2387,6 @@
             "id": 48118,
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2782,8 +2403,6 @@
             "id": 48119,
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2800,8 +2419,6 @@
             "id": 48120,
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2818,8 +2435,6 @@
             "id": 48121,
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2842,8 +2457,6 @@
             "id": 48122,
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2860,8 +2473,6 @@
             "id": 48123,
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2878,8 +2489,6 @@
             "id": 48124,
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2896,8 +2505,6 @@
             "id": 48125,
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2914,8 +2521,6 @@
             "id": 48126,
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2932,8 +2537,6 @@
             "id": 48127,
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2950,8 +2553,6 @@
             "id": 48128,
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2968,8 +2569,6 @@
             "id": 48129,
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -2986,8 +2585,6 @@
             "id": 48130,
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3004,8 +2601,6 @@
             "id": 48131,
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3022,8 +2617,6 @@
             "id": 48132,
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3046,8 +2639,6 @@
             "id": 48133,
             "access_rule": {
               "rule": "raft_can_access_temperance",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3064,8 +2655,6 @@
             "id": 48134,
             "access_rule": {
               "rule": "raft_can_access_temperance",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3082,8 +2671,6 @@
             "id": 48135,
             "access_rule": {
               "rule": "raft_can_access_temperance",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3100,8 +2687,6 @@
             "id": 48136,
             "access_rule": {
               "rule": "raft_can_access_temperance",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3118,8 +2703,6 @@
             "id": 48137,
             "access_rule": {
               "rule": "raft_can_access_temperance",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3136,8 +2719,6 @@
             "id": 48138,
             "access_rule": {
               "rule": "raft_can_access_temperance",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3154,8 +2735,6 @@
             "id": 48139,
             "access_rule": {
               "rule": "raft_can_access_temperance",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3172,8 +2751,6 @@
             "id": 48140,
             "access_rule": {
               "rule": "raft_can_access_temperance",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3190,8 +2767,6 @@
             "id": 48141,
             "access_rule": {
               "rule": "raft_can_access_temperance",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3208,8 +2783,6 @@
             "id": 48142,
             "access_rule": {
               "rule": "raft_can_access_temperance",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3226,8 +2799,6 @@
             "id": 48143,
             "access_rule": {
               "rule": "raft_can_access_temperance",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3244,8 +2815,6 @@
             "id": 48144,
             "access_rule": {
               "rule": "raft_can_access_temperance",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3262,8 +2831,6 @@
             "id": 48145,
             "access_rule": {
               "rule": "raft_can_access_temperance",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3280,8 +2847,6 @@
             "id": 48146,
             "access_rule": {
               "rule": "raft_can_access_temperance",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3298,8 +2863,6 @@
             "id": 48147,
             "access_rule": {
               "rule": "raft_can_access_temperance",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3316,8 +2879,6 @@
             "id": 48148,
             "access_rule": {
               "rule": "raft_can_access_temperance",
-              "options": [],
-              "args": [],
               "_original_ast_type": "helper",
               "_converted_from_cc": true
             },
@@ -3340,19 +2901,14 @@
             "id": 48149,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_access_utopia",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_complete_temperance",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -3371,19 +2927,14 @@
             "id": 48150,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_access_utopia",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_complete_temperance",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -3402,19 +2953,14 @@
             "id": 48151,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_access_utopia",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_complete_temperance",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -3433,19 +2979,14 @@
             "id": 48152,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_access_utopia",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_complete_temperance",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -3464,19 +3005,14 @@
             "id": 48153,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_access_utopia",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_complete_temperance",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -3495,19 +3031,14 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "raft_can_access_utopia",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "raft_can_complete_temperance",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -3530,9 +3061,7 @@
             "name": "MenuToRaft",
             "connected_region": "Raft",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -7715,8 +7244,7 @@
           },
           {
             "type": "helper",
-            "name": "raft_can_access_radio_tower",
-            "args": []
+            "name": "raft_can_access_radio_tower"
           }
         ]
       },
@@ -7725,13 +7253,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_navigate",
-            "args": []
+            "name": "raft_can_navigate"
           },
           {
             "type": "helper",
-            "name": "raft_can_drive",
-            "args": []
+            "name": "raft_can_drive"
           },
           {
             "type": "helper",
@@ -7750,13 +7276,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_navigate",
-            "args": []
+            "name": "raft_can_navigate"
           },
           {
             "type": "helper",
-            "name": "raft_can_drive",
-            "args": []
+            "name": "raft_can_drive"
           },
           {
             "type": "helper",
@@ -7772,21 +7296,18 @@
       },
       "raft_can_access_radio_tower": {
         "type": "helper",
-        "name": "raft_can_navigate",
-        "args": []
+        "name": "raft_can_navigate"
       },
       "raft_can_access_tangaroa": {
         "type": "and",
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_navigate",
-            "args": []
+            "name": "raft_can_navigate"
           },
           {
             "type": "helper",
-            "name": "raft_can_drive",
-            "args": []
+            "name": "raft_can_drive"
           },
           {
             "type": "helper",
@@ -7805,13 +7326,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_navigate",
-            "args": []
+            "name": "raft_can_navigate"
           },
           {
             "type": "helper",
-            "name": "raft_can_drive",
-            "args": []
+            "name": "raft_can_drive"
           },
           {
             "type": "helper",
@@ -7830,48 +7349,39 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_navigate",
-            "args": []
+            "name": "raft_can_navigate"
           },
           {
             "type": "helper",
-            "name": "raft_can_drive",
-            "args": []
+            "name": "raft_can_drive"
           },
           {
             "type": "helper",
-            "name": "raft_can_access_radio_tower",
-            "args": []
+            "name": "raft_can_access_radio_tower"
           },
           {
             "type": "helper",
-            "name": "raft_can_access_vasagatan",
-            "args": []
+            "name": "raft_can_access_vasagatan"
           },
           {
             "type": "helper",
-            "name": "raft_can_access_balboa_island",
-            "args": []
+            "name": "raft_can_access_balboa_island"
           },
           {
             "type": "helper",
-            "name": "raft_can_access_caravan_island",
-            "args": []
+            "name": "raft_can_access_caravan_island"
           },
           {
             "type": "helper",
-            "name": "raft_can_access_tangaroa",
-            "args": []
+            "name": "raft_can_access_tangaroa"
           },
           {
             "type": "helper",
-            "name": "raft_can_access_varuna_point",
-            "args": []
+            "name": "raft_can_access_varuna_point"
           },
           {
             "type": "helper",
-            "name": "raft_can_access_temperance",
-            "args": []
+            "name": "raft_can_access_temperance"
           },
           {
             "type": "helper",
@@ -7885,8 +7395,7 @@
           },
           {
             "type": "helper",
-            "name": "raft_can_craft_shovel",
-            "args": []
+            "name": "raft_can_craft_shovel"
           }
         ]
       },
@@ -7895,13 +7404,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_navigate",
-            "args": []
+            "name": "raft_can_navigate"
           },
           {
             "type": "helper",
-            "name": "raft_can_drive",
-            "args": []
+            "name": "raft_can_drive"
           },
           {
             "type": "helper",
@@ -7920,8 +7427,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_navigate",
-            "args": []
+            "name": "raft_can_navigate"
           },
           {
             "type": "helper",
@@ -7940,38 +7446,32 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_craft_netLauncher",
-            "args": []
+            "name": "raft_can_craft_netLauncher"
           },
           {
             "type": "helper",
-            "name": "raft_can_craft_netCanister",
-            "args": []
+            "name": "raft_can_craft_netCanister"
           },
           {
             "type": "helper",
-            "name": "raft_can_craft_grassPlot",
-            "args": []
+            "name": "raft_can_craft_grassPlot"
           }
         ]
       },
       "raft_can_complete_temperance": {
         "type": "helper",
-        "name": "raft_can_access_temperance",
-        "args": []
+        "name": "raft_can_access_temperance"
       },
       "raft_can_craft_antenna": {
         "type": "and",
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_craft_circuitBoard",
-            "args": []
+            "name": "raft_can_craft_circuitBoard"
           },
           {
             "type": "helper",
-            "name": "raft_can_craft_bolt",
-            "args": []
+            "name": "raft_can_craft_bolt"
           },
           {
             "type": "helper",
@@ -7990,8 +7490,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_smelt_items",
-            "args": []
+            "name": "raft_can_smelt_items"
           },
           {
             "type": "helper",
@@ -8020,8 +7519,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_smelt_items",
-            "args": []
+            "name": "raft_can_smelt_items"
           },
           {
             "type": "helper",
@@ -8040,8 +7538,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_smelt_items",
-            "args": []
+            "name": "raft_can_smelt_items"
           },
           {
             "type": "helper",
@@ -8060,13 +7557,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_smelt_items",
-            "args": []
+            "name": "raft_can_smelt_items"
           },
           {
             "type": "helper",
-            "name": "raft_can_craft_circuitBoard",
-            "args": []
+            "name": "raft_can_craft_circuitBoard"
           },
           {
             "type": "helper",
@@ -8085,8 +7580,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_get_dirt",
-            "args": []
+            "name": "raft_can_get_dirt"
           },
           {
             "type": "helper",
@@ -8105,8 +7599,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_smelt_items",
-            "args": []
+            "name": "raft_can_smelt_items"
           },
           {
             "type": "helper",
@@ -8125,13 +7618,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_smelt_items",
-            "args": []
+            "name": "raft_can_smelt_items"
           },
           {
             "type": "helper",
-            "name": "raft_can_craft_bolt",
-            "args": []
+            "name": "raft_can_craft_bolt"
           },
           {
             "type": "helper",
@@ -8150,8 +7641,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_smelt_items",
-            "args": []
+            "name": "raft_can_smelt_items"
           },
           {
             "type": "helper",
@@ -8170,13 +7660,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_smelt_items",
-            "args": []
+            "name": "raft_can_smelt_items"
           },
           {
             "type": "helper",
-            "name": "raft_can_craft_bolt",
-            "args": []
+            "name": "raft_can_craft_bolt"
           },
           {
             "type": "helper",
@@ -8195,8 +7683,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_smelt_items",
-            "args": []
+            "name": "raft_can_smelt_items"
           },
           {
             "type": "helper",
@@ -8215,13 +7702,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_craft_circuitBoard",
-            "args": []
+            "name": "raft_can_craft_circuitBoard"
           },
           {
             "type": "helper",
-            "name": "raft_can_craft_hinge",
-            "args": []
+            "name": "raft_can_craft_hinge"
           },
           {
             "type": "helper",
@@ -8240,13 +7725,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_smelt_items",
-            "args": []
+            "name": "raft_can_smelt_items"
           },
           {
             "type": "helper",
-            "name": "raft_can_craft_hinge",
-            "args": []
+            "name": "raft_can_craft_hinge"
           },
           {
             "type": "helper",
@@ -8265,8 +7748,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_smelt_items",
-            "args": []
+            "name": "raft_can_smelt_items"
           },
           {
             "type": "helper",
@@ -8280,8 +7762,7 @@
           },
           {
             "type": "helper",
-            "name": "raft_can_craft_bolt",
-            "args": []
+            "name": "raft_can_craft_bolt"
           }
         ]
       },
@@ -8290,18 +7771,15 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_smelt_items",
-            "args": []
+            "name": "raft_can_smelt_items"
           },
           {
             "type": "helper",
-            "name": "raft_can_craft_bolt",
-            "args": []
+            "name": "raft_can_craft_bolt"
           },
           {
             "type": "helper",
-            "name": "raft_can_craft_hinge",
-            "args": []
+            "name": "raft_can_craft_hinge"
           },
           {
             "type": "helper",
@@ -8320,13 +7798,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_craft_hinge",
-            "args": []
+            "name": "raft_can_craft_hinge"
           },
           {
             "type": "helper",
-            "name": "raft_can_craft_bolt",
-            "args": []
+            "name": "raft_can_craft_bolt"
           },
           {
             "type": "helper",
@@ -8348,20 +7824,17 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "raft_can_craft_engine",
-                "args": []
+                "name": "raft_can_craft_engine"
               },
               {
                 "type": "helper",
-                "name": "raft_can_craft_steeringWheel",
-                "args": []
+                "name": "raft_can_craft_steeringWheel"
               }
             ]
           },
           {
             "type": "helper",
-            "name": "raft_paddleboard_mode_enabled",
-            "args": []
+            "name": "raft_paddleboard_mode_enabled"
           }
         ]
       },
@@ -8380,13 +7853,11 @@
           },
           {
             "type": "helper",
-            "name": "raft_can_craft_battery",
-            "args": []
+            "name": "raft_can_craft_battery"
           },
           {
             "type": "helper",
-            "name": "raft_can_craft_shovel",
-            "args": []
+            "name": "raft_can_craft_shovel"
           }
         ]
       },
@@ -8395,13 +7866,11 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_craft_shovel",
-            "args": []
+            "name": "raft_can_craft_shovel"
           },
           {
             "type": "helper",
-            "name": "raft_big_islands_available",
-            "args": []
+            "name": "raft_big_islands_available"
           }
         ]
       },
@@ -8410,18 +7879,15 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "raft_can_craft_battery",
-            "args": []
+            "name": "raft_can_craft_battery"
           },
           {
             "type": "helper",
-            "name": "raft_can_craft_reciever",
-            "args": []
+            "name": "raft_can_craft_reciever"
           },
           {
             "type": "helper",
-            "name": "raft_can_craft_antenna",
-            "args": []
+            "name": "raft_can_craft_antenna"
           }
         ]
       },

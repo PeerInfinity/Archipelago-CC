@@ -19,9 +19,7 @@
             "name": "Menu -> Act 1",
             "connected_region": "Act 1",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -29,7 +27,6 @@
             "connected_region": "Act 2",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Film Roll"
               }
@@ -40,11 +37,9 @@
             "connected_region": "Act 3",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Camera Replica",
@@ -54,7 +49,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Epitaph Piece",
                     "count": 9
@@ -62,14 +56,12 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Film Roll"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Monocle"
                   }
@@ -82,15 +74,12 @@
             "connected_region": "Epilogue",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAll",
-                      "options": [],
                       "args": {
                         "items": [
                           "Camera Replica",
@@ -100,7 +89,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Epitaph Piece",
                         "count": 9
@@ -108,14 +96,12 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Film Roll"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Monocle"
                       }
@@ -124,7 +110,6 @@
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Gems Module",
@@ -147,9 +132,7 @@
             "name": "Act 1 - Boss Prospector",
             "id": 147000,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Card Pack",
@@ -163,9 +146,7 @@
             "name": "Act 1 - Boss Angler",
             "id": 147001,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Currency",
@@ -179,9 +160,7 @@
             "name": "Act 1 - Boss Trapper",
             "id": 147002,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Currency",
@@ -195,9 +174,7 @@
             "name": "Act 1 - Boss Leshy",
             "id": 147003,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Currency",
@@ -211,9 +188,7 @@
             "name": "Act 1 - Safe",
             "id": 147004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Card Pack",
@@ -228,7 +203,6 @@
             "id": 147005,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Magnificus Eye"
               }
@@ -245,9 +219,7 @@
             "name": "Act 1 - Clock Upper Compartment",
             "id": 147006,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Film Roll",
@@ -262,7 +234,6 @@
             "id": 147007,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Caged Wolf Card"
               }
@@ -280,7 +251,6 @@
             "id": 147008,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wardrobe Key"
               }
@@ -298,7 +268,6 @@
             "id": 147009,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wardrobe Key"
               }
@@ -316,7 +285,6 @@
             "id": 147010,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wardrobe Key"
               }
@@ -334,7 +302,6 @@
             "id": 147011,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wardrobe Key"
               }
@@ -352,7 +319,6 @@
             "id": 147012,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Dagger"
               }
@@ -369,9 +335,7 @@
             "name": "Act 1 - Painting 1",
             "id": 147013,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Epitaph Piece",
@@ -386,7 +350,6 @@
             "id": 147014,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Oil Painting's Clover Plant",
@@ -407,7 +370,6 @@
             "id": 147015,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Oil Painting's Clover Plant",
@@ -427,9 +389,7 @@
             "name": "Act 1 - Greater Smoke",
             "id": 147016,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mrs. Bomb's Remote",
@@ -450,7 +410,6 @@
             "id": 147017,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Camera Replica",
@@ -471,15 +430,12 @@
             "id": 147018,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAll",
-                      "options": [],
                       "args": {
                         "items": [
                           "Camera Replica",
@@ -489,7 +445,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Epitaph Piece",
                         "count": 9
@@ -499,7 +454,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Monocle"
                   }
@@ -519,7 +473,6 @@
             "id": 147019,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Epitaph Piece",
                 "count": 9
@@ -538,11 +491,9 @@
             "id": 147020,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Camera Replica",
@@ -552,7 +503,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Epitaph Piece",
                     "count": 9
@@ -573,7 +523,6 @@
             "id": 147021,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Camera Replica",
@@ -594,7 +543,6 @@
             "id": 147022,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Camera Replica",
@@ -615,7 +563,6 @@
             "id": 147023,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Camera Replica",
@@ -635,9 +582,7 @@
             "name": "Act 2 - Battle Sawyer",
             "id": 147024,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Currency",
@@ -651,9 +596,7 @@
             "name": "Act 2 - Battle Royal",
             "id": 147025,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Card Pack",
@@ -667,9 +610,7 @@
             "name": "Act 2 - Battle Kaycee",
             "id": 147026,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Currency",
@@ -684,15 +625,12 @@
             "id": 147027,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAll",
-                      "options": [],
                       "args": {
                         "items": [
                           "Camera Replica",
@@ -702,7 +640,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Epitaph Piece",
                         "count": 9
@@ -712,7 +649,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Monocle"
                   }
@@ -732,15 +668,12 @@
             "id": 147028,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAll",
-                      "options": [],
                       "args": {
                         "items": [
                           "Camera Replica",
@@ -750,7 +683,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Epitaph Piece",
                         "count": 9
@@ -760,7 +692,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Monocle"
                   }
@@ -780,15 +711,12 @@
             "id": 147029,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAll",
-                      "options": [],
                       "args": {
                         "items": [
                           "Camera Replica",
@@ -798,7 +726,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Epitaph Piece",
                         "count": 9
@@ -808,7 +735,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Monocle"
                   }
@@ -828,11 +754,9 @@
             "id": 147030,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Camera Replica",
@@ -842,7 +766,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Epitaph Piece",
                     "count": 9
@@ -863,11 +786,9 @@
             "id": 147031,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Camera Replica",
@@ -877,7 +798,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Epitaph Piece",
                     "count": 9
@@ -898,11 +818,9 @@
             "id": 147032,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Camera Replica",
@@ -912,7 +830,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Epitaph Piece",
                     "count": 9
@@ -932,9 +849,7 @@
             "name": "Act 2 - Dock Chest",
             "id": 147033,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Pile Of Meat",
@@ -948,9 +863,7 @@
             "name": "Act 2 - Forest Cabin Chest",
             "id": 147034,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Card Pack",
@@ -965,7 +878,6 @@
             "id": 147035,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Camera Replica",
@@ -985,9 +897,7 @@
             "name": "Act 2 - Cabin Wardrobe Drawer",
             "id": 147036,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Epitaph Piece",
@@ -1001,9 +911,7 @@
             "name": "Act 2 - Cabin Safe",
             "id": 147037,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Lonely Wizbot Card",
@@ -1017,9 +925,7 @@
             "name": "Act 2 - Crypt Casket 1",
             "id": 147038,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Card Pack",
@@ -1033,9 +939,7 @@
             "name": "Act 2 - Crypt Casket 2",
             "id": 147039,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Holo Pelt",
@@ -1049,9 +953,7 @@
             "name": "Act 2 - Crypt Well",
             "id": 147040,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Card Pack",
@@ -1066,11 +968,9 @@
             "id": 147041,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Camera Replica",
@@ -1080,7 +980,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Epitaph Piece",
                     "count": 9
@@ -1101,15 +1000,12 @@
             "id": 147042,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAll",
-                      "options": [],
                       "args": {
                         "items": [
                           "Camera Replica",
@@ -1119,7 +1015,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Epitaph Piece",
                         "count": 9
@@ -1129,7 +1024,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Monocle"
                   }
@@ -1149,15 +1043,12 @@
             "id": 147043,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAll",
-                      "options": [],
                       "args": {
                         "items": [
                           "Camera Replica",
@@ -1167,7 +1058,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Epitaph Piece",
                         "count": 9
@@ -1177,7 +1067,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Monocle"
                   }
@@ -1197,15 +1086,12 @@
             "id": 147044,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAll",
-                      "options": [],
                       "args": {
                         "items": [
                           "Camera Replica",
@@ -1215,7 +1101,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Epitaph Piece",
                         "count": 9
@@ -1225,7 +1110,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Monocle"
                   }
@@ -1245,11 +1129,9 @@
             "id": 147045,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Camera Replica",
@@ -1259,7 +1141,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Epitaph Piece",
                     "count": 9
@@ -1280,11 +1161,9 @@
             "id": 147046,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Camera Replica",
@@ -1294,7 +1173,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Epitaph Piece",
                     "count": 9
@@ -1315,11 +1193,9 @@
             "id": 147047,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Camera Replica",
@@ -1329,7 +1205,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Epitaph Piece",
                     "count": 9
@@ -1350,11 +1225,9 @@
             "id": 147048,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Camera Replica",
@@ -1364,7 +1237,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Epitaph Piece",
                     "count": 9
@@ -1385,11 +1257,9 @@
             "id": 147049,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Camera Replica",
@@ -1399,7 +1269,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Epitaph Piece",
                     "count": 9
@@ -1420,11 +1289,9 @@
             "id": 147050,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Camera Replica",
@@ -1434,7 +1301,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Epitaph Piece",
                     "count": 9
@@ -1455,11 +1321,9 @@
             "id": 147051,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Camera Replica",
@@ -1469,7 +1333,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Epitaph Piece",
                     "count": 9
@@ -1490,15 +1353,12 @@
             "id": 147052,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAll",
-                      "options": [],
                       "args": {
                         "items": [
                           "Camera Replica",
@@ -1508,7 +1368,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Epitaph Piece",
                         "count": 9
@@ -1518,7 +1377,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Monocle"
                   }
@@ -1538,7 +1396,6 @@
             "id": 147053,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Ancient Obol"
               }
@@ -1556,7 +1413,6 @@
             "id": 147054,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Ancient Obol"
               }
@@ -1574,7 +1430,6 @@
             "id": 147055,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Ancient Obol"
               }
@@ -1592,15 +1447,12 @@
             "id": 147056,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "HasAll",
-                      "options": [],
                       "args": {
                         "items": [
                           "Camera Replica",
@@ -1610,7 +1462,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Epitaph Piece",
                         "count": 9
@@ -1620,7 +1471,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Monocle"
                   }
@@ -1639,9 +1489,7 @@
             "name": "Act 2 - Camera Replica",
             "id": 147057,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Ancient Obol",
@@ -1655,9 +1503,7 @@
             "name": "Act 2 - Clover",
             "id": 147058,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Currency",
@@ -1672,11 +1518,9 @@
             "id": 147059,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Camera Replica",
@@ -1686,7 +1530,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Epitaph Piece",
                     "count": 9
@@ -1706,9 +1549,7 @@
             "name": "Act 2 - Epitaph Piece 1",
             "id": 147060,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Epitaph Piece",
@@ -1722,9 +1563,7 @@
             "name": "Act 2 - Epitaph Piece 2",
             "id": 147061,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Drowned Soul Card",
@@ -1738,9 +1577,7 @@
             "name": "Act 2 - Epitaph Piece 3",
             "id": 147062,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Skink Card",
@@ -1754,9 +1591,7 @@
             "name": "Act 2 - Epitaph Piece 4",
             "id": 147063,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Card Pack",
@@ -1770,9 +1605,7 @@
             "name": "Act 2 - Epitaph Piece 5",
             "id": 147064,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Card Pack",
@@ -1786,9 +1619,7 @@
             "name": "Act 2 - Epitaph Piece 6",
             "id": 147065,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Oil Painting's Clover Plant",
@@ -1802,9 +1633,7 @@
             "name": "Act 2 - Epitaph Piece 7",
             "id": 147066,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Ourobot Card",
@@ -1818,9 +1647,7 @@
             "name": "Act 2 - Epitaph Piece 8",
             "id": 147067,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Epitaph Piece",
@@ -1834,9 +1661,7 @@
             "name": "Act 2 - Epitaph Piece 9",
             "id": 147068,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Card Pack",
@@ -1857,7 +1682,6 @@
             "id": 147069,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Inspectometer Battery"
               }
@@ -1875,18 +1699,15 @@
             "id": 147070,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Inspectometer Battery"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Quill"
                   }
@@ -1906,18 +1727,15 @@
             "id": 147071,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Gems Module"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Inspectometer Battery"
                   }
@@ -1937,18 +1755,15 @@
             "id": 147072,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Gems Module"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Inspectometer Battery"
                   }
@@ -1968,11 +1783,9 @@
             "id": 147073,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Gems Module",
@@ -1983,7 +1796,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Mycologists Holo Key"
                   }
@@ -2003,18 +1815,15 @@
             "id": 147074,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Bone Lord Holo Key"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Inspectometer Battery"
                   }
@@ -2034,18 +1843,15 @@
             "id": 147075,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Gems Module"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Inspectometer Battery"
                   }
@@ -2065,7 +1871,6 @@
             "id": 147076,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Inspectometer Battery"
               }
@@ -2083,7 +1888,6 @@
             "id": 147077,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Inspectometer Battery"
               }
@@ -2101,7 +1905,6 @@
             "id": 147078,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Inspectometer Battery"
               }
@@ -2119,18 +1922,15 @@
             "id": 147079,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Gems Module"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Inspectometer Battery"
                   }
@@ -2150,11 +1950,9 @@
             "id": 147080,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Gems Module",
@@ -2164,7 +1962,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Holo Pelt"
                   }
@@ -2184,11 +1981,9 @@
             "id": 147081,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Gems Module",
@@ -2198,7 +1993,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Holo Pelt",
                     "count": 2
@@ -2219,11 +2013,9 @@
             "id": 147082,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Gems Module",
@@ -2233,7 +2025,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Holo Pelt",
                     "count": 3
@@ -2254,11 +2045,9 @@
             "id": 147083,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Gems Module",
@@ -2268,7 +2057,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Holo Pelt",
                     "count": 4
@@ -2289,11 +2077,9 @@
             "id": 147084,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Gems Module",
@@ -2303,7 +2089,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Holo Pelt",
                     "count": 5
@@ -2323,9 +2108,7 @@
             "name": "Act 3 - Drawer 1",
             "id": 147085,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Inspectometer Battery",
@@ -2339,9 +2122,7 @@
             "name": "Act 3 - Drawer 2",
             "id": 147086,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Ring",
@@ -2356,18 +2137,15 @@
             "id": 147087,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Gems Module"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Inspectometer Battery"
                   }
@@ -2387,7 +2165,6 @@
             "id": 147088,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Inspectometer Battery"
               }
@@ -2405,18 +2182,15 @@
             "id": 147089,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Gems Module"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Inspectometer Battery"
                   }
@@ -2435,9 +2209,7 @@
             "name": "Act 3 - Chest",
             "id": 147090,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Card Pack",
@@ -2452,18 +2224,15 @@
             "id": 147091,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Gems Module"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Inspectometer Battery"
                   }
@@ -2483,18 +2252,15 @@
             "id": 147092,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Inspectometer Battery"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Quill"
                   }
@@ -2514,18 +2280,15 @@
             "id": 147093,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Inspectometer Battery"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Quill"
                   }
@@ -2545,18 +2308,15 @@
             "id": 147094,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Inspectometer Battery"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Quill"
                   }
@@ -2576,11 +2336,9 @@
             "id": 147095,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Gems Module",
@@ -2590,7 +2348,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Quill"
                   }
@@ -2609,9 +2366,7 @@
             "name": "Act 3 - Inspectometer Battery",
             "id": 147096,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bee Figurine",
@@ -2626,7 +2381,6 @@
             "id": 147097,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Inspectometer Battery"
               }
@@ -2644,11 +2398,9 @@
             "id": 147098,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Gems Module",
@@ -2658,7 +2410,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Quill"
                   }
@@ -2678,7 +2429,6 @@
             "id": 147099,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Inspectometer Battery"
               }

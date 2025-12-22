@@ -19,9 +19,7 @@
             "name": "DLC Quest Basic",
             "connected_region": "Move Right",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -35,7 +33,6 @@
             "connected_region": "Movement Pack",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Movement Pack",
                 "count": 1
@@ -48,9 +45,16 @@
             "name": "Movement Pack",
             "id": 120000,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "True_"
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "True_"
+                }
+              }
             },
             "item": {
               "name": "Movement Pack",
@@ -64,9 +68,16 @@
             "name": "Animation Pack",
             "id": 120001,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "True_"
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "True_"
+                }
+              }
             },
             "item": {
               "name": "Psychological Warfare Pack",
@@ -80,9 +91,16 @@
             "name": "Audio Pack",
             "id": 120002,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "True_"
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "True_"
+                }
+              }
             },
             "item": {
               "name": "Name Change Pack",
@@ -96,9 +114,16 @@
             "name": "Pause Menu Pack",
             "id": 120003,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "True_"
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "True_"
+                }
+              }
             },
             "item": {
               "name": "Time is Money Pack",
@@ -112,9 +137,7 @@
             "name": "Move Right coins",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "4 coins",
@@ -134,7 +157,6 @@
             "connected_region": "Behind Tree",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Time is Money Pack",
                 "count": 1
@@ -146,7 +168,6 @@
             "connected_region": "Psychological Warfare",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Psychological Warfare Pack",
                 "count": 1
@@ -159,9 +180,16 @@
             "name": "Time is Money Pack",
             "id": 120004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "True_"
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "True_"
+                }
+              }
             },
             "item": {
               "name": "Zombie Sheep",
@@ -175,9 +203,16 @@
             "name": "Psychological Warfare Pack",
             "id": 120013,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "True_"
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "True_"
+                }
+              }
             },
             "item": {
               "name": "Animation Pack",
@@ -191,9 +226,16 @@
             "name": "Armor for your Horse Pack",
             "id": 120014,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "True_"
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "True_"
+                }
+              }
             },
             "item": {
               "name": "Loading Screen",
@@ -208,7 +250,6 @@
             "id": 120049,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Time is Money Pack",
                 "count": 1
@@ -226,9 +267,7 @@
             "name": "Movement Pack coins",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "46 coins",
@@ -248,7 +287,6 @@
             "connected_region": "Double Jump Behind Tree",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Double Jump Pack",
                 "count": 1
@@ -260,7 +298,6 @@
             "connected_region": "The Forest",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Map Pack",
                 "count": 1
@@ -273,9 +310,16 @@
             "name": "Double Jump Pack",
             "id": 120005,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "True_"
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "True_"
+                }
+              }
             },
             "item": {
               "name": "Loading Screen",
@@ -289,9 +333,16 @@
             "name": "Map Pack",
             "id": 120009,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "True_"
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "True_"
+                }
+              }
             },
             "item": {
               "name": "Armor for your Horse Pack",
@@ -305,9 +356,7 @@
             "name": "Between Trees Sheep",
             "id": 120047,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Name Change Pack",
@@ -321,9 +370,7 @@
             "name": "Hole in the Wall Sheep",
             "id": 120048,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Name Change Pack",
@@ -337,9 +384,7 @@
             "name": "Behind Tree coins",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "60 coins",
@@ -359,7 +404,6 @@
             "connected_region": "Double Jump Total Left",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Double Jump Pack",
                 "count": 1
@@ -373,7 +417,6 @@
             "id": 120053,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Time is Money Pack",
                 "count": 1
@@ -391,9 +434,7 @@
             "name": "Psychological Warfare coins",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "100 coins",
@@ -413,7 +454,6 @@
             "connected_region": "Double Jump Total Left Cave",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Time is Money Pack",
                 "count": 1
@@ -425,7 +465,6 @@
             "connected_region": "Double Jump Total Left Roof",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Double Jump Pack",
                 "count": 1
@@ -438,9 +477,16 @@
             "name": "Pet Pack",
             "id": 120006,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "True_"
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "True_"
+                }
+              }
             },
             "item": {
               "name": "Map Pack",
@@ -454,9 +500,16 @@
             "name": "Top Hat Pack",
             "id": 120008,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "True_"
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "True_"
+                }
+              }
             },
             "item": {
               "name": "Loading Screen",
@@ -471,7 +524,6 @@
             "id": 120052,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Time is Money Pack",
                 "count": 1
@@ -489,9 +541,7 @@
             "name": "Double Jump Total Left coins",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "50 coins",
@@ -511,9 +561,7 @@
             "name": "Top Hat Sheep",
             "id": 120050,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Pause Menu Pack",
@@ -527,9 +575,7 @@
             "name": "Double Jump Total Left Cave coins",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "9 coins",
@@ -550,7 +596,6 @@
             "id": 120051,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Time is Money Pack",
                 "count": 1
@@ -568,9 +613,7 @@
             "name": "Double Jump Total Left Roof coins",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "10 coins",
@@ -589,9 +632,7 @@
             "name": "True Double Jump",
             "connected_region": "True Double Jump Behind Tree",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -600,9 +641,16 @@
             "name": "Sexy Outfits Pack",
             "id": 120007,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "True_"
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "True_"
+                }
+              }
             },
             "item": {
               "name": "Name Change Pack",
@@ -616,9 +664,7 @@
             "name": "Double Jump Alcove Sheep",
             "id": 120042,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Night Map Pack",
@@ -632,9 +678,7 @@
             "name": "Sexy Outfits Sheep",
             "id": 120044,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Loading Screen",
@@ -648,9 +692,7 @@
             "name": "Double Jump Behind Tree coins",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "89 coins",
@@ -670,9 +712,7 @@
             "name": "Double Jump Floating Sheep",
             "id": 120043,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sexy Outfits Pack",
@@ -686,9 +726,7 @@
             "name": "Cutscene Sheep",
             "id": 120054,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Loading Screen",
@@ -702,9 +740,7 @@
             "name": "True Double Jump Behind Tree coins",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "7 coins",
@@ -724,7 +760,6 @@
             "connected_region": "The Final Boss Room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Gun Pack",
                 "count": 1
@@ -736,7 +771,6 @@
             "connected_region": "The Forest with double Jump",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Double Jump Pack",
                 "count": 1
@@ -749,9 +783,16 @@
             "name": "Gun Pack",
             "id": 120010,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "True_"
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "True_"
+                }
+              }
             },
             "item": {
               "name": "Temporary Spike",
@@ -765,9 +806,16 @@
             "name": "Night Map Pack",
             "id": 120012,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "True_"
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "True_"
+                }
+              }
             },
             "item": {
               "name": "Loading Screen",
@@ -781,9 +829,7 @@
             "name": "The Forest coins",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "171 coins",
@@ -803,7 +849,6 @@
             "connected_region": "The Forest with double Jump Part 2",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Double Jump Pack",
                 "count": 1
@@ -816,9 +861,16 @@
             "name": "The Zombie Pack",
             "id": 120011,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "True_"
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "True_"
+                }
+              }
             },
             "item": {
               "name": "Top Hat Pack",
@@ -832,9 +884,7 @@
             "name": "Forest Low Sheep",
             "id": 120046,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "The Zombie Pack",
@@ -848,9 +898,7 @@
             "name": "The Forest with double Jump coins",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "76 coins",
@@ -870,9 +918,7 @@
             "name": "Forest High Sheep",
             "id": 120045,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Gun Pack",
@@ -886,9 +932,7 @@
             "name": "The Forest with double Jump Part 2 coins",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "203 coins",
@@ -908,9 +952,16 @@
             "name": "Finish the Fight Pack",
             "id": 120015,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "True_"
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "True_"
+                }
+              }
             },
             "item": {
               "name": "Finish the Fight Pack",
@@ -925,7 +976,6 @@
             "id": null,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Armor for your Horse Pack",
@@ -1828,7 +1878,7 @@
         "start_inventory": {},
         "start_location_hints": []
       },
-      "world_directory": "dlcquest_worldgen"
+      "world_directory": "dlcquest"
     }
   },
   "game_info": {

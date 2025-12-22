@@ -32,12 +32,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Go To Undead Settlement", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'HWL: Soul of Boreal Valley Vordt'}), Has('Small Lothric Banner'))
+        And(CanReachLocation('HWL: Soul of Boreal Valley Vordt'), Has('Small Lothric Banner'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Go To Lothric Castle", player),
-        CanReachLocation({'type': 'constant', 'value': 'HWL: Soul of the Dancer'})
+        CanReachLocation('HWL: Soul of the Dancer')
     )
 
     world.set_rule(
@@ -52,7 +52,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Go To Cathedral of the Deep", player),
-        CanReachLocation({'type': 'constant', 'value': 'RS: Soul of a Crystal Sage'})
+        CanReachLocation('RS: Soul of a Crystal Sage')
     )
 
     world.set_rule(
@@ -62,12 +62,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Go To Catacombs of Carthus", player),
-        CanReachLocation({'type': 'constant', 'value': 'FK: Soul of the Blood of the Wolf'})
+        CanReachLocation('FK: Soul of the Blood of the Wolf')
     )
 
     world.set_rule(
         multiworld.get_entrance("Go To Irithyll of the Boreal Valley", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'CC: Soul of High Lord Wolnir'}), Has('Small Doll'))
+        And(CanReachLocation('CC: Soul of High Lord Wolnir'), Has('Small Doll'))
     )
 
     world.set_rule(
@@ -77,7 +77,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Go To Anor Londo", player),
-        CanReachLocation({'type': 'constant', 'value': 'IBV: Soul of Pontiff Sulyvahn'})
+        CanReachLocation('IBV: Soul of Pontiff Sulyvahn')
     )
 
     world.set_rule(
@@ -97,12 +97,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Go To Grand Archives", player),
-        And(And(Has('Pyromancy Flame'), Has('Transposing Kiln')), And(CanReachLocation({'type': 'constant', 'value': 'LC: Soul of Dragonslayer Armour'}), Has('Grand Archives Key')))
+        And(And(Has('Pyromancy Flame'), Has('Transposing Kiln')), And(CanReachLocation('LC: Soul of Dragonslayer Armour'), Has('Grand Archives Key')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Go To Untended Graves", player),
-        CanReachLocation({'type': 'constant', 'value': 'CKG: Soul of Consumed Oceiros'})
+        CanReachLocation('CKG: Soul of Consumed Oceiros')
     )
     # Location rules
     world.set_rule(
@@ -667,32 +667,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("CD: Black Eye Orb - Rosaria from Leonhard's quest", player),
-        And(And(CanReachRegion({'type': 'constant', 'value': 'Profaned Capital'}), CanReachLocation({'type': 'constant', 'value': 'HWL: Red Eye Orb - wall tower, miniboss'})), Has('Pale Tongue'))
+        And(And(CanReachRegion('Profaned Capital'), CanReachLocation('HWL: Red Eye Orb - wall tower, miniboss')), Has('Pale Tongue'))
     )
 
     world.set_rule(
         multiworld.get_location("CD: Winged Spear - kill Patches", player),
-        And(CanReachLocation({'type': 'constant', 'value': "FS: Rusted Gold Coin - don't forgive Patches"}), CanReachLocation({'type': 'constant', 'value': 'FS: Hidden Blessing - Patches after searching GA'}))
+        And(CanReachLocation("FS: Rusted Gold Coin - don't forgive Patches"), CanReachLocation('FS: Hidden Blessing - Patches after searching GA'))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Rusted Gold Coin - don't forgive Patches", player),
-        And(CanReachRegion({'type': 'constant', 'value': 'Cathedral of the Deep'}), CanReachRegion({'type': 'constant', 'value': 'Firelink Shrine Bell Tower'}))
+        And(CanReachRegion('Cathedral of the Deep'), CanReachRegion('Firelink Shrine Bell Tower'))
     )
 
     world.set_rule(
         multiworld.get_location("CD: Shotel - Patches", player),
-        And(CanReachRegion({'type': 'constant', 'value': 'Cathedral of the Deep'}), CanReachRegion({'type': 'constant', 'value': 'Firelink Shrine Bell Tower'}))
+        And(CanReachRegion('Cathedral of the Deep'), CanReachRegion('Firelink Shrine Bell Tower'))
     )
 
     world.set_rule(
         multiworld.get_location("CD: Ember - Patches", player),
-        And(CanReachRegion({'type': 'constant', 'value': 'Cathedral of the Deep'}), CanReachRegion({'type': 'constant', 'value': 'Firelink Shrine Bell Tower'}))
+        And(CanReachRegion('Cathedral of the Deep'), CanReachRegion('Firelink Shrine Bell Tower'))
     )
 
     world.set_rule(
         multiworld.get_location("CD: Horsehoof Ring - Patches", player),
-        And(CanReachLocation({'type': 'constant', 'value': "FS: Rusted Gold Coin - don't forgive Patches"}), CanReachLocation({'type': 'constant', 'value': 'FS: Hidden Blessing - Patches after searching GA'}))
+        And(CanReachLocation("FS: Rusted Gold Coin - don't forgive Patches"), CanReachLocation('FS: Hidden Blessing - Patches after searching GA'))
     )
 
     world.set_rule(
@@ -737,72 +737,72 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("FK: Havel's Helm - upper keep, after killing AP belfry roof NPC", player),
-        CanReachRegion({'type': 'constant', 'value': 'Archdragon Peak'})
+        CanReachRegion('Archdragon Peak')
     )
 
     world.set_rule(
         multiworld.get_location("FK: Havel's Armor - upper keep, after killing AP belfry roof NPC", player),
-        CanReachRegion({'type': 'constant', 'value': 'Archdragon Peak'})
+        CanReachRegion('Archdragon Peak')
     )
 
     world.set_rule(
         multiworld.get_location("FK: Havel's Gauntlets - upper keep, after killing AP belfry roof NPC", player),
-        CanReachRegion({'type': 'constant', 'value': 'Archdragon Peak'})
+        CanReachRegion('Archdragon Peak')
     )
 
     world.set_rule(
         multiworld.get_location("FK: Havel's Leggings - upper keep, after killing AP belfry roof NPC", player),
-        CanReachRegion({'type': 'constant', 'value': 'Archdragon Peak'})
+        CanReachRegion('Archdragon Peak')
     )
 
     world.set_rule(
         multiworld.get_location("IBV: Soul of Pontiff Sulyvahn", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'US: Soul of the Rotted Greatwood'}), Has("Dreamchaser's Ashes"))
+        And(CanReachLocation('US: Soul of the Rotted Greatwood'), Has("Dreamchaser's Ashes"))
     )
 
     world.set_rule(
         multiworld.get_location("IBV: Ring of the Evil Eye - Anri", player),
-        CanReachLocation({'type': 'constant', 'value': 'CD: Soul of the Deacons of the Deep'})
+        CanReachLocation('CD: Soul of the Deacons of the Deep')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Mail Breaker - Sirris for killing Creighton", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'US: Soul of the Rotted Greatwood'}), Has("Dreamchaser's Ashes"))
+        And(CanReachLocation('US: Soul of the Rotted Greatwood'), Has("Dreamchaser's Ashes"))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Silvercat Ring - Sirris for killing Creighton", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'US: Soul of the Rotted Greatwood'}), Has("Dreamchaser's Ashes"))
+        And(CanReachLocation('US: Soul of the Rotted Greatwood'), Has("Dreamchaser's Ashes"))
     )
 
     world.set_rule(
         multiworld.get_location("IBV: Dragonslayer's Axe - Creighton drop", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'US: Soul of the Rotted Greatwood'}), Has("Dreamchaser's Ashes"))
+        And(CanReachLocation('US: Soul of the Rotted Greatwood'), Has("Dreamchaser's Ashes"))
     )
 
     world.set_rule(
         multiworld.get_location("IBV: Creighton's Steel Mask - bridge after killing Creighton", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'US: Soul of the Rotted Greatwood'}), Has("Dreamchaser's Ashes"))
+        And(CanReachLocation('US: Soul of the Rotted Greatwood'), Has("Dreamchaser's Ashes"))
     )
 
     world.set_rule(
         multiworld.get_location("IBV: Mirrah Chain Mail - bridge after killing Creighton", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'US: Soul of the Rotted Greatwood'}), Has("Dreamchaser's Ashes"))
+        And(CanReachLocation('US: Soul of the Rotted Greatwood'), Has("Dreamchaser's Ashes"))
     )
 
     world.set_rule(
         multiworld.get_location("IBV: Mirrah Chain Gloves - bridge after killing Creighton", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'US: Soul of the Rotted Greatwood'}), Has("Dreamchaser's Ashes"))
+        And(CanReachLocation('US: Soul of the Rotted Greatwood'), Has("Dreamchaser's Ashes"))
     )
 
     world.set_rule(
         multiworld.get_location("IBV: Mirrah Chain Leggings - bridge after killing Creighton", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'US: Soul of the Rotted Greatwood'}), Has("Dreamchaser's Ashes"))
+        And(CanReachLocation('US: Soul of the Rotted Greatwood'), Has("Dreamchaser's Ashes"))
     )
 
     world.set_rule(
         multiworld.get_location("ID: Titanite Slab - Siegward", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'CD: Shotel - Patches'}), Has('Old Cell Key'))
+        And(CanReachLocation('CD: Shotel - Patches'), Has('Old Cell Key'))
     )
 
     world.set_rule(
@@ -822,62 +822,62 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("PC: Siegbräu - Siegward after killing boss", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'ID: Titanite Slab - Siegward'}), CanReachLocation({'type': 'constant', 'value': 'PC: Soul of Yhorm the Giant'}))
+        And(CanReachLocation('ID: Titanite Slab - Siegward'), CanReachLocation('PC: Soul of Yhorm the Giant'))
     )
 
     world.set_rule(
         multiworld.get_location("PC: Storm Ruler - Siegward", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'ID: Titanite Slab - Siegward'}), CanReachLocation({'type': 'constant', 'value': 'PC: Soul of Yhorm the Giant'}))
+        And(CanReachLocation('ID: Titanite Slab - Siegward'), CanReachLocation('PC: Soul of Yhorm the Giant'))
     )
 
     world.set_rule(
         multiworld.get_location("PC: Pierce Shield - Siegward", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'ID: Titanite Slab - Siegward'}), CanReachLocation({'type': 'constant', 'value': 'PC: Soul of Yhorm the Giant'}))
+        And(CanReachLocation('ID: Titanite Slab - Siegward'), CanReachLocation('PC: Soul of Yhorm the Giant'))
     )
 
     world.set_rule(
         multiworld.get_location("AL: Yorshka's Chime - kill Yorshka", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'US: Soul of the Rotted Greatwood'}), Has("Dreamchaser's Ashes"))
+        And(CanReachLocation('US: Soul of the Rotted Greatwood'), Has("Dreamchaser's Ashes"))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Budding Green Blossom - shop after killing Creighton and AL boss", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'AL: Soul of Aldrich'}), CanReachLocation({'type': 'constant', 'value': 'FS: Mail Breaker - Sirris for killing Creighton'}))
+        And(CanReachLocation('AL: Soul of Aldrich'), CanReachLocation('FS: Mail Breaker - Sirris for killing Creighton'))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Sunset Shield - by grave after killing Hodrick w/Sirris", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'AL: Soul of Aldrich'}), CanReachLocation({'type': 'constant', 'value': 'FS: Mail Breaker - Sirris for killing Creighton'}))
+        And(CanReachLocation('AL: Soul of Aldrich'), CanReachLocation('FS: Mail Breaker - Sirris for killing Creighton'))
     )
 
     world.set_rule(
         multiworld.get_location("US: Sunset Helm - Pit of Hollows after killing Hodrick w/Sirris", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'AL: Soul of Aldrich'}), CanReachLocation({'type': 'constant', 'value': 'FS: Mail Breaker - Sirris for killing Creighton'}))
+        And(CanReachLocation('AL: Soul of Aldrich'), CanReachLocation('FS: Mail Breaker - Sirris for killing Creighton'))
     )
 
     world.set_rule(
         multiworld.get_location("US: Sunset Armor - pit of hollows after killing Hodrick w/Sirris", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'AL: Soul of Aldrich'}), CanReachLocation({'type': 'constant', 'value': 'FS: Mail Breaker - Sirris for killing Creighton'}))
+        And(CanReachLocation('AL: Soul of Aldrich'), CanReachLocation('FS: Mail Breaker - Sirris for killing Creighton'))
     )
 
     world.set_rule(
         multiworld.get_location("US: Sunset Gauntlets - pit of hollows after killing Hodrick w/Sirris", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'AL: Soul of Aldrich'}), CanReachLocation({'type': 'constant', 'value': 'FS: Mail Breaker - Sirris for killing Creighton'}))
+        And(CanReachLocation('AL: Soul of Aldrich'), CanReachLocation('FS: Mail Breaker - Sirris for killing Creighton'))
     )
 
     world.set_rule(
         multiworld.get_location("US: Sunset Leggings - pit of hollows after killing Hodrick w/Sirris", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'AL: Soul of Aldrich'}), CanReachLocation({'type': 'constant', 'value': 'FS: Mail Breaker - Sirris for killing Creighton'}))
+        And(CanReachLocation('AL: Soul of Aldrich'), CanReachLocation('FS: Mail Breaker - Sirris for killing Creighton'))
     )
 
     world.set_rule(
         multiworld.get_location("AL: Chameleon - tomb after marrying Anri", player),
-        CanReachLocation({'type': 'constant', 'value': 'CD: Soul of the Deacons of the Deep'})
+        CanReachLocation('CD: Soul of the Deacons of the Deep')
     )
 
     world.set_rule(
         multiworld.get_location("AL: Anri's Straight Sword - Anri quest", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'AL: Soul of Aldrich'}), CanReachLocation({'type': 'constant', 'value': 'IBV: Ring of the Evil Eye - Anri'}))
+        And(CanReachLocation('AL: Soul of Aldrich'), CanReachLocation('IBV: Ring of the Evil Eye - Anri'))
     )
 
     world.set_rule(
@@ -912,162 +912,162 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("FS: Elite Knight Helm - shop after Anri quest", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'AL: Soul of Aldrich'}), CanReachLocation({'type': 'constant', 'value': 'IBV: Ring of the Evil Eye - Anri'}))
+        And(CanReachLocation('AL: Soul of Aldrich'), CanReachLocation('IBV: Ring of the Evil Eye - Anri'))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Elite Knight Armor - shop after Anri quest", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'AL: Soul of Aldrich'}), CanReachLocation({'type': 'constant', 'value': 'IBV: Ring of the Evil Eye - Anri'}))
+        And(CanReachLocation('AL: Soul of Aldrich'), CanReachLocation('IBV: Ring of the Evil Eye - Anri'))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Elite Knight Gauntlets - shop after Anri quest", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'AL: Soul of Aldrich'}), CanReachLocation({'type': 'constant', 'value': 'IBV: Ring of the Evil Eye - Anri'}))
+        And(CanReachLocation('AL: Soul of Aldrich'), CanReachLocation('IBV: Ring of the Evil Eye - Anri'))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Elite Knight Leggings - shop after Anri quest", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'AL: Soul of Aldrich'}), CanReachLocation({'type': 'constant', 'value': 'IBV: Ring of the Evil Eye - Anri'}))
+        And(CanReachLocation('AL: Soul of Aldrich'), CanReachLocation('IBV: Ring of the Evil Eye - Anri'))
     )
 
     world.set_rule(
         multiworld.get_location("LC: Gotthard Twinswords - by Grand Archives door, after PC and AL bosses", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'AL: Cinders of a Lord - Aldrich'}), CanReachLocation({'type': 'constant', 'value': 'PC: Cinders of a Lord - Yhorm the Giant'}))
+        And(CanReachLocation('AL: Cinders of a Lord - Aldrich'), CanReachLocation('PC: Cinders of a Lord - Yhorm the Giant'))
     )
 
     world.set_rule(
         multiworld.get_location("LC: Grand Archives Key - by Grand Archives door, after PC and AL bosses", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'AL: Cinders of a Lord - Aldrich'}), CanReachLocation({'type': 'constant', 'value': 'PC: Cinders of a Lord - Yhorm the Giant'}))
+        And(CanReachLocation('AL: Cinders of a Lord - Aldrich'), CanReachLocation('PC: Cinders of a Lord - Yhorm the Giant'))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Morne's Great Hammer - Eygon", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'FK: Soul of the Blood of the Wolf'}), CanReachLocation({'type': 'constant', 'value': 'LC: Soul of Dragonslayer Armour'}))
+        And(CanReachLocation('FK: Soul of the Blood of the Wolf'), CanReachLocation('LC: Soul of Dragonslayer Armour'))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Moaning Shield - Eygon", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'FK: Soul of the Blood of the Wolf'}), CanReachLocation({'type': 'constant', 'value': 'LC: Soul of Dragonslayer Armour'}))
+        And(CanReachLocation('FK: Soul of the Blood of the Wolf'), CanReachLocation('LC: Soul of Dragonslayer Armour'))
     )
 
     world.set_rule(
         multiworld.get_location("CKG: Drakeblood Helm - tomb, after killing AP mausoleum NPC", player),
-        CanReachRegion({'type': 'constant', 'value': 'Archdragon Peak'})
+        CanReachRegion('Archdragon Peak')
     )
 
     world.set_rule(
         multiworld.get_location("CKG: Drakeblood Armor - tomb, after killing AP mausoleum NPC", player),
-        CanReachRegion({'type': 'constant', 'value': 'Archdragon Peak'})
+        CanReachRegion('Archdragon Peak')
     )
 
     world.set_rule(
         multiworld.get_location("CKG: Drakeblood Gauntlets - tomb, after killing AP mausoleum NPC", player),
-        CanReachRegion({'type': 'constant', 'value': 'Archdragon Peak'})
+        CanReachRegion('Archdragon Peak')
     )
 
     world.set_rule(
         multiworld.get_location("CKG: Drakeblood Leggings - tomb, after killing AP mausoleum NPC", player),
-        CanReachRegion({'type': 'constant', 'value': 'Archdragon Peak'})
+        CanReachRegion('Archdragon Peak')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Sunless Talisman - Sirris, kill GA boss", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'US: Soul of the Rotted Greatwood'}), Has("Dreamchaser's Ashes"))
+        And(CanReachLocation('US: Soul of the Rotted Greatwood'), Has("Dreamchaser's Ashes"))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Sunless Veil - shop, Sirris quest, kill GA boss", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'US: Soul of the Rotted Greatwood'}), Has("Dreamchaser's Ashes"))
+        And(CanReachLocation('US: Soul of the Rotted Greatwood'), Has("Dreamchaser's Ashes"))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Sunless Armor - shop, Sirris quest, kill GA boss", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'US: Soul of the Rotted Greatwood'}), Has("Dreamchaser's Ashes"))
+        And(CanReachLocation('US: Soul of the Rotted Greatwood'), Has("Dreamchaser's Ashes"))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Sunless Gauntlets - shop, Sirris quest, kill GA boss", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'US: Soul of the Rotted Greatwood'}), Has("Dreamchaser's Ashes"))
+        And(CanReachLocation('US: Soul of the Rotted Greatwood'), Has("Dreamchaser's Ashes"))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Sunless Leggings - shop, Sirris quest, kill GA boss", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'US: Soul of the Rotted Greatwood'}), Has("Dreamchaser's Ashes"))
+        And(CanReachLocation('US: Soul of the Rotted Greatwood'), Has("Dreamchaser's Ashes"))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Hidden Blessing - Patches after searching GA", player),
-        And(CanReachLocation({'type': 'constant', 'value': "FS: Ember - shop for Greirat's Ashes"}), CanReachLocation({'type': 'constant', 'value': 'CD: Shotel - Patches'}))
+        And(CanReachLocation("FS: Ember - shop for Greirat's Ashes"), CanReachLocation('CD: Shotel - Patches'))
     )
 
     world.set_rule(
         multiworld.get_location("UG: Hornet Ring - environs, right of main path after killing FK boss", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'FK: Cinders of a Lord - Abyss Watcher'}), Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll")))
+        And(CanReachLocation('FK: Cinders of a Lord - Abyss Watcher'), Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll")))
     )
 
     world.set_rule(
         multiworld.get_location("UG: Wolf Knight Helm - shop after killing FK boss", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'FK: Cinders of a Lord - Abyss Watcher'}), Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll")))
+        And(CanReachLocation('FK: Cinders of a Lord - Abyss Watcher'), Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll")))
     )
 
     world.set_rule(
         multiworld.get_location("UG: Wolf Knight Armor - shop after killing FK boss", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'FK: Cinders of a Lord - Abyss Watcher'}), Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll")))
+        And(CanReachLocation('FK: Cinders of a Lord - Abyss Watcher'), Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll")))
     )
 
     world.set_rule(
         multiworld.get_location("UG: Wolf Knight Gauntlets - shop after killing FK boss", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'FK: Cinders of a Lord - Abyss Watcher'}), Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll")))
+        And(CanReachLocation('FK: Cinders of a Lord - Abyss Watcher'), Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll")))
     )
 
     world.set_rule(
         multiworld.get_location("UG: Wolf Knight Leggings - shop after killing FK boss", player),
-        And(CanReachLocation({'type': 'constant', 'value': 'FK: Cinders of a Lord - Abyss Watcher'}), Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll")))
+        And(CanReachLocation('FK: Cinders of a Lord - Abyss Watcher'), Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll")))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Hawkwood's Swordgrass - Andre after gesture in AP summit", player),
-        And(CanReachLocation({'type': 'constant', 'value': "FS: Hawkwood's Shield - gravestone after Hawkwood leaves"}), Has('Twinkling Dragon Torso Stone'))
+        And(CanReachLocation("FS: Hawkwood's Shield - gravestone after Hawkwood leaves"), Has('Twinkling Dragon Torso Stone'))
     )
 
     world.set_rule(
         multiworld.get_location("FK: Twinkling Dragon Head Stone - Hawkwood drop", player),
-        And(CanReachLocation({'type': 'constant', 'value': "FS: Hawkwood's Shield - gravestone after Hawkwood leaves"}), Has('Twinkling Dragon Torso Stone'))
+        And(CanReachLocation("FS: Hawkwood's Shield - gravestone after Hawkwood leaves"), Has('Twinkling Dragon Torso Stone'))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Divine Blessing - Greirat from US", player),
-        And(CanReachRegion({'type': 'constant', 'value': 'Undead Settlement'}), Has("Loretta's Bone"))
+        And(CanReachRegion('Undead Settlement'), Has("Loretta's Bone"))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Ember - Greirat from US", player),
-        And(CanReachRegion({'type': 'constant', 'value': 'Undead Settlement'}), Has("Loretta's Bone"))
+        And(CanReachRegion('Undead Settlement'), Has("Loretta's Bone"))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Divine Blessing - Greirat from IBV", player),
-        And(CanReachRegion({'type': 'constant', 'value': 'Irithyll of the Boreal Valley'}), CanReachLocation({'type': 'constant', 'value': 'CD: Shotel - Patches'}), CanReachLocation({'type': 'constant', 'value': 'FS: Divine Blessing - Greirat from US'}))
+        And(CanReachRegion('Irithyll of the Boreal Valley'), CanReachLocation('CD: Shotel - Patches'), CanReachLocation('FS: Divine Blessing - Greirat from US'))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Hidden Blessing - Greirat from IBV", player),
-        And(CanReachRegion({'type': 'constant', 'value': 'Irithyll of the Boreal Valley'}), CanReachLocation({'type': 'constant', 'value': 'CD: Shotel - Patches'}), CanReachLocation({'type': 'constant', 'value': 'FS: Divine Blessing - Greirat from US'}))
+        And(CanReachRegion('Irithyll of the Boreal Valley'), CanReachLocation('CD: Shotel - Patches'), CanReachLocation('FS: Divine Blessing - Greirat from US'))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Titanite Scale - Greirat from IBV", player),
-        And(CanReachRegion({'type': 'constant', 'value': 'Irithyll of the Boreal Valley'}), CanReachLocation({'type': 'constant', 'value': 'CD: Shotel - Patches'}), CanReachLocation({'type': 'constant', 'value': 'FS: Divine Blessing - Greirat from US'}))
+        And(CanReachRegion('Irithyll of the Boreal Valley'), CanReachLocation('CD: Shotel - Patches'), CanReachLocation('FS: Divine Blessing - Greirat from US'))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Twinkling Titanite - Greirat from IBV", player),
-        And(CanReachRegion({'type': 'constant', 'value': 'Irithyll of the Boreal Valley'}), CanReachLocation({'type': 'constant', 'value': 'CD: Shotel - Patches'}), CanReachLocation({'type': 'constant', 'value': 'FS: Divine Blessing - Greirat from US'}))
+        And(CanReachRegion('Irithyll of the Boreal Valley'), CanReachLocation('CD: Shotel - Patches'), CanReachLocation('FS: Divine Blessing - Greirat from US'))
     )
 
     world.set_rule(
         multiworld.get_location("FS: Ember - shop for Greirat's Ashes", player),
-        And(And(CanReachRegion({'type': 'constant', 'value': 'Grand Archives'}), CanReachLocation({'type': 'constant', 'value': 'FS: Divine Blessing - Greirat from IBV'})), And(CanReachRegion({'type': 'constant', 'value': 'Irithyll of the Boreal Valley'}), CanReachLocation({'type': 'constant', 'value': 'CD: Shotel - Patches'}), CanReachLocation({'type': 'constant', 'value': 'FS: Divine Blessing - Greirat from US'})))
+        And(And(CanReachRegion('Grand Archives'), CanReachLocation('FS: Divine Blessing - Greirat from IBV')), And(CanReachRegion('Irithyll of the Boreal Valley'), CanReachLocation('CD: Shotel - Patches'), CanReachLocation('FS: Divine Blessing - Greirat from US')))
     )
 
     world.set_rule(

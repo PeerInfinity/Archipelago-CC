@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Has, Or
+from rule_builder import True_, False_, And, Has, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -110,12 +110,12 @@ _HELPER_DEFINITIONS = {   'air_dash': {'item': 'PNEUMATOPHORE', 'type': 'item_ch
     'charge_up': {'item': 'CHARGE UP', 'type': 'item_check'},
     'clicker': {'item': 'CLICKER', 'type': 'item_check'},
     'deep_key': {'item': 'DEEP KEY', 'type': 'item_check'},
-    'enter_foglast': {   'conditions': [   {'args': [], 'name': 'airship', 'type': 'helper'},
-                                           {'args': [], 'name': 'worm_room_key', 'type': 'helper'},
-                                           {'args': [], 'name': 'paddle', 'type': 'helper'}],
+    'enter_foglast': {   'conditions': [   {'name': 'airship', 'type': 'helper'},
+                                           {'name': 'worm_room_key', 'type': 'helper'},
+                                           {'name': 'paddle', 'type': 'helper'}],
                          'type': 'and'},
     'enter_hylemxylem': {   'conditions': [   {'item': 'PNEUMATOPHORE', 'type': 'item_check'},
-                                              {'args': [], 'name': 'enter_wormpod', 'type': 'helper'},
+                                              {'name': 'enter_wormpod', 'type': 'helper'},
                                               {'item': 'BRIDGE KEY', 'type': 'item_check'}],
                             'type': 'and'},
     'enter_sageship': {   'conditions': [   {'item': 'SKULL BOMB', 'type': 'item_check'},
@@ -150,452 +150,452 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Afterlife To Viewax", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash"), HelperCall(helper_func=_hylics2worldgen_airship, helper_name="airship"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Afterlife To TV Island", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_airship, helper_name="airship")
     )
 
     world.set_rule(
         multiworld.get_entrance("Afterlife To Shield Facility", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_airship, helper_name="airship")
     )
 
     world.set_rule(
         multiworld.get_entrance("Afterlife To Worm Pod", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_enter_wormpod, helper_name="enter_wormpod")
     )
 
     world.set_rule(
         multiworld.get_entrance("Afterlife To Foglast", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_hylics2worldgen_charge_up, helper_name="charge_up"), HelperCall(helper_func=_hylics2worldgen_enter_foglast, helper_name="enter_foglast"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Afterlife To Sage Labyrinth", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_skull_bomb, helper_name="skull_bomb")
     )
 
     world.set_rule(
         multiworld.get_entrance("Afterlife To Hylemxylem", player),
-        And(And(True_(), True_()), True_())
+        And(And(HelperCall(helper_func=_hylics2worldgen_charge_up, helper_name="charge_up"), HelperCall(helper_func=_hylics2worldgen_paper_cup, helper_name="paper_cup")), HelperCall(helper_func=_hylics2worldgen_enter_hylemxylem, helper_name="enter_hylemxylem"))
     )
 
     world.set_rule(
         multiworld.get_entrance("World To Airship", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_airship, helper_name="airship")
     )
 
     world.set_rule(
         multiworld.get_entrance("World To Viewax", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash"), HelperCall(helper_func=_hylics2worldgen_airship, helper_name="airship"))
     )
 
     world.set_rule(
         multiworld.get_entrance("World To Arcade Island", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash"), HelperCall(helper_func=_hylics2worldgen_airship, helper_name="airship"))
     )
 
     world.set_rule(
         multiworld.get_entrance("World To TV Island", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_airship, helper_name="airship")
     )
 
     world.set_rule(
         multiworld.get_entrance("World To Juice Ranch", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_airship, helper_name="airship")
     )
 
     world.set_rule(
         multiworld.get_entrance("World To Shield Facility", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_airship, helper_name="airship")
     )
 
     world.set_rule(
         multiworld.get_entrance("World To Worm Pod", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_enter_wormpod, helper_name="enter_wormpod")
     )
 
     world.set_rule(
         multiworld.get_entrance("World To Foglast", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_hylics2worldgen_charge_up, helper_name="charge_up"), HelperCall(helper_func=_hylics2worldgen_enter_foglast, helper_name="enter_foglast"))
     )
 
     world.set_rule(
         multiworld.get_entrance("World To Sage Airship", player),
-        And(And(True_(), True_(), True_()), True_())
+        And(And(HelperCall(helper_func=_hylics2worldgen_charge_up, helper_name="charge_up"), HelperCall(helper_func=_hylics2worldgen_paper_cup, helper_name="paper_cup"), HelperCall(helper_func=_hylics2worldgen_worm_room_key, helper_name="worm_room_key")), HelperCall(helper_func=_hylics2worldgen_enter_sageship, helper_name="enter_sageship"))
     )
 
     world.set_rule(
         multiworld.get_entrance("World To Hylemxylem", player),
-        And(And(True_(), True_()), True_())
+        And(And(HelperCall(helper_func=_hylics2worldgen_charge_up, helper_name="charge_up"), HelperCall(helper_func=_hylics2worldgen_paper_cup, helper_name="paper_cup")), HelperCall(helper_func=_hylics2worldgen_enter_hylemxylem, helper_name="enter_hylemxylem"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Shield Facility To Worm Pod", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_enter_wormpod, helper_name="enter_wormpod")
     )
 
     world.set_rule(
         multiworld.get_entrance("Worm Pod To Shield Facility", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_airship, helper_name="airship")
     )
 
     world.set_rule(
         multiworld.get_entrance("Drill Castle To Sage Labyrinth", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_skull_bomb, helper_name="skull_bomb")
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Afterlife: TV", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_cave_key, helper_name="cave_key")
     )
 
     world.set_rule(
         multiworld.get_location("New Muldul: Pot above Vault", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash")
     )
 
     world.set_rule(
         multiworld.get_location("New Muldul: Underground Chest", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash")
     )
 
     world.set_rule(
         multiworld.get_location("New Muldul: Upper House Chest 1", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_upper_house_key, helper_name="upper_house_key")
     )
 
     world.set_rule(
         multiworld.get_location("New Muldul: Upper House Chest 2", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_upper_house_key, helper_name="upper_house_key")
     )
 
     world.set_rule(
         multiworld.get_location("New Muldul: Rescued Blerol 1", player),
-        Or(And(And(True_(), True_()), Or(True_(), True_())), True_())
+        Or(And(And(HelperCall(helper_func=_hylics2worldgen_jail_key, helper_name="jail_key"), HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle")), Or(HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash"), HelperCall(helper_func=_hylics2worldgen_airship, helper_name="airship"))), HelperCall(helper_func=_hylics2worldgen_enter_hylemxylem, helper_name="enter_hylemxylem"))
     )
 
     world.set_rule(
         multiworld.get_location("New Muldul: Rescued Blerol 2", player),
-        Or(And(And(True_(), True_()), Or(True_(), True_())), True_())
+        Or(And(And(HelperCall(helper_func=_hylics2worldgen_jail_key, helper_name="jail_key"), HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle")), Or(HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash"), HelperCall(helper_func=_hylics2worldgen_airship, helper_name="airship"))), HelperCall(helper_func=_hylics2worldgen_enter_hylemxylem, helper_name="enter_hylemxylem"))
     )
 
     world.set_rule(
         multiworld.get_location("New Muldul: TV", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_house_key, helper_name="house_key")
     )
 
     world.set_rule(
         multiworld.get_location("New Muldul: Vault Left Chest", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_enter_hylemxylem, helper_name="enter_hylemxylem")
     )
 
     world.set_rule(
         multiworld.get_location("New Muldul: Vault Right Chest", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_enter_hylemxylem, helper_name="enter_hylemxylem")
     )
 
     world.set_rule(
         multiworld.get_location("New Muldul: Vault Bomb", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_enter_hylemxylem, helper_name="enter_hylemxylem")
     )
 
     world.set_rule(
         multiworld.get_location("Viewax's Edifice: Canopic Jar", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle")
     )
 
     world.set_rule(
         multiworld.get_location("Viewax's Edifice: Cave Sarcophagus", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle")
     )
 
     world.set_rule(
         multiworld.get_location("Viewax's Edifice: Shielded Key", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle"), HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle"))
     )
 
     world.set_rule(
         multiworld.get_location("Viewax's Edifice: Tower Pot", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle")
     )
 
     world.set_rule(
         multiworld.get_location("Viewax's Edifice: Tower Jar", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle")
     )
 
     world.set_rule(
         multiworld.get_location("Viewax's Edifice: Tower Chest", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle"), HelperCall(helper_func=_hylics2worldgen_tower_key, helper_name="tower_key"))
     )
 
     world.set_rule(
         multiworld.get_location("Viewax's Edifice: Sage Fridge", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash")
     )
 
     world.set_rule(
         multiworld.get_location("Viewax's Edifice: Sage Item 1", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash")
     )
 
     world.set_rule(
         multiworld.get_location("Viewax's Edifice: Sage Item 2", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash")
     )
 
     world.set_rule(
         multiworld.get_location("Viewax's Edifice: Viewax Pot", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle")
     )
 
     world.set_rule(
         multiworld.get_location("Viewax's Edifice: Defeat Viewax", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle")
     )
 
     world.set_rule(
         multiworld.get_location("Arcade 1: Key", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle")
     )
 
     world.set_rule(
         multiworld.get_location("Arcade 1: Coin Dash", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle")
     )
 
     world.set_rule(
         multiworld.get_location("Arcade 1: Burrito Alcove 1", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle")
     )
 
     world.set_rule(
         multiworld.get_location("Arcade 1: Burrito Alcove 2", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle")
     )
 
     world.set_rule(
         multiworld.get_location("Arcade 1: Behind Spikes Banana", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle")
     )
 
     world.set_rule(
         multiworld.get_location("Arcade 1: Pyramid Banana", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle")
     )
 
     world.set_rule(
         multiworld.get_location("Arcade 1: Moving Platforms Muscle Applique", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle")
     )
 
     world.set_rule(
         multiworld.get_location("Arcade 1: Bed Banana", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle")
     )
 
     world.set_rule(
         multiworld.get_location("Viewax's Edifice: TV", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_hylics2worldgen_jail_key, helper_name="jail_key"), HelperCall(helper_func=_hylics2worldgen_paddle, helper_name="paddle"))
     )
 
     world.set_rule(
         multiworld.get_location("Airship: Talk to Somsnosa", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_worm_room_key, helper_name="worm_room_key")
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: Underground Sarcophagus", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash")
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: Shielded Key", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash")
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: Buy Clicker", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash")
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: Shielded Chest", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash")
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: Cave Fridge", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash")
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: Roof Sarcophagus", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash"), HelperCall(helper_func=_hylics2worldgen_bridge_key, helper_name="bridge_key"))
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: Under Lair Sarcophagus 1", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash"), HelperCall(helper_func=_hylics2worldgen_bridge_key, helper_name="bridge_key"))
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: Under Lair Sarcophagus 2", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash"), HelperCall(helper_func=_hylics2worldgen_bridge_key, helper_name="bridge_key"))
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: Under Lair Sarcophagus 3", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash"), HelperCall(helper_func=_hylics2worldgen_bridge_key, helper_name="bridge_key"))
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: Sage Sarcophagus", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash"), HelperCall(helper_func=_hylics2worldgen_bridge_key, helper_name="bridge_key"))
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: Sage Item 1", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash"), HelperCall(helper_func=_hylics2worldgen_bridge_key, helper_name="bridge_key"))
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: Sage Item 2", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash"), HelperCall(helper_func=_hylics2worldgen_bridge_key, helper_name="bridge_key"))
     )
 
     world.set_rule(
         multiworld.get_location("Foglast: TV", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash"), HelperCall(helper_func=_hylics2worldgen_clicker, helper_name="clicker"))
     )
 
     world.set_rule(
         multiworld.get_location("Drill Castle: Island Banana", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash")
     )
 
     world.set_rule(
         multiworld.get_location("Drill Castle: Island Pot", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash")
     )
 
     world.set_rule(
         multiworld.get_location("Drill Castle: Cave Sarcophagus", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash")
     )
 
     world.set_rule(
         multiworld.get_location("Drill Castle: TV", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_air_dash, helper_name="air_dash")
     )
 
     world.set_rule(
         multiworld.get_location("Sage Labyrinth: Motor Hunter Sarcophagus", player),
-        And(True_(), True_())
+        And(HelperCall(helper_func=_hylics2worldgen_charge_up, helper_name="charge_up"), HelperCall(helper_func=_hylics2worldgen_paper_cup, helper_name="paper_cup"))
     )
 
     world.set_rule(
         multiworld.get_location("Sage Labyrinth: Sage Item 1", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_deep_key, helper_name="deep_key")
     )
 
     world.set_rule(
         multiworld.get_location("Sage Labyrinth: Sage Item 2", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_deep_key, helper_name="deep_key")
     )
 
     world.set_rule(
         multiworld.get_location("Sage Labyrinth: Sage Left Arm", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_deep_key, helper_name="deep_key")
     )
 
     world.set_rule(
         multiworld.get_location("Sage Labyrinth: Sage Right Arm", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_deep_key, helper_name="deep_key")
     )
 
     world.set_rule(
         multiworld.get_location("Sage Labyrinth: Sage Left Leg", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_deep_key, helper_name="deep_key")
     )
 
     world.set_rule(
         multiworld.get_location("Sage Labyrinth: Sage Right Leg", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_deep_key, helper_name="deep_key")
     )
 
     world.set_rule(
         multiworld.get_location("Sage Airship: TV", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_all_tokens, helper_name="all_tokens")
     )
 
     world.set_rule(
         multiworld.get_location("Hylemxylem: Upper Chamber Banana", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_upper_chamber_key, helper_name="upper_chamber_key")
     )
 
     world.set_rule(
         multiworld.get_location("Hylemxylem: Across Upper Reservoir Chest", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_upper_chamber_key, helper_name="upper_chamber_key")
     )
 
     world.set_rule(
         multiworld.get_location("Hylemxylem: Drained Lower Reservoir Chest", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_upper_chamber_key, helper_name="upper_chamber_key")
     )
 
     world.set_rule(
         multiworld.get_location("Hylemxylem: Drained Lower Reservoir Burrito 1", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_upper_chamber_key, helper_name="upper_chamber_key")
     )
 
     world.set_rule(
         multiworld.get_location("Hylemxylem: Drained Lower Reservoir Burrito 2", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_upper_chamber_key, helper_name="upper_chamber_key")
     )
 
     world.set_rule(
         multiworld.get_location("Hylemxylem: Lower Reservoir Hole Pot 1", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_upper_chamber_key, helper_name="upper_chamber_key")
     )
 
     world.set_rule(
         multiworld.get_location("Hylemxylem: Lower Reservoir Hole Pot 2", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_upper_chamber_key, helper_name="upper_chamber_key")
     )
 
     world.set_rule(
         multiworld.get_location("Hylemxylem: Lower Reservoir Hole Pot 3", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_upper_chamber_key, helper_name="upper_chamber_key")
     )
 
     world.set_rule(
         multiworld.get_location("Hylemxylem: Lower Reservoir Hole Sarcophagus", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_upper_chamber_key, helper_name="upper_chamber_key")
     )
 
     world.set_rule(
         multiworld.get_location("Hylemxylem: Drained Upper Reservoir Burrito 1", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_upper_chamber_key, helper_name="upper_chamber_key")
     )
 
     world.set_rule(
         multiworld.get_location("Hylemxylem: Drained Upper Reservoir Burrito 2", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_upper_chamber_key, helper_name="upper_chamber_key")
     )
 
     world.set_rule(
         multiworld.get_location("Hylemxylem: Drained Upper Reservoir Burrito 3", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_upper_chamber_key, helper_name="upper_chamber_key")
     )
 
     world.set_rule(
         multiworld.get_location("Hylemxylem: Upper Reservoir Hole Key", player),
-        True_()
+        HelperCall(helper_func=_hylics2worldgen_upper_chamber_key, helper_name="upper_chamber_key")
     )
 
     world.set_rule(

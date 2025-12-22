@@ -330,13 +330,22 @@ class PythonToJSON:
                 return self._handle_any_call(node)
             elif func_name == 'min':
                 args = [self._visit(arg) for arg in node.args]
-                return {'type': 'min', 'args': args}
+                result = {'type': 'min'}
+                if args:
+                    result['args'] = args
+                return result
             elif func_name == 'max':
                 args = [self._visit(arg) for arg in node.args]
-                return {'type': 'max', 'args': args}
+                result = {'type': 'max'}
+                if args:
+                    result['args'] = args
+                return result
             elif func_name == 'len':
                 args = [self._visit(arg) for arg in node.args]
-                return {'type': 'function_call', 'name': 'len', 'args': args}
+                result = {'type': 'function_call', 'name': 'len'}
+                if args:
+                    result['args'] = args
+                return result
 
         # Handle method calls
         if isinstance(node.func, ast.Attribute):
@@ -346,7 +355,10 @@ class PythonToJSON:
         func = self._visit(node.func)
         args = [self._visit(arg) for arg in node.args]
 
-        return {'type': 'function_call', 'function': func, 'args': args}
+        result = {'type': 'function_call', 'function': func}
+        if args:
+            result['args'] = args
+        return result
 
     def _handle_method_call(self, node: ast.Call) -> Dict[str, Any]:
         """Handle method call patterns."""
@@ -373,15 +385,20 @@ class PythonToJSON:
                 return self._make_can_reach(args)
 
             # Generic state method
-            return {'type': 'state_method', 'method': method, 'args': args}
+            result = {'type': 'state_method', 'method': method}
+            if args:
+                result['args'] = args
+            return result
 
         # Generic method call
-        return {
+        result = {
             'type': 'method_call',
             'object': obj,
             'method': method,
-            'args': args
         }
+        if args:
+            result['args'] = args
+        return result
 
     def _make_item_check(self, args: List[Dict]) -> Dict[str, Any]:
         """Create an item_check rule from args."""
@@ -416,7 +433,7 @@ class PythonToJSON:
     def _make_count_expr(self, args: List[Dict]) -> Dict[str, Any]:
         """Create a count expression from args."""
         if not args:
-            return {'type': 'state_method', 'method': 'count', 'args': []}
+            return {'type': 'state_method', 'method': 'count'}
 
         return {
             'type': 'state_method',

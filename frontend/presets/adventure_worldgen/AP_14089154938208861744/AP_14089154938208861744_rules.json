@@ -19,9 +19,7 @@
             "name": "GameStart",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -35,7 +33,6 @@
             "connected_region": "YellowCastle",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Yellow Key",
                 "count": 1
@@ -47,7 +44,6 @@
             "connected_region": "WhiteCastle",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "White Key",
                 "count": 1
@@ -59,7 +55,6 @@
             "connected_region": "BlackCastle",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Black Key",
                 "count": 1
@@ -71,7 +66,6 @@
             "connected_region": "CreditsRoom",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Black Key",
@@ -86,9 +80,7 @@
             "name": "Blue Labyrinth 0",
             "id": 118000004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Left Difficulty Switch",
@@ -102,9 +94,7 @@
             "name": "Blue Labyrinth 1",
             "id": 118000006,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Slow Yorgle",
@@ -118,9 +108,7 @@
             "name": "Catacombs",
             "id": 118000009,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sword",
@@ -134,9 +122,7 @@
             "name": "Adjacent to Catacombs",
             "id": 118000012,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Slow Grundle",
@@ -150,9 +136,7 @@
             "name": "Southwest of Catacombs",
             "id": 118000014,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Freeincarnate",
@@ -166,9 +150,7 @@
             "name": "White Castle Gate",
             "id": 118000015,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Freeincarnate",
@@ -182,9 +164,7 @@
             "name": "Black Castle Gate",
             "id": 118000016,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Black Key",
@@ -198,9 +178,7 @@
             "name": "Yellow Castle Gate",
             "id": 118000017,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Freeincarnate",
@@ -214,9 +192,7 @@
             "name": "Northeast of Catacombs",
             "id": 118000028,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Freeincarnate",
@@ -230,9 +206,7 @@
             "name": "Southeast of Catacombs",
             "id": 118000029,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Freeincarnate",
@@ -247,7 +221,6 @@
             "id": 118000209,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Right Difficulty Switch",
@@ -273,9 +246,7 @@
             "name": "YellowCastleExit",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -284,9 +255,7 @@
             "name": "Inside Yellow Castle",
             "id": 118000018,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Magnet",
@@ -301,7 +270,6 @@
             "id": null,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Chalice",
@@ -327,9 +295,7 @@
             "name": "WhiteCastleExit",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -337,7 +303,6 @@
             "connected_region": "WhiteCastleVault",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Bridge",
                 "count": 1
@@ -349,7 +314,6 @@
             "connected_region": "WhiteCastlePreVaultPeek",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Bridge",
@@ -364,9 +328,7 @@
             "name": "RedMaze0",
             "id": 118000023,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Freeincarnate",
@@ -380,9 +342,7 @@
             "name": "RedMaze1",
             "id": 118000026,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Freeincarnate",
@@ -402,9 +362,7 @@
             "name": "WhiteCastleFromPeek",
             "connected_region": "WhiteCastle",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -413,9 +371,7 @@
             "name": "Red Maze Vault Entrance",
             "id": 118000183,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Freeincarnate",
@@ -435,9 +391,7 @@
             "name": "WhiteCastleReturnPassage",
             "connected_region": "WhiteCastle",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -446,9 +400,7 @@
             "name": "Red Maze Vault",
             "id": 118000025,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Freeincarnate",
@@ -463,7 +415,6 @@
             "id": 118000210,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Right Difficulty Switch",
@@ -489,9 +440,7 @@
             "name": "BlackCastleExit",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -499,7 +448,6 @@
             "connected_region": "BlackCastleVault",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Bridge",
@@ -514,9 +462,7 @@
             "name": "Dungeon0",
             "id": 118000019,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Freeincarnate",
@@ -530,9 +476,7 @@
             "name": "Dungeon1",
             "id": 118000021,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Right Difficulty Switch",
@@ -546,9 +490,7 @@
             "name": "Black Castle Foyer",
             "id": 118000027,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bridge",
@@ -563,7 +505,6 @@
             "id": 118000208,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Right Difficulty Switch",
@@ -589,9 +530,7 @@
             "name": "BlackCastleReturnPassage",
             "connected_region": "BlackCastle",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -600,9 +539,7 @@
             "name": "Dungeon Vault",
             "id": 118000181,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "White Key",
@@ -622,9 +559,7 @@
             "name": "CreditsExit",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -632,7 +567,6 @@
             "connected_region": "CreditsRoomFarSide",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Magnet",
                 "count": 1
@@ -645,9 +579,7 @@
             "name": "Credits Left Side",
             "id": 118000030,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Freeincarnate",
@@ -667,9 +599,7 @@
             "name": "CreditsFromFarSide",
             "connected_region": "CreditsRoom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -678,9 +608,7 @@
             "name": "Credits Right Side",
             "id": 118000190,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Chalice",
@@ -960,7 +888,7 @@
         "start_inventory": {},
         "start_location_hints": []
       },
-      "world_directory": "adventure_worldgen"
+      "world_directory": "adventure"
     }
   },
   "game_info": {

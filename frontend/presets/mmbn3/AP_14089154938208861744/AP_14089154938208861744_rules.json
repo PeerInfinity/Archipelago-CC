@@ -19,9 +19,7 @@
             "name": "Menu -> ACDC Overworld",
             "connected_region": "ACDC Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -34,9 +32,7 @@
             "name": "ACDC Overworld -> ACDC Cyberworld",
             "connected_region": "ACDC Cyberworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -44,7 +40,6 @@
             "connected_region": "SciLab Overworld",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "SubPET"
               }
@@ -55,7 +50,6 @@
             "connected_region": "Yoka Overworld",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Needle"
               }
@@ -66,7 +60,6 @@
             "connected_region": "Beach Overworld",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "PETCase"
               }
@@ -79,7 +72,6 @@
             "id": 11735185,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "SonicWav W"
               }
@@ -97,7 +89,6 @@
             "id": 11735186,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Bubbler C"
               }
@@ -115,7 +106,6 @@
             "id": 11735187,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Recov120 S"
               }
@@ -132,9 +122,7 @@
             "name": "ACDC School Desk",
             "id": 11735197,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "VarSword F",
@@ -148,9 +136,7 @@
             "name": "ACDC Class 5B Bookshelf",
             "id": 11735198,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "StepSwrd O",
@@ -164,9 +150,7 @@
             "name": "School 1 Entrance BMD",
             "id": 11735083,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "AntiNavi M",
@@ -180,9 +164,7 @@
             "name": "School 1 North Central BMD",
             "id": 11735084,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RegUP2",
@@ -196,9 +178,7 @@
             "name": "School 1 Far West BMD 2",
             "id": 11735085,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed+1 (Yellow)",
@@ -212,9 +192,7 @@
             "name": "School 1 KeyDataA BMD",
             "id": 11735161,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Snake D",
@@ -228,9 +206,7 @@
             "name": "School 1 KeyDataB BMD",
             "id": 11735162,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "CopyDmg *",
@@ -244,9 +220,7 @@
             "name": "School 1 KeyDataC BMD",
             "id": 11735163,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Jungle",
@@ -260,9 +234,7 @@
             "name": "School 2 South BMD",
             "id": 11735087,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Recov300 R",
@@ -276,9 +248,7 @@
             "name": "School 2 Entrance BMD",
             "id": 11735086,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "FlamMan V3 F",
@@ -292,9 +262,7 @@
             "name": "School 2 Mainframe BMD",
             "id": 11735088,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "800z",
@@ -308,9 +276,7 @@
             "name": "School 2 CodeA BMD",
             "id": 11735165,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RegUP2",
@@ -324,9 +290,7 @@
             "name": "School 2 CodeB BMD",
             "id": 11735166,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HPMemory",
@@ -340,9 +304,7 @@
             "name": "School 2 CodeC BMD",
             "id": 11735164,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "GutPunch B",
@@ -356,9 +318,7 @@
             "name": "ACDC Dog House BMD",
             "id": 11735127,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RegUP2",
@@ -372,9 +332,7 @@
             "name": "ACDC Lan's Security Panel BMD",
             "id": 11735128,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HPMemory",
@@ -388,9 +346,7 @@
             "name": "ACDC Yai's Phone BMD",
             "id": 11735129,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Barr100 E",
@@ -404,9 +360,7 @@
             "name": "ACDC NumberMan Display BMD",
             "id": 11735130,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "SpinWht",
@@ -420,9 +374,7 @@
             "name": "ACDC Tank BMD 1",
             "id": 11735131,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Recov30 *",
@@ -436,9 +388,7 @@
             "name": "ACDC Tank BMD 2",
             "id": 11735132,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hammer",
@@ -452,9 +402,7 @@
             "name": "ACDC School Server BMD 1",
             "id": 11735133,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Humor",
@@ -468,9 +416,7 @@
             "name": "ACDC School Server BMD 2",
             "id": 11735134,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "FireSwrd P",
@@ -484,9 +430,7 @@
             "name": "ACDC School Blackboard BMD",
             "id": 11735135,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RegUP2",
@@ -500,9 +444,7 @@
             "name": "Numberman Code 01",
             "id": 11735245,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RegUP2",
@@ -516,9 +458,7 @@
             "name": "Numberman Code 02",
             "id": 11735246,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HeroSwrd P",
@@ -532,9 +472,7 @@
             "name": "Numberman Code 03",
             "id": 11735247,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Unlocker",
@@ -548,9 +486,7 @@
             "name": "Numberman Code 04",
             "id": 11735248,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "AntiRecv B",
@@ -564,9 +500,7 @@
             "name": "Numberman Code 05",
             "id": 11735249,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "SpinGrn",
@@ -580,9 +514,7 @@
             "name": "Numberman Code 06",
             "id": 11735250,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "SubPET",
@@ -596,9 +528,7 @@
             "name": "Numberman Code 07",
             "id": 11735251,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "FlamMan V2 F",
@@ -612,9 +542,7 @@
             "name": "Numberman Code 08",
             "id": 11735252,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HPMemory",
@@ -629,19 +557,15 @@
             "id": 11735253,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 2
                   },
@@ -664,19 +588,15 @@
             "id": 11735254,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 2
                   },
@@ -699,19 +619,15 @@
             "id": 11735255,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 2
                   },
@@ -734,19 +650,15 @@
             "id": 11735256,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 2
                   },
@@ -769,19 +681,15 @@
             "id": 11735257,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 2
                   },
@@ -804,19 +712,15 @@
             "id": 11735258,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 2
                   },
@@ -839,19 +743,15 @@
             "id": 11735259,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 2
                   },
@@ -874,19 +774,15 @@
             "id": 11735260,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 2
                   },
@@ -909,19 +805,15 @@
             "id": 11735261,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 4
                   },
@@ -944,19 +836,15 @@
             "id": 11735262,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 4
                   },
@@ -979,19 +867,15 @@
             "id": 11735263,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 4
                   },
@@ -1014,19 +898,15 @@
             "id": 11735264,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 4
                   },
@@ -1049,19 +929,15 @@
             "id": 11735265,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 4
                   },
@@ -1084,19 +960,15 @@
             "id": 11735266,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 4
                   },
@@ -1119,19 +991,15 @@
             "id": 11735267,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 4
                   },
@@ -1154,19 +1022,15 @@
             "id": 11735268,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 4
                   },
@@ -1189,19 +1053,15 @@
             "id": 11735269,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 8
                   },
@@ -1224,19 +1084,15 @@
             "id": 11735270,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 8
                   },
@@ -1259,19 +1115,15 @@
             "id": 11735271,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 8
                   },
@@ -1294,19 +1146,15 @@
             "id": 11735272,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 8
                   },
@@ -1329,19 +1177,15 @@
             "id": 11735273,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 10
                   },
@@ -1364,19 +1208,15 @@
             "id": 11735274,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 10
                   },
@@ -1399,19 +1239,15 @@
             "id": 11735275,
             "access_rule": {
               "rule": "Compare",
-              "options": [],
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 "op": ">",
                 "right": {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 10
                   },
@@ -1433,9 +1269,7 @@
             "name": "Mayl's HP BMD",
             "id": 11735154,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "FlashMan F",
@@ -1449,9 +1283,7 @@
             "name": "Yai's HP BMD 1",
             "id": 11735155,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "CBeacPas",
@@ -1465,9 +1297,7 @@
             "name": "Yai's HP BMD 2",
             "id": 11735156,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "800z",
@@ -1481,9 +1311,7 @@
             "name": "Dex's HP BMD 1",
             "id": 11735157,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RegUP2",
@@ -1497,9 +1325,7 @@
             "name": "Dex's HP BMD 2",
             "id": 11735158,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Undernet Rank",
@@ -1514,32 +1340,27 @@
             "id": 11735176,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Cyberworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Overworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Cyberworld"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Unlocker",
                     "count": 8
@@ -1565,18 +1386,15 @@
             "connected_region": "SciLab Cyberworld",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Overworld"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "CSciPass"
                   }
@@ -1589,22 +1407,18 @@
             "connected_region": "Yoka Cyberworld",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "CanReachRegion",
-                      "options": [],
                       "args": {
                         "region_name": "SciLab Overworld"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Press"
                       }
@@ -1613,7 +1427,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "CYokaPas"
                   }
@@ -1626,18 +1439,15 @@
             "connected_region": "Beach Cyberworld",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Overworld"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "CBeacPas"
                   }
@@ -1651,9 +1461,7 @@
             "name": "ACDC 1 Southwest BMD",
             "id": 11735040,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "WpnLV+1 (Pink)",
@@ -1667,9 +1475,7 @@
             "name": "ACDC 1 Northeast BMD",
             "id": 11735041,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Charge+1 (White)",
@@ -1684,36 +1490,30 @@
             "id": 11735172,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "CanReachRegion",
-                      "options": [],
                       "args": {
                         "region_name": "SciLab Cyberworld"
                       }
                     },
                     {
                       "rule": "CanReachRegion",
-                      "options": [],
                       "args": {
                         "region_name": "SciLab Overworld"
                       }
                     },
                     {
                       "rule": "CanReachRegion",
-                      "options": [],
                       "args": {
                         "region_name": "Yoka Cyberworld"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Unlocker",
                         "count": 8
@@ -1723,7 +1523,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "WWW ID"
                   }
@@ -1742,9 +1541,7 @@
             "name": "ACDC 2 Center BMD",
             "id": 11735042,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Airshoes",
@@ -1758,9 +1555,7 @@
             "name": "ACDC 2 North BMD",
             "id": 11735043,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Thndrblt *",
@@ -1774,9 +1569,7 @@
             "name": "ACDC 3 Southwest BMD",
             "id": 11735044,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "FlashMan V2 F",
@@ -1790,9 +1583,7 @@
             "name": "ACDC 3 Northeast BMD",
             "id": 11735045,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rockcube *",
@@ -1812,18 +1603,15 @@
             "connected_region": "SciLab Cyberworld",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Overworld"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "CSciPass"
                   }
@@ -1835,9 +1623,7 @@
             "name": "SciLab Overworld -> ACDC Overworld",
             "connected_region": "ACDC Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1845,7 +1631,6 @@
             "connected_region": "Yoka Overworld",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Needle"
               }
@@ -1856,7 +1641,6 @@
             "connected_region": "Beach Overworld",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "PETCase"
               }
@@ -1869,7 +1653,6 @@
             "id": 11735188,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shake1 S"
               }
@@ -1886,9 +1669,7 @@
             "name": "SciLab Garbage Can",
             "id": 11735199,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "VarSword B",
@@ -1902,9 +1683,7 @@
             "name": "SciLab Vending Machine BMD",
             "id": 11735136,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Recov120 S",
@@ -1918,9 +1697,7 @@
             "name": "SciLab Virus Lab Door BMD 1",
             "id": 11735137,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1400z",
@@ -1934,9 +1711,7 @@
             "name": "SciLab Virus Lab Door BMD 2",
             "id": 11735277,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "PlantMan V2 P",
@@ -1950,9 +1725,7 @@
             "name": "SciLab Dad's Computer BMD",
             "id": 11735138,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "AirShoes *",
@@ -1967,32 +1740,27 @@
             "id": 11735177,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Cyberworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Overworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Cyberworld"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Unlocker",
                     "count": 8
@@ -2013,18 +1781,15 @@
             "id": 11735215,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "ACDC Cyberworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "ACDC Overworld"
                   }
@@ -2044,7 +1809,6 @@
             "id": 11735216,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Recov30 *"
               }
@@ -2062,18 +1826,15 @@
             "id": 11735217,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "ACDC Cyberworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Overworld"
                   }
@@ -2093,7 +1854,6 @@
             "id": 11735218,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Yoka Overworld"
               }
@@ -2111,18 +1871,15 @@
             "id": 11735219,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "ACDC Cyberworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Cyberworld"
                   }
@@ -2142,18 +1899,15 @@
             "id": 11735220,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Cyberworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Overworld"
                   }
@@ -2173,7 +1927,6 @@
             "id": 11735221,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "ACDC Overworld"
               }
@@ -2191,7 +1944,6 @@
             "id": 11735222,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Beach Cyberworld"
               }
@@ -2209,25 +1961,21 @@
             "id": 11735223,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "ACDC Cyberworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Beach Overworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Overworld"
                   }
@@ -2247,7 +1995,6 @@
             "id": 11735228,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "ACDC Overworld"
               }
@@ -2265,25 +2012,21 @@
             "id": 11735229,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "ACDC Overworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Beach Overworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Overworld"
                   }
@@ -2303,7 +2046,6 @@
             "id": 11735230,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Beach Overworld"
               }
@@ -2321,7 +2063,6 @@
             "id": 11735310,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Beach Overworld"
               }
@@ -2339,18 +2080,15 @@
             "id": 11735231,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "ACDC Overworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Beach Overworld"
                   }
@@ -2370,18 +2108,15 @@
             "id": 11735232,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Cyberworld"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Press"
                   }
@@ -2401,7 +2136,6 @@
             "id": 11735233,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "SciLab Cyberworld"
               }
@@ -2419,32 +2153,27 @@
             "id": 11735234,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Beach Overworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Deep Undernet"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Undernet"
                   }
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Magnum1 A",
@@ -2467,18 +2196,15 @@
             "id": 11735235,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachLocation",
-                  "options": [],
                   "args": {
                     "location_name": "Job: Legendary Tomes"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "ACDC Overworld"
                   }
@@ -2498,7 +2224,6 @@
             "id": 11735236,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Yoka Overworld"
               }
@@ -2516,7 +2241,6 @@
             "id": 11735237,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Yoka Overworld"
               }
@@ -2534,7 +2258,6 @@
             "id": 11735238,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Yoka Overworld"
               }
@@ -2552,7 +2275,6 @@
             "id": 11735239,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Yoka Overworld"
               }
@@ -2570,7 +2292,6 @@
             "id": 11735240,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Yoka Overworld"
               }
@@ -2588,7 +2309,6 @@
             "id": 11735241,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Undernet"
               }
@@ -2606,7 +2326,6 @@
             "id": 11735242,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Beach Overworld"
               }
@@ -2624,39 +2343,33 @@
             "id": 11735243,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "ACDC Cyberworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Beach Cyberworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Beach Overworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Cyberworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Cyberworld"
                   }
@@ -2676,46 +2389,39 @@
             "id": 11735244,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "ACDC Cyberworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "ACDC Overworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Beach Overworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Undernet"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Cyberworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Overworld"
                   }
@@ -2739,9 +2445,7 @@
             "name": "SciLab Cyberworld -> ACDC Cyberworld",
             "connected_region": "ACDC Cyberworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2749,22 +2453,18 @@
             "connected_region": "Yoka Cyberworld",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "CanReachRegion",
-                      "options": [],
                       "args": {
                         "region_name": "SciLab Overworld"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Press"
                       }
@@ -2773,7 +2473,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "CYokaPas"
                   }
@@ -2786,18 +2485,15 @@
             "connected_region": "Beach Cyberworld",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Overworld"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "CBeacPas"
                   }
@@ -2809,9 +2505,7 @@
             "name": "SciLab Cyberworld -> Deep Undernet",
             "connected_region": "Deep Undernet",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2820,9 +2514,7 @@
             "name": "SciLab 1 East BMD",
             "id": 11735047,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "ProtoMan V2 B",
@@ -2837,7 +2529,6 @@
             "id": 11735046,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "WWW ID"
               }
@@ -2854,9 +2545,7 @@
             "name": "SciLab 2 South BMD",
             "id": 11735049,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "10000z",
@@ -2870,9 +2559,7 @@
             "name": "SciLab 2 West BMD",
             "id": 11735048,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1 BugFrag",
@@ -2892,22 +2579,18 @@
             "connected_region": "Yoka Cyberworld",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "CanReachRegion",
-                      "options": [],
                       "args": {
                         "region_name": "SciLab Overworld"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Press"
                       }
@@ -2916,7 +2599,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "CYokaPas"
                   }
@@ -2928,9 +2610,7 @@
             "name": "Yoka Overworld -> ACDC Overworld",
             "connected_region": "ACDC Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2938,7 +2618,6 @@
             "connected_region": "SciLab Overworld",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "SubPET"
               }
@@ -2949,7 +2628,6 @@
             "connected_region": "Beach Overworld",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "PETCase"
               }
@@ -2960,23 +2638,18 @@
             "connected_region": "Secret Area",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Compare",
-                  "options": [],
                   "args": {
                     "left": {
                       "rule": "explore_score",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     "op": ">",
                     "right": {
                       "rule": "Constant",
-                      "options": [],
                       "args": {
                         "value": 12
                       },
@@ -2988,7 +2661,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Hammer"
                   }
@@ -3002,9 +2674,7 @@
             "name": "Yoka Mr Quiz",
             "id": 11735276,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MetalMan V3 M",
@@ -3018,9 +2688,7 @@
             "name": "Yoka Quiz Master",
             "id": 11735182,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RegUP2",
@@ -3035,7 +2703,6 @@
             "id": 11735189,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "FireSwrd P"
               }
@@ -3052,9 +2719,7 @@
             "name": "Yoka Inn Jars",
             "id": 11735200,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HPMemory",
@@ -3068,9 +2733,7 @@
             "name": "Yoka Zoo Garbage",
             "id": 11735201,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "PETCase",
@@ -3085,32 +2748,27 @@
             "id": 11735178,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Cyberworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Overworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Cyberworld"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Unlocker",
                     "count": 8
@@ -3130,9 +2788,7 @@
             "name": "Zoo 1 East BMD",
             "id": 11735089,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hole *",
@@ -3146,9 +2802,7 @@
             "name": "Zoo 1 North BMD",
             "id": 11735091,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "AlphaArm\u03a9 V",
@@ -3162,9 +2816,7 @@
             "name": "Zoo 1 Central BMD",
             "id": 11735090,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "AntiSword Y",
@@ -3178,9 +2830,7 @@
             "name": "Zoo 2 East BMD",
             "id": 11735092,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Charge+1 (Pink)",
@@ -3194,9 +2844,7 @@
             "name": "Zoo 2 Central BMD",
             "id": 11735093,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "FullEnrg",
@@ -3210,9 +2858,7 @@
             "name": "Zoo 2 West BMD",
             "id": 11735094,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "50000z",
@@ -3226,9 +2872,7 @@
             "name": "Zoo 3 North BMD",
             "id": 11735095,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Panic C",
@@ -3242,9 +2886,7 @@
             "name": "Zoo 3 Central BMD",
             "id": 11735096,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BlkBomb2 S",
@@ -3258,9 +2900,7 @@
             "name": "Zoo 3 Path BMD",
             "id": 11735097,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Barrier L",
@@ -3274,9 +2914,7 @@
             "name": "Zoo 3 Northwest BMD",
             "id": 11735098,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "GutsMan V3 G",
@@ -3290,9 +2928,7 @@
             "name": "Zoo 4 West BMD",
             "id": 11735099,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "GigFldr1",
@@ -3306,9 +2942,7 @@
             "name": "Zoo 4 Northwest BMD",
             "id": 11735100,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BlkBomb1 P",
@@ -3322,9 +2956,7 @@
             "name": "Zoo 4 Southeast BMD",
             "id": 11735101,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Guardian O",
@@ -3338,9 +2970,7 @@
             "name": "Yoka TV BMD",
             "id": 11735140,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1 BugFrag",
@@ -3354,9 +2984,7 @@
             "name": "Yoka Armor BMD",
             "id": 11735139,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "ExpMem",
@@ -3370,9 +2998,7 @@
             "name": "Yoka Hot Spring BMD",
             "id": 11735141,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "DesertMan V2 D",
@@ -3386,9 +3012,7 @@
             "name": "Yoka Ticket Machine BMD",
             "id": 11735142,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BambooSword N",
@@ -3402,9 +3026,7 @@
             "name": "Yoka Giraffe BMD",
             "id": 11735143,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "IceStage *",
@@ -3418,9 +3040,7 @@
             "name": "Yoka Panda BMD",
             "id": 11735144,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "ElecSwrd P",
@@ -3434,9 +3054,7 @@
             "name": "Tamako's HP BMD",
             "id": 11735159,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "DrillMan V2 D",
@@ -3451,32 +3069,27 @@
             "id": 11735181,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Cyberworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Overworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Cyberworld"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Unlocker",
                     "count": 8
@@ -3497,7 +3110,6 @@
             "id": 11735195,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Humor"
               }
@@ -3514,9 +3126,7 @@
             "name": "Chocolate Shop 01",
             "id": 11735278,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Barrier E",
@@ -3530,9 +3140,7 @@
             "name": "Chocolate Shop 02",
             "id": 11735279,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Attack+1 (White)",
@@ -3546,9 +3154,7 @@
             "name": "Chocolate Shop 03",
             "id": 11735280,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Charge+1 (White)",
@@ -3562,9 +3168,7 @@
             "name": "Chocolate Shop 04",
             "id": 11735281,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Team2 *",
@@ -3578,9 +3182,7 @@
             "name": "Chocolate Shop 05",
             "id": 11735282,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Undernet Rank",
@@ -3594,9 +3196,7 @@
             "name": "Chocolate Shop 06",
             "id": 11735283,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RegUP2",
@@ -3610,9 +3210,7 @@
             "name": "Chocolate Shop 07",
             "id": 11735284,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "FireRat H",
@@ -3626,9 +3224,7 @@
             "name": "Chocolate Shop 08",
             "id": 11735285,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "StepCross Q",
@@ -3642,9 +3238,7 @@
             "name": "Chocolate Shop 09",
             "id": 11735286,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Magnum1 A",
@@ -3658,9 +3252,7 @@
             "name": "Chocolate Shop 10",
             "id": 11735287,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1 BugFrag",
@@ -3674,9 +3266,7 @@
             "name": "Chocolate Shop 11",
             "id": 11735288,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RegUP1",
@@ -3690,9 +3280,7 @@
             "name": "Chocolate Shop 12",
             "id": 11735289,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RegUP2",
@@ -3706,9 +3294,7 @@
             "name": "Chocolate Shop 13",
             "id": 11735290,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1 BugFrag",
@@ -3722,9 +3308,7 @@
             "name": "Chocolate Shop 14",
             "id": 11735291,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Tornado L",
@@ -3738,9 +3322,7 @@
             "name": "Chocolate Shop 15",
             "id": 11735292,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HeatSide T",
@@ -3754,9 +3336,7 @@
             "name": "Chocolate Shop 16",
             "id": 11735293,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "SpinRed",
@@ -3770,9 +3350,7 @@
             "name": "Chocolate Shop 17",
             "id": 11735294,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HPMemory",
@@ -3786,9 +3364,7 @@
             "name": "Chocolate Shop 18",
             "id": 11735295,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Team1 *",
@@ -3802,9 +3378,7 @@
             "name": "Chocolate Shop 19",
             "id": 11735296,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spreader P",
@@ -3818,9 +3392,7 @@
             "name": "Chocolate Shop 20",
             "id": 11735297,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "WWW ID",
@@ -3834,9 +3406,7 @@
             "name": "Chocolate Shop 21",
             "id": 11735298,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Undernet Rank",
@@ -3850,9 +3420,7 @@
             "name": "Chocolate Shop 22",
             "id": 11735299,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP+500 (Yellow)",
@@ -3866,9 +3434,7 @@
             "name": "Chocolate Shop 23",
             "id": 11735300,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Poltergeist G",
@@ -3882,9 +3448,7 @@
             "name": "Chocolate Shop 24",
             "id": 11735301,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "ZeusHammer Z",
@@ -3898,9 +3462,7 @@
             "name": "Chocolate Shop 25",
             "id": 11735302,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HPMemory",
@@ -3914,9 +3476,7 @@
             "name": "Chocolate Shop 26",
             "id": 11735303,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Undernet Rank",
@@ -3930,9 +3490,7 @@
             "name": "Chocolate Shop 27",
             "id": 11735304,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Geyser B",
@@ -3946,9 +3504,7 @@
             "name": "Chocolate Shop 28",
             "id": 11735305,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "ProtoMan V3 B",
@@ -3962,9 +3518,7 @@
             "name": "Chocolate Shop 29",
             "id": 11735306,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BeastMan B",
@@ -3978,9 +3532,7 @@
             "name": "Chocolate Shop 30",
             "id": 11735307,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "FullEnrg",
@@ -3994,9 +3546,7 @@
             "name": "Chocolate Shop 31",
             "id": 11735308,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Lance S",
@@ -4010,9 +3560,7 @@
             "name": "Chocolate Shop 32",
             "id": 11735309,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HPMemory",
@@ -4031,9 +3579,7 @@
             "name": "Yoka Cyberworld -> ACDC Cyberworld",
             "connected_region": "ACDC Cyberworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -4041,18 +3587,15 @@
             "connected_region": "SciLab Cyberworld",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Overworld"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "CSciPass"
                   }
@@ -4065,18 +3608,15 @@
             "connected_region": "Beach Cyberworld",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Overworld"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "CBeacPas"
                   }
@@ -4090,9 +3630,7 @@
             "name": "Yoka 1 North BMD",
             "id": 11735050,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "WideSwrd E",
@@ -4107,7 +3645,6 @@
             "id": 11735051,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "WWW ID"
               }
@@ -4125,36 +3662,30 @@
             "id": 11735173,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "CanReachRegion",
-                      "options": [],
                       "args": {
                         "region_name": "SciLab Cyberworld"
                       }
                     },
                     {
                       "rule": "CanReachRegion",
-                      "options": [],
                       "args": {
                         "region_name": "SciLab Overworld"
                       }
                     },
                     {
                       "rule": "CanReachRegion",
-                      "options": [],
                       "args": {
                         "region_name": "Yoka Cyberworld"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Unlocker",
                         "count": 8
@@ -4164,7 +3695,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Press"
                   }
@@ -4183,9 +3713,7 @@
             "name": "Yoka 2 Lower BMD",
             "id": 11735053,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "StepSwrd N",
@@ -4200,7 +3728,6 @@
             "id": 11735052,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Press"
               }
@@ -4222,9 +3749,7 @@
             "name": "Beach Overworld -> ACDC Overworld",
             "connected_region": "ACDC Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -4232,7 +3757,6 @@
             "connected_region": "SciLab Overworld",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "SubPET"
               }
@@ -4243,7 +3767,6 @@
             "connected_region": "Yoka Overworld",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Needle"
               }
@@ -4254,7 +3777,6 @@
             "connected_region": "WWW Island",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Undernet Rank",
                 "count": 8
@@ -4267,9 +3789,7 @@
             "name": "Hospital Quiz Queen",
             "id": 11735183,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "FlashMan V3 F",
@@ -4283,9 +3803,7 @@
             "name": "Hades Quiz King",
             "id": 11735184,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "SpinDark",
@@ -4300,7 +3818,6 @@
             "id": 11735190,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "DynaWave V"
               }
@@ -4318,7 +3835,6 @@
             "id": 11735191,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "WideSwrd C"
               }
@@ -4336,7 +3852,6 @@
             "id": 11735192,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "HoleMetr H"
               }
@@ -4354,7 +3869,6 @@
             "id": 11735193,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shadow J"
               }
@@ -4372,7 +3886,6 @@
             "id": 11735194,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "GrabBack K"
               }
@@ -4389,9 +3902,7 @@
             "name": "Beach Department Store",
             "id": 11735202,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Aqua+30 *",
@@ -4405,9 +3916,7 @@
             "name": "Beach Hospital Plaque",
             "id": 11735203,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bubbler C",
@@ -4421,9 +3930,7 @@
             "name": "Beach Hospital Pink Door",
             "id": 11735204,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BowlMan V3 B",
@@ -4437,9 +3944,7 @@
             "name": "Beach Hospital Tree",
             "id": 11735205,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RegUP2",
@@ -4453,9 +3958,7 @@
             "name": "Beach Hospital Hidden Conversation",
             "id": 11735206,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Geddon3 U",
@@ -4469,9 +3972,7 @@
             "name": "Beach Hospital Girl",
             "id": 11735207,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "StepCross R",
@@ -4485,9 +3986,7 @@
             "name": "Beach DNN Kiosk",
             "id": 11735208,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HPMemory",
@@ -4501,9 +4000,7 @@
             "name": "Beach DNN Boxes",
             "id": 11735209,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RegUP3",
@@ -4517,9 +4014,7 @@
             "name": "Beach DNN Poster",
             "id": 11735210,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "ExpMem",
@@ -4533,9 +4028,7 @@
             "name": "Hades Boat Dock",
             "id": 11735211,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BubblMan B",
@@ -4550,7 +4043,6 @@
             "id": 11735102,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Press"
               }
@@ -4567,9 +4059,7 @@
             "name": "Hades Gargoyle BMD",
             "id": 11735152,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HPMemory",
@@ -4583,9 +4073,7 @@
             "name": "Hospital 1 North BMD",
             "id": 11735103,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Unlocker",
@@ -4599,9 +4087,7 @@
             "name": "Hospital 1 West BMD",
             "id": 11735105,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "CopyDmg *",
@@ -4615,9 +4101,7 @@
             "name": "Hospital 1 Center BMD",
             "id": 11735104,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "DarkAura A",
@@ -4631,9 +4115,7 @@
             "name": "Hospital 2 Island BMD",
             "id": 11735108,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "UnderSht",
@@ -4647,9 +4129,7 @@
             "name": "Hospital 2 Central BMD",
             "id": 11735107,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Unlocker",
@@ -4663,9 +4143,7 @@
             "name": "Hospital 2 Southwest BMD",
             "id": 11735106,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "FstGauge *",
@@ -4679,9 +4157,7 @@
             "name": "Hospital 3 West BMD",
             "id": 11735110,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "DeltaRay Z",
@@ -4695,9 +4171,7 @@
             "name": "Hospital 3 Central BMD",
             "id": 11735109,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Undernet Rank",
@@ -4711,9 +4185,7 @@
             "name": "Hospital 3 Northwest BMD",
             "id": 11735111,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HPMemory",
@@ -4727,9 +4199,7 @@
             "name": "Hospital 4 North BMD",
             "id": 11735114,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "GaiaBlde *",
@@ -4743,9 +4213,7 @@
             "name": "Hospital 4 Central BMD",
             "id": 11735112,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Salamndr *",
@@ -4759,9 +4227,7 @@
             "name": "Hospital 4 Southeast BMD",
             "id": 11735113,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "GutsMan V2 G",
@@ -4775,9 +4241,7 @@
             "name": "Hospital 5 Island BMD",
             "id": 11735117,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HPMemory",
@@ -4791,9 +4255,7 @@
             "name": "Hospital 5 Northeast BMD",
             "id": 11735116,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "2000z",
@@ -4807,9 +4269,7 @@
             "name": "Hospital 5 Southwest BMD",
             "id": 11735115,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RegUP2",
@@ -4823,9 +4283,7 @@
             "name": "Beach Hospital Bed BMD",
             "id": 11735145,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Undernet Rank",
@@ -4839,9 +4297,7 @@
             "name": "Beach TV BMD",
             "id": 11735146,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RegUP2",
@@ -4855,9 +4311,7 @@
             "name": "Beach Vending Machine BMD",
             "id": 11735147,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Barr200 E",
@@ -4871,9 +4325,7 @@
             "name": "Beach News Van BMD",
             "id": 11735148,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HPMemory",
@@ -4887,9 +4339,7 @@
             "name": "Beach Battle Console BMD",
             "id": 11735149,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RegUP1",
@@ -4903,9 +4353,7 @@
             "name": "Beach Security System BMD",
             "id": 11735150,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Spreader N",
@@ -4919,9 +4367,7 @@
             "name": "Beach Broadcast Computer BMD",
             "id": 11735151,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Recov150 P",
@@ -4936,32 +4382,27 @@
             "id": 11735179,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Cyberworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Overworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Cyberworld"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Unlocker",
                     "count": 8
@@ -4982,32 +4423,27 @@
             "id": 11735180,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Cyberworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Overworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Cyberworld"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Unlocker",
                     "count": 8
@@ -5027,9 +4463,7 @@
             "name": "Undernet 6 TV BMD",
             "id": 11735070,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RegUP3",
@@ -5048,9 +4482,7 @@
             "name": "Beach Cyberworld -> ACDC Cyberworld",
             "connected_region": "ACDC Cyberworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -5058,18 +4490,15 @@
             "connected_region": "SciLab Cyberworld",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Overworld"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "CSciPass"
                   }
@@ -5082,22 +4511,18 @@
             "connected_region": "Yoka Cyberworld",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "CanReachRegion",
-                      "options": [],
                       "args": {
                         "region_name": "SciLab Overworld"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Press"
                       }
@@ -5106,7 +4531,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "CYokaPas"
                   }
@@ -5119,23 +4543,18 @@
             "connected_region": "Undernet",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Compare",
-                  "options": [],
                   "args": {
                     "left": {
                       "rule": "explore_score",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     "op": ">",
                     "right": {
                       "rule": "Constant",
-                      "options": [],
                       "args": {
                         "value": 8
                       },
@@ -5147,7 +4566,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Press"
                   }
@@ -5161,9 +4579,7 @@
             "name": "Beach 1 BMD",
             "id": 11735054,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Roll V3 R",
@@ -5178,32 +4594,27 @@
             "id": 11735174,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Cyberworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Overworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Cyberworld"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Unlocker",
                     "count": 8
@@ -5224,7 +4635,6 @@
             "id": 11735056,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Press"
               }
@@ -5241,9 +4651,7 @@
             "name": "Beach 2 West BMD",
             "id": 11735055,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "GrabRvng A",
@@ -5258,7 +4666,6 @@
             "id": 11735196,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "BlckMnd"
               }
@@ -5281,9 +4688,7 @@
             "name": "Undernet 1 South BMD",
             "id": 11735057,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Shadow J",
@@ -5298,7 +4703,6 @@
             "id": 11735058,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "WWW ID"
               }
@@ -5315,9 +4719,7 @@
             "name": "Undernet 2 Lower BMD",
             "id": 11735060,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "WideSwrd C",
@@ -5331,9 +4733,7 @@
             "name": "Undernet 2 Upper BMD",
             "id": 11735059,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Undernet Rank",
@@ -5347,9 +4747,7 @@
             "name": "Undernet 3 South BMD",
             "id": 11735061,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HPMemory",
@@ -5363,9 +4761,7 @@
             "name": "Undernet 3 Central BMD",
             "id": 11735062,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HPMemory",
@@ -5379,9 +4775,7 @@
             "name": "Undernet 4 Pillar Prog",
             "id": 11735214,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Roll R",
@@ -5395,9 +4789,7 @@
             "name": "Undernet 4 Top North BMD",
             "id": 11735065,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Unlocker",
@@ -5411,9 +4803,7 @@
             "name": "Undernet 4 Bottom West BMD",
             "id": 11735063,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Undernet Rank",
@@ -5427,9 +4817,7 @@
             "name": "Undernet 4 Top Pillar BMD",
             "id": 11735064,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Slasher B",
@@ -5443,9 +4831,7 @@
             "name": "Undernet 5 Upper BMD",
             "id": 11735066,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "GtStrght S",
@@ -5465,9 +4851,7 @@
             "name": "Undernet 5 Lower BMD",
             "id": 11735067,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "OrderSys",
@@ -5481,9 +4865,7 @@
             "name": "Undernet 6 East BMD",
             "id": 11735068,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BubblMan V3 B",
@@ -5497,9 +4879,7 @@
             "name": "Undernet 6 Central BMD",
             "id": 11735069,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "CSciPass",
@@ -5514,32 +4894,27 @@
             "id": 11735175,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Cyberworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "SciLab Overworld"
                   }
                 },
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Yoka Cyberworld"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Unlocker",
                     "count": 8
@@ -5559,9 +4934,7 @@
             "name": "Undernet 7 West BMD",
             "id": 11735071,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "SetSand",
@@ -5575,9 +4948,7 @@
             "name": "Undernet 7 Northeast BMD",
             "id": 11735073,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "CopyDmg *",
@@ -5591,9 +4962,7 @@
             "name": "Undernet 7 Northwest BMD",
             "id": 11735072,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MetalMan V2 M",
@@ -5607,9 +4976,7 @@
             "name": "Undernet 7 Upper BMD",
             "id": 11735160,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Unlocker",
@@ -5629,9 +4996,7 @@
             "name": "WWW Control Room 1 Screen",
             "id": 11735212,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "500z",
@@ -5645,9 +5010,7 @@
             "name": "WWW Wily's Desk",
             "id": 11735213,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "1 BugFrag",
@@ -5661,9 +5024,7 @@
             "name": "WWW Wall BMD",
             "id": 11735153,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "DrillMan V3 D",
@@ -5677,9 +5038,7 @@
             "name": "WWW 1 East BMD",
             "id": 11735120,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "SpinYllw",
@@ -5693,9 +5052,7 @@
             "name": "WWW 1 West BMD",
             "id": 11735119,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "BrkChrg",
@@ -5709,9 +5066,7 @@
             "name": "WWW 1 Central BMD",
             "id": 11735118,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mr Famous' Wristband",
@@ -5725,9 +5080,7 @@
             "name": "WWW 2 East BMD",
             "id": 11735121,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "DrillMan D",
@@ -5741,9 +5094,7 @@
             "name": "WWW 2 Northwest BMD",
             "id": 11735122,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "CustSwrd Z",
@@ -5757,9 +5108,7 @@
             "name": "WWW 3 East BMD",
             "id": 11735123,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RegUP3",
@@ -5773,9 +5122,7 @@
             "name": "WWW 3 North BMD",
             "id": 11735124,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Jealousy J",
@@ -5789,9 +5136,7 @@
             "name": "WWW 4 Central BMD",
             "id": 11735126,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "RegUP3",
@@ -5805,9 +5150,7 @@
             "name": "WWW 4 Northwest BMD",
             "id": 11735125,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Invis *",
@@ -5821,9 +5164,7 @@
             "name": "Alpha Defeated",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Victory",
@@ -5843,9 +5184,7 @@
             "name": "Secret 1 South BMD",
             "id": 11735074,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "GutsMan G",
@@ -5860,9 +5199,7 @@
             "name": "Secret 1 Northeast BMD",
             "id": 11735075,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Untrap",
@@ -5877,9 +5214,7 @@
             "name": "Secret 1 Northwest BMD",
             "id": 11735076,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP+100 (Yellow)",
@@ -5894,9 +5229,7 @@
             "name": "Secret 2 Island BMD",
             "id": 11735079,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "10 BugFrags",
@@ -5911,9 +5244,7 @@
             "name": "Secret 2 Lower BMD",
             "id": 11735078,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "FullEnrg",
@@ -5928,9 +5259,7 @@
             "name": "Secret 2 Upper BMD",
             "id": 11735077,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Charge+1 (Pink)",
@@ -5946,7 +5275,6 @@
             "id": 11735081,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Press"
               }
@@ -5964,9 +5292,7 @@
             "name": "Secret 3 South BMD",
             "id": 11735080,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "LongSwrd E",
@@ -5982,7 +5308,6 @@
             "id": 11735082,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Press"
               }
@@ -6000,9 +5325,7 @@
             "name": "Serenade",
             "id": 11735311,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "SandStage C",

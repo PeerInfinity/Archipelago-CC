@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Has, Not, Or, True_
+from rule_builder import True_, False_, And, Has, HelperCall, Not, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -21,7 +21,7 @@ def _terrariaworldgen_has_n_from_list(state: "CollectionState", player: int, ite
 
 
 def _terrariaworldgen_has_minions(state: "CollectionState", player: int, required_count = None) -> bool:
-    return (((1 + (0 if True else 0)) + True) >= required_count)
+    return (((1 + (0 if False else 0)) + False) >= required_count)
 
 
 # Helper definitions for frontend evaluation
@@ -167,7 +167,7 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Traveling Merchant", player),
-        True_()
+        HelperCall(helper_func=_terrariaworldgen_has_n_from_list, helper_name="has_n_from_list", args=(['Guide', 'Squire Slime', 'Merchant', 'Dye Trader', 'Demolitionist', 'Zoologist', 'Cat', 'Dog', 'Painter', 'Angler', 'Clumsy Slime', 'Nurse', 'Stylist', 'Golfer', 'Party Girl', 'Cool Slime', 'Arms Dealer', 'Nerdy Slime', 'Surly Slime', 'Dryad', 'Mystic Slime', 'Tavernkeep', 'Goblin Tinkerer', 'Witch Doctor', 'Clothier', 'Elder Slime', 'Wizard', 'Tax Collector', 'Bunny', 'Truffle', 'Pirate', 'Diva Slime', 'Steampunker', 'Cyborg', 'Princess', 'Santa Claus'], 2,))
     )
 
     world.set_rule(
@@ -192,7 +192,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dye Trader", player),
-        True_()
+        HelperCall(helper_func=_terrariaworldgen_has_n_from_list, helper_name="has_n_from_list", args=(['Guide', 'Squire Slime', 'Merchant', 'Dye Trader', 'Demolitionist', 'Zoologist', 'Cat', 'Dog', 'Painter', 'Angler', 'Clumsy Slime', 'Nurse', 'Stylist', 'Golfer', 'Party Girl', 'Cool Slime', 'Arms Dealer', 'Nerdy Slime', 'Surly Slime', 'Dryad', 'Mystic Slime', 'Tavernkeep', 'Goblin Tinkerer', 'Witch Doctor', 'Clothier', 'Elder Slime', 'Wizard', 'Tax Collector', 'Bunny', 'Truffle', 'Pirate', 'Diva Slime', 'Steampunker', 'Cyborg', 'Princess', 'Santa Claus'], 4,))
     )
 
     world.set_rule(
@@ -222,7 +222,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Painter", player),
-        True_()
+        HelperCall(helper_func=_terrariaworldgen_has_n_from_list, helper_name="has_n_from_list", args=(['Guide', 'Squire Slime', 'Merchant', 'Dye Trader', 'Demolitionist', 'Zoologist', 'Cat', 'Dog', 'Painter', 'Angler', 'Clumsy Slime', 'Nurse', 'Stylist', 'Golfer', 'Party Girl', 'Cool Slime', 'Arms Dealer', 'Nerdy Slime', 'Surly Slime', 'Dryad', 'Mystic Slime', 'Tavernkeep', 'Goblin Tinkerer', 'Witch Doctor', 'Clothier', 'Elder Slime', 'Wizard', 'Tax Collector', 'Bunny', 'Truffle', 'Pirate', 'Diva Slime', 'Steampunker', 'Cyborg', 'Princess', 'Santa Claus'], 8,))
     )
 
     world.set_rule(
@@ -272,7 +272,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Party Girl", player),
-        True_()
+        HelperCall(helper_func=_terrariaworldgen_has_n_from_list, helper_name="has_n_from_list", args=(['Guide', 'Squire Slime', 'Merchant', 'Dye Trader', 'Demolitionist', 'Zoologist', 'Cat', 'Dog', 'Painter', 'Angler', 'Clumsy Slime', 'Nurse', 'Stylist', 'Golfer', 'Party Girl', 'Cool Slime', 'Arms Dealer', 'Nerdy Slime', 'Surly Slime', 'Dryad', 'Mystic Slime', 'Tavernkeep', 'Goblin Tinkerer', 'Witch Doctor', 'Clothier', 'Elder Slime', 'Wizard', 'Tax Collector', 'Bunny', 'Truffle', 'Pirate', 'Diva Slime', 'Steampunker', 'Cyborg', 'Princess', 'Santa Claus'], 14,))
     )
 
     world.set_rule(
@@ -807,7 +807,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Head in the Clouds", player),
-        Or(And(Has('Ancient Manipulator'), Has('Fragment'), Has('Luminite Bar')), And(Has('Hardmode'), Has('Post-Golem'), Has('Tavernkeep')), And(Has('Hardmode'), Has('Post-Plantera'), Has('Witch Doctor')), And(Has('Post-Plantera'), Has('Solar Eclipse')), And(Or(And(Has('Autohammer'), Has('Shroomite Bar')), And(Or(True_(), Or(And(Has('Hardmode'), Has('Lihzahrd Temple'), Has('Post-Plantera')), And(True_(), Has('Essence of Sunlight'), Has('Hardmode Anvil'), Has('Lihzahrd Temple'))), Has('Hardmode'), Has('Pixie Dust'), Has('Post-Plantera'), Has('Solar Eclipse'), Has('Soul of Light'), Has('Soul of Night'), Has('Spectre Bar')), Has('Hardmode Anvil')), Has('Pumpkin Moon'), Has('Pumpkin Moon')), Has('Soul of Flight')), True_(), Or(And(And(Has('Auric Bar'), Has('Brimstone Slag'), Has('Core of Calamity'), Has('Cosmic Anvil'), Has("Fabsol's Vodka")), True_(), True_()), And(Or(True_(), Has('Post-Plantera')), Has('Hallow'), Has('Hardmode'))), Or(And(Has('Bug Net'), Has('Hardmode')), And(True_(), True_(), Has('Titan Heart'))), Has('Frost Moon'), Has('Steampunker'))
+        Or(And(Has('Ancient Manipulator'), Has('Fragment'), Has('Luminite Bar')), And(Has('Hardmode'), Has('Post-Golem'), Has('Tavernkeep')), And(Has('Hardmode'), Has('Post-Plantera'), Has('Witch Doctor')), And(Has('Post-Plantera'), Has('Solar Eclipse')), And(Or(And(Has('Autohammer'), Has('Shroomite Bar')), And(Or(HelperCall(helper_func=_terrariaworldgen_has_n_from_list, helper_name="has_n_from_list", args=(['Post-The Twins', 'Post-The Destroyer', 'Post-Skeletron Prime'], 1,)), Or(And(Has('Hardmode'), Has('Lihzahrd Temple'), Has('Post-Plantera')), And(True_(), Has('Essence of Sunlight'), Has('Hardmode Anvil'), Has('Lihzahrd Temple'))), Has('Hardmode'), Has('Pixie Dust'), Has('Post-Plantera'), Has('Solar Eclipse'), Has('Soul of Light'), Has('Soul of Night'), Has('Spectre Bar')), Has('Hardmode Anvil')), Has('Pumpkin Moon'), Has('Pumpkin Moon')), Has('Soul of Flight')), True_(), Or(And(And(Has('Auric Bar'), Has('Brimstone Slag'), Has('Core of Calamity'), Has('Cosmic Anvil'), Has("Fabsol's Vodka")), True_(), True_()), And(Or(True_(), Has('Post-Plantera')), Has('Hallow'), Has('Hardmode'))), Or(And(Has('Bug Net'), Has('Hardmode')), And(True_(), True_(), Has('Titan Heart'))), Has('Frost Moon'), Has('Steampunker'))
     )
 
     world.set_rule(
@@ -867,7 +867,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mythril Ore", player),
-        Or(And(Or(And(True_(), True_()), And(Not(True_()), Has('Altar'))), Or(Has('Adamantite Pickaxe'), Has('Astral Pickaxe'), Has('Beastial Pickaxe'), Has('Blossom Pickaxe'), Has('Chlorophyte Pickaxe'), Has('Cobalt Pickaxe'), Has('Crystyl Crusher'), Has('Genesis Pickaxe'), Has('Laser Drill'), Has('Luminite Pickaxe'), Has('Mythril Pickaxe'), Has('Pickaxe Axe'), Has('Picksaw'), Has('Seismic Hampick'), Has('Shardlight Pickaxe'), Has('Shroomite Digging Claw'), Has('Spectre Pickaxe'))), Has('Adamantite Ore'), Has('Hardmode'), Has('Mythril Bar'))
+        Or(And(Or(And(HelperCall(helper_func=_terrariaworldgen_has_n_from_list, helper_name="has_n_from_list", args=(['Post-The Twins', 'Post-The Destroyer', 'Post-Skeletron Prime'], 1,)), True_()), And(Not(True_()), Has('Altar'))), Or(Has('Adamantite Pickaxe'), Has('Astral Pickaxe'), Has('Beastial Pickaxe'), Has('Blossom Pickaxe'), Has('Chlorophyte Pickaxe'), Has('Cobalt Pickaxe'), Has('Crystyl Crusher'), Has('Genesis Pickaxe'), Has('Laser Drill'), Has('Luminite Pickaxe'), Has('Mythril Pickaxe'), Has('Pickaxe Axe'), Has('Picksaw'), Has('Seismic Hampick'), Has('Shardlight Pickaxe'), Has('Shroomite Digging Claw'), Has('Spectre Pickaxe'))), Has('Adamantite Ore'), Has('Hardmode'), Has('Mythril Bar'))
     )
 
     world.set_rule(
@@ -887,7 +887,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Adamantite Ore", player),
-        Or(And(True_(), Has('Hallowed Ore')), And(Not(True_()), Has('Chlorophyte Ore')), And(Or(And(True_(), True_()), And(Not(True_()), Has('Altar'))), Or(Has('Adamantite Pickaxe'), Has('Astral Pickaxe'), Has('Beastial Pickaxe'), Has('Blossom Pickaxe'), Has('Chlorophyte Pickaxe'), Has('Crystyl Crusher'), Has('Genesis Pickaxe'), Has('Laser Drill'), Has('Luminite Pickaxe'), Has('Mythril Pickaxe'), Has('Pickaxe Axe'), Has('Picksaw'), Has('Seismic Hampick'), Has('Shardlight Pickaxe'), Has('Shroomite Digging Claw'), Has('Spectre Pickaxe'))), Has('Adamantite Bar'), Has('Hardmode'))
+        Or(And(True_(), Has('Hallowed Ore')), And(Not(True_()), Has('Chlorophyte Ore')), And(Or(And(HelperCall(helper_func=_terrariaworldgen_has_n_from_list, helper_name="has_n_from_list", args=(['Post-The Twins', 'Post-The Destroyer', 'Post-Skeletron Prime'], 2,)), True_()), And(Not(True_()), Has('Altar'))), Or(Has('Adamantite Pickaxe'), Has('Astral Pickaxe'), Has('Beastial Pickaxe'), Has('Blossom Pickaxe'), Has('Chlorophyte Pickaxe'), Has('Crystyl Crusher'), Has('Genesis Pickaxe'), Has('Laser Drill'), Has('Luminite Pickaxe'), Has('Mythril Pickaxe'), Has('Pickaxe Axe'), Has('Picksaw'), Has('Seismic Hampick'), Has('Shardlight Pickaxe'), Has('Shroomite Digging Claw'), Has('Spectre Pickaxe'))), Has('Adamantite Bar'), Has('Hardmode'))
     )
 
     world.set_rule(

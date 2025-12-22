@@ -20,19 +20,14 @@
             "connected_region": "Abyss Stairway",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_jump_level_1",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_kick",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -46,7 +41,6 @@
             "id": 3579576373,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Roc Wing"
               }
@@ -64,7 +58,6 @@
             "id": 3579576375,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Heavy Ring"
               }
@@ -82,7 +75,6 @@
             "id": 3579576387,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Double",
@@ -103,23 +95,17 @@
             "id": 3579576374,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "has_ice_or_stone",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "has_jump_level_1",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -127,8 +113,6 @@
                 },
                 {
                   "rule": "has_jump_level_4",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -146,9 +130,7 @@
             "name": "Catacomb: Earth Demon dash room",
             "id": 3579576488,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -163,7 +145,6 @@
             "id": 3579576376,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tackle"
               }
@@ -180,9 +161,7 @@
             "name": "Catacomb: Earth Demon bone pit - Lower",
             "id": 3579576378,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -197,19 +176,14 @@
             "id": 3579576379,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_jump_level_3",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_kick",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -227,9 +201,7 @@
             "name": "Catacomb: Below right column save room",
             "id": 3579576384,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -243,9 +215,7 @@
             "name": "Catacomb: Right column fake wall",
             "id": 3579576377,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -259,9 +229,7 @@
             "name": "Catacomb: Right column Spirit room",
             "id": 3579576385,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -275,9 +243,7 @@
             "name": "Catacomb: Muddy Mudman platforms room - Lower",
             "id": 3579576380,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Unicorn Card",
@@ -292,19 +258,14 @@
             "id": 3579576381,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_jump_level_1",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_kick",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -322,9 +283,7 @@
             "name": "Catacomb: Slide space zone",
             "id": 3579576382,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Double",
@@ -338,9 +297,7 @@
             "name": "Catacomb: Pre-Cerberus lone Skeleton room",
             "id": 3579576386,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Last Key",
@@ -354,9 +311,7 @@
             "name": "Catacomb: Pre-Cerberus Hopper treasure room",
             "id": 3579576383,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -370,9 +325,7 @@
             "name": "Catacomb: Behind Cerberus",
             "id": 3579576489,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -387,7 +340,6 @@
             "id": 3579576388,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Double",
@@ -413,7 +365,6 @@
             "connected_region": "Audience Room",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Double",
@@ -428,9 +379,7 @@
             "name": "Abyss Staircase: Lower fake wall",
             "id": 3579576391,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Cleansing",
@@ -444,9 +393,7 @@
             "name": "Abyss Staircase: Loopback drop",
             "id": 3579576389,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -466,7 +413,6 @@
             "connected_region": "Machine Tower Bottom",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tackle"
               }
@@ -477,19 +423,14 @@
             "connected_region": "Machine Tower Top",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_jump_level_2",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_kick",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -501,23 +442,17 @@
             "connected_region": "Chapel Tower Bottom",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "has_ice_or_stone",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "has_jump_level_2",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -525,15 +460,11 @@
                 },
                 {
                   "rule": "has_jump_level_3",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_kick",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -545,19 +476,14 @@
             "connected_region": "Underground Gallery Lower",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "broke_iron_maidens",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_push",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -569,7 +495,6 @@
             "connected_region": "Underground Warehouse Start",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Heavy Ring"
               }
@@ -580,16 +505,12 @@
             "connected_region": "Underground Waterway Start",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Maiden Detonator"
                   }
@@ -602,7 +523,6 @@
             "connected_region": "Observation Tower",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Roc Wing"
               }
@@ -613,7 +533,6 @@
             "connected_region": "Ceremonial Room",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Last Key"
               }
@@ -626,7 +545,6 @@
             "id": 3579576390,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Roc Wing"
               }
@@ -643,9 +561,7 @@
             "name": "Abyss Staircase: Upper fake wall",
             "id": 3579576392,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -659,9 +575,7 @@
             "name": "Audience Room: Skeleton foyer fake wall",
             "id": 3579576403,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Tackle",
@@ -675,9 +589,7 @@
             "name": "Audience Room: Main gallery fake wall",
             "id": 3579576404,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -691,9 +603,7 @@
             "name": "Audience Room: Below coyote jump",
             "id": 3579576401,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -708,7 +618,6 @@
             "id": 3579576395,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Heavy Ring"
               }
@@ -725,9 +634,7 @@
             "name": "Audience Room: Past coyote jump",
             "id": 3579576394,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -742,7 +649,6 @@
             "id": 3579576393,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tackle"
               }
@@ -759,9 +665,7 @@
             "name": "Audience Room: Wicked roc chamber - Lower",
             "id": 3579576397,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -776,7 +680,6 @@
             "id": 3579576396,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Roc Wing"
               }
@@ -793,9 +696,7 @@
             "name": "Audience Room: Upper Devil Tower hallway",
             "id": 3579576402,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -809,9 +710,7 @@
             "name": "Audience Room: Right exterior - Lower",
             "id": 3579576400,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -826,19 +725,14 @@
             "id": 3579576399,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_jump_level_2",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_kick",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -856,9 +750,7 @@
             "name": "Audience Room: Right exterior fake wall",
             "id": 3579576398,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -873,19 +765,14 @@
             "id": 3579576426,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_jump_level_2",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_kick",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -903,9 +790,7 @@
             "name": "Audience Room: Lower Devil Tower hallway fake wall",
             "id": 3579576405,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -919,9 +804,7 @@
             "name": "Audience Room: Behind Necromancer",
             "id": 3579576490,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -936,19 +819,14 @@
             "id": 3579576409,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "has_jump_level_5",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_tackle",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -967,19 +845,14 @@
             "id": 3579576408,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "has_push",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_tackle",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -998,23 +871,17 @@
             "id": 3579576473,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "has_ice_or_stone",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "has_jump_level_3",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -1022,8 +889,6 @@
                 },
                 {
                   "rule": "has_jump_level_4",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1042,23 +907,17 @@
             "id": 3579576474,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "has_ice_or_stone",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "has_jump_level_3",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -1066,8 +925,6 @@
                 },
                 {
                   "rule": "has_jump_level_4",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1086,7 +943,6 @@
             "id": 3579576471,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Roc Wing"
               }
@@ -1104,19 +960,14 @@
             "id": 3579576472,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_ice_or_stone",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_jump_level_5",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1134,9 +985,7 @@
             "name": "Outer Wall: Fake Nightmare floor",
             "id": 3579576478,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -1150,9 +999,7 @@
             "name": "Triumph Hallway: Skeleton slopes fake wall",
             "id": 3579576407,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -1167,23 +1014,17 @@
             "id": 3579576406,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "has_ice_or_stone",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "has_kick",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -1191,8 +1032,6 @@
                 },
                 {
                   "rule": "has_jump_level_2",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1215,9 +1054,7 @@
             "name": "Machine Bottom to Top",
             "connected_region": "Machine Tower Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1226,9 +1063,7 @@
             "name": "Machine Tower: Foxy platforms ledge",
             "id": 3579576417,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -1242,9 +1077,7 @@
             "name": "Machine Tower: Knight fox meeting room",
             "id": 3579576418,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -1259,19 +1092,14 @@
             "id": 3579576411,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_jump_level_2",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_kick",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1289,9 +1117,7 @@
             "name": "Machine Tower: Foxy fake wall",
             "id": 3579576410,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mars Card",
@@ -1306,19 +1132,14 @@
             "id": 3579576415,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_jump_level_2",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_kick",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1336,9 +1157,7 @@
             "name": "Machine Tower: Fake Lilim wall",
             "id": 3579576414,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -1352,9 +1171,7 @@
             "name": "Machine Tower: Thunderous zone fake wall",
             "id": 3579576419,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -1368,9 +1185,7 @@
             "name": "Machine Tower: Thunderous zone lone Stone Armor room",
             "id": 3579576413,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Roc Wing",
@@ -1390,9 +1205,7 @@
             "name": "Machine Tower: Top lone Stone Armor room",
             "id": 3579576412,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -1407,7 +1220,6 @@
             "id": 3579576416,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tackle"
               }
@@ -1424,9 +1236,7 @@
             "name": "Machine Tower: Pre-Iron Golem fake wall",
             "id": 3579576420,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -1440,9 +1250,7 @@
             "name": "Machine Tower: Behind Iron Golem",
             "id": 3579576491,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -1462,16 +1270,12 @@
             "connected_region": "Underground Gallery Upper",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Maiden Detonator"
                   }
@@ -1484,19 +1288,14 @@
             "connected_region": "Chapel Tower Bottom",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_jump_level_2",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_kick",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1509,9 +1308,7 @@
             "name": "Eternal Corridor: Midway fake wall",
             "id": 3579576422,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -1530,9 +1327,7 @@
             "name": "Into the Corridor Pit",
             "connected_region": "Eternal Corridor Pit",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1540,7 +1335,6 @@
             "connected_region": "Underground Waterway End",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Roc Wing"
               }
@@ -1551,19 +1345,14 @@
             "connected_region": "Chapel Tower Top",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_jump_level_3",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_kick",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1576,9 +1365,7 @@
             "name": "Eternal Corridor: Skelly-rang wall kicks room",
             "id": 3579576421,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -1592,9 +1379,7 @@
             "name": "Eternal Corridor: Skelly-rang fake wall",
             "id": 3579576423,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -1609,19 +1394,14 @@
             "id": 3579576424,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_ice_or_stone",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_jump_level_2",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1640,7 +1420,6 @@
             "id": 3579576425,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Heavy Ring"
               }
@@ -1657,9 +1436,7 @@
             "name": "Chapel Tower: Lower chapel fake wall",
             "id": 3579576434,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -1673,9 +1450,7 @@
             "name": "Chapel Tower: Beastly wall kicks room - Brain side",
             "id": 3579576427,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -1689,9 +1464,7 @@
             "name": "Chapel Tower: Beastly wall kicks room - Brawn side",
             "id": 3579576428,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -1705,9 +1478,7 @@
             "name": "Chapel Tower: Middle chapel fake wall",
             "id": 3579576429,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -1722,7 +1493,6 @@
             "id": 3579576430,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Heavy Ring"
               }
@@ -1740,19 +1510,14 @@
             "id": 3579576431,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_ice_or_stone",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_jump_level_2",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1770,9 +1535,7 @@
             "name": "Chapel Tower: Upper chapel fake wall",
             "id": 3579576435,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -1792,19 +1555,14 @@
             "connected_region": "Battle Arena",
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "has_jump_level_2",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_push",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1817,9 +1575,7 @@
             "name": "Chapel Tower: Upper chapel Marionette wall kicks",
             "id": 3579576432,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -1833,9 +1589,7 @@
             "name": "Chapel Tower: Upper belfry fake wall",
             "id": 3579576436,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mandragora Card",
@@ -1849,9 +1603,7 @@
             "name": "Chapel Tower: Iron maiden switch",
             "id": 3579576560,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Maiden Detonator",
@@ -1866,16 +1618,12 @@
             "id": 3579576433,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
-                  "rule": "False_",
-                  "options": [],
-                  "args": {}
+                  "rule": "False_"
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Maiden Detonator"
                   }
@@ -1901,23 +1649,17 @@
             "id": 3579576476,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "has_ice_or_stone",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "has_jump_level_3",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -1925,8 +1667,6 @@
                 },
                 {
                   "rule": "has_jump_level_4",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1945,23 +1685,17 @@
             "id": 3579576475,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "has_ice_or_stone",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "has_jump_level_3",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -1969,8 +1703,6 @@
                 },
                 {
                   "rule": "has_jump_level_4",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -1993,9 +1725,7 @@
             "name": "Gallery to Corridor",
             "connected_region": "Eternal Corridor Pit",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2003,7 +1733,6 @@
             "connected_region": "Underground Gallery Lower",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tackle"
               }
@@ -2015,9 +1744,7 @@
             "name": "Underground Gallery: Conveyor platform ride",
             "id": 3579576450,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -2032,7 +1759,6 @@
             "id": 3579576451,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Heavy Ring"
               }
@@ -2050,7 +1776,6 @@
             "id": 3579576449,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Heavy Ring"
               }
@@ -2068,19 +1793,14 @@
             "id": 3579576453,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_ice_or_stone",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_jump_level_2",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2099,19 +1819,14 @@
             "id": 3579576452,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_ice_or_stone",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_jump_level_4",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2135,7 +1850,6 @@
             "connected_region": "Underground Gallery Upper",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tackle"
               }
@@ -2148,7 +1862,6 @@
             "id": 3579576454,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tackle"
               }
@@ -2165,9 +1878,7 @@
             "name": "Underground Gallery: Handy bee hallway",
             "id": 3579576455,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -2181,9 +1892,7 @@
             "name": "Underground Gallery: Myconid fake wall",
             "id": 3579576456,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -2197,9 +1906,7 @@
             "name": "Underground Gallery: Crumble bridge fake wall",
             "id": 3579576457,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -2213,9 +1920,7 @@
             "name": "Underground Gallery: Behind Dragon Zombies",
             "id": 3579576492,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -2235,7 +1940,6 @@
             "connected_region": "Underground Warehouse Main",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Tackle"
               }
@@ -2247,9 +1951,7 @@
             "name": "Underground Warehouse: Entrance push crate room",
             "id": 3579576437,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -2269,9 +1971,7 @@
             "name": "Underground Warehouse: Forever pushing room",
             "id": 3579576438,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -2285,9 +1985,7 @@
             "name": "Underground Warehouse: Crate-nudge fox room",
             "id": 3579576439,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -2301,9 +1999,7 @@
             "name": "Underground Warehouse: Crate-nudge fake wall",
             "id": 3579576446,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -2318,23 +2014,17 @@
             "id": 3579576440,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "has_ice_or_stone",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "has_jump_level_4",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -2342,8 +2032,6 @@
                 },
                 {
                   "rule": "has_jump_level_5",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2361,9 +2049,7 @@
             "name": "Underground Warehouse: Fake Lilith wall",
             "id": 3579576441,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -2378,19 +2064,14 @@
             "id": 3579576447,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_ice_or_stone",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_jump_level_2",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2408,9 +2089,7 @@
             "name": "Underground Warehouse: Holy fox hideout - Left",
             "id": 3579576442,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Salamander Card",
@@ -2425,23 +2104,17 @@
             "id": 3579576443,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "has_ice_or_stone",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "has_jump_level_2",
-                      "options": [],
-                      "args": [],
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     }
@@ -2449,8 +2122,6 @@
                 },
                 {
                   "rule": "has_jump_level_3",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2468,9 +2139,7 @@
             "name": "Underground Warehouse: Forest Armor's domain fake wall",
             "id": 3579576444,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Serpent Card",
@@ -2484,9 +2153,7 @@
             "name": "Underground Warehouse: Behind Death",
             "id": 3579576494,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Golem Card",
@@ -2500,9 +2167,7 @@
             "name": "Underground Warehouse: Behind Death fake wall",
             "id": 3579576448,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -2516,9 +2181,7 @@
             "name": "Underground Warehouse: Dryad expulsion chamber",
             "id": 3579576445,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -2538,11 +2201,9 @@
             "connected_region": "Underground Waterway Main",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 0
                   },
@@ -2550,7 +2211,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Cleansing"
                   }
@@ -2564,9 +2224,7 @@
             "name": "Underground Waterway: Entrance fake wall",
             "id": 3579576467,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -2585,9 +2243,7 @@
             "name": "Onward to Waterway End",
             "connected_region": "Underground Waterway End",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2596,9 +2252,7 @@
             "name": "Underground Waterway: Before illusory wall",
             "id": 3579576459,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -2612,9 +2266,7 @@
             "name": "Underground Waterway: Beyond illusory wall",
             "id": 3579576458,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Manticore Card",
@@ -2628,9 +2280,7 @@
             "name": "Underground Waterway: Ice Armor's domain fake wall",
             "id": 3579576468,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kick Boots",
@@ -2645,19 +2295,14 @@
             "id": 3579576460,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_ice_or_stone",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_jump_level_3",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -2675,9 +2320,7 @@
             "name": "Underground Waterway: Middle lone Ice Armor room",
             "id": 3579576461,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Saturn Card",
@@ -2692,7 +2335,6 @@
             "id": 3579576469,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Roc Wing"
               }
@@ -2709,9 +2351,7 @@
             "name": "Underground Waterway: Wicked Fishhead moat - Bottom",
             "id": 3579576462,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -2725,9 +2365,7 @@
             "name": "Underground Waterway: Wicked Fishhead moat - Top",
             "id": 3579576463,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -2741,9 +2379,7 @@
             "name": "Underground Waterway: Lizard-man turf - Bottom",
             "id": 3579576464,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -2764,11 +2400,9 @@
             "id": 3579576465,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 0
                   },
@@ -2776,7 +2410,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Cleansing"
                   }
@@ -2796,7 +2429,6 @@
             "id": 3579576466,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Roc Wing"
               }
@@ -2814,11 +2446,9 @@
             "id": 3579576495,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "Constant",
-                  "options": [],
                   "args": {
                     "value": 0
                   },
@@ -2826,7 +2456,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Cleansing"
                   }
@@ -2846,7 +2475,6 @@
             "id": 3579576470,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Roc Wing"
               }
@@ -2869,9 +2497,7 @@
             "name": "Observation Tower: Wind Armor rampart",
             "id": 3579576477,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -2885,9 +2511,7 @@
             "name": "Observation Tower: Legion plaza fake wall",
             "id": 3579576484,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -2901,9 +2525,7 @@
             "name": "Observation Tower: Legion plaza Minotaur hallway",
             "id": 3579576479,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -2917,9 +2539,7 @@
             "name": "Observation Tower: Siren balcony fake wall",
             "id": 3579576485,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Diana Card",
@@ -2933,9 +2553,7 @@
             "name": "Observation Tower: Evil Pillar pit fake wall",
             "id": 3579576480,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -2949,9 +2567,7 @@
             "name": "Observation Tower: Alraune garden",
             "id": 3579576482,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -2965,9 +2581,7 @@
             "name": "Observation Tower: Dark Armor's domain fake wall",
             "id": 3579576486,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -2981,9 +2595,7 @@
             "name": "Observation Tower: Catoblepeas hallway",
             "id": 3579576483,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -2997,9 +2609,7 @@
             "name": "Observation Tower: Near warp room fake wall",
             "id": 3579576481,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -3013,9 +2623,7 @@
             "name": "Observation Tower: Behind Hugh",
             "id": 3579576496,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -3036,19 +2644,14 @@
             "id": 3579576487,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "has_jump_level_2",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
                 {
                   "rule": "has_kick",
-                  "options": [],
-                  "args": [],
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -3067,7 +2670,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Roc Wing"
               }
@@ -3089,9 +2691,7 @@
             "name": "Start Game",
             "connected_region": "Catacomb",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],

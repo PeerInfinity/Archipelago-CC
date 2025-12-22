@@ -20,9 +20,7 @@
             "name": "Level 1 Item (Bow)",
             "id": 7009,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -36,9 +34,7 @@
             "name": "Level 1 Item (Boomerang)",
             "id": 7010,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Stepladder",
@@ -52,9 +48,7 @@
             "name": "Level 1 Map",
             "id": 7011,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Candle",
@@ -68,9 +62,7 @@
             "name": "Level 1 Compass",
             "id": 7012,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Magical Rod",
@@ -84,9 +76,7 @@
             "name": "Level 1 Boss",
             "id": 7013,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -100,9 +90,7 @@
             "name": "Level 1 Triforce",
             "id": 7014,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Triforce Fragment",
@@ -116,9 +104,7 @@
             "name": "Level 1 Key Drop (Keese Entrance)",
             "id": 7015,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -132,9 +118,7 @@
             "name": "Level 1 Key Drop (Stalfos Middle)",
             "id": 7016,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Magical Boomerang",
@@ -148,9 +132,7 @@
             "name": "Level 1 Key Drop (Moblins)",
             "id": 7017,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -164,9 +146,7 @@
             "name": "Level 1 Key Drop (Stalfos Water)",
             "id": 7018,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -180,9 +160,7 @@
             "name": "Level 1 Key Drop (Stalfos Entrance)",
             "id": 7019,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -196,9 +174,7 @@
             "name": "Level 1 Key Drop (Wallmasters)",
             "id": 7020,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -212,9 +188,7 @@
             "name": "Level 1 Boss Status",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Boss 1 Defeated",
@@ -235,9 +209,7 @@
             "name": "Level 2 Item (Magical Boomerang)",
             "id": 7021,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -251,9 +223,7 @@
             "name": "Level 2 Map",
             "id": 7022,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -267,9 +237,7 @@
             "name": "Level 2 Compass",
             "id": 7023,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sword",
@@ -283,9 +251,7 @@
             "name": "Level 2 Boss",
             "id": 7024,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Container",
@@ -299,9 +265,7 @@
             "name": "Level 2 Triforce",
             "id": 7025,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Triforce Fragment",
@@ -315,9 +279,7 @@
             "name": "Level 2 Key Drop (Ropes West)",
             "id": 7026,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Container",
@@ -331,9 +293,7 @@
             "name": "Level 2 Key Drop (Moldorms)",
             "id": 7027,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -347,9 +307,7 @@
             "name": "Level 2 Key Drop (Ropes Middle)",
             "id": 7028,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Five Rupees",
@@ -363,9 +321,7 @@
             "name": "Level 2 Key Drop (Ropes Entrance)",
             "id": 7029,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -379,9 +335,7 @@
             "name": "Level 2 Bomb Drop (Keese)",
             "id": 7030,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Container",
@@ -395,9 +349,7 @@
             "name": "Level 2 Bomb Drop (Moblins)",
             "id": 7031,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -411,9 +363,7 @@
             "name": "Level 2 Rupee Drop (Gels)",
             "id": 7032,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fairy",
@@ -427,9 +377,7 @@
             "name": "Level 2 Boss Status",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Boss 2 Defeated",
@@ -450,9 +398,7 @@
             "name": "Level 3 Item (Raft)",
             "id": 7033,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Five Rupees",
@@ -466,9 +412,7 @@
             "name": "Level 3 Map",
             "id": 7034,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -482,9 +426,7 @@
             "name": "Level 3 Compass",
             "id": 7035,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -498,9 +440,7 @@
             "name": "Level 3 Boss",
             "id": 7036,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -514,9 +454,7 @@
             "name": "Level 3 Triforce",
             "id": 7037,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Triforce Fragment",
@@ -530,9 +468,7 @@
             "name": "Level 3 Key Drop (Zols and Keese West)",
             "id": 7038,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -546,9 +482,7 @@
             "name": "Level 3 Key Drop (Keese North)",
             "id": 7039,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Container",
@@ -562,9 +496,7 @@
             "name": "Level 3 Key Drop (Zols Central)",
             "id": 7040,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -578,9 +510,7 @@
             "name": "Level 3 Key Drop (Zols South)",
             "id": 7041,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -594,9 +524,7 @@
             "name": "Level 3 Key Drop (Zols Entrance)",
             "id": 7042,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -610,9 +538,7 @@
             "name": "Level 3 Bomb Drop (Darknuts West)",
             "id": 7043,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Five Rupees",
@@ -626,9 +552,7 @@
             "name": "Level 3 Bomb Drop (Keese Corridor)",
             "id": 7044,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Five Rupees",
@@ -642,9 +566,7 @@
             "name": "Level 3 Bomb Drop (Darknuts Central)",
             "id": 7045,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -658,9 +580,7 @@
             "name": "Level 3 Rupee Drop (Zols and Keese East)",
             "id": 7046,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -674,9 +594,7 @@
             "name": "Level 3 Boss Status",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Boss 3 Defeated",
@@ -697,9 +615,7 @@
             "name": "Level 4 Item (Stepladder)",
             "id": 7047,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -713,9 +629,7 @@
             "name": "Level 4 Map",
             "id": 7048,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -729,9 +643,7 @@
             "name": "Level 4 Compass",
             "id": 7049,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Boomerang",
@@ -745,9 +657,7 @@
             "name": "Level 4 Boss",
             "id": 7050,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -761,9 +671,7 @@
             "name": "Level 4 Triforce",
             "id": 7051,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Triforce Fragment",
@@ -777,9 +685,7 @@
             "name": "Level 4 Key Drop (Keese Entrance)",
             "id": 7052,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Five Rupees",
@@ -793,9 +699,7 @@
             "name": "Level 4 Key Drop (Keese Central)",
             "id": 7053,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -809,9 +713,7 @@
             "name": "Level 4 Key Drop (Zols)",
             "id": 7054,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Five Rupees",
@@ -825,9 +727,7 @@
             "name": "Level 4 Key Drop (Keese North)",
             "id": 7055,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -841,9 +741,7 @@
             "name": "Level 4 Boss Status",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Boss 4 Defeated",
@@ -864,9 +762,7 @@
             "name": "Level 5 Item (Recorder)",
             "id": 7056,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -880,9 +776,7 @@
             "name": "Level 5 Map",
             "id": 7057,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Magical Key",
@@ -896,9 +790,7 @@
             "name": "Level 5 Compass",
             "id": 7058,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -912,9 +804,7 @@
             "name": "Level 5 Boss",
             "id": 7059,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Water of Life (Blue)",
@@ -928,9 +818,7 @@
             "name": "Level 5 Triforce",
             "id": 7060,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Triforce Fragment",
@@ -944,9 +832,7 @@
             "name": "Level 5 Key Drop (Keese North)",
             "id": 7061,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sword",
@@ -960,9 +846,7 @@
             "name": "Level 5 Key Drop (Gibdos North)",
             "id": 7062,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Book of Magic",
@@ -976,9 +860,7 @@
             "name": "Level 5 Key Drop (Gibdos Central)",
             "id": 7063,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Five Rupees",
@@ -992,9 +874,7 @@
             "name": "Level 5 Key Drop (Pols Voice Entrance)",
             "id": 7064,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Container",
@@ -1008,9 +888,7 @@
             "name": "Level 5 Key Drop (Gibdos Entrance)",
             "id": 7065,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fairy",
@@ -1024,9 +902,7 @@
             "name": "Level 5 Key Drop (Gibdos, Keese, and Pols Voice)",
             "id": 7066,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -1040,9 +916,7 @@
             "name": "Level 5 Key Drop (Zols)",
             "id": 7067,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Five Rupees",
@@ -1056,9 +930,7 @@
             "name": "Level 5 Bomb Drop (Gibdos)",
             "id": 7068,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -1072,9 +944,7 @@
             "name": "Level 5 Bomb Drop (Dodongos)",
             "id": 7069,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Five Rupees",
@@ -1088,9 +958,7 @@
             "name": "Level 5 Rupee Drop (Zols)",
             "id": 7070,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -1104,9 +972,7 @@
             "name": "Level 5 Boss Status",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Boss 5 Defeated",
@@ -1127,9 +993,7 @@
             "name": "Level 6 Item (Magical Rod)",
             "id": 7071,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -1143,9 +1007,7 @@
             "name": "Level 6 Map",
             "id": 7072,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Magical Shield",
@@ -1159,9 +1021,7 @@
             "name": "Level 6 Compass",
             "id": 7073,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fairy",
@@ -1175,9 +1035,7 @@
             "name": "Level 6 Boss",
             "id": 7074,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Five Rupees",
@@ -1191,9 +1049,7 @@
             "name": "Level 6 Triforce",
             "id": 7075,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Triforce Fragment",
@@ -1207,9 +1063,7 @@
             "name": "Level 6 Key Drop (Wizzrobes Entrance)",
             "id": 7076,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -1223,9 +1077,7 @@
             "name": "Level 6 Key Drop (Keese)",
             "id": 7077,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fairy",
@@ -1239,9 +1091,7 @@
             "name": "Level 6 Key Drop (Wizzrobes North Island)",
             "id": 7078,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -1255,9 +1105,7 @@
             "name": "Level 6 Key Drop (Wizzrobes North Stream)",
             "id": 7079,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Ring",
@@ -1271,9 +1119,7 @@
             "name": "Level 6 Key Drop (Vires)",
             "id": 7080,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -1287,9 +1133,7 @@
             "name": "Level 6 Bomb Drop (Wizzrobes)",
             "id": 7081,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Five Rupees",
@@ -1303,9 +1147,7 @@
             "name": "Level 6 Rupee Drop (Wizzrobes)",
             "id": 7082,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Letter",
@@ -1319,9 +1161,7 @@
             "name": "Level 6 Boss Status",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Boss 6 Defeated",
@@ -1342,9 +1182,7 @@
             "name": "Level 7 Item (Red Candle)",
             "id": 7083,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Magical Sword",
@@ -1358,9 +1196,7 @@
             "name": "Level 7 Map",
             "id": 7084,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -1374,9 +1210,7 @@
             "name": "Level 7 Compass",
             "id": 7085,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -1390,9 +1224,7 @@
             "name": "Level 7 Boss",
             "id": 7086,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -1406,9 +1238,7 @@
             "name": "Level 7 Triforce",
             "id": 7087,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Triforce Fragment",
@@ -1422,9 +1252,7 @@
             "name": "Level 7 Key Drop (Ropes)",
             "id": 7088,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -1438,9 +1266,7 @@
             "name": "Level 7 Key Drop (Goriyas)",
             "id": 7089,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -1454,9 +1280,7 @@
             "name": "Level 7 Key Drop (Stalfos)",
             "id": 7090,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Magical Shield",
@@ -1470,9 +1294,7 @@
             "name": "Level 7 Key Drop (Moldorms)",
             "id": 7091,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Recovery Heart",
@@ -1486,9 +1308,7 @@
             "name": "Level 7 Bomb Drop (Goriyas South)",
             "id": 7092,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Magical Shield",
@@ -1502,9 +1322,7 @@
             "name": "Level 7 Bomb Drop (Keese and Spikes)",
             "id": 7093,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Container",
@@ -1518,9 +1336,7 @@
             "name": "Level 7 Bomb Drop (Moldorms South)",
             "id": 7094,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Red Candle",
@@ -1534,9 +1350,7 @@
             "name": "Level 7 Bomb Drop (Moldorms North)",
             "id": 7095,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -1550,9 +1364,7 @@
             "name": "Level 7 Bomb Drop (Goriyas North)",
             "id": 7096,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Container",
@@ -1566,9 +1378,7 @@
             "name": "Level 7 Bomb Drop (Dodongos)",
             "id": 7097,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Raft",
@@ -1582,9 +1392,7 @@
             "name": "Level 7 Bomb Drop (Digdogger)",
             "id": 7098,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -1598,9 +1406,7 @@
             "name": "Level 7 Rupee Drop (Goriyas Central)",
             "id": 7099,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -1614,9 +1420,7 @@
             "name": "Level 7 Rupee Drop (Dodongos)",
             "id": 7100,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Water of Life (Blue)",
@@ -1630,9 +1434,7 @@
             "name": "Level 7 Rupee Drop (Goriyas North)",
             "id": 7101,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -1646,9 +1448,7 @@
             "name": "Level 7 Boss Status",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Boss 7 Defeated",
@@ -1669,9 +1469,7 @@
             "name": "Level 8 Item (Magical Key)",
             "id": 7102,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -1685,9 +1483,7 @@
             "name": "Level 8 Map",
             "id": 7103,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Recorder",
@@ -1701,9 +1497,7 @@
             "name": "Level 8 Compass",
             "id": 7104,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -1717,9 +1511,7 @@
             "name": "Level 8 Item (Book of Magic)",
             "id": 7105,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Blue Ring",
@@ -1733,9 +1525,7 @@
             "name": "Level 8 Boss",
             "id": 7106,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -1749,9 +1539,7 @@
             "name": "Level 8 Triforce",
             "id": 7107,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Triforce Fragment",
@@ -1765,9 +1553,7 @@
             "name": "Level 8 Key Drop (Darknuts West)",
             "id": 7108,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -1781,9 +1567,7 @@
             "name": "Level 8 Key Drop (Darknuts Far West)",
             "id": 7109,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fairy",
@@ -1797,9 +1581,7 @@
             "name": "Level 8 Key Drop (Pols Voice South)",
             "id": 7110,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -1813,9 +1595,7 @@
             "name": "Level 8 Key Drop (Pols Voice and Keese)",
             "id": 7111,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Water of Life (Red)",
@@ -1829,9 +1609,7 @@
             "name": "Level 8 Key Drop (Darknuts Central)",
             "id": 7112,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -1845,9 +1623,7 @@
             "name": "Level 8 Key Drop (Keese and Zols Entrance)",
             "id": 7113,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Container",
@@ -1861,9 +1637,7 @@
             "name": "Level 8 Bomb Drop (Darknuts North)",
             "id": 7114,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -1877,9 +1651,7 @@
             "name": "Level 8 Bomb Drop (Darknuts East)",
             "id": 7115,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Five Rupees",
@@ -1893,9 +1665,7 @@
             "name": "Level 8 Bomb Drop (Pols Voice North)",
             "id": 7116,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Food",
@@ -1909,9 +1679,7 @@
             "name": "Level 8 Rupee Drop (Manhandla Entrance West)",
             "id": 7117,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Water of Life (Blue)",
@@ -1925,9 +1693,7 @@
             "name": "Level 8 Rupee Drop (Manhandla Entrance North)",
             "id": 7118,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -1941,9 +1707,7 @@
             "name": "Level 8 Rupee Drop (Darknuts and Gibdos)",
             "id": 7119,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -1957,9 +1721,7 @@
             "name": "Level 8 Boss Status",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Boss 8 Defeated",
@@ -1980,9 +1742,7 @@
             "name": "Level 9 Item (Silver Arrow)",
             "id": 7120,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -1996,9 +1756,7 @@
             "name": "Level 9 Item (Red Ring)",
             "id": 7121,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Fairy",
@@ -2012,9 +1770,7 @@
             "name": "Level 9 Map",
             "id": 7122,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -2028,9 +1784,7 @@
             "name": "Level 9 Compass",
             "id": 7123,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -2044,9 +1798,7 @@
             "name": "Level 9 Key Drop (Patra Southwest)",
             "id": 7124,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -2060,9 +1812,7 @@
             "name": "Level 9 Key Drop (Like Likes and Zols East)",
             "id": 7125,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Container",
@@ -2076,9 +1826,7 @@
             "name": "Level 9 Key Drop (Wizzrobes and Bubbles East)",
             "id": 7126,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Container",
@@ -2092,9 +1840,7 @@
             "name": "Level 9 Key Drop (Wizzrobes East Island)",
             "id": 7127,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Five Rupees",
@@ -2108,9 +1854,7 @@
             "name": "Level 9 Bomb Drop (Blue Lanmolas)",
             "id": 7128,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -2124,9 +1868,7 @@
             "name": "Level 9 Bomb Drop (Gels Lake)",
             "id": 7129,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Silver Arrow",
@@ -2140,9 +1882,7 @@
             "name": "Level 9 Bomb Drop (Like Likes and Zols Corridor)",
             "id": 7130,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -2156,9 +1896,7 @@
             "name": "Level 9 Bomb Drop (Patra Northeast)",
             "id": 7131,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Container",
@@ -2172,9 +1910,7 @@
             "name": "Level 9 Bomb Drop (Vires)",
             "id": 7132,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -2188,9 +1924,7 @@
             "name": "Level 9 Rupee Drop (Wizzrobes West Island)",
             "id": 7133,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -2204,9 +1938,7 @@
             "name": "Level 9 Rupee Drop (Red Lanmolas)",
             "id": 7134,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -2220,9 +1952,7 @@
             "name": "Level 9 Rupee Drop (Keese Southwest)",
             "id": 7135,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -2236,9 +1966,7 @@
             "name": "Level 9 Rupee Drop (Keese Central Island)",
             "id": 7136,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -2252,9 +1980,7 @@
             "name": "Level 9 Rupee Drop (Wizzrobes Central)",
             "id": 7137,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -2268,9 +1994,7 @@
             "name": "Level 9 Rupee Drop (Wizzrobes North Island)",
             "id": 7138,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Power Bracelet",
@@ -2284,9 +2008,7 @@
             "name": "Level 9 Rupee Drop (Gels East)",
             "id": 7139,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Five Rupees",
@@ -2300,9 +2022,7 @@
             "name": "Ganon",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Triforce of Power",
@@ -2317,9 +2037,7 @@
             "name": "Zelda",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rescued Zelda!",
@@ -2339,9 +2057,7 @@
             "name": "Begin Game",
             "connected_region": "Overworld",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2354,81 +2070,63 @@
             "name": "Level 1",
             "connected_region": "Level 1",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Level 2",
             "connected_region": "Level 2",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Level 3",
             "connected_region": "Level 3",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Level 4",
             "connected_region": "Level 4",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Level 5",
             "connected_region": "Level 5",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Level 6",
             "connected_region": "Level 6",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Level 7",
             "connected_region": "Level 7",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Level 8",
             "connected_region": "Level 8",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Level 9",
             "connected_region": "Level 9",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2437,9 +2135,7 @@
             "name": "Starting Sword Cave",
             "id": 7000,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "White Sword",
@@ -2453,9 +2149,7 @@
             "name": "White Sword Pond",
             "id": 7001,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Container",
@@ -2469,9 +2163,7 @@
             "name": "Magical Sword Grave",
             "id": 7002,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -2485,9 +2177,7 @@
             "name": "Take Any Item Left",
             "id": 7003,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Container",
@@ -2501,9 +2191,7 @@
             "name": "Take Any Item Middle",
             "id": 7004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -2517,9 +2205,7 @@
             "name": "Take Any Item Right",
             "id": 7005,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Five Rupees",
@@ -2533,9 +2219,7 @@
             "name": "Armos Knights",
             "id": 7006,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -2549,9 +2233,7 @@
             "name": "Ocean Heart Container",
             "id": 7007,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Food",
@@ -2565,9 +2247,7 @@
             "name": "Letter Cave",
             "id": 7008,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Clock",
@@ -2581,9 +2261,7 @@
             "name": "Arrow Shop Item Left",
             "id": 7140,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -2597,9 +2275,7 @@
             "name": "Arrow Shop Item Middle",
             "id": 7141,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bomb",
@@ -2613,9 +2289,7 @@
             "name": "Arrow Shop Item Right",
             "id": 7142,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Arrow",
@@ -2629,9 +2303,7 @@
             "name": "Candle Shop Item Left",
             "id": 7143,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Five Rupees",
@@ -2645,9 +2317,7 @@
             "name": "Candle Shop Item Middle",
             "id": 7144,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Water of Life (Red)",
@@ -2661,9 +2331,7 @@
             "name": "Candle Shop Item Right",
             "id": 7145,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bow",
@@ -2677,9 +2345,7 @@
             "name": "Blue Ring Shop Item Left",
             "id": 7146,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -2693,9 +2359,7 @@
             "name": "Blue Ring Shop Item Middle",
             "id": 7147,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Clock",
@@ -2709,9 +2373,7 @@
             "name": "Blue Ring Shop Item Right",
             "id": 7148,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Clock",
@@ -2725,9 +2387,7 @@
             "name": "Shield Shop Item Left",
             "id": 7149,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -2741,9 +2401,7 @@
             "name": "Shield Shop Item Middle",
             "id": 7150,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Five Rupees",
@@ -2757,9 +2415,7 @@
             "name": "Shield Shop Item Right",
             "id": 7151,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -2773,9 +2429,7 @@
             "name": "Potion Shop Item Left",
             "id": 7152,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -2789,9 +2443,7 @@
             "name": "Potion Shop Item Middle",
             "id": 7153,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Five Rupees",
@@ -2805,9 +2457,7 @@
             "name": "Potion Shop Item Right",
             "id": 7154,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Small Key",
@@ -3568,7 +3218,7 @@
         "start_inventory": {},
         "start_location_hints": []
       },
-      "world_directory": "tloz_worldgen"
+      "world_directory": "tloz"
     }
   },
   "game_info": {

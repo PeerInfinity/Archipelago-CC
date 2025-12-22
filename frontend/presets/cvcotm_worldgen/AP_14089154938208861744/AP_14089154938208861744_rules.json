@@ -19,9 +19,17 @@
             "name": "Catacomb to Stairway",
             "connected_region": "Abyss Stairway",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_jump_level_1",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_kick",
+                  "_original_ast_type": "helper"
+                }
+              ]
             }
           }
         ],
@@ -30,9 +38,11 @@
             "name": "Sealed Room: Main shaft left fake wall",
             "id": 3579576373,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -46,9 +56,11 @@
             "name": "Catacomb: Push crate treasure room",
             "id": 3579576375,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Heavy Ring",
+                "count": 1
+              }
             },
             "item": {
               "name": "MP Max Up",
@@ -62,9 +74,13 @@
             "name": "Catacomb: Fleamen brain room - Lower",
             "id": 3579576387,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Double",
+                  "Roc Wing"
+                ]
+              }
             },
             "item": {
               "name": "HP Max Up",
@@ -78,9 +94,26 @@
             "name": "Catacomb: Fleamen brain room - Upper",
             "id": 3579576374,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "has_ice_or_stone",
+                      "_original_ast_type": "helper"
+                    },
+                    {
+                      "rule": "has_jump_level_1",
+                      "_original_ast_type": "helper"
+                    }
+                  ]
+                },
+                {
+                  "rule": "has_jump_level_4",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "HP Max Up",
@@ -94,9 +127,7 @@
             "name": "Catacomb: Earth Demon dash room",
             "id": 3579576488,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -110,9 +141,11 @@
             "name": "Catacomb: Tackle block treasure room",
             "id": 3579576376,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Tackle",
+                "count": 1
+              }
             },
             "item": {
               "name": "HP Max Up",
@@ -126,9 +159,7 @@
             "name": "Catacomb: Earth Demon bone pit - Lower",
             "id": 3579576378,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -142,9 +173,17 @@
             "name": "Catacomb: Earth Demon bone pit - Upper",
             "id": 3579576379,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_jump_level_3",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_kick",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "MP Max Up",
@@ -158,9 +197,7 @@
             "name": "Catacomb: Below right column save room",
             "id": 3579576384,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -174,9 +211,7 @@
             "name": "Catacomb: Right column fake wall",
             "id": 3579576377,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -190,9 +225,7 @@
             "name": "Catacomb: Right column Spirit room",
             "id": 3579576385,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -206,9 +239,7 @@
             "name": "Catacomb: Muddy Mudman platforms room - Lower",
             "id": 3579576380,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Unicorn Card",
@@ -222,9 +253,17 @@
             "name": "Catacomb: Muddy Mudman platforms room - Upper",
             "id": 3579576381,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_jump_level_1",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_kick",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "Heart Max Up",
@@ -238,9 +277,7 @@
             "name": "Catacomb: Slide space zone",
             "id": 3579576382,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Double",
@@ -254,9 +291,7 @@
             "name": "Catacomb: Pre-Cerberus lone Skeleton room",
             "id": 3579576386,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Last Key",
@@ -270,9 +305,7 @@
             "name": "Catacomb: Pre-Cerberus Hopper treasure room",
             "id": 3579576383,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -286,9 +319,7 @@
             "name": "Catacomb: Behind Cerberus",
             "id": 3579576489,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -302,9 +333,13 @@
             "name": "Catacomb: Mummies' fake wall",
             "id": 3579576388,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Double",
+                  "Roc Wing"
+                ]
+              }
             },
             "item": {
               "name": "HP Max Up",
@@ -323,9 +358,13 @@
             "name": "Stairway to Audience",
             "connected_region": "Audience Room",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Double",
+                  "Roc Wing"
+                ]
+              }
             }
           }
         ],
@@ -334,9 +373,7 @@
             "name": "Abyss Staircase: Lower fake wall",
             "id": 3579576391,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Cleansing",
@@ -350,9 +387,7 @@
             "name": "Abyss Staircase: Loopback drop",
             "id": 3579576389,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -371,72 +406,119 @@
             "name": "Audience to Machine Bottom",
             "connected_region": "Machine Tower Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Tackle",
+                "count": 1
+              }
             }
           },
           {
             "name": "Audience to Machine Top",
             "connected_region": "Machine Tower Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_jump_level_2",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_kick",
+                  "_original_ast_type": "helper"
+                }
+              ]
             }
           },
           {
             "name": "Audience to Chapel",
             "connected_region": "Chapel Tower Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "has_ice_or_stone",
+                      "_original_ast_type": "helper"
+                    },
+                    {
+                      "rule": "has_jump_level_2",
+                      "_original_ast_type": "helper"
+                    }
+                  ]
+                },
+                {
+                  "rule": "has_jump_level_3",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_kick",
+                  "_original_ast_type": "helper"
+                }
+              ]
             }
           },
           {
             "name": "Audience to Gallery",
             "connected_region": "Underground Gallery Lower",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "broke_iron_maidens",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_push",
+                  "_original_ast_type": "helper"
+                }
+              ]
             }
           },
           {
             "name": "Audience to Warehouse",
             "connected_region": "Underground Warehouse Start",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Heavy Ring",
+                "count": 1
+              }
             }
           },
           {
             "name": "Audience to Waterway",
             "connected_region": "Underground Waterway Start",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Maiden Detonator",
+                "count": 1
+              }
             }
           },
           {
             "name": "Audience to Observation",
             "connected_region": "Observation Tower",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             }
           },
           {
             "name": "Ceremonial Door",
             "connected_region": "Ceremonial Room",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Last Key",
+                "count": 1
+              }
             }
           }
         ],
@@ -445,9 +527,11 @@
             "name": "Abyss Staircase: Roc ledge",
             "id": 3579576390,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             },
             "item": {
               "name": "HP Max Up",
@@ -461,9 +545,7 @@
             "name": "Abyss Staircase: Upper fake wall",
             "id": 3579576392,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -477,9 +559,7 @@
             "name": "Audience Room: Skeleton foyer fake wall",
             "id": 3579576403,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Tackle",
@@ -493,9 +573,7 @@
             "name": "Audience Room: Main gallery fake wall",
             "id": 3579576404,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -509,9 +587,7 @@
             "name": "Audience Room: Below coyote jump",
             "id": 3579576401,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -525,9 +601,11 @@
             "name": "Audience Room: Push crate gallery",
             "id": 3579576395,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Heavy Ring",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -541,9 +619,7 @@
             "name": "Audience Room: Past coyote jump",
             "id": 3579576394,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -557,9 +633,11 @@
             "name": "Audience Room: Tackle block gallery",
             "id": 3579576393,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Tackle",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -573,9 +651,7 @@
             "name": "Audience Room: Wicked roc chamber - Lower",
             "id": 3579576397,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -589,9 +665,11 @@
             "name": "Audience Room: Wicked roc chamber - Upper",
             "id": 3579576396,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             },
             "item": {
               "name": "Black Dog Card",
@@ -605,9 +683,7 @@
             "name": "Audience Room: Upper Devil Tower hallway",
             "id": 3579576402,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -621,9 +697,7 @@
             "name": "Audience Room: Right exterior - Lower",
             "id": 3579576400,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -637,9 +711,17 @@
             "name": "Audience Room: Right exterior - Upper",
             "id": 3579576399,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_jump_level_2",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_kick",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "Pluto Card",
@@ -653,9 +735,7 @@
             "name": "Audience Room: Right exterior fake wall",
             "id": 3579576398,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -669,9 +749,17 @@
             "name": "Audience Room: 100 meter skelly dash hallway",
             "id": 3579576426,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_jump_level_2",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_kick",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "MP Max Up",
@@ -685,9 +773,7 @@
             "name": "Audience Room: Lower Devil Tower hallway fake wall",
             "id": 3579576405,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -701,9 +787,7 @@
             "name": "Audience Room: Behind Necromancer",
             "id": 3579576490,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -717,9 +801,17 @@
             "name": "Audience Room: Below Machine Tower roc ledge",
             "id": 3579576409,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "has_jump_level_5",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_tackle",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "Griffin Card",
@@ -733,9 +825,17 @@
             "name": "Audience Room: Below Machine Tower push crate room",
             "id": 3579576408,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "has_push",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_tackle",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "MP Max Up",
@@ -749,9 +849,26 @@
             "name": "Audience Room: Roc horse jaguar armory - Left",
             "id": 3579576473,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "has_ice_or_stone",
+                      "_original_ast_type": "helper"
+                    },
+                    {
+                      "rule": "has_jump_level_3",
+                      "_original_ast_type": "helper"
+                    }
+                  ]
+                },
+                {
+                  "rule": "has_jump_level_4",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "HP Max Up",
@@ -765,9 +882,26 @@
             "name": "Audience Room: Roc horse jaguar armory - Right",
             "id": 3579576474,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "has_ice_or_stone",
+                      "_original_ast_type": "helper"
+                    },
+                    {
+                      "rule": "has_jump_level_3",
+                      "_original_ast_type": "helper"
+                    }
+                  ]
+                },
+                {
+                  "rule": "has_jump_level_4",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "Mercury Card",
@@ -781,9 +915,11 @@
             "name": "Outer Wall: Left roc ledge",
             "id": 3579576471,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -797,9 +933,17 @@
             "name": "Outer Wall: Right-brained ledge",
             "id": 3579576472,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_ice_or_stone",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_jump_level_5",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "Heavy Ring",
@@ -813,9 +957,7 @@
             "name": "Outer Wall: Fake Nightmare floor",
             "id": 3579576478,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -829,9 +971,7 @@
             "name": "Triumph Hallway: Skeleton slopes fake wall",
             "id": 3579576407,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -845,9 +985,26 @@
             "name": "Triumph Hallway: Entrance Flame Armor climb",
             "id": 3579576406,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "has_ice_or_stone",
+                      "_original_ast_type": "helper"
+                    },
+                    {
+                      "rule": "has_kick",
+                      "_original_ast_type": "helper"
+                    }
+                  ]
+                },
+                {
+                  "rule": "has_jump_level_2",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "Heart Max Up",
@@ -866,9 +1023,7 @@
             "name": "Machine Bottom to Top",
             "connected_region": "Machine Tower Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -877,9 +1032,7 @@
             "name": "Machine Tower: Foxy platforms ledge",
             "id": 3579576417,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -893,9 +1046,7 @@
             "name": "Machine Tower: Knight fox meeting room",
             "id": 3579576418,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -909,9 +1060,17 @@
             "name": "Machine Tower: Boneheaded argument wall kicks room",
             "id": 3579576411,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_jump_level_2",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_kick",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "Thunderbird Card",
@@ -925,9 +1084,7 @@
             "name": "Machine Tower: Foxy fake wall",
             "id": 3579576410,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mars Card",
@@ -941,9 +1098,17 @@
             "name": "Machine Tower: Skelly-rang wall kicks room",
             "id": 3579576415,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_jump_level_2",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_kick",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "HP Max Up",
@@ -957,9 +1122,7 @@
             "name": "Machine Tower: Fake Lilim wall",
             "id": 3579576414,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -973,9 +1136,7 @@
             "name": "Machine Tower: Thunderous zone fake wall",
             "id": 3579576419,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -989,9 +1150,7 @@
             "name": "Machine Tower: Thunderous zone lone Stone Armor room",
             "id": 3579576413,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Roc Wing",
@@ -1011,9 +1170,7 @@
             "name": "Machine Tower: Top lone Stone Armor room",
             "id": 3579576412,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -1027,9 +1184,11 @@
             "name": "Machine Tower: Stone fox hallway",
             "id": 3579576416,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Tackle",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -1043,9 +1202,7 @@
             "name": "Machine Tower: Pre-Iron Golem fake wall",
             "id": 3579576420,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -1059,9 +1216,7 @@
             "name": "Machine Tower: Behind Iron Golem",
             "id": 3579576491,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -1080,18 +1235,28 @@
             "name": "Corridor to Gallery",
             "connected_region": "Underground Gallery Upper",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Maiden Detonator",
+                "count": 1
+              }
             }
           },
           {
             "name": "Escape the Gallery Pit",
             "connected_region": "Chapel Tower Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_jump_level_2",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_kick",
+                  "_original_ast_type": "helper"
+                }
+              ]
             }
           }
         ],
@@ -1100,9 +1265,7 @@
             "name": "Eternal Corridor: Midway fake wall",
             "id": 3579576422,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -1121,27 +1284,35 @@
             "name": "Into the Corridor Pit",
             "connected_region": "Eternal Corridor Pit",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Dip Into Waterway End",
             "connected_region": "Underground Waterway End",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             }
           },
           {
             "name": "Climb to Chapel Top",
             "connected_region": "Chapel Tower Top",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_jump_level_3",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_kick",
+                  "_original_ast_type": "helper"
+                }
+              ]
             }
           }
         ],
@@ -1150,9 +1321,7 @@
             "name": "Eternal Corridor: Skelly-rang wall kicks room",
             "id": 3579576421,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -1166,9 +1335,7 @@
             "name": "Eternal Corridor: Skelly-rang fake wall",
             "id": 3579576423,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -1182,9 +1349,17 @@
             "name": "Chapel Tower: Flame Armor climb room",
             "id": 3579576424,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_ice_or_stone",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_jump_level_2",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "HP Max Up",
@@ -1198,9 +1373,11 @@
             "name": "Chapel Tower: Lower chapel push crate room",
             "id": 3579576425,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Heavy Ring",
+                "count": 1
+              }
             },
             "item": {
               "name": "Uranus Card",
@@ -1214,9 +1391,7 @@
             "name": "Chapel Tower: Lower chapel fake wall",
             "id": 3579576434,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -1230,9 +1405,7 @@
             "name": "Chapel Tower: Beastly wall kicks room - Brain side",
             "id": 3579576427,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -1246,9 +1419,7 @@
             "name": "Chapel Tower: Beastly wall kicks room - Brawn side",
             "id": 3579576428,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -1262,9 +1433,7 @@
             "name": "Chapel Tower: Middle chapel fake wall",
             "id": 3579576429,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -1278,9 +1447,11 @@
             "name": "Chapel Tower: Middle chapel push crate room",
             "id": 3579576430,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Heavy Ring",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -1294,9 +1465,17 @@
             "name": "Chapel Tower: Sharp mind climb room",
             "id": 3579576431,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_ice_or_stone",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_jump_level_2",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "HP Max Up",
@@ -1310,9 +1489,7 @@
             "name": "Chapel Tower: Upper chapel fake wall",
             "id": 3579576435,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -1331,9 +1508,17 @@
             "name": "Arena Passage",
             "connected_region": "Battle Arena",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "has_jump_level_2",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_push",
+                  "_original_ast_type": "helper"
+                }
+              ]
             }
           }
         ],
@@ -1342,9 +1527,7 @@
             "name": "Chapel Tower: Upper chapel Marionette wall kicks",
             "id": 3579576432,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -1358,9 +1541,7 @@
             "name": "Chapel Tower: Upper belfry fake wall",
             "id": 3579576436,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Mandragora Card",
@@ -1374,9 +1555,7 @@
             "name": "Chapel Tower: Iron maiden switch",
             "id": 3579576560,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Maiden Detonator",
@@ -1390,9 +1569,11 @@
             "name": "Chapel Tower: Behind Adramelech iron maiden",
             "id": 3579576433,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Maiden Detonator",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -1412,9 +1593,26 @@
             "name": "Chapel Tower: Outside Battle Arena - Upper",
             "id": 3579576476,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "has_ice_or_stone",
+                      "_original_ast_type": "helper"
+                    },
+                    {
+                      "rule": "has_jump_level_3",
+                      "_original_ast_type": "helper"
+                    }
+                  ]
+                },
+                {
+                  "rule": "has_jump_level_4",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "Jupiter Card",
@@ -1428,9 +1626,26 @@
             "name": "Chapel Tower: Outside Battle Arena - Lower",
             "id": 3579576475,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "has_ice_or_stone",
+                      "_original_ast_type": "helper"
+                    },
+                    {
+                      "rule": "has_jump_level_3",
+                      "_original_ast_type": "helper"
+                    }
+                  ]
+                },
+                {
+                  "rule": "has_jump_level_4",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "Heart Max Up",
@@ -1449,18 +1664,18 @@
             "name": "Gallery to Corridor",
             "connected_region": "Eternal Corridor Pit",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Gallery Upper to Lower",
             "connected_region": "Underground Gallery Lower",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Tackle",
+                "count": 1
+              }
             }
           }
         ],
@@ -1469,9 +1684,7 @@
             "name": "Underground Gallery: Conveyor platform ride",
             "id": 3579576450,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -1485,9 +1698,11 @@
             "name": "Underground Gallery: Conveyor upper push crate room",
             "id": 3579576451,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Heavy Ring",
+                "count": 1
+              }
             },
             "item": {
               "name": "HP Max Up",
@@ -1501,9 +1716,11 @@
             "name": "Underground Gallery: Conveyor lower push crate room",
             "id": 3579576449,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Heavy Ring",
+                "count": 1
+              }
             },
             "item": {
               "name": "MP Max Up",
@@ -1517,9 +1734,17 @@
             "name": "Underground Gallery: Harpy climb room - Lower",
             "id": 3579576453,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_ice_or_stone",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_jump_level_2",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "HP Max Up",
@@ -1533,9 +1758,17 @@
             "name": "Underground Gallery: Harpy climb room - Upper",
             "id": 3579576452,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_ice_or_stone",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_jump_level_4",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "Heart Max Up",
@@ -1554,9 +1787,11 @@
             "name": "Gallery Lower to Upper",
             "connected_region": "Underground Gallery Upper",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Tackle",
+                "count": 1
+              }
             }
           }
         ],
@@ -1565,9 +1800,11 @@
             "name": "Underground Gallery: Harpy mantis tackle hallway",
             "id": 3579576454,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Tackle",
+                "count": 1
+              }
             },
             "item": {
               "name": "HP Max Up",
@@ -1581,9 +1818,7 @@
             "name": "Underground Gallery: Handy bee hallway",
             "id": 3579576455,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -1597,9 +1832,7 @@
             "name": "Underground Gallery: Myconid fake wall",
             "id": 3579576456,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -1613,9 +1846,7 @@
             "name": "Underground Gallery: Crumble bridge fake wall",
             "id": 3579576457,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -1629,9 +1860,7 @@
             "name": "Underground Gallery: Behind Dragon Zombies",
             "id": 3579576492,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -1650,9 +1879,11 @@
             "name": "Into Warehouse Main",
             "connected_region": "Underground Warehouse Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Tackle",
+                "count": 1
+              }
             }
           }
         ],
@@ -1661,9 +1892,7 @@
             "name": "Underground Warehouse: Entrance push crate room",
             "id": 3579576437,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -1683,9 +1912,7 @@
             "name": "Underground Warehouse: Forever pushing room",
             "id": 3579576438,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -1699,9 +1926,7 @@
             "name": "Underground Warehouse: Crate-nudge fox room",
             "id": 3579576439,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -1715,9 +1940,7 @@
             "name": "Underground Warehouse: Crate-nudge fake wall",
             "id": 3579576446,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -1731,9 +1954,26 @@
             "name": "Underground Warehouse: Succubus shaft roc ledge",
             "id": 3579576440,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "has_ice_or_stone",
+                      "_original_ast_type": "helper"
+                    },
+                    {
+                      "rule": "has_jump_level_4",
+                      "_original_ast_type": "helper"
+                    }
+                  ]
+                },
+                {
+                  "rule": "has_jump_level_5",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "Maiden Detonator",
@@ -1747,9 +1987,7 @@
             "name": "Underground Warehouse: Fake Lilith wall",
             "id": 3579576441,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -1763,9 +2001,17 @@
             "name": "Underground Warehouse: Optional puzzle ceiling fake wall",
             "id": 3579576447,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_ice_or_stone",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_jump_level_2",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "Heart Max Up",
@@ -1779,9 +2025,7 @@
             "name": "Underground Warehouse: Holy fox hideout - Left",
             "id": 3579576442,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Salamander Card",
@@ -1795,9 +2039,26 @@
             "name": "Underground Warehouse: Holy fox hideout - Right roc ledge",
             "id": 3579576443,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "has_ice_or_stone",
+                      "_original_ast_type": "helper"
+                    },
+                    {
+                      "rule": "has_jump_level_2",
+                      "_original_ast_type": "helper"
+                    }
+                  ]
+                },
+                {
+                  "rule": "has_jump_level_3",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "Cockatrice Card",
@@ -1811,9 +2072,7 @@
             "name": "Underground Warehouse: Forest Armor's domain fake wall",
             "id": 3579576444,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Serpent Card",
@@ -1827,9 +2086,7 @@
             "name": "Underground Warehouse: Behind Death",
             "id": 3579576494,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Golem Card",
@@ -1843,9 +2100,7 @@
             "name": "Underground Warehouse: Behind Death fake wall",
             "id": 3579576448,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -1859,9 +2114,7 @@
             "name": "Underground Warehouse: Dryad expulsion chamber",
             "id": 3579576445,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -1880,9 +2133,11 @@
             "name": "Into Waterway Main",
             "connected_region": "Underground Waterway Main",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Cleansing",
+                "count": 1
+              }
             }
           }
         ],
@@ -1891,9 +2146,7 @@
             "name": "Underground Waterway: Entrance fake wall",
             "id": 3579576467,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -1912,9 +2165,7 @@
             "name": "Onward to Waterway End",
             "connected_region": "Underground Waterway End",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1923,9 +2174,7 @@
             "name": "Underground Waterway: Before illusory wall",
             "id": 3579576459,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -1939,9 +2188,7 @@
             "name": "Underground Waterway: Beyond illusory wall",
             "id": 3579576458,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Manticore Card",
@@ -1955,9 +2202,7 @@
             "name": "Underground Waterway: Ice Armor's domain fake wall",
             "id": 3579576468,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Kick Boots",
@@ -1971,9 +2216,17 @@
             "name": "Underground Waterway: Brain freeze room",
             "id": 3579576460,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_ice_or_stone",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_jump_level_3",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "HP Max Up",
@@ -1987,9 +2240,7 @@
             "name": "Underground Waterway: Middle lone Ice Armor room",
             "id": 3579576461,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Saturn Card",
@@ -2003,9 +2254,11 @@
             "name": "Underground Waterway: Roc fake ceiling",
             "id": 3579576469,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             },
             "item": {
               "name": "Neptune Card",
@@ -2019,9 +2272,7 @@
             "name": "Underground Waterway: Wicked Fishhead moat - Bottom",
             "id": 3579576462,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -2035,9 +2286,7 @@
             "name": "Underground Waterway: Wicked Fishhead moat - Top",
             "id": 3579576463,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -2051,9 +2300,7 @@
             "name": "Underground Waterway: Lizard-man turf - Bottom",
             "id": 3579576464,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -2073,9 +2320,11 @@
             "name": "Underground Waterway: Lizard-man turf - Top",
             "id": 3579576465,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Cleansing",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -2089,9 +2338,11 @@
             "name": "Underground Waterway: Roc exit shaft",
             "id": 3579576466,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             },
             "item": {
               "name": "Apollo Card",
@@ -2105,9 +2356,11 @@
             "name": "Underground Waterway: Behind Camilla",
             "id": 3579576495,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Cleansing",
+                "count": 1
+              }
             },
             "item": {
               "name": "MP Max Up",
@@ -2121,9 +2374,11 @@
             "name": "Underground Waterway: Roc exit shaft fake wall",
             "id": 3579576470,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -2143,9 +2398,7 @@
             "name": "Observation Tower: Wind Armor rampart",
             "id": 3579576477,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -2159,9 +2412,7 @@
             "name": "Observation Tower: Legion plaza fake wall",
             "id": 3579576484,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "MP Max Up",
@@ -2175,9 +2426,7 @@
             "name": "Observation Tower: Legion plaza Minotaur hallway",
             "id": 3579576479,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -2191,9 +2440,7 @@
             "name": "Observation Tower: Siren balcony fake wall",
             "id": 3579576485,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Diana Card",
@@ -2207,9 +2454,7 @@
             "name": "Observation Tower: Evil Pillar pit fake wall",
             "id": 3579576480,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -2223,9 +2468,7 @@
             "name": "Observation Tower: Alraune garden",
             "id": 3579576482,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -2239,9 +2482,7 @@
             "name": "Observation Tower: Dark Armor's domain fake wall",
             "id": 3579576486,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -2255,9 +2496,7 @@
             "name": "Observation Tower: Catoblepeas hallway",
             "id": 3579576483,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "HP Max Up",
@@ -2271,9 +2510,7 @@
             "name": "Observation Tower: Near warp room fake wall",
             "id": 3579576481,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -2287,9 +2524,7 @@
             "name": "Observation Tower: Behind Hugh",
             "id": 3579576496,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -2309,9 +2544,17 @@
             "name": "Ceremonial Room: Fake floor",
             "id": 3579576487,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_jump_level_2",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_kick",
+                  "_original_ast_type": "helper"
+                }
+              ]
             },
             "item": {
               "name": "Venus Card",
@@ -2325,9 +2568,11 @@
             "name": "Dracula",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Roc Wing",
+                "count": 1
+              }
             },
             "item": {
               "name": "The Count Downed",
@@ -2346,9 +2591,7 @@
             "name": "Start Game",
             "connected_region": "Catacomb",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2359,7 +2602,7 @@
   "start_regions": {
     "1": {
       "default": [
-        "Menu"
+        "Catacomb"
       ],
       "available": []
     }
@@ -3013,7 +3256,12 @@
         "start_inventory": {},
         "start_location_hints": []
       },
-      "world_directory": "cvcotm_worldgen"
+      "nerf_roc_wing": 0,
+      "ignore_cleansing": 0,
+      "iron_maiden_behavior": 0,
+      "required_last_keys": 1,
+      "completion_goal": 0,
+      "world_directory": "cvcotm"
     }
   },
   "game_info": {

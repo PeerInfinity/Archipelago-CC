@@ -105,9 +105,10 @@ class SC2GameExportHandler(GenericGameExportHandler):
         logger.debug(f"[SC2] override_rule_analysis called for '{rule_target_name}' with func_name='{func_name}'")
 
         # Check if this is a complex helper method that should not be expanded
+        # For blacklisted helpers, return True_ directly so worldgen produces matching rules
         if func_name in self.HELPERS_TO_EXPORT_BLACKLIST:
-            logger.debug(f"[SC2] Converting complex helper method '{func_name}' to helper call")
-            return {'type': 'helper', 'name': func_name, 'args': []}
+            logger.debug(f"[SC2] Blacklisted helper '{func_name}' - returning True_ for consistent worldgen")
+            return {'type': 'constant', 'value': True}
 
         # Handle count_missions pattern (from CountMissionsEntryRule.to_lambda)
         if func_name == 'count_missions':
@@ -307,6 +308,14 @@ class SC2GameExportHandler(GenericGameExportHandler):
         if not rule or not isinstance(rule, dict):
             return rule
 
+        # Check for helper AST nodes with blacklisted helper names
+        # The analyzer may create these directly before expand_rule is called
+        if rule.get('type') == 'helper':
+            helper_name = rule.get('name', '')
+            if helper_name in self.HELPERS_TO_EXPORT_BLACKLIST:
+                logger.debug(f"[SC2] Blacklisted helper AST node '{helper_name}' - returning True_")
+                return {'type': 'constant', 'value': True}
+
         # Check for the pattern: function_call with function being attribute access on "logic"
         # This pattern looks like:
         # {
@@ -327,6 +336,11 @@ class SC2GameExportHandler(GenericGameExportHandler):
                     method_name = function.get('attr')
                     # Recursively process args first
                     args = [self.expand_rule(arg, _depth + 1) for arg in rule.get('args', [])]
+
+                    # Check if this helper is blacklisted
+                    if method_name in self.HELPERS_TO_EXPORT_BLACKLIST:
+                        logger.debug(f"[SC2] Blacklisted helper '{method_name}' - returning True_")
+                        return {'type': 'constant', 'value': True}
 
                     logger.debug(f"[SC2] Converting logic.{method_name}() to helper call")
 
@@ -390,6 +404,11 @@ class SC2GameExportHandler(GenericGameExportHandler):
                 }
 
                 if attr_name in known_helpers:
+                    # Check if this helper is blacklisted
+                    if attr_name in self.HELPERS_TO_EXPORT_BLACKLIST:
+                        logger.debug(f"[SC2] Blacklisted helper '{attr_name}' - returning True_")
+                        return {'type': 'constant', 'value': True}
+
                     # This is a helper method accessed without parentheses
                     # Convert to a helper call
                     logger.debug(f"[SC2] Converting {obj_name}.{attr_name} to helper call (method accessed as attribute)")

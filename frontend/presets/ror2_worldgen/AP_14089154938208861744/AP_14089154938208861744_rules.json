@@ -19,45 +19,35 @@
             "name": "Menu -> Distant Roost",
             "connected_region": "Distant Roost",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Menu -> Distant Roost (2)",
             "connected_region": "Distant Roost (2)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Menu -> Titanic Plains",
             "connected_region": "Titanic Plains",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Menu -> Titanic Plains (2)",
             "connected_region": "Titanic Plains (2)",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Menu -> Verdant Falls",
             "connected_region": "Verdant Falls",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -70,9 +60,7 @@
             "name": "Distant Roost -> OrderedStage_1",
             "connected_region": "OrderedStage_1",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -82,7 +70,6 @@
             "id": 38558,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost",
                 "count": 1
@@ -101,7 +88,6 @@
             "id": 38559,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost",
                 "count": 1
@@ -120,7 +106,6 @@
             "id": 38560,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost",
                 "count": 1
@@ -139,7 +124,6 @@
             "id": 38561,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost",
                 "count": 1
@@ -158,7 +142,6 @@
             "id": 38562,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost",
                 "count": 1
@@ -177,7 +160,6 @@
             "id": 38563,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost",
                 "count": 1
@@ -196,7 +178,6 @@
             "id": 38564,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost",
                 "count": 1
@@ -215,7 +196,6 @@
             "id": 38565,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost",
                 "count": 1
@@ -234,7 +214,6 @@
             "id": 38566,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost",
                 "count": 1
@@ -253,7 +232,6 @@
             "id": 38567,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost",
                 "count": 1
@@ -272,7 +250,6 @@
             "id": 38578,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost",
                 "count": 1
@@ -291,7 +268,6 @@
             "id": 38579,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost",
                 "count": 1
@@ -310,7 +286,6 @@
             "id": 38580,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost",
                 "count": 1
@@ -329,7 +304,6 @@
             "id": 38581,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost",
                 "count": 1
@@ -348,7 +322,6 @@
             "id": 38582,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost",
                 "count": 1
@@ -367,7 +340,6 @@
             "id": 38599,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost",
                 "count": 1
@@ -386,7 +358,6 @@
             "id": 38600,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost",
                 "count": 1
@@ -409,9 +380,7 @@
             "name": "Distant Roost (2) -> OrderedStage_1",
             "connected_region": "OrderedStage_1",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -421,7 +390,6 @@
             "id": 38602,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost (2)",
                 "count": 1
@@ -440,7 +408,6 @@
             "id": 38603,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost (2)",
                 "count": 1
@@ -459,7 +426,6 @@
             "id": 38604,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost (2)",
                 "count": 1
@@ -478,7 +444,6 @@
             "id": 38605,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost (2)",
                 "count": 1
@@ -497,7 +462,6 @@
             "id": 38606,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost (2)",
                 "count": 1
@@ -516,7 +480,6 @@
             "id": 38607,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost (2)",
                 "count": 1
@@ -535,7 +498,6 @@
             "id": 38608,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost (2)",
                 "count": 1
@@ -554,7 +516,6 @@
             "id": 38609,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost (2)",
                 "count": 1
@@ -573,7 +534,6 @@
             "id": 38610,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost (2)",
                 "count": 1
@@ -592,7 +552,6 @@
             "id": 38611,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost (2)",
                 "count": 1
@@ -611,7 +570,6 @@
             "id": 38622,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost (2)",
                 "count": 1
@@ -630,7 +588,6 @@
             "id": 38623,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost (2)",
                 "count": 1
@@ -649,7 +606,6 @@
             "id": 38624,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost (2)",
                 "count": 1
@@ -668,7 +624,6 @@
             "id": 38625,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost (2)",
                 "count": 1
@@ -687,7 +642,6 @@
             "id": 38626,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost (2)",
                 "count": 1
@@ -706,7 +660,6 @@
             "id": 38643,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost (2)",
                 "count": 1
@@ -725,7 +678,6 @@
             "id": 38644,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Distant Roost (2)",
                 "count": 1
@@ -748,9 +700,7 @@
             "name": "Titanic Plains -> OrderedStage_1",
             "connected_region": "OrderedStage_1",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -760,7 +710,6 @@
             "id": 38910,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains",
                 "count": 1
@@ -779,7 +728,6 @@
             "id": 38911,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains",
                 "count": 1
@@ -798,7 +746,6 @@
             "id": 38912,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains",
                 "count": 1
@@ -817,7 +764,6 @@
             "id": 38913,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains",
                 "count": 1
@@ -836,7 +782,6 @@
             "id": 38914,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains",
                 "count": 1
@@ -855,7 +800,6 @@
             "id": 38915,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains",
                 "count": 1
@@ -874,7 +818,6 @@
             "id": 38916,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains",
                 "count": 1
@@ -893,7 +836,6 @@
             "id": 38917,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains",
                 "count": 1
@@ -912,7 +854,6 @@
             "id": 38918,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains",
                 "count": 1
@@ -931,7 +872,6 @@
             "id": 38919,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains",
                 "count": 1
@@ -950,7 +890,6 @@
             "id": 38930,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains",
                 "count": 1
@@ -969,7 +908,6 @@
             "id": 38931,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains",
                 "count": 1
@@ -988,7 +926,6 @@
             "id": 38932,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains",
                 "count": 1
@@ -1007,7 +944,6 @@
             "id": 38933,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains",
                 "count": 1
@@ -1026,7 +962,6 @@
             "id": 38934,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains",
                 "count": 1
@@ -1045,7 +980,6 @@
             "id": 38951,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains",
                 "count": 1
@@ -1064,7 +998,6 @@
             "id": 38952,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains",
                 "count": 1
@@ -1087,9 +1020,7 @@
             "name": "Titanic Plains (2) -> OrderedStage_1",
             "connected_region": "OrderedStage_1",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1099,7 +1030,6 @@
             "id": 38954,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains (2)",
                 "count": 1
@@ -1118,7 +1048,6 @@
             "id": 38955,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains (2)",
                 "count": 1
@@ -1137,7 +1066,6 @@
             "id": 38956,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains (2)",
                 "count": 1
@@ -1156,7 +1084,6 @@
             "id": 38957,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains (2)",
                 "count": 1
@@ -1175,7 +1102,6 @@
             "id": 38958,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains (2)",
                 "count": 1
@@ -1194,7 +1120,6 @@
             "id": 38959,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains (2)",
                 "count": 1
@@ -1213,7 +1138,6 @@
             "id": 38960,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains (2)",
                 "count": 1
@@ -1232,7 +1156,6 @@
             "id": 38961,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains (2)",
                 "count": 1
@@ -1251,7 +1174,6 @@
             "id": 38962,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains (2)",
                 "count": 1
@@ -1270,7 +1192,6 @@
             "id": 38963,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains (2)",
                 "count": 1
@@ -1289,7 +1210,6 @@
             "id": 38974,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains (2)",
                 "count": 1
@@ -1308,7 +1228,6 @@
             "id": 38975,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains (2)",
                 "count": 1
@@ -1327,7 +1246,6 @@
             "id": 38976,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains (2)",
                 "count": 1
@@ -1346,7 +1264,6 @@
             "id": 38977,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains (2)",
                 "count": 1
@@ -1365,7 +1282,6 @@
             "id": 38978,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains (2)",
                 "count": 1
@@ -1384,7 +1300,6 @@
             "id": 38995,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains (2)",
                 "count": 1
@@ -1403,7 +1318,6 @@
             "id": 38996,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Titanic Plains (2)",
                 "count": 1
@@ -1426,9 +1340,7 @@
             "name": "Verdant Falls -> OrderedStage_1",
             "connected_region": "OrderedStage_1",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1438,7 +1350,6 @@
             "id": 39482,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Verdant Falls",
                 "count": 1
@@ -1457,7 +1368,6 @@
             "id": 39483,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Verdant Falls",
                 "count": 1
@@ -1476,7 +1386,6 @@
             "id": 39484,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Verdant Falls",
                 "count": 1
@@ -1495,7 +1404,6 @@
             "id": 39485,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Verdant Falls",
                 "count": 1
@@ -1514,7 +1422,6 @@
             "id": 39486,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Verdant Falls",
                 "count": 1
@@ -1533,7 +1440,6 @@
             "id": 39487,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Verdant Falls",
                 "count": 1
@@ -1552,7 +1458,6 @@
             "id": 39488,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Verdant Falls",
                 "count": 1
@@ -1571,7 +1476,6 @@
             "id": 39489,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Verdant Falls",
                 "count": 1
@@ -1590,7 +1494,6 @@
             "id": 39490,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Verdant Falls",
                 "count": 1
@@ -1609,7 +1512,6 @@
             "id": 39491,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Verdant Falls",
                 "count": 1
@@ -1628,7 +1530,6 @@
             "id": 39502,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Verdant Falls",
                 "count": 1
@@ -1647,7 +1548,6 @@
             "id": 39503,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Verdant Falls",
                 "count": 1
@@ -1666,7 +1566,6 @@
             "id": 39504,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Verdant Falls",
                 "count": 1
@@ -1685,7 +1584,6 @@
             "id": 39505,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Verdant Falls",
                 "count": 1
@@ -1704,7 +1602,6 @@
             "id": 39506,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Verdant Falls",
                 "count": 1
@@ -1723,7 +1620,6 @@
             "id": 39523,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Verdant Falls",
                 "count": 1
@@ -1742,7 +1638,6 @@
             "id": 39524,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Verdant Falls",
                 "count": 1
@@ -1765,9 +1660,7 @@
             "name": "Abandoned Aqueduct -> OrderedStage_2",
             "connected_region": "OrderedStage_2",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1777,7 +1670,6 @@
             "id": 38998,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abandoned Aqueduct",
                 "count": 1
@@ -1796,7 +1688,6 @@
             "id": 38999,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abandoned Aqueduct",
                 "count": 1
@@ -1815,7 +1706,6 @@
             "id": 39000,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abandoned Aqueduct",
                 "count": 1
@@ -1834,7 +1724,6 @@
             "id": 39001,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abandoned Aqueduct",
                 "count": 1
@@ -1853,7 +1742,6 @@
             "id": 39002,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abandoned Aqueduct",
                 "count": 1
@@ -1872,7 +1760,6 @@
             "id": 39003,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abandoned Aqueduct",
                 "count": 1
@@ -1891,7 +1778,6 @@
             "id": 39004,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abandoned Aqueduct",
                 "count": 1
@@ -1910,7 +1796,6 @@
             "id": 39005,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abandoned Aqueduct",
                 "count": 1
@@ -1929,7 +1814,6 @@
             "id": 39006,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abandoned Aqueduct",
                 "count": 1
@@ -1948,7 +1832,6 @@
             "id": 39007,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abandoned Aqueduct",
                 "count": 1
@@ -1967,7 +1850,6 @@
             "id": 39018,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abandoned Aqueduct",
                 "count": 1
@@ -1986,7 +1868,6 @@
             "id": 39019,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abandoned Aqueduct",
                 "count": 1
@@ -2005,7 +1886,6 @@
             "id": 39020,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abandoned Aqueduct",
                 "count": 1
@@ -2024,7 +1904,6 @@
             "id": 39021,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abandoned Aqueduct",
                 "count": 1
@@ -2043,7 +1922,6 @@
             "id": 39022,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abandoned Aqueduct",
                 "count": 1
@@ -2062,7 +1940,6 @@
             "id": 39039,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abandoned Aqueduct",
                 "count": 1
@@ -2081,7 +1958,6 @@
             "id": 39040,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abandoned Aqueduct",
                 "count": 1
@@ -2104,9 +1980,7 @@
             "name": "Wetland Aspect -> OrderedStage_2",
             "connected_region": "OrderedStage_2",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2116,7 +1990,6 @@
             "id": 38778,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wetland Aspect",
                 "count": 1
@@ -2135,7 +2008,6 @@
             "id": 38779,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wetland Aspect",
                 "count": 1
@@ -2154,7 +2026,6 @@
             "id": 38780,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wetland Aspect",
                 "count": 1
@@ -2173,7 +2044,6 @@
             "id": 38781,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wetland Aspect",
                 "count": 1
@@ -2192,7 +2062,6 @@
             "id": 38782,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wetland Aspect",
                 "count": 1
@@ -2211,7 +2080,6 @@
             "id": 38783,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wetland Aspect",
                 "count": 1
@@ -2230,7 +2098,6 @@
             "id": 38784,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wetland Aspect",
                 "count": 1
@@ -2249,7 +2116,6 @@
             "id": 38785,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wetland Aspect",
                 "count": 1
@@ -2268,7 +2134,6 @@
             "id": 38786,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wetland Aspect",
                 "count": 1
@@ -2287,7 +2152,6 @@
             "id": 38787,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wetland Aspect",
                 "count": 1
@@ -2306,7 +2170,6 @@
             "id": 38798,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wetland Aspect",
                 "count": 1
@@ -2325,7 +2188,6 @@
             "id": 38799,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wetland Aspect",
                 "count": 1
@@ -2344,7 +2206,6 @@
             "id": 38800,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wetland Aspect",
                 "count": 1
@@ -2363,7 +2224,6 @@
             "id": 38801,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wetland Aspect",
                 "count": 1
@@ -2382,7 +2242,6 @@
             "id": 38802,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wetland Aspect",
                 "count": 1
@@ -2401,7 +2260,6 @@
             "id": 38819,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wetland Aspect",
                 "count": 1
@@ -2420,7 +2278,6 @@
             "id": 38820,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wetland Aspect",
                 "count": 1
@@ -2443,9 +2300,7 @@
             "name": "Rallypoint Delta -> OrderedStage_3",
             "connected_region": "OrderedStage_3",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2455,7 +2310,6 @@
             "id": 38822,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Rallypoint Delta",
                 "count": 1
@@ -2474,7 +2328,6 @@
             "id": 38823,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Rallypoint Delta",
                 "count": 1
@@ -2493,7 +2346,6 @@
             "id": 38824,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Rallypoint Delta",
                 "count": 1
@@ -2512,7 +2364,6 @@
             "id": 38825,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Rallypoint Delta",
                 "count": 1
@@ -2531,7 +2382,6 @@
             "id": 38826,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Rallypoint Delta",
                 "count": 1
@@ -2550,7 +2400,6 @@
             "id": 38827,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Rallypoint Delta",
                 "count": 1
@@ -2569,7 +2418,6 @@
             "id": 38828,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Rallypoint Delta",
                 "count": 1
@@ -2588,7 +2436,6 @@
             "id": 38829,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Rallypoint Delta",
                 "count": 1
@@ -2607,7 +2454,6 @@
             "id": 38830,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Rallypoint Delta",
                 "count": 1
@@ -2626,7 +2472,6 @@
             "id": 38831,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Rallypoint Delta",
                 "count": 1
@@ -2645,7 +2490,6 @@
             "id": 38842,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Rallypoint Delta",
                 "count": 1
@@ -2664,7 +2508,6 @@
             "id": 38843,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Rallypoint Delta",
                 "count": 1
@@ -2683,7 +2526,6 @@
             "id": 38844,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Rallypoint Delta",
                 "count": 1
@@ -2702,7 +2544,6 @@
             "id": 38845,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Rallypoint Delta",
                 "count": 1
@@ -2721,7 +2562,6 @@
             "id": 38846,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Rallypoint Delta",
                 "count": 1
@@ -2740,7 +2580,6 @@
             "id": 38863,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Rallypoint Delta",
                 "count": 1
@@ -2759,7 +2598,6 @@
             "id": 38864,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Rallypoint Delta",
                 "count": 1
@@ -2782,9 +2620,7 @@
             "name": "Scorched Acres -> OrderedStage_3",
             "connected_region": "OrderedStage_3",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2794,7 +2630,6 @@
             "id": 40318,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Scorched Acres",
                 "count": 1
@@ -2813,7 +2648,6 @@
             "id": 40319,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Scorched Acres",
                 "count": 1
@@ -2832,7 +2666,6 @@
             "id": 40320,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Scorched Acres",
                 "count": 1
@@ -2851,7 +2684,6 @@
             "id": 40321,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Scorched Acres",
                 "count": 1
@@ -2870,7 +2702,6 @@
             "id": 40322,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Scorched Acres",
                 "count": 1
@@ -2889,7 +2720,6 @@
             "id": 40323,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Scorched Acres",
                 "count": 1
@@ -2908,7 +2738,6 @@
             "id": 40324,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Scorched Acres",
                 "count": 1
@@ -2927,7 +2756,6 @@
             "id": 40325,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Scorched Acres",
                 "count": 1
@@ -2946,7 +2774,6 @@
             "id": 40326,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Scorched Acres",
                 "count": 1
@@ -2965,7 +2792,6 @@
             "id": 40327,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Scorched Acres",
                 "count": 1
@@ -2984,7 +2810,6 @@
             "id": 40338,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Scorched Acres",
                 "count": 1
@@ -3003,7 +2828,6 @@
             "id": 40339,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Scorched Acres",
                 "count": 1
@@ -3022,7 +2846,6 @@
             "id": 40340,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Scorched Acres",
                 "count": 1
@@ -3041,7 +2864,6 @@
             "id": 40341,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Scorched Acres",
                 "count": 1
@@ -3060,7 +2882,6 @@
             "id": 40342,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Scorched Acres",
                 "count": 1
@@ -3079,7 +2900,6 @@
             "id": 40359,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Scorched Acres",
                 "count": 1
@@ -3098,7 +2918,6 @@
             "id": 40360,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Scorched Acres",
                 "count": 1
@@ -3121,9 +2940,7 @@
             "name": "Abyssal Depths -> OrderedStage_4",
             "connected_region": "OrderedStage_4",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3133,7 +2950,6 @@
             "id": 38690,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abyssal Depths",
                 "count": 1
@@ -3152,7 +2968,6 @@
             "id": 38691,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abyssal Depths",
                 "count": 1
@@ -3171,7 +2986,6 @@
             "id": 38692,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abyssal Depths",
                 "count": 1
@@ -3190,7 +3004,6 @@
             "id": 38693,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abyssal Depths",
                 "count": 1
@@ -3209,7 +3022,6 @@
             "id": 38694,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abyssal Depths",
                 "count": 1
@@ -3228,7 +3040,6 @@
             "id": 38695,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abyssal Depths",
                 "count": 1
@@ -3247,7 +3058,6 @@
             "id": 38696,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abyssal Depths",
                 "count": 1
@@ -3266,7 +3076,6 @@
             "id": 38697,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abyssal Depths",
                 "count": 1
@@ -3285,7 +3094,6 @@
             "id": 38698,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abyssal Depths",
                 "count": 1
@@ -3304,7 +3112,6 @@
             "id": 38699,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abyssal Depths",
                 "count": 1
@@ -3323,7 +3130,6 @@
             "id": 38710,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abyssal Depths",
                 "count": 1
@@ -3342,7 +3148,6 @@
             "id": 38711,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abyssal Depths",
                 "count": 1
@@ -3361,7 +3166,6 @@
             "id": 38712,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abyssal Depths",
                 "count": 1
@@ -3380,7 +3184,6 @@
             "id": 38713,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abyssal Depths",
                 "count": 1
@@ -3399,7 +3202,6 @@
             "id": 38714,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abyssal Depths",
                 "count": 1
@@ -3418,7 +3220,6 @@
             "id": 38731,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abyssal Depths",
                 "count": 1
@@ -3437,7 +3238,6 @@
             "id": 38732,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Abyssal Depths",
                 "count": 1
@@ -3460,9 +3260,7 @@
             "name": "Siren's Call -> OrderedStage_4",
             "connected_region": "OrderedStage_4",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3472,7 +3270,6 @@
             "id": 39878,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Siren's Call",
                 "count": 1
@@ -3491,7 +3288,6 @@
             "id": 39879,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Siren's Call",
                 "count": 1
@@ -3510,7 +3306,6 @@
             "id": 39880,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Siren's Call",
                 "count": 1
@@ -3529,7 +3324,6 @@
             "id": 39881,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Siren's Call",
                 "count": 1
@@ -3548,7 +3342,6 @@
             "id": 39882,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Siren's Call",
                 "count": 1
@@ -3567,7 +3360,6 @@
             "id": 39883,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Siren's Call",
                 "count": 1
@@ -3586,7 +3378,6 @@
             "id": 39884,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Siren's Call",
                 "count": 1
@@ -3605,7 +3396,6 @@
             "id": 39885,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Siren's Call",
                 "count": 1
@@ -3624,7 +3414,6 @@
             "id": 39886,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Siren's Call",
                 "count": 1
@@ -3643,7 +3432,6 @@
             "id": 39887,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Siren's Call",
                 "count": 1
@@ -3662,7 +3450,6 @@
             "id": 39898,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Siren's Call",
                 "count": 1
@@ -3681,7 +3468,6 @@
             "id": 39899,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Siren's Call",
                 "count": 1
@@ -3700,7 +3486,6 @@
             "id": 39900,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Siren's Call",
                 "count": 1
@@ -3719,7 +3504,6 @@
             "id": 39901,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Siren's Call",
                 "count": 1
@@ -3738,7 +3522,6 @@
             "id": 39902,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Siren's Call",
                 "count": 1
@@ -3757,7 +3540,6 @@
             "id": 39919,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Siren's Call",
                 "count": 1
@@ -3776,7 +3558,6 @@
             "id": 39920,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Siren's Call",
                 "count": 1
@@ -3799,9 +3580,7 @@
             "name": "Sundered Grove -> OrderedStage_4",
             "connected_region": "OrderedStage_4",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3811,7 +3590,6 @@
             "id": 39790,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sundered Grove",
                 "count": 1
@@ -3830,7 +3608,6 @@
             "id": 39791,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sundered Grove",
                 "count": 1
@@ -3849,7 +3626,6 @@
             "id": 39792,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sundered Grove",
                 "count": 1
@@ -3868,7 +3644,6 @@
             "id": 39793,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sundered Grove",
                 "count": 1
@@ -3887,7 +3662,6 @@
             "id": 39794,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sundered Grove",
                 "count": 1
@@ -3906,7 +3680,6 @@
             "id": 39795,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sundered Grove",
                 "count": 1
@@ -3925,7 +3698,6 @@
             "id": 39796,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sundered Grove",
                 "count": 1
@@ -3944,7 +3716,6 @@
             "id": 39797,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sundered Grove",
                 "count": 1
@@ -3963,7 +3734,6 @@
             "id": 39798,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sundered Grove",
                 "count": 1
@@ -3982,7 +3752,6 @@
             "id": 39799,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sundered Grove",
                 "count": 1
@@ -4001,7 +3770,6 @@
             "id": 39810,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sundered Grove",
                 "count": 1
@@ -4020,7 +3788,6 @@
             "id": 39811,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sundered Grove",
                 "count": 1
@@ -4039,7 +3806,6 @@
             "id": 39812,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sundered Grove",
                 "count": 1
@@ -4058,7 +3824,6 @@
             "id": 39813,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sundered Grove",
                 "count": 1
@@ -4077,7 +3842,6 @@
             "id": 39814,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sundered Grove",
                 "count": 1
@@ -4096,7 +3860,6 @@
             "id": 39831,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sundered Grove",
                 "count": 1
@@ -4115,7 +3878,6 @@
             "id": 39832,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sundered Grove",
                 "count": 1
@@ -4138,18 +3900,14 @@
             "name": "Sky Meadow -> Hidden Realm: Bulwark's Ambry",
             "connected_region": "Hidden Realm: Bulwark's Ambry",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Sky Meadow -> OrderedStage_5",
             "connected_region": "OrderedStage_5",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4159,7 +3917,6 @@
             "id": 39922,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Meadow",
                 "count": 1
@@ -4178,7 +3935,6 @@
             "id": 39923,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Meadow",
                 "count": 1
@@ -4197,7 +3953,6 @@
             "id": 39924,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Meadow",
                 "count": 1
@@ -4216,7 +3971,6 @@
             "id": 39925,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Meadow",
                 "count": 1
@@ -4235,7 +3989,6 @@
             "id": 39926,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Meadow",
                 "count": 1
@@ -4254,7 +4007,6 @@
             "id": 39927,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Meadow",
                 "count": 1
@@ -4273,7 +4025,6 @@
             "id": 39928,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Meadow",
                 "count": 1
@@ -4292,7 +4043,6 @@
             "id": 39929,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Meadow",
                 "count": 1
@@ -4311,7 +4061,6 @@
             "id": 39930,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Meadow",
                 "count": 1
@@ -4330,7 +4079,6 @@
             "id": 39931,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Meadow",
                 "count": 1
@@ -4349,7 +4097,6 @@
             "id": 39942,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Meadow",
                 "count": 1
@@ -4368,7 +4115,6 @@
             "id": 39943,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Meadow",
                 "count": 1
@@ -4387,7 +4133,6 @@
             "id": 39944,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Meadow",
                 "count": 1
@@ -4406,7 +4151,6 @@
             "id": 39945,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Meadow",
                 "count": 1
@@ -4425,7 +4169,6 @@
             "id": 39946,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Meadow",
                 "count": 1
@@ -4444,7 +4187,6 @@
             "id": 39963,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Meadow",
                 "count": 1
@@ -4463,7 +4205,6 @@
             "id": 39964,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Meadow",
                 "count": 1
@@ -4486,18 +4227,14 @@
             "name": "Commencement -> Victory",
             "connected_region": "Victory",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Commencement -> Petrichor V",
             "connected_region": "Petrichor V",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4511,7 +4248,6 @@
             "connected_region": "Hidden Realm: A Moment, Fractured",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Hidden Realm: A Moment, Fractured",
@@ -4525,7 +4261,6 @@
             "connected_region": "Commencement",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Commencement",
@@ -4541,7 +4276,6 @@
             "id": null,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sky Meadow",
                 "count": 1
@@ -4565,45 +4299,127 @@
             "name": "OrderedStage_1 -> Hidden Realm: Bazaar Between Time",
             "connected_region": "Hidden Realm: Bazaar Between Time",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Hidden Realm: Bazaar Between Time",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "True_"
+                        },
+                        "op": ">=",
+                        "right": {
+                          "rule": "True_"
+                        }
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 1",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Hidden Realm: Bazaar Between Time",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "OrderedStage_1 -> Hidden Realm: Gilded Coast",
             "connected_region": "Hidden Realm: Gilded Coast",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "OrderedStage_1 -> Abandoned Aqueduct",
             "connected_region": "Abandoned Aqueduct",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Abandoned Aqueduct",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "True_"
+                        },
+                        "op": ">=",
+                        "right": {
+                          "rule": "True_"
+                        }
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 1",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Abandoned Aqueduct",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "OrderedStage_1 -> Wetland Aspect",
             "connected_region": "Wetland Aspect",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Wetland Aspect",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "True_"
+                        },
+                        "op": ">=",
+                        "right": {
+                          "rule": "True_"
+                        }
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 1",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wetland Aspect",
+                    "count": 1
+                  }
+                }
+              ]
             }
           }
         ],
@@ -4616,24 +4432,80 @@
             "name": "OrderedStage_2 -> Rallypoint Delta",
             "connected_region": "Rallypoint Delta",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Rallypoint Delta",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "True_"
+                        },
+                        "op": ">=",
+                        "right": {
+                          "rule": "True_"
+                        }
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 2",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Rallypoint Delta",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "OrderedStage_2 -> Scorched Acres",
             "connected_region": "Scorched Acres",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Scorched Acres",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "True_"
+                        },
+                        "op": ">=",
+                        "right": {
+                          "rule": "True_"
+                        }
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 2",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Scorched Acres",
+                    "count": 1
+                  }
+                }
+              ]
             }
           }
         ],
@@ -4646,36 +4518,120 @@
             "name": "OrderedStage_3 -> Abyssal Depths",
             "connected_region": "Abyssal Depths",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Abyssal Depths",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "True_"
+                        },
+                        "op": ">=",
+                        "right": {
+                          "rule": "True_"
+                        }
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 3",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Abyssal Depths",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "OrderedStage_3 -> Siren's Call",
             "connected_region": "Siren's Call",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Siren's Call",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "True_"
+                        },
+                        "op": ">=",
+                        "right": {
+                          "rule": "True_"
+                        }
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 3",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Siren's Call",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "OrderedStage_3 -> Sundered Grove",
             "connected_region": "Sundered Grove",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Sundered Grove",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "True_"
+                        },
+                        "op": ">=",
+                        "right": {
+                          "rule": "True_"
+                        }
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 3",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Sundered Grove",
+                    "count": 1
+                  }
+                }
+              ]
             }
           }
         ],
@@ -4688,12 +4644,40 @@
             "name": "OrderedStage_4 -> Sky Meadow",
             "connected_region": "Sky Meadow",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Sky Meadow",
-                "count": 1
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "True_"
+                        },
+                        "op": ">=",
+                        "right": {
+                          "rule": "True_"
+                        }
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 4",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Sky Meadow",
+                    "count": 1
+                  }
+                }
+              ]
             }
           }
         ],
@@ -4707,7 +4691,6 @@
             "connected_region": "Hidden Realm: A Moment, Whole",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Beads of Fealty",
@@ -4726,18 +4709,14 @@
             "name": "Hidden Realm: A Moment, Whole -> Victory",
             "connected_region": "Victory",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Hidden Realm: A Moment, Whole -> Petrichor V",
             "connected_region": "Petrichor V",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4756,9 +4735,7 @@
             "name": "Victory",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Victory",
@@ -4788,7 +4765,6 @@
             "connected_region": "Void Fields",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Hidden Realm: Bazaar Between Time",
@@ -5758,7 +5734,7 @@
         "start_inventory": {},
         "start_location_hints": []
       },
-      "world_directory": "ror2_worldgen"
+      "world_directory": "ror2"
     }
   },
   "game_info": {

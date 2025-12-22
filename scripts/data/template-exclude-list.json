@@ -76,6 +76,10 @@
     {
       "name": "The Witness.yaml",
       "reason": "Temporarily excluded. The WorldGen spoiler test takes 261 seconds."
+    },
+    {
+      "name": "Yacht Dice.yaml",
+      "reason": "Temporarily excluded. The WorldGen cross-validation test times out at 300 seconds."
     }
   ]
 }

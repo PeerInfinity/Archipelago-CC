@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Has, HasAll, Or
+from rule_builder import True_, False_, And, Has, HasAll, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -47,7 +47,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Eolis -> Path to Apolune", player),
-        HasAll(['Key Jack', 'Progressive Sword'])
+        HasAll('Key Jack', 'Progressive Sword')
     )
 
     world.set_rule(
@@ -72,7 +72,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Trunk -> Path to Mascon", player),
-        And(HasAll(['Joker Spring Flow', 'Key Queen', 'Ring of Ruby', 'Sky Spring Flow', 'Tower of Fortress Spring Flow']), Has('Progressive Sword', 2))
+        And(HasAll('Joker Spring Flow', 'Key Queen', 'Ring of Ruby', 'Sky Spring Flow', 'Tower of Fortress Spring Flow'), Has('Progressive Sword', 2))
     )
 
     world.set_rule(
@@ -92,7 +92,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mist -> Useless Tower", player),
-        HasAll(['Key King', 'Unlock Wingboots'])
+        HasAll('Key King', 'Unlock Wingboots')
     )
 
     world.set_rule(
@@ -127,27 +127,27 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Eolis Key Jack", player),
-        True_()
+        HelperCall(helper_func=_faxanaduworldgen_can_buy_in_eolis, helper_name="can_buy_in_eolis")
     )
 
     world.set_rule(
         multiworld.get_location("Eolis Hand Dagger", player),
-        True_()
+        HelperCall(helper_func=_faxanaduworldgen_can_buy_in_eolis, helper_name="can_buy_in_eolis")
     )
 
     world.set_rule(
         multiworld.get_location("Eolis Red Potion", player),
-        True_()
+        HelperCall(helper_func=_faxanaduworldgen_can_buy_in_eolis, helper_name="can_buy_in_eolis")
     )
 
     world.set_rule(
         multiworld.get_location("Eolis Elixir", player),
-        True_()
+        HelperCall(helper_func=_faxanaduworldgen_can_buy_in_eolis, helper_name="can_buy_in_eolis")
     )
 
     world.set_rule(
         multiworld.get_location("Eolis Deluge", player),
-        True_()
+        HelperCall(helper_func=_faxanaduworldgen_can_buy_in_eolis, helper_name="can_buy_in_eolis")
     )
 
     world.set_rule(
@@ -172,7 +172,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Path to Forepaw Glove", player),
-        HasAll(['Deluge', 'Unlock Wingboots'])
+        HasAll('Deluge', 'Unlock Wingboots')
     )
 
     world.set_rule(
@@ -202,7 +202,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Misty Doctor Office", player),
-        True_()
+        HelperCall(helper_func=_faxanaduworldgen_has_any_magic, helper_name="has_any_magic")
     )
 
     world.set_rule(
@@ -242,12 +242,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dartmoor Castle Hidden Red Potion", player),
-        True_()
+        HelperCall(helper_func=_faxanaduworldgen_has_any_magic, helper_name="has_any_magic")
     )
 
     world.set_rule(
         multiworld.get_location("Fraternal Castle Shop Hidden Ointment", player),
-        True_()
+        HelperCall(helper_func=_faxanaduworldgen_has_any_magic, helper_name="has_any_magic")
     )
 
     world.set_rule(

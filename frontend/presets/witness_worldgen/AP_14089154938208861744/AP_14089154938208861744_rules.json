@@ -19,9 +19,7 @@
             "name": "MenuToStart",
             "connected_region": "Entry",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -34,72 +32,56 @@
             "name": "Entry to Tutorial First Hallway",
             "connected_region": "Tutorial First Hallway",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Entry to Desert Obelisk",
             "connected_region": "Desert Obelisk",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Entry to Quarry Obelisk",
             "connected_region": "Quarry Obelisk",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Entry to Monastery Obelisk",
             "connected_region": "Monastery Obelisk",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Entry to Town Obelisk",
             "connected_region": "Town Obelisk",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Entry to Treehouse Obelisk",
             "connected_region": "Treehouse Obelisk",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Entry to Mountainside Obelisk",
             "connected_region": "Mountainside Obelisk",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Entry to Easter Eggs",
             "connected_region": "Easter Eggs",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -109,18 +91,15 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Symmetry Island Upper"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Progressive Symmetry",
                     "count": 2
@@ -141,7 +120,6 @@
             "id": null,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Desert Outside"
               }
@@ -159,18 +137,15 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Outside Quarry"
                   }
                 },
                 {
                   "rule": "HasAllCounts",
-                  "options": [],
                   "args": {
                     "items": {
                       "Colored Squares": 1,
@@ -196,7 +171,6 @@
             "id": null,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Shadows Laser Room"
               }
@@ -214,54 +188,45 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Keep Tower"
                   }
                 },
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "CanReachRegion",
-                          "options": [],
                           "args": {
                             "region_name": "Keep 2nd Maze"
                           }
                         },
                         {
                           "rule": "CanReachRegion",
-                          "options": [],
                           "args": {
                             "region_name": "Keep 3rd Maze"
                           }
                         },
                         {
                           "rule": "CanReachRegion",
-                          "options": [],
                           "args": {
                             "region_name": "Keep 4th Maze"
                           }
                         },
                         {
                           "rule": "CanReachRegion",
-                          "options": [],
                           "args": {
                             "region_name": "Keep Tower"
                           }
                         },
                         {
                           "rule": "CanReachRegion",
-                          "options": [],
                           "args": {
                             "region_name": "Keep"
                           }
@@ -270,39 +235,33 @@
                     },
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "CanReachRegion",
-                          "options": [],
                           "args": {
                             "region_name": "Keep 2nd Pressure Plate"
                           }
                         },
                         {
                           "rule": "CanReachRegion",
-                          "options": [],
                           "args": {
                             "region_name": "Keep 3rd Pressure Plate"
                           }
                         },
                         {
                           "rule": "CanReachRegion",
-                          "options": [],
                           "args": {
                             "region_name": "Keep 4th Pressure Plate"
                           }
                         },
                         {
                           "rule": "CanReachRegion",
-                          "options": [],
                           "args": {
                             "region_name": "Keep Tower"
                           }
                         },
                         {
                           "rule": "CanReachRegion",
-                          "options": [],
                           "args": {
                             "region_name": "Keep"
                           }
@@ -326,18 +285,15 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Outside Monastery"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Progressive Dots",
                     "count": 1
@@ -358,7 +314,6 @@
             "id": null,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Town Tower Top"
               }
@@ -376,18 +331,15 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "CanReachRegion",
-                  "options": [],
                   "args": {
                     "region_name": "Jungle"
                   }
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Sound Dots",
                     "count": 1
@@ -408,7 +360,6 @@
             "id": null,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Bunker Laser Platform"
               }
@@ -426,7 +377,6 @@
             "id": null,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Swamp Laser Area"
               }
@@ -444,7 +394,6 @@
             "id": null,
             "access_rule": {
               "rule": "CanReachRegion",
-              "options": [],
               "args": {
                 "region_name": "Treehouse Laser Room"
               }
@@ -466,18 +415,14 @@
             "name": "Tutorial First Hallway to Entry",
             "connected_region": "Entry",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Tutorial First Hallway to Tutorial First Hallway Room",
             "connected_region": "Tutorial First Hallway Room",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -490,9 +435,7 @@
             "name": "Tutorial First Hallway Room to Tutorial",
             "connected_region": "Tutorial",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -505,9 +448,7 @@
             "name": "Tutorial to Outside Tutorial",
             "connected_region": "Outside Tutorial",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -516,9 +457,7 @@
             "name": "Tutorial Front Left",
             "id": 158004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -532,9 +471,7 @@
             "name": "Tutorial Back Left",
             "id": 158005,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -548,9 +485,7 @@
             "name": "Tutorial Back Right",
             "id": 158006,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Slowness",
@@ -564,9 +499,7 @@
             "name": "Tutorial Gate Open",
             "id": 158007,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Black/White Squares",
@@ -581,7 +514,6 @@
             "id": 158010,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Progressive Dots",
@@ -606,18 +538,14 @@
             "name": "Outside Tutorial to Outside Tutorial Path To Outpost",
             "connected_region": "Outside Tutorial Path To Outpost",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Outside Tutorial to Main Island",
             "connected_region": "Main Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -627,7 +555,6 @@
             "id": 158017,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Dots",
                 "count": 1
@@ -646,7 +573,6 @@
             "id": 158026,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Black/White Squares",
                 "count": 1
@@ -670,7 +596,6 @@
             "connected_region": "Outside Tutorial Outpost",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -685,9 +610,7 @@
             "name": "Outside Tutorial Path To Outpost to Outside Tutorial",
             "connected_region": "Outside Tutorial",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -697,7 +620,6 @@
             "id": 158011,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Dots",
                 "count": 2
@@ -721,7 +643,6 @@
             "connected_region": "Outside Tutorial",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -739,7 +660,6 @@
             "id": 158012,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Black/White Squares": 1,
@@ -764,18 +684,14 @@
             "name": "Orchard to Main Island",
             "connected_region": "Main Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Orchard to Orchard Beyond First Gate",
             "connected_region": "Orchard Beyond First Gate",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -789,9 +705,7 @@
             "name": "Orchard Apple Tree 5",
             "id": 158075,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sound Dots",
@@ -810,153 +724,119 @@
             "name": "Main Island to Outside Tutorial",
             "connected_region": "Outside Tutorial",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Island to Orchard",
             "connected_region": "Orchard",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Island to Outside Glass Factory",
             "connected_region": "Outside Glass Factory",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Island to Outside Symmetry Island",
             "connected_region": "Outside Symmetry Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Island to Desert Outside",
             "connected_region": "Desert Outside",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Island to Outside Quarry",
             "connected_region": "Outside Quarry",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Island to Shadows",
             "connected_region": "Shadows",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Island to Outside Keep",
             "connected_region": "Outside Keep",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Island to Outside Monastery",
             "connected_region": "Outside Monastery",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Island to Town",
             "connected_region": "Town",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Island to Southern Peninsula",
             "connected_region": "Southern Peninsula",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Island to Jungle",
             "connected_region": "Jungle",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Island to Outside Jungle River",
             "connected_region": "Outside Jungle River",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Island to Outside Bunker",
             "connected_region": "Outside Bunker",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Island to Outside Swamp",
             "connected_region": "Outside Swamp",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Island to Treehouse Beach",
             "connected_region": "Treehouse Beach",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Main Island to Mountainside",
             "connected_region": "Mountainside",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -969,9 +849,7 @@
             "name": "Outside Glass Factory to Main Island",
             "connected_region": "Main Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -979,7 +857,6 @@
             "connected_region": "Inside Glass Factory",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -997,7 +874,6 @@
             "id": 158027,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Symmetry",
                 "count": 1
@@ -1021,7 +897,6 @@
             "connected_region": "Inside Glass Factory Behind Back Wall",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -1039,7 +914,6 @@
             "id": 158032,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Symmetry",
                 "count": 1
@@ -1058,7 +932,6 @@
             "id": 158035,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Symmetry",
                 "count": 1
@@ -1077,7 +950,6 @@
             "id": 158038,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Symmetry",
                 "count": 1
@@ -1101,7 +973,6 @@
             "connected_region": "The Ocean",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -1122,9 +993,7 @@
             "name": "Outside Symmetry Island to Main Island",
             "connected_region": "Main Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1132,7 +1001,6 @@
             "connected_region": "Symmetry Island Lower",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -1150,7 +1018,6 @@
             "id": 158040,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Progressive Dots",
@@ -1176,7 +1043,6 @@
             "connected_region": "Symmetry Island Upper",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -1194,7 +1060,6 @@
             "id": 158045,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Progressive Dots",
@@ -1215,7 +1080,6 @@
             "id": 158051,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Progressive Dots": 1,
@@ -1236,7 +1100,6 @@
             "id": 158058,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Progressive Dots": 1,
@@ -1257,7 +1120,6 @@
             "id": 158063,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Symmetry",
                 "count": 1
@@ -1276,7 +1138,6 @@
             "id": 158064,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Progressive Dots": 1,
@@ -1303,7 +1164,6 @@
             "id": 158067,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Symmetry",
                 "count": 2
@@ -1322,7 +1182,6 @@
             "id": 158070,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Symmetry",
                 "count": 2
@@ -1341,7 +1200,6 @@
             "id": 158700,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Symmetry",
                 "count": 2
@@ -1364,9 +1222,7 @@
             "name": "Desert Obelisk to Entry",
             "connected_region": "Entry",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1379,18 +1235,14 @@
             "name": "Desert Outside to Main Island",
             "connected_region": "Main Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Desert Outside to Desert Light Room",
             "connected_region": "Desert Light Room",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1399,9 +1251,7 @@
             "name": "Desert Surface 8",
             "id": 158084,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -1415,9 +1265,7 @@
             "name": "Desert Laser Panel",
             "id": 158701,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -1432,7 +1280,6 @@
             "id": null,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "+1 Laser (Unredirected)",
@@ -1457,9 +1304,7 @@
             "name": "Desert Light Room to Desert Pond Room",
             "connected_region": "Desert Pond Room",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1468,9 +1313,7 @@
             "name": "Desert Light Room 3",
             "id": 158090,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -1489,9 +1332,7 @@
             "name": "Desert Pond Room to Desert Flood Room",
             "connected_region": "Desert Flood Room",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1500,9 +1341,7 @@
             "name": "Desert Pond Room 5",
             "id": 158095,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -1521,18 +1360,14 @@
             "name": "Desert Flood Room to Desert Elevator Room",
             "connected_region": "Desert Elevator Room",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Desert Flood Room to Desert Flood Room Underwater",
             "connected_region": "Desert Flood Room Underwater",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1541,9 +1376,7 @@
             "name": "Desert Flood Room 6",
             "id": 158110,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Triangles",
@@ -1567,9 +1400,7 @@
             "name": "Desert Elevator Room to Desert Behind Elevator",
             "connected_region": "Desert Behind Elevator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1578,9 +1409,7 @@
             "name": "Desert Elevator Room Hexagonal",
             "id": 158113,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Puzzle Skip",
@@ -1594,9 +1423,7 @@
             "name": "Desert Elevator Room Bent 3",
             "id": 158117,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -1620,9 +1447,7 @@
             "name": "Quarry Obelisk to Entry",
             "connected_region": "Entry",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1635,9 +1460,7 @@
             "name": "Outside Quarry to Main Island",
             "connected_region": "Main Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1645,7 +1468,6 @@
             "connected_region": "Quarry Between Entry Doors",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -1660,9 +1482,7 @@
             "name": "Outside Quarry to Quarry Elevator",
             "connected_region": "Quarry Elevator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1672,7 +1492,6 @@
             "id": 158118,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Black/White Squares",
                 "count": 1
@@ -1691,7 +1510,6 @@
             "id": 158702,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Colored Squares": 1,
@@ -1720,7 +1538,6 @@
             "connected_region": "Outside Quarry",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -1736,7 +1553,6 @@
             "connected_region": "Quarry",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -1758,7 +1574,6 @@
             "connected_region": "Quarry",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -1776,7 +1591,6 @@
             "id": 158119,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shapers",
                 "count": 1
@@ -1800,7 +1614,6 @@
             "connected_region": "Quarry Stoneworks Ground Floor",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -1815,18 +1628,14 @@
             "name": "Quarry to Quarry Boathouse",
             "connected_region": "Quarry Boathouse",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Quarry to Quarry Elevator",
             "connected_region": "Quarry Elevator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1836,7 +1645,6 @@
             "id": 158121,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Black/White Squares",
                 "count": 1
@@ -1855,7 +1663,6 @@
             "id": 158122,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Dots",
                 "count": 1
@@ -1878,9 +1685,7 @@
             "name": "Quarry Stoneworks Ground Floor to Quarry",
             "connected_region": "Quarry",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1888,7 +1693,6 @@
             "connected_region": "Quarry Stoneworks Middle Floor",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -1903,18 +1707,14 @@
             "name": "Quarry Stoneworks Ground Floor to Outside Quarry",
             "connected_region": "Outside Quarry",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Quarry Stoneworks Ground Floor to Quarry Stoneworks Lift",
             "connected_region": "Quarry Stoneworks Lift",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1927,9 +1727,7 @@
             "name": "Quarry Stoneworks Middle Floor to Quarry Stoneworks Lift",
             "connected_region": "Quarry Stoneworks Lift",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1939,7 +1737,6 @@
             "id": 158130,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Eraser",
@@ -1965,7 +1762,6 @@
             "connected_region": "Quarry Stoneworks Ground Floor",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -1981,7 +1777,6 @@
             "connected_region": "Quarry Stoneworks Upper Floor",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -2003,7 +1798,6 @@
             "connected_region": "Quarry Stoneworks Lift",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -2019,7 +1813,6 @@
             "connected_region": "Quarry Stoneworks Ground Floor",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -2037,7 +1830,6 @@
             "id": 158141,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Colored Squares",
@@ -2058,7 +1850,6 @@
             "id": 158142,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Colored Squares",
@@ -2079,7 +1870,6 @@
             "id": 158143,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Black/White Squares",
@@ -2102,7 +1892,6 @@
             "id": 158144,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Colored Squares",
@@ -2128,9 +1917,7 @@
             "name": "Quarry Boathouse to Quarry",
             "connected_region": "Quarry",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2138,7 +1925,6 @@
             "connected_region": "Quarry Boathouse Upper Front",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -2154,7 +1940,6 @@
             "connected_region": "Quarry Boathouse Behind Staircase",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -2172,7 +1957,6 @@
             "id": 158146,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Stars",
                 "count": 1
@@ -2191,7 +1975,6 @@
             "id": 158147,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Rotated Shapers",
@@ -2217,7 +2000,6 @@
             "connected_region": "The Ocean",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -2239,7 +2021,6 @@
             "connected_region": "Quarry Boathouse Upper Middle",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -2257,7 +2038,6 @@
             "id": 158153,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Eraser",
@@ -2283,7 +2063,6 @@
             "connected_region": "Quarry Boathouse Upper Back",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -2304,9 +2083,7 @@
             "name": "Quarry Boathouse Upper Back to Quarry Boathouse Upper Middle",
             "connected_region": "Quarry Boathouse Upper Middle",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2316,7 +2093,6 @@
             "id": 158164,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Eraser": 1,
@@ -2338,7 +2114,6 @@
             "id": 158169,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Eraser": 1,
@@ -2364,27 +2139,21 @@
             "name": "Shadows to Main Island",
             "connected_region": "Main Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Shadows to Shadows Ledge",
             "connected_region": "Shadows Ledge",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Shadows to Shadows Laser Room",
             "connected_region": "Shadows Laser Room",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2393,9 +2162,7 @@
             "name": "Shadows Intro 8",
             "id": 158173,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -2409,9 +2176,7 @@
             "name": "Shadows Far 8",
             "id": 158181,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -2425,9 +2190,7 @@
             "name": "Shadows Near 5",
             "id": 158186,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -2446,18 +2209,14 @@
             "name": "Shadows Ledge to Shadows",
             "connected_region": "Shadows",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Shadows Ledge to Quarry",
             "connected_region": "Quarry",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2471,9 +2230,7 @@
             "name": "Shadows Laser Panel",
             "id": 158703,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Puzzle Skip",
@@ -2492,18 +2249,14 @@
             "name": "Outside Keep to Main Island",
             "connected_region": "Main Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Outside Keep to Keep",
             "connected_region": "Keep",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2516,18 +2269,14 @@
             "name": "Keep to Outside Keep",
             "connected_region": "Outside Keep",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Keep to Keep 2nd Maze",
             "connected_region": "Keep 2nd Maze",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2535,7 +2284,6 @@
             "connected_region": "Keep 2nd Pressure Plate",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -2550,18 +2298,14 @@
             "name": "Keep to Keep 3rd Maze",
             "connected_region": "Keep 3rd Maze",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Keep to Keep 4th Maze",
             "connected_region": "Keep 4th Maze",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2570,9 +2314,7 @@
             "name": "Keep Hedge Maze 1",
             "id": 158193,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -2587,7 +2329,6 @@
             "id": 158198,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Dots",
                 "count": 1
@@ -2610,9 +2351,7 @@
             "name": "Keep 2nd Maze to Keep 3rd Maze",
             "connected_region": "Keep 3rd Maze",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2621,9 +2360,7 @@
             "name": "Keep Hedge Maze 2",
             "id": 158194,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -2642,18 +2379,14 @@
             "name": "Keep 3rd Maze to Keep",
             "connected_region": "Keep",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Keep 3rd Maze to Keep 4th Maze",
             "connected_region": "Keep 4th Maze",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2662,9 +2395,7 @@
             "name": "Keep Hedge Maze 3",
             "id": 158195,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Slowness",
@@ -2683,18 +2414,14 @@
             "name": "Keep 4th Maze to Keep",
             "connected_region": "Keep",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Keep 4th Maze to Keep Tower",
             "connected_region": "Keep Tower",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2703,9 +2430,7 @@
             "name": "Keep Hedge Maze 4",
             "id": 158196,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bonk",
@@ -2724,9 +2449,7 @@
             "name": "Keep 2nd Pressure Plate to Keep 3rd Pressure Plate",
             "connected_region": "Keep 3rd Pressure Plate",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2736,7 +2459,6 @@
             "id": 158200,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Black/White Squares": 1,
@@ -2762,7 +2484,6 @@
             "connected_region": "Keep 4th Pressure Plate",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -2777,18 +2498,14 @@
             "name": "Keep 3rd Pressure Plate to Keep 2nd Pressure Plate",
             "connected_region": "Keep 2nd Pressure Plate",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Keep 3rd Pressure Plate to Shipwreck",
             "connected_region": "Shipwreck",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2798,7 +2515,6 @@
             "id": 158202,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Black/White Squares",
@@ -2824,9 +2540,7 @@
             "name": "Keep 4th Pressure Plate to Shadows",
             "connected_region": "Shadows",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -2834,7 +2548,6 @@
             "connected_region": "Keep Tower",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -2852,7 +2565,6 @@
             "id": 158204,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Progressive Dots",
@@ -2878,9 +2590,7 @@
             "name": "Keep Tower to Keep",
             "connected_region": "Keep",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2889,9 +2599,7 @@
             "name": "Keep Laser Panel Hedges",
             "id": 158704,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -2906,7 +2614,6 @@
             "id": 158705,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Black/White Squares": 1,
@@ -2935,9 +2642,7 @@
             "name": "Shipwreck to Keep 3rd Pressure Plate",
             "connected_region": "Keep 3rd Pressure Plate",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2950,9 +2655,7 @@
             "name": "Monastery Obelisk to Entry",
             "connected_region": "Entry",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2965,18 +2668,14 @@
             "name": "Outside Monastery to Main Island",
             "connected_region": "Main Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Outside Monastery to Inside Monastery",
             "connected_region": "Inside Monastery",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -2986,7 +2685,6 @@
             "id": 158212,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Dots",
                 "count": 1
@@ -3005,7 +2703,6 @@
             "id": 158706,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Dots",
                 "count": 1
@@ -3029,7 +2726,6 @@
             "connected_region": "Monastery North Shutters",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -3047,7 +2743,6 @@
             "id": 158217,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Dots",
                 "count": 1
@@ -3075,9 +2770,7 @@
             "name": "Town Obelisk to Entry",
             "connected_region": "Entry",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3090,9 +2783,7 @@
             "name": "Town to Main Island",
             "connected_region": "Main Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -3100,7 +2791,6 @@
             "connected_region": "The Ocean",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -3115,18 +2805,14 @@
             "name": "Town to Town Maze Rooftop",
             "connected_region": "Town Maze Rooftop",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Town to Town Church",
             "connected_region": "Town Church",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -3134,7 +2820,6 @@
             "connected_region": "Town Wooden Rooftop",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -3150,7 +2835,6 @@
             "connected_region": "Town RGB House",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -3165,18 +2849,14 @@
             "name": "Town to Outside Windmill",
             "connected_region": "Outside Windmill",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Town to Town Tower Bottom",
             "connected_region": "Town Tower Bottom",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3186,7 +2866,6 @@
             "id": 158219,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Black/White Squares",
@@ -3206,9 +2885,7 @@
             "name": "Town Desert Laser Redirect Control Solved",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Desert Laser Redirection",
@@ -3223,7 +2900,6 @@
             "id": 158239,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Progressive Dots": 2,
@@ -3245,7 +2921,6 @@
             "id": 158225,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Progressive Stars",
@@ -3266,7 +2941,6 @@
             "id": 158226,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Progressive Stars",
@@ -3286,9 +2960,7 @@
             "name": "Town Maze Panel",
             "id": 158228,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -3302,9 +2974,7 @@
             "name": "Town Pet the Dog",
             "id": 159800,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Puzzle Skip",
@@ -3324,7 +2994,6 @@
             "connected_region": "Town Red Rooftop",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -3347,7 +3016,6 @@
             "id": 158234,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Black/White Squares",
@@ -3369,7 +3037,6 @@
             "id": 158224,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Symmetry",
                 "count": 1
@@ -3394,7 +3061,6 @@
             "id": 158240,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Eraser": 1,
@@ -3421,9 +3087,7 @@
             "name": "Town Church to Town",
             "connected_region": "Town",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3433,7 +3097,6 @@
             "id": 158227,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Progressive Stars",
@@ -3459,7 +3122,6 @@
             "connected_region": "Town RGB House Upstairs",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -3477,7 +3139,6 @@
             "id": 158243,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sound Dots",
                 "count": 1
@@ -3502,7 +3163,6 @@
             "id": 158245,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Black/White Squares",
@@ -3524,7 +3184,6 @@
             "id": 158246,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Colored Squares",
@@ -3550,9 +3209,7 @@
             "name": "Town Tower Bottom to Town",
             "connected_region": "Town",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -3560,7 +3217,6 @@
             "connected_region": "Town Tower After First Door",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -3582,7 +3238,6 @@
             "connected_region": "Town Tower After Second Door",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -3598,7 +3253,6 @@
             "connected_region": "Town Tower Bottom",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -3620,7 +3274,6 @@
             "connected_region": "Town Tower After Third Door",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -3636,7 +3289,6 @@
             "connected_region": "Town Tower After First Door",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -3658,7 +3310,6 @@
             "connected_region": "Town Tower Top",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -3674,7 +3325,6 @@
             "connected_region": "Town Tower After Second Door",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -3696,7 +3346,6 @@
             "connected_region": "Town Tower After Third Door",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -3713,9 +3362,7 @@
             "name": "Town Laser Panel",
             "id": 158708,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -3735,7 +3382,6 @@
             "connected_region": "Windmill Interior",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -3750,9 +3396,7 @@
             "name": "Outside Windmill to Town",
             "connected_region": "Town",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3762,7 +3406,6 @@
             "id": 158241,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Dots",
                 "count": 1
@@ -3786,7 +3429,6 @@
             "connected_region": "Theater",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -3804,7 +3446,6 @@
             "id": 158248,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Black/White Squares",
                 "count": 1
@@ -3828,7 +3469,6 @@
             "connected_region": "Town",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -3846,7 +3486,6 @@
             "id": 158249,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Black/White Squares",
@@ -3867,7 +3506,6 @@
             "id": 158250,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Black/White Squares",
@@ -3892,9 +3530,7 @@
             "name": "Southern Peninsula to Main Island",
             "connected_region": "Main Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3907,9 +3543,7 @@
             "name": "Jungle to Main Island",
             "connected_region": "Main Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -3917,7 +3551,6 @@
             "connected_region": "The Ocean",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -3932,9 +3565,7 @@
             "name": "Jungle to Jungle Under Popup Wall",
             "connected_region": "Jungle Under Popup Wall",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -3943,9 +3574,7 @@
             "name": "Jungle First Row 3",
             "id": 158254,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Dots",
@@ -3959,9 +3588,7 @@
             "name": "Jungle Second Row 4",
             "id": 158258,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Puzzle Skip",
@@ -3976,7 +3603,6 @@
             "id": 158265,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sound Dots",
                 "count": 1
@@ -3995,7 +3621,6 @@
             "id": 158709,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Sound Dots",
                 "count": 1
@@ -4023,9 +3648,7 @@
             "name": "Outside Jungle River to Main Island",
             "connected_region": "Main Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4034,9 +3657,7 @@
             "name": "Jungle Monastery Garden Shortcut Panel",
             "id": 158267,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -4055,9 +3676,7 @@
             "name": "Outside Bunker to Main Island",
             "connected_region": "Main Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -4065,7 +3684,6 @@
             "connected_region": "Bunker",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4083,7 +3701,6 @@
             "id": 158268,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Black/White Squares",
                 "count": 1
@@ -4107,7 +3724,6 @@
             "connected_region": "Bunker Glass Room",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4125,7 +3741,6 @@
             "id": 158273,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Black/White Squares",
@@ -4146,7 +3761,6 @@
             "id": 158277,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Black/White Squares",
@@ -4172,7 +3786,6 @@
             "connected_region": "Bunker Ultraviolet Room",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4190,7 +3803,6 @@
             "id": 158281,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Black/White Squares",
@@ -4216,7 +3828,6 @@
             "connected_region": "Bunker Elevator Section",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4234,7 +3845,6 @@
             "id": 158285,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Black/White Squares",
@@ -4259,9 +3869,7 @@
             "name": "Bunker Elevator Section to Bunker Elevator",
             "connected_region": "Bunker Elevator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -4269,7 +3877,6 @@
             "connected_region": "Bunker Under Elevator",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4291,7 +3898,6 @@
             "connected_region": "Bunker Elevator Section",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4313,7 +3919,6 @@
             "connected_region": "Bunker Elevator Section",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4329,7 +3934,6 @@
             "connected_region": "Bunker Cyan Room",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4345,7 +3949,6 @@
             "connected_region": "Bunker Green Room",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4361,7 +3964,6 @@
             "connected_region": "Bunker Laser Platform",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4377,7 +3979,6 @@
             "connected_region": "Outside Bunker",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4398,9 +3999,7 @@
             "name": "Bunker Cyan Room to Bunker Elevator",
             "connected_region": "Bunker Elevator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4413,9 +4012,7 @@
             "name": "Bunker Green Room to Bunker Elevator",
             "connected_region": "Bunker Elevator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4428,9 +4025,7 @@
             "name": "Bunker Laser Platform to Bunker Elevator",
             "connected_region": "Bunker Elevator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4439,9 +4034,7 @@
             "name": "Bunker Laser Panel",
             "id": 158710,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Symmetry",
@@ -4461,7 +4054,6 @@
             "connected_region": "Swamp Entry Area",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4476,9 +4068,7 @@
             "name": "Outside Swamp to Main Island",
             "connected_region": "Main Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4488,7 +4078,6 @@
             "id": 158287,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shapers",
                 "count": 1
@@ -4511,9 +4100,7 @@
             "name": "Swamp Entry Area to Swamp Sliding Bridge",
             "connected_region": "Swamp Sliding Bridge",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4523,7 +4110,6 @@
             "id": 158293,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shapers",
                 "count": 1
@@ -4542,7 +4128,6 @@
             "id": 158301,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shapers",
                 "count": 1
@@ -4566,7 +4151,6 @@
             "connected_region": "Swamp Entry Area",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4582,7 +4166,6 @@
             "connected_region": "Swamp Platform",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4604,7 +4187,6 @@
             "connected_region": "Swamp Cyan Underwater",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4620,7 +4202,6 @@
             "connected_region": "Swamp Near Boat",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4636,7 +4217,6 @@
             "connected_region": "Swamp Between Bridges Near",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4651,9 +4231,7 @@
             "name": "Swamp Platform to Swamp Sliding Bridge",
             "connected_region": "Swamp Sliding Bridge",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4663,7 +4241,6 @@
             "id": 158316,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shapers",
                 "count": 1
@@ -4682,7 +4259,6 @@
             "id": 158318,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shapers",
                 "count": 1
@@ -4706,7 +4282,6 @@
             "connected_region": "Swamp Platform",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4724,7 +4299,6 @@
             "id": 158311,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Negative Shapers",
@@ -4750,7 +4324,6 @@
             "connected_region": "Swamp Between Bridges Far",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4768,7 +4341,6 @@
             "id": 158306,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shapers",
                 "count": 1
@@ -4792,7 +4364,6 @@
             "connected_region": "Swamp Red Underwater",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4807,9 +4378,7 @@
             "name": "Swamp Between Bridges Far to Swamp Rotating Bridge",
             "connected_region": "Swamp Rotating Bridge",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -4819,7 +4388,6 @@
             "id": 158322,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Rotated Shapers",
@@ -4845,7 +4413,6 @@
             "connected_region": "Swamp Maze",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4861,7 +4428,6 @@
             "connected_region": "Swamp Between Bridges Far",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4879,7 +4445,6 @@
             "id": 158326,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Negative Shapers",
@@ -4905,7 +4470,6 @@
             "connected_region": "Swamp Between Bridges Far",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4921,7 +4485,6 @@
             "connected_region": "Swamp Near Boat",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4937,7 +4500,6 @@
             "connected_region": "Swamp Purple Area",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4958,9 +4520,7 @@
             "name": "Swamp Near Boat to Swamp Rotating Bridge",
             "connected_region": "Swamp Rotating Bridge",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -4968,7 +4528,6 @@
             "connected_region": "Swamp Blue Underwater",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -4983,9 +4542,7 @@
             "name": "Swamp Near Boat to Swamp Long Bridge",
             "connected_region": "Swamp Long Bridge",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -4993,7 +4550,6 @@
             "connected_region": "The Ocean",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5011,7 +4567,6 @@
             "id": 158332,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Rotated Shapers",
@@ -5041,9 +4596,7 @@
             "name": "Swamp Purple Area to Swamp Rotating Bridge",
             "connected_region": "Swamp Rotating Bridge",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -5051,7 +4604,6 @@
             "connected_region": "Swamp Purple Underwater",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5066,9 +4618,7 @@
             "name": "Swamp Purple Area to Swamp Near Boat",
             "connected_region": "Swamp Near Boat",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5082,7 +4632,6 @@
             "connected_region": "Swamp Purple Area",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5100,7 +4649,6 @@
             "id": 158333,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shapers",
                 "count": 1
@@ -5125,7 +4673,6 @@
             "id": 158338,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Negative Shapers",
@@ -5151,7 +4698,6 @@
             "connected_region": "Swamp Laser Area",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5173,7 +4719,6 @@
             "connected_region": "Outside Swamp",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5190,9 +4735,7 @@
             "name": "Swamp Laser Panel",
             "id": 158711,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -5207,7 +4750,6 @@
             "id": 158342,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Negative Shapers",
@@ -5233,9 +4775,7 @@
             "name": "Treehouse Obelisk to Entry",
             "connected_region": "Entry",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5248,9 +4788,7 @@
             "name": "Treehouse Beach to Main Island",
             "connected_region": "Main Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5264,7 +4802,6 @@
             "connected_region": "Treehouse Between Entry Doors",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5280,7 +4817,6 @@
             "connected_region": "The Ocean",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5298,7 +4834,6 @@
             "id": 158344,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Stars",
                 "count": 1
@@ -5322,7 +4857,6 @@
             "connected_region": "Treehouse Yellow Bridge",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5340,7 +4874,6 @@
             "id": 158345,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Stars",
                 "count": 1
@@ -5364,7 +4897,6 @@
             "connected_region": "Treehouse After Yellow Bridge",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5382,7 +4914,6 @@
             "id": 158354,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Stars",
                 "count": 1
@@ -5406,7 +4937,6 @@
             "connected_region": "Treehouse Junction",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5424,7 +4954,6 @@
             "id": 158355,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Stars",
                 "count": 1
@@ -5447,27 +4976,21 @@
             "name": "Treehouse Junction to Treehouse Right Orange Bridge",
             "connected_region": "Treehouse Right Orange Bridge",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Treehouse Junction to Treehouse First Purple Bridge",
             "connected_region": "Treehouse First Purple Bridge",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Treehouse Junction to Treehouse Green Bridge",
             "connected_region": "Treehouse Green Bridge",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5481,7 +5004,6 @@
             "connected_region": "Treehouse Second Purple Bridge",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5496,9 +5018,7 @@
             "name": "Treehouse First Purple Bridge to Treehouse Junction",
             "connected_region": "Treehouse Junction",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5508,7 +5028,6 @@
             "id": 158361,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Progressive Dots",
@@ -5534,7 +5053,6 @@
             "connected_region": "Treehouse Drawbridge Platform",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5549,9 +5067,7 @@
             "name": "Treehouse Right Orange Bridge to Treehouse Junction",
             "connected_region": "Treehouse Junction",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5561,7 +5077,6 @@
             "id": 158402,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Stars",
                 "count": 1
@@ -5585,7 +5100,6 @@
             "connected_region": "Main Island",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5603,7 +5117,6 @@
             "id": 158404,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Stars",
                 "count": 1
@@ -5627,7 +5140,6 @@
             "connected_region": "Treehouse Left Orange Bridge",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5645,7 +5157,6 @@
             "id": 158368,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Black/White Squares",
@@ -5672,7 +5183,6 @@
             "connected_region": "Treehouse Laser Room Front Platform",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5688,7 +5198,6 @@
             "connected_region": "Treehouse Laser Room Back Platform",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5704,7 +5213,6 @@
             "connected_region": "Treehouse Burned House",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5722,7 +5230,6 @@
             "id": 158390,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Black/White Squares": 1,
@@ -5749,7 +5256,6 @@
             "connected_region": "Treehouse Green Bridge Front House",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5765,7 +5271,6 @@
             "connected_region": "Treehouse Green Bridge Left House",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5780,9 +5285,7 @@
             "name": "Treehouse Green Bridge to Treehouse Junction",
             "connected_region": "Treehouse Junction",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5792,7 +5295,6 @@
             "id": 158375,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Negative Shapers": 1,
@@ -5830,7 +5332,6 @@
             "connected_region": "Treehouse Laser Room",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5861,9 +5362,7 @@
             "name": "Treehouse Laser Room to Treehouse Laser Room Front Platform",
             "connected_region": "Treehouse Laser Room Front Platform",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5872,9 +5371,7 @@
             "name": "Treehouse Laser Panel",
             "id": 158712,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -5893,9 +5390,7 @@
             "name": "Mountainside Obelisk to Entry",
             "connected_region": "Entry",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5908,18 +5403,14 @@
             "name": "Mountainside to Main Island",
             "connected_region": "Main Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Mountainside to Mountaintop",
             "connected_region": "Mountaintop",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5933,7 +5424,6 @@
             "connected_region": "Mountain Floor 1",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -5948,9 +5438,7 @@
             "name": "Mountaintop to Mountainside",
             "connected_region": "Mountainside",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -5959,9 +5447,7 @@
             "name": "Mountaintop River Shape",
             "id": 158405,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Speed Boost",
@@ -5976,11 +5462,9 @@
             "id": 158407,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAllCounts",
-                  "options": [],
                   "args": {
                     "items": {
                       "Black/White Squares": 1,
@@ -5990,7 +5474,6 @@
                 },
                 {
                   "rule": "HasFromList",
-                  "options": [],
                   "args": {
                     "items": [
                       "+1 Laser",
@@ -6014,11 +5497,9 @@
             "id": null,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAllCounts",
-                  "options": [],
                   "args": {
                     "items": {
                       "Black/White Squares": 1,
@@ -6028,7 +5509,6 @@
                 },
                 {
                   "rule": "HasFromList",
-                  "options": [],
                   "args": {
                     "items": [
                       "+1 Laser",
@@ -6057,7 +5537,6 @@
             "connected_region": "Mountain Floor 1 Bridge",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -6073,7 +5552,6 @@
             "connected_region": "Mountaintop",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -6091,7 +5569,6 @@
             "id": 158408,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Black/White Squares",
@@ -6117,27 +5594,21 @@
             "name": "Mountain Floor 1 Bridge to Mountain Floor 1 At Door",
             "connected_region": "Mountain Floor 1 At Door",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Mountain Floor 1 Bridge to Mountain Floor 1 Trash Pillar",
             "connected_region": "Mountain Floor 1 Trash Pillar",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Mountain Floor 1 Bridge to Mountain Floor 1 Back Section",
             "connected_region": "Mountain Floor 1 Back Section",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -6147,7 +5618,6 @@
             "id": 158413,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Black/White Squares",
@@ -6169,7 +5639,6 @@
             "id": 158420,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Black/White Squares": 1,
@@ -6193,7 +5662,6 @@
             "id": 158425,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Black/White Squares",
@@ -6225,7 +5693,6 @@
             "id": 158423,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Black/White Squares",
@@ -6253,7 +5720,6 @@
             "connected_region": "Mountain Floor 2",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -6275,7 +5741,6 @@
             "connected_region": "Mountain Floor 2 Light Bridge Room Near",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -6291,7 +5756,6 @@
             "connected_region": "Mountain Floor 2 Beyond Bridge",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -6306,18 +5770,14 @@
             "name": "Mountain Floor 2 to Mountain Floor 2 Above The Abyss",
             "connected_region": "Mountain Floor 2 Above The Abyss",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Mountain Floor 2 to Mountain Pink Bridge EP",
             "connected_region": "Mountain Pink Bridge EP",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -6325,7 +5785,6 @@
             "connected_region": "Mountain Floor 1 At Door",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -6343,7 +5802,6 @@
             "id": 158430,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Colored Squares": 1,
@@ -6371,7 +5829,6 @@
             "connected_region": "Mountain Floor 2 Elevator Room",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -6386,9 +5843,7 @@
             "name": "Mountain Floor 2 Above The Abyss to Mountain Floor 2",
             "connected_region": "Mountain Floor 2",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -6403,7 +5858,6 @@
             "id": 158431,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Eraser": 1,
@@ -6430,7 +5884,6 @@
             "connected_region": "Mountain Floor 2 Light Bridge Room Far",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -6445,9 +5898,7 @@
             "name": "Mountain Floor 2 Beyond Bridge to Mountain Pink Bridge EP",
             "connected_region": "Mountain Pink Bridge EP",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -6455,7 +5906,6 @@
             "connected_region": "Mountain Floor 2",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -6473,7 +5923,6 @@
             "id": 158437,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Black/White Squares": 1,
@@ -6504,7 +5953,6 @@
             "id": 158438,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Eraser": 1,
@@ -6530,9 +5978,7 @@
             "name": "Mountain Floor 2 Elevator Room to Mountain Floor 2 Elevator",
             "connected_region": "Mountain Floor 2 Elevator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -6540,7 +5986,6 @@
             "connected_region": "Mountain Floor 2 Above The Abyss",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -6562,7 +6007,6 @@
             "connected_region": "Mountain Floor 2 Elevator Room",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -6578,7 +6022,6 @@
             "connected_region": "Mountain Floor 3",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -6599,9 +6042,7 @@
             "name": "Mountain Floor 3 to Mountain Floor 2 Elevator",
             "connected_region": "Mountain Floor 2 Elevator",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -6609,7 +6050,6 @@
             "connected_region": "Mountain Bottom Floor",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -6624,9 +6064,7 @@
             "name": "Mountain Floor 3 to Mountain Pink Bridge EP",
             "connected_region": "Mountain Pink Bridge EP",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -6636,7 +6074,6 @@
             "id": 158444,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Eraser",
@@ -6664,7 +6101,6 @@
             "connected_region": "Mountain Bottom Floor Pillars Room",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -6682,7 +6118,6 @@
             "id": 158445,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Progressive Stars",
@@ -6703,7 +6138,6 @@
             "id": 158446,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Colored Squares",
@@ -6729,7 +6163,6 @@
             "connected_region": "Elevator",
             "access_rule": {
               "rule": "AST_error",
-              "options": [],
               "args": {
                 "message": "Failed to clean or retrieve source code for rule function.",
                 "subtype": "source_cleaning",
@@ -6747,7 +6180,6 @@
             "id": 158525,
             "access_rule": {
               "rule": "HasAllCounts",
-              "options": [],
               "args": {
                 "items": {
                   "Progressive Dots": 2,
@@ -6769,7 +6201,6 @@
             "id": 158529,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Black/White Squares",
@@ -6799,7 +6230,6 @@
             "id": null,
             "access_rule": {
               "rule": "HasFromList",
-              "options": [],
               "args": {
                 "items": [
                   "+1 Laser",
@@ -6830,45 +6260,35 @@
             "name": "The Ocean to Main Island",
             "connected_region": "Main Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "The Ocean to Swamp Near Boat",
             "connected_region": "Swamp Near Boat",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "The Ocean to Treehouse Entry Area",
             "connected_region": "Treehouse Entry Area",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "The Ocean to Quarry Boathouse Behind Staircase",
             "connected_region": "Quarry Boathouse Behind Staircase",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "The Ocean to Inside Glass Factory Behind Back Wall",
             "connected_region": "Inside Glass Factory Behind Back Wall",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -6881,9 +6301,7 @@
             "name": "Easter Eggs to Entry",
             "connected_region": "Entry",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],

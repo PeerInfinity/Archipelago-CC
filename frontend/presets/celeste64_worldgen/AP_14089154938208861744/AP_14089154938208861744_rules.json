@@ -19,9 +19,7 @@
             "name": "Menu -> Forsaken City",
             "connected_region": "Forsaken City",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -34,9 +32,7 @@
             "name": "Forsaken City -> Intro Islands",
             "connected_region": "Intro Islands",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -44,7 +40,6 @@
             "connected_region": "Granny Island",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Climb Sign Checkpoint",
@@ -59,7 +54,6 @@
             "connected_region": "Freeway Island",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Freeway Checkpoint",
@@ -73,7 +67,6 @@
             "connected_region": "North-East Feathers Island",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Feather Maze Checkpoint",
                 "count": 1
@@ -85,7 +78,6 @@
             "connected_region": "South-East House Island",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Double Dash House Checkpoint",
                 "count": 1
@@ -97,7 +89,6 @@
             "connected_region": "Badeline Tower Upper",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Badeline Tower Checkpoint",
                 "count": 1
@@ -109,7 +100,6 @@
             "connected_region": "Badeline Island",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Badeline Island Checkpoint",
                 "count": 1
@@ -127,7 +117,6 @@
             "connected_region": "Granny Island",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -145,7 +134,6 @@
             "id": 13238272,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -166,9 +154,7 @@
             "name": "Intro Checkpoint",
             "id": 13239296,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Intro Checkpoint",
@@ -188,7 +174,6 @@
             "connected_region": "Freeway Island",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -202,7 +187,6 @@
             "connected_region": "North-West Girders Island",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Traffic Blocks",
                 "count": 1
@@ -214,7 +198,6 @@
             "connected_region": "Badeline Tower Lower",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -229,7 +212,6 @@
             "connected_region": "South-East House Island",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -246,7 +228,6 @@
             "id": 13238273,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -267,7 +248,6 @@
             "id": 13238274,
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -288,7 +268,6 @@
             "id": 13238275,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -310,7 +289,6 @@
             "id": 13238276,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Air Dash",
                 "count": 1
@@ -329,7 +307,6 @@
             "id": 13238280,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -350,7 +327,6 @@
             "id": 13238281,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Climb",
                 "count": 1
@@ -369,7 +345,6 @@
             "id": 13238292,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -392,7 +367,6 @@
             "id": 13238293,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -415,7 +389,6 @@
             "id": 13238295,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -437,9 +410,7 @@
             "name": "Granny Checkpoint",
             "id": 13239297,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Granny Checkpoint",
@@ -453,9 +424,7 @@
             "name": "South-East Tower Checkpoint",
             "id": 13239298,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "South-East Tower Checkpoint",
@@ -469,9 +438,7 @@
             "name": "Climb Sign Checkpoint",
             "id": 13239299,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Climb Sign Checkpoint",
@@ -491,11 +458,9 @@
             "connected_region": "Granny Island",
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Air Dash",
@@ -505,7 +470,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Traffic Blocks",
                     "count": 1
@@ -519,7 +483,6 @@
             "connected_region": "North-East Feathers Island",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Feathers",
                 "count": 1
@@ -530,9 +493,7 @@
             "name": "Freeway Island -> North-West Girders Island",
             "connected_region": "North-West Girders Island",
             "access_rule": {
-              "rule": "False_",
-              "options": [],
-              "args": {}
+              "rule": "False_"
             }
           }
         ],
@@ -541,9 +502,7 @@
             "name": "Troll Strawberry",
             "id": 13238277,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Strawberry",
@@ -557,9 +516,7 @@
             "name": "Falling Blocks Strawberry",
             "id": 13238278,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Strawberry",
@@ -574,7 +531,6 @@
             "id": 13238282,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -595,11 +551,9 @@
             "id": 13238284,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Air Dash",
@@ -609,7 +563,6 @@
                 },
                 {
                   "rule": "HasAll",
-                  "options": [],
                   "args": {
                     "items": [
                       "Breakable Blocks",
@@ -632,7 +585,6 @@
             "id": 13238294,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -655,7 +607,6 @@
             "id": 13238297,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -676,9 +627,7 @@
             "name": "Freeway Checkpoint",
             "id": 13239300,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Freeway Checkpoint",
@@ -692,9 +641,7 @@
             "name": "Freeway Feather Checkpoint",
             "id": 13239301,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Freeway Feather Checkpoint",
@@ -714,7 +661,6 @@
             "connected_region": "Freeway Island",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Traffic Blocks",
                 "count": 1
@@ -727,9 +673,7 @@
             "name": "Traffic Block Strawberry",
             "id": 13238279,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Strawberry",
@@ -748,9 +692,7 @@
             "name": "North-East Feathers Island -> South-East House Island",
             "connected_region": "South-East House Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -758,7 +700,6 @@
             "connected_region": "Freeway Island",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Feathers",
                 "count": 1
@@ -770,7 +711,6 @@
             "connected_region": "Badeline Tower Lower",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Feathers",
                 "count": 1
@@ -782,7 +722,6 @@
             "connected_region": "Badeline Tower Upper",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -799,7 +738,6 @@
             "id": 13238285,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -820,7 +758,6 @@
             "id": 13238286,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -842,7 +779,6 @@
             "id": 13238287,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Feathers",
                 "count": 1
@@ -861,7 +797,6 @@
             "id": 13238298,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -885,7 +820,6 @@
             "id": 13238299,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -908,9 +842,7 @@
             "name": "Feather Maze Checkpoint",
             "id": 13239302,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Feather Maze Checkpoint",
@@ -929,9 +861,7 @@
             "name": "South-East House Island -> North-East Feathers Island",
             "connected_region": "North-East Feathers Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -939,7 +869,6 @@
             "connected_region": "Granny Island",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -954,7 +883,6 @@
             "connected_region": "Badeline Tower Lower",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -970,7 +898,6 @@
             "id": 13238288,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Double Dash Refills",
@@ -992,7 +919,6 @@
             "id": 13238289,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -1014,7 +940,6 @@
             "id": 13238290,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -1037,7 +962,6 @@
             "id": 13238296,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -1059,9 +983,7 @@
             "name": "Double Dash House Checkpoint",
             "id": 13239303,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Double Dash House Checkpoint",
@@ -1080,9 +1002,7 @@
             "name": "Badeline Tower Lower -> South-East House Island",
             "connected_region": "South-East House Island",
             "access_rule": {
-              "rule": "False_",
-              "options": [],
-              "args": {}
+              "rule": "False_"
             }
           },
           {
@@ -1090,7 +1010,6 @@
             "connected_region": "North-East Feathers Island",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -1104,18 +1023,14 @@
             "name": "Badeline Tower Lower -> Granny Island",
             "connected_region": "Granny Island",
             "access_rule": {
-              "rule": "False_",
-              "options": [],
-              "args": {}
+              "rule": "False_"
             }
           },
           {
             "name": "Badeline Tower Lower -> Badeline Tower Upper",
             "connected_region": "Badeline Tower Upper",
             "access_rule": {
-              "rule": "False_",
-              "options": [],
-              "args": {}
+              "rule": "False_"
             }
           }
         ],
@@ -1124,9 +1039,7 @@
             "name": "Badeline Tower Bottom Strawberry",
             "id": 13238283,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Strawberry",
@@ -1141,7 +1054,6 @@
             "id": 13238291,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -1168,7 +1080,6 @@
             "connected_region": "Badeline Island",
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -1185,9 +1096,7 @@
             "name": "Badeline Tower Upper -> Badeline Tower Lower",
             "connected_region": "Badeline Tower Lower",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
@@ -1195,7 +1104,6 @@
             "connected_region": "South-East House Island",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -1209,7 +1117,6 @@
             "connected_region": "North-East Feathers Island",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -1223,7 +1130,6 @@
             "connected_region": "Granny Island",
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Dash Refills",
                 "count": 1
@@ -1237,7 +1143,6 @@
             "id": 13238300,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -1260,9 +1165,7 @@
             "name": "Badeline Tower Checkpoint",
             "id": 13239304,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Badeline Tower Checkpoint",
@@ -1282,7 +1185,6 @@
             "connected_region": "Badeline Tower Upper",
             "access_rule": {
               "rule": "HasAny",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -1295,18 +1197,14 @@
             "name": "Badeline Island -> Granny Island",
             "connected_region": "Granny Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           },
           {
             "name": "Badeline Island -> Freeway Island",
             "connected_region": "Freeway Island",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -1316,7 +1214,6 @@
             "id": 13238301,
             "access_rule": {
               "rule": "HasAll",
-              "options": [],
               "args": {
                 "items": [
                   "Air Dash",
@@ -1343,9 +1240,7 @@
             "name": "Badeline Island Checkpoint",
             "id": 13239305,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Badeline Island Checkpoint",
@@ -1743,7 +1638,8 @@
         "start_inventory": {},
         "start_location_hints": []
       },
-      "world_directory": "celeste64_worldgen"
+      "strawberries_required": 16,
+      "world_directory": "celeste64"
     }
   },
   "game_info": {

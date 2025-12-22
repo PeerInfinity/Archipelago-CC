@@ -615,20 +615,23 @@ def generate_rules_py(data: ExtractedData) -> str:
 
     # Build helper definitions dict for exporter
     # This stores helper bodies so they can be looked up by name instead of inlined at every call site
+    # IMPORTANT: Do NOT expand helper references here - keep them as references so the frontend
+    # can look them up from the helpers dict. Expanding creates overly complex structures that
+    # the frontend AST evaluator may not handle correctly.
     helper_definitions_section = ''
     if helper_bodies:
         helper_defs = {}
         for helper_name, body in helper_bodies.items():
-            # Expand nested helper references so body is self-contained
-            expanded_body = rule_builder_generator._expand_helper_refs(body)
+            # Keep helper body as-is with references to other helpers
+            # The frontend will look up referenced helpers from the helpers dict
             # Include params if available for proper argument binding
             if helper_name in helper_params and helper_params[helper_name]:
                 helper_defs[helper_name] = {
                     'params': helper_params[helper_name],
-                    'body': expanded_body
+                    'body': body
                 }
             else:
-                helper_defs[helper_name] = expanded_body
+                helper_defs[helper_name] = body
 
         # Format as Python dict literal using repr() for valid Python syntax
         # (json.dumps produces JSON false/true/null, we need Python False/True/None)

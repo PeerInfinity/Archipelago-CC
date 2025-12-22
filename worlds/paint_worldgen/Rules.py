@@ -9,7 +9,7 @@ import math
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, Compare, HelperCall
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -241,650 +241,650 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Similarity: 1.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 1.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 2.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 2.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 3.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 3.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 4.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 4.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 5.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 5.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 6.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 6.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 7.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 7.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 8.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 8.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 9.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 9.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 10.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 10.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 11.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 11.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 12.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 12.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 13.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 13.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 14.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 14.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 15.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 15.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 16.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 16.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 17.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 17.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 18.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 18.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 19.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 19.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 20.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 20.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 21.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 21.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 22.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 22.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 23.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 23.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 24.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 24.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 25.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 25.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 26.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 26.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 27.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 27.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 28.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 28.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 29.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 29.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 30.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 30.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 31.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 31.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 32.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 32.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 33.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 33.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 34.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 34.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 35.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 35.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 36.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 36.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 37.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 37.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 38.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 38.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 39.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 39.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 40.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 40.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 41.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 41.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 42.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 42.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 43.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 43.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 44.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 44.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 45.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 45.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 46.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 46.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 47.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 47.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 48.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 48.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 49.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 49.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 50.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 50.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 50.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 50.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 51.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 51.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 51.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 51.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 52.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 52.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 52.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 52.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 53.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 53.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 53.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 53.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 54.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 54.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 54.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 54.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 55.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 55.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 55.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 55.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 56.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 56.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 56.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 56.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 57.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 57.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 57.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 57.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 58.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 58.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 58.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 58.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 59.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 59.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 59.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 59.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 60.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 60.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 60.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 60.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 61.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 61.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 61.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 61.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 62.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 62.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 62.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 62.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 63.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 63.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 63.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 63.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 64.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 64.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 64.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 64.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 65.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 65.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 65.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 65.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 66.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 66.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 66.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 66.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 67.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 67.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 67.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 67.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 68.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 68.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 68.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 68.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 69.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 69.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 69.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 69.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 70.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 70.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 70.25%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 70.25)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 70.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 70.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 70.75%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 70.75)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 71.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 71.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 71.25%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 71.25)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 71.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 71.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 71.75%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 71.75)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 72.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 72.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 72.25%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 72.25)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 72.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 72.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 72.75%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 72.75)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 73.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 73.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 73.25%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 73.25)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 73.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 73.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 73.75%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 73.75)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 74.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 74.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 74.25%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 74.25)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 74.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 74.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 74.75%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 74.75)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 75.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 75.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 75.25%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 75.25)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 75.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 75.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 75.75%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 75.75)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 76.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 76.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 76.25%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 76.25)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 76.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 76.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 76.75%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 76.75)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 77.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 77.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 77.25%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 77.25)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 77.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 77.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 77.75%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 77.75)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 78.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 78.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 78.25%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 78.25)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 78.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 78.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 78.75%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 78.75)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 79.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 79.0)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 79.25%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 79.25)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 79.5%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 79.5)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 79.75%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 79.75)
     )
 
     world.set_rule(
         multiworld.get_location("Similarity: 80.0%", player),
-        True_()
+        Compare(HelperCall(helper_func=_paintworldgen_calculate_paint_percent_available, helper_name="calculate_paint_percent_available"), ">=", 80.0)
     )

@@ -26,9 +26,7 @@
             "name": "Menu -> Hawk Peak",
             "connected_region": "Hawk Peak",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             }
           }
         ],
@@ -42,9 +40,7 @@
             "name": "Start Beach Seashell",
             "id": 83001,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Time Piece",
@@ -58,9 +54,7 @@
             "name": "Beach Hut Seashell",
             "id": 83002,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Badge Pin",
@@ -74,9 +68,7 @@
             "name": "Beach Umbrella Seashell",
             "id": 83003,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Seashell",
@@ -90,9 +82,7 @@
             "name": "Sid Beach Mound Seashell",
             "id": 83004,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "25 Coins",
@@ -106,9 +96,7 @@
             "name": "Sid Beach Seashell",
             "id": 83005,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Relic (Blue Crayon)",
@@ -122,9 +110,7 @@
             "name": "Shirley's Point Beach Seashell",
             "id": 83006,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Magic Mirror",
@@ -138,9 +124,7 @@
             "name": "Shirley's Point Rock Seashell",
             "id": 83007,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bottle (Fairy)",
@@ -154,9 +138,7 @@
             "name": "Visitor's Center Beach Seashell",
             "id": 83008,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Yarn",
@@ -170,9 +152,7 @@
             "name": "West River Seashell",
             "id": 83009,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Yellow Key",
@@ -186,9 +166,7 @@
             "name": "West Riverbank Seashell",
             "id": 83010,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Health Pon",
@@ -202,9 +180,7 @@
             "name": "Stone Tower Riverbank Seashell",
             "id": 83011,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "25 Pons",
@@ -218,9 +194,7 @@
             "name": "North Beach Seashell",
             "id": 83012,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Pickaxe",
@@ -234,9 +208,7 @@
             "name": "North Coast Seashell",
             "id": 83013,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Umbrella",
@@ -250,9 +222,7 @@
             "name": "Boat Cliff Seashell",
             "id": 83014,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Sword",
@@ -266,9 +236,7 @@
             "name": "Boat Isle Mound Seashell",
             "id": 83015,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "25 Pons",
@@ -282,9 +250,7 @@
             "name": "East Coast Seashell",
             "id": 83016,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Ether",
@@ -298,9 +264,7 @@
             "name": "House North Beach Seashell",
             "id": 83017,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Relic (Red Crayon)",
@@ -314,9 +278,7 @@
             "name": "Airstream Island North Seashell",
             "id": 83018,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Fishing Rod",
@@ -330,9 +292,7 @@
             "name": "Airstream Island South Seashell",
             "id": 83019,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "25 Pons",
@@ -346,9 +306,7 @@
             "name": "Secret Island Beach Seashell",
             "id": 83020,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Piece of Heart",
@@ -362,9 +320,7 @@
             "name": "Meteor Lake Seashell",
             "id": 83126,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "25 Coins",
@@ -378,9 +334,7 @@
             "name": "Good Creek Path Seashell",
             "id": 83127,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Time Piece",
@@ -394,9 +348,7 @@
             "name": "Visitor's Center Shop Golden Feather 1",
             "id": 83021,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Health Pon",
@@ -410,9 +362,7 @@
             "name": "Visitor's Center Shop Golden Feather 2",
             "id": 83022,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Book of Mudora",
@@ -427,7 +377,6 @@
             "id": 83023,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Fishing Rod"
               }
@@ -445,7 +394,6 @@
             "id": 83024,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Fishing Rod"
               }
@@ -463,7 +411,6 @@
             "id": 83025,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Fishing Rod"
               }
@@ -481,7 +428,6 @@
             "id": 83026,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Fishing Rod"
               }
@@ -499,7 +445,6 @@
             "id": 83027,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Fishing Rod"
               }
@@ -517,7 +462,6 @@
             "id": 83028,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Fishing Rod"
               }
@@ -535,7 +479,6 @@
             "id": 83029,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Stick"
               }
@@ -553,7 +496,6 @@
             "id": 83030,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Stick"
               }
@@ -571,7 +513,6 @@
             "id": 83031,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Stick"
               }
@@ -589,7 +530,6 @@
             "id": 83032,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Toy Shovel"
               }
@@ -606,9 +546,7 @@
             "name": "Compass Guy",
             "id": 83033,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "50 Pons",
@@ -622,9 +560,7 @@
             "name": "Hawk Peak Bucket Rock",
             "id": 83034,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Silver Feather",
@@ -638,9 +574,7 @@
             "name": "Orange Islands Bucket Rock",
             "id": 83035,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hover Badge",
@@ -654,9 +588,7 @@
             "name": "Bill the Walrus Fisherman",
             "id": 83036,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Golden Feather",
@@ -671,7 +603,6 @@
             "id": 83037,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Fishing Rod"
               }
@@ -689,11 +620,9 @@
             "id": 83038,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Golden Feather",
                     "count": 7
@@ -701,7 +630,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Progressive Fishing Rod",
                     "count": 2
@@ -721,9 +649,7 @@
             "name": "Permit Guy Bribe",
             "id": 83039,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rupees (300)",
@@ -738,7 +664,6 @@
             "id": 83129,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Fishing Rod"
               }
@@ -756,7 +681,6 @@
             "id": 83130,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Camping Permit"
               }
@@ -773,9 +697,7 @@
             "name": "Blocked Mine Pickaxe 1",
             "id": 83040,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "13 Coins",
@@ -789,9 +711,7 @@
             "name": "Blocked Mine Pickaxe 2",
             "id": 83041,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "50 Coins",
@@ -805,9 +725,7 @@
             "name": "Blocked Mine Pickaxe 3",
             "id": 83042,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Random Cosmetic",
@@ -821,9 +739,7 @@
             "name": "Blackwood Trail Lookout Toy Shovel",
             "id": 83043,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Time Piece",
@@ -837,9 +753,7 @@
             "name": "Shirley's Point Beach Toy Shovel",
             "id": 83044,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Relic (Green Crayon)",
@@ -853,9 +767,7 @@
             "name": "Visitor's Center Beach Toy Shovel",
             "id": 83045,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Random Cosmetic",
@@ -869,9 +781,7 @@
             "name": "Blackwood Trail Rock Toy Shovel",
             "id": 83046,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Yarn",
@@ -885,9 +795,7 @@
             "name": "Beach Hut Cliff Toy Shovel",
             "id": 83128,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Piece of Heart",
@@ -901,9 +809,7 @@
             "name": "Secret Island Beach Trail Stick",
             "id": 83047,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "25 Pons",
@@ -917,9 +823,7 @@
             "name": "Below Lighthouse Walkway Stick",
             "id": 83048,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Seashell",
@@ -933,9 +837,7 @@
             "name": "Beach Hut Rocky Pool Sand Stick",
             "id": 83049,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Boss Heart Container",
@@ -949,9 +851,7 @@
             "name": "Cliff Overlooking West River Waterfall Stick",
             "id": 83050,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bug Catching Net",
@@ -965,9 +865,7 @@
             "name": "Trail to Tough Bird Salesman Stick",
             "id": 83051,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Golden Feather",
@@ -981,9 +879,7 @@
             "name": "North Beach Stick",
             "id": 83052,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Piece of Heart",
@@ -997,9 +893,7 @@
             "name": "Beachstickball Court Stick",
             "id": 83053,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "50 Pons",
@@ -1013,9 +907,7 @@
             "name": "Stick Under Sid Beach Umbrella",
             "id": 83054,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Freeincarnate",
@@ -1030,7 +922,6 @@
             "id": 83055,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Fishing Rod"
               }
@@ -1048,7 +939,6 @@
             "id": 83056,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Motorboat Key"
               }
@@ -1065,9 +955,7 @@
             "name": "Outlook Point Dog Gift",
             "id": 83057,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Glove",
@@ -1082,7 +970,6 @@
             "id": 83058,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Seashell",
                 "count": 15
@@ -1101,11 +988,9 @@
             "id": 83132,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Seashell",
                     "count": 15
@@ -1113,7 +998,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Shell Necklace"
                   }
@@ -1132,9 +1016,7 @@
             "name": "Taylor the Turtle Headband Gift",
             "id": 83059,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Arrows (10)",
@@ -1149,7 +1031,6 @@
             "id": 83060,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Headband"
               }
@@ -1167,7 +1048,6 @@
             "id": 83061,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Progressive Fishing Rod"
               }
@@ -1184,9 +1064,7 @@
             "name": "Blackwood Forest Golden Feather",
             "id": 83062,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "25 Coins",
@@ -1201,7 +1079,6 @@
             "id": 83063,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shell Necklace"
               }
@@ -1219,7 +1096,6 @@
             "id": 83064,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Toy Shovel"
               }
@@ -1236,9 +1112,7 @@
             "name": "Artist Golden Feather",
             "id": 83065,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bombs (3)",
@@ -1252,9 +1126,7 @@
             "name": "Visitor Camp Rock Golden Feather",
             "id": 83066,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Seashell",
@@ -1268,9 +1140,7 @@
             "name": "Outlook Cliff Golden Feather",
             "id": 83067,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Black Key",
@@ -1284,9 +1154,7 @@
             "name": "Meteor Lake Cliff Golden Feather",
             "id": 83068,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Chalice",
@@ -1301,7 +1169,6 @@
             "id": 83069,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Golden Feather",
                 "count": 5
@@ -1320,7 +1187,6 @@
             "id": 83070,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Wristwatch"
               }
@@ -1338,22 +1204,18 @@
             "id": 83071,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Bucket"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Golden Feather",
                         "count": 0
@@ -1363,7 +1225,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Golden Feather",
                     "count": 2
@@ -1383,9 +1244,7 @@
             "name": "Outlook Golden Chest",
             "id": 83072,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "25 Pons",
@@ -1399,9 +1258,7 @@
             "name": "Stone Tower Golden Chest",
             "id": 83073,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rupees (50)",
@@ -1416,7 +1273,6 @@
             "id": 83074,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Golden Feather",
                 "count": 3
@@ -1434,9 +1290,7 @@
             "name": "Blackwood Cliff Chest",
             "id": 83075,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rupees (50)",
@@ -1450,9 +1304,7 @@
             "name": "White Coast Trail Chest",
             "id": 83076,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Compass",
@@ -1466,9 +1318,7 @@
             "name": "Sid Beach Chest",
             "id": 83077,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bombs (3)",
@@ -1483,7 +1333,6 @@
             "id": 83078,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shovel"
               }
@@ -1500,9 +1349,7 @@
             "name": "Sid Beach Cliff Chest",
             "id": 83079,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "25 Pons",
@@ -1517,7 +1364,6 @@
             "id": 83080,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shovel"
               }
@@ -1534,9 +1380,7 @@
             "name": "Visitor's Center Hidden Chest",
             "id": 83081,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bombs (3)",
@@ -1551,7 +1395,6 @@
             "id": 83082,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Golden Feather"
               }
@@ -1568,9 +1411,7 @@
             "name": "Caravan Cliff Chest",
             "id": 83083,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Freeincarnate",
@@ -1584,9 +1425,7 @@
             "name": "Caravan Arch Chest",
             "id": 83084,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Health Pon",
@@ -1601,7 +1440,6 @@
             "id": 83085,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shovel"
               }
@@ -1619,7 +1457,6 @@
             "id": 83086,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shovel"
               }
@@ -1636,9 +1473,7 @@
             "name": "Good Creek Path West Chest",
             "id": 83087,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Relic (Cow)",
@@ -1652,9 +1487,7 @@
             "name": "Good Creek Path East Chest",
             "id": 83088,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "50 Pons",
@@ -1668,9 +1501,7 @@
             "name": "West Waterfall Chest",
             "id": 83089,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Bombs (3)",
@@ -1684,9 +1515,7 @@
             "name": "Stone Tower West Cliff Chest",
             "id": 83090,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Time Piece",
@@ -1700,9 +1529,7 @@
             "name": "Bucket Path Chest",
             "id": 83091,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Yarn",
@@ -1717,7 +1544,6 @@
             "id": 83092,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Golden Feather",
                 "count": 3
@@ -1736,7 +1562,6 @@
             "id": 83093,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shovel"
               }
@@ -1754,7 +1579,6 @@
             "id": 83094,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shovel"
               }
@@ -1771,9 +1595,7 @@
             "name": "Meteor Lake Chest",
             "id": 83095,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "100 Pons",
@@ -1787,9 +1609,7 @@
             "name": "House North Beach Chest",
             "id": 83096,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "33 Coins",
@@ -1803,9 +1623,7 @@
             "name": "East Coast Chest",
             "id": 83097,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "13 Coins",
@@ -1819,9 +1637,7 @@
             "name": "Fisherman's Boat Chest 1",
             "id": 83099,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rupees (20)",
@@ -1835,9 +1651,7 @@
             "name": "Fisherman's Boat Chest 2",
             "id": 83100,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Freeincarnate",
@@ -1851,9 +1665,7 @@
             "name": "Airstream Island Chest",
             "id": 83101,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Hammer",
@@ -1867,9 +1679,7 @@
             "name": "West River Waterfall Head Chest",
             "id": 83102,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Yarn",
@@ -1883,9 +1693,7 @@
             "name": "Old Building Chest",
             "id": 83103,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Time Piece",
@@ -1899,9 +1707,7 @@
             "name": "Old Building West Chest",
             "id": 83104,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Piece of Heart",
@@ -1915,9 +1721,7 @@
             "name": "Old Building East Chest",
             "id": 83105,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rupees (300)",
@@ -1932,7 +1736,6 @@
             "id": 83106,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Golden Feather",
                 "count": 3
@@ -1951,11 +1754,9 @@
             "id": 83107,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Golden Feather",
                     "count": 3
@@ -1963,7 +1764,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Shovel"
                   }
@@ -1983,7 +1783,6 @@
             "id": 83108,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Golden Feather",
                 "count": 3
@@ -2001,9 +1800,7 @@
             "name": "Northern East Coast Chest",
             "id": 83109,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rupees (20)",
@@ -2017,9 +1814,7 @@
             "name": "North Coast Chest",
             "id": 83110,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Rupees (20)",
@@ -2034,7 +1829,6 @@
             "id": 83111,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shovel"
               }
@@ -2052,7 +1846,6 @@
             "id": 83112,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shovel"
               }
@@ -2069,9 +1862,7 @@
             "name": "Secret Island Bottom Chest",
             "id": 83113,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Time Piece",
@@ -2086,7 +1877,6 @@
             "id": 83114,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Golden Feather"
               }
@@ -2104,7 +1894,6 @@
             "id": 83115,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shovel"
               }
@@ -2122,7 +1911,6 @@
             "id": 83116,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shovel"
               }
@@ -2139,9 +1927,7 @@
             "name": "Orange Islands West Chest",
             "id": 83117,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Random Cosmetic",
@@ -2156,26 +1942,21 @@
             "id": 83118,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Bucket"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Golden Feather",
                             "count": 0
@@ -2185,7 +1966,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Golden Feather"
                       }
@@ -2194,7 +1974,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Shovel"
                   }
@@ -2213,9 +1992,7 @@
             "name": "Orange Islands East Chest",
             "id": 83119,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Stick",
@@ -2229,9 +2006,7 @@
             "name": "Orange Islands South Hidden Chest",
             "id": 83120,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Relic (Burger Patty)",
@@ -2246,7 +2021,6 @@
             "id": 83121,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Shovel"
               }
@@ -2264,26 +2038,21 @@
             "id": 83122,
             "access_rule": {
               "rule": "And",
-              "options": [],
               "children": [
                 {
                   "rule": "Or",
-                  "options": [],
                   "children": [
                     {
                       "rule": "And",
-                      "options": [],
                       "children": [
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Bucket"
                           }
                         },
                         {
                           "rule": "Has",
-                          "options": [],
                           "args": {
                             "item_name": "Golden Feather",
                             "count": 0
@@ -2293,7 +2062,6 @@
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Golden Feather",
                         "count": 2
@@ -2303,7 +2071,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Shovel"
                   }
@@ -2323,22 +2090,18 @@
             "id": 83123,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Bucket"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Golden Feather"
                       }
@@ -2347,7 +2110,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Golden Feather",
                     "count": 2
@@ -2368,22 +2130,18 @@
             "id": 83124,
             "access_rule": {
               "rule": "Or",
-              "options": [],
               "children": [
                 {
                   "rule": "And",
-                  "options": [],
                   "children": [
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Bucket"
                       }
                     },
                     {
                       "rule": "Has",
-                      "options": [],
                       "args": {
                         "item_name": "Golden Feather",
                         "count": 0
@@ -2393,7 +2151,6 @@
                 },
                 {
                   "rule": "Has",
-                  "options": [],
                   "args": {
                     "item_name": "Golden Feather"
                   }
@@ -2413,7 +2170,6 @@
             "id": 83125,
             "access_rule": {
               "rule": "Has",
-              "options": [],
               "args": {
                 "item_name": "Golden Feather",
                 "count": 7
@@ -2431,9 +2187,7 @@
             "name": "Lose Race Gift",
             "id": 83131,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Piece of Heart",
@@ -3563,8 +3317,7 @@
                     ]
                   },
                   "attr": "access_rule"
-                },
-                "args": []
+                }
               }
             }
           ]
@@ -3801,8 +3554,7 @@
                     },
                     {
                       "type": "helper",
-                      "name": "has_fire_source",
-                      "args": []
+                      "name": "has_fire_source"
                     },
                     {
                       "type": "item_check",
@@ -3810,8 +3562,7 @@
                     },
                     {
                       "type": "helper",
-                      "name": "can_shoot_arrows",
-                      "args": []
+                      "name": "can_shoot_arrows"
                     }
                   ]
                 }
@@ -3823,8 +3574,7 @@
             "name": "can_hurt",
             "value": {
               "type": "helper",
-              "name": "has_beam_sword",
-              "args": []
+              "name": "has_beam_sword"
             }
           },
           {
@@ -3839,8 +3589,7 @@
                 },
                 {
                   "type": "helper",
-                  "name": "has_fire_source",
-                  "args": []
+                  "name": "has_fire_source"
                 }
               ]
             }
@@ -3889,8 +3638,7 @@
                             },
                             {
                               "type": "helper",
-                              "name": "can_shoot_arrows",
-                              "args": []
+                              "name": "can_shoot_arrows"
                             }
                           ]
                         },
@@ -3930,8 +3678,7 @@
                     },
                     {
                       "type": "helper",
-                      "name": "can_shoot_arrows",
-                      "args": []
+                      "name": "can_shoot_arrows"
                     }
                   ]
                 }
@@ -4001,18 +3748,15 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "has_melee_weapon",
-            "args": []
+            "name": "has_melee_weapon"
           },
           {
             "type": "helper",
-            "name": "can_use_bombs",
-            "args": []
+            "name": "can_use_bombs"
           },
           {
             "type": "helper",
-            "name": "can_shoot_arrows",
-            "args": []
+            "name": "can_shoot_arrows"
           },
           {
             "type": "state_method",
@@ -4043,8 +3787,7 @@
           },
           {
             "type": "helper",
-            "name": "can_use_bombs",
-            "args": []
+            "name": "can_use_bombs"
           }
         ]
       },
@@ -4256,8 +3999,7 @@
                           "op": "*",
                           "right": {
                             "type": "helper",
-                            "name": "bottle_count",
-                            "args": []
+                            "name": "bottle_count"
                           }
                         }
                       ]
@@ -4317,8 +4059,7 @@
                             "op": "*",
                             "right": {
                               "type": "helper",
-                              "name": "bottle_count",
-                              "args": []
+                              "name": "bottle_count"
                             }
                           }
                         ]
@@ -4340,8 +4081,7 @@
                         "op": "*",
                         "right": {
                           "type": "helper",
-                          "name": "bottle_count",
-                          "args": []
+                          "name": "bottle_count"
                         }
                       }
                     }
@@ -4411,8 +4151,7 @@
                       "conditions": [
                         {
                           "type": "helper",
-                          "name": "has_sword",
-                          "args": []
+                          "name": "has_sword"
                         },
                         {
                           "type": "item_check",
@@ -4431,8 +4170,7 @@
                       "name": "cave"
                     },
                     "attr": "can_reach"
-                  },
-                  "args": []
+                  }
                 },
                 {
                   "type": "helper",
@@ -4666,8 +4404,7 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "has_melee_weapon",
-                "args": []
+                "name": "has_melee_weapon"
               },
               {
                 "type": "item_check",
@@ -4679,13 +4416,11 @@
               },
               {
                 "type": "helper",
-                "name": "can_extend_magic",
-                "args": []
+                "name": "can_extend_magic"
               },
               {
                 "type": "helper",
-                "name": "can_shoot_arrows",
-                "args": []
+                "name": "can_shoot_arrows"
               },
               {
                 "type": "item_check",
@@ -4716,8 +4451,7 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "has_melee_weapon",
-                "args": []
+                "name": "has_melee_weapon"
               },
               {
                 "type": "item_check",
@@ -4747,8 +4481,7 @@
                       },
                       {
                         "type": "helper",
-                        "name": "can_extend_magic",
-                        "args": []
+                        "name": "can_extend_magic"
                       }
                     ]
                   }
@@ -4756,8 +4489,7 @@
               },
               {
                 "type": "helper",
-                "name": "can_shoot_arrows",
-                "args": []
+                "name": "can_shoot_arrows"
               },
               {
                 "type": "item_check",
@@ -4854,8 +4586,7 @@
                   },
                   {
                     "type": "helper",
-                    "name": "has_sword",
-                    "args": []
+                    "name": "has_sword"
                   }
                 ]
               }
@@ -4875,8 +4606,7 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "has_beam_sword",
-                "args": []
+                "name": "has_beam_sword"
               },
               {
                 "type": "and",
@@ -5243,8 +4973,7 @@
           "type": "compare",
           "left": {
             "type": "helper",
-            "name": "heart_count",
-            "args": []
+            "name": "heart_count"
           },
           "op": ">=",
           "right": {
@@ -5258,8 +4987,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "has_sword",
-            "args": []
+            "name": "has_sword"
           },
           {
             "type": "item_check",

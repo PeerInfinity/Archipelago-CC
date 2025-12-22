@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachRegion, Has, HasAll, Or
+from rule_builder import True_, False_, And, CanReachRegion, Compare, Has, HasAll, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -98,33 +98,16 @@ _HELPER_DEFINITIONS = {   'all_skull_dials_set': {   'args': [   {   'type': 'co
                                                 'method': 'has_all',
                                                 'type': 'state_method'}],
                           'type': 'or'},
-    'beths_body_available': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                            'name': 'water_capturable',
+    'beths_body_available': {   'conditions': [   {   'conditions': [   {'name': 'water_capturable', 'type': 'helper'},
+                                                                        {'name': 'wax_capturable', 'type': 'helper'},
+                                                                        {'name': 'ash_capturable', 'type': 'helper'},
+                                                                        {'name': 'oil_capturable', 'type': 'helper'},
+                                                                        {'name': 'cloth_capturable', 'type': 'helper'},
+                                                                        {'name': 'wood_capturable', 'type': 'helper'},
+                                                                        {   'name': 'crystal_capturable',
                                                                             'type': 'helper'},
-                                                                        {   'args': [],
-                                                                            'name': 'wax_capturable',
-                                                                            'type': 'helper'},
-                                                                        {   'args': [],
-                                                                            'name': 'ash_capturable',
-                                                                            'type': 'helper'},
-                                                                        {   'args': [],
-                                                                            'name': 'oil_capturable',
-                                                                            'type': 'helper'},
-                                                                        {   'args': [],
-                                                                            'name': 'cloth_capturable',
-                                                                            'type': 'helper'},
-                                                                        {   'args': [],
-                                                                            'name': 'wood_capturable',
-                                                                            'type': 'helper'},
-                                                                        {   'args': [],
-                                                                            'name': 'crystal_capturable',
-                                                                            'type': 'helper'},
-                                                                        {   'args': [],
-                                                                            'name': 'sand_capturable',
-                                                                            'type': 'helper'},
-                                                                        {   'args': [],
-                                                                            'name': 'metal_capturable',
-                                                                            'type': 'helper'}],
+                                                                        {'name': 'sand_capturable', 'type': 'helper'},
+                                                                        {'name': 'metal_capturable', 'type': 'helper'}],
                                                       'type': 'and'},
                                                   {'type': 'constant', 'value': True}],
                                 'type': 'or'},
@@ -478,32 +461,23 @@ _HELPER_DEFINITIONS = {   'all_skull_dials_set': {   'args': [   {   'type': 'co
                                                                                    'type': 'state_method'}],
                                                              'type': 'or'}],
                                        'type': 'and'},
-    'lightning_capturable': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                                  'name': 'water_capturable',
+    'lightning_capturable': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'name': 'water_capturable',
                                                                                                   'type': 'helper'},
-                                                                                              {   'args': [],
-                                                                                                  'name': 'wax_capturable',
+                                                                                              {   'name': 'wax_capturable',
                                                                                                   'type': 'helper'},
-                                                                                              {   'args': [],
-                                                                                                  'name': 'ash_capturable',
+                                                                                              {   'name': 'ash_capturable',
                                                                                                   'type': 'helper'},
-                                                                                              {   'args': [],
-                                                                                                  'name': 'oil_capturable',
+                                                                                              {   'name': 'oil_capturable',
                                                                                                   'type': 'helper'},
-                                                                                              {   'args': [],
-                                                                                                  'name': 'cloth_capturable',
+                                                                                              {   'name': 'cloth_capturable',
                                                                                                   'type': 'helper'},
-                                                                                              {   'args': [],
-                                                                                                  'name': 'wood_capturable',
+                                                                                              {   'name': 'wood_capturable',
                                                                                                   'type': 'helper'},
-                                                                                              {   'args': [],
-                                                                                                  'name': 'crystal_capturable',
+                                                                                              {   'name': 'crystal_capturable',
                                                                                                   'type': 'helper'},
-                                                                                              {   'args': [],
-                                                                                                  'name': 'sand_capturable',
+                                                                                              {   'name': 'sand_capturable',
                                                                                                   'type': 'helper'},
-                                                                                              {   'args': [],
-                                                                                                  'name': 'metal_capturable',
+                                                                                              {   'name': 'metal_capturable',
                                                                                                   'type': 'helper'}],
                                                                             'type': 'and'},
                                                                         {'type': 'constant', 'value': False}],
@@ -711,12 +685,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Bedroom Elevator From Office", player),
-        HasAll(['Crawling', 'Key for Bedroom Elevator'])
+        HasAll('Crawling', 'Key for Bedroom Elevator')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Office From Bedroom Elevator", player),
-        HasAll(['Crawling', 'Key for Bedroom Elevator'])
+        HasAll('Crawling', 'Key for Bedroom Elevator')
     )
 
     world.set_rule(
@@ -751,7 +725,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Tar River From Lobby", player),
-        And(True_(), CanReachRegion('Tar River'), Has('Crawling'))
+        And(HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable"), CanReachRegion('Tar River'), Has('Crawling'))
     )
 
     world.set_rule(
@@ -761,7 +735,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Victory", player),
-        True_()
+        Compare(True_(), ">=", True_())
     )
 
     world.set_rule(
@@ -781,7 +755,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Beth's Body From Generator", player),
-        And(True_(), True_())
+        And(True_(), HelperCall(helper_func=_shiversworldgen_beths_body_available, helper_name="beths_body_available"))
     )
 
     world.set_rule(
@@ -831,7 +805,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Tar River", player),
-        And(True_(), Has('Crawling'))
+        And(HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable"), Has('Crawling'))
     )
 
     world.set_rule(
@@ -886,7 +860,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Water Capture From Janitor Closet", player),
-        True_()
+        HelperCall(helper_func=_shiversworldgen_cloth_capturable, helper_name="cloth_capturable")
     )
 
     world.set_rule(
@@ -946,7 +920,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Slide Room", player),
-        True_()
+        HelperCall(helper_func=_shiversworldgen_all_skull_dials_set, helper_name="all_skull_dials_set")
     )
 
     world.set_rule(
@@ -966,7 +940,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Bedroom Elevator", player),
-        HasAll(['Crawling', 'Key for Bedroom Elevator'])
+        HasAll('Crawling', 'Key for Bedroom Elevator')
     )
 
     world.set_rule(
@@ -1011,7 +985,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Storage: Tar River", player),
-        True_()
+        HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable")
     )
 
     world.set_rule(
@@ -1041,7 +1015,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Storage: Janitor Closet", player),
-        True_()
+        HelperCall(helper_func=_shiversworldgen_cloth_capturable, helper_name="cloth_capturable")
     )
 
     world.set_rule(
@@ -1056,50 +1030,50 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Skull Dial Door", player),
-        True_()
+        HelperCall(helper_func=_shiversworldgen_all_skull_dials_set, helper_name="all_skull_dials_set")
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Water", player),
-        True_()
+        HelperCall(helper_func=_shiversworldgen_water_capturable, helper_name="water_capturable")
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Wax", player),
-        True_()
+        HelperCall(helper_func=_shiversworldgen_wax_capturable, helper_name="wax_capturable")
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Ash", player),
-        True_()
+        HelperCall(helper_func=_shiversworldgen_ash_capturable, helper_name="ash_capturable")
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Oil", player),
-        True_()
+        HelperCall(helper_func=_shiversworldgen_oil_capturable, helper_name="oil_capturable")
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Cloth", player),
-        True_()
+        HelperCall(helper_func=_shiversworldgen_cloth_capturable, helper_name="cloth_capturable")
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Wood", player),
-        True_()
+        HelperCall(helper_func=_shiversworldgen_wood_capturable, helper_name="wood_capturable")
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Crystal", player),
-        True_()
+        HelperCall(helper_func=_shiversworldgen_crystal_capturable, helper_name="crystal_capturable")
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Sand", player),
-        True_()
+        HelperCall(helper_func=_shiversworldgen_sand_capturable, helper_name="sand_capturable")
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Metal", player),
-        True_()
+        HelperCall(helper_func=_shiversworldgen_metal_capturable, helper_name="metal_capturable")
     )

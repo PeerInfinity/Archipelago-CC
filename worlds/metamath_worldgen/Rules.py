@@ -22,70 +22,70 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("From Statement 1 to Statement 3", player),
-        HasAll(['Statement 1', 'Statement 2'])
+        HasAll('Statement 1', 'Statement 2')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Statement 2 to Statement 3", player),
-        HasAll(['Statement 1', 'Statement 2'])
+        HasAll('Statement 1', 'Statement 2')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Statement 3 to Statement 8", player),
-        HasAll(['Statement 3', 'Statement 6', 'Statement 7'])
+        HasAll('Statement 3', 'Statement 6', 'Statement 7')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Statement 4 to Statement 9", player),
-        HasAll(['Statement 4'])
+        HasAll('Statement 4')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Statement 5 to Statement 7", player),
-        HasAll(['Statement 5'])
+        HasAll('Statement 5')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Statement 6 to Statement 8", player),
-        HasAll(['Statement 3', 'Statement 6', 'Statement 7'])
+        HasAll('Statement 3', 'Statement 6', 'Statement 7')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Statement 7 to Statement 8", player),
-        HasAll(['Statement 3', 'Statement 6', 'Statement 7'])
+        HasAll('Statement 3', 'Statement 6', 'Statement 7')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Statement 8 to Statement 10", player),
-        HasAll(['Statement 8', 'Statement 9'])
+        HasAll('Statement 8', 'Statement 9')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Statement 9 to Statement 10", player),
-        HasAll(['Statement 8', 'Statement 9'])
+        HasAll('Statement 8', 'Statement 9')
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Prove Statement 3", player),
-        HasAll(['Statement 1', 'Statement 2'])
+        HasAll('Statement 1', 'Statement 2')
     )
 
     world.set_rule(
         multiworld.get_location("Prove Statement 7", player),
-        HasAll(['Statement 5'])
+        HasAll('Statement 5')
     )
 
     world.set_rule(
         multiworld.get_location("Prove Statement 8", player),
-        HasAll(['Statement 3', 'Statement 6', 'Statement 7'])
+        HasAll('Statement 3', 'Statement 6', 'Statement 7')
     )
 
     world.set_rule(
         multiworld.get_location("Prove Statement 9", player),
-        HasAll(['Statement 4'])
+        HasAll('Statement 4')
     )
 
     world.set_rule(
         multiworld.get_location("Prove Statement 10", player),
-        HasAll(['Statement 8', 'Statement 9'])
+        HasAll('Statement 8', 'Statement 9')
     )
