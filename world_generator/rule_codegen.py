@@ -609,6 +609,9 @@ class RuleCodeGenerator:
         if rb_rule == 'Has':
             item_name = args.get('item_name', '')
             count = args.get('count', 1)
+            # count=0 means "always true" (no items required)
+            if count <= 0:
+                return self._make_bool_constant(True)
             self.required_imports.add('Has')
             if count > 1:
                 return f'Has({repr(item_name)}, {count})'
