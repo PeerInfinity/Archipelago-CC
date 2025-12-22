@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-22 00:24:07
+**Generated:** 2025-12-22 06:47:09
 
-**Source Data Created:** 2025-12-21T23:39:43.004343
+**Source Data Created:** 2025-12-22T06:03:40.601557
 
-**Source Data Last Updated:** 2025-12-21T23:39:43.004348
+**Source Data Last Updated:** 2025-12-22T06:03:40.601564
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 73 (100.0%)
-- **Failed:** 0 (0.0%)
+- **Passed:** 72 (98.6%)
+- **Failed:** 1 (1.4%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 28/73 (38.4% of passed)
-- **Passing with Generic Logic:** 64/73 (87.7% of passed)
-- **Passing with Both Generic:** 28/73 (38.4% of passed)
+- **Passing with Generic Exporter:** 28/72 (38.9% of passed)
+- **Passing with Generic Logic:** 64/72 (88.9% of passed)
+- **Passing with Both Generic:** 28/72 (38.9% of passed)
 
 ## Test Results
 
@@ -35,7 +35,7 @@
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
-| Aquaria | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 3.3KB | ✅ |
+| Aquaria | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 3.4KB | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.9 | 10.9 | 🟢 Complete | 1.5KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | 0 | 4.4 | 4.4 | 🟢 Complete | 15.0KB | ✅ |
@@ -72,7 +72,7 @@
 | Metamath | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Muse Dash | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 0.2KB | ✅ |
 | Noita | ✅ Passed | 0 | 0.15 | 0.15 | 🟢 Complete | ✅ | ✅ |
-| Old School Runescape | ✅ Passed | 0 | 7.5 | 7.5 | 🟢 Complete | 5.9KB | ✅ |
+| Old School Runescape | ✅ Passed | 0 | 7.5 | 7.5 | 🟢 Complete | 6.2KB | ✅ |
 | Overcooked! 2 | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 26.1KB | 5.1KB |
 | Paint | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 8.4KB | ✅ |
 | Raft | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 12.0KB | ✅ |
@@ -81,7 +81,7 @@
 | Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 34.0KB | 86.3KB |
+| Starcraft 2 | ❌ Failed | 0 | 0.1 | 15.5 | 🟠 0.6% | 35.1KB | 86.3KB |
 | Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 20.6KB | 10.7KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 7.0KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 14.6KB | ✅ |
