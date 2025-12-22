@@ -1380,6 +1380,13 @@ class RuleCodeGenerator:
         if op_type == 'constant':
             return repr(operand.get('value'))
 
+        # Handle Rule Builder format Constant (e.g., {"rule": "Constant", "args": {"value": 6}})
+        # This is needed for numeric comparisons like quest_points() > 6
+        rb_rule = operand.get('rule', '')
+        if rb_rule == 'Constant':
+            value = operand.get('args', {}).get('value')
+            return repr(value)
+
         if op_type == 'count_item':
             # Handle count_item type from rules.json export
             item_name = operand.get('item', '')
