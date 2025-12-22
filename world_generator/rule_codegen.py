@@ -530,6 +530,8 @@ class RuleCodeGenerator:
                     'Constant': 'constant',
                     'AST_all_of': 'ast_all_of',
                     'AST_any_of': 'ast_any_of',
+                    'Arithmetic': 'arithmetic',
+                    'CountItem': 'count_item',
                 }
                 rule_type = rb_to_type.get(rb_rule, '')
 
@@ -741,7 +743,8 @@ class RuleCodeGenerator:
 
         if rb_rule == 'Constant':
             # Handle Constant rule
-            # Values can be booleans (True/False) or integers (0/1) representing boolean conditions
+            # Numeric values are converted to True_/False_ for boolean contexts (And/Or children)
+            # Arithmetic/Compare handlers use _get_numeric_value() to get raw values
             value = args.get('value')
             if value is True:
                 self.required_imports.add('True_')
@@ -749,9 +752,8 @@ class RuleCodeGenerator:
             elif value is False:
                 self.required_imports.add('False_')
                 return 'False_()'
-            elif isinstance(value, int):
-                # Integer values represent boolean conditions (0 = false, non-zero = true)
-                # This handles cases like settings that resolve to 0/1 instead of False/True
+            elif isinstance(value, (int, float)):
+                # Convert to boolean for And/Or contexts
                 if value:
                     self.required_imports.add('True_')
                     return 'True_()'
@@ -759,7 +761,9 @@ class RuleCodeGenerator:
                     self.required_imports.add('False_')
                     return 'False_()'
             else:
-                return repr(value)
+                # String or other value - treat as truthy
+                self.required_imports.add('True_')
+                return 'True_()'
 
         if rb_rule == 'AST_all_of':
             # Delegate to the dedicated converter
@@ -772,6 +776,24 @@ class RuleCodeGenerator:
         # Handle AST_count_true rules (count N of M conditions as true)
         if rb_rule == 'AST_count_true':
             return self._convert_count_true_from_args(args)
+
+        # Handle Arithmetic rule (Rule Builder format)
+        if rb_rule == 'Arithmetic':
+            self.required_imports.add('Arithmetic')
+            left = args.get('left', {})
+            op = args.get('op', '+')
+            right = args.get('right', {})
+            # Use _convert_arithmetic_operand to preserve raw numeric Constant values
+            left_code = self._convert_arithmetic_operand(left)
+            right_code = self._convert_arithmetic_operand(right)
+            return f'Arithmetic({left_code}, "{op}", {right_code})'
+
+        # Handle CountItem rule (Rule Builder format)
+        if rb_rule == 'CountItem':
+            item_name = args.get('item_name', '')
+            self.required_imports.add('CountItem')
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            return f'CountItem("{item_escaped}")'
 
         # Unknown Rule Builder rule - return True_() as placeholder
         self.required_imports.add('True_')
@@ -1371,10 +1393,37 @@ class RuleCodeGenerator:
         return None
 
     def _convert_compare_operand(self, operand: Any) -> str:
-        """Convert a compare operand to Python code."""
+        """Convert a compare operand to Python code.
+
+        For compare contexts, Constant values should return raw numeric values
+        rather than True_()/False_().
+        """
         if not isinstance(operand, dict):
             return repr(operand)
 
+        # Handle Rule Builder format (has 'rule' field)
+        rb_rule = operand.get('rule', '')
+        if rb_rule == 'Constant':
+            # Return raw numeric value for compare context
+            value = operand.get('args', {}).get('value')
+            return repr(value)
+        elif rb_rule == 'CountItem':
+            # Handle Rule Builder CountItem
+            item_name = operand.get('args', {}).get('item_name', '')
+            self.required_imports.add('CountItem')
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            return f'CountItem("{item_escaped}")'
+        elif rb_rule == 'Arithmetic':
+            # Handle Rule Builder Arithmetic
+            return self._convert_arithmetic_operand(operand)
+        elif rb_rule == 'AST_min':
+            # Handle min() - delegate to arithmetic operand handler
+            return self._convert_arithmetic_operand(operand)
+        elif rb_rule:
+            # Other Rule Builder format - fall through to _convert_rule
+            return self._convert_rule(operand)
+
+        # Handle AST format (has 'type' field)
         op_type = operand.get('type', '')
 
         if op_type == 'constant':
@@ -1429,10 +1478,53 @@ class RuleCodeGenerator:
         return f'Arithmetic({left_code}, "{op}", {right_code})'
 
     def _convert_arithmetic_operand(self, operand: Any) -> str:
-        """Convert an arithmetic operand to Python code."""
+        """Convert an arithmetic operand to Python code.
+
+        For arithmetic contexts (Arithmetic, Compare), Constant values should
+        return raw numeric values rather than True_()/False_().
+        """
         if not isinstance(operand, dict):
             return repr(operand)
 
+        # Handle Rule Builder format (has 'rule' field)
+        rb_rule = operand.get('rule', '')
+        if rb_rule == 'Constant':
+            # Return raw numeric value for arithmetic context
+            value = operand.get('args', {}).get('value')
+            return repr(value)
+        elif rb_rule == 'CountItem':
+            # Handle Rule Builder CountItem
+            item_name = operand.get('args', {}).get('item_name', '')
+            self.required_imports.add('CountItem')
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            return f'CountItem("{item_escaped}")'
+        elif rb_rule == 'Arithmetic':
+            # Handle nested Arithmetic
+            self.required_imports.add('Arithmetic')
+            args = operand.get('args', {})
+            left = args.get('left', {})
+            op = args.get('op', '+')
+            right = args.get('right', {})
+            left_code = self._convert_arithmetic_operand(left)
+            right_code = self._convert_arithmetic_operand(right)
+            return f'Arithmetic({left_code}, "{op}", {right_code})'
+        elif rb_rule == 'AST_min':
+            # Handle min() - converts to MinValue(left, right)
+            self.required_imports.add('MinValue')
+            min_args = operand.get('args', {}).get('args', [])
+            if len(min_args) >= 2:
+                left_code = self._convert_arithmetic_operand(min_args[0])
+                right_code = self._convert_arithmetic_operand(min_args[1])
+                return f'MinValue({left_code}, {right_code})'
+            elif len(min_args) == 1:
+                return self._convert_arithmetic_operand(min_args[0])
+            else:
+                return '0'
+        elif rb_rule:
+            # Other Rule Builder format - fall through to _convert_rule
+            return self._convert_rule(operand)
+
+        # Handle AST format (has 'type' field)
         op_type = operand.get('type', '')
 
         if op_type == 'constant':
@@ -1865,9 +1957,176 @@ class RuleCodeGenerator:
 
             return f'HelperCall({", ".join(parts)})'
 
+        # Game-specific helper handling for blacklisted helpers
+        # These helpers are too complex to export as definitions, but we can
+        # generate equivalent Rule Builder expressions for specific games
+        if self.game_name_lower.startswith('kingdomhearts'):
+            result = self._convert_kh1_blacklisted_helper(helper_name, args)
+            if result:
+                return result
+
         # Unknown helper - return True_() as placeholder
         self.required_imports.add('True_')
         return 'True_()'
+
+    def _convert_kh1_blacklisted_helper(self, helper_name: str, args: List[Any]) -> Optional[str]:
+        """Convert KH1 blacklisted helpers to Rule Builder expressions.
+
+        These helpers are blacklisted from export because they contain loops,
+        but we can generate equivalent Rule Builder expressions for worldgen.
+        """
+        if helper_name == 'has_x_worlds':
+            return self._convert_kh1_has_x_worlds(args)
+        elif helper_name == 'has_puppies':
+            return self._convert_kh1_has_puppies(args)
+        return None
+
+    def _extract_arg_value(self, arg: Any) -> Any:
+        """Extract the actual value from a rule argument."""
+        if isinstance(arg, dict):
+            arg_rule = arg.get('rule', '')
+            if arg_rule == 'Constant':
+                return arg.get('args', {}).get('value')
+            elif arg_rule == 'AST_min':
+                # Handle min() calls - evaluate at codegen time
+                min_args = arg.get('args', {}).get('args', [])
+                values = []
+                for min_arg in min_args:
+                    if isinstance(min_arg, dict):
+                        if min_arg.get('type') == 'constant':
+                            values.append(min_arg.get('value'))
+                        elif min_arg.get('type') == 'binary_op':
+                            # Evaluate simple binary ops
+                            val = self._eval_binary_op(min_arg)
+                            if val is not None:
+                                values.append(val)
+                    elif isinstance(min_arg, (int, float)):
+                        values.append(min_arg)
+                if values:
+                    return min(values)
+            elif arg.get('type') == 'constant':
+                return arg.get('value')
+            elif arg.get('type') == 'setting_value':
+                setting = arg.get('setting', '')
+                return self.settings.get(setting)
+        elif isinstance(arg, (int, float, bool)):
+            return arg
+        return None
+
+    def _eval_binary_op(self, op: Dict[str, Any]) -> Optional[int]:
+        """Evaluate a simple binary operation at codegen time."""
+        left = op.get('left', {})
+        right = op.get('right', {})
+        operator = op.get('op', '')
+
+        left_val = None
+        right_val = None
+
+        if isinstance(left, dict):
+            if left.get('type') == 'constant':
+                left_val = left.get('value')
+            elif left.get('type') == 'binary_op':
+                left_val = self._eval_binary_op(left)
+        elif isinstance(left, (int, float)):
+            left_val = left
+
+        if isinstance(right, dict):
+            if right.get('type') == 'constant':
+                right_val = right.get('value')
+            elif right.get('type') == 'binary_op':
+                right_val = self._eval_binary_op(right)
+        elif isinstance(right, (int, float)):
+            right_val = right
+
+        if left_val is not None and right_val is not None:
+            if operator == '//':
+                return int(left_val // right_val)
+            elif operator == '*':
+                return int(left_val * right_val)
+            elif operator == '+':
+                return int(left_val + right_val)
+            elif operator == '-':
+                return int(left_val - right_val)
+        return None
+
+    def _convert_kh1_has_x_worlds(self, args: List[Any]) -> str:
+        """Convert has_x_worlds helper to Rule Builder expression.
+
+        has_x_worlds(num_of_worlds, keyblades_unlock_chests, logic_difficulty, hundred_acre_wood)
+
+        The original function counts worlds where:
+        - Traverse Town always counts 0.5-1.0
+        - Other worlds count 0.5-1.0 if you have the world item (and keyblade if required)
+        - 100 Acre Wood counts if enabled and has Fire
+
+        For worldgen, we simplify to: HasFromList(world_items, count=ceil(num_of_worlds))
+        This is a conservative approximation that requires having enough world items.
+        """
+        # Extract num_of_worlds argument
+        num_of_worlds = 0
+        if args:
+            num_of_worlds = self._extract_arg_value(args[0])
+            if num_of_worlds is None:
+                num_of_worlds = 0
+
+        # If num_of_worlds is 0 or less, always accessible
+        if num_of_worlds <= 0:
+            self.required_imports.add('True_')
+            return 'True_()'
+
+        # KH1 world items (excluding Traverse Town which is always available)
+        world_items = [
+            'Wonderland', 'Olympus Coliseum', 'Deep Jungle', 'Agrabah',
+            'Monstro', 'Halloween Town', 'Neverland', 'Hollow Bastion',
+            'End of the World', 'Atlantica', 'Destiny Islands'
+        ]
+
+        # Traverse Town always provides 1 world, so we need (num_of_worlds - 1) more
+        # Since each world item contributes ~1 (0.5-1.0), we use ceiling
+        import math
+        worlds_needed = max(0, math.ceil(num_of_worlds) - 1)
+
+        if worlds_needed <= 0:
+            self.required_imports.add('True_')
+            return 'True_()'
+
+        # Generate HasFromListUnique with the required count
+        # HasFromListUnique counts unique items (like state.has() returns bool)
+        # HasFromList counts total items including duplicates
+        self.required_imports.add('HasFromListUnique')
+        items_str = ', '.join(repr(item) for item in world_items)
+        return f'HasFromListUnique({items_str}, count={worlds_needed})'
+
+    def _convert_kh1_has_puppies(self, args: List[Any]) -> str:
+        """Convert has_puppies helper to Rule Builder expression.
+
+        has_puppies(puppies_required, puppy_value)
+        Returns True if (state.count("Puppy") * puppy_value) >= puppies_required
+        """
+        puppies_required = 0
+        puppy_value = 1
+
+        if len(args) >= 1:
+            puppies_required = self._extract_arg_value(args[0])
+            if puppies_required is None:
+                puppies_required = 0
+
+        if len(args) >= 2:
+            puppy_value = self._extract_arg_value(args[1])
+            if puppy_value is None or puppy_value <= 0:
+                puppy_value = 1
+
+        # Calculate how many Puppy items are needed
+        import math
+        puppies_needed = math.ceil(puppies_required / puppy_value) if puppy_value > 0 else puppies_required
+
+        if puppies_needed <= 0:
+            self.required_imports.add('True_')
+            return 'True_()'
+
+        # Generate Has with the required count
+        self.required_imports.add('Has')
+        return f'Has("Puppy", {puppies_needed})'
 
     def _convert_placement_lookup(self, rule: Dict[str, Any]) -> str:
         """Convert placement_lookup to resolved placement data.
