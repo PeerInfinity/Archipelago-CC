@@ -1809,7 +1809,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "progression"
       },
       "Heart-Pounding Flight": {
         "name": "Heart-Pounding Flight",
@@ -1822,7 +1822,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "progression"
       },
       "Pancake is Love": {
         "name": "Pancake is Love",
@@ -1834,7 +1834,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "progression"
       },
       "Shiguang Tuya": {
         "name": "Shiguang Tuya",
@@ -1858,7 +1858,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "progression"
       },
       "Dolphin and Broadcast": {
         "name": "Dolphin and Broadcast",
@@ -1907,7 +1907,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "progression"
       },
       "Night Wander": {
         "name": "Night Wander",
@@ -1979,7 +1979,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "progression"
       },
       "Lights of Muse": {
         "name": "Lights of Muse",
@@ -1991,7 +1991,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "progression"
       },
       "midstream jam": {
         "name": "midstream jam",
@@ -2171,7 +2171,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "progression"
       },
       "NISEGAO": {
         "name": "NISEGAO",
@@ -5641,7 +5641,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "progression"
       },
       "Irreplaceable": {
         "name": "Irreplaceable",
@@ -6673,7 +6673,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "progression"
       },
       "My Life Is For You": {
         "name": "My Life Is For You",
@@ -6722,7 +6722,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "progression"
       },
       "Lys Tourbillon": {
         "name": "Lys Tourbillon",
@@ -9314,7 +9314,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "progression"
       },
       "Aventyr": {
         "name": "Aventyr",
