@@ -2910,9 +2910,6 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
 
         This outputs the format expected by the frontend, matching the AST exporter format.
         Empty 'options' and 'args' are omitted.
-
-        Dict arguments are wrapped in Constant format to match the exporter's output:
-        {"rule": "Constant", "args": {"value": {...}}, "_converted_from_cc": True}
         """
         result: dict[str, Any] = {
             "rule": self.helper_name,
@@ -2921,18 +2918,7 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
         if self.options:
             result["options"] = [o.to_dict() for o in self.options]
         if self.args:
-            # Wrap dict arguments in Constant format to match exporter output
-            converted_args = []
-            for arg in self.args:
-                if isinstance(arg, dict):
-                    converted_args.append({
-                        "rule": "Constant",
-                        "args": {"value": arg},
-                        "_converted_from_cc": True
-                    })
-                else:
-                    converted_args.append(arg)
-            result["args"] = converted_args
+            result["args"] = list(self.args)
         return result
 
     class Resolved(Rule.Resolved):
@@ -3021,27 +3007,13 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
 
             This outputs the format expected by the frontend, matching the AST exporter format.
             Empty 'options' and 'args' are omitted.
-
-            Dict arguments are wrapped in Constant format to match the exporter's output:
-            {"rule": "Constant", "args": {"value": {...}}, "_converted_from_cc": True}
             """
             result: dict[str, Any] = {
                 "rule": self.helper_name,
                 "_original_ast_type": "helper",
             }
             if self.args:
-                # Wrap dict arguments in Constant format to match exporter output
-                converted_args = []
-                for arg in self.args:
-                    if isinstance(arg, dict):
-                        converted_args.append({
-                            "rule": "Constant",
-                            "args": {"value": arg},
-                            "_converted_from_cc": True
-                        })
-                    else:
-                        converted_args.append(arg)
-                result["args"] = converted_args
+                result["args"] = list(self.args)
             return result
 
 
