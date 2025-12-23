@@ -43,36 +43,23 @@ class SC2GameExportHandler(GenericGameExportHandler):
     # NOTE: defense_rating helpers now work with game_info export for rating dictionaries
     # power_rating helpers call soa_power_rating which has complex iteration with break statements
     HELPERS_TO_EXPORT_BLACKLIST = {
-        # weapon_armor_upgrade_count - references item_groups module which isn't available in frontend
-        'weapon_armor_upgrade_count',
         # is_item_placement - state check method, not applicable in frontend
         'is_item_placement',
-        # competent_comp helpers - complex conditional logic, but could work if dependencies are met
-        'terran_competent_comp', 'protoss_competent_comp', 'zerg_competent_comp',
-        # defense_rating helpers - now exported with game_info support
-        # 'terran_defense_rating', 'protoss_defense_rating', 'zerg_defense_rating',
-        # power_rating helpers - testing export (uses soa_power_rating with loops/break)
-        # 'terran_power_rating', 'protoss_power_rating', 'zerg_power_rating',
-        # Mission requirements that call power_rating or other complex helpers
-        'terran_havens_fall_requirement', 'terran_great_train_robbery_train_stopper',
-        'terran_welcome_to_the_jungle_requirement', 'zerg_welcome_to_the_jungle_requirement',
-        'protoss_welcome_to_the_jungle_requirement', 'terran_night_terrors_requirement',
-        'terran_engine_of_destruction_requirement', 'engine_of_destruction_requirement',
-        'terran_trouble_in_paradise_requirement', 'terran_media_blitz_requirement',
-        'terran_gates_of_hell_requirement', 'terran_all_in_requirement',
-        # Kerrigan helpers - kerrigan_levels uses get_full_item_list(), two_kerrigan_actives has a bug
-        'kerrigan_levels', 'two_kerrigan_actives',
-        # basic_kerrigan - testing if it can be exported (iterates over imported list)
-        # Helpers that call other blacklisted helpers
-        'terran_competent_ground_to_air', 'protoss_competent_ground_to_air',
-        'zerg_competent_ground_to_air', 'terran_beats_protoss_deathball',
-        'terran_base_trasher',  # calls terran_competent_comp
-        'terran_respond_to_colony_infestations',  # calls terran_havens_fall_requirement
-        # Simple helpers - now exported (just boolean logic):
-        # 'terran_can_rescue',  # just has_any + advanced_tactics
-        # 'terran_cliffjumper',  # just has/has_all
-        # 'terran_sustainable_mech_heal',  # just boolean logic
-        # 'terran_able_to_snipe_defiler',  # just has/has_any/has_all
+        # weapon_armor_upgrade_count - has JavaScript implementation, Python version is too complex
+        # The blacklist prevents it from being exported to helpers section, but AST analyzer
+        # will still convert calls to helper calls, and executeHelper falls back to JavaScript
+        'weapon_armor_upgrade_count',
+        # Zerg/Protoss mission requirements that don't have JavaScript implementations yet
+        'zerg_welcome_to_the_jungle_requirement',
+        'protoss_welcome_to_the_jungle_requirement',
+        'protoss_competent_ground_to_air',
+        'zerg_competent_ground_to_air',
+    }
+
+    # Helpers that are in the blacklist but have JavaScript implementations
+    # These should be kept as helper calls (not converted to True_) during expand_rule
+    HELPERS_WITH_JS_IMPLEMENTATION = {
+        'weapon_armor_upgrade_count',
     }
 
     def _extract_closure_vars(self, rule_func: Callable) -> Dict[str, Any]:
@@ -101,20 +88,6 @@ class SC2GameExportHandler(GenericGameExportHandler):
         Returns:
             Simplified rule dict if available, None otherwise
         """
-        # terran_competent_ground_to_air: Common paths include having Goliath or Cyclone
-        # Full logic: has(Goliath) OR (has_any(Marine, Dominion Trooper) AND bio_heal AND weapons >= 2)
-        #             OR (advanced_tactics AND (has(Cyclone) OR has_all(Thor, Payload)))
-        # We use has_any(Goliath, Cyclone, Thor) to cover multiple progression paths
-        if helper_name == 'terran_competent_ground_to_air':
-            return {
-                'type': 'or',
-                'conditions': [
-                    {'type': 'item_check', 'item': 'Goliath'},
-                    {'type': 'item_check', 'item': 'Cyclone'},
-                    {'type': 'item_check', 'item': 'Thor'}
-                ]
-            }
-
         # protoss_competent_ground_to_air: Common path is Dragoon or Stalker
         if helper_name == 'protoss_competent_ground_to_air':
             return {
@@ -129,18 +102,7 @@ class SC2GameExportHandler(GenericGameExportHandler):
         if helper_name == 'zerg_competent_ground_to_air':
             return {'type': 'item_check', 'item': 'Hydralisk'}
 
-        # terran_base_trasher: Requires competent_comp (complex) but simplified to
-        # having siege tank with jump jets as the most common path
-        if helper_name == 'terran_base_trasher':
-            return {
-                'type': 'and',
-                'conditions': [
-                    {'type': 'item_check', 'item': 'Siege Tank'},
-                    {'type': 'item_check', 'item': 'Jump Jets (Siege Tank)'}
-                ]
-            }
-
-        # No simplified version available
+        # No simplified version available - will return True_ for safety
         return None
 
     def override_rule_analysis(self, rule_func: Callable, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
@@ -367,15 +329,22 @@ class SC2GameExportHandler(GenericGameExportHandler):
 
         # Check for helper AST nodes with blacklisted helper names
         # The analyzer may create these directly before expand_rule is called
+        # NOTE: Helpers in HELPERS_WITH_JS_IMPLEMENTATION should NOT be converted to True_
+        # They should be kept as helper calls so the JavaScript implementation can handle them
         if rule.get('type') == 'helper':
             helper_name = rule.get('name', '')
             if helper_name in self.HELPERS_TO_EXPORT_BLACKLIST:
-                simplified = self._get_simplified_helper(helper_name)
-                if simplified:
-                    logger.debug(f"[SC2] Blacklisted helper AST node '{helper_name}' - using simplified export")
-                    return simplified
-                logger.debug(f"[SC2] Blacklisted helper AST node '{helper_name}' - returning True_")
-                return {'type': 'constant', 'value': True}
+                # Check if this helper has a JavaScript implementation
+                if helper_name in self.HELPERS_WITH_JS_IMPLEMENTATION:
+                    logger.debug(f"[SC2] Blacklisted helper '{helper_name}' has JS implementation - keeping as helper call")
+                    # Keep as helper call - don't convert to True_
+                else:
+                    simplified = self._get_simplified_helper(helper_name)
+                    if simplified:
+                        logger.debug(f"[SC2] Blacklisted helper AST node '{helper_name}' - using simplified export")
+                        return simplified
+                    logger.debug(f"[SC2] Blacklisted helper AST node '{helper_name}' - returning True_")
+                    return {'type': 'constant', 'value': True}
 
         # Check for the pattern: function_call with function being attribute access on "logic"
         # This pattern looks like:
