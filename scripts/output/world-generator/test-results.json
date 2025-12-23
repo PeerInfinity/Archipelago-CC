@@ -1,0 +1,83 @@
+{
+  "metadata": {
+    "timestamp": "2025-12-23T06:30:10.723222",
+    "seed": 1,
+    "phase": "all",
+    "canonical_seed1": true,
+    "total_templates": 1,
+    "successful_generations": 1,
+    "failed_generations": 0,
+    "successful_test_worlds": 1,
+    "failed_test_worlds": 0,
+    "cross_validation_passed": 0,
+    "cross_validation_failed": 1
+  },
+  "results": {
+    "Starcraft 2": {
+      "template": "Starcraft 2.yaml",
+      "game_name": "Starcraft 2",
+      "timestamp": "2025-12-23T06:30:17.299484",
+      "original": {
+        "generation": {
+          "success": true,
+          "seed_id": "AP_14089154938208861744",
+          "rules_path": "/home/user/Archipelago-CC/frontend/presets/sc2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/sc2/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/sc2/AP_14089154938208861744",
+          "error": null,
+          "processing_time_seconds": 9.42
+        },
+        "spoiler_test": {
+          "success": false,
+          "pass_fail": "fail",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": "Spoiler test failed",
+          "processing_time_seconds": 10.83
+        }
+      },
+      "test_world": {
+        "world_generation": {
+          "success": true,
+          "world_dir": "/home/user/Archipelago-CC/worlds/sc2_worldgen",
+          "error": null,
+          "processing_time_seconds": 0.22
+        },
+        "seed_generation": {
+          "success": true,
+          "seed_id": "AP_14089154938208861744",
+          "rules_path": "/home/user/Archipelago-CC/frontend/presets/sc2_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/sc2_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/sc2_worldgen/AP_14089154938208861744",
+          "error": null,
+          "processing_time_seconds": 5.99
+        },
+        "spoiler_test": {
+          "success": true,
+          "pass_fail": "pass",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": null,
+          "processing_time_seconds": 21.95
+        },
+        "cross_validation": {
+          "success": false,
+          "pass_fail": "fail",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": "Spoiler test failed",
+          "processing_time_seconds": 10.91
+        },
+        "world_dir": "/home/user/Archipelago-CC/worlds/sc2_worldgen",
+        "test_game_name": "Starcraft 2 WorldGen",
+        "test_template_name": "Starcraft 2 WorldGen.yaml"
+      },
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed: original sphere log incompatible with _worldgen world"
+        ]
+      }
+    }
+  }
+}
