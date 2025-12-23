@@ -17,11 +17,9 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
-Hatitems:                        0
+Hatitems:                        No
 Logicdifficulty:                 -1
-Nopaintingskips:                 0
-Shufflesubconpaintings:          0
-Umbrellalogic:                   0
+Shufflesubconpaintings:          No
 
 
 Starting Items:
