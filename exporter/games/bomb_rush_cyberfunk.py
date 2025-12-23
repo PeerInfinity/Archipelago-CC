@@ -147,17 +147,213 @@ class BombRushCyberfunkGameExportHandler(GenericGameExportHandler):
                 ]
             }
 
-        else:
-            # Threshold > 25 requires region access beyond Hideout
-            # Use versum_hill_entrance helper (requires 20 REP) plus all graffiti types
-            # This is a conservative approximation
+        elif threshold <= 70:
+            # Threshold 26-70: Accessible with Versum Hill entrance (20 REP)
+            # + VH roadblock (graffitil) + all graffiti + inline skates
+            # Based on sphere log: Tagged 30-70 unlock at sphere 2.1 with 24 REP
             return {
                 'type': 'and',
                 'conditions': [
                     {'type': 'group_check', 'group': 'graffitim'},
                     {'type': 'group_check', 'group': 'graffitil'},
                     {'type': 'group_check', 'group': 'graffitixl'},
-                    {'type': 'helper', 'name': 'versum_hill_entrance', 'args': []}
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'versum_hill_entrance', 'args': []},
+                    {'type': 'helper', 'name': 'versum_hill_ch1_roadblock', 'args': []}
+                ]
+            }
+
+        elif threshold <= 79:
+            # Threshold 71-79: Needs versum_hill_all_challenges (65 REP)
+            # Based on sphere log: Tagged 75 unlocks at sphere 3.10 with 88 REP
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'versum_hill_entrance', 'args': []},
+                    {'type': 'helper', 'name': 'versum_hill_ch1_roadblock', 'args': []},
+                    {'type': 'helper', 'name': 'versum_hill_all_challenges', 'args': []}
+                ]
+            }
+
+        elif threshold <= 135:
+            # Threshold 80-135: Requires Chapter 2 completion
+            # Based on sphere log: Tagged 80-135 unlock at sphere 4.5 with Chapter Completed
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]}
+                ]
+            }
+
+        elif threshold <= 170:
+            # Threshold 136-170: Requires Brink Terminal entrance (50 REP)
+            # Based on sphere log: Tagged 140-170 unlock at sphere 5.6
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]},
+                    {'type': 'helper', 'name': 'brink_terminal_entrance', 'args': []}
+                ]
+            }
+
+        elif threshold <= 180:
+            # Threshold 171-180: Requires Brink Terminal plaza access
+            # Based on sphere log: Tagged 175-180 unlock at sphere 5.9
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]},
+                    {'type': 'helper', 'name': 'brink_terminal_plaza', 'args': []}
+                ]
+            }
+
+        elif threshold <= 185:
+            # Threshold 181-185: Requires Brink Terminal tower access
+            # Based on sphere log: Tagged 185 unlocks at sphere 5.13
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]},
+                    {'type': 'helper', 'name': 'brink_terminal_tower', 'args': []}
+                ]
+            }
+
+        elif threshold <= 245:
+            # Threshold 186-245: Requires Chapter 3 completion
+            # Based on sphere log: Tagged 190-245 unlock at sphere 6.1 with Chapter Completed
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 3}]}
+                ]
+            }
+
+        elif threshold <= 265:
+            # Threshold 246-265: Requires Millennium Mall theater area (491 REP)
+            # Based on sphere log: Tagged 250-265 unlock at sphere 6.6
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'millennium_mall_theater', 'args': []}
+                ]
+            }
+
+        elif threshold <= 320:
+            # Threshold 266-320: Requires Chapter 4 completion + Pyramid Island access
+            # Based on sphere log: Tagged 270-320 unlock at sphere 7.5 with Chapter Completed
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 4}]},
+                    {'type': 'helper', 'name': 'pyramid_island_entrance', 'args': []}
+                ]
+            }
+
+        elif threshold <= 329:
+            # Threshold 321-329: Requires Chapter 4 + pyramid_island_oldhead (780 REP)
+            # Based on sphere log: Tagged 325 unlocks at sphere 7.22
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 4}]},
+                    {'type': 'helper', 'name': 'pyramid_island_oldhead', 'args': []}
+                ]
+            }
+
+        elif threshold <= 340:
+            # Threshold 330-340: Requires Chapter 5 completion + Mataan entrance
+            # Based on sphere log: Tagged 330-340 unlock at sphere 8.6
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 5}]},
+                    {'type': 'helper', 'name': 'mataan_entrance', 'args': []}
+                ]
+            }
+
+        elif threshold <= 360:
+            # Threshold 341-360: Requires Chapter 5 + Mataan deep city
+            # Based on sphere log: Tagged 345-360 unlock at sphere 8.9
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 5}]},
+                    {'type': 'helper', 'name': 'mataan_deep_city', 'args': []}
+                ]
+            }
+
+        elif threshold <= 369:
+            # Threshold 361-369 (Tagged 365): Requires Mataan oldhead area (935 REP)
+            # Based on sphere log: Tagged 365 unlocks at sphere 8.15 with Red Light District
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'mataan_oldhead', 'args': []}
+                ]
+            }
+
+        else:
+            # Threshold 370-389: Requires Mataan deepest (Lion Statue, Skyscrapers)
+            # Based on sphere log: Tagged 370+ unlock at sphere 8.16
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'mataan_deepest', 'args': [
+                        {'type': 'constant', 'value': 0},
+                        {'type': 'constant', 'value': 0}
+                    ]}
                 ]
             }
 
