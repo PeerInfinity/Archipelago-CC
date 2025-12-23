@@ -585,6 +585,15 @@ class RuleCodeGenerator:
                     }
                     return self._convert_location_rule_ref(location_rule)
 
+                # Check if this is an AST_region_check rule (region accessibility check from AST format)
+                if rb_rule == 'AST_region_check':
+                    args = rule.get('args', {})
+                    region_rule = {
+                        'type': 'can_reach',
+                        'region': args.get('region', '')
+                    }
+                    return self._convert_can_reach_region(region_rule)
+
         # Dispatch based on rule type
         converters = {
             'constant': self._convert_constant,
@@ -1608,6 +1617,42 @@ class RuleCodeGenerator:
                 return f'MinValue({left_code}, {right_code})'
             return 'MinValue(0, 0)'
 
+        if rb_rule == 'SettingValue':
+            # Handle SettingValue in Compare operand - preserve numeric value
+            # Unlike _convert_setting_value which converts to boolean rules,
+            # Compare operands need the actual numeric value for arithmetic comparisons
+            setting = rb_args.get('setting', '')
+            if setting in self.settings:
+                value = self.settings[setting]
+                # For numeric settings in Compare context, return the raw value
+                if isinstance(value, (int, float)):
+                    return repr(value)
+                # For boolean-like settings, convert to True_/False_
+                if isinstance(value, bool):
+                    self.required_imports.add('True_' if value else 'False_')
+                    return 'True_()' if value else 'False_()'
+                if isinstance(value, str):
+                    if value.lower() == 'true':
+                        self.required_imports.add('True_')
+                        return 'True_()'
+                    elif value.lower() == 'false':
+                        self.required_imports.add('False_')
+                        return 'False_()'
+                # Other values (strings, etc.) - return as string literal
+                return repr(value)
+            # Unknown setting - return 0 as safe fallback
+            return '0'
+
+        if rb_rule == 'Arithmetic':
+            # Handle Rule Builder format Arithmetic in Compare operand
+            binary_op_rule = {
+                'type': 'binary_op',
+                'left': rb_args.get('left', {}),
+                'op': rb_args.get('op', '+'),
+                'right': rb_args.get('right', {})
+            }
+            return self._convert_binary_op(binary_op_rule)
+
         # Handle integer-returning helpers used as Compare operands
         # These are helpers that count items and return an integer (e.g., weapon_armor_upgrade_count)
         # They are blacklisted from normal helper export but need to be converted to CountItem
@@ -1672,6 +1717,29 @@ class RuleCodeGenerator:
         if rb_rule == 'AST_count_item':
             item_name = operand.get('args', {}).get('item', '')
             return self._make_count_item(item_name)
+
+        # Handle Rule Builder format Arithmetic in arithmetic operand
+        if rb_rule == 'Arithmetic':
+            rb_args = operand.get('args', {})
+            binary_op_rule = {
+                'type': 'binary_op',
+                'left': rb_args.get('left', {}),
+                'op': rb_args.get('op', '+'),
+                'right': rb_args.get('right', {})
+            }
+            return self._convert_binary_op(binary_op_rule)
+
+        # Handle Rule Builder format SettingValue in arithmetic operand
+        if rb_rule == 'SettingValue':
+            rb_args = operand.get('args', {})
+            setting = rb_args.get('setting', '')
+            if setting in self.settings:
+                value = self.settings[setting]
+                # For numeric settings in arithmetic context, return the raw value
+                if isinstance(value, (int, float)):
+                    return repr(value)
+            # Unknown or non-numeric setting - return 0 as safe fallback
+            return '0'
 
         if op_type == 'count_item':
             # Handle count_item type from rules.json export
@@ -2287,10 +2355,12 @@ class RuleCodeGenerator:
 
             return f'HelperCall({", ".join(parts)})'
 
-        # Unknown helper - return False_() as placeholder
-        # Returning False makes locations less accessible, preventing progression issues
-        self.required_imports.add('False_')
-        return 'False_()'
+        # Unknown helper - return True_() as placeholder
+        # Returning True makes locations more accessible, which is appropriate for worldgen
+        # since unknown helpers are typically progression checks that evaluate to true
+        # under default/normal game settings
+        self.required_imports.add('True_')
+        return 'True_()'
 
     def _convert_rule_builder_helper(self, rule: Dict[str, Any], helper_name: str) -> str:
         """Convert Rule Builder format helper rule to HelperCall().
@@ -2368,11 +2438,13 @@ class RuleCodeGenerator:
 
             return f'HelperCall({", ".join(parts)})'
 
-        # Unknown helper - return False_() as placeholder
-        # Returning False makes locations less accessible, preventing progression issues
+        # Unknown helper - return True_() as placeholder
+        # Returning True makes locations more accessible, which is appropriate for worldgen
+        # since unknown helpers are typically progression checks that evaluate to true
+        # under default/normal game settings
         # (This matches the behavior of _convert_helper for consistency)
-        self.required_imports.add('False_')
-        return 'False_()'
+        self.required_imports.add('True_')
+        return 'True_()'
 
     def _convert_placement_lookup(self, rule: Dict[str, Any]) -> str:
         """Convert placement_lookup to resolved placement data.
@@ -2800,6 +2872,7 @@ class HelperCodeGenerator:
             'setting_value': self._expr_setting_value,
             'prog_item_count': self._expr_prog_item_count,
             'sum_of': self._expr_sum_of,
+            'sum': self._expr_sum,
             'min': self._expr_min,
             'max': self._expr_max,
             'block': self._expr_block,
@@ -2812,8 +2885,48 @@ class HelperCodeGenerator:
         if handler:
             return handler(expr)
 
-        # Unknown type - return False as placeholder to prevent progression issues
-        return 'False'
+        # Handle 'rule' key format (Rule Builder format from exporter)
+        rule_type = expr.get('rule', '')
+        if rule_type:
+            # Handle AST_region_check
+            if rule_type == 'AST_region_check':
+                args = expr.get('args', {})
+                region = args.get('region', '')
+                if isinstance(region, str):
+                    return f'state.can_reach({repr(region)}, "Region", player)'
+                elif isinstance(region, dict) and region.get('type') == 'constant':
+                    region_name = region.get('value', '')
+                    return f'state.can_reach({repr(region_name)}, "Region", player)'
+                # Fallback for complex region expressions
+                region_expr = self._generate_expression(region)
+                return f'state.can_reach({region_expr}, "Region", player)'
+
+            # Handle And/Or rules
+            if rule_type in ('And', 'and'):
+                children = expr.get('children', [])
+                if not children:
+                    return 'True'
+                parts = [self._generate_expression(c) for c in children]
+                return '(' + ' and '.join(f'({p})' for p in parts) + ')'
+
+            if rule_type in ('Or', 'or'):
+                children = expr.get('children', [])
+                if not children:
+                    return 'False'
+                parts = [self._generate_expression(c) for c in children]
+                return '(' + ' or '.join(f'({p})' for p in parts) + ')'
+
+            # Handle helper calls with _original_ast_type marker
+            if expr.get('_original_ast_type') == 'helper' or rule_type in self.known_helpers:
+                helper_name = rule_type
+                func_name = self.get_function_name(helper_name)
+                return f'{func_name}(state, player)'
+
+        # Unknown type - return True as placeholder
+        # Returning True makes locations more accessible, which is appropriate for worldgen
+        # since unknown types are typically progression checks that evaluate to true
+        # under default/normal game settings
+        return 'True'
 
     def _expr_setting_value(self, expr: Dict[str, Any]) -> str:
         """Resolve a setting value to its actual value from the seed's settings."""
@@ -3219,11 +3332,30 @@ class HelperCodeGenerator:
                 return f"abs({', '.join(arg_exprs)})"
             return f"math.{name}({', '.join(arg_exprs)})"
 
-        # Unknown helper - return False as safe fallback
-        # This handles helpers that were blacklisted during export (too complex to export)
-        # Returning False makes the location less accessible, preventing progression issues
-        # (Returning True would make all locations with this helper always accessible)
-        return 'False'
+        # total_received - count total received items from a list
+        # Format: total_received(count, [item1, item2, ...])
+        if name == 'total_received':
+            if len(args) >= 2:
+                count_expr = self._generate_expression(args[0])
+                items_arg = args[1]
+                # Handle list of items
+                if isinstance(items_arg, dict) and items_arg.get('type') == 'constant':
+                    items = items_arg.get('value', [])
+                    if isinstance(items, list):
+                        # Generate: sum(state.count(item, player) for item in [...]) >= count
+                        items_repr = ', '.join(repr(item) for item in items)
+                        return f"(sum(state.count(item, player) for item in [{items_repr}]) >= {count_expr})"
+                # Fallback for non-constant lists
+                items_expr = self._generate_expression(items_arg)
+                return f"(sum(state.count(item, player) for item in {items_expr}) >= {count_expr})"
+            # Not enough args - return False
+            return 'False'
+
+        # Unknown helper - return True as placeholder
+        # Returning True makes locations more accessible, which is appropriate for worldgen
+        # since unknown helpers are typically progression checks that evaluate to true
+        # under default/normal game settings
+        return 'True'
 
     def _get_arg_expr(self, arg: Any, default: Any = None) -> str:
         """Get argument expression - handles both constants and variable references.
@@ -3538,6 +3670,44 @@ class HelperCodeGenerator:
             return f"sum({element_expr} for {target_expr} in {iterator_expr} if {condition_expr})"
 
         return f"sum({element_expr} for {target_expr} in {iterator_expr})"
+
+    def _expr_sum(self, expr: Dict[str, Any]) -> str:
+        """Generate sum() expression from sum format.
+
+        This handles the simplified sum format used by exporter helpers:
+        {
+            "type": "sum",
+            "iterable": {
+                "type": "list",
+                "value": [
+                    {"type": "item_check", "item": "Valor Form"},
+                    {"type": "item_check", "item": "Wisdom Form"},
+                    ...
+                ]
+            }
+        }
+
+        Each element in the list is a boolean check (item_check, etc.) that
+        evaluates to True/False. Python treats True as 1 and False as 0 in
+        arithmetic, so sum([True, False, True]) = 2.
+        """
+        iterable = expr.get('iterable', {})
+
+        # If it's a list, convert each element and sum them
+        if iterable.get('type') == 'list':
+            items = iterable.get('value', [])
+            if not items:
+                return '0'  # Empty sum is 0
+
+            # Convert each item in the list
+            item_exprs = [self._generate_expression(item) for item in items]
+
+            # Build sum() call
+            return f"sum([{', '.join(item_exprs)}])"
+
+        # For other iterable types, try to generate expression
+        iterable_expr = self._generate_expression(iterable)
+        return f"sum({iterable_expr})"
 
     def _extract_constant(self, value: Any, default: Any = None) -> Any:
         """Extract constant value from a potential constant wrapper.

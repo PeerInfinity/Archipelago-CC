@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Has, HelperCall, Or, True_
+from rule_builder import True_, False_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -16,520 +16,144 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _stardewvalleyworldgen_has_taro_tuber(state: "CollectionState", player: int) -> bool:
-    return (state.has('Taro Tuber', player)) and (True) and (True) and (_stardewvalleyworldgen_has_bone_fragment(state, player)) and (state.can_reach('Island Trader', "Region", player))
+def _stardewvalleyworldgen_has_albacore(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))
 
 
-def _stardewvalleyworldgen_has_hot_pepper(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Summer Farming', "Region", player)) and (_stardewvalleyworldgen_has_pepper_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_ancient_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Ancient Seeds Recipe', player)) and (state.has('Received Progression Percent', player, 20))
-
-
-def _stardewvalleyworldgen_has_super_cucumber(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and ((state.has('Summer', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_bait(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fishing Level', player, 2)) and (state.can_reach('The Mines - Floor 5', "Region", player))
-
-
-def _stardewvalleyworldgen_has_sunflower(state: "CollectionState", player: int) -> bool:
-    return ((state.can_reach('Summer Farming', "Region", player)) or (state.can_reach('Fall Farming', "Region", player))) and (_stardewvalleyworldgen_has_sunflower_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_bomb(state: "CollectionState", player: int) -> bool:
-    return (state.has('Mining Level', player, 6)) and (state.has('Iron Ore (Logic event)', player)) and (_stardewvalleyworldgen_has_coal(state, player))
-
-
-def _stardewvalleyworldgen_has_lightning_rod(state: "CollectionState", player: int) -> bool:
-    return (state.has('Foraging Level', player, 6)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_refined_quartz(state, player)) and (_stardewvalleyworldgen_has_bat_wing(state, player))
-
-
-def _stardewvalleyworldgen_has_woody_s_secret(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Progressive Axe', player, 2)) and (state.has('Foraging Level', player, 5))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player)))
-
-
-def _stardewvalleyworldgen_has_summer_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Foraging Level', player, 4)) and (_stardewvalleyworldgen_has_spice_berry(state, player)) and (_stardewvalleyworldgen_has_grape(state, player)) and (state.has('Summer', player))
-
-
-def _stardewvalleyworldgen_has_garlic_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Garlic Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_rare_seed(state: "CollectionState", player: int) -> bool:
-    return (state.has('Rare Seed', player)) and ((state.has('Spring', player)) or (state.has('Summer', player))) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (state.can_reach('Fishing', "Region", player)) and (True) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (True) and (state.can_reach('Secret Woods', "Region", player)))) and (state.can_reach('Traveling Cart', "Region", player))
-
-
-def _stardewvalleyworldgen_has_dwarvish_safety_manual(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Shipping Bin', player)) and (True) and (state.can_reach('Mines Dwarf Shop', "Region", player))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player)))
-
-
-def _stardewvalleyworldgen_has_any_fish(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.can_reach('Waterfall', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.has('Summer', player))) or ((state.has('Winter', player)) and (state.has('Progressive Fishing Rod', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Fall', player))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.can_reach('Mutant Bug Lair', "Region", player))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Summer', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.can_reach("Witch's Swamp", "Region", player))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Fall', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.can_reach('Secret Woods', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Fall', player))) or ((state.has('Summer', player)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.can_reach('Tide Pools', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Spring', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.can_reach('Sewer', "Region", player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.can_reach('Island West', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.can_reach('Island South', "Region", player)) or (state.can_reach('Island West', "Region", player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.can_reach('Pirate Cove', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.can_reach('Desert', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.can_reach('Desert', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.can_reach('The Mines - Floor 20', "Region", player)) or (state.can_reach('The Mines - Floor 60', "Region", player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.can_reach('The Mines - Floor 60', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.can_reach('The Mines - Floor 100', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.can_reach('The Mines - Floor 20', "Region", player)))
-
-
-def _stardewvalleyworldgen_has_strawberry(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Spring Farming', "Region", player)) and (_stardewvalleyworldgen_has_strawberry_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_juice_potato(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_potato(state, player)) and (_stardewvalleyworldgen_has_keg(state, player))
-
-
-def _stardewvalleyworldgen_has_pineapple_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Pineapple Seeds', player)) and (True) and (True) and (state.can_reach('Volcano - Floor 5', "Region", player)) and (state.can_reach('Island Trader', "Region", player))
-
-
-def _stardewvalleyworldgen_has_tree_fertilizer(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Foraging Level', player, 7)) and (True) and (True)) or ((state.has('Foraging Level', player, 7)) and (True) and (True))
-
-
-def _stardewvalleyworldgen_has_purple_mushroom(state: "CollectionState", player: int) -> bool:
-    return (state.has('Mushroom Boxes', player)) or (state.can_reach('Skull Cavern Floor 25', "Region", player)) or (state.can_reach('The Mines - Floor 95', "Region", player))
-
-
-def _stardewvalleyworldgen_has_salmonberry(state: "CollectionState", player: int) -> bool:
-    return (state.has('Spring', player)) or (state.has('Fruit Bats', player))
-
-
-def _stardewvalleyworldgen_has_hops(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Summer Farming', "Region", player)) and (_stardewvalleyworldgen_has_hops_starter(state, player))
-
-
-def _stardewvalleyworldgen_has_artichoke_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Artichoke Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_deluxe_fertilizer(state: "CollectionState", player: int) -> bool:
-    return (state.has('Deluxe Fertilizer Recipe', player)) and (state.has('Iridium Bar (Logic event)', player)) and (True)
-
-
-def _stardewvalleyworldgen_has_sardine(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)) or (state.has('Winter', player)))
-
-
-def _stardewvalleyworldgen_has_egg_brown(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (state.can_reach('Fishing', "Region", player)) and (True) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (True) and (state.can_reach('Secret Woods', "Region", player)))) and (True)
-
-
-def _stardewvalleyworldgen_has_mango_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Mango Sapling', player)) and (state.has('Received Progression Percent', player)) and (True) and (True) and (state.can_reach('Island West', "Region", player)) and (state.can_reach('Island Trader', "Region", player))
-
-
-def _stardewvalleyworldgen_has_taro_root(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Summer Farming', "Region", player)) and (_stardewvalleyworldgen_has_taro_tuber(state, player))
-
-
-def _stardewvalleyworldgen_has_flute_block(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fall', player)) and (True) and (True) and (state.has('Copper Ore (Logic event)', player)) and (True)
-
-
-def _stardewvalleyworldgen_has_raccoon_journal(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player))) or ((state.has('Received Progression Percent', player, 2)) and (True) and (True) and (True) and (state.can_reach('Raccoon Shop', "Region", player)))
-
-
-def _stardewvalleyworldgen_has_refined_quartz(state: "CollectionState", player: int) -> bool:
-    return ((_stardewvalleyworldgen_has_furnace(state, player)) and (state.can_reach('The Mines - Floor 20', "Region", player))) or ((_stardewvalleyworldgen_has_furnace(state, player)) and (_stardewvalleyworldgen_has_fire_quartz(state, player))) or ((_stardewvalleyworldgen_has_recycling_machine(state, player)) and ((_stardewvalleyworldgen_has_broken_cd(state, player)) or (_stardewvalleyworldgen_has_broken_glasses(state, player))))
-
-
-def _stardewvalleyworldgen_has_pina_colada(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Island Resort', "Region", player)) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (state.can_reach('Fishing', "Region", player)) and (True) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (True) and (state.can_reach('Secret Woods', "Region", player))))
-
-
-def _stardewvalleyworldgen_has_price_catalogue(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (state.can_reach('Bookseller Year 1 Books', "Region", player))
-
-
-def _stardewvalleyworldgen_has_chicken_egg(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_egg(state, player)) or (_stardewvalleyworldgen_has_egg_brown(state, player)) or (_stardewvalleyworldgen_has_large_egg(state, player)) or (_stardewvalleyworldgen_has_large_egg_brown(state, player))
-
-
-def _stardewvalleyworldgen_has_fossilized_tail(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Pan', player)) and (state.can_reach('Dig Site', "Region", player))
-
-
-def _stardewvalleyworldgen_has_way_of_the_wind_pt_1(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 3)) and (True) and (state.can_reach('Bookseller Year 1 Books', "Region", player))
-
-
-def _stardewvalleyworldgen_has_rice_shoot(state: "CollectionState", player: int) -> bool:
-    return (state.has('Rice Shoot', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_cactus_fruit(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Desert', "Region", player)) or (((state.can_reach('Greenhouse', "Region", player)) or (state.can_reach('Island West', "Region", player))) and (_stardewvalleyworldgen_has_cactus_seeds(state, player)))
-
-
-def _stardewvalleyworldgen_has_tapper(state: "CollectionState", player: int) -> bool:
-    return (state.has('Foraging Level', player, 4)) and (True) and (state.has('Copper Bar (Logic event)', player))
-
-
-def _stardewvalleyworldgen_has_tilapia(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_battery_pack(state: "CollectionState", player: int) -> bool:
-    return ((_stardewvalleyworldgen_has_lightning_rod(state, player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or (_stardewvalleyworldgen_has_solar_panel(state, player))
-
-
-def _stardewvalleyworldgen_has_cactus_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Cactus Seeds', player)) and (True) and (True) and (state.can_reach('Oasis', "Region", player))
-
-
-def _stardewvalleyworldgen_has_artifact_trove(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_omni_geode(state, player)) and (state.can_reach('Desert', "Region", player))
-
-
-def _stardewvalleyworldgen_has_rainbow_trout(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Summer', player))
-
-
-def _stardewvalleyworldgen_has_lingcod(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Winter', player))
-
-
-def _stardewvalleyworldgen_has_book_of_stars(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (state.can_reach('Bookseller Experience Books', "Region", player))
-
-
-def _stardewvalleyworldgen_has_crab_pot(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))
-
-
-def _stardewvalleyworldgen_has_ol_slitherlegs(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 6)) and (True) and (state.can_reach('Bookseller Year 1 Books', "Region", player))
-
-
-def _stardewvalleyworldgen_has_spring_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Foraging Level', player)) and (state.has('Spring', player)) and (state.has('Spring', player)) and (state.has('Spring', player)) and (state.has('Spring', player))
-
-
-def _stardewvalleyworldgen_has_pumpkin_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Pumpkin Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+def _stardewvalleyworldgen_has_amaranth(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Fall Farming', "Region", player)) and ((state.has('Amaranth Seeds', player)) and (state.has('Fall', player)) and (True) and (True))
 
 
 def _stardewvalleyworldgen_has_amaranth_seeds(state: "CollectionState", player: int) -> bool:
     return (state.has('Amaranth Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
 
 
-def _stardewvalleyworldgen_has_monster_compendium(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Received Progression Percent', player, 16)) and (((state.can_reach('The Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((state.can_reach('The Mines - Floor 60', "Region", player)) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((state.can_reach('Skull Cavern Floor 25', "Region", player)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((state.can_reach('Skull Cavern Floor 75', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('Slime Hutch', "Region", player)) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((state.can_reach('Quarry Mine', "Region", player)) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((state.can_reach('Quarry Mine', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((state.can_reach('Island West', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('The Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((state.can_reach('Dangerous Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('The Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((state.can_reach('Dangerous Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('Dangerous Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('The Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((state.can_reach('Dangerous Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('The Mines - Floor 60', "Region", player)) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((state.can_reach('Dangerous Mines - Floor 60', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('The Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((state.can_reach('Skull Cavern Floor 75', "Region", player)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((state.can_reach('The Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((state.can_reach('Dangerous Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('Dangerous Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('The Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((state.can_reach('Dangerous Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('The Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((state.can_reach('Dangerous Mines - Floor 60', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('The Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((state.can_reach('Dangerous Mines - Floor 60', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('Mutant Bug Lair', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((state.can_reach('Mutant Bug Lair', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((state.can_reach('Skull Cavern Floor 25', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((state.can_reach('Skull Cavern Floor 25', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((state.can_reach('The Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((state.can_reach('Dangerous Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((state.can_reach('Volcano - Floor 5', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('The Mines - Floor 60', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((state.can_reach('Dangerous Mines - Floor 60', "Region", player)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((state.can_reach('The Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((state.can_reach('Dangerous Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((state.can_reach('The Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((state.can_reach('Dangerous Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('Skull Cavern Floor 25', "Region", player)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((state.can_reach('Skull Cavern Floor 25', "Region", player)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((state.can_reach('Dangerous Skull Cavern', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('Skull Cavern Floor 25', "Region", player)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((state.can_reach('Skull Cavern Floor 25', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('Dangerous Skull Cavern', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('Volcano - Floor 5', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('Volcano - Floor 10', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player)))
-
-
-def _stardewvalleyworldgen_has_ruby(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 100', "Region", player)) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_seed_maker(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 9)) and (True) and (_stardewvalleyworldgen_has_coal(state, player)) and (state.has('Gold Bar (Logic event)', player))
-
-
-def _stardewvalleyworldgen_has_salmon(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Fall', player))
-
-
-def _stardewvalleyworldgen_has_crimsonfish(state: "CollectionState", player: int) -> bool:
-    return (state.has('Summer', player)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.can_reach('Tide Pools', "Region", player))
-
-
-def _stardewvalleyworldgen_has_solar_panel(state: "CollectionState", player: int) -> bool:
-    return (state.has('Solar Panel Recipe', player)) and (_stardewvalleyworldgen_has_refined_quartz(state, player)) and (state.has('Iron Bar (Logic event)', player)) and (state.has('Gold Bar (Logic event)', player))
-
-
-def _stardewvalleyworldgen_has_void_salmon(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.can_reach("Witch's Swamp", "Region", player))
-
-
-def _stardewvalleyworldgen_has_broken_cd(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))
-
-
-def _stardewvalleyworldgen_has_rabbit_s_foot(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 3)) and (True) and (True) and (state.has('Silo', player))
-
-
-def _stardewvalleyworldgen_has_banana_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Banana Sapling', player)) and (True) and (True) and (state.can_reach('Volcano - Floor 10', "Region", player)) and (state.can_reach('Island Trader', "Region", player))
-
-
-def _stardewvalleyworldgen_has_chanterelle(state: "CollectionState", player: int) -> bool:
-    return (state.has('Mushroom Boxes', player)) or ((state.has('Fall', player)) and (state.can_reach('Secret Woods', "Region", player)))
-
-
-def _stardewvalleyworldgen_has_peach_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Peach Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_powdermelon(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Winter Farming', "Region", player)) and (_stardewvalleyworldgen_has_powdermelon_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_mining_monthly(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (state.can_reach('Bookseller Experience Books', "Region", player))
-
-
-def _stardewvalleyworldgen_has_way_of_the_wind_pt_2(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 8)) and (state.has('Power: Way Of The Wind pt. 1', player)) and (True) and (state.can_reach('Bookseller Year 1 Books', "Region", player))
-
-
-def _stardewvalleyworldgen_has_blueberry(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Summer Farming', "Region", player)) and (_stardewvalleyworldgen_has_blueberry_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_bee_house(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 3)) and (True) and (_stardewvalleyworldgen_has_coal(state, player)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_tapper(state, player))
-
-
-def _stardewvalleyworldgen_has_blackberry(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fall', player)) or (state.has('Fruit Bats', player))
-
-
-def _stardewvalleyworldgen_has_stardew_valley_almanac(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (state.can_reach('Bookseller Experience Books', "Region", player))
-
-
-def _stardewvalleyworldgen_has_fossilized_spine(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and (state.can_reach('Dig Site', "Region", player))
-
-
-def _stardewvalleyworldgen_has_ancient_fruit(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Ancient Seeds', player)) or (state.has('Ancient Seeds Recipe', player))) and (state.can_reach('Greenhouse', "Region", player)) and (_stardewvalleyworldgen_has_seed_maker(state, player))
-
-
-def _stardewvalleyworldgen_has_peach(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (state.can_reach('Summer Farming', "Region", player)) and (_stardewvalleyworldgen_has_peach_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_pancakes(state: "CollectionState", player: int) -> bool:
-    return (state.has('The Queen of Sauce', player)) and (state.has('Summer', player)) and (state.can_reach('Kitchen', "Region", player)) and (_stardewvalleyworldgen_has_chicken_egg(state, player)) and (True)
-
-
-def _stardewvalleyworldgen_has_jotpk_big_buff(state: "CollectionState", player: int) -> bool:
-    return False
-
-
-def _stardewvalleyworldgen_has_apple(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (state.can_reach('Fall Farming', "Region", player)) and (_stardewvalleyworldgen_has_apple_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_rhubarb_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Rhubarb Seeds', player)) and (state.has('Spring', player)) and (True) and (state.can_reach('Oasis', "Region", player))
-
-
-def _stardewvalleyworldgen_has_orange_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Orange Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_fall_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Foraging Level', player, 6)) and (_stardewvalleyworldgen_has_common_mushroom(state, player)) and (_stardewvalleyworldgen_has_wild_plum(state, player)) and (state.has('Fall', player)) and (_stardewvalleyworldgen_has_blackberry(state, player))
-
-
-def _stardewvalleyworldgen_has_oil_maker(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 8)) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (_stardewvalleyworldgen_has_hardwood(state, player)) and (state.has('Gold Bar (Logic event)', player))
-
-
-def _stardewvalleyworldgen_has_magma_geode(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('The Mines - Floor 85', "Region", player)) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_lava_eel(state, player)))
-
-
-def _stardewvalleyworldgen_has_mango(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (state.can_reach('Summer Farming', "Region", player)) and (_stardewvalleyworldgen_has_mango_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_apple_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Apple Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_orange(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (state.can_reach('Summer Farming', "Region", player)) and (_stardewvalleyworldgen_has_orange_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_poppy_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Poppy Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_apricot_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Apricot Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_parsnip_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Parsnip Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_topaz(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 20', "Region", player)) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_truffle_oil(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_truffle(state, player)) and (_stardewvalleyworldgen_has_oil_maker(state, player))
-
-
-def _stardewvalleyworldgen_has_the_art_o_crabbing(state: "CollectionState", player: int) -> bool:
-    return (state.has("Book: The Art O' Crabbing", player)) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player)))
-
-
-def _stardewvalleyworldgen_has_dehydrator(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 2)) and (True) and (True) and (_stardewvalleyworldgen_has_fire_quartz(state, player))
-
-
-def _stardewvalleyworldgen_has_duck_feather(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 2)) and (True) and (True) and (state.has('Silo', player))
-
-
-def _stardewvalleyworldgen_has_truffle(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 4)) and (state.has('Progressive Barn', player, 3)) and (True) and (True) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_banana(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (state.can_reach('Summer Farming', "Region", player)) and (_stardewvalleyworldgen_has_banana_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_beet_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Beet Seeds', player)) and (state.has('Fall', player)) and (True) and (state.can_reach('Oasis', "Region", player))
-
-
-def _stardewvalleyworldgen_has_lionfish(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.can_reach('Island South', "Region", player)) or (state.can_reach('Island West', "Region", player)))
-
-
-def _stardewvalleyworldgen_has_large_egg_brown(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (state.can_reach('Fishing', "Region", player)) and (True) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (True) and (state.can_reach('Secret Woods', "Region", player)))) and (True) and (state.has('Silo', player))
-
-
-def _stardewvalleyworldgen_has_cauliflower_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Cauliflower Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_fish_smoker(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 2)) and (_stardewvalleyworldgen_has_hardwood(state, player)) and (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Progressive Fishing Rod', player, 2)) and (_stardewvalleyworldgen_has_cave_jelly(state, player))
-
-
-def _stardewvalleyworldgen_has_seaweed(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and (state.can_reach('Tide Pools', "Region", player))
-
-
-def _stardewvalleyworldgen_has_spice_berry(state: "CollectionState", player: int) -> bool:
-    return (state.has('Summer', player)) or (state.has('Fruit Bats', player))
-
-
-def _stardewvalleyworldgen_has_quality_fertilizer(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 16)) or ((state.has('Farming Level', player, 9)) and (True) and (_stardewvalleyworldgen_has_any_fish(state, player)))
-
-
-def _stardewvalleyworldgen_has_fairy_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fairy Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_cloth(state: "CollectionState", player: int) -> bool:
-    return ((_stardewvalleyworldgen_has_wool(state, player)) and (_stardewvalleyworldgen_has_loom(state, player))) or ((state.can_reach('Desert', "Region", player)) and (_stardewvalleyworldgen_has_aquamarine(state, player)))
-
-
-def _stardewvalleyworldgen_has_blueberry_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Blueberry Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_eggplant_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Eggplant Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_wild_plum(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fall', player)) or (state.has('Fruit Bats', player))
-
-
-def _stardewvalleyworldgen_has_common_mushroom(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fall', player)) or (state.has('Mushroom Boxes', player)) or ((state.has('Spring', player)) and (state.can_reach('Secret Woods', "Region", player)))
-
-
-def _stardewvalleyworldgen_has_kale_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Kale Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_starfruit_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Starfruit Seeds', player)) and (state.has('Summer', player)) and ((state.has('Shipping Bin', player)) or ((True) and (True)) or ((True) and (state.can_reach('Fishing', "Region", player))) or ((True) and (state.can_reach('The Mines - Floor 5', "Region", player))) or ((True) and (state.can_reach('Secret Woods', "Region", player)))) and (state.can_reach('Oasis', "Region", player))
-
-
-def _stardewvalleyworldgen_has_lobster(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))
-
-
-def _stardewvalleyworldgen_has_cauliflower(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Spring Farming', "Region", player)) and (_stardewvalleyworldgen_has_cauliflower_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_red_cabbage(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Summer Farming', "Region", player)) and (_stardewvalleyworldgen_has_red_cabbage_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_prismatic_shard(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 40)) and (state.can_reach('Skull Cavern Floor 100', "Region", player))
-
-
-def _stardewvalleyworldgen_has_coffee_bean_starter(state: "CollectionState", player: int) -> bool:
-    return (state.has('Coffee Bean', player)) and (state.has('Received Progression Percent', player, 16)) and (state.can_reach('The Mines - Floor 60', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player))) and (False)
-
-
-def _stardewvalleyworldgen_has_red_cabbage_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Red Cabbage Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_jade(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 60', "Region", player)) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_dried_mushrooms_magma_cap(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Volcano - Floor 5', "Region", player)) and (_stardewvalleyworldgen_has_dehydrator(state, player))
-
-
-def _stardewvalleyworldgen_has_tea_leaves(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 8)) and (_stardewvalleyworldgen_has_tea_sapling(state, player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_treasure_appraisal_guide(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Received Progression Percent', player, 48)) and (True) and (_stardewvalleyworldgen_has_artifact_trove(state, player))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player)))
-
-
-def _stardewvalleyworldgen_has_winter_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Foraging Level', player, 7)) and (state.has('Winter', player)) and (state.has('Winter', player)) and (state.has('Winter', player)) and (state.has('Winter', player))
-
-
-def _stardewvalleyworldgen_has_queen_of_sauce_cookbook(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 12)) and (state.has('Progressive Slingshot', player)) and (state.has('Progressive Pickaxe', player, 4)) and (state.has('Combat Level', player, 8)) and (state.has('Mining Level', player, 8)) and (state.has('Fishing Level', player, 10)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Open Professor Snail Cave', player)) and (True) and (state.can_reach('Bookseller Year 1 Books', "Region", player)) and (state.can_reach('Island South', "Region", player)) and (state.can_reach('Island North', "Region", player)) and (state.can_reach('Island West', "Region", player)) and (state.can_reach("Leo's Hut", "Region", player)) and (state.can_reach('Volcano Entrance', "Region", player)) and (state.can_reach('Volcano Secret Beach', "Region", player)) and (state.can_reach('Volcano - Floor 5', "Region", player)) and (state.can_reach('Volcano - Floor 10', "Region", player)) and (state.can_reach("Qi's Walnut Room", "Region", player)) and (state.can_reach('Dig Site', "Region", player)) and (state.can_reach('Gourmand Frog Cave', "Region", player)) and (state.can_reach('Colored Crystals Cave', "Region", player)) and (state.can_reach('Shipwreck', "Region", player)) and (state.can_reach('Island Southeast', "Region", player)) and (state.can_reach('Field Office', "Region", player)) and (state.can_reach('Pirate Cove', "Region", player)) and (_stardewvalleyworldgen_has_banana(state, player)) and (_stardewvalleyworldgen_has_amethyst(state, player)) and (_stardewvalleyworldgen_has_aquamarine(state, player)) and (_stardewvalleyworldgen_has_emerald(state, player)) and (_stardewvalleyworldgen_has_ruby(state, player)) and (_stardewvalleyworldgen_has_topaz(state, player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5))) and (state.can_reach('Kitchen', "Region", player)) and (_stardewvalleyworldgen_has_flute_block(state, player)) and (_stardewvalleyworldgen_has_melon_seeds(state, player)) and (_stardewvalleyworldgen_has_wheat_seeds(state, player)) and (_stardewvalleyworldgen_has_garlic_seeds(state, player)) and (state.can_reach('Field Office', "Region", player)) and (state.can_reach('Dig Site', "Region", player)) and (_stardewvalleyworldgen_has_fossilized_ribs(state, player)) and (state.can_reach('Island North', "Region", player)) and (_stardewvalleyworldgen_has_fossilized_spine(state, player)) and (_stardewvalleyworldgen_has_fossilized_tail(state, player)) and (state.can_reach('Field Office', "Region", player)) and (state.can_reach('Dig Site', "Region", player)) and (state.can_reach('Island West', "Region", player)) and (state.can_reach('Field Office', "Region", player)) and (state.can_reach('Island East', "Region", player)) and (state.can_reach('Field Office', "Region", player)) and (state.can_reach('Volcano - Floor 10', "Region", player))
-
-
-def _stardewvalleyworldgen_has_melon_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Melon Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_apricot(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (state.can_reach('Spring Farming', "Region", player)) and (_stardewvalleyworldgen_has_apricot_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_sashimi(state: "CollectionState", player: int) -> bool:
-    return (state.has('Winter', player)) and (True) and (state.can_reach('Kitchen', "Region", player)) and (_stardewvalleyworldgen_has_any_fish(state, player))
+def _stardewvalleyworldgen_has_amethyst(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 20', "Region", player)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 6))))
 
 
 def _stardewvalleyworldgen_has_anchovy(state: "CollectionState", player: int) -> bool:
     return (state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))
 
 
-def _stardewvalleyworldgen_has_melon(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Summer Farming', "Region", player)) and (_stardewvalleyworldgen_has_melon_seeds(state, player))
+def _stardewvalleyworldgen_has_ancient_fruit(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Ancient Seeds', player)) or (state.has('Ancient Seeds Recipe', player))) and (state.can_reach('Greenhouse', "Region", player)) and ((state.has('Farming Level', player, 9)) and (True) and (_stardewvalleyworldgen_has_coal(state, player)) and (state.has('Gold Bar (Logic event)', player)))
 
 
-def _stardewvalleyworldgen_has_halibut(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Winter', player)))
+def _stardewvalleyworldgen_has_ancient_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Ancient Seeds Recipe', player)) and (state.has('Received Progression Percent', player, 20))
+
+
+def _stardewvalleyworldgen_has_animal_catalogue(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 16)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_any_egg(state: "CollectionState", player: int) -> bool:
+    return ((_stardewvalleyworldgen_has_egg(state, player)) or (_stardewvalleyworldgen_has_egg_brown(state, player)) or (_stardewvalleyworldgen_has_large_egg(state, player)) or (_stardewvalleyworldgen_has_large_egg_brown(state, player))) or ((state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 2)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_any_fish(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.can_reach('Waterfall', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.has('Summer', player))) or ((state.has('Winter', player)) and (state.has('Progressive Fishing Rod', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Fall', player))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.can_reach('Mutant Bug Lair', "Region", player))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Summer', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.can_reach("Witch's Swamp", "Region", player))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Fall', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.can_reach('Secret Woods', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Fall', player))) or ((state.has('Summer', player)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.can_reach('Tide Pools', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Spring', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.can_reach('Sewer', "Region", player))) or ((((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))) and ((state.has('Fishing Level', player, 2)) and (state.can_reach('The Mines - Floor 5', "Region", player)))) or ((((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))) and ((state.has('Fishing Level', player, 2)) and (state.can_reach('The Mines - Floor 5', "Region", player)))) or ((((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))) and ((state.has('Fishing Level', player, 2)) and (state.can_reach('The Mines - Floor 5', "Region", player)))) or ((((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))) and ((state.has('Fishing Level', player, 2)) and (state.can_reach('The Mines - Floor 5', "Region", player)))) or ((((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))) and ((state.has('Fishing Level', player, 2)) and (state.can_reach('The Mines - Floor 5', "Region", player)))) or ((((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))) and ((state.has('Fishing Level', player, 2)) and (state.can_reach('The Mines - Floor 5', "Region", player)))) or ((((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))) and ((state.has('Fishing Level', player, 2)) and (state.can_reach('The Mines - Floor 5', "Region", player)))) or ((((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))) and ((state.has('Fishing Level', player, 2)) and (state.can_reach('The Mines - Floor 5', "Region", player)))) or ((((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))) and ((state.has('Fishing Level', player, 2)) and (state.can_reach('The Mines - Floor 5', "Region", player)))) or ((((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))) and ((state.has('Fishing Level', player, 2)) and (state.can_reach('The Mines - Floor 5', "Region", player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.can_reach('Island West', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.can_reach('Island South', "Region", player)) or (state.can_reach('Island West', "Region", player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.can_reach('Pirate Cove', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.can_reach('Desert', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.can_reach('Desert', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.can_reach('The Mines - Floor 20', "Region", player)) or (state.can_reach('The Mines - Floor 60', "Region", player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.can_reach('The Mines - Floor 60', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.can_reach('The Mines - Floor 100', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.can_reach('The Mines - Floor 20', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_apple(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (state.can_reach('Fall Farming', "Region", player)) and ((state.has('Apple Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_apple_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Apple Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_apricot(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (state.can_reach('Spring Farming', "Region", player)) and ((state.has('Apricot Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_apricot_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Apricot Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
 
 
 def _stardewvalleyworldgen_has_aquamarine(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 60', "Region", player)) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
+    return (state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 60', "Region", player)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 6))))
 
 
-def _stardewvalleyworldgen_has_carrot_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Carrot Seeds', player)) and (True) and (True) and (state.has('Foraging Level', player)) and (state.can_reach('Raccoon Shop', "Region", player))
+def _stardewvalleyworldgen_has_artichoke_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Artichoke Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_artifact_trove(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Progressive Pan', player, 2)) or (state.has('Rusty Key', player)) or (state.can_reach('The Mines - Floor 45', "Region", player)) or (state.can_reach('Desert', "Region", player)) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_octopus(state, player))) or (state.can_reach('Volcano - Floor 10', "Region", player))) and (state.can_reach('Desert', "Region", player))
+
+
+def _stardewvalleyworldgen_has_bait(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fishing Level', player, 2)) and (state.can_reach('The Mines - Floor 5', "Region", player))
+
+
+def _stardewvalleyworldgen_has_bait_and_bobber(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (state.can_reach('Bookseller Experience Books', "Region", player))
+
+
+def _stardewvalleyworldgen_has_banana(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (state.can_reach('Summer Farming', "Region", player)) and ((state.has('Banana Sapling', player)) and (True) and (True) and (state.can_reach('Volcano - Floor 10', "Region", player)) and (state.can_reach('Island Trader', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_banana_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Banana Sapling', player)) and (True) and (True) and (state.can_reach('Volcano - Floor 10', "Region", player)) and (state.can_reach('Island Trader', "Region", player))
+
+
+def _stardewvalleyworldgen_has_bat_wing(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('The Mines - Floor 45', "Region", player)) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (state.can_reach('Skull Cavern', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_battery_pack(state: "CollectionState", player: int) -> bool:
+    return (((state.has('Foraging Level', player, 6)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_refined_quartz(state, player)) and (_stardewvalleyworldgen_has_bat_wing(state, player))) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Solar Panel Recipe', player)) and (_stardewvalleyworldgen_has_refined_quartz(state, player)) and (state.has('Iron Bar (Logic event)', player)) and (state.has('Gold Bar (Logic event)', player)))
+
+
+def _stardewvalleyworldgen_has_bean_starter(state: "CollectionState", player: int) -> bool:
+    return (state.has('Bean Starter', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_bee_house(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 3)) and (True) and ((state.has('Progressive Pan', player)) or (state.can_reach('The Mines - Floor 45', "Region", player))) and (state.has('Iron Bar (Logic event)', player)) and ((state.has('Foraging Level', player, 4)) and (True) and (state.has('Copper Bar (Logic event)', player)))
+
+
+def _stardewvalleyworldgen_has_beet(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Fall Farming', "Region", player)) and ((state.has('Beet Seeds', player)) and (state.has('Fall', player)) and (True) and (state.can_reach('Oasis', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_beet_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Beet Seeds', player)) and (state.has('Fall', player)) and (True) and (state.can_reach('Oasis', "Region", player))
+
+
+def _stardewvalleyworldgen_has_blackberry(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fall', player)) or (state.has('Fruit Bats', player))
+
+
+def _stardewvalleyworldgen_has_blobfish(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))
+
+
+def _stardewvalleyworldgen_has_blue_discus(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.can_reach('Island West', "Region", player))
+
+
+def _stardewvalleyworldgen_has_blueberry(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Summer Farming', "Region", player)) and ((state.has('Blueberry Seeds', player)) and (state.has('Summer', player)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_blueberry_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Blueberry Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_bok_choy(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Fall Farming', "Region", player)) and ((state.has('Bok Choy Seeds', player)) and (state.has('Fall', player)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_bok_choy_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Bok Choy Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_bomb(state: "CollectionState", player: int) -> bool:
+    return (state.has('Mining Level', player, 6)) and (state.has('Iron Ore (Logic event)', player)) and ((state.has('Progressive Pan', player)) or (state.can_reach('The Mines - Floor 45', "Region", player)))
 
 
 def _stardewvalleyworldgen_has_bone_fragment(state: "CollectionState", player: int) -> bool:
@@ -540,452 +164,828 @@ def _stardewvalleyworldgen_has_book_of_mysteries(state: "CollectionState", playe
     return (state.has('Power: Book of Mysteries', player)) and (state.has('Received Progression Percent', player, 8)) and (True) and (state.has("Mr Qi's Plane Ride", player))
 
 
-def _stardewvalleyworldgen_has_hops_starter(state: "CollectionState", player: int) -> bool:
-    return (state.has('Hops Starter', player)) and (state.has('Summer', player)) and (True) and (True)
+def _stardewvalleyworldgen_has_book_of_stars(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (state.can_reach('Bookseller Experience Books', "Region", player))
 
 
-def _stardewvalleyworldgen_has_yam_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Yam Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+def _stardewvalleyworldgen_has_broccoli_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Broccoli Seeds', player)) and (True) and (True) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player))) and (state.can_reach('Raccoon Shop', "Region", player))
 
 
-def _stardewvalleyworldgen_has_blue_discus(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.can_reach('Island West', "Region", player))
+def _stardewvalleyworldgen_has_broken_cd(state: "CollectionState", player: int) -> bool:
+    return (((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))) and ((state.has('Fishing Level', player, 2)) and (state.can_reach('The Mines - Floor 5', "Region", player)))
 
 
-def _stardewvalleyworldgen_has_grape_starter(state: "CollectionState", player: int) -> bool:
-    return (state.has('Grape Starter', player)) and (state.has('Fall', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_honey(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Oasis', "Region", player)) or ((_stardewvalleyworldgen_has_bee_house(state, player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player))))
-
-
-def _stardewvalleyworldgen_has_horse_the_book(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 6)) and (True) and (state.can_reach('Bookseller Year 1 Books', "Region", player))
-
-
-def _stardewvalleyworldgen_has_pepper_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Pepper Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_eel(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_summer_squash_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Summer Squash Seeds', player)) and (True) and (True) and (True) and (state.can_reach('Raccoon Shop', "Region", player))
-
-
-def _stardewvalleyworldgen_has_preserves_jar(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 4)) and (True) and (True) and (_stardewvalleyworldgen_has_coal(state, player))
-
-
-def _stardewvalleyworldgen_has_earth_crystal(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Pan', player, 4)) or (state.can_reach('The Mines - Floor 20', "Region", player)) or ((state.can_reach('The Mines - Floor 5', "Region", player)) and (_stardewvalleyworldgen_has_omni_geode(state, player)) and (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_large_egg(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (state.can_reach('Fishing', "Region", player)) and (True) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (True) and (state.can_reach('Secret Woods', "Region", player)))) and (True) and (state.has('Silo', player))
-
-
-def _stardewvalleyworldgen_has_spangle_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Spangle Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_fire_quartz(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Pan', player, 4)) or (state.can_reach('The Mines - Floor 100', "Region", player)) or ((_stardewvalleyworldgen_has_magma_geode(state, player)) and (_stardewvalleyworldgen_has_omni_geode(state, player)) and (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_potato(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Spring Farming', "Region", player)) and (_stardewvalleyworldgen_has_potato_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_jack_be_nimble_jack_be_thick(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Received Progression Percent', player, 4)) and (True)) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player)))
-
-
-def _stardewvalleyworldgen_has_beet(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Fall Farming', "Region", player)) and (_stardewvalleyworldgen_has_beet_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_friendship_101(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Received Progression Percent', player, 16)) and (True) and (state.has('Received Progression Percent', player, 8))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player)))
-
-
-def _stardewvalleyworldgen_has_jotpk_medium_buff(state: "CollectionState", player: int) -> bool:
-    return False
-
-
-def _stardewvalleyworldgen_has_coal(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Pan', player)) or (state.can_reach('The Mines - Floor 45', "Region", player))
-
-
-def _stardewvalleyworldgen_has_grape(state: "CollectionState", player: int) -> bool:
-    return (state.has('Summer', player)) or ((state.can_reach('Fall Farming', "Region", player)) and (_stardewvalleyworldgen_has_grape_starter(state, player)))
-
-
-def _stardewvalleyworldgen_has_the_diamond_hunter(state: "CollectionState", player: int) -> bool:
-    return (True) and (True) and (_stardewvalleyworldgen_has_diamond(state, player)) and (state.can_reach('Volcano Dwarf Shop', "Region", player))
-
-
-def _stardewvalleyworldgen_has_scarecrow(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player)) and (True) and (_stardewvalleyworldgen_has_coal(state, player)) and (True)
-
-
-def _stardewvalleyworldgen_has_pufferfish(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Summer', player))
-
-
-def _stardewvalleyworldgen_has_fishing_chest(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 6))
-
-
-def _stardewvalleyworldgen_has_pomegranate_sapling(state: "CollectionState", player: int) -> bool:
-    return (state.has('Pomegranate Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_egg(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (state.can_reach('Fishing', "Region", player)) and (True) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (True) and (state.can_reach('Secret Woods', "Region", player)))) and (True)
-
-
-def _stardewvalleyworldgen_has_void_egg_starter(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Shipping Bin', player)) and (state.can_reach('Sewer', "Region", player))) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_void_salmon(state, player)))
-
-
-def _stardewvalleyworldgen_has_cave_jelly(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.can_reach('The Mines - Floor 100', "Region", player))
-
-
-def _stardewvalleyworldgen_has_slime_egg_press(state: "CollectionState", player: int) -> bool:
-    return (state.has('Combat Level', player, 6)) and (_stardewvalleyworldgen_has_coal(state, player)) and (_stardewvalleyworldgen_has_fire_quartz(state, player)) and (_stardewvalleyworldgen_has_battery_pack(state, player))
-
-
-def _stardewvalleyworldgen_has_squid(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))
-
-
-def _stardewvalleyworldgen_has_shad(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_tea_sapling(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Winter', player)) and (True) and (state.can_reach('Sunroom', "Region", player)) and (_stardewvalleyworldgen_has_summer_seeds(state, player)) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (state.can_reach('Sunroom', "Region", player)) and (_stardewvalleyworldgen_has_spring_seeds(state, player)) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (state.can_reach('Sunroom', "Region", player)) and (_stardewvalleyworldgen_has_fall_seeds(state, player)) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (state.can_reach('Sunroom', "Region", player)) and (_stardewvalleyworldgen_has_winter_seeds(state, player)) and (True) and (True))
-
-
-def _stardewvalleyworldgen_has_powdermelon_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Powdermelon Seeds', player)) and (True) and (True) and (state.has('Foraging Level', player)) and (state.can_reach('Raccoon Shop', "Region", player))
-
-
-def _stardewvalleyworldgen_has_sunflower_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Sunflower Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_walleye(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Fall', player))
-
-
-def _stardewvalleyworldgen_has_dorado(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Summer', player))
+def _stardewvalleyworldgen_has_broken_glasses(state: "CollectionState", player: int) -> bool:
+    return (((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))) and ((state.has('Fishing Level', player, 2)) and (state.can_reach('The Mines - Floor 5', "Region", player)))
 
 
 def _stardewvalleyworldgen_has_bullhead(state: "CollectionState", player: int) -> bool:
     return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3))
 
 
-def _stardewvalleyworldgen_has_cranberry_candy(state: "CollectionState", player: int) -> bool:
-    return (state.has('The Queen of Sauce', player)) and (state.has('Winter', player)) and (state.can_reach('Kitchen', "Region", player)) and (_stardewvalleyworldgen_has_apple(state, player)) and (_stardewvalleyworldgen_has_cranberries(state, player)) and (True)
+def _stardewvalleyworldgen_has_cactus_fruit(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Desert', "Region", player)) or (((state.can_reach('Greenhouse', "Region", player)) or (state.can_reach('Island West', "Region", player))) and ((state.has('Cactus Seeds', player)) and (True) and (True) and (state.can_reach('Oasis', "Region", player))))
 
 
-def _stardewvalleyworldgen_has_bok_choy_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Bok Choy Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+def _stardewvalleyworldgen_has_cactus_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Cactus Seeds', player)) and (True) and (True) and (state.can_reach('Oasis', "Region", player))
 
 
-def _stardewvalleyworldgen_has_stingray(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.can_reach('Pirate Cove', "Region", player))
+def _stardewvalleyworldgen_has_carrot_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Carrot Seeds', player)) and (True) and (True) and (state.has('Foraging Level', player)) and (state.can_reach('Raccoon Shop', "Region", player))
 
 
-def _stardewvalleyworldgen_has_loom(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 7)) and (True) and (True) and (_stardewvalleyworldgen_has_tapper(state, player))
+def _stardewvalleyworldgen_has_cauliflower(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Spring Farming', "Region", player)) and ((state.has('Cauliflower Seeds', player)) and (state.has('Spring', player)) and (True) and (True))
 
 
-def _stardewvalleyworldgen_has_void_mayonnaise(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_mayonnaise_machine(state, player)) and (_stardewvalleyworldgen_has_void_egg_starter(state, player))
+def _stardewvalleyworldgen_has_cauliflower_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Cauliflower Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
 
 
-def _stardewvalleyworldgen_has_cherry_bomb(state: "CollectionState", player: int) -> bool:
-    return (state.has('Mining Level', player)) and (state.has('Copper Ore (Logic event)', player)) and (_stardewvalleyworldgen_has_coal(state, player))
+def _stardewvalleyworldgen_has_cave_jelly(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.can_reach('The Mines - Floor 100', "Region", player))
 
 
-def _stardewvalleyworldgen_has_any_egg(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_chicken_egg(state, player)) or (_stardewvalleyworldgen_has_duck_egg(state, player))
-
-
-def _stardewvalleyworldgen_has_diamond(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 60', "Region", player)) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_blobfish(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))
-
-
-def _stardewvalleyworldgen_has_broccoli_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Broccoli Seeds', player)) and (True) and (True) and (_stardewvalleyworldgen_has_moss(state, player)) and (state.can_reach('Raccoon Shop', "Region", player))
-
-
-def _stardewvalleyworldgen_has_bok_choy(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Fall Farming', "Region", player)) and (_stardewvalleyworldgen_has_bok_choy_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_tomato_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Tomato Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_golden_pumpkin(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fall', player)) or (_stardewvalleyworldgen_has_artifact_trove(state, player))
-
-
-def _stardewvalleyworldgen_has_omni_geode(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Pan', player, 2)) or (state.has('Rusty Key', player)) or (state.can_reach('The Mines - Floor 45', "Region", player)) or (state.can_reach('Desert', "Region", player)) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_octopus(state, player))) or (state.can_reach('Volcano - Floor 10', "Region", player))
-
-
-def _stardewvalleyworldgen_has_tulip_bulb(state: "CollectionState", player: int) -> bool:
-    return (state.has('Tulip Bulb', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_pearl(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_blobfish(state, player))) or (_stardewvalleyworldgen_has_artifact_trove(state, player))
-
-
-def _stardewvalleyworldgen_has_albacore(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))
-
-
-def _stardewvalleyworldgen_has_pineapple(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Summer Farming', "Region", player)) and (_stardewvalleyworldgen_has_pineapple_seeds(state, player))
+def _stardewvalleyworldgen_has_chanterelle(state: "CollectionState", player: int) -> bool:
+    return (state.has('Mushroom Boxes', player)) or ((state.has('Fall', player)) and (state.can_reach('Secret Woods', "Region", player)))
 
 
 def _stardewvalleyworldgen_has_cherry(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (state.can_reach('Spring Farming', "Region", player)) and (_stardewvalleyworldgen_has_cherry_sapling(state, player))
+    return (state.has('Received Progression Percent', player, 4)) and (state.can_reach('Spring Farming', "Region", player)) and ((state.has('Cherry Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True))
 
 
-def _stardewvalleyworldgen_has_kale(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Spring Farming', "Region", player)) and (_stardewvalleyworldgen_has_kale_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_goblin_problem(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach("Witch's Swamp", "Region", player)) and ((state.has('Progressive Fishing Rod', player)) or (_stardewvalleyworldgen_has_void_mayonnaise(state, player)))
-
-
-def _stardewvalleyworldgen_has_sweet_gem_berry(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Fall Farming', "Region", player)) and (_stardewvalleyworldgen_has_rare_seed(state, player))
-
-
-def _stardewvalleyworldgen_has_quality_bobber(state: "CollectionState", player: int) -> bool:
-    return (state.has('Quality Bobber Recipe', player)) and (state.has('Copper Bar (Logic event)', player)) and (True) and (_stardewvalleyworldgen_has_solar_essence(state, player))
-
-
-def _stardewvalleyworldgen_has_keg(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 8)) and (True) and (state.has('Copper Bar (Logic event)', player)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_tapper(state, player))
-
-
-def _stardewvalleyworldgen_has_starfruit(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Summer Farming', "Region", player)) and (_stardewvalleyworldgen_has_starfruit_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_solar_essence(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('The Mines - Floor 45', "Region", player)) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (state.can_reach('Skull Cavern', "Region", player)))
-
-
-def _stardewvalleyworldgen_has_strawberry_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Strawberry Seeds', player)) and (state.has('Spring', player)) and (True) and (state.can_reach('Egg Festival', "Region", player))
-
-
-def _stardewvalleyworldgen_has_recycling_machine(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fishing Level', player, 4)) and (True) and (True) and (state.has('Iron Bar (Logic event)', player))
-
-
-def _stardewvalleyworldgen_has_hardwood(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Axe', player)) and ((state.can_reach('Secret Woods', "Region", player)) or (state.can_reach('Island West', "Region", player)))
-
-
-def _stardewvalleyworldgen_has_rhubarb_pie(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fall', player)) and (True) and (state.can_reach('Kitchen', "Region", player)) and (_stardewvalleyworldgen_has_rhubarb(state, player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_midnight_carp(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Fall', player)) or (state.has('Winter', player)))
-
-
-def _stardewvalleyworldgen_has_bait_and_bobber(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (state.can_reach('Bookseller Experience Books', "Region", player))
-
-
-def _stardewvalleyworldgen_has_octopus(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.has('Summer', player))
-
-
-def _stardewvalleyworldgen_has_bean_starter(state: "CollectionState", player: int) -> bool:
-    return (state.has('Bean Starter', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_lava_eel(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.can_reach('The Mines - Floor 100', "Region", player))
-
-
-def _stardewvalleyworldgen_has_wheat_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Wheat Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_mayonnaise_machine(state: "CollectionState", player: int) -> bool:
-    return (state.has('Farming Level', player, 2)) and (True) and (True) and (_stardewvalleyworldgen_has_earth_crystal(state, player)) and (state.has('Copper Bar (Logic event)', player))
-
-
-def _stardewvalleyworldgen_has_pomegranate(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 4)) and (state.can_reach('Fall Farming', "Region", player)) and (_stardewvalleyworldgen_has_pomegranate_sapling(state, player))
-
-
-def _stardewvalleyworldgen_has_the_alleyway_buffet(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Progressive Axe', player, 2)) and (state.has('Progressive Pickaxe', player, 2))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player)))
-
-
-def _stardewvalleyworldgen_has_jazz_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Jazz Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_cranberry_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Cranberry Seeds', player)) and (state.has('Fall', player)) and ((state.has('Shipping Bin', player)) or ((True) and (True)) or ((True) and (state.can_reach('Fishing', "Region", player))) or ((True) and (state.can_reach('The Mines - Floor 5', "Region", player))) or ((True) and (state.can_reach('Secret Woods', "Region", player)))) and (True)
-
-
-def _stardewvalleyworldgen_has_amaranth(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Fall Farming', "Region", player)) and (_stardewvalleyworldgen_has_amaranth_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_jotpk_small_buff(state: "CollectionState", player: int) -> bool:
-    return False
-
-
-def _stardewvalleyworldgen_has_radish_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Radish Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_combat_quarterly(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (state.can_reach('Bookseller Experience Books', "Region", player))
-
-
-def _stardewvalleyworldgen_has_woodcutter_s_weekly(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (True) and (state.can_reach('Bookseller Experience Books', "Region", player))
-
-
-def _stardewvalleyworldgen_has_bat_wing(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('The Mines - Floor 45', "Region", player)) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (state.can_reach('Skull Cavern', "Region", player)))
-
-
-def _stardewvalleyworldgen_has_smallmouth_bass(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))
-
-
-def _stardewvalleyworldgen_has_wheat(state: "CollectionState", player: int) -> bool:
-    return ((state.can_reach('Summer Farming', "Region", player)) or (state.can_reach('Fall Farming', "Region", player))) and (_stardewvalleyworldgen_has_wheat_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_duck_egg(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 2)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_pale_ale(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_hops(state, player)) and (_stardewvalleyworldgen_has_keg(state, player))
-
-
-def _stardewvalleyworldgen_has_pickles_tea_leaves(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_tea_leaves(state, player)) and (_stardewvalleyworldgen_has_preserves_jar(state, player))
-
-
-def _stardewvalleyworldgen_has_emerald(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 100', "Region", player)) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
-
-
-def _stardewvalleyworldgen_has_corn_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Corn Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_broken_glasses(state: "CollectionState", player: int) -> bool:
-    return (_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))
-
-
-def _stardewvalleyworldgen_has_pumpkin(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Fall Farming', "Region", player)) and (_stardewvalleyworldgen_has_pumpkin_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_animal_catalogue(state: "CollectionState", player: int) -> bool:
-    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 16)) and (True) and (True)
-
-
-def _stardewvalleyworldgen_has_void_essence(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('The Mines - Floor 85', "Region", player)) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (state.can_reach('Skull Cavern', "Region", player)))
-
-
-def _stardewvalleyworldgen_has_cranberries(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Fall Farming', "Region", player)) and (_stardewvalleyworldgen_has_cranberry_seeds(state, player))
-
-
-def _stardewvalleyworldgen_has_fossilized_ribs(state: "CollectionState", player: int) -> bool:
-    return (state.has('Open Professor Snail Cave', player)) and (state.can_reach('Island South', "Region", player))
-
-
-def _stardewvalleyworldgen_has_jewels_of_the_sea(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Received Progression Percent', player, 20)) and (_stardewvalleyworldgen_has_fishing_chest(state, player))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player)))
+def _stardewvalleyworldgen_has_cherry_bomb(state: "CollectionState", player: int) -> bool:
+    return (state.has('Mining Level', player)) and (state.has('Copper Ore (Logic event)', player)) and ((state.has('Progressive Pan', player)) or (state.can_reach('The Mines - Floor 45', "Region", player)))
 
 
 def _stardewvalleyworldgen_has_cherry_sapling(state: "CollectionState", player: int) -> bool:
     return (state.has('Cherry Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
 
 
-def _stardewvalleyworldgen_has_potato_seeds(state: "CollectionState", player: int) -> bool:
-    return (state.has('Potato Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+def _stardewvalleyworldgen_has_chicken_egg(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (state.can_reach('Fishing', "Region", player)) and (True) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (True) and (state.can_reach('Secret Woods', "Region", player)))) and (True)) or ((state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (state.can_reach('Fishing', "Region", player)) and (True) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (True) and (state.can_reach('Secret Woods', "Region", player)))) and (True)) or ((state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (state.can_reach('Fishing', "Region", player)) and (True) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (True) and (state.can_reach('Secret Woods', "Region", player)))) and (True) and (state.has('Silo', player))) or ((state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (state.can_reach('Fishing', "Region", player)) and (True) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (True) and (state.can_reach('Secret Woods', "Region", player)))) and (True) and (state.has('Silo', player)))
 
 
-def _stardewvalleyworldgen_has_legend(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Spring', player))
+def _stardewvalleyworldgen_has_cloth(state: "CollectionState", player: int) -> bool:
+    return ((((state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 3)) and (True) and (True)) or ((state.has('Shipping Bin', player)) and (state.has('Progressive Barn', player, 3)) and (True) and (True))) and ((state.has('Farming Level', player, 7)) and (True) and (True) and (_stardewvalleyworldgen_has_tapper(state, player)))) or ((state.can_reach('Desert', "Region", player)) and ((state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 60', "Region", player)) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))))
 
 
-def _stardewvalleyworldgen_has_moss(state: "CollectionState", player: int) -> bool:
-    return (state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player))
+def _stardewvalleyworldgen_has_coal(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Pan', player)) or (state.can_reach('The Mines - Floor 45', "Region", player))
 
 
-def _stardewvalleyworldgen_has_jotpk_max_buff(state: "CollectionState", player: int) -> bool:
-    return False
+def _stardewvalleyworldgen_has_coffee_bean_starter(state: "CollectionState", player: int) -> bool:
+    return (state.has('Coffee Bean', player)) and (state.has('Received Progression Percent', player, 16)) and (state.can_reach('The Mines - Floor 60', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player))) and ((sum(state.count(item, player) for item in ['Traveling Merchant: Sunday', 'Traveling Merchant: Monday', 'Traveling Merchant: Tuesday', 'Traveling Merchant: Wednesday', 'Traveling Merchant: Thursday', 'Traveling Merchant: Friday', 'Traveling Merchant: Saturday']) >= 3))
 
 
-def _stardewvalleyworldgen_has_rhubarb(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Spring Farming', "Region", player)) and (_stardewvalleyworldgen_has_rhubarb_seeds(state, player))
+def _stardewvalleyworldgen_has_combat_quarterly(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (state.can_reach('Bookseller Experience Books', "Region", player))
 
 
-def _stardewvalleyworldgen_has_rat_problem(state: "CollectionState", player: int) -> bool:
-    return (True) and (True)
+def _stardewvalleyworldgen_has_common_mushroom(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fall', player)) or (state.has('Mushroom Boxes', player)) or ((state.has('Spring', player)) and (state.can_reach('Secret Woods', "Region", player)))
 
 
-def _stardewvalleyworldgen_has_parsnip(state: "CollectionState", player: int) -> bool:
-    return (state.can_reach('Spring Farming', "Region", player)) and (_stardewvalleyworldgen_has_parsnip_seeds(state, player))
+def _stardewvalleyworldgen_has_corn_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Corn Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)
 
 
-def _stardewvalleyworldgen_has_amethyst(state: "CollectionState", player: int) -> bool:
-    return (state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 20', "Region", player)) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))
+def _stardewvalleyworldgen_has_crab_pot(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))
+
+
+def _stardewvalleyworldgen_has_cranberries(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Fall Farming', "Region", player)) and ((state.has('Cranberry Seeds', player)) and (state.has('Fall', player)) and ((state.has('Shipping Bin', player)) or ((True) and (True)) or ((True) and (state.can_reach('Fishing', "Region", player))) or ((True) and (state.can_reach('The Mines - Floor 5', "Region", player))) or ((True) and (state.can_reach('Secret Woods', "Region", player)))) and (True))
+
+
+def _stardewvalleyworldgen_has_cranberry_candy(state: "CollectionState", player: int) -> bool:
+    return (state.has('The Queen of Sauce', player)) and (state.has('Winter', player)) and (state.can_reach('Kitchen', "Region", player)) and ((state.has('Received Progression Percent', player, 4)) and (state.can_reach('Fall Farming', "Region", player)) and (_stardewvalleyworldgen_has_apple_sapling(state, player))) and ((state.can_reach('Fall Farming', "Region", player)) and (_stardewvalleyworldgen_has_cranberry_seeds(state, player))) and (True)
+
+
+def _stardewvalleyworldgen_has_cranberry_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Cranberry Seeds', player)) and (state.has('Fall', player)) and ((state.has('Shipping Bin', player)) or ((True) and (True)) or ((True) and (state.can_reach('Fishing', "Region", player))) or ((True) and (state.can_reach('The Mines - Floor 5', "Region", player))) or ((True) and (state.can_reach('Secret Woods', "Region", player)))) and (True)
+
+
+def _stardewvalleyworldgen_has_crimsonfish(state: "CollectionState", player: int) -> bool:
+    return (state.has('Summer', player)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.can_reach('Tide Pools', "Region", player))
+
+
+def _stardewvalleyworldgen_has_dehydrator(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 2)) and (True) and (True) and ((state.has('Progressive Pan', player, 4)) or (state.can_reach('The Mines - Floor 100', "Region", player)) or ((_stardewvalleyworldgen_has_magma_geode(state, player)) and (_stardewvalleyworldgen_has_omni_geode(state, player)) and (_stardewvalleyworldgen_has_fishing_chest(state, player))))
+
+
+def _stardewvalleyworldgen_has_deluxe_fertilizer(state: "CollectionState", player: int) -> bool:
+    return (state.has('Deluxe Fertilizer Recipe', player)) and (state.has('Iridium Bar (Logic event)', player)) and (True)
+
+
+def _stardewvalleyworldgen_has_diamond(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 60', "Region", player)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 6))))
+
+
+def _stardewvalleyworldgen_has_dorado(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Summer', player))
+
+
+def _stardewvalleyworldgen_has_dried_mushrooms_magma_cap(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Volcano - Floor 5', "Region", player)) and ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 2)) and (True) and (True) and (_stardewvalleyworldgen_has_fire_quartz(state, player)))
+
+
+def _stardewvalleyworldgen_has_duck_egg(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 2)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_duck_feather(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 2)) and (True) and (True) and (state.has('Silo', player))
+
+
+def _stardewvalleyworldgen_has_dwarvish_safety_manual(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Shipping Bin', player)) and (True) and (state.can_reach('Mines Dwarf Shop', "Region", player))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_earth_crystal(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Pan', player, 4)) or (state.can_reach('The Mines - Floor 20', "Region", player)) or ((state.can_reach('The Mines - Floor 5', "Region", player)) and ((state.has('Progressive Pan', player, 2)) or (state.has('Rusty Key', player)) or (state.can_reach('The Mines - Floor 45', "Region", player)) or (state.can_reach('Desert', "Region", player)) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_octopus(state, player))) or (state.can_reach('Volcano - Floor 10', "Region", player))) and ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 6))))
+
+
+def _stardewvalleyworldgen_has_eel(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_egg(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (state.can_reach('Fishing', "Region", player)) and (True) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (True) and (state.can_reach('Secret Woods', "Region", player)))) and (True)
+
+
+def _stardewvalleyworldgen_has_egg_brown(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (state.can_reach('Fishing', "Region", player)) and (True) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (True) and (state.can_reach('Secret Woods', "Region", player)))) and (True)
+
+
+def _stardewvalleyworldgen_has_eggplant_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Eggplant Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_emerald(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 100', "Region", player)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 6))))
+
+
+def _stardewvalleyworldgen_has_explosive_ammo(state: "CollectionState", player: int) -> bool:
+    return (state.has('Combat Level', player, 8)) and (state.has('Iron Bar (Logic event)', player)) and ((state.has('Progressive Pan', player)) or (state.can_reach('The Mines - Floor 45', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_fairy_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fairy Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_fall_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Foraging Level', player, 6)) and ((state.has('Fall', player)) or (state.has('Mushroom Boxes', player)) or ((state.has('Spring', player)) and (state.can_reach('Secret Woods', "Region", player)))) and ((state.has('Fall', player)) or (state.has('Fruit Bats', player))) and (state.has('Fall', player)) and ((state.has('Fall', player)) or (state.has('Fruit Bats', player)))
+
+
+def _stardewvalleyworldgen_has_fire_quartz(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Pan', player, 4)) or (state.can_reach('The Mines - Floor 100', "Region", player)) or (((state.can_reach('The Mines - Floor 85', "Region", player)) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_lava_eel(state, player)))) and ((state.has('Progressive Pan', player, 2)) or (state.has('Rusty Key', player)) or (state.can_reach('The Mines - Floor 45', "Region", player)) or (state.can_reach('Desert', "Region", player)) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_octopus(state, player))) or (state.can_reach('Volcano - Floor 10', "Region", player))) and ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 6))))
+
+
+def _stardewvalleyworldgen_has_fish_smoker(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 2)) and ((state.has('Progressive Axe', player)) and ((state.can_reach('Secret Woods', "Region", player)) or (state.can_reach('Island West', "Region", player)))) and (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Progressive Fishing Rod', player, 2)) and ((state.has('Progressive Fishing Rod', player, 2)) and (state.can_reach('The Mines - Floor 100', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_fishing_chest(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 6))
+
+
+def _stardewvalleyworldgen_has_flute_block(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fall', player)) and (True) and (True) and (state.has('Copper Ore (Logic event)', player)) and (True)
+
+
+def _stardewvalleyworldgen_has_fossilized_ribs(state: "CollectionState", player: int) -> bool:
+    return (state.has('Open Professor Snail Cave', player)) and (state.can_reach('Island South', "Region", player))
+
+
+def _stardewvalleyworldgen_has_fossilized_spine(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and (state.can_reach('Dig Site', "Region", player))
+
+
+def _stardewvalleyworldgen_has_fossilized_tail(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Pan', player)) and (state.can_reach('Dig Site', "Region", player))
+
+
+def _stardewvalleyworldgen_has_friendship_101(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Received Progression Percent', player, 16)) and (True) and (state.has('Received Progression Percent', player, 8))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player)))
 
 
 def _stardewvalleyworldgen_has_furnace(state: "CollectionState", player: int) -> bool:
     return (state.has('Mining Level', player)) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (state.has('Copper Ore (Logic event)', player)) and (True)
 
 
-def _stardewvalleyworldgen_has_explosive_ammo(state: "CollectionState", player: int) -> bool:
-    return (state.has('Combat Level', player, 8)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_coal(state, player))
+def _stardewvalleyworldgen_has_garlic_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Garlic Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_goblin_problem(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach("Witch's Swamp", "Region", player)) and ((state.has('Progressive Fishing Rod', player)) or ((_stardewvalleyworldgen_has_mayonnaise_machine(state, player)) and (_stardewvalleyworldgen_has_void_egg_starter(state, player))))
+
+
+def _stardewvalleyworldgen_has_golden_pumpkin(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fall', player)) or ((_stardewvalleyworldgen_has_omni_geode(state, player)) and (state.can_reach('Desert', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_grape(state: "CollectionState", player: int) -> bool:
+    return (state.has('Summer', player)) or ((state.can_reach('Fall Farming', "Region", player)) and ((state.has('Grape Starter', player)) and (state.has('Fall', player)) and (True) and (True)))
+
+
+def _stardewvalleyworldgen_has_grape_starter(state: "CollectionState", player: int) -> bool:
+    return (state.has('Grape Starter', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_halibut(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Winter', player)))
+
+
+def _stardewvalleyworldgen_has_hardwood(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Axe', player)) and ((state.can_reach('Secret Woods', "Region", player)) or (state.can_reach('Island West', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_honey(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Oasis', "Region", player)) or (((state.has('Farming Level', player, 3)) and (True) and (_stardewvalleyworldgen_has_coal(state, player)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_tapper(state, player))) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player))))
+
+
+def _stardewvalleyworldgen_has_hops(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Summer Farming', "Region", player)) and ((state.has('Hops Starter', player)) and (state.has('Summer', player)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_hops_starter(state: "CollectionState", player: int) -> bool:
+    return (state.has('Hops Starter', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_horse_the_book(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 6)) and (True) and (state.can_reach('Bookseller Year 1 Books', "Region", player))
+
+
+def _stardewvalleyworldgen_has_hot_pepper(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Summer Farming', "Region", player)) and ((state.has('Pepper Seeds', player)) and (state.has('Summer', player)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_jack_be_nimble_jack_be_thick(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Received Progression Percent', player, 4)) and (True)) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_jade(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 60', "Region", player)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 6))))
+
+
+def _stardewvalleyworldgen_has_jazz_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Jazz Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_jewels_of_the_sea(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Received Progression Percent', player, 20)) and ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 6)))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_jotpk_big_buff(state: "CollectionState", player: int) -> bool:
+    return (sum(state.count(item, player) for item in ['JotPK: Progressive Boots', 'JotPK: Progressive Gun', 'JotPK: Progressive Ammo', 'JotPK: Extra Life', 'JotPK: Increased Drop Rate']) >= 7)
+
+
+def _stardewvalleyworldgen_has_jotpk_max_buff(state: "CollectionState", player: int) -> bool:
+    return (sum(state.count(item, player) for item in ['JotPK: Progressive Boots', 'JotPK: Progressive Gun', 'JotPK: Progressive Ammo', 'JotPK: Extra Life', 'JotPK: Increased Drop Rate']) >= 9)
+
+
+def _stardewvalleyworldgen_has_jotpk_medium_buff(state: "CollectionState", player: int) -> bool:
+    return (sum(state.count(item, player) for item in ['JotPK: Progressive Boots', 'JotPK: Progressive Gun', 'JotPK: Progressive Ammo', 'JotPK: Extra Life', 'JotPK: Increased Drop Rate']) >= 4)
+
+
+def _stardewvalleyworldgen_has_jotpk_small_buff(state: "CollectionState", player: int) -> bool:
+    return (sum(state.count(item, player) for item in ['JotPK: Progressive Boots', 'JotPK: Progressive Gun', 'JotPK: Progressive Ammo', 'JotPK: Extra Life', 'JotPK: Increased Drop Rate']) >= 2)
+
+
+def _stardewvalleyworldgen_has_juice_potato(state: "CollectionState", player: int) -> bool:
+    return ((state.can_reach('Spring Farming', "Region", player)) and (_stardewvalleyworldgen_has_potato_seeds(state, player))) and ((state.has('Farming Level', player, 8)) and (True) and (state.has('Copper Bar (Logic event)', player)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_tapper(state, player)))
+
+
+def _stardewvalleyworldgen_has_kale(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Spring Farming', "Region", player)) and ((state.has('Kale Seeds', player)) and (state.has('Spring', player)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_kale_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Kale Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_keg(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 8)) and (True) and (state.has('Copper Bar (Logic event)', player)) and (state.has('Iron Bar (Logic event)', player)) and ((state.has('Foraging Level', player, 4)) and (True) and (state.has('Copper Bar (Logic event)', player)))
+
+
+def _stardewvalleyworldgen_has_large_egg(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (state.can_reach('Fishing', "Region", player)) and (True) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (True) and (state.can_reach('Secret Woods', "Region", player)))) and (True) and (state.has('Silo', player))
+
+
+def _stardewvalleyworldgen_has_large_egg_brown(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Coop', player)) and (True) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (state.can_reach('Fishing', "Region", player)) and (True) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (True) and (state.can_reach('Secret Woods', "Region", player)))) and (True) and (state.has('Silo', player))
+
+
+def _stardewvalleyworldgen_has_largemouth_bass(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4))
+
+
+def _stardewvalleyworldgen_has_lava_eel(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.can_reach('The Mines - Floor 100', "Region", player))
+
+
+def _stardewvalleyworldgen_has_legend(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Spring', player))
+
+
+def _stardewvalleyworldgen_has_lightning_rod(state: "CollectionState", player: int) -> bool:
+    return (state.has('Foraging Level', player, 6)) and (state.has('Iron Bar (Logic event)', player)) and (((_stardewvalleyworldgen_has_furnace(state, player)) and (state.can_reach('The Mines - Floor 20', "Region", player))) or ((_stardewvalleyworldgen_has_furnace(state, player)) and (_stardewvalleyworldgen_has_fire_quartz(state, player))) or ((_stardewvalleyworldgen_has_recycling_machine(state, player)) and ((_stardewvalleyworldgen_has_broken_cd(state, player)) or (_stardewvalleyworldgen_has_broken_glasses(state, player))))) and ((state.can_reach('The Mines - Floor 45', "Region", player)) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (state.can_reach('Skull Cavern', "Region", player))))
+
+
+def _stardewvalleyworldgen_has_lingcod(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Winter', player))
+
+
+def _stardewvalleyworldgen_has_lionfish(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.can_reach('Island South', "Region", player)) or (state.can_reach('Island West', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_lobster(state: "CollectionState", player: int) -> bool:
+    return (((state.has('Fishing Level', player, 3)) and (state.has('Shipping Bin', player))) or ((state.has('Fishing Level', player, 3)) and (True) and (state.has('Iron Bar (Logic event)', player)))) and ((state.has('Fishing Level', player, 2)) and (state.can_reach('The Mines - Floor 5', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_loom(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 7)) and (True) and (True) and ((state.has('Foraging Level', player, 4)) and (True) and (state.has('Copper Bar (Logic event)', player)))
+
+
+def _stardewvalleyworldgen_has_magma_geode(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('The Mines - Floor 85', "Region", player)) or ((state.has('Fish Pond', player)) and ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.can_reach('The Mines - Floor 100', "Region", player))))
+
+
+def _stardewvalleyworldgen_has_mango(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (state.can_reach('Summer Farming', "Region", player)) and ((state.has('Mango Sapling', player)) and (state.has('Received Progression Percent', player)) and (True) and (True) and (state.can_reach('Island West', "Region", player)) and (state.can_reach('Island Trader', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_mango_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Mango Sapling', player)) and (state.has('Received Progression Percent', player)) and (True) and (True) and (state.can_reach('Island West', "Region", player)) and (state.can_reach('Island Trader', "Region", player))
+
+
+def _stardewvalleyworldgen_has_mayonnaise_machine(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 2)) and (True) and (True) and ((state.has('Progressive Pan', player, 4)) or (state.can_reach('The Mines - Floor 20', "Region", player)) or ((state.can_reach('The Mines - Floor 5', "Region", player)) and (_stardewvalleyworldgen_has_omni_geode(state, player)) and (_stardewvalleyworldgen_has_fishing_chest(state, player)))) and (state.has('Copper Bar (Logic event)', player))
+
+
+def _stardewvalleyworldgen_has_melon(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Summer Farming', "Region", player)) and ((state.has('Melon Seeds', player)) and (state.has('Summer', player)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_melon_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Melon Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_midnight_carp(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Fall', player)) or (state.has('Winter', player)))
+
+
+def _stardewvalleyworldgen_has_mining_monthly(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (state.can_reach('Bookseller Experience Books', "Region", player))
+
+
+def _stardewvalleyworldgen_has_monster_compendium(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Received Progression Percent', player, 16)) and (((state.can_reach('The Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((state.can_reach('The Mines - Floor 60', "Region", player)) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((state.can_reach('Skull Cavern Floor 25', "Region", player)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((state.can_reach('Skull Cavern Floor 75', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('Slime Hutch', "Region", player)) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((state.can_reach('Quarry Mine', "Region", player)) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((state.can_reach('Quarry Mine', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((state.can_reach('Island West', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('The Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((state.can_reach('Dangerous Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('The Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((state.can_reach('Dangerous Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('Dangerous Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('The Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((state.can_reach('Dangerous Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('The Mines - Floor 60', "Region", player)) and ((state.has('Progressive Weapon', player, 2)) or (state.has('Progressive Sword', player, 2)) or (state.has('Progressive Club', player, 2)) or (state.has('Progressive Dagger', player, 2)))) or ((state.can_reach('Dangerous Mines - Floor 60', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('The Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((state.can_reach('Skull Cavern Floor 75', "Region", player)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((state.can_reach('The Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((state.can_reach('Dangerous Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('Dangerous Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('The Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((state.can_reach('Dangerous Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('The Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((state.can_reach('Dangerous Mines - Floor 60', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('The Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((state.can_reach('Dangerous Mines - Floor 60', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('Mutant Bug Lair', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((state.can_reach('Mutant Bug Lair', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((state.can_reach('Skull Cavern Floor 25', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((state.can_reach('Skull Cavern Floor 25', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((state.can_reach('The Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((state.can_reach('Dangerous Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((state.can_reach('Volcano - Floor 5', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('The Mines - Floor 60', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((state.can_reach('Dangerous Mines - Floor 60', "Region", player)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((state.can_reach('The Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player)) or (state.has('Progressive Sword', player)) or (state.has('Progressive Club', player)) or (state.has('Progressive Dagger', player)))) or ((state.can_reach('Dangerous Mines - Floor 20', "Region", player)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((state.can_reach('The Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3)))) or ((state.can_reach('Dangerous Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('Skull Cavern Floor 25', "Region", player)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((state.can_reach('Skull Cavern Floor 25', "Region", player)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((state.can_reach('Dangerous Skull Cavern', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('Skull Cavern Floor 25', "Region", player)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4)))) or ((state.can_reach('Skull Cavern Floor 25', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('Dangerous Skull Cavern', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('Volcano - Floor 5', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))) or ((state.can_reach('Volcano - Floor 10', "Region", player)) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5)))))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_moss(state: "CollectionState", player: int) -> bool:
+    return (state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player))
+
+
+def _stardewvalleyworldgen_has_octopus(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.has('Summer', player))
+
+
+def _stardewvalleyworldgen_has_oil_maker(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 8)) and (state.can_reach('The Mines - Floor 5', "Region", player)) and ((state.has('Progressive Axe', player)) and ((state.can_reach('Secret Woods', "Region", player)) or (state.can_reach('Island West', "Region", player)))) and (state.has('Gold Bar (Logic event)', player))
+
+
+def _stardewvalleyworldgen_has_ol_slitherlegs(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 6)) and (True) and (state.can_reach('Bookseller Year 1 Books', "Region", player))
+
+
+def _stardewvalleyworldgen_has_omni_geode(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Pan', player, 2)) or (state.has('Rusty Key', player)) or (state.can_reach('The Mines - Floor 45', "Region", player)) or (state.can_reach('Desert', "Region", player)) or ((state.has('Fish Pond', player)) and ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.has('Summer', player)))) or (state.can_reach('Volcano - Floor 10', "Region", player))
+
+
+def _stardewvalleyworldgen_has_orange(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (state.can_reach('Summer Farming', "Region", player)) and ((state.has('Orange Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_orange_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Orange Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_pale_ale(state: "CollectionState", player: int) -> bool:
+    return ((state.can_reach('Summer Farming', "Region", player)) and (_stardewvalleyworldgen_has_hops_starter(state, player))) and ((state.has('Farming Level', player, 8)) and (True) and (state.has('Copper Bar (Logic event)', player)) and (state.has('Iron Bar (Logic event)', player)) and (_stardewvalleyworldgen_has_tapper(state, player)))
+
+
+def _stardewvalleyworldgen_has_pancakes(state: "CollectionState", player: int) -> bool:
+    return (state.has('The Queen of Sauce', player)) and (state.has('Summer', player)) and (state.can_reach('Kitchen', "Region", player)) and ((_stardewvalleyworldgen_has_egg(state, player)) or (_stardewvalleyworldgen_has_egg_brown(state, player)) or (_stardewvalleyworldgen_has_large_egg(state, player)) or (_stardewvalleyworldgen_has_large_egg_brown(state, player))) and (True)
+
+
+def _stardewvalleyworldgen_has_parsnip(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Spring Farming', "Region", player)) and ((state.has('Parsnip Seeds', player)) and (state.has('Spring', player)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_parsnip_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Parsnip Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_peach(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (state.can_reach('Summer Farming', "Region", player)) and ((state.has('Peach Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_peach_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Peach Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_pearl(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Fish Pond', player)) and ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player)))) or ((_stardewvalleyworldgen_has_omni_geode(state, player)) and (state.can_reach('Desert', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_pepper_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Pepper Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_pickles_tea_leaves(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Received Progression Percent', player, 8)) and (_stardewvalleyworldgen_has_tea_sapling(state, player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) and ((state.has('Farming Level', player, 4)) and (True) and (True) and (_stardewvalleyworldgen_has_coal(state, player)))
+
+
+def _stardewvalleyworldgen_has_pina_colada(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Island Resort', "Region", player)) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (state.can_reach('Fishing', "Region", player)) and (True) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (True) and (state.can_reach('Secret Woods', "Region", player))))
+
+
+def _stardewvalleyworldgen_has_pineapple(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Summer Farming', "Region", player)) and ((state.has('Pineapple Seeds', player)) and (True) and (True) and (state.can_reach('Volcano - Floor 5', "Region", player)) and (state.can_reach('Island Trader', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_pineapple_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Pineapple Seeds', player)) and (True) and (True) and (state.can_reach('Volcano - Floor 5', "Region", player)) and (state.can_reach('Island Trader', "Region", player))
+
+
+def _stardewvalleyworldgen_has_pomegranate(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 4)) and (state.can_reach('Fall Farming', "Region", player)) and ((state.has('Pomegranate Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_pomegranate_sapling(state: "CollectionState", player: int) -> bool:
+    return (state.has('Pomegranate Sapling', player)) and (state.has('Shipping Bin', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_poppy_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Poppy Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_potato(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Spring Farming', "Region", player)) and ((state.has('Potato Seeds', player)) and (state.has('Spring', player)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_potato_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Potato Seeds', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_powdermelon(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Winter Farming', "Region", player)) and ((state.has('Powdermelon Seeds', player)) and (True) and (True) and (state.has('Foraging Level', player)) and (state.can_reach('Raccoon Shop', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_powdermelon_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Powdermelon Seeds', player)) and (True) and (True) and (state.has('Foraging Level', player)) and (state.can_reach('Raccoon Shop', "Region", player))
+
+
+def _stardewvalleyworldgen_has_preserves_jar(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 4)) and (True) and (True) and ((state.has('Progressive Pan', player)) or (state.can_reach('The Mines - Floor 45', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_price_catalogue(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (state.can_reach('Bookseller Year 1 Books', "Region", player))
+
+
+def _stardewvalleyworldgen_has_prismatic_shard(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 40)) and (state.can_reach('Skull Cavern Floor 100', "Region", player))
+
+
+def _stardewvalleyworldgen_has_pufferfish(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Summer', player))
+
+
+def _stardewvalleyworldgen_has_pumpkin(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Fall Farming', "Region", player)) and ((state.has('Pumpkin Seeds', player)) and (state.has('Fall', player)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_pumpkin_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Pumpkin Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_purple_mushroom(state: "CollectionState", player: int) -> bool:
+    return (state.has('Mushroom Boxes', player)) or (state.can_reach('Skull Cavern Floor 25', "Region", player)) or (state.can_reach('The Mines - Floor 95', "Region", player))
+
+
+def _stardewvalleyworldgen_has_quality_bobber(state: "CollectionState", player: int) -> bool:
+    return (state.has('Quality Bobber Recipe', player)) and (state.has('Copper Bar (Logic event)', player)) and (True) and ((state.can_reach('The Mines - Floor 45', "Region", player)) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (state.can_reach('Skull Cavern', "Region", player))))
+
+
+def _stardewvalleyworldgen_has_quality_fertilizer(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 16)) or ((state.has('Farming Level', player, 9)) and (True) and ((state.has('Progressive Fishing Rod', player)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.can_reach('Waterfall', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.has('Summer', player))) or ((state.has('Winter', player)) and (state.has('Progressive Fishing Rod', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Fall', player))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.can_reach('Mutant Bug Lair', "Region", player))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Summer', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.can_reach("Witch's Swamp", "Region", player))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Fall', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.can_reach('Secret Woods', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Fall', player))) or ((state.has('Summer', player)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.can_reach('Tide Pools', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Spring', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.can_reach('Sewer', "Region", player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.can_reach('Island West', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.can_reach('Island South', "Region", player)) or (state.can_reach('Island West', "Region", player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.can_reach('Pirate Cove', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.can_reach('Desert', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.can_reach('Desert', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.can_reach('The Mines - Floor 20', "Region", player)) or (state.can_reach('The Mines - Floor 60', "Region", player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.can_reach('The Mines - Floor 60', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.can_reach('The Mines - Floor 100', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.can_reach('The Mines - Floor 20', "Region", player)))))
+
+
+def _stardewvalleyworldgen_has_queen_of_sauce_cookbook(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 12)) and (state.has('Progressive Slingshot', player)) and (state.has('Progressive Pickaxe', player, 4)) and (state.has('Combat Level', player, 8)) and (state.has('Mining Level', player, 8)) and (state.has('Fishing Level', player, 10)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Open Professor Snail Cave', player)) and (True) and (state.can_reach('Bookseller Year 1 Books', "Region", player)) and (state.can_reach('Island South', "Region", player)) and (state.can_reach('Island North', "Region", player)) and (state.can_reach('Island West', "Region", player)) and (state.can_reach("Leo's Hut", "Region", player)) and (state.can_reach('Volcano Entrance', "Region", player)) and (state.can_reach('Volcano Secret Beach', "Region", player)) and (state.can_reach('Volcano - Floor 5', "Region", player)) and (state.can_reach('Volcano - Floor 10', "Region", player)) and (state.can_reach("Qi's Walnut Room", "Region", player)) and (state.can_reach('Dig Site', "Region", player)) and (state.can_reach('Gourmand Frog Cave', "Region", player)) and (state.can_reach('Colored Crystals Cave', "Region", player)) and (state.can_reach('Shipwreck', "Region", player)) and (state.can_reach('Island Southeast', "Region", player)) and (state.can_reach('Field Office', "Region", player)) and (state.can_reach('Pirate Cove', "Region", player)) and ((state.has('Received Progression Percent', player, 4)) and (state.can_reach('Summer Farming', "Region", player)) and (_stardewvalleyworldgen_has_banana_sapling(state, player))) and ((state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 20', "Region", player)) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))) and ((state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 60', "Region", player)) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))) and ((state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 100', "Region", player)) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))) and ((state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 100', "Region", player)) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))) and ((state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 20', "Region", player)) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))) and ((state.has('Progressive Weapon', player, 5)) or (state.has('Progressive Sword', player, 5)) or (state.has('Progressive Club', player, 5)) or (state.has('Progressive Dagger', player, 5))) and (state.can_reach('Kitchen', "Region", player)) and ((state.has('Fall', player)) and (True) and (True) and (state.has('Copper Ore (Logic event)', player)) and (True)) and ((state.has('Melon Seeds', player)) and (state.has('Summer', player)) and (True) and (True)) and ((state.has('Wheat Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)) and ((state.has('Garlic Seeds', player)) and (state.has('Spring', player)) and (True) and (True)) and (state.can_reach('Field Office', "Region", player)) and (state.can_reach('Dig Site', "Region", player)) and ((state.has('Open Professor Snail Cave', player)) and (state.can_reach('Island South', "Region", player))) and (state.can_reach('Island North', "Region", player)) and ((state.has('Progressive Fishing Rod', player)) and (state.can_reach('Dig Site', "Region", player))) and ((state.has('Progressive Pan', player)) and (state.can_reach('Dig Site', "Region", player))) and (state.can_reach('Field Office', "Region", player)) and (state.can_reach('Dig Site', "Region", player)) and (state.can_reach('Island West', "Region", player)) and (state.can_reach('Field Office', "Region", player)) and (state.can_reach('Island East', "Region", player)) and (state.can_reach('Field Office', "Region", player)) and (state.can_reach('Volcano - Floor 10', "Region", player))
+
+
+def _stardewvalleyworldgen_has_rabbit_s_foot(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 3)) and (True) and (True) and (state.has('Silo', player))
+
+
+def _stardewvalleyworldgen_has_raccoon_journal(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player))) or ((state.has('Received Progression Percent', player, 2)) and (True) and (True) and (True) and (state.can_reach('Raccoon Shop', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_radish_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Radish Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_rainbow_trout(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Summer', player))
+
+
+def _stardewvalleyworldgen_has_rare_seed(state: "CollectionState", player: int) -> bool:
+    return (state.has('Rare Seed', player)) and ((state.has('Spring', player)) or (state.has('Summer', player))) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (state.can_reach('Fishing', "Region", player)) and (True) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (True) and (state.can_reach('Secret Woods', "Region", player)))) and (state.can_reach('Traveling Cart', "Region", player))
+
+
+def _stardewvalleyworldgen_has_rat_problem(state: "CollectionState", player: int) -> bool:
+    return (True) and (True)
+
+
+def _stardewvalleyworldgen_has_recycling_machine(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fishing Level', player, 4)) and (True) and (True) and (state.has('Iron Bar (Logic event)', player))
+
+
+def _stardewvalleyworldgen_has_red_cabbage(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Summer Farming', "Region", player)) and ((state.has('Red Cabbage Seeds', player)) and (state.has('Summer', player)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_red_cabbage_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Red Cabbage Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_refined_quartz(state: "CollectionState", player: int) -> bool:
+    return (((state.has('Mining Level', player)) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (state.has('Copper Ore (Logic event)', player)) and (True)) and (state.can_reach('The Mines - Floor 20', "Region", player))) or (((state.has('Mining Level', player)) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (state.has('Copper Ore (Logic event)', player)) and (True)) and ((state.has('Progressive Pan', player, 4)) or (state.can_reach('The Mines - Floor 100', "Region", player)) or ((_stardewvalleyworldgen_has_magma_geode(state, player)) and (_stardewvalleyworldgen_has_omni_geode(state, player)) and (_stardewvalleyworldgen_has_fishing_chest(state, player))))) or (((state.has('Fishing Level', player, 4)) and (True) and (True) and (state.has('Iron Bar (Logic event)', player))) and (((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player)))))
+
+
+def _stardewvalleyworldgen_has_rhubarb(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Spring Farming', "Region", player)) and ((state.has('Rhubarb Seeds', player)) and (state.has('Spring', player)) and (True) and (state.can_reach('Oasis', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_rhubarb_pie(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fall', player)) and (True) and (state.can_reach('Kitchen', "Region", player)) and ((state.can_reach('Spring Farming', "Region", player)) and (_stardewvalleyworldgen_has_rhubarb_seeds(state, player))) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_rhubarb_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Rhubarb Seeds', player)) and (state.has('Spring', player)) and (True) and (state.can_reach('Oasis', "Region", player))
+
+
+def _stardewvalleyworldgen_has_rice_shoot(state: "CollectionState", player: int) -> bool:
+    return (state.has('Rice Shoot', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_ruby(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 100', "Region", player)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 6))))
+
+
+def _stardewvalleyworldgen_has_salmon(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Fall', player))
+
+
+def _stardewvalleyworldgen_has_salmonberry(state: "CollectionState", player: int) -> bool:
+    return (state.has('Spring', player)) or (state.has('Fruit Bats', player))
+
+
+def _stardewvalleyworldgen_has_sardine(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)) or (state.has('Winter', player)))
+
+
+def _stardewvalleyworldgen_has_sashimi(state: "CollectionState", player: int) -> bool:
+    return (state.has('Winter', player)) and (True) and (state.can_reach('Kitchen', "Region", player)) and ((state.has('Progressive Fishing Rod', player)) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.can_reach('Waterfall', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.has('Summer', player))) or ((state.has('Winter', player)) and (state.has('Progressive Fishing Rod', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Summer', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Fall', player))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.can_reach('Mutant Bug Lair', "Region", player))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Summer', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and ((state.has('Fall', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Fall', player)))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and ((state.has('Summer', player)) or (state.has('Winter', player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.can_reach("Witch's Swamp", "Region", player))) or ((state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Fall', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.can_reach('Secret Woods', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Fall', player))) or ((state.has('Summer', player)) and (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.can_reach('Tide Pools', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Winter', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.has('Spring', player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 10)) and (state.can_reach('Sewer', "Region", player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((_stardewvalleyworldgen_has_crab_pot(state, player)) and (_stardewvalleyworldgen_has_bait(state, player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.can_reach('Island West', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.can_reach('Island South', "Region", player)) or (state.can_reach('Island West', "Region", player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.can_reach('Pirate Cove', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.can_reach('Desert', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.can_reach('Desert', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.can_reach('The Mines - Floor 20', "Region", player)) or (state.can_reach('The Mines - Floor 60', "Region", player)))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.can_reach('The Mines - Floor 60', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 8)) and (state.can_reach('The Mines - Floor 100', "Region", player))) or ((state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 5)) and (state.can_reach('The Mines - Floor 20', "Region", player))))
+
+
+def _stardewvalleyworldgen_has_scarecrow(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player)) and (True) and ((state.has('Progressive Pan', player)) or (state.can_reach('The Mines - Floor 45', "Region", player))) and (True)
+
+
+def _stardewvalleyworldgen_has_seaweed(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and (state.can_reach('Tide Pools', "Region", player))
+
+
+def _stardewvalleyworldgen_has_seed_maker(state: "CollectionState", player: int) -> bool:
+    return (state.has('Farming Level', player, 9)) and (True) and ((state.has('Progressive Pan', player)) or (state.can_reach('The Mines - Floor 45', "Region", player))) and (state.has('Gold Bar (Logic event)', player))
+
+
+def _stardewvalleyworldgen_has_shad(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_slime_egg_press(state: "CollectionState", player: int) -> bool:
+    return (state.has('Combat Level', player, 6)) and ((state.has('Progressive Pan', player)) or (state.can_reach('The Mines - Floor 45', "Region", player))) and ((state.has('Progressive Pan', player, 4)) or (state.can_reach('The Mines - Floor 100', "Region", player)) or ((_stardewvalleyworldgen_has_magma_geode(state, player)) and (_stardewvalleyworldgen_has_omni_geode(state, player)) and (_stardewvalleyworldgen_has_fishing_chest(state, player)))) and (((_stardewvalleyworldgen_has_lightning_rod(state, player)) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) or (_stardewvalleyworldgen_has_solar_panel(state, player)))
+
+
+def _stardewvalleyworldgen_has_smallmouth_bass(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and ((state.has('Spring', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_solar_essence(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('The Mines - Floor 45', "Region", player)) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (state.can_reach('Skull Cavern', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_solar_panel(state: "CollectionState", player: int) -> bool:
+    return (state.has('Solar Panel Recipe', player)) and (((_stardewvalleyworldgen_has_furnace(state, player)) and (state.can_reach('The Mines - Floor 20', "Region", player))) or ((_stardewvalleyworldgen_has_furnace(state, player)) and (_stardewvalleyworldgen_has_fire_quartz(state, player))) or ((_stardewvalleyworldgen_has_recycling_machine(state, player)) and ((_stardewvalleyworldgen_has_broken_cd(state, player)) or (_stardewvalleyworldgen_has_broken_glasses(state, player))))) and (state.has('Iron Bar (Logic event)', player)) and (state.has('Gold Bar (Logic event)', player))
+
+
+def _stardewvalleyworldgen_has_spangle_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Spangle Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_spice_berry(state: "CollectionState", player: int) -> bool:
+    return (state.has('Summer', player)) or (state.has('Fruit Bats', player))
+
+
+def _stardewvalleyworldgen_has_spring_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Foraging Level', player)) and (state.has('Spring', player)) and (state.has('Spring', player)) and (state.has('Spring', player)) and (state.has('Spring', player))
+
+
+def _stardewvalleyworldgen_has_squid(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 6)) and (state.has('Winter', player))
+
+
+def _stardewvalleyworldgen_has_stardew_valley_almanac(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (state.can_reach('Bookseller Experience Books', "Region", player))
+
+
+def _stardewvalleyworldgen_has_starfruit(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Summer Farming', "Region", player)) and ((state.has('Starfruit Seeds', player)) and (state.has('Summer', player)) and ((state.has('Shipping Bin', player)) or ((True) and (True)) or ((True) and (state.can_reach('Fishing', "Region", player))) or ((True) and (state.can_reach('The Mines - Floor 5', "Region", player))) or ((True) and (state.can_reach('Secret Woods', "Region", player)))) and (state.can_reach('Oasis', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_starfruit_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Starfruit Seeds', player)) and (state.has('Summer', player)) and ((state.has('Shipping Bin', player)) or ((True) and (True)) or ((True) and (state.can_reach('Fishing', "Region", player))) or ((True) and (state.can_reach('The Mines - Floor 5', "Region", player))) or ((True) and (state.can_reach('Secret Woods', "Region", player)))) and (state.can_reach('Oasis', "Region", player))
+
+
+def _stardewvalleyworldgen_has_stingray(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.can_reach('Pirate Cove', "Region", player))
+
+
+def _stardewvalleyworldgen_has_strawberry(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Spring Farming', "Region", player)) and ((state.has('Strawberry Seeds', player)) and (state.has('Spring', player)) and (True) and (state.can_reach('Egg Festival', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_strawberry_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Strawberry Seeds', player)) and (state.has('Spring', player)) and (True) and (state.can_reach('Egg Festival', "Region", player))
+
+
+def _stardewvalleyworldgen_has_summer_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Foraging Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Fruit Bats', player))) and ((state.has('Summer', player)) or ((state.can_reach('Fall Farming', "Region", player)) and (_stardewvalleyworldgen_has_grape_starter(state, player)))) and (state.has('Summer', player))
+
+
+def _stardewvalleyworldgen_has_summer_squash_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Summer Squash Seeds', player)) and (True) and (True) and (True) and (state.can_reach('Raccoon Shop', "Region", player))
+
+
+def _stardewvalleyworldgen_has_sunflower(state: "CollectionState", player: int) -> bool:
+    return ((state.can_reach('Summer Farming', "Region", player)) or (state.can_reach('Fall Farming', "Region", player))) and ((state.has('Sunflower Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_sunflower_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Sunflower Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_super_cucumber(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and ((state.has('Summer', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_sweet_gem_berry(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Fall Farming', "Region", player)) and ((state.has('Rare Seed', player)) and ((state.has('Spring', player)) or (state.has('Summer', player))) and ((state.has('Shipping Bin', player)) or ((True) and (True) and (True) and (state.can_reach('Fishing', "Region", player)) and (True) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (True) and (state.can_reach('Secret Woods', "Region", player)))) and (state.can_reach('Traveling Cart', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_tapper(state: "CollectionState", player: int) -> bool:
+    return (state.has('Foraging Level', player, 4)) and (True) and (state.has('Copper Bar (Logic event)', player))
+
+
+def _stardewvalleyworldgen_has_taro_root(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('Summer Farming', "Region", player)) and ((state.has('Taro Tuber', player)) and (True) and (True) and (_stardewvalleyworldgen_has_bone_fragment(state, player)) and (state.can_reach('Island Trader', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_taro_tuber(state: "CollectionState", player: int) -> bool:
+    return (state.has('Taro Tuber', player)) and (True) and (True) and ((state.can_reach('Dig Site', "Region", player)) or ((state.can_reach('The Mines - Floor 100', "Region", player)) and ((state.has('Progressive Weapon', player, 3)) or (state.has('Progressive Sword', player, 3)) or (state.has('Progressive Club', player, 3)) or (state.has('Progressive Dagger', player, 3))))) and (state.can_reach('Island Trader', "Region", player))
+
+
+def _stardewvalleyworldgen_has_tea_leaves(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 8)) and (((state.has('Winter', player)) and (True) and (state.can_reach('Sunroom', "Region", player)) and (_stardewvalleyworldgen_has_summer_seeds(state, player)) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (state.can_reach('Sunroom', "Region", player)) and (_stardewvalleyworldgen_has_spring_seeds(state, player)) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (state.can_reach('Sunroom', "Region", player)) and (_stardewvalleyworldgen_has_fall_seeds(state, player)) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (state.can_reach('Sunroom', "Region", player)) and (_stardewvalleyworldgen_has_winter_seeds(state, player)) and (True) and (True))) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_tea_sapling(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Winter', player)) and (True) and (state.can_reach('Sunroom', "Region", player)) and ((state.has('Foraging Level', player, 4)) and (_stardewvalleyworldgen_has_spice_berry(state, player)) and (_stardewvalleyworldgen_has_grape(state, player)) and (state.has('Summer', player))) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (state.can_reach('Sunroom', "Region", player)) and ((state.has('Foraging Level', player)) and (state.has('Spring', player)) and (state.has('Spring', player)) and (state.has('Spring', player)) and (state.has('Spring', player))) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (state.can_reach('Sunroom', "Region", player)) and ((state.has('Foraging Level', player, 6)) and (_stardewvalleyworldgen_has_common_mushroom(state, player)) and (_stardewvalleyworldgen_has_wild_plum(state, player)) and (state.has('Fall', player)) and (_stardewvalleyworldgen_has_blackberry(state, player))) and (True) and (True)) or ((state.has('Winter', player)) and (True) and (state.can_reach('Sunroom', "Region", player)) and ((state.has('Foraging Level', player, 7)) and (state.has('Winter', player)) and (state.has('Winter', player)) and (state.has('Winter', player)) and (state.has('Winter', player))) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_the_alleyway_buffet(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Progressive Axe', player, 2)) and (state.has('Progressive Pickaxe', player, 2))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_the_art_o_crabbing(state: "CollectionState", player: int) -> bool:
+    return (state.has("Book: The Art O' Crabbing", player)) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_the_diamond_hunter(state: "CollectionState", player: int) -> bool:
+    return (True) and (True) and ((state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 60', "Region", player)) or (_stardewvalleyworldgen_has_fishing_chest(state, player)))) and (state.can_reach('Volcano Dwarf Shop', "Region", player))
+
+
+def _stardewvalleyworldgen_has_tilapia(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4)) and ((state.has('Summer', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_tomato_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Tomato Seeds', player)) and (state.has('Summer', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_topaz(state: "CollectionState", player: int) -> bool:
+    return (state.has('Received Progression Percent', player, 28)) and ((state.can_reach('The Mines - Floor 20', "Region", player)) or ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 6))))
+
+
+def _stardewvalleyworldgen_has_treasure_appraisal_guide(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Received Progression Percent', player, 48)) and (True) and ((_stardewvalleyworldgen_has_omni_geode(state, player)) and (state.can_reach('Desert', "Region", player)))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_tree_fertilizer(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Foraging Level', player, 7)) and (True) and (True)) or ((state.has('Foraging Level', player, 7)) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_truffle(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 4)) and (state.has('Progressive Barn', player, 3)) and (True) and (True) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))
+
+
+def _stardewvalleyworldgen_has_truffle_oil(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 4)) and (state.has('Progressive Barn', player, 3)) and (True) and (True) and ((state.has('Spring', player)) or (state.has('Summer', player)) or (state.has('Fall', player)))) and ((state.has('Farming Level', player, 8)) and (state.can_reach('The Mines - Floor 5', "Region", player)) and (_stardewvalleyworldgen_has_hardwood(state, player)) and (state.has('Gold Bar (Logic event)', player)))
+
+
+def _stardewvalleyworldgen_has_tulip_bulb(state: "CollectionState", player: int) -> bool:
+    return (state.has('Tulip Bulb', player)) and (state.has('Spring', player)) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_void_egg_starter(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Shipping Bin', player)) and (state.can_reach('Sewer', "Region", player))) or ((state.has('Fish Pond', player)) and ((state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.can_reach("Witch's Swamp", "Region", player))))
+
+
+def _stardewvalleyworldgen_has_void_essence(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach('The Mines - Floor 85', "Region", player)) or ((state.has('Progressive Pickaxe', player, 3)) and (state.has('Combat Level', player, 6)) and (state.has('Mining Level', player, 6)) and ((state.has('Progressive Weapon', player, 4)) or (state.has('Progressive Sword', player, 4)) or (state.has('Progressive Club', player, 4)) or (state.has('Progressive Dagger', player, 4))) and (state.can_reach('Skull Cavern', "Region", player)))
+
+
+def _stardewvalleyworldgen_has_void_mayonnaise(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Farming Level', player, 2)) and (True) and (True) and (_stardewvalleyworldgen_has_earth_crystal(state, player)) and (state.has('Copper Bar (Logic event)', player))) and (((state.has('Shipping Bin', player)) and (state.can_reach('Sewer', "Region", player))) or ((state.has('Fish Pond', player)) and (_stardewvalleyworldgen_has_void_salmon(state, player))))
+
+
+def _stardewvalleyworldgen_has_void_salmon(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player, 4)) and (state.has('Fishing Level', player, 7)) and (state.can_reach("Witch's Swamp", "Region", player))
+
+
+def _stardewvalleyworldgen_has_walleye(state: "CollectionState", player: int) -> bool:
+    return (state.has('Progressive Fishing Rod', player)) and (state.has('Fishing Level', player, 3)) and (state.has('Fall', player))
+
+
+def _stardewvalleyworldgen_has_way_of_the_wind_pt_1(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 3)) and (True) and (state.can_reach('Bookseller Year 1 Books', "Region", player))
+
+
+def _stardewvalleyworldgen_has_way_of_the_wind_pt_2(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 8)) and (state.has('Power: Way Of The Wind pt. 1', player)) and (True) and (state.can_reach('Bookseller Year 1 Books', "Region", player))
+
+
+def _stardewvalleyworldgen_has_wheat(state: "CollectionState", player: int) -> bool:
+    return ((state.can_reach('Summer Farming', "Region", player)) or (state.can_reach('Fall Farming', "Region", player))) and ((state.has('Wheat Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True))
+
+
+def _stardewvalleyworldgen_has_wheat_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Wheat Seeds', player)) and ((state.has('Summer', player)) or (state.has('Fall', player))) and (True) and (True)
+
+
+def _stardewvalleyworldgen_has_wild_plum(state: "CollectionState", player: int) -> bool:
+    return (state.has('Fall', player)) or (state.has('Fruit Bats', player))
+
+
+def _stardewvalleyworldgen_has_winter_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Foraging Level', player, 7)) and (state.has('Winter', player)) and (state.has('Winter', player)) and (state.has('Winter', player)) and (state.has('Winter', player))
+
+
+def _stardewvalleyworldgen_has_woodcutter_s_weekly(state: "CollectionState", player: int) -> bool:
+    return (state.has('Shipping Bin', player)) and (True) and (state.can_reach('Bookseller Experience Books', "Region", player))
+
+
+def _stardewvalleyworldgen_has_woody_s_secret(state: "CollectionState", player: int) -> bool:
+    return ((state.has('Progressive Axe', player, 2)) and (state.has('Foraging Level', player, 5))) or ((state.has('Shipping Bin', player)) and (state.has('Received Progression Percent', player, 5)) and (True) and (state.can_reach('Bookseller Year 3 Books', "Region", player)))
 
 
 def _stardewvalleyworldgen_has_wool(state: "CollectionState", player: int) -> bool:
     return ((state.has('Shipping Bin', player)) and (state.has('Progressive Coop', player, 3)) and (True) and (True)) or ((state.has('Shipping Bin', player)) and (state.has('Progressive Barn', player, 3)) and (True) and (True))
 
 
-def _stardewvalleyworldgen_has_largemouth_bass(state: "CollectionState", player: int) -> bool:
-    return (state.has('Progressive Fishing Rod', player, 2)) and (state.has('Fishing Level', player, 4))
+def _stardewvalleyworldgen_has_yam_seeds(state: "CollectionState", player: int) -> bool:
+    return (state.has('Yam Seeds', player)) and (state.has('Fall', player)) and (True) and (True)
 
 
 # Helper definitions for frontend evaluation
@@ -1001,7 +1001,11 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                               'type': 'or'}],
                         'type': 'and'},
     'has_amaranth': {   'conditions': [   {'region': 'Fall Farming', 'type': 'region_check'},
-                                          {'name': 'has_amaranth_seeds', 'type': 'helper'}],
+                                          {   'conditions': [   {'item': 'Amaranth Seeds', 'type': 'item_check'},
+                                                                {'item': 'Fall', 'type': 'item_check'},
+                                                                {'type': 'constant', 'value': True},
+                                                                {'type': 'constant', 'value': True}],
+                                              'type': 'and'}],
                         'type': 'and'},
     'has_amaranth_seeds': {   'conditions': [   {'item': 'Amaranth Seeds', 'type': 'item_check'},
                                                 {'item': 'Fall', 'type': 'item_check'},
@@ -1013,7 +1017,16 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                               'type': 'item_check'},
                                           {   'conditions': [   {   'region': 'The Mines - Floor 20',
                                                                     'type': 'region_check'},
-                                                                {'name': 'has_fishing_chest', 'type': 'helper'}],
+                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                       'value': 4},
+                                                                                          'item': 'Progressive Fishing '
+                                                                                                  'Rod',
+                                                                                          'type': 'item_check'},
+                                                                                      {   'count': {   'type': 'constant',
+                                                                                                       'value': 6},
+                                                                                          'item': 'Fishing Level',
+                                                                                          'type': 'item_check'}],
+                                                                    'type': 'and'}],
                                               'type': 'or'}],
                         'type': 'and'},
     'has_anchovy': {   'conditions': [   {'item': 'Progressive Fishing Rod', 'type': 'item_check'},
@@ -1026,7 +1039,14 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                          'type': 'item_check'}],
                                                    'type': 'or'},
                                                {'region': 'Greenhouse', 'type': 'region_check'},
-                                               {'name': 'has_seed_maker', 'type': 'helper'}],
+                                               {   'conditions': [   {   'count': {'type': 'constant', 'value': 9},
+                                                                         'item': 'Farming Level',
+                                                                         'type': 'item_check'},
+                                                                     {'type': 'constant', 'value': True},
+                                                                     {'name': 'has_coal', 'type': 'helper'},
+                                                                     {   'item': 'Gold Bar (Logic event)',
+                                                                         'type': 'item_check'}],
+                                                   'type': 'and'}],
                              'type': 'and'},
     'has_ancient_seeds': {   'conditions': [   {'item': 'Ancient Seeds Recipe', 'type': 'item_check'},
                                                {   'count': {'type': 'constant', 'value': 20},
@@ -1040,8 +1060,18 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                   {'type': 'constant', 'value': True},
                                                   {'type': 'constant', 'value': True}],
                                 'type': 'and'},
-    'has_any_egg': {   'conditions': [   {'name': 'has_chicken_egg', 'type': 'helper'},
-                                         {'name': 'has_duck_egg', 'type': 'helper'}],
+    'has_any_egg': {   'conditions': [   {   'conditions': [   {'name': 'has_egg', 'type': 'helper'},
+                                                               {'name': 'has_egg_brown', 'type': 'helper'},
+                                                               {'name': 'has_large_egg', 'type': 'helper'},
+                                                               {'name': 'has_large_egg_brown', 'type': 'helper'}],
+                                             'type': 'or'},
+                                         {   'conditions': [   {'item': 'Shipping Bin', 'type': 'item_check'},
+                                                               {   'count': {'type': 'constant', 'value': 2},
+                                                                   'item': 'Progressive Coop',
+                                                                   'type': 'item_check'},
+                                                               {'type': 'constant', 'value': True},
+                                                               {'type': 'constant', 'value': True}],
+                                             'type': 'and'}],
                        'type': 'or'},
     'has_any_fish': {   'conditions': [   {'item': 'Progressive Fishing Rod', 'type': 'item_check'},
                                           {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
@@ -1459,35 +1489,325 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                     'type': 'item_check'},
                                                                 {'region': 'Sewer', 'type': 'region_check'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
-                                                                {'name': 'has_bait', 'type': 'helper'}],
+                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'item': 'Shipping '
+                                                                                                                        'Bin',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'},
+                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'type': 'constant',
+                                                                                                                'value': True},
+                                                                                                            {   'item': 'Iron '
+                                                                                                                        'Bar '
+                                                                                                                        '(Logic '
+                                                                                                                        'event)',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'}],
+                                                                    'type': 'or'},
+                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                       'value': 2},
+                                                                                          'item': 'Fishing Level',
+                                                                                          'type': 'item_check'},
+                                                                                      {   'region': 'The Mines - Floor '
+                                                                                                    '5',
+                                                                                          'type': 'region_check'}],
+                                                                    'type': 'and'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
-                                                                {'name': 'has_bait', 'type': 'helper'}],
+                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'item': 'Shipping '
+                                                                                                                        'Bin',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'},
+                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'type': 'constant',
+                                                                                                                'value': True},
+                                                                                                            {   'item': 'Iron '
+                                                                                                                        'Bar '
+                                                                                                                        '(Logic '
+                                                                                                                        'event)',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'}],
+                                                                    'type': 'or'},
+                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                       'value': 2},
+                                                                                          'item': 'Fishing Level',
+                                                                                          'type': 'item_check'},
+                                                                                      {   'region': 'The Mines - Floor '
+                                                                                                    '5',
+                                                                                          'type': 'region_check'}],
+                                                                    'type': 'and'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
-                                                                {'name': 'has_bait', 'type': 'helper'}],
+                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'item': 'Shipping '
+                                                                                                                        'Bin',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'},
+                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'type': 'constant',
+                                                                                                                'value': True},
+                                                                                                            {   'item': 'Iron '
+                                                                                                                        'Bar '
+                                                                                                                        '(Logic '
+                                                                                                                        'event)',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'}],
+                                                                    'type': 'or'},
+                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                       'value': 2},
+                                                                                          'item': 'Fishing Level',
+                                                                                          'type': 'item_check'},
+                                                                                      {   'region': 'The Mines - Floor '
+                                                                                                    '5',
+                                                                                          'type': 'region_check'}],
+                                                                    'type': 'and'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
-                                                                {'name': 'has_bait', 'type': 'helper'}],
+                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'item': 'Shipping '
+                                                                                                                        'Bin',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'},
+                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'type': 'constant',
+                                                                                                                'value': True},
+                                                                                                            {   'item': 'Iron '
+                                                                                                                        'Bar '
+                                                                                                                        '(Logic '
+                                                                                                                        'event)',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'}],
+                                                                    'type': 'or'},
+                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                       'value': 2},
+                                                                                          'item': 'Fishing Level',
+                                                                                          'type': 'item_check'},
+                                                                                      {   'region': 'The Mines - Floor '
+                                                                                                    '5',
+                                                                                          'type': 'region_check'}],
+                                                                    'type': 'and'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
-                                                                {'name': 'has_bait', 'type': 'helper'}],
+                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'item': 'Shipping '
+                                                                                                                        'Bin',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'},
+                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'type': 'constant',
+                                                                                                                'value': True},
+                                                                                                            {   'item': 'Iron '
+                                                                                                                        'Bar '
+                                                                                                                        '(Logic '
+                                                                                                                        'event)',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'}],
+                                                                    'type': 'or'},
+                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                       'value': 2},
+                                                                                          'item': 'Fishing Level',
+                                                                                          'type': 'item_check'},
+                                                                                      {   'region': 'The Mines - Floor '
+                                                                                                    '5',
+                                                                                          'type': 'region_check'}],
+                                                                    'type': 'and'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
-                                                                {'name': 'has_bait', 'type': 'helper'}],
+                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'item': 'Shipping '
+                                                                                                                        'Bin',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'},
+                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'type': 'constant',
+                                                                                                                'value': True},
+                                                                                                            {   'item': 'Iron '
+                                                                                                                        'Bar '
+                                                                                                                        '(Logic '
+                                                                                                                        'event)',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'}],
+                                                                    'type': 'or'},
+                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                       'value': 2},
+                                                                                          'item': 'Fishing Level',
+                                                                                          'type': 'item_check'},
+                                                                                      {   'region': 'The Mines - Floor '
+                                                                                                    '5',
+                                                                                          'type': 'region_check'}],
+                                                                    'type': 'and'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
-                                                                {'name': 'has_bait', 'type': 'helper'}],
+                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'item': 'Shipping '
+                                                                                                                        'Bin',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'},
+                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'type': 'constant',
+                                                                                                                'value': True},
+                                                                                                            {   'item': 'Iron '
+                                                                                                                        'Bar '
+                                                                                                                        '(Logic '
+                                                                                                                        'event)',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'}],
+                                                                    'type': 'or'},
+                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                       'value': 2},
+                                                                                          'item': 'Fishing Level',
+                                                                                          'type': 'item_check'},
+                                                                                      {   'region': 'The Mines - Floor '
+                                                                                                    '5',
+                                                                                          'type': 'region_check'}],
+                                                                    'type': 'and'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
-                                                                {'name': 'has_bait', 'type': 'helper'}],
+                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'item': 'Shipping '
+                                                                                                                        'Bin',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'},
+                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'type': 'constant',
+                                                                                                                'value': True},
+                                                                                                            {   'item': 'Iron '
+                                                                                                                        'Bar '
+                                                                                                                        '(Logic '
+                                                                                                                        'event)',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'}],
+                                                                    'type': 'or'},
+                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                       'value': 2},
+                                                                                          'item': 'Fishing Level',
+                                                                                          'type': 'item_check'},
+                                                                                      {   'region': 'The Mines - Floor '
+                                                                                                    '5',
+                                                                                          'type': 'region_check'}],
+                                                                    'type': 'and'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
-                                                                {'name': 'has_bait', 'type': 'helper'}],
+                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'item': 'Shipping '
+                                                                                                                        'Bin',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'},
+                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'type': 'constant',
+                                                                                                                'value': True},
+                                                                                                            {   'item': 'Iron '
+                                                                                                                        'Bar '
+                                                                                                                        '(Logic '
+                                                                                                                        'event)',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'}],
+                                                                    'type': 'or'},
+                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                       'value': 2},
+                                                                                          'item': 'Fishing Level',
+                                                                                          'type': 'item_check'},
+                                                                                      {   'region': 'The Mines - Floor '
+                                                                                                    '5',
+                                                                                          'type': 'region_check'}],
+                                                                    'type': 'and'}],
                                               'type': 'and'},
-                                          {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
-                                                                {'name': 'has_bait', 'type': 'helper'}],
+                                          {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'item': 'Shipping '
+                                                                                                                        'Bin',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'},
+                                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                             'value': 3},
+                                                                                                                'item': 'Fishing '
+                                                                                                                        'Level',
+                                                                                                                'type': 'item_check'},
+                                                                                                            {   'type': 'constant',
+                                                                                                                'value': True},
+                                                                                                            {   'item': 'Iron '
+                                                                                                                        'Bar '
+                                                                                                                        '(Logic '
+                                                                                                                        'event)',
+                                                                                                                'type': 'item_check'}],
+                                                                                          'type': 'and'}],
+                                                                    'type': 'or'},
+                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                       'value': 2},
+                                                                                          'item': 'Fishing Level',
+                                                                                          'type': 'item_check'},
+                                                                                      {   'region': 'The Mines - Floor '
+                                                                                                    '5',
+                                                                                          'type': 'region_check'}],
+                                                                    'type': 'and'}],
                                               'type': 'and'},
                                           {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
                                                                     'item': 'Progressive Fishing Rod',
@@ -1579,7 +1899,11 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                            'item': 'Received Progression Percent',
                                            'type': 'item_check'},
                                        {'region': 'Fall Farming', 'type': 'region_check'},
-                                       {'name': 'has_apple_sapling', 'type': 'helper'}],
+                                       {   'conditions': [   {'item': 'Apple Sapling', 'type': 'item_check'},
+                                                             {'item': 'Shipping Bin', 'type': 'item_check'},
+                                                             {'type': 'constant', 'value': True},
+                                                             {'type': 'constant', 'value': True}],
+                                           'type': 'and'}],
                      'type': 'and'},
     'has_apple_sapling': {   'conditions': [   {'item': 'Apple Sapling', 'type': 'item_check'},
                                                {'item': 'Shipping Bin', 'type': 'item_check'},
@@ -1590,7 +1914,11 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                              'item': 'Received Progression Percent',
                                              'type': 'item_check'},
                                          {'region': 'Spring Farming', 'type': 'region_check'},
-                                         {'name': 'has_apricot_sapling', 'type': 'helper'}],
+                                         {   'conditions': [   {'item': 'Apricot Sapling', 'type': 'item_check'},
+                                                               {'item': 'Shipping Bin', 'type': 'item_check'},
+                                                               {'type': 'constant', 'value': True},
+                                                               {'type': 'constant', 'value': True}],
+                                             'type': 'and'}],
                        'type': 'and'},
     'has_apricot_sapling': {   'conditions': [   {'item': 'Apricot Sapling', 'type': 'item_check'},
                                                  {'item': 'Shipping Bin', 'type': 'item_check'},
@@ -1602,7 +1930,16 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                 'type': 'item_check'},
                                             {   'conditions': [   {   'region': 'The Mines - Floor 60',
                                                                       'type': 'region_check'},
-                                                                  {'name': 'has_fishing_chest', 'type': 'helper'}],
+                                                                  {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                         'value': 4},
+                                                                                            'item': 'Progressive '
+                                                                                                    'Fishing Rod',
+                                                                                            'type': 'item_check'},
+                                                                                        {   'count': {   'type': 'constant',
+                                                                                                         'value': 6},
+                                                                                            'item': 'Fishing Level',
+                                                                                            'type': 'item_check'}],
+                                                                      'type': 'and'}],
                                                 'type': 'or'}],
                           'type': 'and'},
     'has_artichoke_seeds': {   'conditions': [   {'item': 'Artichoke Seeds', 'type': 'item_check'},
@@ -1610,7 +1947,21 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                  {'type': 'constant', 'value': True},
                                                  {'type': 'constant', 'value': True}],
                                'type': 'and'},
-    'has_artifact_trove': {   'conditions': [   {'name': 'has_omni_geode', 'type': 'helper'},
+    'has_artifact_trove': {   'conditions': [   {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
+                                                                          'item': 'Progressive Pan',
+                                                                          'type': 'item_check'},
+                                                                      {'item': 'Rusty Key', 'type': 'item_check'},
+                                                                      {   'region': 'The Mines - Floor 45',
+                                                                          'type': 'region_check'},
+                                                                      {'region': 'Desert', 'type': 'region_check'},
+                                                                      {   'conditions': [   {   'item': 'Fish Pond',
+                                                                                                'type': 'item_check'},
+                                                                                            {   'name': 'has_octopus',
+                                                                                                'type': 'helper'}],
+                                                                          'type': 'and'},
+                                                                      {   'region': 'Volcano - Floor 10',
+                                                                          'type': 'region_check'}],
+                                                    'type': 'or'},
                                                 {'region': 'Desert', 'type': 'region_check'}],
                               'type': 'and'},
     'has_bait': {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
@@ -1626,7 +1977,12 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                             'item': 'Received Progression Percent',
                                             'type': 'item_check'},
                                         {'region': 'Summer Farming', 'type': 'region_check'},
-                                        {'name': 'has_banana_sapling', 'type': 'helper'}],
+                                        {   'conditions': [   {'item': 'Banana Sapling', 'type': 'item_check'},
+                                                              {'type': 'constant', 'value': True},
+                                                              {'type': 'constant', 'value': True},
+                                                              {'region': 'Volcano - Floor 10', 'type': 'region_check'},
+                                                              {'region': 'Island Trader', 'type': 'region_check'}],
+                                            'type': 'and'}],
                       'type': 'and'},
     'has_banana_sapling': {   'conditions': [   {'item': 'Banana Sapling', 'type': 'item_check'},
                                                 {'type': 'constant', 'value': True},
@@ -1664,7 +2020,18 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                 {'region': 'Skull Cavern', 'type': 'region_check'}],
                                               'type': 'and'}],
                         'type': 'or'},
-    'has_battery_pack': {   'conditions': [   {   'conditions': [   {'name': 'has_lightning_rod', 'type': 'helper'},
+    'has_battery_pack': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                           'value': 6},
+                                                                                              'item': 'Foraging Level',
+                                                                                              'type': 'item_check'},
+                                                                                          {   'item': 'Iron Bar (Logic '
+                                                                                                      'event)',
+                                                                                              'type': 'item_check'},
+                                                                                          {   'name': 'has_refined_quartz',
+                                                                                              'type': 'helper'},
+                                                                                          {   'name': 'has_bat_wing',
+                                                                                              'type': 'helper'}],
+                                                                        'type': 'and'},
                                                                     {   'conditions': [   {   'item': 'Spring',
                                                                                               'type': 'item_check'},
                                                                                           {   'item': 'Summer',
@@ -1673,7 +2040,14 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                                               'type': 'item_check'}],
                                                                         'type': 'or'}],
                                                   'type': 'and'},
-                                              {'name': 'has_solar_panel', 'type': 'helper'}],
+                                              {   'conditions': [   {   'item': 'Solar Panel Recipe',
+                                                                        'type': 'item_check'},
+                                                                    {'name': 'has_refined_quartz', 'type': 'helper'},
+                                                                    {   'item': 'Iron Bar (Logic event)',
+                                                                        'type': 'item_check'},
+                                                                    {   'item': 'Gold Bar (Logic event)',
+                                                                        'type': 'item_check'}],
+                                                  'type': 'and'}],
                             'type': 'or'},
     'has_bean_starter': {   'conditions': [   {'item': 'Bean Starter', 'type': 'item_check'},
                                               {'item': 'Spring', 'type': 'item_check'},
@@ -1684,12 +2058,25 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                'item': 'Farming Level',
                                                'type': 'item_check'},
                                            {'type': 'constant', 'value': True},
-                                           {'name': 'has_coal', 'type': 'helper'},
+                                           {   'conditions': [   {'item': 'Progressive Pan', 'type': 'item_check'},
+                                                                 {   'region': 'The Mines - Floor 45',
+                                                                     'type': 'region_check'}],
+                                               'type': 'or'},
                                            {'item': 'Iron Bar (Logic event)', 'type': 'item_check'},
-                                           {'name': 'has_tapper', 'type': 'helper'}],
+                                           {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
+                                                                     'item': 'Foraging Level',
+                                                                     'type': 'item_check'},
+                                                                 {'type': 'constant', 'value': True},
+                                                                 {   'item': 'Copper Bar (Logic event)',
+                                                                     'type': 'item_check'}],
+                                               'type': 'and'}],
                          'type': 'and'},
     'has_beet': {   'conditions': [   {'region': 'Fall Farming', 'type': 'region_check'},
-                                      {'name': 'has_beet_seeds', 'type': 'helper'}],
+                                      {   'conditions': [   {'item': 'Beet Seeds', 'type': 'item_check'},
+                                                            {'item': 'Fall', 'type': 'item_check'},
+                                                            {'type': 'constant', 'value': True},
+                                                            {'region': 'Oasis', 'type': 'region_check'}],
+                                          'type': 'and'}],
                     'type': 'and'},
     'has_beet_seeds': {   'conditions': [   {'item': 'Beet Seeds', 'type': 'item_check'},
                                             {'item': 'Fall', 'type': 'item_check'},
@@ -1716,7 +2103,11 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                              {'region': 'Island West', 'type': 'region_check'}],
                            'type': 'and'},
     'has_blueberry': {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
-                                           {'name': 'has_blueberry_seeds', 'type': 'helper'}],
+                                           {   'conditions': [   {'item': 'Blueberry Seeds', 'type': 'item_check'},
+                                                                 {'item': 'Summer', 'type': 'item_check'},
+                                                                 {'type': 'constant', 'value': True},
+                                                                 {'type': 'constant', 'value': True}],
+                                               'type': 'and'}],
                          'type': 'and'},
     'has_blueberry_seeds': {   'conditions': [   {'item': 'Blueberry Seeds', 'type': 'item_check'},
                                                  {'item': 'Summer', 'type': 'item_check'},
@@ -1724,7 +2115,11 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                  {'type': 'constant', 'value': True}],
                                'type': 'and'},
     'has_bok_choy': {   'conditions': [   {'region': 'Fall Farming', 'type': 'region_check'},
-                                          {'name': 'has_bok_choy_seeds', 'type': 'helper'}],
+                                          {   'conditions': [   {'item': 'Bok Choy Seeds', 'type': 'item_check'},
+                                                                {'item': 'Fall', 'type': 'item_check'},
+                                                                {'type': 'constant', 'value': True},
+                                                                {'type': 'constant', 'value': True}],
+                                              'type': 'and'}],
                         'type': 'and'},
     'has_bok_choy_seeds': {   'conditions': [   {'item': 'Bok Choy Seeds', 'type': 'item_check'},
                                                 {'item': 'Fall', 'type': 'item_check'},
@@ -1735,7 +2130,9 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                           'item': 'Mining Level',
                                           'type': 'item_check'},
                                       {'item': 'Iron Ore (Logic event)', 'type': 'item_check'},
-                                      {'name': 'has_coal', 'type': 'helper'}],
+                                      {   'conditions': [   {'item': 'Progressive Pan', 'type': 'item_check'},
+                                                            {'region': 'The Mines - Floor 45', 'type': 'region_check'}],
+                                          'type': 'or'}],
                     'type': 'and'},
     'has_bone_fragment': {   'conditions': [   {'region': 'Dig Site', 'type': 'region_check'},
                                                {   'conditions': [   {   'region': 'The Mines - Floor 100',
@@ -1777,14 +2174,61 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_broccoli_seeds': {   'conditions': [   {'item': 'Broccoli Seeds', 'type': 'item_check'},
                                                 {'type': 'constant', 'value': True},
                                                 {'type': 'constant', 'value': True},
-                                                {'name': 'has_moss', 'type': 'helper'},
+                                                {   'conditions': [   {'item': 'Spring', 'type': 'item_check'},
+                                                                      {'item': 'Summer', 'type': 'item_check'},
+                                                                      {'item': 'Fall', 'type': 'item_check'}],
+                                                    'type': 'or'},
                                                 {'region': 'Raccoon Shop', 'type': 'region_check'}],
                               'type': 'and'},
-    'has_broken_cd': {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
-                                           {'name': 'has_bait', 'type': 'helper'}],
+    'has_broken_cd': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                        'value': 3},
+                                                                                           'item': 'Fishing Level',
+                                                                                           'type': 'item_check'},
+                                                                                       {   'item': 'Shipping Bin',
+                                                                                           'type': 'item_check'}],
+                                                                     'type': 'and'},
+                                                                 {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                        'value': 3},
+                                                                                           'item': 'Fishing Level',
+                                                                                           'type': 'item_check'},
+                                                                                       {   'type': 'constant',
+                                                                                           'value': True},
+                                                                                       {   'item': 'Iron Bar (Logic '
+                                                                                                   'event)',
+                                                                                           'type': 'item_check'}],
+                                                                     'type': 'and'}],
+                                               'type': 'or'},
+                                           {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
+                                                                     'item': 'Fishing Level',
+                                                                     'type': 'item_check'},
+                                                                 {   'region': 'The Mines - Floor 5',
+                                                                     'type': 'region_check'}],
+                                               'type': 'and'}],
                          'type': 'and'},
-    'has_broken_glasses': {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
-                                                {'name': 'has_bait', 'type': 'helper'}],
+    'has_broken_glasses': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                             'value': 3},
+                                                                                                'item': 'Fishing Level',
+                                                                                                'type': 'item_check'},
+                                                                                            {   'item': 'Shipping Bin',
+                                                                                                'type': 'item_check'}],
+                                                                          'type': 'and'},
+                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                             'value': 3},
+                                                                                                'item': 'Fishing Level',
+                                                                                                'type': 'item_check'},
+                                                                                            {   'type': 'constant',
+                                                                                                'value': True},
+                                                                                            {   'item': 'Iron Bar '
+                                                                                                        '(Logic event)',
+                                                                                                'type': 'item_check'}],
+                                                                          'type': 'and'}],
+                                                    'type': 'or'},
+                                                {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
+                                                                          'item': 'Fishing Level',
+                                                                          'type': 'item_check'},
+                                                                      {   'region': 'The Mines - Floor 5',
+                                                                          'type': 'region_check'}],
+                                                    'type': 'and'}],
                               'type': 'and'},
     'has_bullhead': {   'conditions': [   {'item': 'Progressive Fishing Rod', 'type': 'item_check'},
                                           {   'count': {'type': 'constant', 'value': 3},
@@ -1797,7 +2241,15 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                                           {   'region': 'Island West',
                                                                                               'type': 'region_check'}],
                                                                         'type': 'or'},
-                                                                    {'name': 'has_cactus_seeds', 'type': 'helper'}],
+                                                                    {   'conditions': [   {   'item': 'Cactus Seeds',
+                                                                                              'type': 'item_check'},
+                                                                                          {   'type': 'constant',
+                                                                                              'value': True},
+                                                                                          {   'type': 'constant',
+                                                                                              'value': True},
+                                                                                          {   'region': 'Oasis',
+                                                                                              'type': 'region_check'}],
+                                                                        'type': 'and'}],
                                                   'type': 'and'}],
                             'type': 'or'},
     'has_cactus_seeds': {   'conditions': [   {'item': 'Cactus Seeds', 'type': 'item_check'},
@@ -1812,7 +2264,11 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                               {'region': 'Raccoon Shop', 'type': 'region_check'}],
                             'type': 'and'},
     'has_cauliflower': {   'conditions': [   {'region': 'Spring Farming', 'type': 'region_check'},
-                                             {'name': 'has_cauliflower_seeds', 'type': 'helper'}],
+                                             {   'conditions': [   {'item': 'Cauliflower Seeds', 'type': 'item_check'},
+                                                                   {'item': 'Spring', 'type': 'item_check'},
+                                                                   {'type': 'constant', 'value': True},
+                                                                   {'type': 'constant', 'value': True}],
+                                                 'type': 'and'}],
                            'type': 'and'},
     'has_cauliflower_seeds': {   'conditions': [   {'item': 'Cauliflower Seeds', 'type': 'item_check'},
                                                    {'item': 'Spring', 'type': 'item_check'},
@@ -1833,27 +2289,196 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                             'item': 'Received Progression Percent',
                                             'type': 'item_check'},
                                         {'region': 'Spring Farming', 'type': 'region_check'},
-                                        {'name': 'has_cherry_sapling', 'type': 'helper'}],
+                                        {   'conditions': [   {'item': 'Cherry Sapling', 'type': 'item_check'},
+                                                              {'item': 'Shipping Bin', 'type': 'item_check'},
+                                                              {'type': 'constant', 'value': True},
+                                                              {'type': 'constant', 'value': True}],
+                                            'type': 'and'}],
                       'type': 'and'},
     'has_cherry_bomb': {   'conditions': [   {'item': 'Mining Level', 'type': 'item_check'},
                                              {'item': 'Copper Ore (Logic event)', 'type': 'item_check'},
-                                             {'name': 'has_coal', 'type': 'helper'}],
+                                             {   'conditions': [   {'item': 'Progressive Pan', 'type': 'item_check'},
+                                                                   {   'region': 'The Mines - Floor 45',
+                                                                       'type': 'region_check'}],
+                                                 'type': 'or'}],
                            'type': 'and'},
     'has_cherry_sapling': {   'conditions': [   {'item': 'Cherry Sapling', 'type': 'item_check'},
                                                 {'item': 'Shipping Bin', 'type': 'item_check'},
                                                 {'type': 'constant', 'value': True},
                                                 {'type': 'constant', 'value': True}],
                               'type': 'and'},
-    'has_chicken_egg': {   'conditions': [   {'name': 'has_egg', 'type': 'helper'},
-                                             {'name': 'has_egg_brown', 'type': 'helper'},
-                                             {'name': 'has_large_egg', 'type': 'helper'},
-                                             {'name': 'has_large_egg_brown', 'type': 'helper'}],
+    'has_chicken_egg': {   'conditions': [   {   'conditions': [   {'item': 'Progressive Coop', 'type': 'item_check'},
+                                                                   {'type': 'constant', 'value': True},
+                                                                   {   'conditions': [   {   'item': 'Shipping Bin',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'conditions': [   {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'region': 'Fishing',
+                                                                                                                   'type': 'region_check'},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'region': 'The '
+                                                                                                                             'Mines '
+                                                                                                                             '- '
+                                                                                                                             'Floor '
+                                                                                                                             '5',
+                                                                                                                   'type': 'region_check'},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'region': 'Secret '
+                                                                                                                             'Woods',
+                                                                                                                   'type': 'region_check'}],
+                                                                                             'type': 'and'}],
+                                                                       'type': 'or'},
+                                                                   {'type': 'constant', 'value': True}],
+                                                 'type': 'and'},
+                                             {   'conditions': [   {'item': 'Progressive Coop', 'type': 'item_check'},
+                                                                   {'type': 'constant', 'value': True},
+                                                                   {   'conditions': [   {   'item': 'Shipping Bin',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'conditions': [   {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'region': 'Fishing',
+                                                                                                                   'type': 'region_check'},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'region': 'The '
+                                                                                                                             'Mines '
+                                                                                                                             '- '
+                                                                                                                             'Floor '
+                                                                                                                             '5',
+                                                                                                                   'type': 'region_check'},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'region': 'Secret '
+                                                                                                                             'Woods',
+                                                                                                                   'type': 'region_check'}],
+                                                                                             'type': 'and'}],
+                                                                       'type': 'or'},
+                                                                   {'type': 'constant', 'value': True}],
+                                                 'type': 'and'},
+                                             {   'conditions': [   {'item': 'Progressive Coop', 'type': 'item_check'},
+                                                                   {'type': 'constant', 'value': True},
+                                                                   {   'conditions': [   {   'item': 'Shipping Bin',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'conditions': [   {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'region': 'Fishing',
+                                                                                                                   'type': 'region_check'},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'region': 'The '
+                                                                                                                             'Mines '
+                                                                                                                             '- '
+                                                                                                                             'Floor '
+                                                                                                                             '5',
+                                                                                                                   'type': 'region_check'},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'region': 'Secret '
+                                                                                                                             'Woods',
+                                                                                                                   'type': 'region_check'}],
+                                                                                             'type': 'and'}],
+                                                                       'type': 'or'},
+                                                                   {'type': 'constant', 'value': True},
+                                                                   {'item': 'Silo', 'type': 'item_check'}],
+                                                 'type': 'and'},
+                                             {   'conditions': [   {'item': 'Progressive Coop', 'type': 'item_check'},
+                                                                   {'type': 'constant', 'value': True},
+                                                                   {   'conditions': [   {   'item': 'Shipping Bin',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'conditions': [   {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'region': 'Fishing',
+                                                                                                                   'type': 'region_check'},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'region': 'The '
+                                                                                                                             'Mines '
+                                                                                                                             '- '
+                                                                                                                             'Floor '
+                                                                                                                             '5',
+                                                                                                                   'type': 'region_check'},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'region': 'Secret '
+                                                                                                                             'Woods',
+                                                                                                                   'type': 'region_check'}],
+                                                                                             'type': 'and'}],
+                                                                       'type': 'or'},
+                                                                   {'type': 'constant', 'value': True},
+                                                                   {'item': 'Silo', 'type': 'item_check'}],
+                                                 'type': 'and'}],
                            'type': 'or'},
-    'has_cloth': {   'conditions': [   {   'conditions': [   {'name': 'has_wool', 'type': 'helper'},
-                                                             {'name': 'has_loom', 'type': 'helper'}],
+    'has_cloth': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'item': 'Shipping '
+                                                                                                                     'Bin',
+                                                                                                             'type': 'item_check'},
+                                                                                                         {   'count': {   'type': 'constant',
+                                                                                                                          'value': 3},
+                                                                                                             'item': 'Progressive '
+                                                                                                                     'Coop',
+                                                                                                             'type': 'item_check'},
+                                                                                                         {   'type': 'constant',
+                                                                                                             'value': True},
+                                                                                                         {   'type': 'constant',
+                                                                                                             'value': True}],
+                                                                                       'type': 'and'},
+                                                                                   {   'conditions': [   {   'item': 'Shipping '
+                                                                                                                     'Bin',
+                                                                                                             'type': 'item_check'},
+                                                                                                         {   'count': {   'type': 'constant',
+                                                                                                                          'value': 3},
+                                                                                                             'item': 'Progressive '
+                                                                                                                     'Barn',
+                                                                                                             'type': 'item_check'},
+                                                                                                         {   'type': 'constant',
+                                                                                                             'value': True},
+                                                                                                         {   'type': 'constant',
+                                                                                                             'value': True}],
+                                                                                       'type': 'and'}],
+                                                                 'type': 'or'},
+                                                             {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                    'value': 7},
+                                                                                       'item': 'Farming Level',
+                                                                                       'type': 'item_check'},
+                                                                                   {'type': 'constant', 'value': True},
+                                                                                   {'type': 'constant', 'value': True},
+                                                                                   {   'name': 'has_tapper',
+                                                                                       'type': 'helper'}],
+                                                                 'type': 'and'}],
                                            'type': 'and'},
                                        {   'conditions': [   {'region': 'Desert', 'type': 'region_check'},
-                                                             {'name': 'has_aquamarine', 'type': 'helper'}],
+                                                             {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                    'value': 28},
+                                                                                       'item': 'Received Progression '
+                                                                                               'Percent',
+                                                                                       'type': 'item_check'},
+                                                                                   {   'conditions': [   {   'region': 'The '
+                                                                                                                       'Mines '
+                                                                                                                       '- '
+                                                                                                                       'Floor '
+                                                                                                                       '60',
+                                                                                                             'type': 'region_check'},
+                                                                                                         {   'name': 'has_fishing_chest',
+                                                                                                             'type': 'helper'}],
+                                                                                       'type': 'or'}],
+                                                                 'type': 'and'}],
                                            'type': 'and'}],
                      'type': 'or'},
     'has_coal': {   'conditions': [   {'item': 'Progressive Pan', 'type': 'item_check'},
@@ -1917,13 +2542,54 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                               'type': 'and'}],
                         'type': 'or'},
     'has_cranberries': {   'conditions': [   {'region': 'Fall Farming', 'type': 'region_check'},
-                                             {'name': 'has_cranberry_seeds', 'type': 'helper'}],
+                                             {   'conditions': [   {'item': 'Cranberry Seeds', 'type': 'item_check'},
+                                                                   {'item': 'Fall', 'type': 'item_check'},
+                                                                   {   'conditions': [   {   'item': 'Shipping Bin',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'conditions': [   {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'type': 'constant',
+                                                                                                                   'value': True}],
+                                                                                             'type': 'and'},
+                                                                                         {   'conditions': [   {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'region': 'Fishing',
+                                                                                                                   'type': 'region_check'}],
+                                                                                             'type': 'and'},
+                                                                                         {   'conditions': [   {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'region': 'The '
+                                                                                                                             'Mines '
+                                                                                                                             '- '
+                                                                                                                             'Floor '
+                                                                                                                             '5',
+                                                                                                                   'type': 'region_check'}],
+                                                                                             'type': 'and'},
+                                                                                         {   'conditions': [   {   'type': 'constant',
+                                                                                                                   'value': True},
+                                                                                                               {   'region': 'Secret '
+                                                                                                                             'Woods',
+                                                                                                                   'type': 'region_check'}],
+                                                                                             'type': 'and'}],
+                                                                       'type': 'or'},
+                                                                   {'type': 'constant', 'value': True}],
+                                                 'type': 'and'}],
                            'type': 'and'},
     'has_cranberry_candy': {   'conditions': [   {'item': 'The Queen of Sauce', 'type': 'item_check'},
                                                  {'item': 'Winter', 'type': 'item_check'},
                                                  {'region': 'Kitchen', 'type': 'region_check'},
-                                                 {'name': 'has_apple', 'type': 'helper'},
-                                                 {'name': 'has_cranberries', 'type': 'helper'},
+                                                 {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
+                                                                           'item': 'Received Progression Percent',
+                                                                           'type': 'item_check'},
+                                                                       {   'region': 'Fall Farming',
+                                                                           'type': 'region_check'},
+                                                                       {'name': 'has_apple_sapling', 'type': 'helper'}],
+                                                     'type': 'and'},
+                                                 {   'conditions': [   {   'region': 'Fall Farming',
+                                                                           'type': 'region_check'},
+                                                                       {   'name': 'has_cranberry_seeds',
+                                                                           'type': 'helper'}],
+                                                     'type': 'and'},
                                                  {'type': 'constant', 'value': True}],
                                'type': 'and'},
     'has_cranberry_seeds': {   'conditions': [   {'item': 'Cranberry Seeds', 'type': 'item_check'},
@@ -1969,7 +2635,19 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                 'type': 'item_check'},
                                             {'type': 'constant', 'value': True},
                                             {'type': 'constant', 'value': True},
-                                            {'name': 'has_fire_quartz', 'type': 'helper'}],
+                                            {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
+                                                                      'item': 'Progressive Pan',
+                                                                      'type': 'item_check'},
+                                                                  {   'region': 'The Mines - Floor 100',
+                                                                      'type': 'region_check'},
+                                                                  {   'conditions': [   {   'name': 'has_magma_geode',
+                                                                                            'type': 'helper'},
+                                                                                        {   'name': 'has_omni_geode',
+                                                                                            'type': 'helper'},
+                                                                                        {   'name': 'has_fishing_chest',
+                                                                                            'type': 'helper'}],
+                                                                      'type': 'and'}],
+                                                'type': 'or'}],
                           'type': 'and'},
     'has_deluxe_fertilizer': {   'conditions': [   {'item': 'Deluxe Fertilizer Recipe', 'type': 'item_check'},
                                                    {'item': 'Iridium Bar (Logic event)', 'type': 'item_check'},
@@ -1980,7 +2658,16 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                              'type': 'item_check'},
                                          {   'conditions': [   {   'region': 'The Mines - Floor 60',
                                                                    'type': 'region_check'},
-                                                               {'name': 'has_fishing_chest', 'type': 'helper'}],
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 6},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'}],
                                              'type': 'or'}],
                        'type': 'and'},
     'has_dorado': {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
@@ -1992,7 +2679,18 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                         {'item': 'Summer', 'type': 'item_check'}],
                       'type': 'and'},
     'has_dried_mushrooms_magma_cap': {   'conditions': [   {'region': 'Volcano - Floor 5', 'type': 'region_check'},
-                                                           {'name': 'has_dehydrator', 'type': 'helper'}],
+                                                           {   'conditions': [   {   'item': 'Shipping Bin',
+                                                                                     'type': 'item_check'},
+                                                                                 {   'count': {   'type': 'constant',
+                                                                                                  'value': 2},
+                                                                                     'item': 'Received Progression '
+                                                                                             'Percent',
+                                                                                     'type': 'item_check'},
+                                                                                 {'type': 'constant', 'value': True},
+                                                                                 {'type': 'constant', 'value': True},
+                                                                                 {   'name': 'has_fire_quartz',
+                                                                                     'type': 'helper'}],
+                                                               'type': 'and'}],
                                          'type': 'and'},
     'has_duck_egg': {   'conditions': [   {'item': 'Shipping Bin', 'type': 'item_check'},
                                           {   'count': {'type': 'constant', 'value': 2},
@@ -2033,8 +2731,38 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                {'region': 'The Mines - Floor 20', 'type': 'region_check'},
                                                {   'conditions': [   {   'region': 'The Mines - Floor 5',
                                                                          'type': 'region_check'},
-                                                                     {'name': 'has_omni_geode', 'type': 'helper'},
-                                                                     {'name': 'has_fishing_chest', 'type': 'helper'}],
+                                                                     {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                            'value': 2},
+                                                                                               'item': 'Progressive '
+                                                                                                       'Pan',
+                                                                                               'type': 'item_check'},
+                                                                                           {   'item': 'Rusty Key',
+                                                                                               'type': 'item_check'},
+                                                                                           {   'region': 'The Mines - '
+                                                                                                         'Floor 45',
+                                                                                               'type': 'region_check'},
+                                                                                           {   'region': 'Desert',
+                                                                                               'type': 'region_check'},
+                                                                                           {   'conditions': [   {   'item': 'Fish '
+                                                                                                                             'Pond',
+                                                                                                                     'type': 'item_check'},
+                                                                                                                 {   'name': 'has_octopus',
+                                                                                                                     'type': 'helper'}],
+                                                                                               'type': 'and'},
+                                                                                           {   'region': 'Volcano - '
+                                                                                                         'Floor 10',
+                                                                                               'type': 'region_check'}],
+                                                                         'type': 'or'},
+                                                                     {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                            'value': 4},
+                                                                                               'item': 'Progressive '
+                                                                                                       'Fishing Rod',
+                                                                                               'type': 'item_check'},
+                                                                                           {   'count': {   'type': 'constant',
+                                                                                                            'value': 6},
+                                                                                               'item': 'Fishing Level',
+                                                                                               'type': 'item_check'}],
+                                                                         'type': 'and'}],
                                                    'type': 'and'}],
                              'type': 'or'},
     'has_eel': {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
@@ -2099,14 +2827,26 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                              'type': 'item_check'},
                                          {   'conditions': [   {   'region': 'The Mines - Floor 100',
                                                                    'type': 'region_check'},
-                                                               {'name': 'has_fishing_chest', 'type': 'helper'}],
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 6},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'}],
                                              'type': 'or'}],
                        'type': 'and'},
     'has_explosive_ammo': {   'conditions': [   {   'count': {'type': 'constant', 'value': 8},
                                                     'item': 'Combat Level',
                                                     'type': 'item_check'},
                                                 {'item': 'Iron Bar (Logic event)', 'type': 'item_check'},
-                                                {'name': 'has_coal', 'type': 'helper'}],
+                                                {   'conditions': [   {'item': 'Progressive Pan', 'type': 'item_check'},
+                                                                      {   'region': 'The Mines - Floor 45',
+                                                                          'type': 'region_check'}],
+                                                    'type': 'or'}],
                               'type': 'and'},
     'has_fairy_seeds': {   'conditions': [   {'item': 'Fairy Seeds', 'type': 'item_check'},
                                              {'item': 'Fall', 'type': 'item_check'},
@@ -2116,32 +2856,92 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_fall_seeds': {   'conditions': [   {   'count': {'type': 'constant', 'value': 6},
                                                 'item': 'Foraging Level',
                                                 'type': 'item_check'},
-                                            {'name': 'has_common_mushroom', 'type': 'helper'},
-                                            {'name': 'has_wild_plum', 'type': 'helper'},
+                                            {   'conditions': [   {'item': 'Fall', 'type': 'item_check'},
+                                                                  {'item': 'Mushroom Boxes', 'type': 'item_check'},
+                                                                  {   'conditions': [   {   'item': 'Spring',
+                                                                                            'type': 'item_check'},
+                                                                                        {   'region': 'Secret Woods',
+                                                                                            'type': 'region_check'}],
+                                                                      'type': 'and'}],
+                                                'type': 'or'},
+                                            {   'conditions': [   {'item': 'Fall', 'type': 'item_check'},
+                                                                  {'item': 'Fruit Bats', 'type': 'item_check'}],
+                                                'type': 'or'},
                                             {'item': 'Fall', 'type': 'item_check'},
-                                            {'name': 'has_blackberry', 'type': 'helper'}],
+                                            {   'conditions': [   {'item': 'Fall', 'type': 'item_check'},
+                                                                  {'item': 'Fruit Bats', 'type': 'item_check'}],
+                                                'type': 'or'}],
                           'type': 'and'},
     'has_fire_quartz': {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
                                                  'item': 'Progressive Pan',
                                                  'type': 'item_check'},
                                              {'region': 'The Mines - Floor 100', 'type': 'region_check'},
-                                             {   'conditions': [   {'name': 'has_magma_geode', 'type': 'helper'},
-                                                                   {'name': 'has_omni_geode', 'type': 'helper'},
-                                                                   {'name': 'has_fishing_chest', 'type': 'helper'}],
+                                             {   'conditions': [   {   'conditions': [   {   'region': 'The Mines - '
+                                                                                                       'Floor 85',
+                                                                                             'type': 'region_check'},
+                                                                                         {   'conditions': [   {   'item': 'Fish '
+                                                                                                                           'Pond',
+                                                                                                                   'type': 'item_check'},
+                                                                                                               {   'name': 'has_lava_eel',
+                                                                                                                   'type': 'helper'}],
+                                                                                             'type': 'and'}],
+                                                                       'type': 'or'},
+                                                                   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                          'value': 2},
+                                                                                             'item': 'Progressive Pan',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'item': 'Rusty Key',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'region': 'The Mines - '
+                                                                                                       'Floor 45',
+                                                                                             'type': 'region_check'},
+                                                                                         {   'region': 'Desert',
+                                                                                             'type': 'region_check'},
+                                                                                         {   'conditions': [   {   'item': 'Fish '
+                                                                                                                           'Pond',
+                                                                                                                   'type': 'item_check'},
+                                                                                                               {   'name': 'has_octopus',
+                                                                                                                   'type': 'helper'}],
+                                                                                             'type': 'and'},
+                                                                                         {   'region': 'Volcano - '
+                                                                                                       'Floor 10',
+                                                                                             'type': 'region_check'}],
+                                                                       'type': 'or'},
+                                                                   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                          'value': 4},
+                                                                                             'item': 'Progressive '
+                                                                                                     'Fishing Rod',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'count': {   'type': 'constant',
+                                                                                                          'value': 6},
+                                                                                             'item': 'Fishing Level',
+                                                                                             'type': 'item_check'}],
+                                                                       'type': 'and'}],
                                                  'type': 'and'}],
                            'type': 'or'},
     'has_fish_smoker': {   'conditions': [   {'item': 'Shipping Bin', 'type': 'item_check'},
                                              {   'count': {'type': 'constant', 'value': 2},
                                                  'item': 'Received Progression Percent',
                                                  'type': 'item_check'},
-                                             {'name': 'has_hardwood', 'type': 'helper'},
+                                             {   'conditions': [   {'item': 'Progressive Axe', 'type': 'item_check'},
+                                                                   {   'conditions': [   {   'region': 'Secret Woods',
+                                                                                             'type': 'region_check'},
+                                                                                         {   'region': 'Island West',
+                                                                                             'type': 'region_check'}],
+                                                                       'type': 'or'}],
+                                                 'type': 'and'},
                                              {   'count': {'type': 'constant', 'value': 2},
                                                  'item': 'Progressive Fishing Rod',
                                                  'type': 'item_check'},
                                              {   'count': {'type': 'constant', 'value': 2},
                                                  'item': 'Progressive Fishing Rod',
                                                  'type': 'item_check'},
-                                             {'name': 'has_cave_jelly', 'type': 'helper'}],
+                                             {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
+                                                                       'item': 'Progressive Fishing Rod',
+                                                                       'type': 'item_check'},
+                                                                   {   'region': 'The Mines - Floor 100',
+                                                                       'type': 'region_check'}],
+                                                 'type': 'and'}],
                            'type': 'and'},
     'has_fishing_chest': {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
                                                    'item': 'Progressive Fishing Rod',
@@ -2195,16 +2995,27 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_goblin_problem': {   'conditions': [   {'region': "Witch's Swamp", 'type': 'region_check'},
                                                 {   'conditions': [   {   'item': 'Progressive Fishing Rod',
                                                                           'type': 'item_check'},
-                                                                      {   'name': 'has_void_mayonnaise',
-                                                                          'type': 'helper'}],
+                                                                      {   'conditions': [   {   'name': 'has_mayonnaise_machine',
+                                                                                                'type': 'helper'},
+                                                                                            {   'name': 'has_void_egg_starter',
+                                                                                                'type': 'helper'}],
+                                                                          'type': 'and'}],
                                                     'type': 'or'}],
                               'type': 'and'},
     'has_golden_pumpkin': {   'conditions': [   {'item': 'Fall', 'type': 'item_check'},
-                                                {'name': 'has_artifact_trove', 'type': 'helper'}],
+                                                {   'conditions': [   {'name': 'has_omni_geode', 'type': 'helper'},
+                                                                      {'region': 'Desert', 'type': 'region_check'}],
+                                                    'type': 'and'}],
                               'type': 'or'},
     'has_grape': {   'conditions': [   {'item': 'Summer', 'type': 'item_check'},
                                        {   'conditions': [   {'region': 'Fall Farming', 'type': 'region_check'},
-                                                             {'name': 'has_grape_starter', 'type': 'helper'}],
+                                                             {   'conditions': [   {   'item': 'Grape Starter',
+                                                                                       'type': 'item_check'},
+                                                                                   {   'item': 'Fall',
+                                                                                       'type': 'item_check'},
+                                                                                   {'type': 'constant', 'value': True},
+                                                                                   {'type': 'constant', 'value': True}],
+                                                                 'type': 'and'}],
                                            'type': 'and'}],
                      'type': 'or'},
     'has_grape_starter': {   'conditions': [   {'item': 'Grape Starter', 'type': 'item_check'},
@@ -2229,7 +3040,18 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                               'type': 'or'}],
                         'type': 'and'},
     'has_honey': {   'conditions': [   {'region': 'Oasis', 'type': 'region_check'},
-                                       {   'conditions': [   {'name': 'has_bee_house', 'type': 'helper'},
+                                       {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                    'value': 3},
+                                                                                       'item': 'Farming Level',
+                                                                                       'type': 'item_check'},
+                                                                                   {'type': 'constant', 'value': True},
+                                                                                   {   'name': 'has_coal',
+                                                                                       'type': 'helper'},
+                                                                                   {   'item': 'Iron Bar (Logic event)',
+                                                                                       'type': 'item_check'},
+                                                                                   {   'name': 'has_tapper',
+                                                                                       'type': 'helper'}],
+                                                                 'type': 'and'},
                                                              {   'conditions': [   {   'item': 'Spring',
                                                                                        'type': 'item_check'},
                                                                                    {   'item': 'Summer',
@@ -2240,7 +3062,11 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                            'type': 'and'}],
                      'type': 'or'},
     'has_hops': {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
-                                      {'name': 'has_hops_starter', 'type': 'helper'}],
+                                      {   'conditions': [   {'item': 'Hops Starter', 'type': 'item_check'},
+                                                            {'item': 'Summer', 'type': 'item_check'},
+                                                            {'type': 'constant', 'value': True},
+                                                            {'type': 'constant', 'value': True}],
+                                          'type': 'and'}],
                     'type': 'and'},
     'has_hops_starter': {   'conditions': [   {'item': 'Hops Starter', 'type': 'item_check'},
                                               {'item': 'Summer', 'type': 'item_check'},
@@ -2255,7 +3081,11 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                 {'region': 'Bookseller Year 1 Books', 'type': 'region_check'}],
                               'type': 'and'},
     'has_hot_pepper': {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
-                                            {'name': 'has_pepper_seeds', 'type': 'helper'}],
+                                            {   'conditions': [   {'item': 'Pepper Seeds', 'type': 'item_check'},
+                                                                  {'item': 'Summer', 'type': 'item_check'},
+                                                                  {'type': 'constant', 'value': True},
+                                                                  {'type': 'constant', 'value': True}],
+                                                'type': 'and'}],
                           'type': 'and'},
     'has_jack_be_nimble_jack_be_thick': {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
                                                                                                      'value': 4},
@@ -2282,7 +3112,15 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                           'item': 'Received Progression Percent',
                                           'type': 'item_check'},
                                       {   'conditions': [   {'region': 'The Mines - Floor 60', 'type': 'region_check'},
-                                                            {'name': 'has_fishing_chest', 'type': 'helper'}],
+                                                            {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                   'value': 4},
+                                                                                      'item': 'Progressive Fishing Rod',
+                                                                                      'type': 'item_check'},
+                                                                                  {   'count': {   'type': 'constant',
+                                                                                                   'value': 6},
+                                                                                      'item': 'Fishing Level',
+                                                                                      'type': 'item_check'}],
+                                                                'type': 'and'}],
                                           'type': 'or'}],
                     'type': 'and'},
     'has_jazz_seeds': {   'conditions': [   {'item': 'Jazz Seeds', 'type': 'item_check'},
@@ -2293,8 +3131,18 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_jewels_of_the_sea': {   'conditions': [   {   'conditions': [   {   'count': {'type': 'constant', 'value': 20},
                                                                              'item': 'Received Progression Percent',
                                                                              'type': 'item_check'},
-                                                                         {   'name': 'has_fishing_chest',
-                                                                             'type': 'helper'}],
+                                                                         {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                'value': 4},
+                                                                                                   'item': 'Progressive '
+                                                                                                           'Fishing '
+                                                                                                           'Rod',
+                                                                                                   'type': 'item_check'},
+                                                                                               {   'count': {   'type': 'constant',
+                                                                                                                'value': 6},
+                                                                                                   'item': 'Fishing '
+                                                                                                           'Level',
+                                                                                                   'type': 'item_check'}],
+                                                                             'type': 'and'}],
                                                        'type': 'and'},
                                                    {   'conditions': [   {'item': 'Shipping Bin', 'type': 'item_check'},
                                                                          {   'count': {'type': 'constant', 'value': 5},
@@ -2341,11 +3189,27 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                              'JotPK: Increased Drop Rate']}],
                                 'name': 'total_received',
                                 'type': 'helper'},
-    'has_juice_potato': {   'conditions': [   {'name': 'has_potato', 'type': 'helper'},
-                                              {'name': 'has_keg', 'type': 'helper'}],
+    'has_juice_potato': {   'conditions': [   {   'conditions': [   {   'region': 'Spring Farming',
+                                                                        'type': 'region_check'},
+                                                                    {'name': 'has_potato_seeds', 'type': 'helper'}],
+                                                  'type': 'and'},
+                                              {   'conditions': [   {   'count': {'type': 'constant', 'value': 8},
+                                                                        'item': 'Farming Level',
+                                                                        'type': 'item_check'},
+                                                                    {'type': 'constant', 'value': True},
+                                                                    {   'item': 'Copper Bar (Logic event)',
+                                                                        'type': 'item_check'},
+                                                                    {   'item': 'Iron Bar (Logic event)',
+                                                                        'type': 'item_check'},
+                                                                    {'name': 'has_tapper', 'type': 'helper'}],
+                                                  'type': 'and'}],
                             'type': 'and'},
     'has_kale': {   'conditions': [   {'region': 'Spring Farming', 'type': 'region_check'},
-                                      {'name': 'has_kale_seeds', 'type': 'helper'}],
+                                      {   'conditions': [   {'item': 'Kale Seeds', 'type': 'item_check'},
+                                                            {'item': 'Spring', 'type': 'item_check'},
+                                                            {'type': 'constant', 'value': True},
+                                                            {'type': 'constant', 'value': True}],
+                                          'type': 'and'}],
                     'type': 'and'},
     'has_kale_seeds': {   'conditions': [   {'item': 'Kale Seeds', 'type': 'item_check'},
                                             {'item': 'Spring', 'type': 'item_check'},
@@ -2358,7 +3222,12 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                      {'type': 'constant', 'value': True},
                                      {'item': 'Copper Bar (Logic event)', 'type': 'item_check'},
                                      {'item': 'Iron Bar (Logic event)', 'type': 'item_check'},
-                                     {'name': 'has_tapper', 'type': 'helper'}],
+                                     {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
+                                                               'item': 'Foraging Level',
+                                                               'type': 'item_check'},
+                                                           {'type': 'constant', 'value': True},
+                                                           {'item': 'Copper Bar (Logic event)', 'type': 'item_check'}],
+                                         'type': 'and'}],
                    'type': 'and'},
     'has_large_egg': {   'conditions': [   {'item': 'Progressive Coop', 'type': 'item_check'},
                                            {'type': 'constant', 'value': True},
@@ -2438,8 +3307,66 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                    'item': 'Foraging Level',
                                                    'type': 'item_check'},
                                                {'item': 'Iron Bar (Logic event)', 'type': 'item_check'},
-                                               {'name': 'has_refined_quartz', 'type': 'helper'},
-                                               {'name': 'has_bat_wing', 'type': 'helper'}],
+                                               {   'conditions': [   {   'conditions': [   {   'name': 'has_furnace',
+                                                                                               'type': 'helper'},
+                                                                                           {   'region': 'The Mines - '
+                                                                                                         'Floor 20',
+                                                                                               'type': 'region_check'}],
+                                                                         'type': 'and'},
+                                                                     {   'conditions': [   {   'name': 'has_furnace',
+                                                                                               'type': 'helper'},
+                                                                                           {   'name': 'has_fire_quartz',
+                                                                                               'type': 'helper'}],
+                                                                         'type': 'and'},
+                                                                     {   'conditions': [   {   'name': 'has_recycling_machine',
+                                                                                               'type': 'helper'},
+                                                                                           {   'conditions': [   {   'name': 'has_broken_cd',
+                                                                                                                     'type': 'helper'},
+                                                                                                                 {   'name': 'has_broken_glasses',
+                                                                                                                     'type': 'helper'}],
+                                                                                               'type': 'or'}],
+                                                                         'type': 'and'}],
+                                                   'type': 'or'},
+                                               {   'conditions': [   {   'region': 'The Mines - Floor 45',
+                                                                         'type': 'region_check'},
+                                                                     {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                            'value': 3},
+                                                                                               'item': 'Progressive '
+                                                                                                       'Pickaxe',
+                                                                                               'type': 'item_check'},
+                                                                                           {   'count': {   'type': 'constant',
+                                                                                                            'value': 6},
+                                                                                               'item': 'Combat Level',
+                                                                                               'type': 'item_check'},
+                                                                                           {   'count': {   'type': 'constant',
+                                                                                                            'value': 6},
+                                                                                               'item': 'Mining Level',
+                                                                                               'type': 'item_check'},
+                                                                                           {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                  'value': 4},
+                                                                                                                     'item': 'Progressive '
+                                                                                                                             'Weapon',
+                                                                                                                     'type': 'item_check'},
+                                                                                                                 {   'count': {   'type': 'constant',
+                                                                                                                                  'value': 4},
+                                                                                                                     'item': 'Progressive '
+                                                                                                                             'Sword',
+                                                                                                                     'type': 'item_check'},
+                                                                                                                 {   'count': {   'type': 'constant',
+                                                                                                                                  'value': 4},
+                                                                                                                     'item': 'Progressive '
+                                                                                                                             'Club',
+                                                                                                                     'type': 'item_check'},
+                                                                                                                 {   'count': {   'type': 'constant',
+                                                                                                                                  'value': 4},
+                                                                                                                     'item': 'Progressive '
+                                                                                                                             'Dagger',
+                                                                                                                     'type': 'item_check'}],
+                                                                                               'type': 'or'},
+                                                                                           {   'region': 'Skull Cavern',
+                                                                                               'type': 'region_check'}],
+                                                                         'type': 'and'}],
+                                                   'type': 'or'}],
                              'type': 'and'},
     'has_lingcod': {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
                                              'item': 'Progressive Fishing Rod',
@@ -2459,26 +3386,73 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                 {'region': 'Island West', 'type': 'region_check'}],
                                               'type': 'or'}],
                         'type': 'and'},
-    'has_lobster': {   'conditions': [   {'name': 'has_crab_pot', 'type': 'helper'},
-                                         {'name': 'has_bait', 'type': 'helper'}],
+    'has_lobster': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 3},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'item': 'Shipping Bin',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 3},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'type': 'constant',
+                                                                                         'value': True},
+                                                                                     {   'item': 'Iron Bar (Logic '
+                                                                                                 'event)',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'}],
+                                             'type': 'or'},
+                                         {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
+                                                                   'item': 'Fishing Level',
+                                                                   'type': 'item_check'},
+                                                               {   'region': 'The Mines - Floor 5',
+                                                                   'type': 'region_check'}],
+                                             'type': 'and'}],
                        'type': 'and'},
     'has_loom': {   'conditions': [   {   'count': {'type': 'constant', 'value': 7},
                                           'item': 'Farming Level',
                                           'type': 'item_check'},
                                       {'type': 'constant', 'value': True},
                                       {'type': 'constant', 'value': True},
-                                      {'name': 'has_tapper', 'type': 'helper'}],
+                                      {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
+                                                                'item': 'Foraging Level',
+                                                                'type': 'item_check'},
+                                                            {'type': 'constant', 'value': True},
+                                                            {'item': 'Copper Bar (Logic event)', 'type': 'item_check'}],
+                                          'type': 'and'}],
                     'type': 'and'},
     'has_magma_geode': {   'conditions': [   {'region': 'The Mines - Floor 85', 'type': 'region_check'},
                                              {   'conditions': [   {'item': 'Fish Pond', 'type': 'item_check'},
-                                                                   {'name': 'has_lava_eel', 'type': 'helper'}],
+                                                                   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                          'value': 4},
+                                                                                             'item': 'Progressive '
+                                                                                                     'Fishing Rod',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'count': {   'type': 'constant',
+                                                                                                          'value': 8},
+                                                                                             'item': 'Fishing Level',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'region': 'The Mines - '
+                                                                                                       'Floor 100',
+                                                                                             'type': 'region_check'}],
+                                                                       'type': 'and'}],
                                                  'type': 'and'}],
                            'type': 'or'},
     'has_mango': {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
                                            'item': 'Received Progression Percent',
                                            'type': 'item_check'},
                                        {'region': 'Summer Farming', 'type': 'region_check'},
-                                       {'name': 'has_mango_sapling', 'type': 'helper'}],
+                                       {   'conditions': [   {'item': 'Mango Sapling', 'type': 'item_check'},
+                                                             {   'count': {'type': 'constant', 'value': 1},
+                                                                 'item': 'Received Progression Percent',
+                                                                 'type': 'item_check'},
+                                                             {'type': 'constant', 'value': True},
+                                                             {'type': 'constant', 'value': True},
+                                                             {'region': 'Island West', 'type': 'region_check'},
+                                                             {'region': 'Island Trader', 'type': 'region_check'}],
+                                           'type': 'and'}],
                      'type': 'and'},
     'has_mango_sapling': {   'conditions': [   {'item': 'Mango Sapling', 'type': 'item_check'},
                                                {   'count': {'type': 'constant', 'value': 1},
@@ -2494,11 +3468,29 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                         'type': 'item_check'},
                                                     {'type': 'constant', 'value': True},
                                                     {'type': 'constant', 'value': True},
-                                                    {'name': 'has_earth_crystal', 'type': 'helper'},
+                                                    {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
+                                                                              'item': 'Progressive Pan',
+                                                                              'type': 'item_check'},
+                                                                          {   'region': 'The Mines - Floor 20',
+                                                                              'type': 'region_check'},
+                                                                          {   'conditions': [   {   'region': 'The '
+                                                                                                              'Mines - '
+                                                                                                              'Floor 5',
+                                                                                                    'type': 'region_check'},
+                                                                                                {   'name': 'has_omni_geode',
+                                                                                                    'type': 'helper'},
+                                                                                                {   'name': 'has_fishing_chest',
+                                                                                                    'type': 'helper'}],
+                                                                              'type': 'and'}],
+                                                        'type': 'or'},
                                                     {'item': 'Copper Bar (Logic event)', 'type': 'item_check'}],
                                   'type': 'and'},
     'has_melon': {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
-                                       {'name': 'has_melon_seeds', 'type': 'helper'}],
+                                       {   'conditions': [   {'item': 'Melon Seeds', 'type': 'item_check'},
+                                                             {'item': 'Summer', 'type': 'item_check'},
+                                                             {'type': 'constant', 'value': True},
+                                                             {'type': 'constant', 'value': True}],
+                                           'type': 'and'}],
                      'type': 'and'},
     'has_melon_seeds': {   'conditions': [   {'item': 'Melon Seeds', 'type': 'item_check'},
                                              {'item': 'Summer', 'type': 'item_check'},
@@ -3819,7 +4811,13 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                'item': 'Farming Level',
                                                'type': 'item_check'},
                                            {'region': 'The Mines - Floor 5', 'type': 'region_check'},
-                                           {'name': 'has_hardwood', 'type': 'helper'},
+                                           {   'conditions': [   {'item': 'Progressive Axe', 'type': 'item_check'},
+                                                                 {   'conditions': [   {   'region': 'Secret Woods',
+                                                                                           'type': 'region_check'},
+                                                                                       {   'region': 'Island West',
+                                                                                           'type': 'region_check'}],
+                                                                     'type': 'or'}],
+                                               'type': 'and'},
                                            {'item': 'Gold Bar (Logic event)', 'type': 'item_check'}],
                          'type': 'and'},
     'has_ol_slitherlegs': {   'conditions': [   {'item': 'Shipping Bin', 'type': 'item_check'},
@@ -3836,7 +4834,18 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                             {'region': 'The Mines - Floor 45', 'type': 'region_check'},
                                             {'region': 'Desert', 'type': 'region_check'},
                                             {   'conditions': [   {'item': 'Fish Pond', 'type': 'item_check'},
-                                                                  {'name': 'has_octopus', 'type': 'helper'}],
+                                                                  {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                         'value': 4},
+                                                                                            'item': 'Progressive '
+                                                                                                    'Fishing Rod',
+                                                                                            'type': 'item_check'},
+                                                                                        {   'count': {   'type': 'constant',
+                                                                                                         'value': 8},
+                                                                                            'item': 'Fishing Level',
+                                                                                            'type': 'item_check'},
+                                                                                        {   'item': 'Summer',
+                                                                                            'type': 'item_check'}],
+                                                                      'type': 'and'}],
                                                 'type': 'and'},
                                             {'region': 'Volcano - Floor 10', 'type': 'region_check'}],
                           'type': 'or'},
@@ -3844,23 +4853,47 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                             'item': 'Received Progression Percent',
                                             'type': 'item_check'},
                                         {'region': 'Summer Farming', 'type': 'region_check'},
-                                        {'name': 'has_orange_sapling', 'type': 'helper'}],
+                                        {   'conditions': [   {'item': 'Orange Sapling', 'type': 'item_check'},
+                                                              {'item': 'Shipping Bin', 'type': 'item_check'},
+                                                              {'type': 'constant', 'value': True},
+                                                              {'type': 'constant', 'value': True}],
+                                            'type': 'and'}],
                       'type': 'and'},
     'has_orange_sapling': {   'conditions': [   {'item': 'Orange Sapling', 'type': 'item_check'},
                                                 {'item': 'Shipping Bin', 'type': 'item_check'},
                                                 {'type': 'constant', 'value': True},
                                                 {'type': 'constant', 'value': True}],
                               'type': 'and'},
-    'has_pale_ale': {   'conditions': [{'name': 'has_hops', 'type': 'helper'}, {'name': 'has_keg', 'type': 'helper'}],
+    'has_pale_ale': {   'conditions': [   {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
+                                                                {'name': 'has_hops_starter', 'type': 'helper'}],
+                                              'type': 'and'},
+                                          {   'conditions': [   {   'count': {'type': 'constant', 'value': 8},
+                                                                    'item': 'Farming Level',
+                                                                    'type': 'item_check'},
+                                                                {'type': 'constant', 'value': True},
+                                                                {   'item': 'Copper Bar (Logic event)',
+                                                                    'type': 'item_check'},
+                                                                {   'item': 'Iron Bar (Logic event)',
+                                                                    'type': 'item_check'},
+                                                                {'name': 'has_tapper', 'type': 'helper'}],
+                                              'type': 'and'}],
                         'type': 'and'},
     'has_pancakes': {   'conditions': [   {'item': 'The Queen of Sauce', 'type': 'item_check'},
                                           {'item': 'Summer', 'type': 'item_check'},
                                           {'region': 'Kitchen', 'type': 'region_check'},
-                                          {'name': 'has_chicken_egg', 'type': 'helper'},
+                                          {   'conditions': [   {'name': 'has_egg', 'type': 'helper'},
+                                                                {'name': 'has_egg_brown', 'type': 'helper'},
+                                                                {'name': 'has_large_egg', 'type': 'helper'},
+                                                                {'name': 'has_large_egg_brown', 'type': 'helper'}],
+                                              'type': 'or'},
                                           {'type': 'constant', 'value': True}],
                         'type': 'and'},
     'has_parsnip': {   'conditions': [   {'region': 'Spring Farming', 'type': 'region_check'},
-                                         {'name': 'has_parsnip_seeds', 'type': 'helper'}],
+                                         {   'conditions': [   {'item': 'Parsnip Seeds', 'type': 'item_check'},
+                                                               {'item': 'Spring', 'type': 'item_check'},
+                                                               {'type': 'constant', 'value': True},
+                                                               {'type': 'constant', 'value': True}],
+                                             'type': 'and'}],
                        'type': 'and'},
     'has_parsnip_seeds': {   'conditions': [   {'item': 'Parsnip Seeds', 'type': 'item_check'},
                                                {'item': 'Spring', 'type': 'item_check'},
@@ -3871,7 +4904,11 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                            'item': 'Received Progression Percent',
                                            'type': 'item_check'},
                                        {'region': 'Summer Farming', 'type': 'region_check'},
-                                       {'name': 'has_peach_sapling', 'type': 'helper'}],
+                                       {   'conditions': [   {'item': 'Peach Sapling', 'type': 'item_check'},
+                                                             {'item': 'Shipping Bin', 'type': 'item_check'},
+                                                             {'type': 'constant', 'value': True},
+                                                             {'type': 'constant', 'value': True}],
+                                           'type': 'and'}],
                      'type': 'and'},
     'has_peach_sapling': {   'conditions': [   {'item': 'Peach Sapling', 'type': 'item_check'},
                                                {'item': 'Shipping Bin', 'type': 'item_check'},
@@ -3879,17 +4916,47 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                {'type': 'constant', 'value': True}],
                              'type': 'and'},
     'has_pearl': {   'conditions': [   {   'conditions': [   {'item': 'Fish Pond', 'type': 'item_check'},
-                                                             {'name': 'has_blobfish', 'type': 'helper'}],
+                                                             {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                    'value': 2},
+                                                                                       'item': 'Progressive Fishing '
+                                                                                               'Rod',
+                                                                                       'type': 'item_check'},
+                                                                                   {   'count': {   'type': 'constant',
+                                                                                                    'value': 6},
+                                                                                       'item': 'Fishing Level',
+                                                                                       'type': 'item_check'},
+                                                                                   {   'item': 'Winter',
+                                                                                       'type': 'item_check'}],
+                                                                 'type': 'and'}],
                                            'type': 'and'},
-                                       {'name': 'has_artifact_trove', 'type': 'helper'}],
+                                       {   'conditions': [   {'name': 'has_omni_geode', 'type': 'helper'},
+                                                             {'region': 'Desert', 'type': 'region_check'}],
+                                           'type': 'and'}],
                      'type': 'or'},
     'has_pepper_seeds': {   'conditions': [   {'item': 'Pepper Seeds', 'type': 'item_check'},
                                               {'item': 'Summer', 'type': 'item_check'},
                                               {'type': 'constant', 'value': True},
                                               {'type': 'constant', 'value': True}],
                             'type': 'and'},
-    'has_pickles_tea_leaves': {   'conditions': [   {'name': 'has_tea_leaves', 'type': 'helper'},
-                                                    {'name': 'has_preserves_jar', 'type': 'helper'}],
+    'has_pickles_tea_leaves': {   'conditions': [   {   'conditions': [   {   'count': {'type': 'constant', 'value': 8},
+                                                                              'item': 'Received Progression Percent',
+                                                                              'type': 'item_check'},
+                                                                          {'name': 'has_tea_sapling', 'type': 'helper'},
+                                                                          {   'conditions': [   {   'item': 'Spring',
+                                                                                                    'type': 'item_check'},
+                                                                                                {   'item': 'Summer',
+                                                                                                    'type': 'item_check'},
+                                                                                                {   'item': 'Fall',
+                                                                                                    'type': 'item_check'}],
+                                                                              'type': 'or'}],
+                                                        'type': 'and'},
+                                                    {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
+                                                                              'item': 'Farming Level',
+                                                                              'type': 'item_check'},
+                                                                          {'type': 'constant', 'value': True},
+                                                                          {'type': 'constant', 'value': True},
+                                                                          {'name': 'has_coal', 'type': 'helper'}],
+                                                        'type': 'and'}],
                                   'type': 'and'},
     'has_pina_colada': {   'conditions': [   {'region': 'Island Resort', 'type': 'region_check'},
                                              {   'conditions': [   {'item': 'Shipping Bin', 'type': 'item_check'},
@@ -3914,7 +4981,13 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                  'type': 'or'}],
                            'type': 'and'},
     'has_pineapple': {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
-                                           {'name': 'has_pineapple_seeds', 'type': 'helper'}],
+                                           {   'conditions': [   {'item': 'Pineapple Seeds', 'type': 'item_check'},
+                                                                 {'type': 'constant', 'value': True},
+                                                                 {'type': 'constant', 'value': True},
+                                                                 {   'region': 'Volcano - Floor 5',
+                                                                     'type': 'region_check'},
+                                                                 {'region': 'Island Trader', 'type': 'region_check'}],
+                                               'type': 'and'}],
                          'type': 'and'},
     'has_pineapple_seeds': {   'conditions': [   {'item': 'Pineapple Seeds', 'type': 'item_check'},
                                                  {'type': 'constant', 'value': True},
@@ -3926,7 +4999,12 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                  'item': 'Received Progression Percent',
                                                  'type': 'item_check'},
                                              {'region': 'Fall Farming', 'type': 'region_check'},
-                                             {'name': 'has_pomegranate_sapling', 'type': 'helper'}],
+                                             {   'conditions': [   {   'item': 'Pomegranate Sapling',
+                                                                       'type': 'item_check'},
+                                                                   {'item': 'Shipping Bin', 'type': 'item_check'},
+                                                                   {'type': 'constant', 'value': True},
+                                                                   {'type': 'constant', 'value': True}],
+                                                 'type': 'and'}],
                            'type': 'and'},
     'has_pomegranate_sapling': {   'conditions': [   {'item': 'Pomegranate Sapling', 'type': 'item_check'},
                                                      {'item': 'Shipping Bin', 'type': 'item_check'},
@@ -3939,7 +5017,11 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                              {'type': 'constant', 'value': True}],
                            'type': 'and'},
     'has_potato': {   'conditions': [   {'region': 'Spring Farming', 'type': 'region_check'},
-                                        {'name': 'has_potato_seeds', 'type': 'helper'}],
+                                        {   'conditions': [   {'item': 'Potato Seeds', 'type': 'item_check'},
+                                                              {'item': 'Spring', 'type': 'item_check'},
+                                                              {'type': 'constant', 'value': True},
+                                                              {'type': 'constant', 'value': True}],
+                                            'type': 'and'}],
                       'type': 'and'},
     'has_potato_seeds': {   'conditions': [   {'item': 'Potato Seeds', 'type': 'item_check'},
                                               {'item': 'Spring', 'type': 'item_check'},
@@ -3947,7 +5029,12 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                               {'type': 'constant', 'value': True}],
                             'type': 'and'},
     'has_powdermelon': {   'conditions': [   {'region': 'Winter Farming', 'type': 'region_check'},
-                                             {'name': 'has_powdermelon_seeds', 'type': 'helper'}],
+                                             {   'conditions': [   {'item': 'Powdermelon Seeds', 'type': 'item_check'},
+                                                                   {'type': 'constant', 'value': True},
+                                                                   {'type': 'constant', 'value': True},
+                                                                   {'item': 'Foraging Level', 'type': 'item_check'},
+                                                                   {'region': 'Raccoon Shop', 'type': 'region_check'}],
+                                                 'type': 'and'}],
                            'type': 'and'},
     'has_powdermelon_seeds': {   'conditions': [   {'item': 'Powdermelon Seeds', 'type': 'item_check'},
                                                    {'type': 'constant', 'value': True},
@@ -3960,7 +5047,10 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                    'type': 'item_check'},
                                                {'type': 'constant', 'value': True},
                                                {'type': 'constant', 'value': True},
-                                               {'name': 'has_coal', 'type': 'helper'}],
+                                               {   'conditions': [   {'item': 'Progressive Pan', 'type': 'item_check'},
+                                                                     {   'region': 'The Mines - Floor 45',
+                                                                         'type': 'region_check'}],
+                                                   'type': 'or'}],
                              'type': 'and'},
     'has_price_catalogue': {   'conditions': [   {'item': 'Shipping Bin', 'type': 'item_check'},
                                                  {'type': 'constant', 'value': True},
@@ -3980,7 +5070,11 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                             {'item': 'Summer', 'type': 'item_check'}],
                           'type': 'and'},
     'has_pumpkin': {   'conditions': [   {'region': 'Fall Farming', 'type': 'region_check'},
-                                         {'name': 'has_pumpkin_seeds', 'type': 'helper'}],
+                                         {   'conditions': [   {'item': 'Pumpkin Seeds', 'type': 'item_check'},
+                                                               {'item': 'Fall', 'type': 'item_check'},
+                                                               {'type': 'constant', 'value': True},
+                                                               {'type': 'constant', 'value': True}],
+                                             'type': 'and'}],
                        'type': 'and'},
     'has_pumpkin_seeds': {   'conditions': [   {'item': 'Pumpkin Seeds', 'type': 'item_check'},
                                                {'item': 'Fall', 'type': 'item_check'},
@@ -3994,7 +5088,47 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_quality_bobber': {   'conditions': [   {'item': 'Quality Bobber Recipe', 'type': 'item_check'},
                                                 {'item': 'Copper Bar (Logic event)', 'type': 'item_check'},
                                                 {'type': 'constant', 'value': True},
-                                                {'name': 'has_solar_essence', 'type': 'helper'}],
+                                                {   'conditions': [   {   'region': 'The Mines - Floor 45',
+                                                                          'type': 'region_check'},
+                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                             'value': 3},
+                                                                                                'item': 'Progressive '
+                                                                                                        'Pickaxe',
+                                                                                                'type': 'item_check'},
+                                                                                            {   'count': {   'type': 'constant',
+                                                                                                             'value': 6},
+                                                                                                'item': 'Combat Level',
+                                                                                                'type': 'item_check'},
+                                                                                            {   'count': {   'type': 'constant',
+                                                                                                             'value': 6},
+                                                                                                'item': 'Mining Level',
+                                                                                                'type': 'item_check'},
+                                                                                            {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                   'value': 4},
+                                                                                                                      'item': 'Progressive '
+                                                                                                                              'Weapon',
+                                                                                                                      'type': 'item_check'},
+                                                                                                                  {   'count': {   'type': 'constant',
+                                                                                                                                   'value': 4},
+                                                                                                                      'item': 'Progressive '
+                                                                                                                              'Sword',
+                                                                                                                      'type': 'item_check'},
+                                                                                                                  {   'count': {   'type': 'constant',
+                                                                                                                                   'value': 4},
+                                                                                                                      'item': 'Progressive '
+                                                                                                                              'Club',
+                                                                                                                      'type': 'item_check'},
+                                                                                                                  {   'count': {   'type': 'constant',
+                                                                                                                                   'value': 4},
+                                                                                                                      'item': 'Progressive '
+                                                                                                                              'Dagger',
+                                                                                                                      'type': 'item_check'}],
+                                                                                                'type': 'or'},
+                                                                                            {   'region': 'Skull '
+                                                                                                          'Cavern',
+                                                                                                'type': 'region_check'}],
+                                                                          'type': 'and'}],
+                                                    'type': 'or'}],
                               'type': 'and'},
     'has_quality_fertilizer': {   'conditions': [   {   'count': {'type': 'constant', 'value': 16},
                                                         'item': 'Received Progression Percent',
@@ -4003,7 +5137,853 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                               'item': 'Farming Level',
                                                                               'type': 'item_check'},
                                                                           {'type': 'constant', 'value': True},
-                                                                          {'name': 'has_any_fish', 'type': 'helper'}],
+                                                                          {   'conditions': [   {   'item': 'Progressive '
+                                                                                                            'Fishing '
+                                                                                                            'Rod',
+                                                                                                    'type': 'item_check'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 5},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Fall',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Winter',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Spring',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Fall',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 3},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Spring',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Summer',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Fall',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 6},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Spring',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Fall',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 6},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'item': 'Summer',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 6},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Spring',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Fall',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Spring',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Summer',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'region': 'Waterfall',
+                                                                                                                          'type': 'region_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Spring',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Summer',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Winter',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Spring',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Winter',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 7},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'item': 'Winter',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Fall',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Winter',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 8},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'item': 'Summer',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'item': 'Winter',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 5},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Summer',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Winter',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 7},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'item': 'Summer',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 3},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'item': 'Summer',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Summer',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Winter',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Summer',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Fall',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'item': 'Fall',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Spring',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Fall',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Winter',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Fall',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Winter',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 3},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Spring',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Summer',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Fall',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'region': 'Mutant '
+                                                                                                                                    'Bug '
+                                                                                                                                    'Lair',
+                                                                                                                          'type': 'region_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Spring',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Fall',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 6},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'item': 'Winter',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 6},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Summer',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Winter',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Spring',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Summer',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 7},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Summer',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Fall',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 5},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Fall',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Winter',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Summer',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Fall',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 6},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'item': 'Summer',
+                                                                                                                                                'type': 'item_check'},
+                                                                                                                                            {   'item': 'Winter',
+                                                                                                                                                'type': 'item_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 7},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'region': "Witch's "
+                                                                                                                                    'Swamp',
+                                                                                                                          'type': 'region_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 3},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'item': 'Fall',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'region': 'Secret '
+                                                                                                                                    'Woods',
+                                                                                                                          'type': 'region_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 6},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'item': 'Winter',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'item': 'Winter',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 5},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'item': 'Winter',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 10},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'item': 'Fall',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'item': 'Summer',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 10},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'region': 'Tide '
+                                                                                                                                    'Pools',
+                                                                                                                          'type': 'region_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 10},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'item': 'Winter',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 10},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'item': 'Spring',
+                                                                                                                          'type': 'item_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 10},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'region': 'Sewer',
+                                                                                                                          'type': 'region_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                                                          'type': 'helper'},
+                                                                                                                      {   'name': 'has_bait',
+                                                                                                                          'type': 'helper'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                                                          'type': 'helper'},
+                                                                                                                      {   'name': 'has_bait',
+                                                                                                                          'type': 'helper'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                                                          'type': 'helper'},
+                                                                                                                      {   'name': 'has_bait',
+                                                                                                                          'type': 'helper'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                                                          'type': 'helper'},
+                                                                                                                      {   'name': 'has_bait',
+                                                                                                                          'type': 'helper'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                                                          'type': 'helper'},
+                                                                                                                      {   'name': 'has_bait',
+                                                                                                                          'type': 'helper'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                                                          'type': 'helper'},
+                                                                                                                      {   'name': 'has_bait',
+                                                                                                                          'type': 'helper'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                                                          'type': 'helper'},
+                                                                                                                      {   'name': 'has_bait',
+                                                                                                                          'type': 'helper'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                                                          'type': 'helper'},
+                                                                                                                      {   'name': 'has_bait',
+                                                                                                                          'type': 'helper'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                                                          'type': 'helper'},
+                                                                                                                      {   'name': 'has_bait',
+                                                                                                                          'type': 'helper'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                                                          'type': 'helper'},
+                                                                                                                      {   'name': 'has_bait',
+                                                                                                                          'type': 'helper'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 5},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'region': 'Island '
+                                                                                                                                    'West',
+                                                                                                                          'type': 'region_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'region': 'Island '
+                                                                                                                                                          'South',
+                                                                                                                                                'type': 'region_check'},
+                                                                                                                                            {   'region': 'Island '
+                                                                                                                                                          'West',
+                                                                                                                                                'type': 'region_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 7},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'region': 'Pirate '
+                                                                                                                                    'Cove',
+                                                                                                                          'type': 'region_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 5},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'region': 'Desert',
+                                                                                                                          'type': 'region_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 8},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'region': 'Desert',
+                                                                                                                          'type': 'region_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'conditions': [   {   'region': 'The '
+                                                                                                                                                          'Mines '
+                                                                                                                                                          '- '
+                                                                                                                                                          'Floor '
+                                                                                                                                                          '20',
+                                                                                                                                                'type': 'region_check'},
+                                                                                                                                            {   'region': 'The '
+                                                                                                                                                          'Mines '
+                                                                                                                                                          '- '
+                                                                                                                                                          'Floor '
+                                                                                                                                                          '60',
+                                                                                                                                                'type': 'region_check'}],
+                                                                                                                          'type': 'or'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 7},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'region': 'The '
+                                                                                                                                    'Mines '
+                                                                                                                                    '- '
+                                                                                                                                    'Floor '
+                                                                                                                                    '60',
+                                                                                                                          'type': 'region_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 4},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 8},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'region': 'The '
+                                                                                                                                    'Mines '
+                                                                                                                                    '- '
+                                                                                                                                    'Floor '
+                                                                                                                                    '100',
+                                                                                                                          'type': 'region_check'}],
+                                                                                                    'type': 'and'},
+                                                                                                {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 2},
+                                                                                                                          'item': 'Progressive '
+                                                                                                                                  'Fishing '
+                                                                                                                                  'Rod',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'count': {   'type': 'constant',
+                                                                                                                                       'value': 5},
+                                                                                                                          'item': 'Fishing '
+                                                                                                                                  'Level',
+                                                                                                                          'type': 'item_check'},
+                                                                                                                      {   'region': 'The '
+                                                                                                                                    'Mines '
+                                                                                                                                    '- '
+                                                                                                                                    'Floor '
+                                                                                                                                    '20',
+                                                                                                                          'type': 'region_check'}],
+                                                                                                    'type': 'and'}],
+                                                                              'type': 'or'}],
                                                         'type': 'and'}],
                                   'type': 'or'},
     'has_queen_of_sauce_cookbook': {   'conditions': [   {'item': 'Shipping Bin', 'type': 'item_check'},
@@ -4045,12 +6025,91 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                          {'region': 'Island Southeast', 'type': 'region_check'},
                                                          {'region': 'Field Office', 'type': 'region_check'},
                                                          {'region': 'Pirate Cove', 'type': 'region_check'},
-                                                         {'name': 'has_banana', 'type': 'helper'},
-                                                         {'name': 'has_amethyst', 'type': 'helper'},
-                                                         {'name': 'has_aquamarine', 'type': 'helper'},
-                                                         {'name': 'has_emerald', 'type': 'helper'},
-                                                         {'name': 'has_ruby', 'type': 'helper'},
-                                                         {'name': 'has_topaz', 'type': 'helper'},
+                                                         {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                'value': 4},
+                                                                                   'item': 'Received Progression '
+                                                                                           'Percent',
+                                                                                   'type': 'item_check'},
+                                                                               {   'region': 'Summer Farming',
+                                                                                   'type': 'region_check'},
+                                                                               {   'name': 'has_banana_sapling',
+                                                                                   'type': 'helper'}],
+                                                             'type': 'and'},
+                                                         {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                'value': 28},
+                                                                                   'item': 'Received Progression '
+                                                                                           'Percent',
+                                                                                   'type': 'item_check'},
+                                                                               {   'conditions': [   {   'region': 'The '
+                                                                                                                   'Mines '
+                                                                                                                   '- '
+                                                                                                                   'Floor '
+                                                                                                                   '20',
+                                                                                                         'type': 'region_check'},
+                                                                                                     {   'name': 'has_fishing_chest',
+                                                                                                         'type': 'helper'}],
+                                                                                   'type': 'or'}],
+                                                             'type': 'and'},
+                                                         {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                'value': 28},
+                                                                                   'item': 'Received Progression '
+                                                                                           'Percent',
+                                                                                   'type': 'item_check'},
+                                                                               {   'conditions': [   {   'region': 'The '
+                                                                                                                   'Mines '
+                                                                                                                   '- '
+                                                                                                                   'Floor '
+                                                                                                                   '60',
+                                                                                                         'type': 'region_check'},
+                                                                                                     {   'name': 'has_fishing_chest',
+                                                                                                         'type': 'helper'}],
+                                                                                   'type': 'or'}],
+                                                             'type': 'and'},
+                                                         {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                'value': 28},
+                                                                                   'item': 'Received Progression '
+                                                                                           'Percent',
+                                                                                   'type': 'item_check'},
+                                                                               {   'conditions': [   {   'region': 'The '
+                                                                                                                   'Mines '
+                                                                                                                   '- '
+                                                                                                                   'Floor '
+                                                                                                                   '100',
+                                                                                                         'type': 'region_check'},
+                                                                                                     {   'name': 'has_fishing_chest',
+                                                                                                         'type': 'helper'}],
+                                                                                   'type': 'or'}],
+                                                             'type': 'and'},
+                                                         {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                'value': 28},
+                                                                                   'item': 'Received Progression '
+                                                                                           'Percent',
+                                                                                   'type': 'item_check'},
+                                                                               {   'conditions': [   {   'region': 'The '
+                                                                                                                   'Mines '
+                                                                                                                   '- '
+                                                                                                                   'Floor '
+                                                                                                                   '100',
+                                                                                                         'type': 'region_check'},
+                                                                                                     {   'name': 'has_fishing_chest',
+                                                                                                         'type': 'helper'}],
+                                                                                   'type': 'or'}],
+                                                             'type': 'and'},
+                                                         {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                'value': 28},
+                                                                                   'item': 'Received Progression '
+                                                                                           'Percent',
+                                                                                   'type': 'item_check'},
+                                                                               {   'conditions': [   {   'region': 'The '
+                                                                                                                   'Mines '
+                                                                                                                   '- '
+                                                                                                                   'Floor '
+                                                                                                                   '20',
+                                                                                                         'type': 'region_check'},
+                                                                                                     {   'name': 'has_fishing_chest',
+                                                                                                         'type': 'helper'}],
+                                                                                   'type': 'or'}],
+                                                             'type': 'and'},
                                                          {   'conditions': [   {   'count': {   'type': 'constant',
                                                                                                 'value': 5},
                                                                                    'item': 'Progressive Weapon',
@@ -4069,16 +6128,53 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                                    'type': 'item_check'}],
                                                              'type': 'or'},
                                                          {'region': 'Kitchen', 'type': 'region_check'},
-                                                         {'name': 'has_flute_block', 'type': 'helper'},
-                                                         {'name': 'has_melon_seeds', 'type': 'helper'},
-                                                         {'name': 'has_wheat_seeds', 'type': 'helper'},
-                                                         {'name': 'has_garlic_seeds', 'type': 'helper'},
+                                                         {   'conditions': [   {'item': 'Fall', 'type': 'item_check'},
+                                                                               {'type': 'constant', 'value': True},
+                                                                               {'type': 'constant', 'value': True},
+                                                                               {   'item': 'Copper Ore (Logic event)',
+                                                                                   'type': 'item_check'},
+                                                                               {'type': 'constant', 'value': True}],
+                                                             'type': 'and'},
+                                                         {   'conditions': [   {   'item': 'Melon Seeds',
+                                                                                   'type': 'item_check'},
+                                                                               {'item': 'Summer', 'type': 'item_check'},
+                                                                               {'type': 'constant', 'value': True},
+                                                                               {'type': 'constant', 'value': True}],
+                                                             'type': 'and'},
+                                                         {   'conditions': [   {   'item': 'Wheat Seeds',
+                                                                                   'type': 'item_check'},
+                                                                               {   'conditions': [   {   'item': 'Summer',
+                                                                                                         'type': 'item_check'},
+                                                                                                     {   'item': 'Fall',
+                                                                                                         'type': 'item_check'}],
+                                                                                   'type': 'or'},
+                                                                               {'type': 'constant', 'value': True},
+                                                                               {'type': 'constant', 'value': True}],
+                                                             'type': 'and'},
+                                                         {   'conditions': [   {   'item': 'Garlic Seeds',
+                                                                                   'type': 'item_check'},
+                                                                               {'item': 'Spring', 'type': 'item_check'},
+                                                                               {'type': 'constant', 'value': True},
+                                                                               {'type': 'constant', 'value': True}],
+                                                             'type': 'and'},
                                                          {'region': 'Field Office', 'type': 'region_check'},
                                                          {'region': 'Dig Site', 'type': 'region_check'},
-                                                         {'name': 'has_fossilized_ribs', 'type': 'helper'},
+                                                         {   'conditions': [   {   'item': 'Open Professor Snail Cave',
+                                                                                   'type': 'item_check'},
+                                                                               {   'region': 'Island South',
+                                                                                   'type': 'region_check'}],
+                                                             'type': 'and'},
                                                          {'region': 'Island North', 'type': 'region_check'},
-                                                         {'name': 'has_fossilized_spine', 'type': 'helper'},
-                                                         {'name': 'has_fossilized_tail', 'type': 'helper'},
+                                                         {   'conditions': [   {   'item': 'Progressive Fishing Rod',
+                                                                                   'type': 'item_check'},
+                                                                               {   'region': 'Dig Site',
+                                                                                   'type': 'region_check'}],
+                                                             'type': 'and'},
+                                                         {   'conditions': [   {   'item': 'Progressive Pan',
+                                                                                   'type': 'item_check'},
+                                                                               {   'region': 'Dig Site',
+                                                                                   'type': 'region_check'}],
+                                                             'type': 'and'},
                                                          {'region': 'Field Office', 'type': 'region_check'},
                                                          {'region': 'Dig Site', 'type': 'region_check'},
                                                          {'region': 'Island West', 'type': 'region_check'},
@@ -4160,36 +6256,97 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                    {'item': 'Iron Bar (Logic event)', 'type': 'item_check'}],
                                  'type': 'and'},
     'has_red_cabbage': {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
-                                             {'name': 'has_red_cabbage_seeds', 'type': 'helper'}],
+                                             {   'conditions': [   {'item': 'Red Cabbage Seeds', 'type': 'item_check'},
+                                                                   {'item': 'Summer', 'type': 'item_check'},
+                                                                   {'type': 'constant', 'value': True},
+                                                                   {'type': 'constant', 'value': True}],
+                                                 'type': 'and'}],
                            'type': 'and'},
     'has_red_cabbage_seeds': {   'conditions': [   {'item': 'Red Cabbage Seeds', 'type': 'item_check'},
                                                    {'item': 'Summer', 'type': 'item_check'},
                                                    {'type': 'constant', 'value': True},
                                                    {'type': 'constant', 'value': True}],
                                  'type': 'and'},
-    'has_refined_quartz': {   'conditions': [   {   'conditions': [   {'name': 'has_furnace', 'type': 'helper'},
+    'has_refined_quartz': {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'item': 'Mining Level',
+                                                                                                'type': 'item_check'},
+                                                                                            {   'region': 'The Mines - '
+                                                                                                          'Floor 5',
+                                                                                                'type': 'region_check'},
+                                                                                            {   'item': 'Copper Ore '
+                                                                                                        '(Logic event)',
+                                                                                                'type': 'item_check'},
+                                                                                            {   'type': 'constant',
+                                                                                                'value': True}],
+                                                                          'type': 'and'},
                                                                       {   'region': 'The Mines - Floor 20',
                                                                           'type': 'region_check'}],
                                                     'type': 'and'},
-                                                {   'conditions': [   {'name': 'has_furnace', 'type': 'helper'},
-                                                                      {'name': 'has_fire_quartz', 'type': 'helper'}],
+                                                {   'conditions': [   {   'conditions': [   {   'item': 'Mining Level',
+                                                                                                'type': 'item_check'},
+                                                                                            {   'region': 'The Mines - '
+                                                                                                          'Floor 5',
+                                                                                                'type': 'region_check'},
+                                                                                            {   'item': 'Copper Ore '
+                                                                                                        '(Logic event)',
+                                                                                                'type': 'item_check'},
+                                                                                            {   'type': 'constant',
+                                                                                                'value': True}],
+                                                                          'type': 'and'},
+                                                                      {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                             'value': 4},
+                                                                                                'item': 'Progressive '
+                                                                                                        'Pan',
+                                                                                                'type': 'item_check'},
+                                                                                            {   'region': 'The Mines - '
+                                                                                                          'Floor 100',
+                                                                                                'type': 'region_check'},
+                                                                                            {   'conditions': [   {   'name': 'has_magma_geode',
+                                                                                                                      'type': 'helper'},
+                                                                                                                  {   'name': 'has_omni_geode',
+                                                                                                                      'type': 'helper'},
+                                                                                                                  {   'name': 'has_fishing_chest',
+                                                                                                                      'type': 'helper'}],
+                                                                                                'type': 'and'}],
+                                                                          'type': 'or'}],
                                                     'type': 'and'},
-                                                {   'conditions': [   {   'name': 'has_recycling_machine',
-                                                                          'type': 'helper'},
-                                                                      {   'conditions': [   {   'name': 'has_broken_cd',
-                                                                                                'type': 'helper'},
-                                                                                            {   'name': 'has_broken_glasses',
-                                                                                                'type': 'helper'}],
+                                                {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                             'value': 4},
+                                                                                                'item': 'Fishing Level',
+                                                                                                'type': 'item_check'},
+                                                                                            {   'type': 'constant',
+                                                                                                'value': True},
+                                                                                            {   'type': 'constant',
+                                                                                                'value': True},
+                                                                                            {   'item': 'Iron Bar '
+                                                                                                        '(Logic event)',
+                                                                                                'type': 'item_check'}],
+                                                                          'type': 'and'},
+                                                                      {   'conditions': [   {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                                                      'type': 'helper'},
+                                                                                                                  {   'name': 'has_bait',
+                                                                                                                      'type': 'helper'}],
+                                                                                                'type': 'and'},
+                                                                                            {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                                                      'type': 'helper'},
+                                                                                                                  {   'name': 'has_bait',
+                                                                                                                      'type': 'helper'}],
+                                                                                                'type': 'and'}],
                                                                           'type': 'or'}],
                                                     'type': 'and'}],
                               'type': 'or'},
     'has_rhubarb': {   'conditions': [   {'region': 'Spring Farming', 'type': 'region_check'},
-                                         {'name': 'has_rhubarb_seeds', 'type': 'helper'}],
+                                         {   'conditions': [   {'item': 'Rhubarb Seeds', 'type': 'item_check'},
+                                                               {'item': 'Spring', 'type': 'item_check'},
+                                                               {'type': 'constant', 'value': True},
+                                                               {'region': 'Oasis', 'type': 'region_check'}],
+                                             'type': 'and'}],
                        'type': 'and'},
     'has_rhubarb_pie': {   'conditions': [   {'item': 'Fall', 'type': 'item_check'},
                                              {'type': 'constant', 'value': True},
                                              {'region': 'Kitchen', 'type': 'region_check'},
-                                             {'name': 'has_rhubarb', 'type': 'helper'},
+                                             {   'conditions': [   {'region': 'Spring Farming', 'type': 'region_check'},
+                                                                   {'name': 'has_rhubarb_seeds', 'type': 'helper'}],
+                                                 'type': 'and'},
                                              {'type': 'constant', 'value': True},
                                              {'type': 'constant', 'value': True}],
                            'type': 'and'},
@@ -4207,7 +6364,15 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                           'item': 'Received Progression Percent',
                                           'type': 'item_check'},
                                       {   'conditions': [   {'region': 'The Mines - Floor 100', 'type': 'region_check'},
-                                                            {'name': 'has_fishing_chest', 'type': 'helper'}],
+                                                            {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                   'value': 4},
+                                                                                      'item': 'Progressive Fishing Rod',
+                                                                                      'type': 'item_check'},
+                                                                                  {   'count': {   'type': 'constant',
+                                                                                                   'value': 6},
+                                                                                      'item': 'Fishing Level',
+                                                                                      'type': 'item_check'}],
+                                                                'type': 'and'}],
                                           'type': 'or'}],
                     'type': 'and'},
     'has_salmon': {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
@@ -4230,11 +6395,743 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_sashimi': {   'conditions': [   {'item': 'Winter', 'type': 'item_check'},
                                          {'type': 'constant', 'value': True},
                                          {'region': 'Kitchen', 'type': 'region_check'},
-                                         {'name': 'has_any_fish', 'type': 'helper'}],
+                                         {   'conditions': [   {   'item': 'Progressive Fishing Rod',
+                                                                   'type': 'item_check'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 5},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Fall',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Winter',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Spring',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Fall',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 3},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Spring',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Summer',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Fall',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 6},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Spring',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Fall',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 6},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'item': 'Summer',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 6},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Spring',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Fall',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Spring',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Summer',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'region': 'Waterfall',
+                                                                                         'type': 'region_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Spring',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Summer',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Winter',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Spring',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Winter',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 7},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'item': 'Winter',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Fall',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Winter',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 8},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'item': 'Summer',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'item': 'Winter',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 5},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Summer',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Winter',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 7},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'item': 'Summer',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 3},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'item': 'Summer',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Summer',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Winter',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Summer',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Fall',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'item': 'Fall',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Spring',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Fall',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Winter',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Fall',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Winter',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 3},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Spring',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Summer',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Fall',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'region': 'Mutant Bug Lair',
+                                                                                         'type': 'region_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Spring',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Fall',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 6},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'item': 'Winter',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 6},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Summer',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Winter',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Spring',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Summer',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 7},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Summer',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Fall',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 5},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Fall',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Winter',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Summer',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Fall',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 6},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'item': 'Summer',
+                                                                                                               'type': 'item_check'},
+                                                                                                           {   'item': 'Winter',
+                                                                                                               'type': 'item_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 7},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'region': "Witch's Swamp",
+                                                                                         'type': 'region_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 3},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'item': 'Fall',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'region': 'Secret Woods',
+                                                                                         'type': 'region_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 6},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'item': 'Winter',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'item': 'Winter',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 5},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'item': 'Winter',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 10},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'item': 'Fall',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'item': 'Summer',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 10},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'region': 'Tide Pools',
+                                                                                         'type': 'region_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 10},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'item': 'Winter',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 10},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'item': 'Spring',
+                                                                                         'type': 'item_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 10},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'region': 'Sewer',
+                                                                                         'type': 'region_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                         'type': 'helper'},
+                                                                                     {   'name': 'has_bait',
+                                                                                         'type': 'helper'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                         'type': 'helper'},
+                                                                                     {   'name': 'has_bait',
+                                                                                         'type': 'helper'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                         'type': 'helper'},
+                                                                                     {   'name': 'has_bait',
+                                                                                         'type': 'helper'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                         'type': 'helper'},
+                                                                                     {   'name': 'has_bait',
+                                                                                         'type': 'helper'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                         'type': 'helper'},
+                                                                                     {   'name': 'has_bait',
+                                                                                         'type': 'helper'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                         'type': 'helper'},
+                                                                                     {   'name': 'has_bait',
+                                                                                         'type': 'helper'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                         'type': 'helper'},
+                                                                                     {   'name': 'has_bait',
+                                                                                         'type': 'helper'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                         'type': 'helper'},
+                                                                                     {   'name': 'has_bait',
+                                                                                         'type': 'helper'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                         'type': 'helper'},
+                                                                                     {   'name': 'has_bait',
+                                                                                         'type': 'helper'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'name': 'has_crab_pot',
+                                                                                         'type': 'helper'},
+                                                                                     {   'name': 'has_bait',
+                                                                                         'type': 'helper'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 5},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'region': 'Island West',
+                                                                                         'type': 'region_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'region': 'Island '
+                                                                                                                         'South',
+                                                                                                               'type': 'region_check'},
+                                                                                                           {   'region': 'Island '
+                                                                                                                         'West',
+                                                                                                               'type': 'region_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 7},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'region': 'Pirate Cove',
+                                                                                         'type': 'region_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 5},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'region': 'Desert',
+                                                                                         'type': 'region_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 8},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'region': 'Desert',
+                                                                                         'type': 'region_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'conditions': [   {   'region': 'The '
+                                                                                                                         'Mines '
+                                                                                                                         '- '
+                                                                                                                         'Floor '
+                                                                                                                         '20',
+                                                                                                               'type': 'region_check'},
+                                                                                                           {   'region': 'The '
+                                                                                                                         'Mines '
+                                                                                                                         '- '
+                                                                                                                         'Floor '
+                                                                                                                         '60',
+                                                                                                               'type': 'region_check'}],
+                                                                                         'type': 'or'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 7},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'region': 'The Mines - Floor '
+                                                                                                   '60',
+                                                                                         'type': 'region_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 4},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 8},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'region': 'The Mines - Floor '
+                                                                                                   '100',
+                                                                                         'type': 'region_check'}],
+                                                                   'type': 'and'},
+                                                               {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                      'value': 2},
+                                                                                         'item': 'Progressive Fishing '
+                                                                                                 'Rod',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'count': {   'type': 'constant',
+                                                                                                      'value': 5},
+                                                                                         'item': 'Fishing Level',
+                                                                                         'type': 'item_check'},
+                                                                                     {   'region': 'The Mines - Floor '
+                                                                                                   '20',
+                                                                                         'type': 'region_check'}],
+                                                                   'type': 'and'}],
+                                             'type': 'or'}],
                        'type': 'and'},
     'has_scarecrow': {   'conditions': [   {'item': 'Farming Level', 'type': 'item_check'},
                                            {'type': 'constant', 'value': True},
-                                           {'name': 'has_coal', 'type': 'helper'},
+                                           {   'conditions': [   {'item': 'Progressive Pan', 'type': 'item_check'},
+                                                                 {   'region': 'The Mines - Floor 45',
+                                                                     'type': 'region_check'}],
+                                               'type': 'or'},
                                            {'type': 'constant', 'value': True}],
                          'type': 'and'},
     'has_seaweed': {   'conditions': [   {'item': 'Progressive Fishing Rod', 'type': 'item_check'},
@@ -4244,7 +7141,10 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                 'item': 'Farming Level',
                                                 'type': 'item_check'},
                                             {'type': 'constant', 'value': True},
-                                            {'name': 'has_coal', 'type': 'helper'},
+                                            {   'conditions': [   {'item': 'Progressive Pan', 'type': 'item_check'},
+                                                                  {   'region': 'The Mines - Floor 45',
+                                                                      'type': 'region_check'}],
+                                                'type': 'or'},
                                             {'item': 'Gold Bar (Logic event)', 'type': 'item_check'}],
                           'type': 'and'},
     'has_shad': {   'conditions': [   {'item': 'Progressive Fishing Rod', 'type': 'item_check'},
@@ -4259,9 +7159,36 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_slime_egg_press': {   'conditions': [   {   'count': {'type': 'constant', 'value': 6},
                                                      'item': 'Combat Level',
                                                      'type': 'item_check'},
-                                                 {'name': 'has_coal', 'type': 'helper'},
-                                                 {'name': 'has_fire_quartz', 'type': 'helper'},
-                                                 {'name': 'has_battery_pack', 'type': 'helper'}],
+                                                 {   'conditions': [   {   'item': 'Progressive Pan',
+                                                                           'type': 'item_check'},
+                                                                       {   'region': 'The Mines - Floor 45',
+                                                                           'type': 'region_check'}],
+                                                     'type': 'or'},
+                                                 {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
+                                                                           'item': 'Progressive Pan',
+                                                                           'type': 'item_check'},
+                                                                       {   'region': 'The Mines - Floor 100',
+                                                                           'type': 'region_check'},
+                                                                       {   'conditions': [   {   'name': 'has_magma_geode',
+                                                                                                 'type': 'helper'},
+                                                                                             {   'name': 'has_omni_geode',
+                                                                                                 'type': 'helper'},
+                                                                                             {   'name': 'has_fishing_chest',
+                                                                                                 'type': 'helper'}],
+                                                                           'type': 'and'}],
+                                                     'type': 'or'},
+                                                 {   'conditions': [   {   'conditions': [   {   'name': 'has_lightning_rod',
+                                                                                                 'type': 'helper'},
+                                                                                             {   'conditions': [   {   'item': 'Spring',
+                                                                                                                       'type': 'item_check'},
+                                                                                                                   {   'item': 'Summer',
+                                                                                                                       'type': 'item_check'},
+                                                                                                                   {   'item': 'Fall',
+                                                                                                                       'type': 'item_check'}],
+                                                                                                 'type': 'or'}],
+                                                                           'type': 'and'},
+                                                                       {'name': 'has_solar_panel', 'type': 'helper'}],
+                                                     'type': 'or'}],
                                'type': 'and'},
     'has_smallmouth_bass': {   'conditions': [   {'item': 'Progressive Fishing Rod', 'type': 'item_check'},
                                                  {   'conditions': [   {'item': 'Spring', 'type': 'item_check'},
@@ -4304,7 +7231,26 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                    'type': 'and'}],
                              'type': 'or'},
     'has_solar_panel': {   'conditions': [   {'item': 'Solar Panel Recipe', 'type': 'item_check'},
-                                             {'name': 'has_refined_quartz', 'type': 'helper'},
+                                             {   'conditions': [   {   'conditions': [   {   'name': 'has_furnace',
+                                                                                             'type': 'helper'},
+                                                                                         {   'region': 'The Mines - '
+                                                                                                       'Floor 20',
+                                                                                             'type': 'region_check'}],
+                                                                       'type': 'and'},
+                                                                   {   'conditions': [   {   'name': 'has_furnace',
+                                                                                             'type': 'helper'},
+                                                                                         {   'name': 'has_fire_quartz',
+                                                                                             'type': 'helper'}],
+                                                                       'type': 'and'},
+                                                                   {   'conditions': [   {   'name': 'has_recycling_machine',
+                                                                                             'type': 'helper'},
+                                                                                         {   'conditions': [   {   'name': 'has_broken_cd',
+                                                                                                                   'type': 'helper'},
+                                                                                                               {   'name': 'has_broken_glasses',
+                                                                                                                   'type': 'helper'}],
+                                                                                             'type': 'or'}],
+                                                                       'type': 'and'}],
+                                                 'type': 'or'},
                                              {'item': 'Iron Bar (Logic event)', 'type': 'item_check'},
                                              {'item': 'Gold Bar (Logic event)', 'type': 'item_check'}],
                            'type': 'and'},
@@ -4336,7 +7282,38 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                             'type': 'region_check'}],
                                       'type': 'and'},
     'has_starfruit': {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
-                                           {'name': 'has_starfruit_seeds', 'type': 'helper'}],
+                                           {   'conditions': [   {'item': 'Starfruit Seeds', 'type': 'item_check'},
+                                                                 {'item': 'Summer', 'type': 'item_check'},
+                                                                 {   'conditions': [   {   'item': 'Shipping Bin',
+                                                                                           'type': 'item_check'},
+                                                                                       {   'conditions': [   {   'type': 'constant',
+                                                                                                                 'value': True},
+                                                                                                             {   'type': 'constant',
+                                                                                                                 'value': True}],
+                                                                                           'type': 'and'},
+                                                                                       {   'conditions': [   {   'type': 'constant',
+                                                                                                                 'value': True},
+                                                                                                             {   'region': 'Fishing',
+                                                                                                                 'type': 'region_check'}],
+                                                                                           'type': 'and'},
+                                                                                       {   'conditions': [   {   'type': 'constant',
+                                                                                                                 'value': True},
+                                                                                                             {   'region': 'The '
+                                                                                                                           'Mines '
+                                                                                                                           '- '
+                                                                                                                           'Floor '
+                                                                                                                           '5',
+                                                                                                                 'type': 'region_check'}],
+                                                                                           'type': 'and'},
+                                                                                       {   'conditions': [   {   'type': 'constant',
+                                                                                                                 'value': True},
+                                                                                                             {   'region': 'Secret '
+                                                                                                                           'Woods',
+                                                                                                                 'type': 'region_check'}],
+                                                                                           'type': 'and'}],
+                                                                     'type': 'or'},
+                                                                 {'region': 'Oasis', 'type': 'region_check'}],
+                                               'type': 'and'}],
                          'type': 'and'},
     'has_starfruit_seeds': {   'conditions': [   {'item': 'Starfruit Seeds', 'type': 'item_check'},
                                                  {'item': 'Summer', 'type': 'item_check'},
@@ -4375,7 +7352,11 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                           {'region': 'Pirate Cove', 'type': 'region_check'}],
                         'type': 'and'},
     'has_strawberry': {   'conditions': [   {'region': 'Spring Farming', 'type': 'region_check'},
-                                            {'name': 'has_strawberry_seeds', 'type': 'helper'}],
+                                            {   'conditions': [   {'item': 'Strawberry Seeds', 'type': 'item_check'},
+                                                                  {'item': 'Spring', 'type': 'item_check'},
+                                                                  {'type': 'constant', 'value': True},
+                                                                  {'region': 'Egg Festival', 'type': 'region_check'}],
+                                                'type': 'and'}],
                           'type': 'and'},
     'has_strawberry_seeds': {   'conditions': [   {'item': 'Strawberry Seeds', 'type': 'item_check'},
                                                   {'item': 'Spring', 'type': 'item_check'},
@@ -4385,8 +7366,16 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_summer_seeds': {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
                                                   'item': 'Foraging Level',
                                                   'type': 'item_check'},
-                                              {'name': 'has_spice_berry', 'type': 'helper'},
-                                              {'name': 'has_grape', 'type': 'helper'},
+                                              {   'conditions': [   {'item': 'Summer', 'type': 'item_check'},
+                                                                    {'item': 'Fruit Bats', 'type': 'item_check'}],
+                                                  'type': 'or'},
+                                              {   'conditions': [   {'item': 'Summer', 'type': 'item_check'},
+                                                                    {   'conditions': [   {   'region': 'Fall Farming',
+                                                                                              'type': 'region_check'},
+                                                                                          {   'name': 'has_grape_starter',
+                                                                                              'type': 'helper'}],
+                                                                        'type': 'and'}],
+                                                  'type': 'or'},
                                               {'item': 'Summer', 'type': 'item_check'}],
                             'type': 'and'},
     'has_summer_squash_seeds': {   'conditions': [   {'item': 'Summer Squash Seeds', 'type': 'item_check'},
@@ -4398,7 +7387,15 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_sunflower': {   'conditions': [   {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
                                                                  {'region': 'Fall Farming', 'type': 'region_check'}],
                                                'type': 'or'},
-                                           {'name': 'has_sunflower_seeds', 'type': 'helper'}],
+                                           {   'conditions': [   {'item': 'Sunflower Seeds', 'type': 'item_check'},
+                                                                 {   'conditions': [   {   'item': 'Summer',
+                                                                                           'type': 'item_check'},
+                                                                                       {   'item': 'Fall',
+                                                                                           'type': 'item_check'}],
+                                                                     'type': 'or'},
+                                                                 {'type': 'constant', 'value': True},
+                                                                 {'type': 'constant', 'value': True}],
+                                               'type': 'and'}],
                          'type': 'and'},
     'has_sunflower_seeds': {   'conditions': [   {'item': 'Sunflower Seeds', 'type': 'item_check'},
                                                  {   'conditions': [   {'item': 'Summer', 'type': 'item_check'},
@@ -4418,7 +7415,40 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                     'type': 'or'}],
                               'type': 'and'},
     'has_sweet_gem_berry': {   'conditions': [   {'region': 'Fall Farming', 'type': 'region_check'},
-                                                 {'name': 'has_rare_seed', 'type': 'helper'}],
+                                                 {   'conditions': [   {'item': 'Rare Seed', 'type': 'item_check'},
+                                                                       {   'conditions': [   {   'item': 'Spring',
+                                                                                                 'type': 'item_check'},
+                                                                                             {   'item': 'Summer',
+                                                                                                 'type': 'item_check'}],
+                                                                           'type': 'or'},
+                                                                       {   'conditions': [   {   'item': 'Shipping Bin',
+                                                                                                 'type': 'item_check'},
+                                                                                             {   'conditions': [   {   'type': 'constant',
+                                                                                                                       'value': True},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': True},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': True},
+                                                                                                                   {   'region': 'Fishing',
+                                                                                                                       'type': 'region_check'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': True},
+                                                                                                                   {   'region': 'The '
+                                                                                                                                 'Mines '
+                                                                                                                                 '- '
+                                                                                                                                 'Floor '
+                                                                                                                                 '5',
+                                                                                                                       'type': 'region_check'},
+                                                                                                                   {   'type': 'constant',
+                                                                                                                       'value': True},
+                                                                                                                   {   'region': 'Secret '
+                                                                                                                                 'Woods',
+                                                                                                                       'type': 'region_check'}],
+                                                                                                 'type': 'and'}],
+                                                                           'type': 'or'},
+                                                                       {   'region': 'Traveling Cart',
+                                                                           'type': 'region_check'}],
+                                                     'type': 'and'}],
                                'type': 'and'},
     'has_tapper': {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
                                             'item': 'Foraging Level',
@@ -4427,18 +7457,101 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                         {'item': 'Copper Bar (Logic event)', 'type': 'item_check'}],
                       'type': 'and'},
     'has_taro_root': {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
-                                           {'name': 'has_taro_tuber', 'type': 'helper'}],
+                                           {   'conditions': [   {'item': 'Taro Tuber', 'type': 'item_check'},
+                                                                 {'type': 'constant', 'value': True},
+                                                                 {'type': 'constant', 'value': True},
+                                                                 {'name': 'has_bone_fragment', 'type': 'helper'},
+                                                                 {'region': 'Island Trader', 'type': 'region_check'}],
+                                               'type': 'and'}],
                          'type': 'and'},
     'has_taro_tuber': {   'conditions': [   {'item': 'Taro Tuber', 'type': 'item_check'},
                                             {'type': 'constant', 'value': True},
                                             {'type': 'constant', 'value': True},
-                                            {'name': 'has_bone_fragment', 'type': 'helper'},
+                                            {   'conditions': [   {'region': 'Dig Site', 'type': 'region_check'},
+                                                                  {   'conditions': [   {   'region': 'The Mines - '
+                                                                                                      'Floor 100',
+                                                                                            'type': 'region_check'},
+                                                                                        {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                                               'value': 3},
+                                                                                                                  'item': 'Progressive '
+                                                                                                                          'Weapon',
+                                                                                                                  'type': 'item_check'},
+                                                                                                              {   'count': {   'type': 'constant',
+                                                                                                                               'value': 3},
+                                                                                                                  'item': 'Progressive '
+                                                                                                                          'Sword',
+                                                                                                                  'type': 'item_check'},
+                                                                                                              {   'count': {   'type': 'constant',
+                                                                                                                               'value': 3},
+                                                                                                                  'item': 'Progressive '
+                                                                                                                          'Club',
+                                                                                                                  'type': 'item_check'},
+                                                                                                              {   'count': {   'type': 'constant',
+                                                                                                                               'value': 3},
+                                                                                                                  'item': 'Progressive '
+                                                                                                                          'Dagger',
+                                                                                                                  'type': 'item_check'}],
+                                                                                            'type': 'or'}],
+                                                                      'type': 'and'}],
+                                                'type': 'or'},
                                             {'region': 'Island Trader', 'type': 'region_check'}],
                           'type': 'and'},
     'has_tea_leaves': {   'conditions': [   {   'count': {'type': 'constant', 'value': 8},
                                                 'item': 'Received Progression Percent',
                                                 'type': 'item_check'},
-                                            {'name': 'has_tea_sapling', 'type': 'helper'},
+                                            {   'conditions': [   {   'conditions': [   {   'item': 'Winter',
+                                                                                            'type': 'item_check'},
+                                                                                        {   'type': 'constant',
+                                                                                            'value': True},
+                                                                                        {   'region': 'Sunroom',
+                                                                                            'type': 'region_check'},
+                                                                                        {   'name': 'has_summer_seeds',
+                                                                                            'type': 'helper'},
+                                                                                        {   'type': 'constant',
+                                                                                            'value': True},
+                                                                                        {   'type': 'constant',
+                                                                                            'value': True}],
+                                                                      'type': 'and'},
+                                                                  {   'conditions': [   {   'item': 'Winter',
+                                                                                            'type': 'item_check'},
+                                                                                        {   'type': 'constant',
+                                                                                            'value': True},
+                                                                                        {   'region': 'Sunroom',
+                                                                                            'type': 'region_check'},
+                                                                                        {   'name': 'has_spring_seeds',
+                                                                                            'type': 'helper'},
+                                                                                        {   'type': 'constant',
+                                                                                            'value': True},
+                                                                                        {   'type': 'constant',
+                                                                                            'value': True}],
+                                                                      'type': 'and'},
+                                                                  {   'conditions': [   {   'item': 'Winter',
+                                                                                            'type': 'item_check'},
+                                                                                        {   'type': 'constant',
+                                                                                            'value': True},
+                                                                                        {   'region': 'Sunroom',
+                                                                                            'type': 'region_check'},
+                                                                                        {   'name': 'has_fall_seeds',
+                                                                                            'type': 'helper'},
+                                                                                        {   'type': 'constant',
+                                                                                            'value': True},
+                                                                                        {   'type': 'constant',
+                                                                                            'value': True}],
+                                                                      'type': 'and'},
+                                                                  {   'conditions': [   {   'item': 'Winter',
+                                                                                            'type': 'item_check'},
+                                                                                        {   'type': 'constant',
+                                                                                            'value': True},
+                                                                                        {   'region': 'Sunroom',
+                                                                                            'type': 'region_check'},
+                                                                                        {   'name': 'has_winter_seeds',
+                                                                                            'type': 'helper'},
+                                                                                        {   'type': 'constant',
+                                                                                            'value': True},
+                                                                                        {   'type': 'constant',
+                                                                                            'value': True}],
+                                                                      'type': 'and'}],
+                                                'type': 'or'},
                                             {   'conditions': [   {'item': 'Spring', 'type': 'item_check'},
                                                                   {'item': 'Summer', 'type': 'item_check'},
                                                                   {'item': 'Fall', 'type': 'item_check'}],
@@ -4447,28 +7560,72 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_tea_sapling': {   'conditions': [   {   'conditions': [   {'item': 'Winter', 'type': 'item_check'},
                                                                    {'type': 'constant', 'value': True},
                                                                    {'region': 'Sunroom', 'type': 'region_check'},
-                                                                   {'name': 'has_summer_seeds', 'type': 'helper'},
+                                                                   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                          'value': 4},
+                                                                                             'item': 'Foraging Level',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'name': 'has_spice_berry',
+                                                                                             'type': 'helper'},
+                                                                                         {   'name': 'has_grape',
+                                                                                             'type': 'helper'},
+                                                                                         {   'item': 'Summer',
+                                                                                             'type': 'item_check'}],
+                                                                       'type': 'and'},
                                                                    {'type': 'constant', 'value': True},
                                                                    {'type': 'constant', 'value': True}],
                                                  'type': 'and'},
                                              {   'conditions': [   {'item': 'Winter', 'type': 'item_check'},
                                                                    {'type': 'constant', 'value': True},
                                                                    {'region': 'Sunroom', 'type': 'region_check'},
-                                                                   {'name': 'has_spring_seeds', 'type': 'helper'},
+                                                                   {   'conditions': [   {   'item': 'Foraging Level',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'item': 'Spring',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'item': 'Spring',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'item': 'Spring',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'item': 'Spring',
+                                                                                             'type': 'item_check'}],
+                                                                       'type': 'and'},
                                                                    {'type': 'constant', 'value': True},
                                                                    {'type': 'constant', 'value': True}],
                                                  'type': 'and'},
                                              {   'conditions': [   {'item': 'Winter', 'type': 'item_check'},
                                                                    {'type': 'constant', 'value': True},
                                                                    {'region': 'Sunroom', 'type': 'region_check'},
-                                                                   {'name': 'has_fall_seeds', 'type': 'helper'},
+                                                                   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                          'value': 6},
+                                                                                             'item': 'Foraging Level',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'name': 'has_common_mushroom',
+                                                                                             'type': 'helper'},
+                                                                                         {   'name': 'has_wild_plum',
+                                                                                             'type': 'helper'},
+                                                                                         {   'item': 'Fall',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'name': 'has_blackberry',
+                                                                                             'type': 'helper'}],
+                                                                       'type': 'and'},
                                                                    {'type': 'constant', 'value': True},
                                                                    {'type': 'constant', 'value': True}],
                                                  'type': 'and'},
                                              {   'conditions': [   {'item': 'Winter', 'type': 'item_check'},
                                                                    {'type': 'constant', 'value': True},
                                                                    {'region': 'Sunroom', 'type': 'region_check'},
-                                                                   {'name': 'has_winter_seeds', 'type': 'helper'},
+                                                                   {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                          'value': 7},
+                                                                                             'item': 'Foraging Level',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'item': 'Winter',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'item': 'Winter',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'item': 'Winter',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'item': 'Winter',
+                                                                                             'type': 'item_check'}],
+                                                                       'type': 'and'},
                                                                    {'type': 'constant', 'value': True},
                                                                    {'type': 'constant', 'value': True}],
                                                  'type': 'and'}],
@@ -4506,7 +7663,19 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                   'type': 'or'},
     'has_the_diamond_hunter': {   'conditions': [   {'type': 'constant', 'value': True},
                                                     {'type': 'constant', 'value': True},
-                                                    {'name': 'has_diamond', 'type': 'helper'},
+                                                    {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                           'value': 28},
+                                                                              'item': 'Received Progression Percent',
+                                                                              'type': 'item_check'},
+                                                                          {   'conditions': [   {   'region': 'The '
+                                                                                                              'Mines - '
+                                                                                                              'Floor '
+                                                                                                              '60',
+                                                                                                    'type': 'region_check'},
+                                                                                                {   'name': 'has_fishing_chest',
+                                                                                                    'type': 'helper'}],
+                                                                              'type': 'or'}],
+                                                        'type': 'and'},
                                                     {'region': 'Volcano Dwarf Shop', 'type': 'region_check'}],
                                   'type': 'and'},
     'has_tilapia': {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
@@ -4528,7 +7697,16 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                            'item': 'Received Progression Percent',
                                            'type': 'item_check'},
                                        {   'conditions': [   {'region': 'The Mines - Floor 20', 'type': 'region_check'},
-                                                             {'name': 'has_fishing_chest', 'type': 'helper'}],
+                                                             {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                    'value': 4},
+                                                                                       'item': 'Progressive Fishing '
+                                                                                               'Rod',
+                                                                                       'type': 'item_check'},
+                                                                                   {   'count': {   'type': 'constant',
+                                                                                                    'value': 6},
+                                                                                       'item': 'Fishing Level',
+                                                                                       'type': 'item_check'}],
+                                                                 'type': 'and'}],
                                            'type': 'or'}],
                      'type': 'and'},
     'has_treasure_appraisal_guide': {   'conditions': [   {   'conditions': [   {   'count': {   'type': 'constant',
@@ -4537,8 +7715,11 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                                             'Percent',
                                                                                     'type': 'item_check'},
                                                                                 {'type': 'constant', 'value': True},
-                                                                                {   'name': 'has_artifact_trove',
-                                                                                    'type': 'helper'}],
+                                                                                {   'conditions': [   {   'name': 'has_omni_geode',
+                                                                                                          'type': 'helper'},
+                                                                                                      {   'region': 'Desert',
+                                                                                                          'type': 'region_check'}],
+                                                                                    'type': 'and'}],
                                                               'type': 'and'},
                                                           {   'conditions': [   {   'item': 'Shipping Bin',
                                                                                     'type': 'item_check'},
@@ -4579,8 +7760,32 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                {'item': 'Fall', 'type': 'item_check'}],
                                              'type': 'or'}],
                        'type': 'and'},
-    'has_truffle_oil': {   'conditions': [   {'name': 'has_truffle', 'type': 'helper'},
-                                             {'name': 'has_oil_maker', 'type': 'helper'}],
+    'has_truffle_oil': {   'conditions': [   {   'conditions': [   {'item': 'Shipping Bin', 'type': 'item_check'},
+                                                                   {   'count': {'type': 'constant', 'value': 4},
+                                                                       'item': 'Received Progression Percent',
+                                                                       'type': 'item_check'},
+                                                                   {   'count': {'type': 'constant', 'value': 3},
+                                                                       'item': 'Progressive Barn',
+                                                                       'type': 'item_check'},
+                                                                   {'type': 'constant', 'value': True},
+                                                                   {'type': 'constant', 'value': True},
+                                                                   {   'conditions': [   {   'item': 'Spring',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'item': 'Summer',
+                                                                                             'type': 'item_check'},
+                                                                                         {   'item': 'Fall',
+                                                                                             'type': 'item_check'}],
+                                                                       'type': 'or'}],
+                                                 'type': 'and'},
+                                             {   'conditions': [   {   'count': {'type': 'constant', 'value': 8},
+                                                                       'item': 'Farming Level',
+                                                                       'type': 'item_check'},
+                                                                   {   'region': 'The Mines - Floor 5',
+                                                                       'type': 'region_check'},
+                                                                   {'name': 'has_hardwood', 'type': 'helper'},
+                                                                   {   'item': 'Gold Bar (Logic event)',
+                                                                       'type': 'item_check'}],
+                                                 'type': 'and'}],
                            'type': 'and'},
     'has_tulip_bulb': {   'conditions': [   {'item': 'Tulip Bulb', 'type': 'item_check'},
                                             {'item': 'Spring', 'type': 'item_check'},
@@ -4591,7 +7796,20 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                         {'region': 'Sewer', 'type': 'region_check'}],
                                                       'type': 'and'},
                                                   {   'conditions': [   {'item': 'Fish Pond', 'type': 'item_check'},
-                                                                        {'name': 'has_void_salmon', 'type': 'helper'}],
+                                                                        {   'conditions': [   {   'count': {   'type': 'constant',
+                                                                                                               'value': 4},
+                                                                                                  'item': 'Progressive '
+                                                                                                          'Fishing Rod',
+                                                                                                  'type': 'item_check'},
+                                                                                              {   'count': {   'type': 'constant',
+                                                                                                               'value': 7},
+                                                                                                  'item': 'Fishing '
+                                                                                                          'Level',
+                                                                                                  'type': 'item_check'},
+                                                                                              {   'region': "Witch's "
+                                                                                                            'Swamp',
+                                                                                                  'type': 'region_check'}],
+                                                                            'type': 'and'}],
                                                       'type': 'and'}],
                                 'type': 'or'},
     'has_void_essence': {   'conditions': [   {'region': 'The Mines - Floor 85', 'type': 'region_check'},
@@ -4628,8 +7846,26 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
                                                                     {'region': 'Skull Cavern', 'type': 'region_check'}],
                                                   'type': 'and'}],
                             'type': 'or'},
-    'has_void_mayonnaise': {   'conditions': [   {'name': 'has_mayonnaise_machine', 'type': 'helper'},
-                                                 {'name': 'has_void_egg_starter', 'type': 'helper'}],
+    'has_void_mayonnaise': {   'conditions': [   {   'conditions': [   {   'count': {'type': 'constant', 'value': 2},
+                                                                           'item': 'Farming Level',
+                                                                           'type': 'item_check'},
+                                                                       {'type': 'constant', 'value': True},
+                                                                       {'type': 'constant', 'value': True},
+                                                                       {'name': 'has_earth_crystal', 'type': 'helper'},
+                                                                       {   'item': 'Copper Bar (Logic event)',
+                                                                           'type': 'item_check'}],
+                                                     'type': 'and'},
+                                                 {   'conditions': [   {   'conditions': [   {   'item': 'Shipping Bin',
+                                                                                                 'type': 'item_check'},
+                                                                                             {   'region': 'Sewer',
+                                                                                                 'type': 'region_check'}],
+                                                                           'type': 'and'},
+                                                                       {   'conditions': [   {   'item': 'Fish Pond',
+                                                                                                 'type': 'item_check'},
+                                                                                             {   'name': 'has_void_salmon',
+                                                                                                 'type': 'helper'}],
+                                                                           'type': 'and'}],
+                                                     'type': 'or'}],
                                'type': 'and'},
     'has_void_salmon': {   'conditions': [   {   'count': {'type': 'constant', 'value': 4},
                                                  'item': 'Progressive Fishing Rod',
@@ -4663,7 +7899,15 @@ _HELPER_DEFINITIONS = {   'has_albacore': {   'conditions': [   {   'count': {'t
     'has_wheat': {   'conditions': [   {   'conditions': [   {'region': 'Summer Farming', 'type': 'region_check'},
                                                              {'region': 'Fall Farming', 'type': 'region_check'}],
                                            'type': 'or'},
-                                       {'name': 'has_wheat_seeds', 'type': 'helper'}],
+                                       {   'conditions': [   {'item': 'Wheat Seeds', 'type': 'item_check'},
+                                                             {   'conditions': [   {   'item': 'Summer',
+                                                                                       'type': 'item_check'},
+                                                                                   {   'item': 'Fall',
+                                                                                       'type': 'item_check'}],
+                                                                 'type': 'or'},
+                                                             {'type': 'constant', 'value': True},
+                                                             {'type': 'constant', 'value': True}],
+                                           'type': 'and'}],
                      'type': 'and'},
     'has_wheat_seeds': {   'conditions': [   {'item': 'Wheat Seeds', 'type': 'item_check'},
                                              {   'conditions': [   {'item': 'Summer', 'type': 'item_check'},
@@ -4734,2599 +7978,4 @@ def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player
     multiworld = world.multiworld
-
-    # Entrance rules
-    world.set_rule(
-        multiworld.get_entrance("Farmhouse to Cellar", player),
-        Has('Progressive House', 3)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Farmhouse Cooking", player),
-        Or(Has('Foraging Level', 9), Has('Progressive House'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Watch Queen of Sauce", player),
-        Has('The Queen of Sauce')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Farm to Greenhouse", player),
-        Has('Greenhouse')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Farm to Coop", player),
-        Has('Progressive Coop')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Farm to Barn", player),
-        Has('Progressive Barn')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Farm to Shed", player),
-        Has('Progressive Shed')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Farm to Slime Hutch", player),
-        Has('Slime Hutch')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Grow Spring Crops", player),
-        Has('Spring')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Grow Summer Crops", player),
-        Has('Summer')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Grow Fall Crops", player),
-        Has('Fall')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Use Shipping Bin", player),
-        Has('Shipping Bin')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Start Fishing", player),
-        Has('Progressive Fishing Rod')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Bus Stop to Desert", player),
-        And(Or(And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), Has('Shipping Bin')), Has('Bus Repair'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forest to Secret Woods", player),
-        Has('Progressive Axe', 2)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forest to Leah's Cottage", player),
-        And(True_(), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forest to Sewer", player),
-        Has('Rusty Key')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forest to Mastery Cave", player),
-        Has('Mastery Of The Five Ways')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Buy from Traveling Merchant", player),
-        And(Or(Has('Traveling Merchant: Friday'), Has('Traveling Merchant: Monday'), Has('Traveling Merchant: Saturday'), Has('Traveling Merchant: Sunday'), Has('Traveling Merchant: Thursday'), Has('Traveling Merchant: Tuesday'), Has('Traveling Merchant: Wednesday')), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Fish In Waterfall", player),
-        And(Has('Fishing Level', 5), Has('Progressive Fishing Rod', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Attend Flower Dance", player),
-        Has('Spring')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Attend Trout Derby", player),
-        Has('Summer')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Attend Festival of Ice", player),
-        Has('Winter')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mountain to Railroad", player),
-        Has('Railroad Boulder Removed')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mountain to Quarry", player),
-        Has('Bridge Repair')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mountain to Maru's Room", player),
-        And(True_(), Has('Summer'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mountain to Leo TreeHouse", player),
-        Has('Treehouse')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Town to Sewer", player),
-        Has('Rusty Key')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Purchase Movie Ticket", player),
-        Has('Progressive Movie Theater', 2)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Buy Experience Books from the bookseller", player),
-        Has('Received Progression Percent', 8)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Attend Egg Festival", player),
-        Has('Spring')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Attend Stardew Valley Fair", player),
-        Has('Fall')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Attend Spirit's Eve", player),
-        Has('Fall')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Attend Feast of the Winter Star", player),
-        Has('Winter')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Beach to Elliott's House", player),
-        And(True_(), Has('Fall'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Beach to Tide Pools", player),
-        Has('Beach Bridge')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Attend Luau", player),
-        Has('Summer')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Attend Dance of the Moonlight Jellies", player),
-        Has('Summer')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Attend Night Market", player),
-        Has('Winter')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Attend SquidFest", player),
-        Has('Winter')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Railroad to Witch Warp Cave", player),
-        Has('Dark Talisman')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sewer to Mutant Bug Lair", player),
-        And(True_(), True_(), Has('Rusty Key'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Wizard Tower to Wizard Basement", player),
-        And(True_(), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Use Desert Obelisk", player),
-        Has('Desert Obelisk')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Use Island Obelisk", player),
-        Has('Island Obelisk')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Carpenter Shop to Sebastian's Room", player),
-        And(True_(), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Adventurer's Guild to Marlon's Bedroom", player),
-        And(Or(And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_()), And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_()), And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_()), And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_())), Has('Received Progression Percent', 48))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Hospital to Harvey's Room", player),
-        And(True_(), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Pierre's General Store to Sunroom", player),
-        And(True_(), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Play Journey of the Prairie King", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_jotpk_small_buff, helper_name="has_jotpk_small_buff")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Play Junimo Kart", player),
-        And(Has('Junimo Kart: Extra Life', 2), Has('Skull Key'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Reach JotPK World 2", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_jotpk_medium_buff, helper_name="has_jotpk_medium_buff")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Reach JotPK World 3", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_jotpk_big_buff, helper_name="has_jotpk_big_buff")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Reach Junimo Kart 2", player),
-        Has('Junimo Kart: Extra Life', 4)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Reach Junimo Kart 3", player),
-        Has('Junimo Kart: Extra Life', 6)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Reach Junimo Kart 4", player),
-        Has('Junimo Kart: Extra Life', 8)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Upgrade Copper Tools", player),
-        And(Has('Copper Bar (Logic event)'), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Enter Abandoned Joja Mart", player),
-        Has('Progressive Movie Theater')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Enter Movie Theater", player),
-        Has('Progressive Movie Theater', 2)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Fish Shop to Boat Tunnel", player),
-        Has('Boat Repair')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Witch's Swamp to Witch's Hut", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_goblin_problem, helper_name="has_goblin_problem")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Attend Desert Festival", player),
-        And(Has('Bus Repair'), Has('Spring'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Oasis to Casino", player),
-        Has('Club Card')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Skull Cavern Entrance to Skull Cavern", player),
-        Has('Skull Key')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mine to Skull Cavern Floor 25", player),
-        And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), Has('Combat Level', 6), Has('Mining Level', 6), Has('Progressive Pickaxe', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mine to Skull Cavern Floor 75", player),
-        And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), Has('Combat Level', 8), Has('Mining Level', 8), Has('Progressive Pickaxe', 3))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mine to Skull Cavern Floor 125", player),
-        And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), Has('Combat Level', 10), Has('Mining Level', 10), Has('Progressive Pickaxe', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Enter the Dangerous Skull Cavern", player),
-        And(True_(), Has('Skull Key'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Talk to Mines Dwarf", player),
-        And(Has('Dwarvish Translation Guide'), Has('Progressive Pickaxe', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 5", player),
-        And(True_(), True_(), True_(), True_(), Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 15", player),
-        Has('Progressive Mine Elevator')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 20", player),
-        Has('Progressive Mine Elevator', 2)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 25", player),
-        Has('Progressive Mine Elevator', 3)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 30", player),
-        Has('Progressive Mine Elevator', 4)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 35", player),
-        Has('Progressive Mine Elevator', 5)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 40", player),
-        Has('Progressive Mine Elevator', 6)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 45", player),
-        And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), Has('Combat Level', 2), Has('Mining Level', 2), Has('Progressive Mine Elevator', 7), Has('Progressive Pickaxe'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 50", player),
-        Has('Progressive Mine Elevator', 8)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 55", player),
-        Has('Progressive Mine Elevator', 9)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 60", player),
-        Has('Progressive Mine Elevator', 10)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 65", player),
-        Has('Progressive Mine Elevator', 11)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 70", player),
-        Has('Progressive Mine Elevator', 12)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 75", player),
-        Has('Progressive Mine Elevator', 13)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 80", player),
-        Has('Progressive Mine Elevator', 14)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 85", player),
-        And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), Has('Combat Level', 4), Has('Mining Level', 4), Has('Progressive Mine Elevator', 15), Has('Progressive Pickaxe', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 90", player),
-        Has('Progressive Mine Elevator', 16)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 95", player),
-        Has('Progressive Mine Elevator', 17)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 100", player),
-        Has('Progressive Mine Elevator', 18)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 105", player),
-        Has('Progressive Mine Elevator', 19)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 110", player),
-        Has('Progressive Mine Elevator', 20)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 115", player),
-        Has('Progressive Mine Elevator', 21)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to The Mines - Floor 120", player),
-        Has('Progressive Mine Elevator', 22)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to the Dangerous Mines - Floor 20", player),
-        And(True_(), Has('Progressive Mine Elevator', 24))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to the Dangerous Mines - Floor 60", player),
-        And(True_(), Has('Progressive Mine Elevator', 24))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig to the Dangerous Mines - Floor 100", player),
-        And(True_(), Has('Progressive Mine Elevator', 24))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Upgrade Iron Tools", player),
-        And(Has('Iron Bar (Logic event)'), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Upgrade Gold Tools", player),
-        And(Has('Gold Bar (Logic event)'), Has('Received Progression Percent', 2), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Upgrade Iridium Tools", player),
-        And(Has('Iridium Bar (Logic event)'), Has('Received Progression Percent', 6), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Buy from Traveling Merchant Sunday", player),
-        Has('Traveling Merchant: Sunday')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Buy from Traveling Merchant Monday", player),
-        Has('Traveling Merchant: Monday')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Buy from Traveling Merchant Tuesday", player),
-        Has('Traveling Merchant: Tuesday')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Buy from Traveling Merchant Wednesday", player),
-        Has('Traveling Merchant: Wednesday')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Buy from Traveling Merchant Thursday", player),
-        Has('Traveling Merchant: Thursday')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Buy from Traveling Merchant Friday", player),
-        Has('Traveling Merchant: Friday')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Buy from Traveling Merchant Saturday", player),
-        Has('Traveling Merchant: Saturday')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Buy From Raccoon", player),
-        Has('Progressive Raccoon', 3)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Buy Year 1 Books from the Bookseller", player),
-        Has('Received Progression Percent', 16)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Buy Year 3 Books from the Bookseller", player),
-        Has('Received Progression Percent', 32)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Take the Boat to Ginger Island", player),
-        And(Or(And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_()), Has('Shipping Bin')), Has('Boat Repair'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Island South to West", player),
-        Has('Island West Turtle')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Island South to North", player),
-        Has('Island North Turtle')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Island South to Southeast", player),
-        Has('Island Resort')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Use Island Resort", player),
-        Has('Island Resort')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Parrot Express Docks to Volcano", player),
-        Has('Parrot Express')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Parrot Express Docks to Dig Site", player),
-        And(Has('Dig Site Bridge'), Has('Parrot Express'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Parrot Express Docks to Jungle", player),
-        Has('Parrot Express')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Island West to Island Farmhouse", player),
-        Has('Island Farmhouse')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Island West to Gourmand Cave", player),
-        Has('Island Farmhouse')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Island West to Qi Walnut Room", player),
-        Has('Qi Walnut Room')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Use Farm Obelisk", player),
-        Has('Farm Obelisk')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Parrot Express Jungle to Docks", player),
-        Has('Parrot Express')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Parrot Express Jungle to Dig Site", player),
-        And(Has('Dig Site Bridge'), Has('Parrot Express'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Parrot Express Jungle to Volcano", player),
-        Has('Parrot Express')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Talk to Island Trader", player),
-        Has('Island Trader')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Island North to Dig Site", player),
-        Has('Dig Site Bridge')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Parrot Express Volcano to Dig Site", player),
-        And(Has('Dig Site Bridge'), Has('Parrot Express'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Parrot Express Volcano to Jungle", player),
-        Has('Parrot Express')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Parrot Express Volcano to Docks", player),
-        Has('Parrot Express')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Climb to Volcano Floor 5", player),
-        And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_(), Has('Combat Level', 8), Has('Mining Level', 8), Has('Progressive Pickaxe', 4), Has('Progressive Watering Can'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Volcano River to Secret Beach", player),
-        Has('Progressive Watering Can', 2)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Talk to Volcano Dwarf", player),
-        Has('Dwarvish Translation Guide')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Climb to Volcano Floor 10", player),
-        And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_(), Has('Combat Level', 8), Has('Mining Level', 8), Has('Progressive Pickaxe', 4), Has('Progressive Watering Can'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Island Cooking", player),
-        Or(Has('Foraging Level', 9), Has('Progressive House'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dig Site to Professor Snail Cave", player),
-        Has('Open Professor Snail Cave')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Parrot Express Dig Site to Volcano", player),
-        And(Has('Dig Site Bridge'), Has('Parrot Express'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Parrot Express Dig Site to Docks", player),
-        And(Has('Dig Site Bridge'), Has('Parrot Express'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Parrot Express Dig Site to Jungle", player),
-        And(Has('Dig Site Bridge'), Has('Parrot Express'))
-    )
-    # Location rules
-    world.set_rule(
-        multiworld.get_location("Level 1 Farming", player),
-        Or(And(HelperCall(helper_func=_stardewvalleyworldgen_has_amaranth_seeds, helper_name="has_amaranth_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_ancient_seeds, helper_name="has_ancient_seeds"), Or(True_(), True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_artichoke_seeds, helper_name="has_artichoke_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bean_starter, helper_name="has_bean_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_beet_seeds, helper_name="has_beet_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_blueberry_seeds, helper_name="has_blueberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bok_choy_seeds, helper_name="has_bok_choy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_broccoli_seeds, helper_name="has_broccoli_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cactus_seeds, helper_name="has_cactus_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_carrot_seeds, helper_name="has_carrot_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cauliflower_seeds, helper_name="has_cauliflower_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_coffee_bean_starter, helper_name="has_coffee_bean_starter"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_corn_seeds, helper_name="has_corn_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cranberry_seeds, helper_name="has_cranberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_eggplant_seeds, helper_name="has_eggplant_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_fairy_seeds, helper_name="has_fairy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_garlic_seeds, helper_name="has_garlic_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_grape_starter, helper_name="has_grape_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_hops_starter, helper_name="has_hops_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_jazz_seeds, helper_name="has_jazz_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_kale_seeds, helper_name="has_kale_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_melon_seeds, helper_name="has_melon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_parsnip_seeds, helper_name="has_parsnip_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pepper_seeds, helper_name="has_pepper_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple_seeds, helper_name="has_pineapple_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_poppy_seeds, helper_name="has_poppy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_potato_seeds, helper_name="has_potato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_powdermelon_seeds, helper_name="has_powdermelon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pumpkin_seeds, helper_name="has_pumpkin_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_radish_seeds, helper_name="has_radish_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rare_seed, helper_name="has_rare_seed"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_red_cabbage_seeds, helper_name="has_red_cabbage_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rhubarb_seeds, helper_name="has_rhubarb_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rice_shoot, helper_name="has_rice_shoot"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_spangle_seeds, helper_name="has_spangle_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_starfruit_seeds, helper_name="has_starfruit_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_strawberry_seeds, helper_name="has_strawberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_summer_squash_seeds, helper_name="has_summer_squash_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower_seeds, helper_name="has_sunflower_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_taro_tuber, helper_name="has_taro_tuber"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tomato_seeds, helper_name="has_tomato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tulip_bulb, helper_name="has_tulip_bulb"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_yam_seeds, helper_name="has_yam_seeds"), True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 2 Farming", player),
-        And(Or(And(HelperCall(helper_func=_stardewvalleyworldgen_has_amaranth_seeds, helper_name="has_amaranth_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_ancient_seeds, helper_name="has_ancient_seeds"), Or(True_(), True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_artichoke_seeds, helper_name="has_artichoke_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bean_starter, helper_name="has_bean_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_beet_seeds, helper_name="has_beet_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_blueberry_seeds, helper_name="has_blueberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bok_choy_seeds, helper_name="has_bok_choy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_broccoli_seeds, helper_name="has_broccoli_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cactus_seeds, helper_name="has_cactus_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_carrot_seeds, helper_name="has_carrot_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cauliflower_seeds, helper_name="has_cauliflower_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_coffee_bean_starter, helper_name="has_coffee_bean_starter"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_corn_seeds, helper_name="has_corn_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cranberry_seeds, helper_name="has_cranberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_eggplant_seeds, helper_name="has_eggplant_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_fairy_seeds, helper_name="has_fairy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_garlic_seeds, helper_name="has_garlic_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_grape_starter, helper_name="has_grape_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_hops_starter, helper_name="has_hops_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_jazz_seeds, helper_name="has_jazz_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_kale_seeds, helper_name="has_kale_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_melon_seeds, helper_name="has_melon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_parsnip_seeds, helper_name="has_parsnip_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pepper_seeds, helper_name="has_pepper_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple_seeds, helper_name="has_pineapple_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_poppy_seeds, helper_name="has_poppy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_potato_seeds, helper_name="has_potato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_powdermelon_seeds, helper_name="has_powdermelon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pumpkin_seeds, helper_name="has_pumpkin_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_radish_seeds, helper_name="has_radish_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rare_seed, helper_name="has_rare_seed"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_red_cabbage_seeds, helper_name="has_red_cabbage_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rhubarb_seeds, helper_name="has_rhubarb_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rice_shoot, helper_name="has_rice_shoot"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_spangle_seeds, helper_name="has_spangle_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_starfruit_seeds, helper_name="has_starfruit_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_strawberry_seeds, helper_name="has_strawberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_summer_squash_seeds, helper_name="has_summer_squash_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower_seeds, helper_name="has_sunflower_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_taro_tuber, helper_name="has_taro_tuber"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tomato_seeds, helper_name="has_tomato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tulip_bulb, helper_name="has_tulip_bulb"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_yam_seeds, helper_name="has_yam_seeds"), True_())), Has('Farming Level'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 3 Farming", player),
-        And(Or(And(HelperCall(helper_func=_stardewvalleyworldgen_has_amaranth_seeds, helper_name="has_amaranth_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_ancient_seeds, helper_name="has_ancient_seeds"), Or(True_(), True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_artichoke_seeds, helper_name="has_artichoke_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bean_starter, helper_name="has_bean_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_beet_seeds, helper_name="has_beet_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_blueberry_seeds, helper_name="has_blueberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bok_choy_seeds, helper_name="has_bok_choy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_broccoli_seeds, helper_name="has_broccoli_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cactus_seeds, helper_name="has_cactus_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_carrot_seeds, helper_name="has_carrot_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cauliflower_seeds, helper_name="has_cauliflower_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_coffee_bean_starter, helper_name="has_coffee_bean_starter"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_corn_seeds, helper_name="has_corn_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cranberry_seeds, helper_name="has_cranberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_eggplant_seeds, helper_name="has_eggplant_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_fairy_seeds, helper_name="has_fairy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_garlic_seeds, helper_name="has_garlic_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_grape_starter, helper_name="has_grape_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_hops_starter, helper_name="has_hops_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_jazz_seeds, helper_name="has_jazz_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_kale_seeds, helper_name="has_kale_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_melon_seeds, helper_name="has_melon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_parsnip_seeds, helper_name="has_parsnip_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pepper_seeds, helper_name="has_pepper_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple_seeds, helper_name="has_pineapple_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_poppy_seeds, helper_name="has_poppy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_potato_seeds, helper_name="has_potato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_powdermelon_seeds, helper_name="has_powdermelon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pumpkin_seeds, helper_name="has_pumpkin_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_radish_seeds, helper_name="has_radish_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rare_seed, helper_name="has_rare_seed"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_red_cabbage_seeds, helper_name="has_red_cabbage_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rhubarb_seeds, helper_name="has_rhubarb_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rice_shoot, helper_name="has_rice_shoot"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_spangle_seeds, helper_name="has_spangle_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_starfruit_seeds, helper_name="has_starfruit_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_strawberry_seeds, helper_name="has_strawberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_summer_squash_seeds, helper_name="has_summer_squash_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower_seeds, helper_name="has_sunflower_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_taro_tuber, helper_name="has_taro_tuber"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tomato_seeds, helper_name="has_tomato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tulip_bulb, helper_name="has_tulip_bulb"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_yam_seeds, helper_name="has_yam_seeds"), True_())), Has('Farming Level', 2), Has('Progressive Hoe'), Has('Progressive Watering Can'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 4 Farming", player),
-        And(Or(And(HelperCall(helper_func=_stardewvalleyworldgen_has_amaranth_seeds, helper_name="has_amaranth_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_ancient_seeds, helper_name="has_ancient_seeds"), Or(True_(), True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_artichoke_seeds, helper_name="has_artichoke_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bean_starter, helper_name="has_bean_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_beet_seeds, helper_name="has_beet_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_blueberry_seeds, helper_name="has_blueberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bok_choy_seeds, helper_name="has_bok_choy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_broccoli_seeds, helper_name="has_broccoli_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cactus_seeds, helper_name="has_cactus_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_carrot_seeds, helper_name="has_carrot_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cauliflower_seeds, helper_name="has_cauliflower_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_coffee_bean_starter, helper_name="has_coffee_bean_starter"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_corn_seeds, helper_name="has_corn_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cranberry_seeds, helper_name="has_cranberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_eggplant_seeds, helper_name="has_eggplant_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_fairy_seeds, helper_name="has_fairy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_garlic_seeds, helper_name="has_garlic_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_grape_starter, helper_name="has_grape_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_hops_starter, helper_name="has_hops_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_jazz_seeds, helper_name="has_jazz_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_kale_seeds, helper_name="has_kale_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_melon_seeds, helper_name="has_melon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_parsnip_seeds, helper_name="has_parsnip_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pepper_seeds, helper_name="has_pepper_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple_seeds, helper_name="has_pineapple_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_poppy_seeds, helper_name="has_poppy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_potato_seeds, helper_name="has_potato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_powdermelon_seeds, helper_name="has_powdermelon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pumpkin_seeds, helper_name="has_pumpkin_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_radish_seeds, helper_name="has_radish_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rare_seed, helper_name="has_rare_seed"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_red_cabbage_seeds, helper_name="has_red_cabbage_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rhubarb_seeds, helper_name="has_rhubarb_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rice_shoot, helper_name="has_rice_shoot"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_spangle_seeds, helper_name="has_spangle_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_starfruit_seeds, helper_name="has_starfruit_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_strawberry_seeds, helper_name="has_strawberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_summer_squash_seeds, helper_name="has_summer_squash_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower_seeds, helper_name="has_sunflower_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_taro_tuber, helper_name="has_taro_tuber"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tomato_seeds, helper_name="has_tomato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tulip_bulb, helper_name="has_tulip_bulb"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_yam_seeds, helper_name="has_yam_seeds"), True_())), Has('Farming Level', 3), Has('Progressive Hoe'), Has('Progressive Watering Can'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 5 Farming", player),
-        And(Or(And(HelperCall(helper_func=_stardewvalleyworldgen_has_amaranth_seeds, helper_name="has_amaranth_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_ancient_seeds, helper_name="has_ancient_seeds"), Or(True_(), True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_artichoke_seeds, helper_name="has_artichoke_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bean_starter, helper_name="has_bean_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_beet_seeds, helper_name="has_beet_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_blueberry_seeds, helper_name="has_blueberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bok_choy_seeds, helper_name="has_bok_choy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_broccoli_seeds, helper_name="has_broccoli_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cactus_seeds, helper_name="has_cactus_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_carrot_seeds, helper_name="has_carrot_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cauliflower_seeds, helper_name="has_cauliflower_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_coffee_bean_starter, helper_name="has_coffee_bean_starter"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_corn_seeds, helper_name="has_corn_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cranberry_seeds, helper_name="has_cranberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_eggplant_seeds, helper_name="has_eggplant_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_fairy_seeds, helper_name="has_fairy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_garlic_seeds, helper_name="has_garlic_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_grape_starter, helper_name="has_grape_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_hops_starter, helper_name="has_hops_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_jazz_seeds, helper_name="has_jazz_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_kale_seeds, helper_name="has_kale_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_melon_seeds, helper_name="has_melon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_parsnip_seeds, helper_name="has_parsnip_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pepper_seeds, helper_name="has_pepper_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple_seeds, helper_name="has_pineapple_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_poppy_seeds, helper_name="has_poppy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_potato_seeds, helper_name="has_potato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_powdermelon_seeds, helper_name="has_powdermelon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pumpkin_seeds, helper_name="has_pumpkin_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_radish_seeds, helper_name="has_radish_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rare_seed, helper_name="has_rare_seed"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_red_cabbage_seeds, helper_name="has_red_cabbage_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rhubarb_seeds, helper_name="has_rhubarb_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rice_shoot, helper_name="has_rice_shoot"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_spangle_seeds, helper_name="has_spangle_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_starfruit_seeds, helper_name="has_starfruit_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_strawberry_seeds, helper_name="has_strawberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_summer_squash_seeds, helper_name="has_summer_squash_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower_seeds, helper_name="has_sunflower_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_taro_tuber, helper_name="has_taro_tuber"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tomato_seeds, helper_name="has_tomato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tulip_bulb, helper_name="has_tulip_bulb"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_yam_seeds, helper_name="has_yam_seeds"), True_())), Has('Farming Level', 4), Has('Progressive Hoe', 2), Has('Progressive Watering Can', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 6 Farming", player),
-        And(Or(And(HelperCall(helper_func=_stardewvalleyworldgen_has_amaranth_seeds, helper_name="has_amaranth_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_ancient_seeds, helper_name="has_ancient_seeds"), Or(True_(), True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_artichoke_seeds, helper_name="has_artichoke_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bean_starter, helper_name="has_bean_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_beet_seeds, helper_name="has_beet_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_blueberry_seeds, helper_name="has_blueberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bok_choy_seeds, helper_name="has_bok_choy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_broccoli_seeds, helper_name="has_broccoli_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cactus_seeds, helper_name="has_cactus_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_carrot_seeds, helper_name="has_carrot_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cauliflower_seeds, helper_name="has_cauliflower_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_coffee_bean_starter, helper_name="has_coffee_bean_starter"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_corn_seeds, helper_name="has_corn_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cranberry_seeds, helper_name="has_cranberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_eggplant_seeds, helper_name="has_eggplant_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_fairy_seeds, helper_name="has_fairy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_garlic_seeds, helper_name="has_garlic_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_grape_starter, helper_name="has_grape_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_hops_starter, helper_name="has_hops_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_jazz_seeds, helper_name="has_jazz_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_kale_seeds, helper_name="has_kale_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_melon_seeds, helper_name="has_melon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_parsnip_seeds, helper_name="has_parsnip_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pepper_seeds, helper_name="has_pepper_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple_seeds, helper_name="has_pineapple_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_poppy_seeds, helper_name="has_poppy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_potato_seeds, helper_name="has_potato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_powdermelon_seeds, helper_name="has_powdermelon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pumpkin_seeds, helper_name="has_pumpkin_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_radish_seeds, helper_name="has_radish_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rare_seed, helper_name="has_rare_seed"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_red_cabbage_seeds, helper_name="has_red_cabbage_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rhubarb_seeds, helper_name="has_rhubarb_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rice_shoot, helper_name="has_rice_shoot"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_spangle_seeds, helper_name="has_spangle_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_starfruit_seeds, helper_name="has_starfruit_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_strawberry_seeds, helper_name="has_strawberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_summer_squash_seeds, helper_name="has_summer_squash_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower_seeds, helper_name="has_sunflower_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_taro_tuber, helper_name="has_taro_tuber"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tomato_seeds, helper_name="has_tomato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tulip_bulb, helper_name="has_tulip_bulb"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_yam_seeds, helper_name="has_yam_seeds"), True_())), Has('Farming Level', 5), Has('Progressive Hoe', 2), Has('Progressive Watering Can', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 7 Farming", player),
-        And(Or(And(HelperCall(helper_func=_stardewvalleyworldgen_has_amaranth_seeds, helper_name="has_amaranth_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_ancient_seeds, helper_name="has_ancient_seeds"), Or(True_(), True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_artichoke_seeds, helper_name="has_artichoke_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bean_starter, helper_name="has_bean_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_beet_seeds, helper_name="has_beet_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_blueberry_seeds, helper_name="has_blueberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bok_choy_seeds, helper_name="has_bok_choy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_broccoli_seeds, helper_name="has_broccoli_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cactus_seeds, helper_name="has_cactus_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_carrot_seeds, helper_name="has_carrot_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cauliflower_seeds, helper_name="has_cauliflower_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_coffee_bean_starter, helper_name="has_coffee_bean_starter"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_corn_seeds, helper_name="has_corn_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cranberry_seeds, helper_name="has_cranberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_eggplant_seeds, helper_name="has_eggplant_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_fairy_seeds, helper_name="has_fairy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_garlic_seeds, helper_name="has_garlic_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_grape_starter, helper_name="has_grape_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_hops_starter, helper_name="has_hops_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_jazz_seeds, helper_name="has_jazz_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_kale_seeds, helper_name="has_kale_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_melon_seeds, helper_name="has_melon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_parsnip_seeds, helper_name="has_parsnip_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pepper_seeds, helper_name="has_pepper_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple_seeds, helper_name="has_pineapple_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_poppy_seeds, helper_name="has_poppy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_potato_seeds, helper_name="has_potato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_powdermelon_seeds, helper_name="has_powdermelon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pumpkin_seeds, helper_name="has_pumpkin_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_radish_seeds, helper_name="has_radish_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rare_seed, helper_name="has_rare_seed"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_red_cabbage_seeds, helper_name="has_red_cabbage_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rhubarb_seeds, helper_name="has_rhubarb_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rice_shoot, helper_name="has_rice_shoot"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_spangle_seeds, helper_name="has_spangle_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_starfruit_seeds, helper_name="has_starfruit_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_strawberry_seeds, helper_name="has_strawberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_summer_squash_seeds, helper_name="has_summer_squash_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower_seeds, helper_name="has_sunflower_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_taro_tuber, helper_name="has_taro_tuber"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tomato_seeds, helper_name="has_tomato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tulip_bulb, helper_name="has_tulip_bulb"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_yam_seeds, helper_name="has_yam_seeds"), True_())), Has('Farming Level', 6), Has('Progressive Hoe', 3), Has('Progressive Watering Can', 3))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 8 Farming", player),
-        And(Or(And(HelperCall(helper_func=_stardewvalleyworldgen_has_amaranth_seeds, helper_name="has_amaranth_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_ancient_seeds, helper_name="has_ancient_seeds"), Or(True_(), True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_artichoke_seeds, helper_name="has_artichoke_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bean_starter, helper_name="has_bean_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_beet_seeds, helper_name="has_beet_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_blueberry_seeds, helper_name="has_blueberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bok_choy_seeds, helper_name="has_bok_choy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_broccoli_seeds, helper_name="has_broccoli_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cactus_seeds, helper_name="has_cactus_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_carrot_seeds, helper_name="has_carrot_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cauliflower_seeds, helper_name="has_cauliflower_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_coffee_bean_starter, helper_name="has_coffee_bean_starter"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_corn_seeds, helper_name="has_corn_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cranberry_seeds, helper_name="has_cranberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_eggplant_seeds, helper_name="has_eggplant_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_fairy_seeds, helper_name="has_fairy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_garlic_seeds, helper_name="has_garlic_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_grape_starter, helper_name="has_grape_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_hops_starter, helper_name="has_hops_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_jazz_seeds, helper_name="has_jazz_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_kale_seeds, helper_name="has_kale_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_melon_seeds, helper_name="has_melon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_parsnip_seeds, helper_name="has_parsnip_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pepper_seeds, helper_name="has_pepper_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple_seeds, helper_name="has_pineapple_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_poppy_seeds, helper_name="has_poppy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_potato_seeds, helper_name="has_potato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_powdermelon_seeds, helper_name="has_powdermelon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pumpkin_seeds, helper_name="has_pumpkin_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_radish_seeds, helper_name="has_radish_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rare_seed, helper_name="has_rare_seed"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_red_cabbage_seeds, helper_name="has_red_cabbage_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rhubarb_seeds, helper_name="has_rhubarb_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rice_shoot, helper_name="has_rice_shoot"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_spangle_seeds, helper_name="has_spangle_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_starfruit_seeds, helper_name="has_starfruit_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_strawberry_seeds, helper_name="has_strawberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_summer_squash_seeds, helper_name="has_summer_squash_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower_seeds, helper_name="has_sunflower_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_taro_tuber, helper_name="has_taro_tuber"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tomato_seeds, helper_name="has_tomato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tulip_bulb, helper_name="has_tulip_bulb"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_yam_seeds, helper_name="has_yam_seeds"), True_())), Has('Farming Level', 7), Has('Progressive Hoe', 3), Has('Progressive Watering Can', 3))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 9 Farming", player),
-        And(Or(And(HelperCall(helper_func=_stardewvalleyworldgen_has_amaranth_seeds, helper_name="has_amaranth_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_ancient_seeds, helper_name="has_ancient_seeds"), Or(True_(), True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_artichoke_seeds, helper_name="has_artichoke_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bean_starter, helper_name="has_bean_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_beet_seeds, helper_name="has_beet_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_blueberry_seeds, helper_name="has_blueberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bok_choy_seeds, helper_name="has_bok_choy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_broccoli_seeds, helper_name="has_broccoli_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cactus_seeds, helper_name="has_cactus_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_carrot_seeds, helper_name="has_carrot_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cauliflower_seeds, helper_name="has_cauliflower_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_coffee_bean_starter, helper_name="has_coffee_bean_starter"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_corn_seeds, helper_name="has_corn_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cranberry_seeds, helper_name="has_cranberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_eggplant_seeds, helper_name="has_eggplant_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_fairy_seeds, helper_name="has_fairy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_garlic_seeds, helper_name="has_garlic_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_grape_starter, helper_name="has_grape_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_hops_starter, helper_name="has_hops_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_jazz_seeds, helper_name="has_jazz_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_kale_seeds, helper_name="has_kale_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_melon_seeds, helper_name="has_melon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_parsnip_seeds, helper_name="has_parsnip_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pepper_seeds, helper_name="has_pepper_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple_seeds, helper_name="has_pineapple_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_poppy_seeds, helper_name="has_poppy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_potato_seeds, helper_name="has_potato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_powdermelon_seeds, helper_name="has_powdermelon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pumpkin_seeds, helper_name="has_pumpkin_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_radish_seeds, helper_name="has_radish_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rare_seed, helper_name="has_rare_seed"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_red_cabbage_seeds, helper_name="has_red_cabbage_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rhubarb_seeds, helper_name="has_rhubarb_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rice_shoot, helper_name="has_rice_shoot"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_spangle_seeds, helper_name="has_spangle_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_starfruit_seeds, helper_name="has_starfruit_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_strawberry_seeds, helper_name="has_strawberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_summer_squash_seeds, helper_name="has_summer_squash_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower_seeds, helper_name="has_sunflower_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_taro_tuber, helper_name="has_taro_tuber"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tomato_seeds, helper_name="has_tomato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tulip_bulb, helper_name="has_tulip_bulb"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_yam_seeds, helper_name="has_yam_seeds"), True_())), Has('Farming Level', 8), Has('Progressive Hoe', 4), Has('Progressive Watering Can', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 10 Farming", player),
-        And(Or(And(HelperCall(helper_func=_stardewvalleyworldgen_has_amaranth_seeds, helper_name="has_amaranth_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_ancient_seeds, helper_name="has_ancient_seeds"), Or(True_(), True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_artichoke_seeds, helper_name="has_artichoke_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bean_starter, helper_name="has_bean_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_beet_seeds, helper_name="has_beet_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_blueberry_seeds, helper_name="has_blueberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bok_choy_seeds, helper_name="has_bok_choy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_broccoli_seeds, helper_name="has_broccoli_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cactus_seeds, helper_name="has_cactus_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_carrot_seeds, helper_name="has_carrot_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cauliflower_seeds, helper_name="has_cauliflower_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_coffee_bean_starter, helper_name="has_coffee_bean_starter"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_corn_seeds, helper_name="has_corn_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cranberry_seeds, helper_name="has_cranberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_eggplant_seeds, helper_name="has_eggplant_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_fairy_seeds, helper_name="has_fairy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_garlic_seeds, helper_name="has_garlic_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_grape_starter, helper_name="has_grape_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_hops_starter, helper_name="has_hops_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_jazz_seeds, helper_name="has_jazz_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_kale_seeds, helper_name="has_kale_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_melon_seeds, helper_name="has_melon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_parsnip_seeds, helper_name="has_parsnip_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pepper_seeds, helper_name="has_pepper_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple_seeds, helper_name="has_pineapple_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_poppy_seeds, helper_name="has_poppy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_potato_seeds, helper_name="has_potato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_powdermelon_seeds, helper_name="has_powdermelon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pumpkin_seeds, helper_name="has_pumpkin_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_radish_seeds, helper_name="has_radish_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rare_seed, helper_name="has_rare_seed"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_red_cabbage_seeds, helper_name="has_red_cabbage_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rhubarb_seeds, helper_name="has_rhubarb_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rice_shoot, helper_name="has_rice_shoot"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_spangle_seeds, helper_name="has_spangle_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_starfruit_seeds, helper_name="has_starfruit_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_strawberry_seeds, helper_name="has_strawberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_summer_squash_seeds, helper_name="has_summer_squash_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower_seeds, helper_name="has_sunflower_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_taro_tuber, helper_name="has_taro_tuber"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tomato_seeds, helper_name="has_tomato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tulip_bulb, helper_name="has_tulip_bulb"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_yam_seeds, helper_name="has_yam_seeds"), True_())), Has('Farming Level', 9), Has('Progressive Hoe', 4), Has('Progressive Watering Can', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Collect All Rarecrows", player),
-        And(Has('Rarecrow #1'), Has('Rarecrow #2'), Has('Rarecrow #3'), Has('Rarecrow #4'), Has('Rarecrow #5'), Has('Rarecrow #6'), Has('Rarecrow #7'), Has('Rarecrow #8'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Crop Order", player),
-        And(Has('Farming Level', 10), Has('Progressive Hoe', 4), Has('Progressive Watering Can', 4), Has('Received Progression Percent', 16), Has('Shipping Bin'), Has('Special Order Board'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Getting Started", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_parsnip, helper_name="has_parsnip")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Raising Animals", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_parsnip, helper_name="has_parsnip"), Has('Progressive Coop'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Advancement", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_parsnip, helper_name="has_parsnip"), HelperCall(helper_func=_stardewvalleyworldgen_has_scarecrow, helper_name="has_scarecrow"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Jack Be Nimble, Jack Be Thick", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_jack_be_nimble_jack_be_thick, helper_name="has_jack_be_nimble_jack_be_thick")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Woody's Secret", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_woody_s_secret, helper_name="has_woody_s_secret")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Animal Catalogue", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_animal_catalogue, helper_name="has_animal_catalogue")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Book of Mysteries", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_book_of_mysteries, helper_name="has_book_of_mysteries")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Dwarvish Safety Manual", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_dwarvish_safety_manual, helper_name="has_dwarvish_safety_manual")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Friendship 101", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_friendship_101, helper_name="has_friendship_101")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Horse: The Book", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_horse_the_book, helper_name="has_horse_the_book")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Jewels Of The Sea", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_jewels_of_the_sea, helper_name="has_jewels_of_the_sea")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Mapping Cave Systems", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Monster Compendium", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_monster_compendium, helper_name="has_monster_compendium")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Ol' Slitherlegs", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_ol_slitherlegs, helper_name="has_ol_slitherlegs")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Price Catalogue", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_price_catalogue, helper_name="has_price_catalogue")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read The Alleyway Buffet", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_the_alleyway_buffet, helper_name="has_the_alleyway_buffet")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read The Art O' Crabbing", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_the_art_o_crabbing, helper_name="has_the_art_o_crabbing")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Treasure Appraisal Guide", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_treasure_appraisal_guide, helper_name="has_treasure_appraisal_guide")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Raccoon Journal", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_raccoon_journal, helper_name="has_raccoon_journal")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Way Of The Wind pt. 1", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_way_of_the_wind_pt_1, helper_name="has_way_of_the_wind_pt_1")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Way Of The Wind pt. 2", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_way_of_the_wind_pt_2, helper_name="has_way_of_the_wind_pt_2")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Book Of Stars", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_book_of_stars, helper_name="has_book_of_stars")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Bait And Bobber", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_bait_and_bobber, helper_name="has_bait_and_bobber")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Combat Quarterly", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_combat_quarterly, helper_name="has_combat_quarterly")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Mining Monthly", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_mining_monthly, helper_name="has_mining_monthly")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Stardew Valley Almanac", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_stardew_valley_almanac, helper_name="has_stardew_valley_almanac")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Woodcutter's Weekly", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_woodcutter_s_weekly, helper_name="has_woodcutter_s_weekly")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read The Diamond Hunter", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_the_diamond_hunter, helper_name="has_the_diamond_hunter")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Read Queen Of Sauce Cookbook", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_queen_of_sauce_cookbook, helper_name="has_queen_of_sauce_cookbook")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Copper Bar (Logic event)", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_furnace, helper_name="has_furnace"), Has('Copper Ore (Logic event)'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Iron Bar (Logic event)", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_furnace, helper_name="has_furnace"), Has('Iron Ore (Logic event)'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gold Bar (Logic event)", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_furnace, helper_name="has_furnace"), Has('Gold Ore (Logic event)'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Iridium Bar (Logic event)", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_furnace, helper_name="has_furnace"), Has('Iridium Ore (Logic event)'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Copper Ore (Logic event)", player),
-        Or(And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_(), Has('Combat Level', 6), Has('Mining Level', 6), Has('Progressive Pickaxe', 3)), True_(), Has('Progressive Pan'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Iron Ore (Logic event)", player),
-        Or(And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_(), Has('Combat Level', 6), Has('Mining Level', 6), Has('Progressive Pickaxe', 3)), True_(), Has('Progressive Pan', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gold Ore (Logic event)", player),
-        Or(And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_(), Has('Combat Level', 6), Has('Mining Level', 6), Has('Progressive Pickaxe', 3)), True_(), Has('Progressive Pan', 3))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Iridium Ore (Logic event)", player),
-        ((((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (CanReachRegion("Skull Cavern")) & (Has("Combat Level", 6)) & (Has("Mining Level", 6)) & (Has("Progressive Pickaxe", 3))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_super_cucumber, helper_name="has_super_cucumber")) & (Has("Fish Pond")))) | ((((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (CanReachRegion("Skull Cavern")) & (Has("Combat Level", 6)) & (Has("Mining Level", 6)) & (Has("Progressive Pickaxe", 3))) & (Has("Progressive Pan", 4))) | (((HelperCall(helper_func=_stardewvalleyworldgen_has_super_cucumber, helper_name="has_super_cucumber")) & (Has("Fish Pond"))) & (Has("Progressive Pan", 4)))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pot Of Gold", player),
-        Has('Spring')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 1 Foraging", player),
-        Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 2 Foraging", player),
-        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), Has('Foraging Level'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 3 Foraging", player),
-        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), Has('Foraging Level', 2), Has('Progressive Axe'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 4 Foraging", player),
-        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), Has('Foraging Level', 3), Has('Progressive Axe'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 5 Foraging", player),
-        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), Has('Foraging Level', 4), Has('Progressive Axe', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cow's Delight", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_amaranth, helper_name="has_amaranth"), Has('Fall'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Giant Stump", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_hardwood, helper_name="has_hardwood")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Copper Pan Cutscene", player),
-        Has('Glittering Boulder Removed')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Robin's Lost Axe", player),
-        Has('Spring')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Blackberry Basket", player),
-        Has('Fall')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Crop Research", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_melon, helper_name="has_melon"), Has('Summer'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Robin's Request", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_hardwood, helper_name="has_hardwood"), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Aquatic Research", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_pufferfish, helper_name="has_pufferfish"), Has('Summer'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Island Ingredients", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple, helper_name="has_pineapple"), HelperCall(helper_func=_stardewvalleyworldgen_has_taro_root, helper_name="has_taro_root"), Or(Has('Boat Repair'), Has('Island Obelisk')), True_(), Has('Farming Level', 10), Has('Progressive Hoe', 4), Has('Progressive Watering Can', 4), Has('Received Progression Percent', 16), Has('Shipping Bin'), Has('Special Order Board'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tropical Fish", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_blue_discus, helper_name="has_blue_discus"), HelperCall(helper_func=_stardewvalleyworldgen_has_lionfish, helper_name="has_lionfish"), HelperCall(helper_func=_stardewvalleyworldgen_has_stingray, helper_name="has_stingray"), Or(Has('Boat Repair'), Has('Island Obelisk')), Has('Island Resort'), Has('Received Progression Percent', 16), Has('Special Order Board'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Jodi's Request", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_cauliflower, helper_name="has_cauliflower"), Has('Spring'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mayor's \"Shorts\"", player),
-        And(True_(), Has('Fall'), Has('Summer'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pam Is Thirsty", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_pale_ale, helper_name="has_pale_ale"), Has('Summer'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Carving Pumpkins", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_pumpkin, helper_name="has_pumpkin"), Has('Fall'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("A Winter Mystery", player),
-        Has('Winter')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fresh Fruit", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_apricot, helper_name="has_apricot"), Has('Spring'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("A Soldier's Star", player),
-        And(True_(), HelperCall(helper_func=_stardewvalleyworldgen_has_starfruit, helper_name="has_starfruit"), Has('Received Progression Percent', 16), Has('Summer'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mayor's Need", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_truffle_oil, helper_name="has_truffle_oil"), Has('Summer'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pam Needs Juice", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_battery_pack, helper_name="has_battery_pack"), Has('Fall'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("A Favor For Clint", player),
-        And(Has('Iron Bar (Logic event)'), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Granny's Gift", player),
-        And(Has('Spring'), Has('Spring'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Juicy Bugs Wanted!", player),
-        And(True_(), Has('Received Progression Percent', 16), Has('Special Order Board'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Catch A Squid", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_squid, helper_name="has_squid"), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Community Cleanup", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_bait, helper_name="has_bait"), HelperCall(helper_func=_stardewvalleyworldgen_has_crab_pot, helper_name="has_crab_pot"), Has('Received Progression Percent', 16), Has('Special Order Board'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Marnie's Request", player),
-        And(True_(), True_(), Has('Fall'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Farming Mastery", player),
-        And(Or(And(HelperCall(helper_func=_stardewvalleyworldgen_has_amaranth_seeds, helper_name="has_amaranth_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_ancient_seeds, helper_name="has_ancient_seeds"), Or(True_(), True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_artichoke_seeds, helper_name="has_artichoke_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bean_starter, helper_name="has_bean_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_beet_seeds, helper_name="has_beet_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_blueberry_seeds, helper_name="has_blueberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_bok_choy_seeds, helper_name="has_bok_choy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_broccoli_seeds, helper_name="has_broccoli_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cactus_seeds, helper_name="has_cactus_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_carrot_seeds, helper_name="has_carrot_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cauliflower_seeds, helper_name="has_cauliflower_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_coffee_bean_starter, helper_name="has_coffee_bean_starter"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_corn_seeds, helper_name="has_corn_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_cranberry_seeds, helper_name="has_cranberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_eggplant_seeds, helper_name="has_eggplant_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_fairy_seeds, helper_name="has_fairy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_garlic_seeds, helper_name="has_garlic_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_grape_starter, helper_name="has_grape_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_hops_starter, helper_name="has_hops_starter"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_jazz_seeds, helper_name="has_jazz_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_kale_seeds, helper_name="has_kale_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_melon_seeds, helper_name="has_melon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_parsnip_seeds, helper_name="has_parsnip_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pepper_seeds, helper_name="has_pepper_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple_seeds, helper_name="has_pineapple_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_poppy_seeds, helper_name="has_poppy_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_potato_seeds, helper_name="has_potato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_powdermelon_seeds, helper_name="has_powdermelon_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_pumpkin_seeds, helper_name="has_pumpkin_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_radish_seeds, helper_name="has_radish_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rare_seed, helper_name="has_rare_seed"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_red_cabbage_seeds, helper_name="has_red_cabbage_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rhubarb_seeds, helper_name="has_rhubarb_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_rice_shoot, helper_name="has_rice_shoot"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_spangle_seeds, helper_name="has_spangle_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_starfruit_seeds, helper_name="has_starfruit_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_strawberry_seeds, helper_name="has_strawberry_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_summer_squash_seeds, helper_name="has_summer_squash_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower_seeds, helper_name="has_sunflower_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_taro_tuber, helper_name="has_taro_tuber"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tomato_seeds, helper_name="has_tomato_seeds"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_tulip_bulb, helper_name="has_tulip_bulb"), True_()), And(HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds"), Or(True_(), True_())), And(HelperCall(helper_func=_stardewvalleyworldgen_has_yam_seeds, helper_name="has_yam_seeds"), True_())), True_(), Has('Farming Level', 10), Has('Progressive Hoe', 4), Has('Progressive Watering Can', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Foraging Mastery", player),
-        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), True_(), Has('Foraging Level', 10), Has('Progressive Axe', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fishing Mastery", player),
-        And(True_(), Has('Fishing Level', 10), Has('Progressive Fishing Rod', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mining Mastery", player),
-        And(True_(), True_(), Has('Mining Level', 10), Has('Progressive Pickaxe', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Combat Mastery", player),
-        And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_(), True_(), Has('Combat Level', 10))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Krobus Stardrop", player),
-        And(Has('Received Progression Percent', 5), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Dark Talisman", player),
-        And(True_(), True_(), Has('Rusty Key'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Meet The Wizard", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_rat_problem, helper_name="has_rat_problem")
-    )
-
-    world.set_rule(
-        multiworld.get_location("A Dark Reagent", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_void_essence, helper_name="has_void_essence"), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Staff Of Power", player),
-        And(Has('Iridium Bar (Logic event)'), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Barn Blueprint", player),
-        And(True_(), True_(), True_(), True_(), Has('Received Progression Percent'), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Big Barn Blueprint", player),
-        And(True_(), True_(), True_(), True_(), Has('Progressive Barn'), Has('Received Progression Percent', 3), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Deluxe Barn Blueprint", player),
-        And(True_(), True_(), True_(), True_(), Has('Progressive Barn', 2), Has('Received Progression Percent', 6), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Coop Blueprint", player),
-        And(True_(), True_(), True_(), True_(), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Big Coop Blueprint", player),
-        And(True_(), True_(), True_(), True_(), Has('Progressive Coop'), Has('Received Progression Percent', 2), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Deluxe Coop Blueprint", player),
-        And(True_(), True_(), True_(), True_(), Has('Progressive Coop', 2), Has('Received Progression Percent', 5), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fish Pond Blueprint", player),
-        And(True_(), True_(), True_(), HelperCall(helper_func=_stardewvalleyworldgen_has_seaweed, helper_name="has_seaweed"), Has('Progressive Fishing Rod'), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mill Blueprint", player),
-        And(True_(), True_(), True_(), True_(), HelperCall(helper_func=_stardewvalleyworldgen_has_cloth, helper_name="has_cloth"), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shed Blueprint", player),
-        And(True_(), True_(), True_(), Has('Received Progression Percent', 3), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Big Shed Blueprint", player),
-        And(True_(), True_(), True_(), True_(), Has('Progressive Shed'), Has('Received Progression Percent', 5), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Silo Blueprint", player),
-        And(True_(), True_(), True_(), True_(), True_(), Has('Copper Bar (Logic event)'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Slime Hutch Blueprint", player),
-        And(True_(), True_(), True_(), HelperCall(helper_func=_stardewvalleyworldgen_has_refined_quartz, helper_name="has_refined_quartz"), Has('Iridium Bar (Logic event)'), Has('Received Progression Percent', 2), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Stable Blueprint", player),
-        And(True_(), True_(), HelperCall(helper_func=_stardewvalleyworldgen_has_hardwood, helper_name="has_hardwood"), Has('Iron Bar (Logic event)'), Has('Received Progression Percent', 2), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Well Blueprint", player),
-        And(True_(), True_(), True_(), Or(And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_()), Has('Shipping Bin')))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Shipping Bin Blueprint", player),
-        And(True_(), True_(), True_(), Or(And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), And(True_(), True_()), Has('Shipping Bin')))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Kitchen Blueprint", player),
-        And(True_(), True_(), True_(), True_(), Has('Received Progression Percent', 2), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Kids Room Blueprint", player),
-        And(True_(), True_(), HelperCall(helper_func=_stardewvalleyworldgen_has_hardwood, helper_name="has_hardwood"), Has('Progressive House'), Has('Received Progression Percent', 16), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cellar Blueprint", player),
-        And(True_(), True_(), Has('Progressive House', 2), Has('Received Progression Percent', 25), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Robin's Project", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_hardwood, helper_name="has_hardwood"), Has('Foraging Level', 10), Has('Progressive Axe', 4), Has('Received Progression Percent', 16), Has('Special Order Board'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Robin's Resource Rush", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_tree_fertilizer, helper_name="has_tree_fertilizer"), Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_(), Has('Combat Level', 8), Has('Foraging Level', 10), Has('Mining Level', 8), Has('Progressive Axe', 4), Has('Progressive Pickaxe', 4), Has('Received Progression Percent', 16), Has('Special Order Board'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Monster Eradication: Slimes", player),
-        Or(And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_()), And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_()), And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Monster Eradication: Void Spirits", player),
-        Or(And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Monster Eradication: Bats", player),
-        Or(And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Monster Eradication: Skeletons", player),
-        Or(And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Monster Eradication: Cave Insects", player),
-        Or(And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Monster Eradication: Duggies", player),
-        Or(And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Monster Eradication: Dust Sprites", player),
-        Or(And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Monster Eradication: Rock Crabs", player),
-        Or(And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Monster Eradication: Mummies", player),
-        Or(And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Monster Eradication: Pepper Rex", player),
-        And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Monster Eradication: Serpents", player),
-        Or(And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Monster Eradication: Magma Sprites", player),
-        Or(And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()), And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Complete Community Center", player),
-        And(CanReachLocation('Complete Boiler Room'), CanReachLocation('Complete Bulletin Board'), CanReachLocation('Complete Crafts Room'), CanReachLocation('Complete Fish Tank'), CanReachLocation('Complete Pantry'), CanReachLocation('Complete Vault'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Complete Crafts Room", player),
-        And(True_(), ((Has("Summer")) & ((CanReachRegion("Secret Woods")) & (Has("Summer"))) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer")))) | ((Has("Summer")) & ((CanReachRegion("Secret Woods")) & (Has("Summer"))) & (True_())) | ((Has("Summer")) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (True_())) | (((CanReachRegion("Secret Woods")) & (Has("Summer"))) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (True_())), True_(), HelperCall(helper_func=_stardewvalleyworldgen_has_cactus_fruit, helper_name="has_cactus_fruit"), HelperCall(helper_func=_stardewvalleyworldgen_has_chanterelle, helper_name="has_chanterelle"), HelperCall(helper_func=_stardewvalleyworldgen_has_common_mushroom, helper_name="has_common_mushroom"), HelperCall(helper_func=_stardewvalleyworldgen_has_wild_plum, helper_name="has_wild_plum"), True_(), Has('Fall'), Has('Foraging Level', 9), Has('Received Progression Percent', 40), Has('Winter'), Has('Winter'), Has('Winter'), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Exotic Foraging Bundle", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Winter Foraging Bundle", player),
-        And(Has('Winter'), Has('Winter'), Has('Winter'), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Desert Foraging Bundle", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_cactus_fruit, helper_name="has_cactus_fruit"), True_(), Has('Foraging Level', 9))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sticky Bundle", player),
-        And(True_(), Has('Received Progression Percent', 40))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fall Foraging Bundle", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_chanterelle, helper_name="has_chanterelle"), HelperCall(helper_func=_stardewvalleyworldgen_has_common_mushroom, helper_name="has_common_mushroom"), HelperCall(helper_func=_stardewvalleyworldgen_has_wild_plum, helper_name="has_wild_plum"), Has('Fall'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Green Rain Bundle", player),
-        And(((Has("Summer")) & ((CanReachRegion("Secret Woods")) & (Has("Summer"))) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer")))) | ((Has("Summer")) & ((CanReachRegion("Secret Woods")) & (Has("Summer"))) & (True_())) | ((Has("Summer")) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (True_())) | (((CanReachRegion("Secret Woods")) & (Has("Summer"))) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (True_())), Has('Received Progression Percent', 16))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Complete Pantry", player),
-        And((((HelperCall(helper_func=_stardewvalleyworldgen_has_radish_seeds, helper_name="has_radish_seeds")) & (CanReachRegion("Summer Farming"))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds")) & ((CanReachRegion("Fall Farming")) | (CanReachRegion("Summer Farming")))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower_seeds, helper_name="has_sunflower_seeds")) & ((CanReachRegion("Fall Farming")) | (CanReachRegion("Summer Farming"))))) | (((HelperCall(helper_func=_stardewvalleyworldgen_has_radish_seeds, helper_name="has_radish_seeds")) & (CanReachRegion("Summer Farming"))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds")) & ((CanReachRegion("Fall Farming")) | (CanReachRegion("Summer Farming")))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_rice_shoot, helper_name="has_rice_shoot")) & (CanReachRegion("Spring Farming")))) | (((HelperCall(helper_func=_stardewvalleyworldgen_has_radish_seeds, helper_name="has_radish_seeds")) & (CanReachRegion("Summer Farming"))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower_seeds, helper_name="has_sunflower_seeds")) & ((CanReachRegion("Fall Farming")) | (CanReachRegion("Summer Farming")))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_rice_shoot, helper_name="has_rice_shoot")) & (CanReachRegion("Spring Farming")))) | (((HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds")) & ((CanReachRegion("Fall Farming")) | (CanReachRegion("Summer Farming")))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower_seeds, helper_name="has_sunflower_seeds")) & ((CanReachRegion("Fall Farming")) | (CanReachRegion("Summer Farming")))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_rice_shoot, helper_name="has_rice_shoot")) & (CanReachRegion("Spring Farming")))), (((CanReachRegion("Slime Hutch")) & (Has("Received Progression Percent", 40))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_lionfish, helper_name="has_lionfish")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_mango, helper_name="has_mango")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple, helper_name="has_pineapple")) & ((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (CanReachRegion("Island West")) & (CanReachRegion("Island West")) & (Has("Fish Pond")) & (Has("Received Progression Percent", 48)) & (Has("Slime Hutch"))) & (CanReachRegion("The Mines - Floor 5"))) | (((CanReachRegion("Slime Hutch")) & (Has("Received Progression Percent", 40))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_lionfish, helper_name="has_lionfish")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_mango, helper_name="has_mango")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple, helper_name="has_pineapple")) & ((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (CanReachRegion("Island West")) & (CanReachRegion("Island West")) & (Has("Fish Pond")) & (Has("Received Progression Percent", 48)) & (Has("Slime Hutch"))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_slime_egg_press, helper_name="has_slime_egg_press")) & (CanReachRegion("The Mines - Floor 5")) & (Has("Received Progression Percent", 24)))) | (((CanReachRegion("Slime Hutch")) & (Has("Received Progression Percent", 40))) & (CanReachRegion("The Mines - Floor 5")) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_slime_egg_press, helper_name="has_slime_egg_press")) & (CanReachRegion("The Mines - Floor 5")) & (Has("Received Progression Percent", 24)))) | (((HelperCall(helper_func=_stardewvalleyworldgen_has_lionfish, helper_name="has_lionfish")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_mango, helper_name="has_mango")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple, helper_name="has_pineapple")) & ((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (CanReachRegion("Island West")) & (CanReachRegion("Island West")) & (Has("Fish Pond")) & (Has("Received Progression Percent", 48)) & (Has("Slime Hutch"))) & (CanReachRegion("The Mines - Floor 5")) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_slime_egg_press, helper_name="has_slime_egg_press")) & (CanReachRegion("The Mines - Floor 5")) & (Has("Received Progression Percent", 24)))), True_(), True_(), HelperCall(helper_func=_stardewvalleyworldgen_has_amaranth, helper_name="has_amaranth"), HelperCall(helper_func=_stardewvalleyworldgen_has_ancient_fruit, helper_name="has_ancient_fruit"), HelperCall(helper_func=_stardewvalleyworldgen_has_bok_choy, helper_name="has_bok_choy"), HelperCall(helper_func=_stardewvalleyworldgen_has_pumpkin, helper_name="has_pumpkin"), HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower, helper_name="has_sunflower"), HelperCall(helper_func=_stardewvalleyworldgen_has_sweet_gem_berry, helper_name="has_sweet_gem_berry"), Or(And(True_(), Has('Farming Level', 5)), And(HelperCall(helper_func=_stardewvalleyworldgen_has_deluxe_fertilizer, helper_name="has_deluxe_fertilizer"), Has('Farming Level', 2)), And(HelperCall(helper_func=_stardewvalleyworldgen_has_quality_fertilizer, helper_name="has_quality_fertilizer"), Has('Farming Level', 3)), Has('Farming Level', 10)), Has('Received Progression Percent', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Slime Farmer Bundle", player),
-        And((((CanReachRegion("Slime Hutch")) & (Has("Received Progression Percent", 40))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_lionfish, helper_name="has_lionfish")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_mango, helper_name="has_mango")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple, helper_name="has_pineapple")) & ((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (CanReachRegion("Island West")) & (CanReachRegion("Island West")) & (Has("Fish Pond")) & (Has("Received Progression Percent", 48)) & (Has("Slime Hutch"))) & (CanReachRegion("The Mines - Floor 5"))) | (((CanReachRegion("Slime Hutch")) & (Has("Received Progression Percent", 40))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_lionfish, helper_name="has_lionfish")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_mango, helper_name="has_mango")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple, helper_name="has_pineapple")) & ((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (CanReachRegion("Island West")) & (CanReachRegion("Island West")) & (Has("Fish Pond")) & (Has("Received Progression Percent", 48)) & (Has("Slime Hutch"))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_slime_egg_press, helper_name="has_slime_egg_press")) & (CanReachRegion("The Mines - Floor 5")) & (Has("Received Progression Percent", 24)))) | (((CanReachRegion("Slime Hutch")) & (Has("Received Progression Percent", 40))) & (CanReachRegion("The Mines - Floor 5")) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_slime_egg_press, helper_name="has_slime_egg_press")) & (CanReachRegion("The Mines - Floor 5")) & (Has("Received Progression Percent", 24)))) | (((HelperCall(helper_func=_stardewvalleyworldgen_has_lionfish, helper_name="has_lionfish")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_mango, helper_name="has_mango")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple, helper_name="has_pineapple")) & ((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (CanReachRegion("Island West")) & (CanReachRegion("Island West")) & (Has("Fish Pond")) & (Has("Received Progression Percent", 48)) & (Has("Slime Hutch"))) & (CanReachRegion("The Mines - Floor 5")) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_slime_egg_press, helper_name="has_slime_egg_press")) & (CanReachRegion("The Mines - Floor 5")) & (Has("Received Progression Percent", 24)))), Has('Received Progression Percent', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Quality Crops Bundle", player),
-        And((((HelperCall(helper_func=_stardewvalleyworldgen_has_radish_seeds, helper_name="has_radish_seeds")) & (CanReachRegion("Summer Farming"))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds")) & ((CanReachRegion("Fall Farming")) | (CanReachRegion("Summer Farming")))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower_seeds, helper_name="has_sunflower_seeds")) & ((CanReachRegion("Fall Farming")) | (CanReachRegion("Summer Farming"))))) | (((HelperCall(helper_func=_stardewvalleyworldgen_has_radish_seeds, helper_name="has_radish_seeds")) & (CanReachRegion("Summer Farming"))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds")) & ((CanReachRegion("Fall Farming")) | (CanReachRegion("Summer Farming")))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_rice_shoot, helper_name="has_rice_shoot")) & (CanReachRegion("Spring Farming")))) | (((HelperCall(helper_func=_stardewvalleyworldgen_has_radish_seeds, helper_name="has_radish_seeds")) & (CanReachRegion("Summer Farming"))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower_seeds, helper_name="has_sunflower_seeds")) & ((CanReachRegion("Fall Farming")) | (CanReachRegion("Summer Farming")))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_rice_shoot, helper_name="has_rice_shoot")) & (CanReachRegion("Spring Farming")))) | (((HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds")) & ((CanReachRegion("Fall Farming")) | (CanReachRegion("Summer Farming")))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower_seeds, helper_name="has_sunflower_seeds")) & ((CanReachRegion("Fall Farming")) | (CanReachRegion("Summer Farming")))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_rice_shoot, helper_name="has_rice_shoot")) & (CanReachRegion("Spring Farming")))), Or(And(True_(), Has('Farming Level', 5)), And(HelperCall(helper_func=_stardewvalleyworldgen_has_deluxe_fertilizer, helper_name="has_deluxe_fertilizer"), Has('Farming Level', 2)), And(HelperCall(helper_func=_stardewvalleyworldgen_has_quality_fertilizer, helper_name="has_quality_fertilizer"), Has('Farming Level', 3)), Has('Farming Level', 10)))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fall Crops Bundle", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_amaranth, helper_name="has_amaranth"), HelperCall(helper_func=_stardewvalleyworldgen_has_bok_choy, helper_name="has_bok_choy"), HelperCall(helper_func=_stardewvalleyworldgen_has_pumpkin, helper_name="has_pumpkin"), HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower, helper_name="has_sunflower"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rare Crops Bundle", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_ancient_fruit, helper_name="has_ancient_fruit"), HelperCall(helper_func=_stardewvalleyworldgen_has_sweet_gem_berry, helper_name="has_sweet_gem_berry"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Brewer's Bundle", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Garden Bundle", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Complete Fish Tank", player),
-        And(((((Has("Spring")) | (Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) & (Has("Progressive Fishing Rod")) & ((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer")))) | ((((Has("Spring")) | (Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) & (Has("Progressive Fishing Rod")) & (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2)))) | ((((Has("Spring")) | (Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) & ((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2)))) | ((Has("Progressive Fishing Rod")) & ((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2)))), HelperCall(helper_func=_stardewvalleyworldgen_has_anchovy, helper_name="has_anchovy"), HelperCall(helper_func=_stardewvalleyworldgen_has_crimsonfish, helper_name="has_crimsonfish"), HelperCall(helper_func=_stardewvalleyworldgen_has_dorado, helper_name="has_dorado"), HelperCall(helper_func=_stardewvalleyworldgen_has_eel, helper_name="has_eel"), HelperCall(helper_func=_stardewvalleyworldgen_has_halibut, helper_name="has_halibut"), HelperCall(helper_func=_stardewvalleyworldgen_has_halibut, helper_name="has_halibut"), HelperCall(helper_func=_stardewvalleyworldgen_has_legend, helper_name="has_legend"), HelperCall(helper_func=_stardewvalleyworldgen_has_quality_bobber, helper_name="has_quality_bobber"), HelperCall(helper_func=_stardewvalleyworldgen_has_rainbow_trout, helper_name="has_rainbow_trout"), HelperCall(helper_func=_stardewvalleyworldgen_has_salmon, helper_name="has_salmon"), HelperCall(helper_func=_stardewvalleyworldgen_has_sardine, helper_name="has_sardine"), HelperCall(helper_func=_stardewvalleyworldgen_has_shad, helper_name="has_shad"), HelperCall(helper_func=_stardewvalleyworldgen_has_shad, helper_name="has_shad"), HelperCall(helper_func=_stardewvalleyworldgen_has_smallmouth_bass, helper_name="has_smallmouth_bass"), HelperCall(helper_func=_stardewvalleyworldgen_has_smallmouth_bass, helper_name="has_smallmouth_bass"), HelperCall(helper_func=_stardewvalleyworldgen_has_super_cucumber, helper_name="has_super_cucumber"), HelperCall(helper_func=_stardewvalleyworldgen_has_super_cucumber, helper_name="has_super_cucumber"), HelperCall(helper_func=_stardewvalleyworldgen_has_tilapia, helper_name="has_tilapia"), HelperCall(helper_func=_stardewvalleyworldgen_has_walleye, helper_name="has_walleye"), Has('Fishing Level', 4), Has('Progressive Fishing Rod', 4), Has('Progressive Fishing Rod'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Spring Fishing Bundle", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_halibut, helper_name="has_halibut"), HelperCall(helper_func=_stardewvalleyworldgen_has_legend, helper_name="has_legend"), HelperCall(helper_func=_stardewvalleyworldgen_has_sardine, helper_name="has_sardine"), HelperCall(helper_func=_stardewvalleyworldgen_has_shad, helper_name="has_shad"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("River Fish Bundle", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_dorado, helper_name="has_dorado"), HelperCall(helper_func=_stardewvalleyworldgen_has_salmon, helper_name="has_salmon"), HelperCall(helper_func=_stardewvalleyworldgen_has_smallmouth_bass, helper_name="has_smallmouth_bass"), Has('Progressive Fishing Rod'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Summer Fishing Bundle", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_crimsonfish, helper_name="has_crimsonfish"), HelperCall(helper_func=_stardewvalleyworldgen_has_halibut, helper_name="has_halibut"), HelperCall(helper_func=_stardewvalleyworldgen_has_rainbow_trout, helper_name="has_rainbow_trout"), HelperCall(helper_func=_stardewvalleyworldgen_has_tilapia, helper_name="has_tilapia"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fall Fishing Bundle", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_anchovy, helper_name="has_anchovy"), HelperCall(helper_func=_stardewvalleyworldgen_has_shad, helper_name="has_shad"), HelperCall(helper_func=_stardewvalleyworldgen_has_smallmouth_bass, helper_name="has_smallmouth_bass"), HelperCall(helper_func=_stardewvalleyworldgen_has_super_cucumber, helper_name="has_super_cucumber"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Quality Fish Bundle", player),
-        And(((((Has("Spring")) | (Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) & (Has("Progressive Fishing Rod")) & ((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer")))) | ((((Has("Spring")) | (Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) & (Has("Progressive Fishing Rod")) & (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2)))) | ((((Has("Spring")) | (Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) & ((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2)))) | ((Has("Progressive Fishing Rod")) & ((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2)))), HelperCall(helper_func=_stardewvalleyworldgen_has_quality_bobber, helper_name="has_quality_bobber"), Has('Fishing Level', 4), Has('Progressive Fishing Rod', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Night Fishing Bundle", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_eel, helper_name="has_eel"), HelperCall(helper_func=_stardewvalleyworldgen_has_super_cucumber, helper_name="has_super_cucumber"), HelperCall(helper_func=_stardewvalleyworldgen_has_walleye, helper_name="has_walleye"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Complete Boiler Room", player),
-        And(True_(), True_(), HelperCall(helper_func=_stardewvalleyworldgen_has_battery_pack, helper_name="has_battery_pack"), HelperCall(helper_func=_stardewvalleyworldgen_has_bomb, helper_name="has_bomb"), HelperCall(helper_func=_stardewvalleyworldgen_has_cherry_bomb, helper_name="has_cherry_bomb"), HelperCall(helper_func=_stardewvalleyworldgen_has_cloth, helper_name="has_cloth"), HelperCall(helper_func=_stardewvalleyworldgen_has_diamond, helper_name="has_diamond"), HelperCall(helper_func=_stardewvalleyworldgen_has_explosive_ammo, helper_name="has_explosive_ammo"), HelperCall(helper_func=_stardewvalleyworldgen_has_refined_quartz, helper_name="has_refined_quartz"), HelperCall(helper_func=_stardewvalleyworldgen_has_refined_quartz, helper_name="has_refined_quartz"), Has('Received Progression Percent', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Demolition Bundle", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_bomb, helper_name="has_bomb"), HelperCall(helper_func=_stardewvalleyworldgen_has_cherry_bomb, helper_name="has_cherry_bomb"), HelperCall(helper_func=_stardewvalleyworldgen_has_explosive_ammo, helper_name="has_explosive_ammo"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Recycling Bundle", player),
-        And(True_(), True_(), HelperCall(helper_func=_stardewvalleyworldgen_has_cloth, helper_name="has_cloth"), HelperCall(helper_func=_stardewvalleyworldgen_has_refined_quartz, helper_name="has_refined_quartz"), Has('Received Progression Percent', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Engineer's Bundle", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_battery_pack, helper_name="has_battery_pack"), HelperCall(helper_func=_stardewvalleyworldgen_has_diamond, helper_name="has_diamond"), HelperCall(helper_func=_stardewvalleyworldgen_has_refined_quartz, helper_name="has_refined_quartz"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Complete Bulletin Board", player),
-        And(True_(), ((Has("Winter")) & ((Has("Fall")) | (Has("Fruit Bats")))) | ((Has("Winter")) & (Has("Spring"))) | (((Has("Fall")) | (Has("Fruit Bats"))) & (Has("Spring"))), HelperCall(helper_func=_stardewvalleyworldgen_has_aquamarine, helper_name="has_aquamarine"), HelperCall(helper_func=_stardewvalleyworldgen_has_cranberries, helper_name="has_cranberries"), HelperCall(helper_func=_stardewvalleyworldgen_has_cranberry_candy, helper_name="has_cranberry_candy"), HelperCall(helper_func=_stardewvalleyworldgen_has_duck_feather, helper_name="has_duck_feather"), HelperCall(helper_func=_stardewvalleyworldgen_has_fire_quartz, helper_name="has_fire_quartz"), HelperCall(helper_func=_stardewvalleyworldgen_has_pale_ale, helper_name="has_pale_ale"), HelperCall(helper_func=_stardewvalleyworldgen_has_pancakes, helper_name="has_pancakes"), HelperCall(helper_func=_stardewvalleyworldgen_has_pina_colada, helper_name="has_pina_colada"), HelperCall(helper_func=_stardewvalleyworldgen_has_pomegranate, helper_name="has_pomegranate"), HelperCall(helper_func=_stardewvalleyworldgen_has_purple_mushroom, helper_name="has_purple_mushroom"), HelperCall(helper_func=_stardewvalleyworldgen_has_red_cabbage, helper_name="has_red_cabbage"), HelperCall(helper_func=_stardewvalleyworldgen_has_rhubarb_pie, helper_name="has_rhubarb_pie"), HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower, helper_name="has_sunflower"), HelperCall(helper_func=_stardewvalleyworldgen_has_void_essence, helper_name="has_void_essence"), Has('Received Progression Percent', 8), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Dye Bundle", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_aquamarine, helper_name="has_aquamarine"), HelperCall(helper_func=_stardewvalleyworldgen_has_cranberries, helper_name="has_cranberries"), HelperCall(helper_func=_stardewvalleyworldgen_has_duck_feather, helper_name="has_duck_feather"), HelperCall(helper_func=_stardewvalleyworldgen_has_red_cabbage, helper_name="has_red_cabbage"), HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower, helper_name="has_sunflower"), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bartender's Bundle", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_cranberry_candy, helper_name="has_cranberry_candy"), HelperCall(helper_func=_stardewvalleyworldgen_has_pale_ale, helper_name="has_pale_ale"), HelperCall(helper_func=_stardewvalleyworldgen_has_pina_colada, helper_name="has_pina_colada"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Home Cook's Bundle", player),
-        And(True_(), HelperCall(helper_func=_stardewvalleyworldgen_has_pancakes, helper_name="has_pancakes"), HelperCall(helper_func=_stardewvalleyworldgen_has_rhubarb_pie, helper_name="has_rhubarb_pie"), Has('Received Progression Percent', 8))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forager's Bundle", player),
-        ((Has("Winter")) & ((Has("Fall")) | (Has("Fruit Bats")))) | ((Has("Winter")) & (Has("Spring"))) | (((Has("Fall")) | (Has("Fruit Bats"))) & (Has("Spring")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Enchanter's Bundle", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_fire_quartz, helper_name="has_fire_quartz"), HelperCall(helper_func=_stardewvalleyworldgen_has_pomegranate, helper_name="has_pomegranate"), HelperCall(helper_func=_stardewvalleyworldgen_has_purple_mushroom, helper_name="has_purple_mushroom"), HelperCall(helper_func=_stardewvalleyworldgen_has_void_essence, helper_name="has_void_essence"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Complete Vault", player),
-        And(True_(), Or(And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_()), Has('Shipping Bin')), True_(), True_(), True_(), Has('Received Progression Percent', 40), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Carnival Bundle", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gambler's Bundle", player),
-        And(True_(), Has('Received Progression Percent', 40))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Qi's Helper Bundle", player),
-        And(True_(), Or(And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_()), Has('Shipping Bin')), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("10,000g Bundle", player),
-        And(Has('Received Progression Percent', 2), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Large Pack", player),
-        Has('Shipping Bin')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Deluxe Pack", player),
-        And(Has('Progressive Backpack'), Has('Received Progression Percent', 2), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pierre's Prime Produce", player),
-        And(Has('Farming Level', 10), Has('Progressive Hoe', 4), Has('Progressive Watering Can', 4), Has('Received Progression Percent', 16), Has('Special Order Board'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pierre's Notice", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_sashimi, helper_name="has_sashimi"), Has('Spring'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gus' Famous Omelet", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_any_egg, helper_name="has_any_egg"), Has('Received Progression Percent', 16), Has('Special Order Board'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Wanted: Lobster", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_lobster, helper_name="has_lobster"), Has('Fall'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fish Stew", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_albacore, helper_name="has_albacore"), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Journey of the Prairie King Victory", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_jotpk_max_buff, helper_name="has_jotpk_max_buff")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gifts for George", player),
-        And(Has('Received Progression Percent', 16), Has('Special Order Board'), Has('Spring'), Has('Spring'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Knee Therapy", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_hot_pepper, helper_name="has_hot_pepper"), Has('Summer'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Strong Stuff", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_juice_potato, helper_name="has_juice_potato"), Has('Received Progression Percent', 16), Has('Special Order Board'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fish Casserole", player),
-        And(True_(), HelperCall(helper_func=_stardewvalleyworldgen_has_largemouth_bass, helper_name="has_largemouth_bass"), Has('Fall'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rock Rejuvenation", player),
-        And(True_(), HelperCall(helper_func=_stardewvalleyworldgen_has_amethyst, helper_name="has_amethyst"), HelperCall(helper_func=_stardewvalleyworldgen_has_cloth, helper_name="has_cloth"), HelperCall(helper_func=_stardewvalleyworldgen_has_emerald, helper_name="has_emerald"), HelperCall(helper_func=_stardewvalleyworldgen_has_jade, helper_name="has_jade"), HelperCall(helper_func=_stardewvalleyworldgen_has_ruby, helper_name="has_ruby"), HelperCall(helper_func=_stardewvalleyworldgen_has_topaz, helper_name="has_topaz"), Has('Received Progression Percent', 16), Has('Special Order Board'), Has('Spring'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Clint's Attempt", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_amethyst, helper_name="has_amethyst"), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 5 Donations", player),
-        And(True_(), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 10 Donations", player),
-        And(True_(), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 15 Donations", player),
-        And(True_(), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 20 Donations", player),
-        And(True_(), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 25 Donations", player),
-        And(True_(), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 30 Donations", player),
-        And(True_(), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 35 Donations", player),
-        And(True_(), Has('Traveling Merchant Metal Detector'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 40 Donations", player),
-        And(True_(), Has('Traveling Merchant Metal Detector'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 50 Donations", player),
-        And(True_(), Has('Traveling Merchant Metal Detector'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 60 Donations", player),
-        And(True_(), Has('Traveling Merchant Metal Detector'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 70 Donations", player),
-        And(True_(), Has('Traveling Merchant Metal Detector', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 80 Donations", player),
-        And(True_(), Has('Traveling Merchant Metal Detector', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 90 Donations", player),
-        And(True_(), Has('Traveling Merchant Metal Detector', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 95 Donations", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_magma_geode, helper_name="has_magma_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_magma_geode, helper_name="has_magma_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_magma_geode, helper_name="has_magma_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_magma_geode, helper_name="has_magma_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_magma_geode, helper_name="has_magma_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_magma_geode, helper_name="has_magma_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_magma_geode, helper_name="has_magma_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_magma_geode, helper_name="has_magma_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_magma_geode, helper_name="has_magma_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_magma_geode, helper_name="has_magma_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_magma_geode, helper_name="has_magma_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_magma_geode, helper_name="has_magma_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), Or(And(HelperCall(helper_func=_stardewvalleyworldgen_has_artifact_trove, helper_name="has_artifact_trove"), HelperCall(helper_func=_stardewvalleyworldgen_has_magma_geode, helper_name="has_magma_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode")), True_()), Or(And(HelperCall(helper_func=_stardewvalleyworldgen_has_artifact_trove, helper_name="has_artifact_trove"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), True_()), True_()), Or(And(HelperCall(helper_func=_stardewvalleyworldgen_has_fishing_chest, helper_name="has_fishing_chest"), HelperCall(helper_func=_stardewvalleyworldgen_has_magma_geode, helper_name="has_magma_geode"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode")), True_(), Has('Progressive Pan', 4)), Or(And(HelperCall(helper_func=_stardewvalleyworldgen_has_fishing_chest, helper_name="has_fishing_chest"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), True_()), True_(), Has('Progressive Pan', 4)), Or(And(HelperCall(helper_func=_stardewvalleyworldgen_has_fishing_chest, helper_name="has_fishing_chest"), HelperCall(helper_func=_stardewvalleyworldgen_has_omni_geode, helper_name="has_omni_geode"), True_()), True_(), Has('Progressive Pan', 4)), Or(HelperCall(helper_func=_stardewvalleyworldgen_has_artifact_trove, helper_name="has_artifact_trove"), True_()), Or(HelperCall(helper_func=_stardewvalleyworldgen_has_artifact_trove, helper_name="has_artifact_trove"), True_()), Or(HelperCall(helper_func=_stardewvalleyworldgen_has_fishing_chest, helper_name="has_fishing_chest"), True_(), True_()), Or(HelperCall(helper_func=_stardewvalleyworldgen_has_fishing_chest, helper_name="has_fishing_chest"), True_()), Or(HelperCall(helper_func=_stardewvalleyworldgen_has_fishing_chest, helper_name="has_fishing_chest"), True_()), Or(HelperCall(helper_func=_stardewvalleyworldgen_has_fishing_chest, helper_name="has_fishing_chest"), True_()), Or(HelperCall(helper_func=_stardewvalleyworldgen_has_fishing_chest, helper_name="has_fishing_chest"), True_()), Or(HelperCall(helper_func=_stardewvalleyworldgen_has_fishing_chest, helper_name="has_fishing_chest"), True_()), Or(HelperCall(helper_func=_stardewvalleyworldgen_has_fishing_chest, helper_name="has_fishing_chest"), True_()), Or(HelperCall(helper_func=_stardewvalleyworldgen_has_fishing_chest, helper_name="has_fishing_chest"), True_()), Or(True_(), Has('Magnifying Glass')), Or(True_(), True_()), Or(True_(), True_()), Or(True_(), True_()), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Received Progression Percent', 40), Has('Traveling Merchant Metal Detector', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 11 Minerals", player),
-        And(True_(), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 21 Minerals", player),
-        And(True_(), Has('Traveling Merchant Metal Detector'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 31 Minerals", player),
-        And(True_(), Has('Traveling Merchant Metal Detector'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 41 Minerals", player),
-        And(True_(), Has('Traveling Merchant Metal Detector', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 50 Minerals", player),
-        And(True_(), Has('Traveling Merchant Metal Detector', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 3 Artifacts", player),
-        And(True_(), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 6 Artifacts", player),
-        And(True_(), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 9 Artifacts", player),
-        And(True_(), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 11 Artifacts", player),
-        And(True_(), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 15 Artifacts", player),
-        And(True_(), Has('Traveling Merchant Metal Detector'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: 20 Artifacts", player),
-        And(True_(), Has('Traveling Merchant Metal Detector'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: Dwarf Scrolls", player),
-        And(True_(), True_(), True_(), True_(), Has('Received Progression Percent', 32), Has('Traveling Merchant Metal Detector', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: Skeleton Front", player),
-        And(Has('Received Progression Percent', 32), Has('Traveling Merchant Metal Detector', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: Skeleton Middle", player),
-        And(Has('Received Progression Percent', 12), Has('Traveling Merchant Metal Detector', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: Skeleton Back", player),
-        And(Or(HelperCall(helper_func=_stardewvalleyworldgen_has_fishing_chest, helper_name="has_fishing_chest"), True_(), True_()), Or(True_(), True_()), Has('Received Progression Percent', 28), Has('Traveling Merchant Metal Detector', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museumsanity: Ancient Seed", player),
-        And(Has('Received Progression Percent', 20), Has('Traveling Merchant Metal Detector', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fragments of the past", player),
-        And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_(), Has('Received Progression Percent', 16), Has('Special Order Board'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Missing Bundle", player),
-        And(True_(), HelperCall(helper_func=_stardewvalleyworldgen_has_quality_bobber, helper_name="has_quality_bobber"), Or(And(True_(), Has('Farming Level', 5)), And(HelperCall(helper_func=_stardewvalleyworldgen_has_deluxe_fertilizer, helper_name="has_deluxe_fertilizer"), Has('Farming Level', 2)), And(HelperCall(helper_func=_stardewvalleyworldgen_has_quality_fertilizer, helper_name="has_quality_fertilizer"), Has('Farming Level', 3)), Has('Farming Level', 10)), Has('Fishing Level', 4), Has('Progressive Fishing Rod', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Purchase Fiberglass Rod", player),
-        And(Has('Fishing Level', 2), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Purchase Iridium Rod", player),
-        And(Has('Fishing Level', 6), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Goblin Problem", player),
-        And(Or(HelperCall(helper_func=_stardewvalleyworldgen_has_void_mayonnaise, helper_name="has_void_mayonnaise"), Has('Progressive Fishing Rod')), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Magic Ink", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Old Master Cannoli", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_sweet_gem_berry, helper_name="has_sweet_gem_berry")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 6 Foraging", player),
-        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), Has('Foraging Level', 5), Has('Progressive Axe', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 7 Foraging", player),
-        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), Has('Foraging Level', 6), Has('Progressive Axe', 3))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 8 Foraging", player),
-        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), Has('Foraging Level', 7), Has('Progressive Axe', 3))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 9 Foraging", player),
-        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), Has('Foraging Level', 8), Has('Progressive Axe', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 10 Foraging", player),
-        And(Or(And(True_(), Has('Progressive Axe')), Has('Fall'), Has('Spring'), Has('Summer')), Has('Foraging Level', 9), Has('Progressive Axe', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Strange Note", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_tapper, helper_name="has_tapper"), Has('Magnifying Glass'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Galaxy Sword Shrine", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_prismatic_shard, helper_name="has_prismatic_shard")
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Mysterious Qi", player),
-        And(True_(), True_(), HelperCall(helper_func=_stardewvalleyworldgen_has_battery_pack, helper_name="has_battery_pack"), HelperCall(helper_func=_stardewvalleyworldgen_has_beet, helper_name="has_beet"), HelperCall(helper_func=_stardewvalleyworldgen_has_solar_essence, helper_name="has_solar_essence"), True_(), Has('Summer'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Exotic Spirits", player),
-        And(True_(), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Skull Key", player),
-        Has('Skull Key')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cryptic Note", player),
-        Has('Magnifying Glass')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forging Ahead", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_furnace, helper_name="has_furnace"), Has('Copper Ore (Logic event)'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Smelting", player),
-        Has('Copper Bar (Logic event)')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Initiation", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 1 Mining", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 1 Combat", player),
-        And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 2 Mining", player),
-        And(True_(), Has('Mining Level'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 2 Combat", player),
-        And(Or(Has('Progressive Club'), Has('Progressive Dagger'), Has('Progressive Sword'), Has('Progressive Weapon')), True_(), Has('Combat Level'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Prismatic Jelly", player),
-        And(Has('Received Progression Percent', 16), Has('Special Order Board'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 3 Mining", player),
-        And(True_(), Has('Mining Level', 2), Has('Progressive Pickaxe'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 3 Combat", player),
-        And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_(), Has('Combat Level', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 4 Mining", player),
-        And(True_(), Has('Mining Level', 3), Has('Progressive Pickaxe'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 4 Combat", player),
-        And(Or(Has('Progressive Club', 2), Has('Progressive Dagger', 2), Has('Progressive Sword', 2), Has('Progressive Weapon', 2)), True_(), Has('Combat Level', 3))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 5 Mining", player),
-        And(True_(), Has('Mining Level', 4), Has('Progressive Pickaxe', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 5 Combat", player),
-        And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_(), Has('Combat Level', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 6 Mining", player),
-        And(True_(), Has('Mining Level', 5), Has('Progressive Pickaxe', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 6 Combat", player),
-        And(Or(Has('Progressive Club', 3), Has('Progressive Dagger', 3), Has('Progressive Sword', 3), Has('Progressive Weapon', 3)), True_(), Has('Combat Level', 5))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cave Patrol", player),
-        And(Has('Received Progression Percent', 16), Has('Special Order Board'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("A Curious Substance", player),
-        And(Has('Received Progression Percent', 16), Has('Special Order Board'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 7 Mining", player),
-        And(True_(), Has('Mining Level', 6), Has('Progressive Pickaxe', 3))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 7 Combat", player),
-        And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_(), Has('Combat Level', 6))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 8 Mining", player),
-        And(True_(), Has('Mining Level', 7), Has('Progressive Pickaxe', 3))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 8 Combat", player),
-        And(Or(Has('Progressive Club', 4), Has('Progressive Dagger', 4), Has('Progressive Sword', 4), Has('Progressive Weapon', 4)), True_(), Has('Combat Level', 7))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 9 Mining", player),
-        And(True_(), Has('Mining Level', 8), Has('Progressive Pickaxe', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 9 Combat", player),
-        And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_(), Has('Combat Level', 8))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 10 Mining", player),
-        And(True_(), Has('Mining Level', 9), Has('Progressive Pickaxe', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 10 Combat", player),
-        And(Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_(), Has('Combat Level', 9))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Iron Hoe Upgrade", player),
-        Has('Progressive Hoe')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Iron Pickaxe Upgrade", player),
-        Has('Progressive Pickaxe')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Iron Axe Upgrade", player),
-        Has('Progressive Axe')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Iron Watering Can Upgrade", player),
-        Has('Progressive Watering Can')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Iron Trash Can Upgrade", player),
-        Has('Progressive Trash Can')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Iron Pan Upgrade", player),
-        Has('Progressive Pan')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gold Hoe Upgrade", player),
-        Has('Progressive Hoe', 2)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gold Pickaxe Upgrade", player),
-        Has('Progressive Pickaxe', 2)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gold Axe Upgrade", player),
-        Has('Progressive Axe', 2)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gold Watering Can Upgrade", player),
-        Has('Progressive Watering Can', 2)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gold Trash Can Upgrade", player),
-        Has('Progressive Trash Can', 2)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gold Pan Upgrade", player),
-        Has('Progressive Pan', 2)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Iridium Hoe Upgrade", player),
-        Has('Progressive Hoe', 3)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Iridium Pickaxe Upgrade", player),
-        Has('Progressive Pickaxe', 3)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Iridium Axe Upgrade", player),
-        Has('Progressive Axe', 3)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Iridium Watering Can Upgrade", player),
-        Has('Progressive Watering Can', 3)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Iridium Trash Can Upgrade", player),
-        Has('Progressive Trash Can', 3)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Iridium Pan Upgrade", player),
-        Has('Progressive Pan', 3)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 1 Fishing", player),
-        Has('Progressive Fishing Rod', 3)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 2 Fishing", player),
-        And(Has('Fishing Level'), Has('Progressive Fishing Rod', 3))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 3 Fishing", player),
-        And(Has('Fishing Level', 2), Has('Progressive Fishing Rod', 3))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 4 Fishing", player),
-        And(Has('Fishing Level', 3), Has('Progressive Fishing Rod', 3))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 5 Fishing", player),
-        And(Has('Fishing Level', 4), Has('Progressive Fishing Rod', 3))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 6 Fishing", player),
-        And(Has('Fishing Level', 5), Has('Progressive Fishing Rod', 3))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 7 Fishing", player),
-        And(Has('Fishing Level', 6), Has('Progressive Fishing Rod', 3))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 8 Fishing", player),
-        And(Has('Fishing Level', 7), Has('Progressive Fishing Rod', 3))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 9 Fishing", player),
-        And(Has('Fishing Level', 8), Has('Progressive Fishing Rod', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Level 10 Fishing", player),
-        And(Has('Fishing Level', 9), Has('Progressive Fishing Rod', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Aquatic Overpopulation", player),
-        And(Has('Fishing Level', 10), Has('Progressive Fishing Rod', 4), Has('Received Progression Percent', 16), Has('Special Order Board'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Biome Balance", player),
-        And(Has('Fishing Level', 10), Has('Progressive Fishing Rod', 4), Has('Received Progression Percent', 16), Has('Special Order Board'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Catch a Lingcod", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_lingcod, helper_name="has_lingcod"), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Apricot", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_apricot_sapling, helper_name="has_apricot_sapling"), True_(), Has('Received Progression Percent', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Cherry", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_cherry_sapling, helper_name="has_cherry_sapling"), True_(), Has('Received Progression Percent', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Parsnip", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_parsnip_seeds, helper_name="has_parsnip_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Green Bean", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_bean_starter, helper_name="has_bean_starter"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Cauliflower", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_cauliflower_seeds, helper_name="has_cauliflower_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Potato", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_potato_seeds, helper_name="has_potato_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Tulip", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_tulip_bulb, helper_name="has_tulip_bulb"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Kale", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_kale_seeds, helper_name="has_kale_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Blue Jazz", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_jazz_seeds, helper_name="has_jazz_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Garlic", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_garlic_seeds, helper_name="has_garlic_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Unmilled Rice", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_rice_shoot, helper_name="has_rice_shoot"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Carrot", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_carrot_seeds, helper_name="has_carrot_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Strawberry", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_strawberry_seeds, helper_name="has_strawberry_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Rhubarb", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_rhubarb_seeds, helper_name="has_rhubarb_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Orange", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_orange_sapling, helper_name="has_orange_sapling"), True_(), Has('Received Progression Percent', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Peach", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_peach_sapling, helper_name="has_peach_sapling"), True_(), Has('Received Progression Percent', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Melon", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_melon_seeds, helper_name="has_melon_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Tomato", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_tomato_seeds, helper_name="has_tomato_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Blueberry", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_blueberry_seeds, helper_name="has_blueberry_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Hot Pepper", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_pepper_seeds, helper_name="has_pepper_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Radish", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_radish_seeds, helper_name="has_radish_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Poppy", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_poppy_seeds, helper_name="has_poppy_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Summer Spangle", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_spangle_seeds, helper_name="has_spangle_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Hops", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_hops_starter, helper_name="has_hops_starter"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Red Cabbage", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_red_cabbage_seeds, helper_name="has_red_cabbage_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Powdermelon", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_powdermelon_seeds, helper_name="has_powdermelon_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Summer Squash", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_summer_squash_seeds, helper_name="has_summer_squash_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Banana", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_banana_sapling, helper_name="has_banana_sapling"), True_(), Has('Received Progression Percent', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Mango", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_mango_sapling, helper_name="has_mango_sapling"), True_(), Has('Received Progression Percent', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Pineapple", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_pineapple_seeds, helper_name="has_pineapple_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Starfruit", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_starfruit_seeds, helper_name="has_starfruit_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Taro Root", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_taro_tuber, helper_name="has_taro_tuber"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Apple", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_apple_sapling, helper_name="has_apple_sapling"), True_(), Has('Received Progression Percent', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Pomegranate", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_pomegranate_sapling, helper_name="has_pomegranate_sapling"), True_(), Has('Received Progression Percent', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Eggplant", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_eggplant_seeds, helper_name="has_eggplant_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Pumpkin", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_pumpkin_seeds, helper_name="has_pumpkin_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Bok Choy", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_bok_choy_seeds, helper_name="has_bok_choy_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Yam", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_yam_seeds, helper_name="has_yam_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Cranberries", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_cranberry_seeds, helper_name="has_cranberry_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Fairy Rose", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_fairy_seeds, helper_name="has_fairy_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Amaranth", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_amaranth_seeds, helper_name="has_amaranth_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Grape", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_grape_starter, helper_name="has_grape_starter"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Artichoke", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_artichoke_seeds, helper_name="has_artichoke_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Broccoli", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_broccoli_seeds, helper_name="has_broccoli_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Sweet Gem Berry", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_rare_seed, helper_name="has_rare_seed"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Beet", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_beet_seeds, helper_name="has_beet_seeds"), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Wheat", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds"), Or(True_(), True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Corn", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_corn_seeds, helper_name="has_corn_seeds"), Or(True_(), True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Sunflower", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_sunflower_seeds, helper_name="has_sunflower_seeds"), Or(True_(), True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Ancient Fruit", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_ancient_seeds, helper_name="has_ancient_seeds"), Or(True_(), True_(), True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Coffee Bean", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_coffee_bean_starter, helper_name="has_coffee_bean_starter"), Or(True_(), True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Harvest Cactus Fruit", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_cactus_seeds, helper_name="has_cactus_seeds"), Or(True_(), True_()))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Demetrius's Breakthrough", player),
-        Has('Shipping Bin')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Raccoon Request 1", player),
-        And((((HelperCall(helper_func=_stardewvalleyworldgen_has_bullhead, helper_name="has_bullhead")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_fish_smoker, helper_name="has_fish_smoker"))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_fish_smoker, helper_name="has_fish_smoker")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_midnight_carp, helper_name="has_midnight_carp")))) | (((HelperCall(helper_func=_stardewvalleyworldgen_has_bullhead, helper_name="has_bullhead")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_fish_smoker, helper_name="has_fish_smoker"))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_bait, helper_name="has_bait")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_crab_pot, helper_name="has_crab_pot")))) | (((HelperCall(helper_func=_stardewvalleyworldgen_has_fish_smoker, helper_name="has_fish_smoker")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_midnight_carp, helper_name="has_midnight_carp"))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_bait, helper_name="has_bait")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_crab_pot, helper_name="has_crab_pot")))), Has('Progressive Raccoon', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Raccoon Request 2", player),
-        And(((((HelperCall(helper_func=_stardewvalleyworldgen_has_fishing_chest, helper_name="has_fishing_chest")) | (CanReachRegion("The Mines - Floor 60"))) & (Has("Received Progression Percent", 28))) & (CanReachRegion("The Mines - Floor 5"))) | ((((HelperCall(helper_func=_stardewvalleyworldgen_has_fishing_chest, helper_name="has_fishing_chest")) | (CanReachRegion("The Mines - Floor 60"))) & (Has("Received Progression Percent", 28))) & (CanReachRegion("The Mines - Floor 5"))) | ((CanReachRegion("The Mines - Floor 5")) & (CanReachRegion("The Mines - Floor 5"))), CanReachLocation('Raccoon Request 1'), Has('Progressive Raccoon', 3), Has('Received Progression Percent', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Raccoon Request 3", player),
-        And(((CanReachRegion("The Mines - Floor 45")) & (((HelperCall(helper_func=_stardewvalleyworldgen_has_fishing_chest, helper_name="has_fishing_chest")) | (CanReachRegion("The Mines - Floor 60"))) & (Has("Received Progression Percent", 28)))) | ((CanReachRegion("The Mines - Floor 45")) & (Has("Received Progression Percent", 20))) | ((((HelperCall(helper_func=_stardewvalleyworldgen_has_fishing_chest, helper_name="has_fishing_chest")) | (CanReachRegion("The Mines - Floor 60"))) & (Has("Received Progression Percent", 28))) & (Has("Received Progression Percent", 20))), CanReachLocation('Raccoon Request 2'), Has('Progressive Raccoon', 4))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Raccoon Request 4", player),
-        And((((HelperCall(helper_func=_stardewvalleyworldgen_has_preserves_jar, helper_name="has_preserves_jar")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_taro_root, helper_name="has_taro_root"))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_melon, helper_name="has_melon")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_preserves_jar, helper_name="has_preserves_jar")))) | (((HelperCall(helper_func=_stardewvalleyworldgen_has_preserves_jar, helper_name="has_preserves_jar")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_taro_root, helper_name="has_taro_root"))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_kale, helper_name="has_kale")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_keg, helper_name="has_keg")))) | (((HelperCall(helper_func=_stardewvalleyworldgen_has_melon, helper_name="has_melon")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_preserves_jar, helper_name="has_preserves_jar"))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_kale, helper_name="has_kale")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_keg, helper_name="has_keg")))), CanReachLocation('Raccoon Request 3'), Has('Progressive Raccoon', 5))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Raccoon Request 5", player),
-        And(((Has("Progressive Fishing Rod")) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_common_mushroom, helper_name="has_common_mushroom")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_dehydrator, helper_name="has_dehydrator")))) | ((Has("Progressive Fishing Rod")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_egg, helper_name="has_egg"))) | (((HelperCall(helper_func=_stardewvalleyworldgen_has_common_mushroom, helper_name="has_common_mushroom")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_dehydrator, helper_name="has_dehydrator"))) & (HelperCall(helper_func=_stardewvalleyworldgen_has_egg, helper_name="has_egg"))), CanReachLocation('Raccoon Request 4'), Has('Progressive Raccoon', 6))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Raccoon Request 6", player),
-        And((((HelperCall(helper_func=_stardewvalleyworldgen_has_apple, helper_name="has_apple")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_dehydrator, helper_name="has_dehydrator"))) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_preserves_jar, helper_name="has_preserves_jar")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_spice_berry, helper_name="has_spice_berry")))) | (((HelperCall(helper_func=_stardewvalleyworldgen_has_apple, helper_name="has_apple")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_dehydrator, helper_name="has_dehydrator"))) & (HelperCall(helper_func=_stardewvalleyworldgen_has_pickles_tea_leaves, helper_name="has_pickles_tea_leaves"))) | (((HelperCall(helper_func=_stardewvalleyworldgen_has_preserves_jar, helper_name="has_preserves_jar")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_spice_berry, helper_name="has_spice_berry"))) & (HelperCall(helper_func=_stardewvalleyworldgen_has_pickles_tea_leaves, helper_name="has_pickles_tea_leaves"))), CanReachLocation('Raccoon Request 5'), Has('Progressive Raccoon', 7))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Raccoon Request 7", player),
-        And(((Has("Progressive Fishing Rod")) & ((HelperCall(helper_func=_stardewvalleyworldgen_has_dehydrator, helper_name="has_dehydrator")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_purple_mushroom, helper_name="has_purple_mushroom")))) | ((Has("Progressive Fishing Rod")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_dried_mushrooms_magma_cap, helper_name="has_dried_mushrooms_magma_cap"))) | (((HelperCall(helper_func=_stardewvalleyworldgen_has_dehydrator, helper_name="has_dehydrator")) & (HelperCall(helper_func=_stardewvalleyworldgen_has_purple_mushroom, helper_name="has_purple_mushroom"))) & (HelperCall(helper_func=_stardewvalleyworldgen_has_dried_mushrooms_magma_cap, helper_name="has_dried_mushrooms_magma_cap"))), CanReachLocation('Raccoon Request 6'), Has('Progressive Raccoon', 8))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Raccoon Request 8", player),
-        And((((True_()) & (True_()) & (((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (CanReachRegion("Fishing")) & (CanReachRegion("Secret Woods")) & (CanReachRegion("The Mines - Floor 5"))) | (Has("Shipping Bin"))) & (Has("Progressive Coop"))) & ((True_()) & (True_()) & (((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (CanReachRegion("Fishing")) & (CanReachRegion("Secret Woods")) & (CanReachRegion("The Mines - Floor 5"))) | (Has("Shipping Bin"))) & (Has("Progressive Coop")) & (Has("Silo")))) | (((True_()) & (True_()) & (((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (CanReachRegion("Fishing")) & (CanReachRegion("Secret Woods")) & (CanReachRegion("The Mines - Floor 5"))) | (Has("Shipping Bin"))) & (Has("Progressive Coop"))) & (HelperCall(helper_func=_stardewvalleyworldgen_has_dried_mushrooms_magma_cap, helper_name="has_dried_mushrooms_magma_cap"))) | (((True_()) & (True_()) & (((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (CanReachRegion("Fishing")) & (CanReachRegion("Secret Woods")) & (CanReachRegion("The Mines - Floor 5"))) | (Has("Shipping Bin"))) & (Has("Progressive Coop")) & (Has("Silo"))) & (HelperCall(helper_func=_stardewvalleyworldgen_has_dried_mushrooms_magma_cap, helper_name="has_dried_mushrooms_magma_cap"))), CanReachLocation('Raccoon Request 7'), Has('Progressive Raccoon', 9))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Egg Festival: Strawberry Seeds", player),
-        Or(And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_()), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Touch A Calico Statue", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Real Calico Egg Hunter", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Dance with someone", player),
-        Or(And(True_(), Has('Fall')), And(True_(), Has('Fall')), And(True_(), Has('Fall')), And(True_(), Has('Spring')), And(True_(), Has('Spring')), And(True_(), Has('Spring')), And(True_(), Has('Summer')), And(True_(), Has('Summer')), And(True_(), Has('Summer')), And(True_(), Has('Winter')), And(True_(), Has('Winter')), And(True_(), Has('Winter')))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rarecrow #5 (Woman)", player),
-        Has('Shipping Bin')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tub o' Flowers Recipe", player),
-        Has('Shipping Bin')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Trout Derby Reward 1", player),
-        And(Has('Fishing Level', 3), Has('Progressive Fishing Rod'), Has('Summer'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Trout Derby Reward 2", player),
-        And(Has('Fishing Level', 3), Has('Progressive Fishing Rod'), Has('Summer'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Trout Derby Reward 3", player),
-        And(Has('Fishing Level', 3), Has('Progressive Fishing Rod'), Has('Summer'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Moonlight Jellies Banner", player),
-        Or(And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_()), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Starport Decal", player),
-        Or(And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_()), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rarecrow #2 (Witch)", player),
-        Has('Shipping Bin')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Jack-O-Lantern Recipe", player),
-        Has('Shipping Bin')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Win Fishing Competition", player),
-        And(Has('Fishing Level', 5), Has('Progressive Fishing Rod', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rarecrow #4 (Snowman)", player),
-        Has('Shipping Bin')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mermaid Pearl", player),
-        Has('Magnifying Glass')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rarecrow #7 (Tanuki)", player),
-        And(True_(), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rarecrow #8 (Tribal Mask)", player),
-        And(True_(), Has('Shipping Bin'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lupini: Red Eagle", player),
-        Has('Shipping Bin')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lupini: Portrait Of A Mermaid", player),
-        Has('Shipping Bin')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lupini: Solar Kingdom", player),
-        Has('Shipping Bin')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Secret Santa", player),
-        Or(HelperCall(helper_func=_stardewvalleyworldgen_has_golden_pumpkin, helper_name="has_golden_pumpkin"), HelperCall(helper_func=_stardewvalleyworldgen_has_pearl, helper_name="has_pearl"), HelperCall(helper_func=_stardewvalleyworldgen_has_prismatic_shard, helper_name="has_prismatic_shard"), HelperCall(helper_func=_stardewvalleyworldgen_has_rabbit_s_foot, helper_name="has_rabbit_s_foot"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("SquidFest Day 1 Copper", player),
-        And(Has('Fishing Level', 6), Has('Progressive Fishing Rod', 2), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("SquidFest Day 1 Iron", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_bait, helper_name="has_bait"), Has('Fishing Level', 6), Has('Progressive Fishing Rod', 2), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("SquidFest Day 2 Copper", player),
-        And(Has('Fishing Level', 6), Has('Progressive Fishing Rod', 2), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("SquidFest Day 2 Iron", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_bait, helper_name="has_bait"), Has('Fishing Level', 6), Has('Progressive Fishing Rod', 2), Has('Winter'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Repair Ticket Machine", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_battery_pack, helper_name="has_battery_pack")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Repair Boat Hull", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_hardwood, helper_name="has_hardwood")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Repair Boat Anchor", player),
-        Has('Iridium Bar (Logic event)')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Island West Turtle", player),
-        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Island North Turtle'), Has('Progressive Slingshot'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Island Resort", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_amethyst, helper_name="has_amethyst"), HelperCall(helper_func=_stardewvalleyworldgen_has_aquamarine, helper_name="has_aquamarine"), HelperCall(helper_func=_stardewvalleyworldgen_has_banana, helper_name="has_banana"), HelperCall(helper_func=_stardewvalleyworldgen_has_emerald, helper_name="has_emerald"), HelperCall(helper_func=_stardewvalleyworldgen_has_flute_block, helper_name="has_flute_block"), HelperCall(helper_func=_stardewvalleyworldgen_has_fossilized_ribs, helper_name="has_fossilized_ribs"), HelperCall(helper_func=_stardewvalleyworldgen_has_fossilized_spine, helper_name="has_fossilized_spine"), HelperCall(helper_func=_stardewvalleyworldgen_has_fossilized_tail, helper_name="has_fossilized_tail"), HelperCall(helper_func=_stardewvalleyworldgen_has_garlic_seeds, helper_name="has_garlic_seeds"), HelperCall(helper_func=_stardewvalleyworldgen_has_melon_seeds, helper_name="has_melon_seeds"), HelperCall(helper_func=_stardewvalleyworldgen_has_ruby, helper_name="has_ruby"), HelperCall(helper_func=_stardewvalleyworldgen_has_topaz, helper_name="has_topaz"), HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds"), Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Combat Level', 8), Has('Fishing Level', 10), Has('Island Farmhouse'), Has('Mining Level', 8), Has('Open Professor Snail Cave'), Has('Progressive Fishing Rod', 4), Has('Progressive Pickaxe', 4), Has('Progressive Slingshot'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Island Farmhouse", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_amethyst, helper_name="has_amethyst"), HelperCall(helper_func=_stardewvalleyworldgen_has_aquamarine, helper_name="has_aquamarine"), HelperCall(helper_func=_stardewvalleyworldgen_has_banana, helper_name="has_banana"), HelperCall(helper_func=_stardewvalleyworldgen_has_emerald, helper_name="has_emerald"), HelperCall(helper_func=_stardewvalleyworldgen_has_flute_block, helper_name="has_flute_block"), HelperCall(helper_func=_stardewvalleyworldgen_has_fossilized_ribs, helper_name="has_fossilized_ribs"), HelperCall(helper_func=_stardewvalleyworldgen_has_fossilized_spine, helper_name="has_fossilized_spine"), HelperCall(helper_func=_stardewvalleyworldgen_has_fossilized_tail, helper_name="has_fossilized_tail"), HelperCall(helper_func=_stardewvalleyworldgen_has_garlic_seeds, helper_name="has_garlic_seeds"), HelperCall(helper_func=_stardewvalleyworldgen_has_melon_seeds, helper_name="has_melon_seeds"), HelperCall(helper_func=_stardewvalleyworldgen_has_ruby, helper_name="has_ruby"), HelperCall(helper_func=_stardewvalleyworldgen_has_topaz, helper_name="has_topaz"), HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds"), Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Combat Level', 8), Has('Fishing Level', 10), Has('Mining Level', 8), Has('Open Professor Snail Cave'), Has('Progressive Fishing Rod', 4), Has('Progressive Pickaxe', 4), Has('Progressive Slingshot'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Island Mailbox", player),
-        And(((CanReachRegion("Island South")) & (CanReachRegion("Island North")) & (CanReachRegion("Island West"))) | ((CanReachRegion("Island South")) & (CanReachRegion("Island North")) & ((CanReachRegion("Volcano - Floor 10")) | (CanReachRegion("Volcano - Floor 5")) | (CanReachRegion("Volcano Entrance")) | (CanReachRegion("Volcano Secret Beach")))) | ((CanReachRegion("Island South")) & (CanReachRegion("Island North")) & (CanReachRegion("Field Office"))) | ((CanReachRegion("Island South")) & (CanReachRegion("Island West")) & ((CanReachRegion("Volcano - Floor 10")) | (CanReachRegion("Volcano - Floor 5")) | (CanReachRegion("Volcano Entrance")) | (CanReachRegion("Volcano Secret Beach")))) | ((CanReachRegion("Island South")) & (CanReachRegion("Island West")) & (CanReachRegion("Field Office"))) | ((CanReachRegion("Island South")) & ((CanReachRegion("Volcano - Floor 10")) | (CanReachRegion("Volcano - Floor 5")) | (CanReachRegion("Volcano Entrance")) | (CanReachRegion("Volcano Secret Beach"))) & (CanReachRegion("Field Office"))) | ((CanReachRegion("Island North")) & (CanReachRegion("Island West")) & ((CanReachRegion("Volcano - Floor 10")) | (CanReachRegion("Volcano - Floor 5")) | (CanReachRegion("Volcano Entrance")) | (CanReachRegion("Volcano Secret Beach")))) | ((CanReachRegion("Island North")) & (CanReachRegion("Island West")) & (CanReachRegion("Field Office"))) | ((CanReachRegion("Island North")) & ((CanReachRegion("Volcano - Floor 10")) | (CanReachRegion("Volcano - Floor 5")) | (CanReachRegion("Volcano Entrance")) | (CanReachRegion("Volcano Secret Beach"))) & (CanReachRegion("Field Office"))) | ((CanReachRegion("Island West")) & ((CanReachRegion("Volcano - Floor 10")) | (CanReachRegion("Volcano - Floor 5")) | (CanReachRegion("Volcano Entrance")) | (CanReachRegion("Volcano Secret Beach"))) & (CanReachRegion("Field Office"))), Has('Island Farmhouse'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Farm Obelisk", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_amethyst, helper_name="has_amethyst"), HelperCall(helper_func=_stardewvalleyworldgen_has_aquamarine, helper_name="has_aquamarine"), HelperCall(helper_func=_stardewvalleyworldgen_has_banana, helper_name="has_banana"), HelperCall(helper_func=_stardewvalleyworldgen_has_emerald, helper_name="has_emerald"), HelperCall(helper_func=_stardewvalleyworldgen_has_flute_block, helper_name="has_flute_block"), HelperCall(helper_func=_stardewvalleyworldgen_has_fossilized_ribs, helper_name="has_fossilized_ribs"), HelperCall(helper_func=_stardewvalleyworldgen_has_fossilized_spine, helper_name="has_fossilized_spine"), HelperCall(helper_func=_stardewvalleyworldgen_has_fossilized_tail, helper_name="has_fossilized_tail"), HelperCall(helper_func=_stardewvalleyworldgen_has_garlic_seeds, helper_name="has_garlic_seeds"), HelperCall(helper_func=_stardewvalleyworldgen_has_melon_seeds, helper_name="has_melon_seeds"), HelperCall(helper_func=_stardewvalleyworldgen_has_ruby, helper_name="has_ruby"), HelperCall(helper_func=_stardewvalleyworldgen_has_topaz, helper_name="has_topaz"), HelperCall(helper_func=_stardewvalleyworldgen_has_wheat_seeds, helper_name="has_wheat_seeds"), Or(Has('Progressive Club', 5), Has('Progressive Dagger', 5), Has('Progressive Sword', 5), Has('Progressive Weapon', 5)), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Combat Level', 8), Has('Fishing Level', 10), Has('Island Mailbox'), Has('Mining Level', 8), Has('Open Professor Snail Cave'), Has('Progressive Fishing Rod', 4), Has('Progressive Pickaxe', 4), Has('Progressive Slingshot'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Parrot Express", player),
-        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Progressive Slingshot'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Pirate's Wife", player),
-        And(True_(), True_(), Has('Received Progression Percent', 16))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Dig Site Bridge", player),
-        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Island West Turtle'), Has('Progressive Slingshot'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Island Trader", player),
-        And(True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Island Farmhouse'), Has('Progressive Slingshot'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Volcano Bridge", player),
-        And(((CanReachRegion("Island South")) & (CanReachRegion("Island North")) & (CanReachRegion("Island West"))) | ((CanReachRegion("Island South")) & (CanReachRegion("Island North")) & ((CanReachRegion("Volcano - Floor 10")) | (CanReachRegion("Volcano - Floor 5")) | (CanReachRegion("Volcano Entrance")) | (CanReachRegion("Volcano Secret Beach")))) | ((CanReachRegion("Island South")) & (CanReachRegion("Island North")) & (CanReachRegion("Field Office"))) | ((CanReachRegion("Island South")) & (CanReachRegion("Island West")) & ((CanReachRegion("Volcano - Floor 10")) | (CanReachRegion("Volcano - Floor 5")) | (CanReachRegion("Volcano Entrance")) | (CanReachRegion("Volcano Secret Beach")))) | ((CanReachRegion("Island South")) & (CanReachRegion("Island West")) & (CanReachRegion("Field Office"))) | ((CanReachRegion("Island South")) & ((CanReachRegion("Volcano - Floor 10")) | (CanReachRegion("Volcano - Floor 5")) | (CanReachRegion("Volcano Entrance")) | (CanReachRegion("Volcano Secret Beach"))) & (CanReachRegion("Field Office"))) | ((CanReachRegion("Island North")) & (CanReachRegion("Island West")) & ((CanReachRegion("Volcano - Floor 10")) | (CanReachRegion("Volcano - Floor 5")) | (CanReachRegion("Volcano Entrance")) | (CanReachRegion("Volcano Secret Beach")))) | ((CanReachRegion("Island North")) & (CanReachRegion("Island West")) & (CanReachRegion("Field Office"))) | ((CanReachRegion("Island North")) & ((CanReachRegion("Volcano - Floor 10")) | (CanReachRegion("Volcano - Floor 5")) | (CanReachRegion("Volcano Entrance")) | (CanReachRegion("Volcano Secret Beach"))) & (CanReachRegion("Field Office"))) | ((CanReachRegion("Island West")) & ((CanReachRegion("Volcano - Floor 10")) | (CanReachRegion("Volcano - Floor 5")) | (CanReachRegion("Volcano Entrance")) | (CanReachRegion("Volcano Secret Beach"))) & (CanReachRegion("Field Office"))), True_(), Has('Island West Turtle'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Volcano Exit Shortcut", player),
-        And(((CanReachRegion("Island South")) & (CanReachRegion("Island North")) & (CanReachRegion("Island West"))) | ((CanReachRegion("Island South")) & (CanReachRegion("Island North")) & ((CanReachRegion("Volcano - Floor 10")) | (CanReachRegion("Volcano - Floor 5")) | (CanReachRegion("Volcano Entrance")) | (CanReachRegion("Volcano Secret Beach")))) | ((CanReachRegion("Island South")) & (CanReachRegion("Island North")) & (CanReachRegion("Field Office"))) | ((CanReachRegion("Island South")) & (CanReachRegion("Island West")) & ((CanReachRegion("Volcano - Floor 10")) | (CanReachRegion("Volcano - Floor 5")) | (CanReachRegion("Volcano Entrance")) | (CanReachRegion("Volcano Secret Beach")))) | ((CanReachRegion("Island South")) & (CanReachRegion("Island West")) & (CanReachRegion("Field Office"))) | ((CanReachRegion("Island South")) & ((CanReachRegion("Volcano - Floor 10")) | (CanReachRegion("Volcano - Floor 5")) | (CanReachRegion("Volcano Entrance")) | (CanReachRegion("Volcano Secret Beach"))) & (CanReachRegion("Field Office"))) | ((CanReachRegion("Island North")) & (CanReachRegion("Island West")) & ((CanReachRegion("Volcano - Floor 10")) | (CanReachRegion("Volcano - Floor 5")) | (CanReachRegion("Volcano Entrance")) | (CanReachRegion("Volcano Secret Beach")))) | ((CanReachRegion("Island North")) & (CanReachRegion("Island West")) & (CanReachRegion("Field Office"))) | ((CanReachRegion("Island North")) & ((CanReachRegion("Volcano - Floor 10")) | (CanReachRegion("Volcano - Floor 5")) | (CanReachRegion("Volcano Entrance")) | (CanReachRegion("Volcano Secret Beach"))) & (CanReachRegion("Field Office"))) | ((CanReachRegion("Island West")) & ((CanReachRegion("Volcano - Floor 10")) | (CanReachRegion("Volcano - Floor 5")) | (CanReachRegion("Volcano Entrance")) | (CanReachRegion("Volcano Secret Beach"))) & (CanReachRegion("Field Office"))), Has('Island West Turtle'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Leo's Parrot", player),
-        Or(True_(), True_(), True_(), True_(), True_(), True_(), True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Complete Island Field Office", player),
-        And(HelperCall(helper_func=_stardewvalleyworldgen_has_fossilized_ribs, helper_name="has_fossilized_ribs"), HelperCall(helper_func=_stardewvalleyworldgen_has_fossilized_spine, helper_name="has_fossilized_spine"), HelperCall(helper_func=_stardewvalleyworldgen_has_fossilized_tail, helper_name="has_fossilized_tail"), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), True_(), Has('Open Professor Snail Cave'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Open Professor Snail Cave", player),
-        HelperCall(helper_func=_stardewvalleyworldgen_has_cherry_bomb, helper_name="has_cherry_bomb")
-    )
+    pass  # No non-trivial rules

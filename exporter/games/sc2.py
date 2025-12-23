@@ -47,7 +47,8 @@ class SC2GameExportHandler(GenericGameExportHandler):
         'weapon_armor_upgrade_count',
         # is_item_placement - state check method, not applicable in frontend
         'is_item_placement',
-        # competent_comp helpers - complex conditional logic, but could work if dependencies are met
+        # competent_comp helpers - complex conditional logic with parametric upgrade_level
+        # Too complex to simplify without causing fill errors
         'terran_competent_comp', 'protoss_competent_comp', 'zerg_competent_comp',
         # defense_rating helpers - now exported with game_info support
         # 'terran_defense_rating', 'protoss_defense_rating', 'zerg_defense_rating',
@@ -165,6 +166,11 @@ class SC2GameExportHandler(GenericGameExportHandler):
                     {'type': 'item_check', 'item': 'Jump Jets (Siege Tank)'}
                 ]
             }
+
+        # terran_competent_comp is NOT simplified here because it takes an upgrade_level
+        # parameter (1 or 2) that changes the requirements. Since we can't easily handle
+        # parametric helpers, we let it be exported as a helper call with args.
+        # The world generator will need to handle the translation.
 
         # No simplified version available
         return None

@@ -31,7 +31,7 @@ item_table: Dict[str, ItemData] = {
     "Glittering Boulder Removed": ItemData(717019, ItemClassification.progression),
     "Minecarts Repair": ItemData(717020, ItemClassification.useful),
     "Bus Repair": ItemData(717021, ItemClassification.progression),
-    "Progressive Movie Theater": ItemData(717022, ItemClassification.filler),
+    "Progressive Movie Theater": ItemData(717022, ItemClassification.progression | ItemClassification.trap),
     "Stardrop": ItemData(717023, ItemClassification.useful),
     "Progressive Backpack": ItemData(717024, ItemClassification.progression),
     "Rusty Sword": ItemData(717025, ItemClassification.filler),
