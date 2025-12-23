@@ -9,6 +9,22 @@ import copy
 from typing import Any, Dict, List, Set, Tuple, Optional
 
 
+# KH1-specific helpers that need special handling
+# These are too complex to export via JSON but have known implementations
+KH1_BUILTIN_HELPERS = {
+    'has_x_worlds',
+    'has_all_magic_lvx',
+    'has_emblems',
+    'has_puppies',
+    'has_reports',
+    'has_torn_pages',
+    'has_defensive_tools',
+    'has_parasite_cage',
+    'has_key_item',
+    'has_final_rest_door',
+}
+
+
 class RuleCodeGenerator:
     """Generates Python Rule Builder code from AST format rules."""
 
@@ -2296,9 +2312,97 @@ class RuleCodeGenerator:
 
             return f'HelperCall({", ".join(parts)})'
 
+        # Check if this is a KH1 builtin helper that we can handle
+        if helper_name in KH1_BUILTIN_HELPERS and self.game_name_lower in ('kh1', 'kingdomhearts', 'kingdomheartsworldgen'):
+            self.required_imports.add('HelperCall')
+            # Use the helper name directly without prefix - these are builtin functions
+            func_name = helper_name
+
+            # Convert arguments to Python code
+            arg_strs = []
+            for arg in args:
+                if isinstance(arg, dict):
+                    # Handle Rule Builder format args
+                    arg_rule = arg.get('rule', '')
+                    if arg_rule == 'Constant':
+                        value = arg.get('args', {}).get('value')
+                        arg_strs.append(repr(value))
+                    elif arg_rule == 'AST_min':
+                        # Handle AST_min specially - evaluate at codegen time
+                        min_args = arg.get('args', {}).get('args', [])
+                        values = []
+                        for min_arg in min_args:
+                            if isinstance(min_arg, dict):
+                                val = self._eval_constant_expr(min_arg)
+                                if val is not None:
+                                    values.append(val)
+                        if values:
+                            arg_strs.append(repr(min(values)))
+                        else:
+                            arg_strs.append('0')
+                    elif arg.get('type') == 'constant':
+                        arg_strs.append(repr(arg.get('value')))
+                    elif arg_rule == 'False_':
+                        arg_strs.append('False')
+                    elif arg_rule == 'True_':
+                        arg_strs.append('True')
+                    else:
+                        # For complex args, try to extract value
+                        if '_converted_from_cc' in arg and 'args' in arg:
+                            val = arg.get('args', {}).get('value')
+                            if val is not None:
+                                arg_strs.append(repr(val))
+                                continue
+                        arg_strs.append('None')
+                else:
+                    arg_strs.append(repr(arg))
+
+            # Build HelperCall with helper_func reference
+            parts = [f'helper_func={func_name}', f'helper_name="{helper_name}"']
+
+            if arg_strs:
+                parts.append(f'args=({", ".join(arg_strs)},)')
+
+            return f'HelperCall({", ".join(parts)})'
+
         # Unknown helper - return True_() as placeholder
         self.required_imports.add('True_')
         return 'True_()'
+
+    def _eval_constant_expr(self, expr: Dict[str, Any]) -> Optional[int]:
+        """Evaluate a constant expression at codegen time.
+
+        This handles nested binary_op and constant expressions to produce
+        a single numeric value.
+        """
+        if not isinstance(expr, dict):
+            return None
+
+        expr_type = expr.get('type', '')
+
+        if expr_type == 'constant':
+            return expr.get('value')
+
+        if expr_type == 'binary_op':
+            left_val = self._eval_constant_expr(expr.get('left', {}))
+            right_val = self._eval_constant_expr(expr.get('right', {}))
+            if left_val is None or right_val is None:
+                return None
+            op = expr.get('op', '+')
+            if op == '+':
+                return left_val + right_val
+            elif op == '-':
+                return left_val - right_val
+            elif op == '*':
+                return left_val * right_val
+            elif op == '//':
+                return left_val // right_val
+            elif op == '/':
+                return left_val / right_val if right_val != 0 else 0
+            elif op == '%':
+                return left_val % right_val if right_val != 0 else 0
+
+        return None
 
     def _convert_placement_lookup(self, rule: Dict[str, Any]) -> str:
         """Convert placement_lookup to resolved placement data.

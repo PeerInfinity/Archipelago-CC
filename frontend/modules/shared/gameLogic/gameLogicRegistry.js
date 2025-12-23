@@ -307,7 +307,7 @@ const GAME_REGISTRY = {
     logicModule: genericLogic.genericStateModule,
     helperFunctions: kh1Logic,
     worldClasses: ['KH1World'],
-    aliases: ['Kingdom Hearts', 'KH1', 'Kingdom Hearts 1']
+    aliases: ['Kingdom Hearts', 'KH1', 'Kingdom Hearts 1', 'Kingdom Hearts WorldGen']
   },
   'Kingdom Hearts 2': {
     logicModule: genericLogic.genericStateModule,
