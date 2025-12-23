@@ -4,9 +4,7 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-[View Original Template Results](./test-results-spoilers-full.md)
-
-**Generated:** 2025-12-23 00:55:33
+**Generated:** 2025-12-23 05:52:49
 
 **Source Data Created:** 2025-12-17T20:52:52.442501
 
@@ -57,7 +55,7 @@
 | Heretic WorldGen | ✅ Passed | 0 | 24.4 | 24.4 | 🟢 Complete | ✅ | ✅ |
 | Hylics 2 WorldGen | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Inscryption WorldGen | ✅ Passed | 0 | 10.2 | 10.2 | 🟢 Complete | ✅ | ✅ |
-| Kingdom Hearts 2 WorldGen | ❌ Failed | 2 | 0 | 0 | 🔴 0.0% | ✅ | ✅ |
+| Kingdom Hearts 2 WorldGen | ❌ Failed | 2 | 0 | 0 | 🔴 0.0% | 4.0KB | ✅ |
 | Kingdom Hearts WorldGen | ❌ Failed | 3 | 0 | 0 | 🔴 0.0% | ✅ | ✅ |
 | Kirby's Dream Land 3 WorldGen | ✅ Passed | 0 | 10.2 | 10.2 | 🟢 Complete | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | ✅ | ✅ |
