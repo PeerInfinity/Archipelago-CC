@@ -576,6 +576,15 @@ class RuleCodeGenerator:
                     }
                     return self._convert_setting_value(setting_rule)
 
+                # Check if this is an AST_location_rule_ref rule (location accessibility check from AST format)
+                if rb_rule == 'AST_location_rule_ref':
+                    args = rule.get('args', {})
+                    location_rule = {
+                        'type': 'location_rule_ref',
+                        'location': args.get('location', '')
+                    }
+                    return self._convert_location_rule_ref(location_rule)
+
         # Dispatch based on rule type
         converters = {
             'constant': self._convert_constant,
@@ -587,6 +596,7 @@ class RuleCodeGenerator:
             'can_reach': self._convert_can_reach_region,
             'region_check': self._convert_can_reach_region,
             'location_check': self._convert_location_check,
+            'location_rule_ref': self._convert_location_rule_ref,
             'can_reach_entrance': self._convert_can_reach_entrance,
             'state_method': self._convert_state_method,
             'not': self._convert_not,
@@ -1259,6 +1269,21 @@ class RuleCodeGenerator:
 
     def _convert_location_check(self, rule: Dict[str, Any]) -> str:
         """Convert location_check to CanReachLocation()."""
+        self.required_imports.add('CanReachLocation')
+
+        location_raw = rule.get('location', '')
+        location = self._extract_constant_value(location_raw, '')
+        location_escaped = self._escape_string(location)
+
+        return f'CanReachLocation("{location_escaped}")'
+
+    def _convert_location_rule_ref(self, rule: Dict[str, Any]) -> str:
+        """Convert location_rule_ref to CanReachLocation().
+
+        location_rule_ref checks if a location's access rule is satisfied,
+        which is equivalent to CanReachLocation (checking if the location is accessible).
+        This is used by AHIT's can_clear_required_act helper expansion.
+        """
         self.required_imports.add('CanReachLocation')
 
         location_raw = rule.get('location', '')
