@@ -652,6 +652,15 @@ class RuleCodeGenerator:
         if rb_rule == 'Has':
             item_name = args.get('item_name', '')
             count = args.get('count', 1)
+
+            # If count is a complex expression (dict), use Compare(CountItem(...), ">=", expr)
+            if isinstance(count, dict):
+                # Convert the count expression to Python code
+                count_expr = self._convert_rule(count)
+                self.required_imports.add('Compare')
+                self.required_imports.add('CountItem')
+                return f'Compare(CountItem({repr(item_name)}), ">=", {count_expr})'
+
             # count=0 means "always true" (no items required)
             if count <= 0:
                 return self._make_bool_constant(True)
@@ -1519,6 +1528,21 @@ class RuleCodeGenerator:
         left_code = self._convert_compare_operand(left)
         right_code = self._convert_compare_operand(right)
 
+        # For 'in' and 'not in' operators, check if operands are valid
+        # If either operand is True_() or False_() (unresolvable), the comparison is invalid
+        # (e.g., "enemy_health in ['easy', 'default']" can't be evaluated without game options)
+        # Default to True_() for 'in' (assume option check passes) and False_() for 'not in'
+        if op in ('in', 'not in'):
+            if left_code in ('True_()', 'False_()') or right_code in ('True_()', 'False_()'):
+                # Can't perform membership test with boolean values
+                # Return sensible default based on operator
+                if op == 'in':
+                    self.required_imports.add('True_')
+                    return 'True_()'
+                else:  # 'not in'
+                    self.required_imports.add('False_')
+                    return 'False_()'
+
         return f'Compare({left_code}, "{op}", {right_code})'
 
     def _get_list_constant_value(self, operand: Any) -> Optional[list]:
@@ -2321,9 +2345,19 @@ class RuleCodeGenerator:
             for arg in args:
                 if isinstance(arg, dict) and arg.get('type') == 'constant':
                     arg_strs.append(repr(arg.get('value')))
+                elif isinstance(arg, dict) and arg.get('rule') == 'Constant':
+                    # Rule Builder format constant
+                    arg_strs.append(repr(arg.get('args', {}).get('value')))
                 elif isinstance(arg, dict) and arg.get('type') == 'setting_value':
                     # Resolve setting_value args to their actual values
                     setting = arg.get('setting', '')
+                    if setting in self.settings:
+                        arg_strs.append(repr(self.settings[setting]))
+                    else:
+                        arg_strs.append('None')
+                elif isinstance(arg, dict) and arg.get('rule') == 'AST_setting_value':
+                    # Rule Builder format setting value (from CC converter)
+                    setting = arg.get('args', {}).get('setting', '')
                     if setting in self.settings:
                         arg_strs.append(repr(self.settings[setting]))
                     else:
@@ -2384,6 +2418,13 @@ class RuleCodeGenerator:
                     arg_rule = arg.get('rule', '')
                     if arg_rule == 'SettingValue':
                         # Resolve setting_value args to their actual values
+                        setting = arg.get('args', {}).get('setting', '')
+                        if setting in self.settings:
+                            arg_strs.append(repr(self.settings[setting]))
+                        else:
+                            arg_strs.append('None')
+                    elif arg_rule == 'AST_setting_value':
+                        # Rule Builder format setting value from CC converter
                         setting = arg.get('args', {}).get('setting', '')
                         if setting in self.settings:
                             arg_strs.append(repr(self.settings[setting]))
