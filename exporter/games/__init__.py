@@ -43,8 +43,18 @@ def _get_world_directory(world) -> Optional[str]:
         parts = module_path.split('.')
         if len(parts) >= 2 and parts[0] == 'worlds':
             world_dir = parts[1]
-            # Strip _worldgen suffix so worldgen worlds use parent game's handler
+            # For worldgen worlds, check if a specific worldgen handler exists first.
+            # If so, use the worldgen handler; otherwise fall back to parent game's handler.
             if world_dir.endswith('_worldgen'):
+                # Check if a specific worldgen handler is registered
+                # We can't call GAME_HANDLERS here as it's not defined yet during init,
+                # but we can check if the handler module exists
+                import os
+                handler_path = os.path.join(os.path.dirname(__file__), f'{world_dir}.py')
+                if os.path.exists(handler_path):
+                    # Use the worldgen-specific handler
+                    return world_dir
+                # Fall back to parent game's handler
                 world_dir = world_dir[:-9]  # Remove '_worldgen' (9 chars)
             return world_dir
     except Exception as e:
