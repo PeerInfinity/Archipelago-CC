@@ -2287,10 +2287,12 @@ class RuleCodeGenerator:
 
             return f'HelperCall({", ".join(parts)})'
 
-        # Unknown helper - return False_() as placeholder
-        # Returning False makes locations less accessible, preventing progression issues
-        self.required_imports.add('False_')
-        return 'False_()'
+        # Unknown helper - return True_() as placeholder
+        # Returning True makes locations more accessible, which is appropriate for worldgen
+        # since unknown helpers are typically progression checks that evaluate to true
+        # under default/normal game settings
+        self.required_imports.add('True_')
+        return 'True_()'
 
     def _convert_rule_builder_helper(self, rule: Dict[str, Any], helper_name: str) -> str:
         """Convert Rule Builder format helper rule to HelperCall().
@@ -2368,11 +2370,13 @@ class RuleCodeGenerator:
 
             return f'HelperCall({", ".join(parts)})'
 
-        # Unknown helper - return False_() as placeholder
-        # Returning False makes locations less accessible, preventing progression issues
+        # Unknown helper - return True_() as placeholder
+        # Returning True makes locations more accessible, which is appropriate for worldgen
+        # since unknown helpers are typically progression checks that evaluate to true
+        # under default/normal game settings
         # (This matches the behavior of _convert_helper for consistency)
-        self.required_imports.add('False_')
-        return 'False_()'
+        self.required_imports.add('True_')
+        return 'True_()'
 
     def _convert_placement_lookup(self, rule: Dict[str, Any]) -> str:
         """Convert placement_lookup to resolved placement data.
