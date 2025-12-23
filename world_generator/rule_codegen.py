@@ -2800,6 +2800,7 @@ class HelperCodeGenerator:
             'setting_value': self._expr_setting_value,
             'prog_item_count': self._expr_prog_item_count,
             'sum_of': self._expr_sum_of,
+            'sum': self._expr_sum,
             'min': self._expr_min,
             'max': self._expr_max,
             'block': self._expr_block,
@@ -3538,6 +3539,44 @@ class HelperCodeGenerator:
             return f"sum({element_expr} for {target_expr} in {iterator_expr} if {condition_expr})"
 
         return f"sum({element_expr} for {target_expr} in {iterator_expr})"
+
+    def _expr_sum(self, expr: Dict[str, Any]) -> str:
+        """Generate sum() expression from sum format.
+
+        This handles the simplified sum format used by exporter helpers:
+        {
+            "type": "sum",
+            "iterable": {
+                "type": "list",
+                "value": [
+                    {"type": "item_check", "item": "Valor Form"},
+                    {"type": "item_check", "item": "Wisdom Form"},
+                    ...
+                ]
+            }
+        }
+
+        Each element in the list is a boolean check (item_check, etc.) that
+        evaluates to True/False. Python treats True as 1 and False as 0 in
+        arithmetic, so sum([True, False, True]) = 2.
+        """
+        iterable = expr.get('iterable', {})
+
+        # If it's a list, convert each element and sum them
+        if iterable.get('type') == 'list':
+            items = iterable.get('value', [])
+            if not items:
+                return '0'  # Empty sum is 0
+
+            # Convert each item in the list
+            item_exprs = [self._generate_expression(item) for item in items]
+
+            # Build sum() call
+            return f"sum([{', '.join(item_exprs)}])"
+
+        # For other iterable types, try to generate expression
+        iterable_expr = self._generate_expression(iterable)
+        return f"sum({iterable_expr})"
 
     def _extract_constant(self, value: Any, default: Any = None) -> Any:
         """Extract constant value from a potential constant wrapper.
