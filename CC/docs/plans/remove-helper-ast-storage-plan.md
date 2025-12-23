@@ -139,22 +139,19 @@ Also remove `{helper_definitions_section}` from the return template string.
 ### Step 3: Regenerate a Worldgen World
 
 ```bash
-# Generate shapez_worldgen
-python Generate.py --weights_file_path "Templates/shapez.yaml" --multi 1 --seed 1
+# Generate shapez_worldgen (this runs world generator AND exports rules)
+python scripts/test/test-world-generator.py --include-list "shapez.yaml" --phase generate-test-worlds --seed 1
 
 # Verify Rules.py no longer has _HELPER_DEFINITIONS
 grep "_HELPER_DEFINITIONS" worlds/shapez_worldgen/Rules.py
 # Should return nothing
+
+# Verify helpers section is populated in exported rules.json
+python -c "import json; d=json.load(open('frontend/presets/shapez_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json')); print('helpers' in d and bool(d['helpers']))"
+# Should print True
 ```
 
-### Step 4: Run Exporter on Worldgen World
-
-```bash
-# Export the worldgen world (method TBD - may need to run generation which triggers export)
-# Verify helpers section is populated in rules.json
-```
-
-### Step 5: Test Frontend
+### Step 4: Test Frontend
 
 ```bash
 # Run spoiler test
