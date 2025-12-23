@@ -844,7 +844,41 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
 
     # Generate canonical seed1 sections only if enabled
     if canonical_seed1:
-        generate_early_section = '''
+        # KH2 has circular dependencies in canonical placements where visit lock items
+        # are placed behind other visit lock items. Push them as starting items.
+        if game_name == "Kingdom Hearts 2":
+            generate_early_section = '''
+    def generate_early(self) -> None:
+        """Push starting items and disable randomization for seed 1."""
+        self._push_starting_items()
+        if self.multiworld.seed == 1:
+            self.options.randomize_items.value = False
+            # Push visit lock items to break circular dependencies in canonical placements
+            self._push_visit_lock_items()
+
+    def _push_visit_lock_items(self) -> None:
+        """Push visit lock items as precollected to break circular dependencies.
+
+        When using canonical (non-randomized) placements, visit lock items are
+        placed in locations that require other visit lock items, creating a
+        circular dependency. This method pushes all visit lock items as starting
+        items to ensure all regions are accessible.
+        """
+        visit_lock_items = [
+            "Namine Sketches", "Disney Castle Key", "Battlefields of War",
+            "Sword of the Ancestor", "Beast\'s Claw", "Bone Fist", "Proud Fang",
+            "Skill and Crossbones", "Scimitar", "Membership Card", "Ice Cream",
+            "Way to the Dawn", "Identity Disk"
+        ]
+        for item_name in visit_lock_items:
+            if item_name in item_table:
+                count = ITEMPOOL_COUNTS.get(item_name, 1)
+                for _ in range(count):
+                    item = self.create_item(item_name)
+                    self.multiworld.push_precollected(item)
+'''
+        else:
+            generate_early_section = '''
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
         self._push_starting_items()
