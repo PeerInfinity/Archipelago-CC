@@ -1608,6 +1608,42 @@ class RuleCodeGenerator:
                 return f'MinValue({left_code}, {right_code})'
             return 'MinValue(0, 0)'
 
+        if rb_rule == 'SettingValue':
+            # Handle SettingValue in Compare operand - preserve numeric value
+            # Unlike _convert_setting_value which converts to boolean rules,
+            # Compare operands need the actual numeric value for arithmetic comparisons
+            setting = rb_args.get('setting', '')
+            if setting in self.settings:
+                value = self.settings[setting]
+                # For numeric settings in Compare context, return the raw value
+                if isinstance(value, (int, float)):
+                    return repr(value)
+                # For boolean-like settings, convert to True_/False_
+                if isinstance(value, bool):
+                    self.required_imports.add('True_' if value else 'False_')
+                    return 'True_()' if value else 'False_()'
+                if isinstance(value, str):
+                    if value.lower() == 'true':
+                        self.required_imports.add('True_')
+                        return 'True_()'
+                    elif value.lower() == 'false':
+                        self.required_imports.add('False_')
+                        return 'False_()'
+                # Other values (strings, etc.) - return as string literal
+                return repr(value)
+            # Unknown setting - return 0 as safe fallback
+            return '0'
+
+        if rb_rule == 'Arithmetic':
+            # Handle Rule Builder format Arithmetic in Compare operand
+            binary_op_rule = {
+                'type': 'binary_op',
+                'left': rb_args.get('left', {}),
+                'op': rb_args.get('op', '+'),
+                'right': rb_args.get('right', {})
+            }
+            return self._convert_binary_op(binary_op_rule)
+
         # Handle integer-returning helpers used as Compare operands
         # These are helpers that count items and return an integer (e.g., weapon_armor_upgrade_count)
         # They are blacklisted from normal helper export but need to be converted to CountItem
@@ -1672,6 +1708,29 @@ class RuleCodeGenerator:
         if rb_rule == 'AST_count_item':
             item_name = operand.get('args', {}).get('item', '')
             return self._make_count_item(item_name)
+
+        # Handle Rule Builder format Arithmetic in arithmetic operand
+        if rb_rule == 'Arithmetic':
+            rb_args = operand.get('args', {})
+            binary_op_rule = {
+                'type': 'binary_op',
+                'left': rb_args.get('left', {}),
+                'op': rb_args.get('op', '+'),
+                'right': rb_args.get('right', {})
+            }
+            return self._convert_binary_op(binary_op_rule)
+
+        # Handle Rule Builder format SettingValue in arithmetic operand
+        if rb_rule == 'SettingValue':
+            rb_args = operand.get('args', {})
+            setting = rb_args.get('setting', '')
+            if setting in self.settings:
+                value = self.settings[setting]
+                # For numeric settings in arithmetic context, return the raw value
+                if isinstance(value, (int, float)):
+                    return repr(value)
+            # Unknown or non-numeric setting - return 0 as safe fallback
+            return '0'
 
         if op_type == 'count_item':
             # Handle count_item type from rules.json export
