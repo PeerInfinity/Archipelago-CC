@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-23 00:55:33
+**Generated:** 2025-12-23 06:36:13
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 62 (84.9%)
-- **Failed:** 11 (15.1%)
+- **Passed:** 61 (83.6%)
+- **Failed:** 12 (16.4%)
 - **Skipped (Prerequisites):** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
-- **Second Pass Tested:** 72
-- **Second Pass Passed:** 62
+- **Second Pass Tested:** 71
+- **Second Pass Passed:** 61
 - **Second Pass Failed:** 10
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 21/62 (33.9% of passed)
-- **Passing with Generic Logic:** 54/62 (87.1% of passed)
-- **Passing with Both Generic:** 21/62 (33.9% of passed)
+- **Passing with Generic Exporter:** 21/61 (34.4% of passed)
+- **Passing with Generic Logic:** 54/61 (88.5% of passed)
+- **Passing with Both Generic:** 21/61 (34.4% of passed)
 
 ## Test Results
 
@@ -38,7 +38,7 @@
 | Aquaria | ✅ Passed | ✅ Passed | 1 | 1 | 3.4KB | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | ❌ Failed | 1 | 1 | 6.8KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 15.0KB | ✅ |
+| Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 16.4KB | ✅ |
 | Castlevania 64 | ✅ Passed | ❌ Failed | 1 | 1 | ✅ | ✅ |
 | Celeste (Open World) | ✅ Passed | ✅ Passed | 2 | 2 | 7.1KB | ✅ |
 | Celeste 64 | ✅ Passed | ✅ Passed | 2 | 2 | 8.9KB | ✅ |
@@ -73,7 +73,7 @@
 | Muse Dash | ✅ Passed | ✅ Passed | 5 | 5 | 0.2KB | ✅ |
 | Noita | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | ✅ Passed | 5 | 5 | 6.2KB | ✅ |
-| Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 26.1KB | 5.1KB |
+| Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 31.2KB | 5.1KB |
 | Paint | ✅ Passed | ✅ Passed | 5 | 5 | 8.4KB | ✅ |
 | Raft | ✅ Passed | ✅ Passed | 5 | 5 | 12.0KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | ❌ Failed | 5 | 5 | ✅ | ✅ |
@@ -81,23 +81,23 @@
 | Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | ❌ Failed | 5 | 5 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Starcraft 2 | ❌ Failed | — | 6 | 6 | 38.4KB | 86.3KB |
+| Starcraft 2 | ❌ Failed | — | 6 | 6 | 39.9KB | 86.3KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 20.6KB | 10.7KB |
 | Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 7.0KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | 14.0KB | ✅ |
 | Super Mario World | ✅ Passed | ❌ Failed | 6 | 6 | ✅ | ✅ |
-| Super Metroid | ✅ Passed | ✅ Passed | 6 | 6 | 73.6KB | 114.6KB |
+| Super Metroid | ❌ Failed | — | 6 | 6 | 90.6KB | 114.6KB |
 | TOEM original | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | ❌ Failed | 6 | 6 | ✅ | ✅ |
 | Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 19.3KB | ✅ |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | 6 | 6 | 5.9KB | ✅ |
-| The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 11.2KB | ✅ |
+| The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 11.7KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 5.4KB | ✅ |
 | The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 28.4KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 4.6KB | ✅ |
 | Undertale | ✅ Passed | ❌ Failed | 7 | 7 | ✅ | ✅ |
-| VVVVVV | ✅ Passed | ✅ Passed | 7 | 7 | 5.4KB | ✅ |
+| VVVVVV | ✅ Passed | ✅ Passed | 6 | 6 | 5.4KB | ✅ |
 | Wargroove | ✅ Passed | ✅ Passed | 7 | 7 | 9.6KB | ✅ |
 | WebDevJourney | ✅ Passed | ❌ Failed | 7 | 7 | ✅ | ✅ |
 | Yacht Dice | ✅ Passed | ✅ Passed | 8 | 8 | 0.9KB | 285.0KB |
@@ -585,7 +585,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Risk of Rain 2.yaml |
 | 6 | Super Mario World.yaml |
 
-### Super Metroid ✅ (Split 8)
+### Super Metroid ❌ (Split 8)
 
 | Player # | Template |
 |----------|----------|
@@ -710,8 +710,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
 | 5 | Saving Princess.yaml |
-| 6 | Super Metroid.yaml |
-| 7 | VVVVVV.yaml |
+| 6 | VVVVVV.yaml |
 
 ### Wargroove ✅ (Split 9)
 
@@ -792,6 +791,18 @@ When a multiworld test fails, bisection tests each pair of templates to find whi
 | Lingo.yaml | ❌ | ✅ | ✅ | ❌ |
 | Noita.yaml | ❌ | ✅ | ✅ | ❌ |
 
+### Super Metroid (Super Metroid.yaml)
+
+**Failing pairs found:** 5
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| Bumper Stickers.yaml | ❌ | ✅ | ✅ | ❌ |
+| DOOM 1993.yaml | ❌ | ✅ | ✅ | ❌ |
+| Kingdom Hearts 2.yaml | ❌ | ✅ | ✅ | ❌ |
+| MegaMan Battle Network 3.yaml | ❌ | ✅ | ✅ | ❌ |
+| Saving Princess.yaml | ❌ | ✅ | ✅ | ❌ |
+
 
 ## Second Pass Results
 
@@ -806,7 +817,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Adventure | 1 | 7 | 1 | ✅ Passed |
 | Aquaria | 1 | 7 | 1 | ✅ Passed |
 | Bomb Rush Cyberfunk | 1 | 7 | 1 | ❌ Failed |
-| Bumper Stickers | 1 | 7 | 1 | ✅ Passed |
+| Bumper Stickers | 1 | 6 | 1 | ✅ Passed |
 | Castlevania - Circle of the Moon | 1 | 7 | 1 | ✅ Passed |
 | Castlevania 64 | 1 | 7 | 1 | ❌ Failed |
 | Celeste (Open World) | 2 | 8 | 2 | ✅ Passed |
@@ -816,7 +827,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Choo-Choo Charles | 2 | 7 | 2 | ✅ Passed |
 | Civilization VI | 2 | 7 | 2 | ✅ Passed |
 | DLCQuest | 2 | 6 | 1 | ❌ Failed |
-| DOOM 1993 | 2 | 7 | 2 | ✅ Passed |
+| DOOM 1993 | 2 | 6 | 2 | ✅ Passed |
 | DOOM II | 2 | 7 | 2 | ✅ Passed |
 | Dark Souls III | 2 | 6 | 1 | ❌ Failed |
 | Donkey Kong Country 3 | 3 | 8 | 3 | ✅ Passed |
@@ -827,7 +838,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Hylics 2 | 3 | 7 | 3 | ✅ Passed |
 | Inscryption | 3 | 5 | 1 | ✅ Passed |
 | Kingdom Hearts | 3 | 7 | 3 | ✅ Passed |
-| Kingdom Hearts 2 | 3 | 7 | 3 | ✅ Passed |
+| Kingdom Hearts 2 | 3 | 6 | 3 | ✅ Passed |
 | Kirby's Dream Land 3 | 3 | 5 | 1 | ✅ Passed |
 | Landstalker - The Treasures of King Nole | 4 | 8 | 4 | ✅ Passed |
 | Lingo | 4 | 7 | 4 | ✅ Passed |
@@ -836,7 +847,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Mario & Luigi Superstar Saga | 4 | 7 | 4 | ✅ Passed |
 | MathProof2p2e4 | 4 | 7 | 4 | ✅ Passed |
 | Mega Man 2 | 4 | 5 | 2 | ✅ Passed |
-| MegaMan Battle Network 3 | 4 | 7 | 4 | ✅ Passed |
+| MegaMan Battle Network 3 | 4 | 6 | 4 | ✅ Passed |
 | Meritous | 4 | 7 | 4 | ✅ Passed |
 | Metamath | 4 | 5 | 2 | ✅ Passed |
 | Muse Dash | 5 | 8 | 5 | ✅ Passed |
@@ -846,7 +857,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Paint | 5 | 7 | 5 | ✅ Passed |
 | Raft | 5 | 7 | 5 | ✅ Passed |
 | Risk of Rain 2 | 5 | 5 | 3 | ❌ Failed |
-| Saving Princess | 5 | 7 | 5 | ✅ Passed |
+| Saving Princess | 5 | 6 | 5 | ✅ Passed |
 | Secret of Evermore | 5 | 7 | 5 | ✅ Passed |
 | Shivers | 5 | 5 | 3 | ❌ Failed |
 | Sonic Adventure 2 Battle | 6 | 8 | 6 | ✅ Passed |
@@ -855,7 +866,6 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Super Mario 64 | 6 | 7 | 6 | ✅ Passed |
 | Super Mario Land 2 | 6 | 7 | 6 | ✅ Passed |
 | Super Mario World | 6 | 4 | 3 | ❌ Failed |
-| Super Metroid | 6 | 7 | 6 | ✅ Passed |
 | TOEM original | 6 | 7 | 6 | ✅ Passed |
 | TOEM rule builder | 6 | 4 | 3 | ❌ Failed |
 | Terraria | 7 | 8 | 7 | ✅ Passed |
@@ -865,7 +875,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | The Witness | 7 | 7 | 7 | ✅ Passed |
 | Timespinner | 7 | 7 | 7 | ✅ Passed |
 | Undertale | 7 | 3 | 3 | ❌ Failed |
-| VVVVVV | 7 | 7 | 7 | ✅ Passed |
+| VVVVVV | 6 | 6 | 6 | ✅ Passed |
 | Wargroove | 7 | 7 | 7 | ✅ Passed |
 | WebDevJourney | 7 | 3 | 3 | ❌ Failed |
 | Yacht Dice | 8 | 8 | 8 | ✅ Passed |
@@ -971,8 +981,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
 | 5 | Saving Princess.yaml |
-| 6 | Super Metroid.yaml |
-| 7 | VVVVVV.yaml |
+| 6 | VVVVVV.yaml |
 
 #### Castlevania - Circle of the Moon ✅ (Split 9)
 
@@ -1092,8 +1101,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
 | 5 | Saving Princess.yaml |
-| 6 | Super Metroid.yaml |
-| 7 | VVVVVV.yaml |
+| 6 | VVVVVV.yaml |
 
 #### DOOM II ✅ (Split 9)
 
@@ -1223,8 +1231,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
 | 5 | Saving Princess.yaml |
-| 6 | Super Metroid.yaml |
-| 7 | VVVVVV.yaml |
+| 6 | VVVVVV.yaml |
 
 #### Kirby's Dream Land 3 ✅ (Split 10)
 
@@ -1329,8 +1336,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
 | 5 | Saving Princess.yaml |
-| 6 | Super Metroid.yaml |
-| 7 | VVVVVV.yaml |
+| 6 | VVVVVV.yaml |
 
 #### Meritous ✅ (Split 9)
 
@@ -1447,8 +1453,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
 | 5 | Saving Princess.yaml |
-| 6 | Super Metroid.yaml |
-| 7 | VVVVVV.yaml |
+| 6 | VVVVVV.yaml |
 
 #### Secret of Evermore ✅ (Split 9)
 
@@ -1542,18 +1547,6 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | Mega Man 2.yaml |
 | 3 | Super Mario World.yaml |
 | 4 | Undertale.yaml |
-
-#### Super Metroid ✅ (Split 8)
-
-| Player # | Template |
-|----------|----------|
-| 1 | Bumper Stickers.yaml |
-| 2 | DOOM 1993.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Saving Princess.yaml |
-| 6 | Super Metroid.yaml |
-| 7 | VVVVVV.yaml |
 
 #### TOEM original ✅ (Split 9)
 
@@ -1667,8 +1660,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
 | 5 | Saving Princess.yaml |
-| 6 | Super Metroid.yaml |
-| 7 | VVVVVV.yaml |
+| 6 | VVVVVV.yaml |
 
 #### Wargroove ✅ (Split 9)
 
