@@ -6,37 +6,37 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-22 06:47:09
+**Generated:** 2025-12-23 00:12:22
 
-**Source Data Created:** 2025-12-22T06:03:40.601557
+**Source Data Created:** 2025-12-23T00:12:22.128097
 
-**Source Data Last Updated:** 2025-12-22T06:03:40.601564
+**Source Data Last Updated:** 2025-12-23T00:12:22.128102
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 72 (98.6%)
-- **Failed:** 1 (1.4%)
+- **Passed:** 71 (97.3%)
+- **Failed:** 2 (2.7%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 28/72 (38.9% of passed)
-- **Passing with Generic Logic:** 64/72 (88.9% of passed)
-- **Passing with Both Generic:** 28/72 (38.9% of passed)
+- **Passing with Generic Exporter:** 28/71 (39.4% of passed)
+- **Passing with Generic Logic:** 63/71 (88.7% of passed)
+- **Passing with Both Generic:** 28/71 (39.4% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
-| A Hat in Time | ✅ Passed | 0 | 5.11 | 5.11 | 🟢 Complete | 11.1KB | ✅ |
+| A Hat in Time | ✅ Passed | 0 | 5.11 | 5.11 | 🟢 Complete | 11.3KB | ✅ |
 | A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 40.6KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Aquaria | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 3.4KB | ✅ |
-| Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.9 | 10.9 | 🟢 Complete | 1.5KB | 40.3KB |
+| Bomb Rush Cyberfunk | ❌ Failed | 0 | 2.1 | 10.9 | 🟡 19.3% | 6.8KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | 0 | 4.4 | 4.4 | 🟢 Complete | 15.0KB | ✅ |
 | Castlevania 64 | ✅ Passed | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ✅ |
@@ -81,7 +81,7 @@
 | Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ❌ Failed | 0 | 0.1 | 15.5 | 🟠 0.6% | 35.1KB | 86.3KB |
+| Starcraft 2 | ❌ Failed | 0 | 7.1 | 15.5 | 🟡 45.8% | 38.4KB | 86.3KB |
 | Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 20.6KB | 10.7KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 7.0KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 14.6KB | ✅ |
@@ -95,13 +95,13 @@
 | The Messenger | ✅ Passed | 0 | 6.3 | 6.3 | 🟢 Complete | 11.2KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | 5.4KB | ✅ |
 | The Witness | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 28.4KB | ✅ |
-| Timespinner | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 4.0KB | ✅ |
+| Timespinner | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 4.6KB | ✅ |
 | Undertale | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | 2.4 | 2.4 | 🟢 Complete | 5.4KB | ✅ |
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 9.6KB | ✅ |
 | WebDevJourney | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Yacht Dice | ✅ Passed | 0 | 21.1 | 21.1 | 🟢 Complete | 0.9KB | 285.0KB |
-| Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 10.8KB | ✅ |
+| Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 11.8KB | ✅ |
 | shapez | ✅ Passed | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
 
 ## Notes

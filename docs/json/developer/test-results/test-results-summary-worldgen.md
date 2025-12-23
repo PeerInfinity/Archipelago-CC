@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2025-12-22 06:47:09
+**Generated:** 2025-12-23 00:12:22
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -44,21 +44,21 @@ Of the 54 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 583.5KB
+- **Total Exporter Code:** 593.7KB
 - **Total Game Logic Code:** 674.4KB
-- **Combined Total:** 1257.9KB
+- **Combined Total:** 1268.1KB
 
 ## Test Results
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
-| A Hat in Time WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 11.1KB | ✅ | 188.6KB |
+| A Hat in Time WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 11.3KB | ✅ | 188.6KB |
 | A Link to the Past WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 40.6KB | ✅ | 418.9KB |
 | A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 74.5KB |
 | APQuest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 9.8KB |
 | Adventure WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 22.6KB |
 | Aquaria WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.4KB | ✅ | 268.0KB |
-| Bomb Rush Cyberfunk WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 1.5KB | 40.3KB | 292.6KB |
+| Bomb Rush Cyberfunk WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 6.8KB | 40.3KB | 292.6KB |
 | Bumper Stickers WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 53.0KB |
 | Castlevania - Circle of the Moon WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 15.0KB | ✅ | 93.3KB |
 | Castlevania 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 134.4KB |
@@ -102,7 +102,7 @@ Of the 54 templates passing all 4 tests:
 | Secret of Evermore WorldGen | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | 13.7KB | 6.9KB | 425.0KB |
 | Shivers WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 159.4KB |
 | Sonic Adventure 2 Battle WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 236.9KB |
-| Starcraft 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 35.1KB | 86.3KB | 1052.0KB |
+| Starcraft 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 38.4KB | 86.3KB | 1052.0KB |
 | Stardew Valley WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 20.6KB | 10.7KB | 1100.3KB |
 | Subnautica WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 7.0KB | ✅ | 201.9KB |
 | Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.6KB | ✅ | 96.0KB |
@@ -115,13 +115,13 @@ Of the 54 templates passing all 4 tests:
 | The Legend of Zelda WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.9KB | ✅ | 83.7KB |
 | The Messenger WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 11.2KB | ✅ | 194.6KB |
 | The Wind Waker WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.4KB | ✅ | 283.0KB |
-| Timespinner WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 4.0KB | ✅ | 206.2KB |
+| Timespinner WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 4.6KB | ✅ | 206.2KB |
 | Undertale WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 51.4KB |
 | VVVVVV WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.4KB | ✅ | 22.0KB |
 | Wargroove WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.6KB | ✅ | 45.0KB |
 | WebDevJourney WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 55.6KB |
 | Yacht Dice WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 0.9KB | 285.0KB | 52.6KB |
-| Yoshi's Island WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 10.8KB | ✅ | 312.8KB |
+| Yoshi's Island WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 11.8KB | ✅ | 312.8KB |
 | shapez WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 137.3KB |
 
 ### Largest Rules Files
