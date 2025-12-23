@@ -1,0 +1,83 @@
+{
+  "metadata": {
+    "timestamp": "2025-12-23T06:33:51.378303",
+    "seed": 1,
+    "phase": "all",
+    "canonical_seed1": true,
+    "total_templates": 1,
+    "successful_generations": 1,
+    "failed_generations": 0,
+    "successful_test_worlds": 1,
+    "failed_test_worlds": 0,
+    "cross_validation_passed": 0,
+    "cross_validation_failed": 1
+  },
+  "results": {
+    "Bomb Rush Cyberfunk": {
+      "template": "Bomb Rush Cyberfunk.yaml",
+      "game_name": "Bomb Rush Cyberfunk",
+      "timestamp": "2025-12-23T06:33:57.645044",
+      "original": {
+        "generation": {
+          "success": true,
+          "seed_id": "AP_14089154938208861744",
+          "rules_path": "/home/user/Archipelago-CC/frontend/presets/bomb_rush_cyberfunk/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/bomb_rush_cyberfunk/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/bomb_rush_cyberfunk/AP_14089154938208861744",
+          "error": null,
+          "processing_time_seconds": 21.41
+        },
+        "spoiler_test": {
+          "success": false,
+          "pass_fail": "fail",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": "Spoiler test failed",
+          "processing_time_seconds": 11.76
+        }
+      },
+      "test_world": {
+        "world_generation": {
+          "success": true,
+          "world_dir": "/home/user/Archipelago-CC/worlds/bomb_rush_cyberfunk_worldgen",
+          "error": null,
+          "processing_time_seconds": 0.18
+        },
+        "seed_generation": {
+          "success": true,
+          "seed_id": "AP_14089154938208861744",
+          "rules_path": "/home/user/Archipelago-CC/frontend/presets/bomb_rush_cyberfunk_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/bomb_rush_cyberfunk_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/bomb_rush_cyberfunk_worldgen/AP_14089154938208861744",
+          "error": null,
+          "processing_time_seconds": 6.14
+        },
+        "spoiler_test": {
+          "success": true,
+          "pass_fail": "pass",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": null,
+          "processing_time_seconds": 25.98
+        },
+        "cross_validation": {
+          "success": false,
+          "pass_fail": "fail",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": "Spoiler test failed",
+          "processing_time_seconds": 11.92
+        },
+        "world_dir": "/home/user/Archipelago-CC/worlds/bomb_rush_cyberfunk_worldgen",
+        "test_game_name": "Bomb Rush Cyberfunk WorldGen",
+        "test_template_name": "Bomb Rush Cyberfunk WorldGen.yaml"
+      },
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed: original sphere log incompatible with _worldgen world"
+        ]
+      }
+    }
+  }
+}
