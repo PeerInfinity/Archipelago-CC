@@ -2301,6 +2301,104 @@ class RuleCodeGenerator:
         """
         args = rule.get('args', [])
 
+        # Special handling for SM variadic boolean operators
+        # These can't be regular helper functions because they receive Rule objects
+        # that need to be combined with Rule Builder's And/Or/Not
+        if helper_name == 'wand':
+            # Convert wand(a, b, c) to And(a, b, c)
+            if not args:
+                self.required_imports.add('True_')
+                return 'True_()'
+            converted_args = [self._convert_rule(arg) for arg in args]
+            if len(converted_args) == 1:
+                return converted_args[0]
+            self.required_imports.add('And')
+            return f'And({", ".join(converted_args)})'
+
+        if helper_name == 'wor':
+            # Convert wor(a, b, c) to Or(a, b, c)
+            if not args:
+                self.required_imports.add('False_')
+                return 'False_()'
+            converted_args = [self._convert_rule(arg) for arg in args]
+            if len(converted_args) == 1:
+                return converted_args[0]
+            self.required_imports.add('Or')
+            return f'Or({", ".join(converted_args)})'
+
+        if helper_name == 'wnot':
+            # Convert wnot(a) to Not(a)
+            if not args:
+                self.required_imports.add('True_')
+                return 'True_()'
+            converted_arg = self._convert_rule(args[0])
+            self.required_imports.add('Not')
+            return f'Not({converted_arg})'
+
+        # Special handling for SM pass-through helpers
+        # evalSMBool(smbool, maxDiff) just returns smbool in our simplified worldgen
+        # SMBool(value, difficulty) just returns value
+        # divideByDmgReduction(value) just returns value (numeric pass-through)
+        # When the first arg is a Rule (helper call), we return it directly
+
+        # divideByDmgReduction and int are numeric pass-through helpers - extract the value
+        if helper_name in ('divideByDmgReduction', 'int'):
+            if args:
+                first_arg = args[0]
+                if isinstance(first_arg, dict):
+                    first_arg_rule = first_arg.get('rule', '')
+                    # Recursively handle nested pass-through helpers
+                    if first_arg_rule in ('divideByDmgReduction', 'int'):
+                        nested_args = first_arg.get('args', [])
+                        if nested_args:
+                            return self._convert_rule_builder_helper(first_arg, first_arg_rule)
+                    # Extract constant value
+                    if first_arg_rule == 'Constant':
+                        return repr(first_arg.get('args', {}).get('value', 0))
+                    if first_arg.get('type') == 'constant':
+                        return repr(first_arg.get('value', 0))
+                    # For Arithmetic expressions, try to evaluate them
+                    if first_arg_rule == 'Arithmetic':
+                        # Just return 0 for now - these are damage reduction calculations
+                        return '0'
+                elif isinstance(first_arg, (int, float)):
+                    return repr(first_arg)
+            return '0'  # Default if no args
+
+        if helper_name in ('evalSMBool', 'SMBool'):
+            if args:
+                first_arg = args[0]
+                if isinstance(first_arg, dict):
+                    first_arg_rule = first_arg.get('rule', '')
+                    # If the first arg is a helper call, just return that helper
+                    if first_arg.get('_original_ast_type') == 'helper' or first_arg_rule in self.known_helpers:
+                        return self._convert_rule(first_arg)
+                    # If it's a constant True/False, return True_/False_
+                    if first_arg_rule == 'True_' or first_arg.get('type') == 'constant' and first_arg.get('value') is True:
+                        self.required_imports.add('True_')
+                        return 'True_()'
+                    if first_arg_rule == 'False_' or first_arg.get('type') == 'constant' and first_arg.get('value') is False:
+                        self.required_imports.add('False_')
+                        return 'False_()'
+                    if first_arg_rule == 'Constant':
+                        value = first_arg.get('args', {}).get('value')
+                        if value is True:
+                            self.required_imports.add('True_')
+                            return 'True_()'
+                        elif value is False:
+                            self.required_imports.add('False_')
+                            return 'False_()'
+                # If first arg is a boolean constant, return True_/False_
+                elif first_arg is True:
+                    self.required_imports.add('True_')
+                    return 'True_()'
+                elif first_arg is False:
+                    self.required_imports.add('False_')
+                    return 'False_()'
+            # No args or None - return True_ (optimistic)
+            self.required_imports.add('True_')
+            return 'True_()'
+
         # If we know about this helper, generate a proper HelperCall
         if helper_name in self.known_helpers:
             self.required_imports.add('HelperCall')
@@ -2341,16 +2439,47 @@ class RuleCodeGenerator:
                     elif arg.get('_original_ast_type') == 'helper' or arg_rule in self.known_helpers:
                         # Nested helper call - check if we know about it
                         nested_helper = arg_rule
-                        if nested_helper in self.known_helpers:
+                        # Special handling for wand/wor/wnot - convert to And/Or/Not
+                        if nested_helper in ('wand', 'wor', 'wnot'):
+                            # Recursively convert - this will trigger the special handling
+                            # at the start of _convert_rule_builder_helper
+                            arg_strs.append(self._convert_rule(arg))
+                        # Special handling for pass-through helpers
+                        elif nested_helper in ('evalSMBool', 'SMBool'):
+                            # These just return their first arg - recursively convert it
+                            arg_strs.append(self._convert_rule(arg))
+                        elif nested_helper in ('divideByDmgReduction', 'int'):
+                            # These are numeric pass-through helpers - recursively convert
+                            # This will trigger the special handling that extracts values
+                            converted = self._convert_rule_builder_helper(arg, nested_helper)
+                            arg_strs.append(converted)
+                        elif nested_helper in self.known_helpers:
                             # Check helper body - if it returns constant True/False, inline it
                             helper_body = self.helper_bodies.get(nested_helper, {})
                             if isinstance(helper_body, dict) and helper_body.get('type') == 'constant':
                                 const_val = helper_body.get('value')
                                 arg_strs.append(repr(const_val))
                             else:
-                                # Complex helper - evaluate to True as approximation
-                                # (Most SM canXXX/knowsXXX helpers are simplified to True)
-                                arg_strs.append('True')
+                                # Complex helper - generate a proper HelperCall
+                                # This ensures the nested helper is evaluated at runtime
+                                nested_func_name = self.get_function_name(nested_helper)
+                                nested_args = arg.get('args', [])
+                                nested_arg_strs = []
+                                for nested_arg in nested_args:
+                                    if isinstance(nested_arg, dict):
+                                        if nested_arg.get('rule') == 'Constant':
+                                            nested_arg_strs.append(repr(nested_arg.get('args', {}).get('value', '')))
+                                        elif nested_arg.get('type') == 'constant':
+                                            nested_arg_strs.append(repr(nested_arg.get('value', '')))
+                                        else:
+                                            nested_arg_strs.append('None')
+                                    else:
+                                        nested_arg_strs.append(repr(nested_arg))
+                                if nested_arg_strs:
+                                    arg_strs.append(f'HelperCall(helper_func={nested_func_name}, helper_name="{nested_helper}", args=({", ".join(nested_arg_strs)},))')
+                                else:
+                                    arg_strs.append(f'HelperCall(helper_func={nested_func_name}, helper_name="{nested_helper}")')
+                                self.required_imports.add('HelperCall')
                         else:
                             # Unknown nested helper - assume True (optimistic approximation)
                             arg_strs.append('True')
@@ -2767,6 +2896,7 @@ class HelperCodeGenerator:
             'variable': self._expr_name,  # alias
             'item_check': self._expr_item_check,
             'item_check_count': self._expr_item_check_count,  # for SM helpers
+            'item_check_count_with_mapping': self._expr_item_check_count_with_mapping,  # for SM item count with mapping
             'item_check_with_mapping': self._expr_item_check_with_mapping,  # for SM item name mapping
             'count_check': self._expr_count_check,
             'group_check': self._expr_group_check,
@@ -3124,6 +3254,39 @@ class HelperCodeGenerator:
             count = str(count_raw)
 
         return f'state.has({item}, player, {count})'
+
+    def _expr_item_check_count_with_mapping(self, expr: Dict[str, Any]) -> str:
+        """Generate state.has() count check with item name mapping for SM helpers.
+
+        Handles item count comparisons like 'has at least 3 Energy Tanks' where
+        the item name needs to be mapped from VARIA names to AP names.
+        """
+        item_raw = expr.get('item', '')
+        count_raw = expr.get('count', 1)
+        item_name_mapping = expr.get('item_name_mapping', {})
+
+        # Handle count - could be constant or variable
+        if isinstance(count_raw, dict):
+            if count_raw.get('type') == 'param_ref':
+                count = count_raw.get('name', '_count')
+            elif count_raw.get('type') == 'constant':
+                count = str(count_raw.get('value', 1))
+            else:
+                count = self._generate_expression(count_raw)
+        else:
+            count = str(count_raw)
+
+        # Handle item - use the mapping
+        if isinstance(item_raw, dict) and item_raw.get('type') == 'param_ref':
+            item_param = item_raw.get('name', 'item')
+            # Generate code that looks up the item in the mapping
+            return f'state.has({repr(item_name_mapping)}.get({item_param}, {item_param}), player, {count})'
+        elif isinstance(item_raw, str):
+            # Constant item name - resolve mapping at codegen time
+            mapped_item = item_name_mapping.get(item_raw, item_raw)
+            return f'state.has({repr(mapped_item)}, player, {count})'
+        else:
+            return f'state.has({repr(item_raw)}, player, {count})'
 
     def _expr_compare(self, expr: Dict[str, Any]) -> str:
         """Generate comparison expression."""

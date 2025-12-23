@@ -1584,25 +1584,33 @@ class SMGameExportHandler(GenericGameExportHandler):
         }
 
         # wand - AND of SMBools, returns True if all args are True
-        # Since all canXXX helpers return True, wand of them also returns True
-        # (Simplified: nested helper calls can't be properly evaluated, so assume True)
+        # Use all_of to properly AND the variadic arguments
         helpers['wand'] = {
             'params': ['*args'],
-            'body': {'type': 'constant', 'value': True}
+            'body': {
+                'type': 'all_of',
+                'conditions': {'type': 'param_ref', 'name': 'args'}
+            }
         }
 
         # wor - OR of SMBools, returns True if any arg is True
-        # Since all canXXX helpers return True, wor of them also returns True
+        # Use any_of to properly OR the variadic arguments
         helpers['wor'] = {
             'params': ['*args'],
-            'body': {'type': 'constant', 'value': True}
+            'body': {
+                'type': 'any_of',
+                'conditions': {'type': 'param_ref', 'name': 'args'}
+            }
         }
 
         # wnot - NOT of SMBool
-        # For worldgen simplification, wnot returns False (not True = False)
+        # Properly negate the argument
         helpers['wnot'] = {
             'params': ['arg'],
-            'body': {'type': 'constant', 'value': False}
+            'body': {
+                'type': 'not',
+                'condition': {'type': 'param_ref', 'name': 'arg'}
+            }
         }
 
         # SMBool constructor - for worldgen, just returns the boolean part
@@ -1649,14 +1657,16 @@ class SMGameExportHandler(GenericGameExportHandler):
         }
 
         # itemCountOk - check if player has enough of an item type
+        # Uses the same VARIA->AP name mapping as haveItem
         helpers['itemCountOk'] = {
             'params': ['item', 'count', 'difficulty'],
             'defaults': {'difficulty': 0},
             'body': {
-                'type': 'item_check_count',
+                'type': 'item_check_count_with_mapping',
                 'item': {'type': 'param_ref', 'name': 'item'},
                 'count': {'type': 'param_ref', 'name': 'count'},
-                'compare': '>='
+                'compare': '>=',
+                'item_name_mapping': varia_to_ap
             }
         }
 
@@ -1756,6 +1766,62 @@ class SMGameExportHandler(GenericGameExportHandler):
                     ]},
                     {'type': 'item_check', 'item': 'Screw Attack', 'count': 1},
                     {'type': 'item_check', 'item': 'Speed Booster', 'count': 1}
+                ]
+            }
+        }
+
+        # canPassTerminatorBombWall - Speed Booster OR canDestroyBombWalls
+        # Original VARIA: wor(wand(SpeedBooster, wor(knows...)), canDestroyBombWalls())
+        # Since knows are True, simplifies to: Speed Booster OR canDestroyBombWalls
+        helpers['canPassTerminatorBombWall'] = {
+            'params': ['fromLandingSite'],
+            'defaults': {'fromLandingSite': True},
+            'body': {
+                'type': 'or',
+                'conditions': [
+                    {'type': 'item_check', 'item': 'Speed Booster', 'count': 1},
+                    # Inline canDestroyBombWalls logic
+                    {'type': 'and', 'conditions': [
+                        {'type': 'item_check', 'item': 'Morph Ball', 'count': 1},
+                        {'type': 'item_check', 'item': 'Bomb', 'count': 1}
+                    ]},
+                    {'type': 'and', 'conditions': [
+                        {'type': 'item_check', 'item': 'Morph Ball', 'count': 1},
+                        {'type': 'item_check', 'item': 'Power Bomb', 'count': 1}
+                    ]},
+                    {'type': 'item_check', 'item': 'Screw Attack', 'count': 1}
+                ]
+            }
+        }
+
+        # canPassCrateriaGreenPirates - pass the green pirates in Crateria
+        # Original VARIA: wor(canPassBombPassages, haveMissileOrSuper, energyReserveCountOk(1), beamWeapons)
+        # Simplified to: bomb passages OR missiles/supers OR energy tank OR beams
+        helpers['canPassCrateriaGreenPirates'] = {
+            'params': [],
+            'body': {
+                'type': 'or',
+                'conditions': [
+                    # canPassBombPassages = Morph + (Bombs OR Power Bombs)
+                    {'type': 'and', 'conditions': [
+                        {'type': 'item_check', 'item': 'Morph Ball', 'count': 1},
+                        {'type': 'or', 'conditions': [
+                            {'type': 'item_check', 'item': 'Bomb', 'count': 1},
+                            {'type': 'item_check', 'item': 'Power Bomb', 'count': 1}
+                        ]}
+                    ]},
+                    # haveMissileOrSuper
+                    {'type': 'item_check', 'item': 'Missile', 'count': 1},
+                    {'type': 'item_check', 'item': 'Super Missile', 'count': 1},
+                    # energyReserveCountOk(1)
+                    {'type': 'item_check', 'item': 'Energy Tank', 'count': 1},
+                    # Beam weapons and Screw Attack
+                    {'type': 'item_check', 'item': 'Charge Beam', 'count': 1},
+                    {'type': 'item_check', 'item': 'Ice Beam', 'count': 1},
+                    {'type': 'item_check', 'item': 'Wave Beam', 'count': 1},
+                    {'type': 'item_check', 'item': 'Spazer', 'count': 1},
+                    {'type': 'item_check', 'item': 'Plasma Beam', 'count': 1},
+                    {'type': 'item_check', 'item': 'Screw Attack', 'count': 1}
                 ]
             }
         }
