@@ -655,8 +655,9 @@ class RuleCodeGenerator:
 
             # If count is a complex expression (dict), use Compare(CountItem(...), ">=", expr)
             if isinstance(count, dict):
-                # Convert the count expression to Python code
-                count_expr = self._convert_rule(count)
+                # Use _convert_compare_operand to preserve numeric SettingValue values
+                # instead of _convert_rule which converts them to boolean True_/False_
+                count_expr = self._convert_compare_operand(count)
                 self.required_imports.add('Compare')
                 self.required_imports.add('CountItem')
                 return f'Compare(CountItem({repr(item_name)}), ">=", {count_expr})'
