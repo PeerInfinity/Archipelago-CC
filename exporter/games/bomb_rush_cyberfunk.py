@@ -147,10 +147,9 @@ class BombRushCyberfunkGameExportHandler(GenericGameExportHandler):
                 ]
             }
 
-        else:
-            # Threshold > 25 requires region access beyond Hideout
-            # Use versum_hill_entrance helper (requires 20 REP) plus all graffiti types
-            # This is a conservative approximation
+        elif threshold <= 30:
+            # Need versum_hill_entrance (20 REP) + all graffiti types
+            # Total with entrance: 10+4+7+3 + 1+3+2 = 30
             return {
                 'type': 'and',
                 'conditions': [
@@ -158,6 +157,198 @@ class BombRushCyberfunkGameExportHandler(GenericGameExportHandler):
                     {'type': 'group_check', 'group': 'graffitil'},
                     {'type': 'group_check', 'group': 'graffitixl'},
                     {'type': 'helper', 'name': 'versum_hill_entrance', 'args': []}
+                ]
+            }
+
+        elif threshold <= 73:
+            # Need versum_hill_entrance (20 REP) + ch1_roadblock (graffitiL) + all graffiti types
+            # Total with roadblock: 30 + 11+13+13+6 = 73
+            # Note: versum_hill_ch1_roadblock with limit=False just checks graffitiL,
+            # so we explicitly require versum_hill_entrance for the REP check
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'helper', 'name': 'versum_hill_entrance', 'args': []}
+                ]
+            }
+
+        elif threshold <= 77:
+            # Need versum_hill_all_challenges (65 REP) + roadblock + all graffiti types
+            # all_challenges adds M+3, L+1 in spots_m/l before chapter2 check
+            # Total: 73 + 3 + 1 = 77
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'helper', 'name': 'versum_hill_all_challenges', 'args': []}
+                ]
+            }
+
+        elif threshold <= 78:
+            # Need versum_hill_basketball_court (90 REP) for XL+1
+            # Total: 77 + 1 = 78
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'helper', 'name': 'versum_hill_basketball_court', 'args': []}
+                ]
+            }
+
+        elif threshold <= 139:
+            # Threshold 79-139 requires chapter 2 completion
+            # Chapter 2 adds S+12, M+16, L+14, XL+9 = 51 more spots (total ~129)
+            # Plus versum_hill_oldhead and some other locations get ~10 more
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]}
+                ]
+            }
+
+        elif threshold <= 174:
+            # Threshold 140-174 requires brink_terminal_entrance
+            # brink_terminal_entrance = is_girl + 180 REP + chapter 2
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'helper', 'name': 'brink_terminal_entrance', 'args': []}
+                ]
+            }
+
+        elif threshold <= 184:
+            # Threshold 175-184 requires brink_terminal_plaza (220 REP)
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'helper', 'name': 'brink_terminal_plaza', 'args': []}
+                ]
+            }
+
+        elif threshold <= 189:
+            # Threshold 185-189 requires brink_terminal_tower (280 REP)
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'helper', 'name': 'brink_terminal_tower', 'args': []}
+                ]
+            }
+
+        elif threshold <= 249:
+            # Threshold 190-249 requires millennium_mall_entrance
+            # millennium_mall_entrance = 380 REP + chapter 3
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'helper', 'name': 'millennium_mall_entrance', 'args': []}
+                ]
+            }
+
+        elif threshold <= 269:
+            # Threshold 250-269 requires millennium_mall_theater (491 REP)
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'helper', 'name': 'millennium_mall_theater', 'args': []}
+                ]
+            }
+
+        elif threshold <= 324:
+            # Threshold 270-324 requires pyramid_island_entrance (chapter 4)
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'helper', 'name': 'pyramid_island_entrance', 'args': []}
+                ]
+            }
+
+        elif threshold <= 329:
+            # Threshold 325-329 requires Pyramid Island - Maze
+            # Maze requires pyramid_island_oldhead (780 REP)
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'helper', 'name': 'pyramid_island_oldhead', 'args': []}
+                ]
+            }
+
+        elif threshold <= 344:
+            # Threshold 330-344 requires mataan_smoke_wall (chapter 5 + 850 REP)
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'helper', 'name': 'mataan_smoke_wall', 'args': []}
+                ]
+            }
+
+        elif threshold <= 364:
+            # Threshold 345-364 requires mataan_deep_city
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'helper', 'name': 'mataan_deep_city', 'args': []}
+                ]
+            }
+
+        elif threshold <= 369:
+            # Threshold 365-369 requires mataan_oldhead (950 REP)
+            # This is for Mataan - Red Light District
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'helper', 'name': 'mataan_oldhead', 'args': []}
+                ]
+            }
+
+        else:
+            # Threshold >= 370 requires mataan_deepest (crew battle)
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'helper', 'name': 'mataan_deepest', 'args': []}
                 ]
             }
 
