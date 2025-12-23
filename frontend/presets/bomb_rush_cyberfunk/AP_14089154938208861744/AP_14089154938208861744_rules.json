@@ -41,39 +41,7 @@
             "name": "Tagged 5 Graffiti Spots",
             "id": 2308169,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 5
-                  },
-                  "_converted_from_cc": true
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Graffiti (XL - WILD STRUXXA)",
@@ -87,39 +55,7 @@
             "name": "Tagged 10 Graffiti Spots",
             "id": 2308170,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 10
-                  },
-                  "_converted_from_cc": true
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Music (Two Days Off)",
@@ -133,37 +69,30 @@
             "name": "Tagged 15 Graffiti Spots",
             "id": 2308171,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "Or",
+              "children": [
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "HasGroup",
+                      "args": {
+                        "group": "graffitim"
+                      }
+                    },
+                    {
+                      "rule": "HasGroup",
+                      "args": {
+                        "group": "graffitixl"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 15
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 }
               ]
             },
@@ -179,37 +108,41 @@
             "name": "Tagged 20 Graffiti Spots",
             "id": 2308172,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "Or",
+              "children": [
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "HasGroup",
+                      "args": {
+                        "group": "graffitil"
+                      }
+                    },
+                    {
+                      "rule": "HasGroup",
+                      "args": {
+                        "group": "graffitim"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 20
-                  },
-                  "_converted_from_cc": true
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "HasGroup",
+                      "args": {
+                        "group": "graffitil"
+                      }
+                    },
+                    {
+                      "rule": "HasGroup",
+                      "args": {
+                        "group": "graffitixl"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -225,37 +158,31 @@
             "name": "Tagged 25 Graffiti Spots",
             "id": 2308173,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 25
-                  },
-                  "_converted_from_cc": true
+                    "group": "skates"
+                  }
                 }
               ]
             },
@@ -271,36 +198,29 @@
             "name": "Tagged 30 Graffiti Spots",
             "id": 2308174,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 30
-                  },
+                  "rule": "versum_hill_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -317,36 +237,29 @@
             "name": "Tagged 35 Graffiti Spots",
             "id": 2308175,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 35
-                  },
+                  "rule": "versum_hill_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -363,36 +276,29 @@
             "name": "Tagged 40 Graffiti Spots",
             "id": 2308176,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 40
-                  },
+                  "rule": "versum_hill_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -409,36 +315,29 @@
             "name": "Tagged 45 Graffiti Spots",
             "id": 2308177,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 45
-                  },
+                  "rule": "versum_hill_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -455,36 +354,29 @@
             "name": "Tagged 50 Graffiti Spots",
             "id": 2308178,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 50
-                  },
+                  "rule": "versum_hill_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -501,36 +393,29 @@
             "name": "Tagged 55 Graffiti Spots",
             "id": 2308179,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 55
-                  },
+                  "rule": "versum_hill_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -547,36 +432,29 @@
             "name": "Tagged 60 Graffiti Spots",
             "id": 2308180,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 60
-                  },
+                  "rule": "versum_hill_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -593,36 +471,29 @@
             "name": "Tagged 65 Graffiti Spots",
             "id": 2308181,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 65
-                  },
+                  "rule": "versum_hill_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -639,36 +510,29 @@
             "name": "Tagged 70 Graffiti Spots",
             "id": 2308182,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 70
-                  },
+                  "rule": "versum_hill_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -685,36 +549,29 @@
             "name": "Tagged 75 Graffiti Spots",
             "id": 2308183,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 75
-                  },
+                  "rule": "versum_hill_all_challenges",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -731,37 +588,39 @@
             "name": "Tagged 80 Graffiti Spots",
             "id": 2308184,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 80
-                  },
-                  "_converted_from_cc": true
+                  "rule": "current_chapter",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 2
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ]
                 }
               ]
             },
@@ -777,37 +636,39 @@
             "name": "Tagged 85 Graffiti Spots",
             "id": 2308185,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 85
-                  },
-                  "_converted_from_cc": true
+                  "rule": "current_chapter",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 2
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ]
                 }
               ]
             },
@@ -823,37 +684,39 @@
             "name": "Tagged 90 Graffiti Spots",
             "id": 2308186,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 90
-                  },
-                  "_converted_from_cc": true
+                  "rule": "current_chapter",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 2
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ]
                 }
               ]
             },
@@ -869,37 +732,39 @@
             "name": "Tagged 95 Graffiti Spots",
             "id": 2308187,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 95
-                  },
-                  "_converted_from_cc": true
+                  "rule": "current_chapter",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 2
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ]
                 }
               ]
             },
@@ -915,37 +780,39 @@
             "name": "Tagged 100 Graffiti Spots",
             "id": 2308188,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 100
-                  },
-                  "_converted_from_cc": true
+                  "rule": "current_chapter",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 2
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ]
                 }
               ]
             },
@@ -961,37 +828,39 @@
             "name": "Tagged 105 Graffiti Spots",
             "id": 2308189,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 105
-                  },
-                  "_converted_from_cc": true
+                  "rule": "current_chapter",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 2
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ]
                 }
               ]
             },
@@ -1007,37 +876,39 @@
             "name": "Tagged 110 Graffiti Spots",
             "id": 2308190,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 110
-                  },
-                  "_converted_from_cc": true
+                  "rule": "current_chapter",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 2
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ]
                 }
               ]
             },
@@ -1053,37 +924,39 @@
             "name": "Tagged 115 Graffiti Spots",
             "id": 2308191,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 115
-                  },
-                  "_converted_from_cc": true
+                  "rule": "current_chapter",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 2
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ]
                 }
               ]
             },
@@ -1099,37 +972,39 @@
             "name": "Tagged 120 Graffiti Spots",
             "id": 2308192,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 120
-                  },
-                  "_converted_from_cc": true
+                  "rule": "current_chapter",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 2
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ]
                 }
               ]
             },
@@ -1145,37 +1020,39 @@
             "name": "Tagged 125 Graffiti Spots",
             "id": 2308193,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 125
-                  },
-                  "_converted_from_cc": true
+                  "rule": "current_chapter",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 2
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ]
                 }
               ]
             },
@@ -1191,37 +1068,39 @@
             "name": "Tagged 130 Graffiti Spots",
             "id": 2308194,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 130
-                  },
-                  "_converted_from_cc": true
+                  "rule": "current_chapter",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 2
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ]
                 }
               ]
             },
@@ -1237,37 +1116,39 @@
             "name": "Tagged 135 Graffiti Spots",
             "id": 2308195,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 135
-                  },
-                  "_converted_from_cc": true
+                  "rule": "current_chapter",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 2
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ]
                 }
               ]
             },
@@ -1283,36 +1164,29 @@
             "name": "Tagged 140 Graffiti Spots",
             "id": 2308196,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 140
-                  },
+                  "rule": "brink_terminal_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -1329,36 +1203,29 @@
             "name": "Tagged 145 Graffiti Spots",
             "id": 2308197,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 145
-                  },
+                  "rule": "brink_terminal_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -1375,36 +1242,29 @@
             "name": "Tagged 150 Graffiti Spots",
             "id": 2308198,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 150
-                  },
+                  "rule": "brink_terminal_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -1421,36 +1281,29 @@
             "name": "Tagged 155 Graffiti Spots",
             "id": 2308199,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 155
-                  },
+                  "rule": "brink_terminal_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -1467,36 +1320,29 @@
             "name": "Tagged 160 Graffiti Spots",
             "id": 2308200,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 160
-                  },
+                  "rule": "brink_terminal_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -1513,36 +1359,29 @@
             "name": "Tagged 165 Graffiti Spots",
             "id": 2308201,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 165
-                  },
+                  "rule": "brink_terminal_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -1559,36 +1398,29 @@
             "name": "Tagged 170 Graffiti Spots",
             "id": 2308202,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 170
-                  },
+                  "rule": "brink_terminal_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -1605,36 +1437,29 @@
             "name": "Tagged 175 Graffiti Spots",
             "id": 2308203,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 175
-                  },
+                  "rule": "brink_terminal_plaza",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -1651,36 +1476,29 @@
             "name": "Tagged 180 Graffiti Spots",
             "id": 2308204,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 180
-                  },
+                  "rule": "brink_terminal_plaza",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -1697,36 +1515,29 @@
             "name": "Tagged 185 Graffiti Spots",
             "id": 2308205,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 185
-                  },
+                  "rule": "brink_terminal_tower",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -1743,36 +1554,29 @@
             "name": "Tagged 190 Graffiti Spots",
             "id": 2308206,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 190
-                  },
+                  "rule": "millennium_mall_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -1789,36 +1593,29 @@
             "name": "Tagged 195 Graffiti Spots",
             "id": 2308207,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 195
-                  },
+                  "rule": "millennium_mall_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -1835,36 +1632,29 @@
             "name": "Tagged 200 Graffiti Spots",
             "id": 2308208,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 200
-                  },
+                  "rule": "millennium_mall_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -1881,36 +1671,29 @@
             "name": "Tagged 205 Graffiti Spots",
             "id": 2308209,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 205
-                  },
+                  "rule": "millennium_mall_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -1927,36 +1710,29 @@
             "name": "Tagged 210 Graffiti Spots",
             "id": 2308210,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 210
-                  },
+                  "rule": "millennium_mall_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -1973,36 +1749,29 @@
             "name": "Tagged 215 Graffiti Spots",
             "id": 2308211,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 215
-                  },
+                  "rule": "millennium_mall_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2019,36 +1788,29 @@
             "name": "Tagged 220 Graffiti Spots",
             "id": 2308212,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 220
-                  },
+                  "rule": "millennium_mall_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2065,36 +1827,29 @@
             "name": "Tagged 225 Graffiti Spots",
             "id": 2308213,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 225
-                  },
+                  "rule": "millennium_mall_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2111,36 +1866,29 @@
             "name": "Tagged 230 Graffiti Spots",
             "id": 2308214,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 230
-                  },
+                  "rule": "millennium_mall_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2157,36 +1905,29 @@
             "name": "Tagged 235 Graffiti Spots",
             "id": 2308215,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 235
-                  },
+                  "rule": "millennium_mall_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2203,36 +1944,29 @@
             "name": "Tagged 240 Graffiti Spots",
             "id": 2308216,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 240
-                  },
+                  "rule": "millennium_mall_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2249,36 +1983,29 @@
             "name": "Tagged 245 Graffiti Spots",
             "id": 2308217,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 245
-                  },
+                  "rule": "millennium_mall_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2295,36 +2022,29 @@
             "name": "Tagged 250 Graffiti Spots",
             "id": 2308218,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 250
-                  },
+                  "rule": "millennium_mall_theater",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2341,36 +2061,29 @@
             "name": "Tagged 255 Graffiti Spots",
             "id": 2308219,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 255
-                  },
+                  "rule": "millennium_mall_theater",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2387,36 +2100,29 @@
             "name": "Tagged 260 Graffiti Spots",
             "id": 2308220,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 260
-                  },
+                  "rule": "millennium_mall_theater",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2433,36 +2139,29 @@
             "name": "Tagged 265 Graffiti Spots",
             "id": 2308221,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 265
-                  },
+                  "rule": "millennium_mall_theater",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2479,36 +2178,29 @@
             "name": "Tagged 270 Graffiti Spots",
             "id": 2308222,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 270
-                  },
+                  "rule": "pyramid_island_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2525,36 +2217,29 @@
             "name": "Tagged 275 Graffiti Spots",
             "id": 2308223,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 275
-                  },
+                  "rule": "pyramid_island_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2571,36 +2256,29 @@
             "name": "Tagged 280 Graffiti Spots",
             "id": 2308224,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 280
-                  },
+                  "rule": "pyramid_island_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2617,36 +2295,29 @@
             "name": "Tagged 285 Graffiti Spots",
             "id": 2308225,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 285
-                  },
+                  "rule": "pyramid_island_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2663,36 +2334,29 @@
             "name": "Tagged 290 Graffiti Spots",
             "id": 2308226,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 290
-                  },
+                  "rule": "pyramid_island_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2709,36 +2373,29 @@
             "name": "Tagged 295 Graffiti Spots",
             "id": 2308227,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 295
-                  },
+                  "rule": "pyramid_island_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2755,36 +2412,29 @@
             "name": "Tagged 300 Graffiti Spots",
             "id": 2308228,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 300
-                  },
+                  "rule": "pyramid_island_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2801,36 +2451,29 @@
             "name": "Tagged 305 Graffiti Spots",
             "id": 2308229,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 305
-                  },
+                  "rule": "pyramid_island_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2847,36 +2490,29 @@
             "name": "Tagged 310 Graffiti Spots",
             "id": 2308230,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 310
-                  },
+                  "rule": "pyramid_island_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2893,36 +2529,29 @@
             "name": "Tagged 315 Graffiti Spots",
             "id": 2308231,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 315
-                  },
+                  "rule": "pyramid_island_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2939,36 +2568,29 @@
             "name": "Tagged 320 Graffiti Spots",
             "id": 2308232,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 320
-                  },
+                  "rule": "pyramid_island_entrance",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -2985,36 +2607,29 @@
             "name": "Tagged 325 Graffiti Spots",
             "id": 2308233,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 325
-                  },
+                  "rule": "pyramid_island_oldhead",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -3031,36 +2646,29 @@
             "name": "Tagged 330 Graffiti Spots",
             "id": 2308234,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 330
-                  },
+                  "rule": "mataan_smoke_wall",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -3077,36 +2685,29 @@
             "name": "Tagged 335 Graffiti Spots",
             "id": 2308235,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 335
-                  },
+                  "rule": "mataan_smoke_wall",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -3123,36 +2724,29 @@
             "name": "Tagged 340 Graffiti Spots",
             "id": 2308236,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 340
-                  },
+                  "rule": "mataan_smoke_wall",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -3169,36 +2763,29 @@
             "name": "Tagged 345 Graffiti Spots",
             "id": 2308237,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 345
-                  },
+                  "rule": "mataan_deep_city",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -3215,36 +2802,29 @@
             "name": "Tagged 350 Graffiti Spots",
             "id": 2308238,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 350
-                  },
+                  "rule": "mataan_deep_city",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -3261,36 +2841,29 @@
             "name": "Tagged 355 Graffiti Spots",
             "id": 2308239,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 355
-                  },
+                  "rule": "mataan_deep_city",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -3307,36 +2880,29 @@
             "name": "Tagged 360 Graffiti Spots",
             "id": 2308240,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 360
-                  },
+                  "rule": "mataan_deep_city",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -3353,36 +2919,29 @@
             "name": "Tagged 365 Graffiti Spots",
             "id": 2308241,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 365
-                  },
+                  "rule": "mataan_oldhead",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -3399,36 +2958,29 @@
             "name": "Tagged 370 Graffiti Spots",
             "id": 2308242,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 370
-                  },
+                  "rule": "mataan_deepest",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -3445,36 +2997,29 @@
             "name": "Tagged 375 Graffiti Spots",
             "id": 2308243,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 375
-                  },
+                  "rule": "mataan_deepest",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -3491,36 +3036,29 @@
             "name": "Tagged 380 Graffiti Spots",
             "id": 2308244,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 380
-                  },
+                  "rule": "mataan_deepest",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -3537,36 +3075,29 @@
             "name": "Tagged 385 Graffiti Spots",
             "id": 2308245,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 385
-                  },
+                  "rule": "mataan_deepest",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -3583,36 +3114,29 @@
             "name": "Tagged 389 Graffiti Spots",
             "id": 2308246,
             "access_rule": {
-              "rule": "graffiti_spots",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitim"
+                  }
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "HasGroup",
                   "args": {
-                    "value": 0
-                  },
-                  "_converted_from_cc": true
+                    "group": "graffitixl"
+                  }
                 },
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 389
-                  },
+                  "rule": "mataan_deepest",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
