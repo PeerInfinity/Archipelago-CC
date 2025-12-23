@@ -580,6 +580,7 @@ class RuleCodeGenerator:
                     'Name': 'name',  # Option/setting references
                     'CountItem': 'count_item',  # Item count for arithmetic/comparisons
                     'AST_min': 'min',  # Min operation from AST export
+                    'List': 'list',  # Rule Builder format list for comparisons
                 }
                 rule_type = rb_to_type.get(rb_rule, '')
 
@@ -635,6 +636,19 @@ class RuleCodeGenerator:
                         'region': args.get('region', '')
                     }
                     return self._convert_can_reach_region(region_rule)
+
+                # Check if this is an AST_placement_lookup rule (placement lookup from AST format)
+                if rb_rule == 'AST_placement_lookup':
+                    args = rule.get('args', {})
+                    placement_rule = {
+                        'type': 'placement_lookup',
+                        'location': {'type': 'constant', 'value': args.get('location', '')}
+                    }
+                    return self._convert_placement_lookup(placement_rule)
+
+                # Check if this is an AST_function_call rule (option.to_bool() style calls)
+                if rb_rule == 'AST_function_call':
+                    return self._convert_ast_function_call(rule)
 
         # Dispatch based on rule type
         converters = {
@@ -939,6 +953,26 @@ class RuleCodeGenerator:
         if rb_rule == 'AST_block':
             # Convert AST block to evaluated result
             return self._convert_ast_block(rule)
+
+        if rb_rule == 'List':
+            # Convert Rule Builder format List to Python list literal
+            # Structure: {"rule": "List", "args": {"value": [...]}}
+            value_list = args.get('value', [])
+            converted_items = []
+            for item in value_list:
+                if isinstance(item, dict):
+                    # Check for Rule Builder format Constant
+                    if item.get('rule') == 'Constant':
+                        converted_items.append(repr(item.get('args', {}).get('value')))
+                    elif item.get('type') == 'constant':
+                        converted_items.append(repr(item.get('value')))
+                    else:
+                        # Other rule types - convert recursively
+                        converted_items.append(self._convert_rule(item))
+                else:
+                    # Raw value
+                    converted_items.append(repr(item))
+            return f'[{", ".join(converted_items)}]'
 
         if rb_rule == 'Name':
             # Convert Name rule to constant based on settings
@@ -1618,6 +1652,35 @@ class RuleCodeGenerator:
                     item_name = self.placements[location_name]
                     return [item_name, 1]  # [item_name, player]
             return None  # Unknown location
+
+        # Handle Rule Builder format AST_placement_lookup
+        rb_rule = operand.get('rule', '')
+        if rb_rule == 'AST_placement_lookup':
+            args = operand.get('args', {})
+            location_name = args.get('location', '')
+            if location_name and location_name in self.placements:
+                item_name = self.placements[location_name]
+                return [item_name, 1]  # [item_name, player]
+            return None  # Unknown location
+
+        # Handle Rule Builder format List (e.g., {"rule": "List", "args": {"value": [...]}})
+        if rb_rule == 'List':
+            args = operand.get('args', {})
+            value_list = args.get('value', [])
+            result = []
+            for item in value_list:
+                if isinstance(item, dict):
+                    # Check for Rule Builder format Constant
+                    if item.get('rule') == 'Constant':
+                        result.append(item.get('args', {}).get('value'))
+                    elif item.get('type') == 'constant':
+                        result.append(item.get('value'))
+                    else:
+                        # Non-constant item in list - can't statically evaluate
+                        return None
+                else:
+                    result.append(item)
+            return result
 
         return None
 
@@ -2547,6 +2610,94 @@ class RuleCodeGenerator:
 
         # Location not found - return None which will make comparisons fail correctly
         return 'None'
+
+    def _convert_ast_function_call(self, rule: Dict[str, Any]) -> str:
+        """Convert AST_function_call to resolved constant.
+
+        This handles function calls like options.open_pyramid.to_bool()
+        by extracting the option name and resolving it from settings.
+        """
+        args = rule.get('args', {})
+        function = args.get('function', {})
+
+        # Try to extract the option name from the function expression
+        # Structure: world.worlds[1].options.<option_name>.to_bool()
+        option_name = self._extract_option_name_from_function(function)
+
+        if option_name:
+            # Check if we have this setting
+            if option_name in self.settings:
+                value = self.settings[option_name]
+                # Convert to boolean
+                if isinstance(value, bool):
+                    return self._make_bool_constant(value)
+                elif isinstance(value, (int, float)):
+                    return self._make_bool_constant(bool(value))
+                elif isinstance(value, str):
+                    # Common string values that mean "enabled"
+                    return self._make_bool_constant(value.lower() in ('true', 'on', 'yes', '1'))
+                else:
+                    return self._make_bool_constant(False)
+
+        # Unknown function call - default to True (accessible)
+        # This is for things like boss.can_defeat() which should be True
+        # if you can reach the location (progression will handle item requirements)
+        return self._make_bool_constant(True)
+
+    def _extract_option_name_from_function(self, function: Dict[str, Any]) -> Optional[str]:
+        """Extract option name from a function call structure.
+
+        Handles patterns like:
+        - world.worlds[1].options.<option_name>.to_bool()
+        - self.options.<option_name>.to_bool()
+        - options.<option_name>
+        """
+        if not isinstance(function, dict):
+            return None
+
+        func_type = function.get('type', '')
+
+        # Handle attribute access: obj.attr
+        if func_type == 'attribute':
+            obj = function.get('object', {})
+            attr = function.get('attr', '')
+
+            # If attr is 'to_bool', look at the object for the option name
+            if attr == 'to_bool':
+                return self._extract_option_name_from_function(obj)
+
+            # If the object is 'options' or ends with '.options', the attr is the option name
+            obj_name = self._get_attribute_chain_name(obj)
+            if obj_name and (obj_name == 'options' or obj_name.endswith('.options')):
+                return attr
+
+            # Otherwise, keep traversing
+            return attr
+
+        return None
+
+    def _get_attribute_chain_name(self, expr: Dict[str, Any]) -> Optional[str]:
+        """Get the full attribute chain name from an expression."""
+        if not isinstance(expr, dict):
+            return None
+
+        expr_type = expr.get('type', '')
+
+        if expr_type == 'name':
+            return expr.get('name', '')
+
+        if expr_type == 'attribute':
+            obj_name = self._get_attribute_chain_name(expr.get('object', {}))
+            attr = expr.get('attr', '')
+            if obj_name:
+                return f"{obj_name}.{attr}"
+            return attr
+
+        if expr_type == 'subscript':
+            # Skip subscripts like [1] - just return the value part
+            return self._get_attribute_chain_name(expr.get('value', {}))
+
+        return None
 
     def _convert_conditional(self, rule: Dict[str, Any]) -> str:
         """Convert conditional rule to Conditional()."""
