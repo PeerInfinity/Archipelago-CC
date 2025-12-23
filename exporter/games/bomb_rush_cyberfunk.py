@@ -147,17 +147,138 @@ class BombRushCyberfunkGameExportHandler(GenericGameExportHandler):
                 ]
             }
 
-        else:
-            # Threshold > 25 requires region access beyond Hideout
-            # Use versum_hill_entrance helper (requires 20 REP) plus all graffiti types
-            # This is a conservative approximation
+        elif threshold <= 31:
+            # Threshold 26-31: versum_hill_entrance + inline_skates + all graffiti types
+            # S: 11, M: 7, L: 10 (with inline_skates), XL: 3 = 31 max
             return {
                 'type': 'and',
                 'conditions': [
                     {'type': 'group_check', 'group': 'graffitim'},
                     {'type': 'group_check', 'group': 'graffitil'},
                     {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
                     {'type': 'helper', 'name': 'versum_hill_entrance', 'args': []}
+                ]
+            }
+
+        elif threshold <= 74:
+            # Threshold 32-74: versum_hill_entrance + versum_hill_ch1_roadblock + all graffiti types
+            # S: 22, M: 20, L: 23 (with inline_skates), XL: 9 = 74 max
+            # The spot counting is sequential - you need versum_hill_entrance first to get the ch1_roadblock spots
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'versum_hill_entrance', 'args': []},
+                    {'type': 'helper', 'name': 'versum_hill_ch1_roadblock', 'args': []}
+                ]
+            }
+
+        elif threshold <= 78:
+            # Threshold 75-78: versum_hill_entrance + ch1_roadblock + all_challenges + all graffiti types
+            # S: 22, M: 23, L: 24, XL: 9 = 78 max (with all_challenges)
+            # versum_hill_all_challenges requires 65 REP
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'versum_hill_entrance', 'args': []},
+                    {'type': 'helper', 'name': 'versum_hill_ch1_roadblock', 'args': []},
+                    {'type': 'helper', 'name': 'versum_hill_all_challenges', 'args': []}
+                ]
+            }
+
+        elif threshold <= 79:
+            # Threshold 79: add basketball_court requirement
+            # S: 22, M: 23, L: 24, XL: 10 = 79 max with basketball_court
+            # versum_hill_basketball_court requires 90 REP
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'versum_hill_entrance', 'args': []},
+                    {'type': 'helper', 'name': 'versum_hill_ch1_roadblock', 'args': []},
+                    {'type': 'helper', 'name': 'versum_hill_all_challenges', 'args': []},
+                    {'type': 'helper', 'name': 'versum_hill_basketball_court', 'args': []}
+                ]
+            }
+
+        elif threshold <= 135:
+            # Threshold 80-135: chapter 2 access + all graffiti types
+            # Chapter 2 provides spots: S=34, M=39, L=38, XL=19 = 130
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'current_chapter', 'args': [{'type': 'constant', 'value': 2}]}
+                ]
+            }
+
+        elif threshold <= 170:
+            # Threshold 136-170: brink_terminal_entrance + all graffiti types
+            # Brink Terminal adds more spots after chapter 2
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'brink_terminal_entrance', 'args': []}
+                ]
+            }
+
+        elif threshold <= 189:
+            # Threshold 171-189: brink_terminal_plaza + all graffiti types
+            # Further Brink Terminal progress needed for these spots
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'brink_terminal_plaza', 'args': []}
+                ]
+            }
+
+        elif threshold <= 269:
+            # Threshold 190-269: millennium_mall_entrance + all graffiti types
+            # Millennium Mall adds more spots after Brink Terminal
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'millennium_mall_entrance', 'args': []}
+                ]
+            }
+
+        else:
+            # Threshold > 269: pyramid_island_entrance + all graffiti types
+            # Pyramid Island provides the remaining spots
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'group_check', 'group': 'graffitim'},
+                    {'type': 'group_check', 'group': 'graffitil'},
+                    {'type': 'group_check', 'group': 'graffitixl'},
+                    {'type': 'group_check', 'group': 'skates'},
+                    {'type': 'helper', 'name': 'pyramid_island_entrance', 'args': []}
                 ]
             }
 
