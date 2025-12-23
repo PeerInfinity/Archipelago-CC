@@ -2823,6 +2823,11 @@ class HelperCodeGenerator:
             if isinstance(value, bool):
                 return 'True' if value else 'False'
             elif isinstance(value, str):
+                # Convert string 'true'/'false' to Python booleans
+                if value.lower() == 'true':
+                    return 'True'
+                elif value.lower() == 'false':
+                    return 'False'
                 return repr(value)
             else:
                 return str(value)
@@ -2859,7 +2864,13 @@ class HelperCodeGenerator:
         if isinstance(value, str):
             return repr(value)
         if isinstance(value, list):
-            items = [self._generate_expression({'type': 'constant', 'value': v}) for v in value]
+            # Check if list items are AST nodes (have 'type' key) - process as expressions
+            items = []
+            for v in value:
+                if isinstance(v, dict) and 'type' in v:
+                    items.append(self._generate_expression(v))
+                else:
+                    items.append(self._generate_expression({'type': 'constant', 'value': v}))
             return f"[{', '.join(items)}]"
         if isinstance(value, dict):
             # Handle dict constants - convert string keys that look like integers
@@ -2870,7 +2881,11 @@ class HelperCodeGenerator:
                     key_repr = str(int(k))
                 except (ValueError, TypeError):
                     key_repr = repr(k)
-                val_repr = self._generate_expression({'type': 'constant', 'value': v})
+                # Check if dict value is an AST node (has 'type' key) - process as expression
+                if isinstance(v, dict) and 'type' in v:
+                    val_repr = self._generate_expression(v)
+                else:
+                    val_repr = self._generate_expression({'type': 'constant', 'value': v})
                 items.append(f"{key_repr}: {val_repr}")
             return "{" + ", ".join(items) + "}"
         return str(value)
