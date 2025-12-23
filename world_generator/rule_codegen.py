@@ -65,6 +65,42 @@ class RuleCodeGenerator:
             return rule
 
         rule_type = rule.get('type', '')
+        rb_rule = rule.get('rule', '')  # Rule Builder format uses 'rule' key
+
+        # Handle Rule Builder format AST_setting_value - resolve to constant
+        # This is critical for short-circuiting conditionals based on option values
+        if rb_rule == 'AST_setting_value':
+            args = rule.get('args', {})
+            setting_name = args.get('setting', '')
+            if setting_name in self.settings:
+                value = self.settings[setting_name]
+                return {'type': 'constant', 'value': value}
+            return rule
+
+        # Handle Rule Builder format Conditional - check for constant test
+        if rb_rule == 'Conditional':
+            args = rule.get('args', {})
+            expanded_test = self._expand_helper_refs(args.get('test', {}), visited, depth)
+            expanded_if_true = self._expand_helper_refs(args.get('if_true', {}), visited, depth)
+            expanded_if_false = self._expand_helper_refs(args.get('if_false', {}), visited, depth)
+
+            # If test resolved to a constant boolean, short-circuit to the appropriate branch
+            if isinstance(expanded_test, dict) and expanded_test.get('type') == 'constant':
+                test_value = expanded_test.get('value')
+                if test_value is True or test_value == 'true':
+                    return expanded_if_true
+                elif test_value is False or test_value == 'false':
+                    return expanded_if_false
+
+            # Can't short-circuit - return expanded conditional
+            return {
+                'rule': 'Conditional',
+                'args': {
+                    'test': expanded_test,
+                    'if_true': expanded_if_true,
+                    'if_false': expanded_if_false
+                }
+            }
 
         # If this is a helper reference, expand it (only at top level to avoid overly complex rules)
         if rule_type == 'helper':
@@ -486,7 +522,13 @@ class RuleCodeGenerator:
             self.required_imports.add('True_')
             return 'True_()'
 
-        return self._convert_rule(rule)
+        # Expand helper references and resolve setting_value references first.
+        # This allows conditionals with setting-based tests to be short-circuited
+        # when the setting evaluates to a constant boolean, avoiding generation
+        # of unreachable branches that may contain unresolvable expressions
+        # (like dynamic location lookups that only apply when a setting is false).
+        expanded_rule = self._expand_helper_refs(rule)
+        return self._convert_rule(expanded_rule)
 
     def _convert_rule(self, rule: Dict[str, Any]) -> str:
         """Internal recursive rule converter."""
