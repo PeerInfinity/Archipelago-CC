@@ -62,6 +62,10 @@
   ],
   "worldgen_test_exclude_list": [
     {
+      "name": "Bomb Rush Cyberfunk.yaml",
+      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
+    },
+    {
       "name": "Lingo.yaml",
       "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
     },
@@ -74,12 +78,16 @@
       "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
     },
     {
+      "name": "Super Metroid.yaml",
+      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
+    },
+    {
       "name": "The Witness.yaml",
       "reason": "Temporarily excluded. The WorldGen spoiler test takes 261 seconds."
     },
     {
       "name": "Yacht Dice.yaml",
-      "reason": "Temporarily excluded. The WorldGen cross-validation test times out at 300 seconds."
+      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
     }
   ]
 }
