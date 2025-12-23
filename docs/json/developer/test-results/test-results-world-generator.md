@@ -1,7 +1,9 @@
 # World Generator Test Results
 
 **Generated:** 2025-12-23 04:58:43 UTC
+
 **Seed:** 1
+
 **Mode:** Both (Canonical and Random)
 
 This report shows the results of round-trip testing the world generator.
@@ -22,12 +24,15 @@ Tests are run in two modes:
 
 ### Columns
 
-- **Original Gen**: Original world seed generation
-- **Original Test**: Spoiler test on original world
-- **World Gen**: World generator created _worldgen world from rules.json
-- **Test Gen**: _worldgen world seed generation
-- **Test Spoiler**: Spoiler test on _worldgen world
-- **Cross-Validation**: Original sphere log validates against _worldgen world
+**Original World Tests** (prerequisite - must pass before worldgen testing):
+- **Original Gen**: Generate a seed with the original Archipelago world
+- **Original Spoiler**: Validate the original world's sphere log against its rules.json
+
+**World Generator Tests** (the actual round-trip test):
+- **World Gen** (Stage 1): Create `_worldgen` Python world files from rules.json
+- **Seed Gen** (Stage 2): Generate a seed with the `_worldgen` world
+- **WorldGen Spoiler** (Stage 3): Validate the `_worldgen` world's sphere log against its rules
+- **Cross-Validation** (Stage 4): Validate the **original** sphere log against `_worldgen` rules (proves equivalent logic)
 
 ---
 
@@ -43,15 +48,15 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 |------|--------|--------|-------|
 | Original Generation | 68 | 0 | 68 |
 | Original Spoiler Test | 65 | 3 | 68 |
-| Test World Generation | 62 | 6 | 68 |
-| Test Seed Generation | 59 | 9 | 68 |
-| Test Spoiler Test | 59 | 0 | 59 |
-| Cross-Validation | 55 | 4 | 59 |
+| Stage 1: World Generation | 62 | 6 | 68 |
+| Stage 2: Seed Generation | 59 | 9 | 68 |
+| Stage 3: WorldGen Spoiler Test | 59 | 0 | 59 |
+| Stage 4: Cross-Validation | 55 | 4 | 59 |
 
 ## Canonical Detailed Results
 
-| Game | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler | Cross-Validation |
-|------|--------------|---------------|-----------|----------|--------------|------------------|
+| Game | Original Gen | Original Spoiler | World Gen | Seed Gen | WorldGen Spoiler | Cross-Validation |
+|------|--------------|------------------|-----------|----------|------------------|------------------|
 | A Hat in Time | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | A Link to the Past | ✅ | ✅ | ❌ | - | - | - |
 | A Short Hike | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -135,15 +140,15 @@ Tests run with standard randomized item placement.
 |------|--------|--------|-------|
 | Original Generation | 68 | 0 | 68 |
 | Original Spoiler Test | 65 | 3 | 68 |
-| Test World Generation | 62 | 6 | 68 |
-| Test Seed Generation | 59 | 9 | 68 |
-| Test Spoiler Test | 59 | 0 | 59 |
-| Cross-Validation | 28 | 31 | 59 |
+| Stage 1: World Generation | 62 | 6 | 68 |
+| Stage 2: Seed Generation | 59 | 9 | 68 |
+| Stage 3: WorldGen Spoiler Test | 59 | 0 | 59 |
+| Stage 4: Cross-Validation | 28 | 31 | 59 |
 
 ## Random Detailed Results
 
-| Game | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler | Cross-Validation |
-|------|--------------|---------------|-----------|----------|--------------|------------------|
+| Game | Original Gen | Original Spoiler | World Gen | Seed Gen | WorldGen Spoiler | Cross-Validation |
+|------|--------------|------------------|-----------|----------|------------------|------------------|
 | A Hat in Time | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | A Link to the Past | ✅ | ✅ | ❌ | - | - | - |
 | A Short Hike | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -223,8 +228,8 @@ Processing times for each test phase. Times are in seconds.
 
 ### Summary Statistics
 
-| Metric | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler | Cross-Val |
-|--------|--------------|---------------|-----------|----------|--------------|-----------|
+| Metric | Original Gen | Original Spoiler | World Gen | Seed Gen | WorldGen Spoiler | Cross-Val |
+|--------|--------------|------------------|-----------|----------|------------------|-----------|
 | Total | 310.7s | 915.7s | 6.5s | 175.1s | 627.9s | 650.3s |
 | Average | 4.6s | 13.5s | 0.1s | 2.8s | 10.6s | 11.0s |
 | Max | 26.5s | 72.7s | 0.5s | 3.9s | 43.9s | 73.2s |
@@ -232,15 +237,15 @@ Processing times for each test phase. Times are in seconds.
 
 ### Slowest and Fastest Games
 
-| Metric | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler | Cross-Val |
-|--------|--------------|---------------|-----------|----------|--------------|-----------|
+| Metric | Original Gen | Original Spoiler | World Gen | Seed Gen | WorldGen Spoiler | Cross-Val |
+|--------|--------------|------------------|-----------|----------|------------------|-----------|
 | Slowest | Subnautica (26.5s) | Stardew Valley (72.7s) | Kingdom Hearts 2 (0.5s) | Overcooked! 2 (3.9s) | Super Metroid (43.9s) | Super Metroid (73.2s) |
 | Fastest | Saving Princess (2.6s) | Saving Princess (5.6s) | WebDevJourney (0.1s) | Kingdom Hearts (2.5s) | Lufia II Ancient Cave (5.6s) | Saving Princess (5.6s) |
 
 ### Individual Game Processing Times
 
-| Game | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler | Cross-Val |
-|------|--------------|---------------|-----------|----------|--------------|-----------|
+| Game | Original Gen | Original Spoiler | World Gen | Seed Gen | WorldGen Spoiler | Cross-Val |
+|------|--------------|------------------|-----------|----------|------------------|-----------|
 | A Hat in Time | 4.8s | 16.6s | 0.1s | 2.8s | 13.8s | 13.7s |
 | A Link to the Past | 11.0s | 20.7s | 0.1s | - | - | - |
 | A Short Hike | 3.1s | 12.7s | 0.1s | 2.7s | 9.6s | 9.7s |
@@ -357,7 +362,7 @@ Processing times for each test phase. Times are in seconds.
 | 9 | Starcraft 2 | 0.1s |
 | 10 | A Short Hike | 0.1s |
 
-#### Test Seed Generation
+#### Seed Generation
 
 | Rank | Game | Time |
 |------|------|------|
@@ -372,7 +377,7 @@ Processing times for each test phase. Times are in seconds.
 | 9 | Final Fantasy Mystic Quest | 3.0s |
 | 10 | Mario & Luigi Superstar Saga | 2.9s |
 
-#### Test Spoiler Test
+#### WorldGen Spoiler Test
 
 | Rank | Game | Time |
 |------|------|------|
@@ -410,8 +415,8 @@ Processing times for each test phase. Times are in seconds.
 
 ### Summary Statistics
 
-| Metric | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler | Cross-Val |
-|--------|--------------|---------------|-----------|----------|--------------|-----------|
+| Metric | Original Gen | Original Spoiler | World Gen | Seed Gen | WorldGen Spoiler | Cross-Val |
+|--------|--------------|------------------|-----------|----------|------------------|-----------|
 | Total | 307.4s | 905.5s | 6.5s | 179.6s | 625.1s | 779.7s |
 | Average | 4.5s | 13.3s | 0.1s | 2.9s | 10.6s | 13.2s |
 | Max | 26.7s | 72.7s | 0.5s | 3.9s | 43.0s | 84.5s |
@@ -419,15 +424,15 @@ Processing times for each test phase. Times are in seconds.
 
 ### Slowest and Fastest Games
 
-| Metric | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler | Cross-Val |
-|--------|--------------|---------------|-----------|----------|--------------|-----------|
+| Metric | Original Gen | Original Spoiler | World Gen | Seed Gen | WorldGen Spoiler | Cross-Val |
+|--------|--------------|------------------|-----------|----------|------------------|-----------|
 | Slowest | Subnautica (26.7s) | Stardew Valley (72.7s) | Kingdom Hearts 2 (0.5s) | Overcooked! 2 (3.9s) | Super Metroid (43.0s) | Super Metroid (84.5s) |
 | Fastest | MathProof2p2e4 (2.6s) | MathProof2p2e4 (5.6s) | WebDevJourney (0.1s) | Adventure (2.7s) | Adventure (5.6s) | Noita (5.6s) |
 
 ### Individual Game Processing Times
 
-| Game | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler | Cross-Val |
-|------|--------------|---------------|-----------|----------|--------------|-----------|
+| Game | Original Gen | Original Spoiler | World Gen | Seed Gen | WorldGen Spoiler | Cross-Val |
+|------|--------------|------------------|-----------|----------|------------------|-----------|
 | A Hat in Time | 4.7s | 16.2s | 0.1s | 2.8s | 13.7s | 13.7s |
 | A Link to the Past | 10.2s | 19.2s | 0.1s | - | - | - |
 | A Short Hike | 3.1s | 11.1s | 0.1s | 3.0s | 9.7s | 9.7s |
@@ -544,7 +549,7 @@ Processing times for each test phase. Times are in seconds.
 | 9 | A Short Hike | 0.1s |
 | 10 | Castlevania - Circle of the Moon | 0.1s |
 
-#### Test Seed Generation
+#### Seed Generation
 
 | Rank | Game | Time |
 |------|------|------|
@@ -559,7 +564,7 @@ Processing times for each test phase. Times are in seconds.
 | 9 | Kingdom Hearts | 3.1s |
 | 10 | DOOM II | 3.0s |
 
-#### Test Spoiler Test
+#### WorldGen Spoiler Test
 
 | Rank | Game | Time |
 |------|------|------|
