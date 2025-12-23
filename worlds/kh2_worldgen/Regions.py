@@ -9,6 +9,9 @@ from BaseClasses import MultiWorld, Region, Entrance
 from .Locations import location_table, KingdomHearts2WorldGenLocation
 
 
+# Regions that were added after sphere calculation (from original export)
+DYNAMICALLY_ADDED_REGIONS = {"Levels Region (26 Visit Locking Items)", "Summons"}
+
 def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
