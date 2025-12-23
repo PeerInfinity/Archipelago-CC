@@ -107,21 +107,21 @@ def compute_summary_stats(results: Dict) -> Dict:
         elif orig_spoiler.get('pass_fail') == 'fail':
             stats['original_spoiler_failed'] += 1
 
-        # Test world generation (rules.json -> test world)
+        # Stage 1: World generation (rules.json -> _worldgen world)
         world_gen = result.get('test_world', {}).get('world_generation', {})
         if world_gen.get('success'):
             stats['successful_test_worlds'] += 1
         elif world_gen:
             stats['failed_test_worlds'] += 1
 
-        # Test seed generation (test world -> seed)
+        # Stage 2: Seed generation (_worldgen world -> seed)
         seed_gen = result.get('test_world', {}).get('seed_generation', {})
         if seed_gen.get('success'):
             stats['successful_test_seeds'] += 1
         elif seed_gen:
             stats['failed_test_seeds'] += 1
 
-        # Test world spoiler test
+        # Stage 3: WorldGen spoiler test
         test_spoiler = result.get('test_world', {}).get('spoiler_test', {})
         if test_spoiler.get('pass_fail') == 'pass':
             stats['test_spoiler_passed'] += 1
@@ -145,10 +145,10 @@ def extract_processing_times(results: Dict) -> Dict[str, Dict[str, float]]:
     Returns dict mapping game_name to dict of timing categories:
     - original_gen: Original seed generation time
     - original_test: Original spoiler test time
-    - world_gen: World generator time
-    - test_gen: Test seed generation time
-    - test_spoiler: Test spoiler test time
-    - cross_validation: Cross-validation time
+    - world_gen: World generation time (Stage 1)
+    - test_gen: Seed generation time (Stage 2)
+    - test_spoiler: WorldGen spoiler test time (Stage 3)
+    - cross_validation: Cross-validation time (Stage 4)
     """
     template_results = results.get('results', {})
     times = {}
@@ -177,12 +177,12 @@ def extract_processing_times(results: Dict) -> Dict[str, Dict[str, float]]:
         if world_gen.get('processing_time_seconds'):
             game_times['world_gen'] = world_gen['processing_time_seconds']
 
-        # Test seed generation time
+        # Stage 2: Seed generation time
         test_gen = result.get('test_world', {}).get('seed_generation', {})
         if test_gen.get('processing_time_seconds'):
             game_times['test_gen'] = test_gen['processing_time_seconds']
 
-        # Test spoiler test time
+        # Stage 3: WorldGen spoiler test time
         test_spoiler = result.get('test_world', {}).get('spoiler_test', {})
         if test_spoiler.get('processing_time_seconds'):
             game_times['test_spoiler'] = test_spoiler['processing_time_seconds']
@@ -228,10 +228,10 @@ def generate_time_summary_table(times: Dict[str, Dict[str, float]]) -> str:
     """Generate summary statistics table for processing times."""
     categories = [
         ('original_gen', 'Original Gen'),
-        ('original_test', 'Original Test'),
+        ('original_test', 'Original Spoiler'),
         ('world_gen', 'World Gen'),
-        ('test_gen', 'Test Gen'),
-        ('test_spoiler', 'Test Spoiler'),
+        ('test_gen', 'Seed Gen'),
+        ('test_spoiler', 'WorldGen Spoiler'),
         ('cross_validation', 'Cross-Val')
     ]
 
@@ -240,8 +240,8 @@ def generate_time_summary_table(times: Dict[str, Dict[str, float]]) -> str:
     lines = [
         "### Summary Statistics",
         "",
-        "| Metric | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler | Cross-Val |",
-        "|--------|--------------|---------------|-----------|----------|--------------|-----------|",
+        "| Metric | Original Gen | Original Spoiler | World Gen | Seed Gen | WorldGen Spoiler | Cross-Val |",
+        "|--------|--------------|------------------|-----------|----------|------------------|-----------|",
     ]
 
     # Total row
@@ -279,10 +279,10 @@ def generate_slowest_fastest_table(times: Dict[str, Dict[str, float]]) -> str:
     """Generate table showing slowest and fastest games per category."""
     categories = [
         ('original_gen', 'Original Gen'),
-        ('original_test', 'Original Test'),
+        ('original_test', 'Original Spoiler'),
         ('world_gen', 'World Gen'),
-        ('test_gen', 'Test Gen'),
-        ('test_spoiler', 'Test Spoiler'),
+        ('test_gen', 'Seed Gen'),
+        ('test_spoiler', 'WorldGen Spoiler'),
         ('cross_validation', 'Cross-Val')
     ]
 
@@ -291,8 +291,8 @@ def generate_slowest_fastest_table(times: Dict[str, Dict[str, float]]) -> str:
     lines = [
         "### Slowest and Fastest Games",
         "",
-        "| Metric | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler | Cross-Val |",
-        "|--------|--------------|---------------|-----------|----------|--------------|-----------|",
+        "| Metric | Original Gen | Original Spoiler | World Gen | Seed Gen | WorldGen Spoiler | Cross-Val |",
+        "|--------|--------------|------------------|-----------|----------|------------------|-----------|",
     ]
 
     # Slowest row
@@ -324,8 +324,8 @@ def generate_processing_times_table(times: Dict[str, Dict[str, float]]) -> str:
     lines = [
         "### Individual Game Processing Times",
         "",
-        "| Game | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler | Cross-Val |",
-        "|------|--------------|---------------|-----------|----------|--------------|-----------|",
+        "| Game | Original Gen | Original Spoiler | World Gen | Seed Gen | WorldGen Spoiler | Cross-Val |",
+        "|------|--------------|------------------|-----------|----------|------------------|-----------|",
     ]
 
     for game_name in sorted(times.keys()):
@@ -348,8 +348,8 @@ def generate_top_10_section(times: Dict[str, Dict[str, float]]) -> str:
         ('original_gen', 'Original Generation'),
         ('original_test', 'Original Spoiler Test'),
         ('world_gen', 'World Generation'),
-        ('test_gen', 'Test Seed Generation'),
-        ('test_spoiler', 'Test Spoiler Test'),
+        ('test_gen', 'Seed Generation'),
+        ('test_spoiler', 'WorldGen Spoiler Test'),
         ('cross_validation', 'Cross-Validation')
     ]
 
@@ -427,10 +427,10 @@ def generate_summary_table(results: Dict, title: str = "Summary") -> str:
         "|------|--------|--------|-------|",
         f"| Original Generation | {stats.get('successful_generations', 0)} | {stats.get('failed_generations', 0)} | {orig_gen_total} |",
         f"| Original Spoiler Test | {stats.get('original_spoiler_passed', 0)} | {stats.get('original_spoiler_failed', 0)} | {orig_spoiler_total} |",
-        f"| Test World Generation | {stats.get('successful_test_worlds', 0)} | {stats.get('failed_test_worlds', 0)} | {world_gen_total} |",
-        f"| Test Seed Generation | {stats.get('successful_test_seeds', 0)} | {stats.get('failed_test_seeds', 0)} | {test_seed_total} |",
-        f"| Test Spoiler Test | {stats.get('test_spoiler_passed', 0)} | {stats.get('test_spoiler_failed', 0)} | {test_spoiler_total} |",
-        f"| Cross-Validation | {stats.get('cross_validation_passed', 0)} | {stats.get('cross_validation_failed', 0)} | {cross_val_total} |",
+        f"| Stage 1: World Generation | {stats.get('successful_test_worlds', 0)} | {stats.get('failed_test_worlds', 0)} | {world_gen_total} |",
+        f"| Stage 2: Seed Generation | {stats.get('successful_test_seeds', 0)} | {stats.get('failed_test_seeds', 0)} | {test_seed_total} |",
+        f"| Stage 3: WorldGen Spoiler Test | {stats.get('test_spoiler_passed', 0)} | {stats.get('test_spoiler_failed', 0)} | {test_spoiler_total} |",
+        f"| Stage 4: Cross-Validation | {stats.get('cross_validation_passed', 0)} | {stats.get('cross_validation_failed', 0)} | {cross_val_total} |",
         "",
     ]
 
@@ -447,8 +447,8 @@ def generate_results_table(results: Dict, title: str = "Detailed Results") -> st
     lines = [
         f"## {title}",
         "",
-        "| Game | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler | Cross-Validation |",
-        "|------|--------------|---------------|-----------|----------|--------------|------------------|",
+        "| Game | Original Gen | Original Spoiler | World Gen | Seed Gen | WorldGen Spoiler | Cross-Validation |",
+        "|------|--------------|------------------|-----------|----------|------------------|------------------|",
     ]
 
     # Handle both dict and list formats
@@ -478,13 +478,13 @@ def generate_results_table(results: Dict, title: str = "Detailed Results") -> st
         if not orig_gen.get('success'):
             world_gen_status = '-'
 
-        # Test world seed generation
+        # Stage 2: Seed generation
         test_gen = result.get('test_world', {}).get('seed_generation', {})
         test_gen_status = '✅' if test_gen.get('success') else '❌'
         if not world_gen.get('success'):
             test_gen_status = '-'
 
-        # Test world spoiler test
+        # Stage 3: WorldGen spoiler test
         test_spoiler = result.get('test_world', {}).get('spoiler_test', {})
         test_spoiler_status = get_status_emoji(False, test_spoiler.get('pass_fail'))
         if test_spoiler.get('note'):
@@ -635,7 +635,9 @@ def generate_single_mode_report(results: Dict, mode_name: str = None) -> str:
         "# World Generator Test Results",
         "",
         f"**Generated:** {timestamp_display}",
+        "",
         f"**Seed:** {seed_display}",
+        "",
         f"**Mode:** {mode_display}",
         "",
         "This report shows the results of round-trip testing the world generator.",
@@ -652,12 +654,15 @@ def generate_single_mode_report(results: Dict, mode_name: str = None) -> str:
         "",
         "### Columns",
         "",
-        "- **Original Gen**: Original world seed generation",
-        "- **Original Test**: Spoiler test on original world",
-        "- **World Gen**: World generator created _worldgen world from rules.json",
-        "- **Test Gen**: _worldgen world seed generation",
-        "- **Test Spoiler**: Spoiler test on _worldgen world",
-        "- **Cross-Validation**: Original sphere log validates against _worldgen world",
+        "**Original World Tests** (prerequisite - must pass before worldgen testing):",
+        "- **Original Gen**: Generate a seed with the original Archipelago world",
+        "- **Original Spoiler**: Validate the original world's sphere log against its rules.json",
+        "",
+        "**World Generator Tests** (the actual round-trip test):",
+        "- **World Gen** (Stage 1): Create `_worldgen` Python world files from rules.json",
+        "- **Seed Gen** (Stage 2): Generate a seed with the `_worldgen` world",
+        "- **WorldGen Spoiler** (Stage 3): Validate the `_worldgen` world's sphere log against its rules",
+        "- **Cross-Validation** (Stage 4): Validate the **original** sphere log against `_worldgen` rules (proves equivalent logic)",
         "",
     ]
 
@@ -685,7 +690,9 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
         "# World Generator Test Results",
         "",
         f"**Generated:** {timestamp_display}",
+        "",
         f"**Seed:** {seed_display}",
+        "",
         f"**Mode:** Both (Canonical and Random)",
         "",
         "This report shows the results of round-trip testing the world generator.",
@@ -706,12 +713,15 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
         "",
         "### Columns",
         "",
-        "- **Original Gen**: Original world seed generation",
-        "- **Original Test**: Spoiler test on original world",
-        "- **World Gen**: World generator created _worldgen world from rules.json",
-        "- **Test Gen**: _worldgen world seed generation",
-        "- **Test Spoiler**: Spoiler test on _worldgen world",
-        "- **Cross-Validation**: Original sphere log validates against _worldgen world",
+        "**Original World Tests** (prerequisite - must pass before worldgen testing):",
+        "- **Original Gen**: Generate a seed with the original Archipelago world",
+        "- **Original Spoiler**: Validate the original world's sphere log against its rules.json",
+        "",
+        "**World Generator Tests** (the actual round-trip test):",
+        "- **World Gen** (Stage 1): Create `_worldgen` Python world files from rules.json",
+        "- **Seed Gen** (Stage 2): Generate a seed with the `_worldgen` world",
+        "- **WorldGen Spoiler** (Stage 3): Validate the `_worldgen` world's sphere log against its rules",
+        "- **Cross-Validation** (Stage 4): Validate the **original** sphere log against `_worldgen` rules (proves equivalent logic)",
         "",
         "---",
         "",
