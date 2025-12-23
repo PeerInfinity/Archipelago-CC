@@ -494,8 +494,8 @@ class StardewValleyWorldGenWorld(RuleWorldMixin, World):
     prog_items_init: ClassVar[dict] = {
         "QI GEMS": 0,
         "GOLDEN WALNUTS": 0,
-        "Received Progression Item": 0,
         "Received Progression Percent": 0,
+        "Received Progression Item": 0,
     }
 
     # Total progression items - set during create_items for Received Progression Percent tracking

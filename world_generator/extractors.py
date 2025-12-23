@@ -786,6 +786,17 @@ def compute_state_counter_accumulator_rules(
             })
             prog_items_init[target_name] = 0
 
+    # Pattern 5: Detect "Received Progression Percent" tracking
+    # Some games (like Stardew Valley) use state counters to track what percentage
+    # of progression items have been collected. These counters are:
+    # - "Received Progression Percent": 0-100 percentage of progression collected
+    # - "Received Progression Item": Count of progression items collected
+    # These are event items (id=None) that get updated in collect/remove methods
+    progression_tracking_items = ["Received Progression Percent", "Received Progression Item"]
+    for item_name in progression_tracking_items:
+        if item_name in items and items[item_name].item_id is None:
+            prog_items_init[item_name] = 0
+
     return accumulator_rules, prog_items_init
 
 

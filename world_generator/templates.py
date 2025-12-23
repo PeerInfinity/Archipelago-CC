@@ -943,15 +943,62 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
 
     # Build prog_items_init dictionary (initial values for state counters)
     prog_items_init_content = ''
+    has_progression_percent_tracking = False
     if data.prog_items_init:
         init_entries = []
         for item_name, value in data.prog_items_init.items():
             item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
             init_entries.append(f'        "{item_escaped}": {value},')
+            if item_name == "Received Progression Percent":
+                has_progression_percent_tracking = True
         prog_items_init_content = '\n'.join(init_entries)
 
     # Generate accumulator_rules section (for state counter patterns like coins)
     collect_remove_section = ''
+    total_progression_items_section = ''
+    total_progression_items_calculation = ''
+
+    # Generate progression percent tracking code if needed
+    progression_percent_collect_code = ''
+    progression_percent_remove_code = ''
+    if has_progression_percent_tracking:
+        total_progression_items_section = '''
+    # Total progression items - set during create_items for Received Progression Percent tracking
+    total_progression_items: int = 0
+'''
+        total_progression_items_calculation = '''
+        # Calculate total progression items for Received Progression Percent tracking
+        # This counts progression items from the pool plus precollected items
+        self.total_progression_items = sum(
+            1 for item in item_pool
+            if item.classification == ItemClassification.progression
+        )
+        # Add precollected progression items (starting items)
+        for item_name, count in STARTING_ITEMS.items():
+            if item_name in item_table and item_table[item_name].classification == ItemClassification.progression:
+                self.total_progression_items += count
+'''
+        progression_percent_collect_code = '''
+            # Track Received Progression Percent for progression items
+            if item.classification == ItemClassification.progression:
+                player_state = state.prog_items[self.player]
+                received_progression_count = player_state["Received Progression Item"]
+                received_progression_count += 1
+                if self.total_progression_items:
+                    player_state["Received Progression Percent"] = received_progression_count * 100 // self.total_progression_items
+                player_state["Received Progression Item"] = received_progression_count
+'''
+        progression_percent_remove_code = '''
+            # Track Received Progression Percent for progression items
+            if item.classification == ItemClassification.progression:
+                player_state = state.prog_items[self.player]
+                received_progression_count = player_state["Received Progression Item"]
+                received_progression_count -= 1
+                if self.total_progression_items:
+                    player_state["Received Progression Percent"] = received_progression_count * 100 // self.total_progression_items
+                player_state["Received Progression Item"] = received_progression_count
+'''
+
     if accumulator_rules_content:
         accumulator_rules_section = f'''
     # Accumulator rules for state counters (e.g., coins)
@@ -961,7 +1008,7 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     ]
 '''
         # Generate collect/remove methods for accumulator rules
-        collect_remove_section = '''
+        collect_remove_section = f'''
     def collect(self, state: "CollectionState", item: "Item") -> bool:
         """Collect item and track cumulative counters from accumulator rules."""
         import re
@@ -976,6 +1023,7 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
                         value = 1
                     state.prog_items[item.player][rule["target"]] += value
                     break
+{progression_percent_collect_code}
         return change
 
     def remove(self, state: "CollectionState", item: "Item") -> bool:
@@ -992,8 +1040,27 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
                         value = 1
                     state.prog_items[item.player][rule["target"]] -= value
                     break
+{progression_percent_remove_code}
         return change
 '''
+    elif has_progression_percent_tracking:
+        # No accumulator rules, but still need progression percent tracking
+        collect_remove_section = f'''
+    def collect(self, state: "CollectionState", item: "Item") -> bool:
+        """Collect item and track Received Progression Percent."""
+        change = super().collect(state, item)
+        if change:
+{progression_percent_collect_code}
+        return change
+
+    def remove(self, state: "CollectionState", item: "Item") -> bool:
+        """Remove item and update Received Progression Percent."""
+        change = super().remove(state, item)
+        if change:
+{progression_percent_remove_code}
+        return change
+'''
+        accumulator_rules_section = ''
     else:
         accumulator_rules_section = ''
 
@@ -1306,7 +1373,7 @@ class {world_class}(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {{
 {item_name_groups_content}
     }}
-{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{init_section}{generate_early_section}
+{accumulator_rules_section}{prog_items_init_section}{total_progression_items_section}{progression_mapping_section}{canonical_placements_section}{init_section}{generate_early_section}
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
@@ -1337,7 +1404,7 @@ class {world_class}(RuleWorldMixin, World):
                 item_pool.append(item)
 
         self.multiworld.itempool += item_pool
-
+{total_progression_items_calculation}
     def _place_locked_items(self) -> None:
         """Place items that must be in specific locations (locked placements)."""
         for location_name, item_name in LOCKED_PLACEMENTS.items():
