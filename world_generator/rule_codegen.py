@@ -1568,6 +1568,11 @@ class RuleCodeGenerator:
             item_name = rb_args.get('item_name', '')
             return self._make_count_item(item_name)
 
+        if rb_rule == 'AST_count_item':
+            # Handle AST_count_item from CC converter (e.g., {"rule": "AST_count_item", "args": {"item": "..."}})
+            item_name = rb_args.get('item', '')
+            return self._make_count_item(item_name)
+
         if rb_rule == 'AST_min':
             # Handle AST_min with nested args
             min_args = rb_args.get('args', [])
@@ -1577,6 +1582,26 @@ class RuleCodeGenerator:
                 right_code = self._convert_arithmetic_operand(min_args[1])
                 return f'MinValue({left_code}, {right_code})'
             return 'MinValue(0, 0)'
+
+        # Handle integer-returning helpers used as Compare operands
+        # These are helpers that count items and return an integer (e.g., weapon_armor_upgrade_count)
+        # They are blacklisted from normal helper export but need to be converted to CountItem
+        if operand.get('_original_ast_type') == 'helper':
+            # Get the helper's first argument which is typically the item name
+            args = operand.get('args', [])
+            if args and isinstance(args[0], dict):
+                arg = args[0]
+                # Extract item name from Constant or constant format
+                if arg.get('rule') == 'Constant':
+                    item_name = arg.get('args', {}).get('value', '')
+                elif arg.get('type') == 'constant':
+                    item_name = arg.get('value', '')
+                else:
+                    item_name = ''
+
+                if item_name:
+                    # Convert helper call to CountItem for the item
+                    return self._make_count_item(item_name)
 
         # For other types, try to convert as a rule
         return self._convert_rule(operand)

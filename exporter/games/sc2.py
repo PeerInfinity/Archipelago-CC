@@ -1,6 +1,6 @@
 """Starcraft 2 game-specific export handler."""
 
-from typing import Dict, Any, Optional, Callable
+from typing import Dict, Any, Optional, Callable, List
 from .generic import GenericGameExportHandler
 import logging
 
@@ -90,7 +90,7 @@ class SC2GameExportHandler(GenericGameExportHandler):
                             pass
         return closure_vars
 
-    def _get_simplified_helper(self, helper_name: str) -> Optional[Dict[str, Any]]:
+    def _get_simplified_helper(self, helper_name: str, args: List[Dict[str, Any]] = None) -> Optional[Dict[str, Any]]:
         """
         Get simplified logic for blacklisted helpers.
 
@@ -98,9 +98,35 @@ class SC2GameExportHandler(GenericGameExportHandler):
         or use complex patterns. For these, we provide simplified approximations that
         capture the most common accessibility paths.
 
+        Args:
+            helper_name: Name of the helper to simplify
+            args: List of argument rules passed to the helper (already expanded)
+
         Returns:
             Simplified rule dict if available, None otherwise
         """
+        args = args or []
+
+        # weapon_armor_upgrade_count: Takes an item name and returns its count
+        # We simplify it to a count_item check for the progressive item
+        if helper_name == 'weapon_armor_upgrade_count':
+            if args and isinstance(args[0], dict):
+                # Extract the item name from the first argument
+                arg = args[0]
+                item_name = None
+                if arg.get('type') == 'constant':
+                    item_name = arg.get('value', '')
+                elif arg.get('rule') == 'Constant':
+                    item_name = arg.get('args', {}).get('value', '')
+
+                if item_name:
+                    return {
+                        'type': 'count_item',
+                        'item': item_name
+                    }
+            # If we can't extract the item name, return None to fall back to True_
+            return None
+
         # terran_competent_ground_to_air: Common paths include having Goliath or Cyclone
         # Full logic: has(Goliath) OR (has_any(Marine, Dominion Trooper) AND bio_heal AND weapons >= 2)
         #             OR (advanced_tactics AND (has(Cyclone) OR has_all(Thor, Payload)))
@@ -370,7 +396,9 @@ class SC2GameExportHandler(GenericGameExportHandler):
         if rule.get('type') == 'helper':
             helper_name = rule.get('name', '')
             if helper_name in self.HELPERS_TO_EXPORT_BLACKLIST:
-                simplified = self._get_simplified_helper(helper_name)
+                # Get expanded args for the helper
+                helper_args = [self.expand_rule(arg, _depth + 1) for arg in rule.get('args', [])]
+                simplified = self._get_simplified_helper(helper_name, helper_args)
                 if simplified:
                     logger.debug(f"[SC2] Blacklisted helper AST node '{helper_name}' - using simplified export")
                     return simplified
@@ -392,22 +420,24 @@ class SC2GameExportHandler(GenericGameExportHandler):
             function = rule.get('function', {})
             if function.get('type') == 'attribute':
                 obj = function.get('object', {})
-                if obj.get('type') == 'name' and obj.get('name') == 'logic':
-                    # This is a logic.method_name() call - convert to helper
+                obj_name = obj.get('name') if obj.get('type') == 'name' else None
+                # Handle both 'logic' and 'self' as they're both used for SC2Logic methods
+                if obj_name in ('logic', 'self'):
+                    # This is a logic.method_name() or self.method_name() call - convert to helper
                     method_name = function.get('attr')
                     # Recursively process args first
                     args = [self.expand_rule(arg, _depth + 1) for arg in rule.get('args', [])]
 
                     # Check if this helper is blacklisted
                     if method_name in self.HELPERS_TO_EXPORT_BLACKLIST:
-                        simplified = self._get_simplified_helper(method_name)
+                        simplified = self._get_simplified_helper(method_name, args)
                         if simplified:
                             logger.debug(f"[SC2] Blacklisted helper '{method_name}' - using simplified export")
                             return simplified
                         logger.debug(f"[SC2] Blacklisted helper '{method_name}' - returning True_")
                         return {'type': 'constant', 'value': True}
 
-                    logger.debug(f"[SC2] Converting logic.{method_name}() to helper call")
+                    logger.debug(f"[SC2] Converting {obj_name}.{method_name}() to helper call")
 
                     # Register the helper usage for automatic discovery
                     self.register_helper_usage(method_name)
@@ -471,7 +501,8 @@ class SC2GameExportHandler(GenericGameExportHandler):
                 if attr_name in known_helpers:
                     # Check if this helper is blacklisted
                     if attr_name in self.HELPERS_TO_EXPORT_BLACKLIST:
-                        simplified = self._get_simplified_helper(attr_name)
+                        # Helpers accessed without parentheses have no args
+                        simplified = self._get_simplified_helper(attr_name, [])
                         if simplified:
                             logger.debug(f"[SC2] Blacklisted helper '{attr_name}' - using simplified export")
                             return simplified

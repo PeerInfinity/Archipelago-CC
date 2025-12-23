@@ -33,9 +33,7 @@
             "name": "All-In (Terran): Victory",
             "id": 3900,
             "access_rule": {
-              "rule": "terran_all_in_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Juggernaut Plating (Marauder)",
@@ -49,9 +47,7 @@
             "name": "All-In (Terran): First Kerrigan Attack",
             "id": 3901,
             "access_rule": {
-              "rule": "terran_all_in_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Command Center Reactor (Command Center)",
@@ -65,9 +61,7 @@
             "name": "All-In (Terran): Second Kerrigan Attack",
             "id": 3902,
             "access_rule": {
-              "rule": "terran_all_in_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Rapid Reignition Systems (Medivac)",
@@ -81,9 +75,7 @@
             "name": "All-In (Terran): Third Kerrigan Attack",
             "id": 3903,
             "access_rule": {
-              "rule": "terran_all_in_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "EMP Rounds (Ghost)",
@@ -97,9 +89,7 @@
             "name": "All-In (Terran): Fourth Kerrigan Attack",
             "id": 3904,
             "access_rule": {
-              "rule": "terran_all_in_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Orbital Strike (Barracks)",
@@ -113,9 +103,7 @@
             "name": "All-In (Terran): Fifth Kerrigan Attack",
             "id": 3905,
             "access_rule": {
-              "rule": "terran_all_in_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Resource Efficiency (Ghost)",
@@ -129,9 +117,7 @@
             "name": "Beat All-In (Terran)",
             "id": null,
             "access_rule": {
-              "rule": "terran_all_in_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Beat All-In (Terran)",
@@ -709,9 +695,21 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "terran_base_trasher",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Jump Jets (Siege Tank)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Siege Tank"
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "terran_common_unit",
@@ -740,9 +738,21 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "terran_base_trasher",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Jump Jets (Siege Tank)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Siege Tank"
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "terran_common_unit",
@@ -1474,9 +1484,7 @@
             "name": "Gates of Hell (Terran): Victory",
             "id": 3600,
             "access_rule": {
-              "rule": "terran_gates_of_hell_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Advanced Optics (Terran)",
@@ -1490,9 +1498,7 @@
             "name": "Gates of Hell (Terran): Large Army",
             "id": 3601,
             "access_rule": {
-              "rule": "terran_gates_of_hell_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Argus Amplifier (Hive Mind Emulator)",
@@ -1506,9 +1512,7 @@
             "name": "Gates of Hell (Terran): 2 Drop Pods",
             "id": 3602,
             "access_rule": {
-              "rule": "terran_gates_of_hell_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Stimpack (Firebat)",
@@ -1522,9 +1526,7 @@
             "name": "Gates of Hell (Terran): 4 Drop Pods",
             "id": 3603,
             "access_rule": {
-              "rule": "terran_gates_of_hell_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Mechanical Know-how (Terran)",
@@ -1538,9 +1540,7 @@
             "name": "Gates of Hell (Terran): 6 Drop Pods",
             "id": 3604,
             "access_rule": {
-              "rule": "terran_gates_of_hell_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Tomahawk Power Cells (Wraith)",
@@ -1554,9 +1554,7 @@
             "name": "Gates of Hell (Terran): 8 Drop Pods",
             "id": 3605,
             "access_rule": {
-              "rule": "terran_gates_of_hell_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Terran Vehicle Armor",
@@ -1570,9 +1568,7 @@
             "name": "Gates of Hell (Terran): Southwest Spore Cannon",
             "id": 3606,
             "access_rule": {
-              "rule": "terran_gates_of_hell_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Fast Delivery (Terran)",
@@ -1586,9 +1582,7 @@
             "name": "Gates of Hell (Terran): Northwest Spore Cannon",
             "id": 3607,
             "access_rule": {
-              "rule": "terran_gates_of_hell_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Resource Efficiency (Liberator)",
@@ -1602,9 +1596,7 @@
             "name": "Gates of Hell (Terran): Northeast Spore Cannon",
             "id": 3608,
             "access_rule": {
-              "rule": "terran_gates_of_hell_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Jet Pack Overdrive (Reaper)",
@@ -1618,9 +1610,7 @@
             "name": "Gates of Hell (Terran): East Spore Cannon",
             "id": 3609,
             "access_rule": {
-              "rule": "terran_gates_of_hell_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Jerry-Rigged Patchup (Vulture)",
@@ -1634,9 +1624,7 @@
             "name": "Gates of Hell (Terran): Southeast Spore Cannon",
             "id": 3610,
             "access_rule": {
-              "rule": "terran_gates_of_hell_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Skibi's Angels",
@@ -1650,9 +1638,7 @@
             "name": "Gates of Hell (Terran): Expansion Spore Cannon",
             "id": 3611,
             "access_rule": {
-              "rule": "terran_gates_of_hell_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Guerilla Missiles (Liberator)",
@@ -1666,9 +1652,7 @@
             "name": "Beat Gates of Hell (Terran)",
             "id": null,
             "access_rule": {
-              "rule": "terran_gates_of_hell_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Beat Gates of Hell (Terran)",
@@ -1694,17 +1678,15 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "True_"
+                    },
+                    {
                       "rule": "terran_air",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_cc": true
-                    },
-                    {
-                      "rule": "terran_competent_comp",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
@@ -1723,18 +1705,12 @@
                               "rule": "Compare",
                               "args": {
                                 "left": {
-                                  "rule": "weapon_armor_upgrade_count",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "rule": "AST_count_item",
+                                  "args": {
+                                    "item": "Progressive Terran Ship Weapon",
+                                    "_original_ast_type": "count_item"
+                                  },
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -1846,18 +1822,12 @@
                           "rule": "Compare",
                           "args": {
                             "left": {
-                              "rule": "weapon_armor_upgrade_count",
-                              "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "rule": "AST_count_item",
+                              "args": {
+                                "item": "Progressive Terran Ship Weapon",
+                                "_original_ast_type": "count_item"
+                              },
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -1969,17 +1939,15 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "True_"
+                    },
+                    {
                       "rule": "terran_air",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_cc": true
-                    },
-                    {
-                      "rule": "terran_competent_comp",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
@@ -1998,18 +1966,12 @@
                               "rule": "Compare",
                               "args": {
                                 "left": {
-                                  "rule": "weapon_armor_upgrade_count",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "rule": "AST_count_item",
+                                  "args": {
+                                    "item": "Progressive Terran Ship Weapon",
+                                    "_original_ast_type": "count_item"
+                                  },
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -2121,18 +2083,12 @@
                           "rule": "Compare",
                           "args": {
                             "left": {
-                              "rule": "weapon_armor_upgrade_count",
-                              "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "rule": "AST_count_item",
+                              "args": {
+                                "item": "Progressive Terran Ship Weapon",
+                                "_original_ast_type": "count_item"
+                              },
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -2182,17 +2138,15 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "True_"
+                    },
+                    {
                       "rule": "terran_air",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_cc": true
-                    },
-                    {
-                      "rule": "terran_competent_comp",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
@@ -2211,18 +2165,12 @@
                               "rule": "Compare",
                               "args": {
                                 "left": {
-                                  "rule": "weapon_armor_upgrade_count",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "rule": "AST_count_item",
+                                  "args": {
+                                    "item": "Progressive Terran Ship Weapon",
+                                    "_original_ast_type": "count_item"
+                                  },
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -2334,18 +2282,12 @@
                           "rule": "Compare",
                           "args": {
                             "left": {
-                              "rule": "weapon_armor_upgrade_count",
-                              "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "rule": "AST_count_item",
+                              "args": {
+                                "item": "Progressive Terran Ship Weapon",
+                                "_original_ast_type": "count_item"
+                              },
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -2395,17 +2337,15 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "True_"
+                    },
+                    {
                       "rule": "terran_air",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_cc": true
-                    },
-                    {
-                      "rule": "terran_competent_comp",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
@@ -2424,18 +2364,12 @@
                               "rule": "Compare",
                               "args": {
                                 "left": {
-                                  "rule": "weapon_armor_upgrade_count",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "rule": "AST_count_item",
+                                  "args": {
+                                    "item": "Progressive Terran Ship Weapon",
+                                    "_original_ast_type": "count_item"
+                                  },
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -2547,18 +2481,12 @@
                           "rule": "Compare",
                           "args": {
                             "left": {
-                              "rule": "weapon_armor_upgrade_count",
-                              "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "rule": "AST_count_item",
+                              "args": {
+                                "item": "Progressive Terran Ship Weapon",
+                                "_original_ast_type": "count_item"
+                              },
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -2632,17 +2560,15 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "True_"
+                    },
+                    {
                       "rule": "terran_air",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_cc": true
-                    },
-                    {
-                      "rule": "terran_competent_comp",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
@@ -2661,18 +2587,12 @@
                               "rule": "Compare",
                               "args": {
                                 "left": {
-                                  "rule": "weapon_armor_upgrade_count",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "rule": "AST_count_item",
+                                  "args": {
+                                    "item": "Progressive Terran Ship Weapon",
+                                    "_original_ast_type": "count_item"
+                                  },
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -2784,18 +2704,12 @@
                           "rule": "Compare",
                           "args": {
                             "left": {
-                              "rule": "weapon_armor_upgrade_count",
-                              "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "rule": "AST_count_item",
+                              "args": {
+                                "item": "Progressive Terran Ship Weapon",
+                                "_original_ast_type": "count_item"
+                              },
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -2845,17 +2759,15 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "True_"
+                    },
+                    {
                       "rule": "terran_air",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_cc": true
-                    },
-                    {
-                      "rule": "terran_competent_comp",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
@@ -2874,18 +2786,12 @@
                               "rule": "Compare",
                               "args": {
                                 "left": {
-                                  "rule": "weapon_armor_upgrade_count",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "rule": "AST_count_item",
+                                  "args": {
+                                    "item": "Progressive Terran Ship Weapon",
+                                    "_original_ast_type": "count_item"
+                                  },
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -2997,18 +2903,12 @@
                           "rule": "Compare",
                           "args": {
                             "left": {
-                              "rule": "weapon_armor_upgrade_count",
-                              "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "rule": "AST_count_item",
+                              "args": {
+                                "item": "Progressive Terran Ship Weapon",
+                                "_original_ast_type": "count_item"
+                              },
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -3058,17 +2958,15 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "True_"
+                    },
+                    {
                       "rule": "terran_air",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_cc": true
-                    },
-                    {
-                      "rule": "terran_competent_comp",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
@@ -3087,18 +2985,12 @@
                               "rule": "Compare",
                               "args": {
                                 "left": {
-                                  "rule": "weapon_armor_upgrade_count",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "rule": "AST_count_item",
+                                  "args": {
+                                    "item": "Progressive Terran Ship Weapon",
+                                    "_original_ast_type": "count_item"
+                                  },
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -3210,18 +3102,12 @@
                           "rule": "Compare",
                           "args": {
                             "left": {
-                              "rule": "weapon_armor_upgrade_count",
-                              "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "rule": "AST_count_item",
+                              "args": {
+                                "item": "Progressive Terran Ship Weapon",
+                                "_original_ast_type": "count_item"
+                              },
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -3271,17 +3157,15 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "True_"
+                    },
+                    {
                       "rule": "terran_air",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_cc": true
-                    },
-                    {
-                      "rule": "terran_competent_comp",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
@@ -3300,18 +3184,12 @@
                               "rule": "Compare",
                               "args": {
                                 "left": {
-                                  "rule": "weapon_armor_upgrade_count",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "rule": "AST_count_item",
+                                  "args": {
+                                    "item": "Progressive Terran Ship Weapon",
+                                    "_original_ast_type": "count_item"
+                                  },
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -3423,18 +3301,12 @@
                           "rule": "Compare",
                           "args": {
                             "left": {
-                              "rule": "weapon_armor_upgrade_count",
-                              "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "rule": "AST_count_item",
+                              "args": {
+                                "item": "Progressive Terran Ship Weapon",
+                                "_original_ast_type": "count_item"
+                              },
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -3484,17 +3356,15 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "True_"
+                    },
+                    {
                       "rule": "terran_air",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_cc": true
-                    },
-                    {
-                      "rule": "terran_competent_comp",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
@@ -3513,18 +3383,12 @@
                               "rule": "Compare",
                               "args": {
                                 "left": {
-                                  "rule": "weapon_armor_upgrade_count",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "rule": "AST_count_item",
+                                  "args": {
+                                    "item": "Progressive Terran Ship Weapon",
+                                    "_original_ast_type": "count_item"
+                                  },
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -3636,18 +3500,12 @@
                           "rule": "Compare",
                           "args": {
                             "left": {
-                              "rule": "weapon_armor_upgrade_count",
-                              "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "rule": "AST_count_item",
+                              "args": {
+                                "item": "Progressive Terran Ship Weapon",
+                                "_original_ast_type": "count_item"
+                              },
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -3697,17 +3555,15 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "True_"
+                    },
+                    {
                       "rule": "terran_air",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_cc": true
-                    },
-                    {
-                      "rule": "terran_competent_comp",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
@@ -3726,18 +3582,12 @@
                               "rule": "Compare",
                               "args": {
                                 "left": {
-                                  "rule": "weapon_armor_upgrade_count",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "rule": "AST_count_item",
+                                  "args": {
+                                    "item": "Progressive Terran Ship Weapon",
+                                    "_original_ast_type": "count_item"
+                                  },
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -3849,18 +3699,12 @@
                           "rule": "Compare",
                           "args": {
                             "left": {
-                              "rule": "weapon_armor_upgrade_count",
-                              "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "rule": "AST_count_item",
+                              "args": {
+                                "item": "Progressive Terran Ship Weapon",
+                                "_original_ast_type": "count_item"
+                              },
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -3910,17 +3754,15 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "True_"
+                    },
+                    {
                       "rule": "terran_air",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper",
-                      "_converted_from_cc": true
-                    },
-                    {
-                      "rule": "terran_competent_comp",
                       "_original_ast_type": "helper",
                       "_converted_from_cc": true
                     },
@@ -3939,18 +3781,12 @@
                               "rule": "Compare",
                               "args": {
                                 "left": {
-                                  "rule": "weapon_armor_upgrade_count",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Progressive Terran Ship Weapon"
-                                      },
-                                      "_converted_from_cc": true
-                                    }
-                                  ]
+                                  "rule": "AST_count_item",
+                                  "args": {
+                                    "item": "Progressive Terran Ship Weapon",
+                                    "_original_ast_type": "count_item"
+                                  },
+                                  "_converted_from_cc": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -4062,18 +3898,12 @@
                           "rule": "Compare",
                           "args": {
                             "left": {
-                              "rule": "weapon_armor_upgrade_count",
-                              "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": "Progressive Terran Ship Weapon"
-                                  },
-                                  "_converted_from_cc": true
-                                }
-                              ]
+                              "rule": "AST_count_item",
+                              "args": {
+                                "item": "Progressive Terran Ship Weapon",
+                                "_original_ast_type": "count_item"
+                              },
+                              "_converted_from_cc": true
                             },
                             "op": ">=",
                             "right": {
@@ -4421,9 +4251,7 @@
                   "_converted_from_cc": true
                 },
                 {
-                  "rule": "terran_beats_protoss_deathball",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 }
               ]
             },
@@ -4490,9 +4318,7 @@
                   "_converted_from_cc": true
                 },
                 {
-                  "rule": "terran_beats_protoss_deathball",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 }
               ]
             },
@@ -4531,9 +4357,7 @@
                   "_converted_from_cc": true
                 },
                 {
-                  "rule": "terran_beats_protoss_deathball",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 }
               ]
             },
@@ -4586,9 +4410,7 @@
                   "_converted_from_cc": true
                 },
                 {
-                  "rule": "terran_beats_protoss_deathball",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 }
               ]
             },
@@ -4627,9 +4449,7 @@
                   "_converted_from_cc": true
                 },
                 {
-                  "rule": "terran_beats_protoss_deathball",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 }
               ]
             },
@@ -4668,9 +4488,7 @@
                   "_converted_from_cc": true
                 },
                 {
-                  "rule": "terran_beats_protoss_deathball",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 }
               ]
             },
@@ -5813,6 +5631,23 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Jump Jets (Siege Tank)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Siege Tank"
+                      }
+                    }
+                  ]
+                },
+                {
                   "rule": "Compare",
                   "args": {
                     "left": {
@@ -5841,14 +5676,7 @@
                   "_converted_from_cc": true
                 },
                 {
-                  "rule": "terran_base_trasher",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
-                },
-                {
-                  "rule": "terran_beats_protoss_deathball",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "terran_common_unit",
@@ -5885,6 +5713,23 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Jump Jets (Siege Tank)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Siege Tank"
+                      }
+                    }
+                  ]
+                },
+                {
                   "rule": "Compare",
                   "args": {
                     "left": {
@@ -5913,14 +5758,7 @@
                   "_converted_from_cc": true
                 },
                 {
-                  "rule": "terran_base_trasher",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
-                },
-                {
-                  "rule": "terran_beats_protoss_deathball",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "terran_common_unit",
@@ -5957,6 +5795,23 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Jump Jets (Siege Tank)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Siege Tank"
+                      }
+                    }
+                  ]
+                },
+                {
                   "rule": "Compare",
                   "args": {
                     "left": {
@@ -5985,14 +5840,7 @@
                   "_converted_from_cc": true
                 },
                 {
-                  "rule": "terran_base_trasher",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
-                },
-                {
-                  "rule": "terran_beats_protoss_deathball",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "terran_common_unit",
@@ -6107,12 +5955,10 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "terran_basic_anti_air",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 },
                 {
-                  "rule": "terran_great_train_robbery_train_stopper",
+                  "rule": "terran_basic_anti_air",
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -6259,12 +6105,10 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "terran_basic_anti_air",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 },
                 {
-                  "rule": "terran_great_train_robbery_train_stopper",
+                  "rule": "terran_basic_anti_air",
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 },
@@ -6298,12 +6142,10 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "terran_basic_anti_air",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 },
                 {
-                  "rule": "terran_great_train_robbery_train_stopper",
+                  "rule": "terran_basic_anti_air",
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -6321,9 +6163,7 @@
             "name": "The Great Train Robbery (Terran): 2 Trains Destroyed",
             "id": 2712,
             "access_rule": {
-              "rule": "terran_great_train_robbery_train_stopper",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Hive Mind Emulator",
@@ -6340,12 +6180,10 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "terran_basic_anti_air",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 },
                 {
-                  "rule": "terran_great_train_robbery_train_stopper",
+                  "rule": "terran_basic_anti_air",
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -6366,12 +6204,10 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "terran_basic_anti_air",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 },
                 {
-                  "rule": "terran_great_train_robbery_train_stopper",
+                  "rule": "terran_basic_anti_air",
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -6392,12 +6228,10 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "terran_basic_anti_air",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 },
                 {
-                  "rule": "terran_great_train_robbery_train_stopper",
+                  "rule": "terran_basic_anti_air",
                   "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
@@ -7123,9 +6957,21 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "terran_base_trasher",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Jump Jets (Siege Tank)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Siege Tank"
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "terran_common_unit",
@@ -8217,9 +8063,7 @@
             "name": "Haven's Fall (Terran): Victory",
             "id": 1700,
             "access_rule": {
-              "rule": "terran_havens_fall_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Reaper",
@@ -8259,9 +8103,7 @@
             "name": "Haven's Fall (Terran): East Hive",
             "id": 1702,
             "access_rule": {
-              "rule": "terran_havens_fall_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Scatter Veil (Medivac)",
@@ -8275,9 +8117,7 @@
             "name": "Haven's Fall (Terran): South Hive",
             "id": 1703,
             "access_rule": {
-              "rule": "terran_havens_fall_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Immortality Protocol (Thor)",
@@ -8291,9 +8131,7 @@
             "name": "Haven's Fall (Terran): Northeast Colony Base",
             "id": 1704,
             "access_rule": {
-              "rule": "terran_respond_to_colony_infestations",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Shaped Hull (Diamondback)",
@@ -8307,9 +8145,7 @@
             "name": "Haven's Fall (Terran): East Colony Base",
             "id": 1705,
             "access_rule": {
-              "rule": "terran_respond_to_colony_infestations",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Projectile Accelerator (Bunker)",
@@ -8323,9 +8159,7 @@
             "name": "Haven's Fall (Terran): Middle Colony Base",
             "id": 1706,
             "access_rule": {
-              "rule": "terran_respond_to_colony_infestations",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Stimpack (Marauder)",
@@ -8339,9 +8173,7 @@
             "name": "Haven's Fall (Terran): Southeast Colony Base",
             "id": 1707,
             "access_rule": {
-              "rule": "terran_respond_to_colony_infestations",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Devastator Turret",
@@ -8355,9 +8187,7 @@
             "name": "Haven's Fall (Terran): Southwest Colony Base",
             "id": 1708,
             "access_rule": {
-              "rule": "terran_respond_to_colony_infestations",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Rapid Fire Launchers (Cyclone)",
@@ -8385,9 +8215,7 @@
             "name": "Haven's Fall (Terran): East Gas Pickups",
             "id": 1710,
             "access_rule": {
-              "rule": "terran_havens_fall_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Trigger Override (Wraith)",
@@ -8401,9 +8229,7 @@
             "name": "Haven's Fall (Terran): Southeast Gas Pickups",
             "id": 1711,
             "access_rule": {
-              "rule": "terran_havens_fall_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Terran Vehicle Armor",
@@ -8417,9 +8243,7 @@
             "name": "Beat Haven's Fall (Terran)",
             "id": null,
             "access_rule": {
-              "rule": "terran_havens_fall_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Beat Haven's Fall (Terran)",
@@ -8439,18 +8263,7 @@
             "name": "Shatter the Sky (Terran): Victory",
             "id": 3800,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "UED Missile Technology (Liberator)",
@@ -8464,9 +8277,7 @@
             "name": "Shatter the Sky (Terran): Close Coolant Tower",
             "id": 3801,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Ultra-Capacitors (Terran)",
@@ -8480,9 +8291,7 @@
             "name": "Shatter the Sky (Terran): Northwest Coolant Tower",
             "id": 3802,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Terran Vehicle Weapon",
@@ -8496,18 +8305,7 @@
             "name": "Shatter the Sky (Terran): Southeast Coolant Tower",
             "id": 3803,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Ocular Implants (Ghost)",
@@ -8521,18 +8319,7 @@
             "name": "Shatter the Sky (Terran): Southwest Coolant Tower",
             "id": 3804,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Construction Jump Jets (SCV)",
@@ -8546,18 +8333,7 @@
             "name": "Shatter the Sky (Terran): Leviathan",
             "id": 3805,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Moirai Impulse Drive (Battlecruiser)",
@@ -8571,9 +8347,7 @@
             "name": "Shatter the Sky (Terran): East Hatchery",
             "id": 3806,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Terran Infantry Weapon",
@@ -8587,9 +8361,7 @@
             "name": "Shatter the Sky (Terran): North Hatchery",
             "id": 3807,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Terran Vehicle Weapon",
@@ -8603,9 +8375,7 @@
             "name": "Shatter the Sky (Terran): Mid Hatchery",
             "id": 3808,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Ripwave Missiles (Viking)",
@@ -8619,18 +8389,7 @@
             "name": "Beat Shatter the Sky (Terran)",
             "id": null,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_cc": true
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Beat Shatter the Sky (Terran)",
@@ -8864,9 +8623,7 @@
             "name": "Engine of Destruction (Terran): Victory",
             "id": 2900,
             "access_rule": {
-              "rule": "terran_engine_of_destruction_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Maglev Propulsion (Diamondback)",
@@ -8956,9 +8713,7 @@
             "name": "Engine of Destruction (Terran): Loki",
             "id": 2902,
             "access_rule": {
-              "rule": "terran_engine_of_destruction_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Spartan Company",
@@ -9048,9 +8803,7 @@
             "name": "Engine of Destruction (Terran): North Devourer",
             "id": 2904,
             "access_rule": {
-              "rule": "terran_engine_of_destruction_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Enhanced Cluster Launchers (Valkyrie)",
@@ -9064,9 +8817,7 @@
             "name": "Engine of Destruction (Terran): Southeast Devourer",
             "id": 2905,
             "access_rule": {
-              "rule": "terran_engine_of_destruction_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Hunter-Seeker Weapon (Raven)",
@@ -9080,9 +8831,7 @@
             "name": "Engine of Destruction (Terran): West Base",
             "id": 2906,
             "access_rule": {
-              "rule": "terran_engine_of_destruction_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Behemoth Reactor (Battlecruiser)",
@@ -9096,9 +8845,7 @@
             "name": "Engine of Destruction (Terran): Northwest Base",
             "id": 2907,
             "access_rule": {
-              "rule": "terran_engine_of_destruction_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Terran Ship Armor",
@@ -9112,9 +8859,7 @@
             "name": "Engine of Destruction (Terran): Northeast Base",
             "id": 2908,
             "access_rule": {
-              "rule": "terran_engine_of_destruction_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Marine",
@@ -9128,9 +8873,7 @@
             "name": "Engine of Destruction (Terran): Southeast Base",
             "id": 2909,
             "access_rule": {
-              "rule": "terran_engine_of_destruction_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Hyperfluxor (Diamondback)",
@@ -9144,9 +8887,7 @@
             "name": "Beat Engine of Destruction (Terran)",
             "id": null,
             "access_rule": {
-              "rule": "terran_engine_of_destruction_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Beat Engine of Destruction (Terran)",
@@ -9166,9 +8907,7 @@
             "name": "Welcome to the Jungle (Terran): Victory",
             "id": 2400,
             "access_rule": {
-              "rule": "terran_welcome_to_the_jungle_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Perdition Turret",
@@ -9196,9 +8935,7 @@
             "name": "Welcome to the Jungle (Terran): West Relic",
             "id": 2402,
             "access_rule": {
-              "rule": "terran_welcome_to_the_jungle_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Infernal Plating (Hellion)",
@@ -9212,9 +8949,7 @@
             "name": "Welcome to the Jungle (Terran): North-East Relic",
             "id": 2403,
             "access_rule": {
-              "rule": "terran_welcome_to_the_jungle_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Resource Efficiency (Firebat)",
@@ -9228,9 +8963,7 @@
             "name": "Welcome to the Jungle (Terran): Middle Base",
             "id": 2404,
             "access_rule": {
-              "rule": "terran_welcome_to_the_jungle_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Hel's Angels",
@@ -9247,19 +8980,27 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "terran_base_trasher",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Jump Jets (Siege Tank)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Siege Tank"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "terran_beats_protoss_deathball",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 },
                 {
-                  "rule": "terran_welcome_to_the_jungle_requirement",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 }
               ]
             },
@@ -9278,19 +9019,33 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "terran_beats_protoss_deathball",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 },
                 {
-                  "rule": "terran_competent_ground_to_air",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 },
                 {
-                  "rule": "terran_welcome_to_the_jungle_requirement",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Cyclone"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Goliath"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Thor"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -9309,19 +9064,33 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "terran_beats_protoss_deathball",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 },
                 {
-                  "rule": "terran_competent_ground_to_air",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 },
                 {
-                  "rule": "terran_welcome_to_the_jungle_requirement",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Cyclone"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Goliath"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Thor"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -9340,14 +9109,10 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "terran_beats_protoss_deathball",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 },
                 {
-                  "rule": "terran_welcome_to_the_jungle_requirement",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 }
               ]
             },
@@ -9366,14 +9131,10 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "terran_competent_comp",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 },
                 {
-                  "rule": "terran_welcome_to_the_jungle_requirement",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 }
               ]
             },
@@ -9389,9 +9150,7 @@
             "name": "Welcome to the Jungle (Terran): Up to 4 Terrazine Nodes Sealed",
             "id": 2410,
             "access_rule": {
-              "rule": "terran_welcome_to_the_jungle_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Hellbat (Hellion Morph)",
@@ -9405,9 +9164,7 @@
             "name": "Welcome to the Jungle (Terran): Up to 5 Terrazine Nodes Sealed",
             "id": 2411,
             "access_rule": {
-              "rule": "terran_welcome_to_the_jungle_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Warhound",
@@ -9421,9 +9178,7 @@
             "name": "Beat Welcome to the Jungle (Terran)",
             "id": null,
             "access_rule": {
-              "rule": "terran_welcome_to_the_jungle_requirement",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Beat Welcome to the Jungle (Terran)",
@@ -9443,9 +9198,7 @@
             "name": "Media Blitz (Terran): Victory",
             "id": 3000,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Siege Breakers",
@@ -9459,9 +9212,7 @@
             "name": "Media Blitz (Terran): Tower 1",
             "id": 3001,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Advanced Targeting Optics (Banshee)",
@@ -9475,9 +9226,7 @@
             "name": "Media Blitz (Terran): Tower 2",
             "id": 3002,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Twin-Linked Flamethrower (Hellion)",
@@ -9491,9 +9240,7 @@
             "name": "Media Blitz (Terran): Tower 3",
             "id": 3003,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Internal Tech Module (Raven)",
@@ -9513,9 +9260,7 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "terran_competent_comp",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 }
               ]
             },
@@ -9531,9 +9276,7 @@
             "name": "Media Blitz (Terran): All Barracks",
             "id": 3005,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Terran Ship Weapon",
@@ -9547,9 +9290,7 @@
             "name": "Media Blitz (Terran): All Factories",
             "id": 3006,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Advanced Cloaking Field (Medivac)",
@@ -9569,9 +9310,7 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "terran_competent_comp",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "True_"
                 }
               ]
             },
@@ -9587,9 +9326,7 @@
             "name": "Media Blitz (Terran): Odin Not Trashed",
             "id": 3008,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Launching Vector Compensator (Valkyrie)",
@@ -9617,9 +9354,7 @@
             "name": "Beat Media Blitz (Terran)",
             "id": null,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Beat Media Blitz (Terran)",
@@ -10895,9 +10630,7 @@
             "name": "Zero Hour (Terran): First Hatchery",
             "id": 1304,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Siege Tank",
@@ -10911,9 +10644,7 @@
             "name": "Zero Hour (Terran): Second Hatchery",
             "id": 1305,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Terran Ship Weapon",
@@ -10927,9 +10658,7 @@
             "name": "Zero Hour (Terran): Third Hatchery",
             "id": 1306,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Laser Targeting System (Marine)",
@@ -10943,9 +10672,7 @@
             "name": "Zero Hour (Terran): Fourth Hatchery",
             "id": 1307,
             "access_rule": {
-              "rule": "terran_competent_comp",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "True_"
             },
             "item": {
               "name": "Progressive Terran Ship Armor",
@@ -41781,14 +41508,8 @@
               {
                 "type": "compare",
                 "left": {
-                  "type": "helper",
-                  "name": "weapon_armor_upgrade_count",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Progressive Terran Ship Weapon"
-                    }
-                  ]
+                  "type": "count_item",
+                  "item": "Progressive Terran Ship Weapon"
                 },
                 "op": ">=",
                 "right": {
@@ -41950,8 +41671,21 @@
         "type": "or",
         "conditions": [
           {
-            "type": "helper",
-            "name": "terran_competent_ground_to_air"
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Goliath"
+              },
+              {
+                "type": "item_check",
+                "item": "Cyclone"
+              },
+              {
+                "type": "item_check",
+                "item": "Thor"
+              }
+            ]
           },
           {
             "type": "helper",
@@ -42459,14 +42193,8 @@
                   {
                     "type": "compare",
                     "left": {
-                      "type": "helper",
-                      "name": "weapon_armor_upgrade_count",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Progressive Terran Ship Weapon"
-                        }
-                      ]
+                      "type": "count_item",
+                      "item": "Progressive Terran Ship Weapon"
                     },
                     "op": ">=",
                     "right": {
@@ -42609,14 +42337,8 @@
                       {
                         "type": "compare",
                         "left": {
-                          "type": "helper",
-                          "name": "weapon_armor_upgrade_count",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "Progressive Terran Ship Weapon"
-                            }
-                          ]
+                          "type": "count_item",
+                          "item": "Progressive Terran Ship Weapon"
                         },
                         "op": ">=",
                         "right": {
@@ -42642,8 +42364,8 @@
                 ]
               },
               {
-                "type": "helper",
-                "name": "terran_competent_comp"
+                "type": "constant",
+                "value": true
               },
               {
                 "type": "helper",
