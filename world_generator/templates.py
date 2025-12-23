@@ -621,41 +621,10 @@ def generate_rules_py(data: ExtractedData) -> str:
     if helper_generator.uses_math:
         math_import = 'import math\n'
 
-    # Build helper definitions dict for exporter
-    # This stores helper bodies so they can be looked up by name instead of inlined at every call site
-    # IMPORTANT: Do NOT expand helper references here - keep them as references so the frontend
-    # can look them up from the helpers dict. Expanding creates overly complex structures that
-    # the frontend AST evaluator may not handle correctly.
-    helper_definitions_section = ''
-    if helper_bodies:
-        helper_defs = {}
-        for helper_name, body in helper_bodies.items():
-            # Keep helper body as-is with references to other helpers
-            # The frontend will look up referenced helpers from the helpers dict
-            # Include params if available for proper argument binding
-            if helper_name in helper_params and helper_params[helper_name]:
-                helper_defs[helper_name] = {
-                    'params': helper_params[helper_name],
-                    'body': body
-                }
-            else:
-                helper_defs[helper_name] = body
-
-        # Format as Python dict literal using repr() for valid Python syntax
-        # (json.dumps produces JSON false/true/null, we need Python False/True/None)
-        import pprint
-        helper_defs_str = pprint.pformat(helper_defs, indent=4, width=120)
-        helper_definitions_section = f'''
-
-# Helper definitions for frontend evaluation
-# These are looked up by name instead of being inlined at every call site
-_HELPER_DEFINITIONS = {helper_defs_str}
-
-
-def get_helper_definitions() -> dict:
-    """Return helper definitions for frontend evaluation."""
-    return _HELPER_DEFINITIONS
-'''
+    # Note: Helper definitions for frontend evaluation are no longer stored as AST
+    # in the generated Rules.py. Instead, when the exporter runs on a worldgen world,
+    # it analyzes the Python helper functions and converts them back to AST format.
+    # This keeps the generated code clean and readable.
 
     return f'''"""
 Access rules for {game_name}.
@@ -669,7 +638,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
     from worlds.AutoWorld import World
-{helpers_section}{helper_definitions_section}
+{helpers_section}
 
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""

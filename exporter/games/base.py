@@ -930,6 +930,128 @@ class BaseGameExportHandler:
         """
         return self.ITEM_NAME_MODULES
 
+    def _analyze_worldgen_helpers(self, rules_module, world) -> Dict[str, Any]:
+        """
+        Analyze helper functions from a worldgen Rules.py module.
+
+        Worldgen worlds have helper functions defined as Python code in their Rules.py.
+        This method finds all helper functions (those starting with '_' and taking
+        state/player args) and analyzes them to produce AST definitions.
+
+        Args:
+            rules_module: The imported Rules.py module from a worldgen world
+            world: The world object for this player
+
+        Returns:
+            A dictionary mapping helper names to their rule definitions.
+        """
+        from exporter.analyzer import analyze_rule
+
+        helper_definitions = {}
+
+        # Find all helper functions in the module
+        # Worldgen helper functions follow the pattern: _gamename_worldgen_helpername
+        # They take (state, player) or (state, player, *args) as parameters
+        for name in dir(rules_module):
+            if not name.startswith('_') or name.startswith('__'):
+                continue
+
+            obj = getattr(rules_module, name)
+            if not callable(obj) or not hasattr(obj, '__code__'):
+                continue
+
+            # Check if this looks like a helper function (has state and player params)
+            code = obj.__code__
+            if code.co_argcount < 2:
+                continue
+
+            varnames = code.co_varnames[:code.co_argcount]
+            if len(varnames) < 2 or varnames[0] != 'state' or varnames[1] != 'player':
+                continue
+
+            # This is a helper function - analyze it
+            try:
+                rule = analyze_rule(
+                    rule_func=obj,
+                    game_handler=self,
+                    player_context=world.player if hasattr(world, 'player') else None,
+                    preserve_parameter_names=True
+                )
+
+                if rule and rule.get('type') != 'error':
+                    # Extract parameter names beyond state/player
+                    params = list(varnames[2:])  # Skip state, player
+                    defaults = {}
+
+                    # Get default values if any
+                    if obj.__defaults__:
+                        num_defaults = len(obj.__defaults__)
+                        param_names_with_defaults = params[-num_defaults:]
+                        for param_name, default_val in zip(param_names_with_defaults, obj.__defaults__):
+                            if default_val is not None:
+                                defaults[param_name] = default_val
+
+                    # Extract the helper name without the worldgen prefix
+                    # e.g., _shapezworldgen_can_cut_half -> can_cut_half
+                    # The pattern is: _<gamename>worldgen_<helper_name>
+                    # We need to match the unprefixed names used in the rules
+                    helper_name = name
+                    if name.startswith('_') and 'worldgen_' in name:
+                        # Strip the _<gamename>worldgen_ prefix
+                        prefix_end = name.find('worldgen_') + len('worldgen_')
+                        helper_name = name[prefix_end:]
+
+                    if params:
+                        helper_def = {
+                            'params': params,
+                            'body': rule
+                        }
+                        if defaults:
+                            helper_def['defaults'] = defaults
+                        helper_definitions[helper_name] = helper_def
+                    else:
+                        helper_definitions[helper_name] = rule
+
+                    logger.debug(f"Analyzed worldgen helper '{helper_name}'")
+
+            except Exception as e:
+                logger.warning(f"Failed to analyze worldgen helper '{name}': {e}")
+
+        # Post-process: strip worldgen prefix from all helper references within rules
+        helper_definitions = self._strip_worldgen_prefixes_from_rules(helper_definitions)
+
+        return helper_definitions
+
+    def _strip_worldgen_prefixes_from_rules(self, helper_definitions: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Strip worldgen prefixes from all helper references within rule bodies.
+
+        When the analyzer parses Python code like `_shapezworldgen_can_stack(state, player)`,
+        it creates helper references with the full prefixed name. This method transforms
+        all such references to use the unprefixed name (e.g., `can_stack`).
+        """
+        def strip_prefix(name: str) -> str:
+            if name.startswith('_') and 'worldgen_' in name:
+                prefix_end = name.find('worldgen_') + len('worldgen_')
+                return name[prefix_end:]
+            return name
+
+        def transform_rule(rule: Any) -> Any:
+            if isinstance(rule, dict):
+                # Check if this is a helper reference
+                if rule.get('type') == 'helper' and 'name' in rule:
+                    rule = dict(rule)  # Make a copy
+                    rule['name'] = strip_prefix(rule['name'])
+                    return rule
+
+                # Recursively process all values
+                return {k: transform_rule(v) for k, v in rule.items()}
+            elif isinstance(rule, list):
+                return [transform_rule(item) for item in rule]
+            return rule
+
+        return {name: transform_rule(definition) for name, definition in helper_definitions.items()}
+
     def get_helper_definitions(self, world) -> Dict[str, Any]:
         """
         Extract helper function definitions and return them as rule structures.
@@ -944,8 +1066,8 @@ class BaseGameExportHandler:
 
         The blacklist (HELPERS_TO_EXPORT_BLACKLIST) excludes helpers from export.
 
-        For worldgen worlds, if the Rules.py module has a get_helper_definitions()
-        function, it will be used instead of analyzing helper functions.
+        For worldgen worlds, helper functions are analyzed directly from the
+        Rules.py module's Python code, converting them to AST format.
 
         Args:
             world: The world object for this player
@@ -954,21 +1076,19 @@ class BaseGameExportHandler:
             A dictionary mapping helper names to their rule definitions.
             Example: {"can_cut_half": {"type": "item_check", "item": "Cutter"}}
         """
-        # Check for worldgen worlds first - they have pre-computed helper definitions
-        # in their Rules.py module
+        # Check for worldgen worlds first - analyze helper functions from their Rules.py module
         try:
             world_module = type(world).__module__
             if '_worldgen' in world_module:
-                # This is a worldgen world - try to import get_helper_definitions from Rules.py
+                # This is a worldgen world - analyze helper functions from Rules.py
                 # world_module is like 'worlds.ahit_worldgen' - we need 'worlds.ahit_worldgen.Rules'
                 rules_module_name = world_module + '.Rules'
                 try:
                     rules_module = importlib.import_module(rules_module_name)
-                    if hasattr(rules_module, 'get_helper_definitions'):
-                        worldgen_helpers = rules_module.get_helper_definitions()
-                        if worldgen_helpers:
-                            logger.debug(f"Loaded {len(worldgen_helpers)} helper definitions from worldgen Rules.py")
-                            return worldgen_helpers
+                    worldgen_helpers = self._analyze_worldgen_helpers(rules_module, world)
+                    if worldgen_helpers:
+                        logger.debug(f"Analyzed {len(worldgen_helpers)} helper definitions from worldgen Rules.py")
+                        return worldgen_helpers
                 except ImportError as e:
                     logger.debug(f"Could not import worldgen Rules module: {e}")
         except Exception as e:
