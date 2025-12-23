@@ -611,6 +611,12 @@ def generate_rules_py(data: ExtractedData) -> str:
     if rule_builder_imports:
         imports_section = f'\nfrom rule_builder import {rule_builder_imports_str}\n'
 
+    # Add helper function imports from original world modules
+    helper_imports = rule_builder_generator.get_helper_imports()
+    if helper_imports:
+        for helper_import in sorted(helper_imports):
+            imports_section += f'{helper_import}\n'
+
     # Add CollectionState import if we have helpers or lambda rules
     collection_state_import = ''
     if has_helpers or needs_lambda:

@@ -22,11 +22,30 @@ class RuleCodeGenerator:
         self.known_helpers: Set[str] = set()
         self.helper_bodies: Dict[str, Dict[str, Any]] = {}  # helper_name -> AST format body
         self._inline_counter: int = 0  # Counter for generating unique variable prefixes
+        # Helpers that have JavaScript implementations in the frontend but are too complex
+        # for Python export. These should be preserved as HelperCall to maintain proper
+        # rule semantics for frontend evaluation.
+        self.js_only_helpers: Set[str] = {
+            # KH1 helpers with JS implementations in kh1Logic.js
+            'has_x_worlds',
+            'has_emblems',
+            'has_defensive_tools',
+            'has_puppies',
+            'has_reports',
+            'has_torn_pages',
+        }
+        # Tracks imports for helper functions from original world modules
+        self.js_only_helper_imports: Set[str] = set()
 
     def reset(self) -> None:
         """Reset state for a new generation run."""
         self.required_imports = set()
         self._inline_counter = 0
+        self.js_only_helper_imports = set()
+
+    def get_helper_imports(self) -> Set[str]:
+        """Get import statements for helper functions from original world modules."""
+        return self.js_only_helper_imports
 
     def set_helpers(self, helper_names: Set[str], helper_bodies: Dict[str, Dict[str, Any]] = None,
                      helper_params: Dict[str, List[str]] = None,
@@ -2389,6 +2408,35 @@ class RuleCodeGenerator:
 
             return f'HelperCall({", ".join(parts)})'
 
+        # Check if this is a JS-only helper (has frontend implementation but no Python body)
+        # These need to be preserved as HelperCall for proper frontend evaluation
+        if helper_name in self.js_only_helpers:
+            self.required_imports.add('HelperCall')
+
+            # Convert arguments to their serializable form
+            arg_strs = []
+            for arg in args:
+                if isinstance(arg, dict) and arg.get('type') == 'constant':
+                    arg_strs.append(repr(arg.get('value')))
+                elif isinstance(arg, dict) and arg.get('rule') == 'Constant':
+                    arg_strs.append(repr(arg.get('args', {}).get('value')))
+                elif isinstance(arg, dict) and arg.get('type') == 'binary_op':
+                    # Evaluate binary ops at code-gen time if possible
+                    value = self._eval_binary_op(arg)
+                    if value is not None:
+                        arg_strs.append(repr(value))
+                    else:
+                        arg_strs.append(repr(arg))
+                else:
+                    # Preserve complex args as dicts
+                    arg_strs.append(repr(arg) if not isinstance(arg, dict) else repr(arg))
+
+            parts = [f'helper_name="{helper_name}"']
+            if arg_strs:
+                parts.append(f'args=({", ".join(arg_strs)},)')
+
+            return f'HelperCall({", ".join(parts)})'
+
         # Unknown helper - return True_() as placeholder
         # Returning True makes locations more accessible, which is appropriate for worldgen
         # since unknown helpers are typically progression checks that evaluate to true
@@ -2479,6 +2527,55 @@ class RuleCodeGenerator:
 
             return f'HelperCall({", ".join(parts)})'
 
+        # Check if this is a JS-only helper (has frontend implementation but no Python body)
+        # These need to be preserved as HelperCall for proper frontend evaluation
+        if helper_name in self.js_only_helpers:
+            self.required_imports.add('HelperCall')
+
+            # Get the original world's helper function reference if available
+            func_ref = self._get_original_helper_func_ref(helper_name)
+
+            # Convert arguments to their serializable form
+            # These will be exported as the args array in HelperCall.to_dict()
+            arg_strs = []
+            for arg in args:
+                if isinstance(arg, dict):
+                    arg_rule = arg.get('rule', '')
+                    if arg_rule == 'Constant':
+                        value = arg.get('args', {}).get('value')
+                        arg_strs.append(repr(value))
+                    elif arg_rule == 'AST_min':
+                        # Evaluate AST_min at code-gen time
+                        value = self._eval_ast_min(arg)
+                        if value is not None:
+                            arg_strs.append(repr(value))
+                        else:
+                            # Fallback: preserve the dict (may cause frontend issues)
+                            arg_strs.append(repr(arg))
+                    elif arg.get('type') == 'constant':
+                        arg_strs.append(repr(arg.get('value')))
+                    elif arg.get('type') == 'binary_op':
+                        # Evaluate binary ops at code-gen time if possible
+                        value = self._eval_binary_op(arg)
+                        if value is not None:
+                            arg_strs.append(repr(value))
+                        else:
+                            arg_strs.append(repr(arg))
+                    else:
+                        # Preserve complex args as dicts
+                        arg_strs.append(repr(arg))
+                else:
+                    arg_strs.append(repr(arg))
+
+            parts = []
+            if func_ref:
+                parts.append(f'helper_func={func_ref}')
+            parts.append(f'helper_name="{helper_name}"')
+            if arg_strs:
+                parts.append(f'args=({", ".join(arg_strs)},)')
+
+            return f'HelperCall({", ".join(parts)})'
+
         # Unknown helper - return True_() as placeholder
         # Returning True makes locations more accessible, which is appropriate for worldgen
         # since unknown helpers are typically progression checks that evaluate to true
@@ -2486,6 +2583,122 @@ class RuleCodeGenerator:
         # (This matches the behavior of _convert_helper for consistency)
         self.required_imports.add('True_')
         return 'True_()'
+
+    def _eval_binary_op(self, op: Dict[str, Any]) -> Any:
+        """Evaluate a binary operation at code-gen time if possible."""
+        if op.get('type') != 'binary_op':
+            return None
+
+        left = op.get('left', {})
+        right = op.get('right', {})
+        operator = op.get('op')
+
+        left_val = None
+        right_val = None
+
+        # Get left value
+        if isinstance(left, dict):
+            if left.get('type') == 'constant':
+                left_val = left.get('value')
+            elif left.get('type') == 'binary_op':
+                left_val = self._eval_binary_op(left)
+        elif isinstance(left, (int, float)):
+            left_val = left
+
+        # Get right value
+        if isinstance(right, dict):
+            if right.get('type') == 'constant':
+                right_val = right.get('value')
+            elif right.get('type') == 'binary_op':
+                right_val = self._eval_binary_op(right)
+        elif isinstance(right, (int, float)):
+            right_val = right
+
+        if left_val is None or right_val is None:
+            return None
+
+        # Evaluate the operation
+        try:
+            if operator == '+':
+                return left_val + right_val
+            elif operator == '-':
+                return left_val - right_val
+            elif operator == '*':
+                return left_val * right_val
+            elif operator == '/':
+                return left_val / right_val
+            elif operator == '//':
+                return left_val // right_val
+            elif operator == '%':
+                return left_val % right_val
+        except Exception:
+            pass
+
+        return None
+
+    def _eval_ast_min(self, rule: Dict[str, Any]) -> Any:
+        """Evaluate an AST_min expression at code-gen time if possible."""
+        if rule.get('rule') != 'AST_min':
+            return None
+
+        inner_args = rule.get('args', {}).get('args', [])
+        if not inner_args:
+            return None
+
+        # Evaluate all arguments
+        values = []
+        for arg in inner_args:
+            if isinstance(arg, dict):
+                if arg.get('type') == 'constant':
+                    values.append(arg.get('value'))
+                elif arg.get('type') == 'binary_op':
+                    val = self._eval_binary_op(arg)
+                    if val is not None:
+                        values.append(val)
+                    else:
+                        return None  # Can't evaluate
+            elif isinstance(arg, (int, float)):
+                values.append(arg)
+            else:
+                return None  # Can't evaluate
+
+        if not values:
+            return None
+
+        return min(values)
+
+    def _get_original_helper_func_ref(self, helper_name: str) -> str:
+        """Get a reference to the original world's helper function.
+
+        This returns the function name to use in HelperCall, and adds the necessary
+        import statement to required_imports.
+
+        For KH1, the helper functions are in worlds.kh1.Rules module.
+        """
+        # Map game name patterns to their Rules modules and available helpers
+        # Use prefix matching since worldgen worlds have "WorldGen" suffix
+        game_helper_modules = {
+            'kingdomhearts': ('worlds.kh1.Rules', {
+                'has_x_worlds': '_kh1_has_x_worlds',
+                'has_emblems': '_kh1_has_emblems',
+                'has_defensive_tools': '_kh1_has_defensive_tools',
+                'has_puppies': '_kh1_has_puppies',
+                'has_reports': '_kh1_has_reports',
+                'has_torn_pages': '_kh1_has_torn_pages',
+            }),
+        }
+
+        # Get the helper module and function mappings for this game
+        # Try prefix match to handle "kingdomheartsworldgen" -> "kingdomhearts"
+        for game_prefix, (module_path, helper_map) in game_helper_modules.items():
+            if self.game_name_lower.startswith(game_prefix):
+                if helper_name in helper_map:
+                    func_alias = helper_map[helper_name]
+                    # Add the import: from worlds.kh1.Rules import has_x_worlds as _kh1_has_x_worlds
+                    self.js_only_helper_imports.add(f'from {module_path} import {helper_name} as {func_alias}')
+                    return func_alias
+
+        return None
 
     def _convert_placement_lookup(self, rule: Dict[str, Any]) -> str:
         """Convert placement_lookup to resolved placement data.
