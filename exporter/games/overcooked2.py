@@ -279,23 +279,13 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
         if rule_type == 'helper':
             helper_name = rule.get('name', '')
 
-            # Keep level star helpers as-is (implemented in frontend JavaScript)
-            if helper_name in ['has_requirements_for_level_star', 'has_requirements_for_level_access']:
-                # Don't call super().expand_rule() - this would convert has_* to items
-                # Just recursively process the args if any
-                if 'args' in rule:
-                    rule = dict(rule)  # Make a copy
-                    rule['args'] = [self.expand_rule(arg, _depth + 1) if isinstance(arg, dict) else arg
-                                   for arg in rule.get('args', [])]
-                return rule
-
-            # Handle has_requirements_for_level_access (shouldn't reach here due to override)
-            if helper_name == 'has_requirements_for_level_access':
-                return self._expand_level_access_rule(rule)
-
-            # Handle has_requirements_for_level_star (shouldn't reach here due to override)
+            # Expand has_requirements_for_level_star into explicit rules
             if helper_name == 'has_requirements_for_level_star':
                 return self._expand_level_star_rule(rule)
+
+            # Expand has_requirements_for_level_access into explicit rules
+            if helper_name == 'has_requirements_for_level_access':
+                return self._expand_level_access_rule(rule)
 
         # Standard recursive processing
         return super().expand_rule(rule, _depth)
@@ -564,35 +554,174 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
             }
 
     def _expand_level_star_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Expand has_requirements_for_level_star helper.
+        """Expand has_requirements_for_level_star helper into explicit rules.
 
         This checks if the player can earn a specific number of stars on a level.
+        The helper checks:
+        1. Global requirements ("*") for all stars up to the target
+        2. Level-specific requirements for all stars up to the target
+
+        Each check involves:
+        - Exclusive requirements (must have ALL items)
+        - Additive requirements (weighted sum >= 1.0)
         """
+        # Ensure level_logic is loaded
+        if not hasattr(self, 'level_logic') or not self.level_logic:
+            try:
+                from worlds.overcooked2 import Logic
+                self.level_logic = Logic.level_logic
+                logger.info(f"Loaded level_logic with {len(self.level_logic)} entries")
+            except Exception as e:
+                logger.error(f"Error loading level_logic: {e}")
+                return {'type': 'constant', 'value': True}
+
         args = rule.get('args', [])
         if len(args) < 2:
-            return rule
+            logger.warning(f"has_requirements_for_level_star called with insufficient args: {args}")
+            return {'type': 'constant', 'value': True}
 
-        # If the first arg is still a variable reference, we can't expand it here
-        # Instead, keep it as a helper but the frontend will need to handle it
         level_arg = args[0]
         stars_arg = args[1]
 
-        if level_arg.get('type') == 'name':
-            # Can't expand without knowing the level - keep as helper
-            return rule
-
-        # Extract level_id and stars
-        level_id = self._resolve_constant(level_arg)
+        # Extract shortname and stars from constant args
+        shortname = self._resolve_constant(level_arg)
         stars = self._resolve_constant(stars_arg)
 
-        if level_id is None or stars is None:
-            return rule
+        if shortname is None or stars is None:
+            logger.warning(f"Could not resolve has_requirements_for_level_star args: shortname={shortname}, stars={stars}")
+            return {'type': 'constant', 'value': True}
 
-        # Look up the level in level_logic to get its shortname
-        # The level_logic uses shortnames like "Story 1-1", not level numbers
-        # We need to figure out the shortname from the level_id
-        # For now, keep as helper - this would require more context
-        return rule
+        # Build the combined requirements
+        conditions = []
+
+        # Check global requirements ("*") for stars 1 through target_stars
+        global_rule = self._build_level_logic_rule("*", stars)
+        if global_rule:
+            conditions.append(global_rule)
+
+        # Check level-specific requirements for stars 1 through target_stars
+        level_rule = self._build_level_logic_rule(shortname, stars)
+        if level_rule:
+            conditions.append(level_rule)
+
+        # Combine all conditions
+        if len(conditions) == 0:
+            return {'type': 'constant', 'value': True}
+        elif len(conditions) == 1:
+            return conditions[0]
+        else:
+            return {'type': 'and', 'conditions': conditions}
+
+    def _build_level_logic_rule(self, shortname: str, target_stars: int) -> Optional[Dict[str, Any]]:
+        """Build a rule that checks level_logic requirements for a given shortname and star count.
+
+        This checks requirements for all stars from 1 up to target_stars (inclusive).
+        """
+        if shortname not in self.level_logic:
+            # No logic for this level - no requirements
+            return None
+
+        level_reqs = self.level_logic[shortname]
+        conditions = []
+
+        # Check requirements for each star level up to target_stars
+        for star_idx in range(min(target_stars, len(level_reqs))):
+            star_logic = level_reqs[star_idx]
+            if len(star_logic) < 2:
+                continue
+
+            exclusive_reqs = star_logic[0]
+            additive_reqs = star_logic[1]
+
+            # Add exclusive requirements (must have ALL)
+            if exclusive_reqs:
+                # Convert to a list if it's a set
+                exclusive_list = list(exclusive_reqs) if isinstance(exclusive_reqs, (set, frozenset)) else exclusive_reqs
+                if exclusive_list:
+                    # Create has_all check for exclusive requirements
+                    for item_name in exclusive_list:
+                        conditions.append({'type': 'item_check', 'item': item_name})
+
+            # Add additive requirements (weighted sum >= 1.0)
+            if additive_reqs:
+                additive_list = list(additive_reqs) if isinstance(additive_reqs, (set, frozenset)) else additive_reqs
+                if additive_list:
+                    # Build a weighted sum check
+                    # We need: sum(weight for item, weight in additive if has(item)) >= 1.0
+                    # Approximation: require enough items to sum to >= 1.0
+                    additive_rule = self._build_additive_rule(additive_list)
+                    if additive_rule:
+                        conditions.append(additive_rule)
+
+        # Combine all conditions
+        if len(conditions) == 0:
+            return None
+        elif len(conditions) == 1:
+            return conditions[0]
+        else:
+            return {'type': 'and', 'conditions': conditions}
+
+    def _build_additive_rule(self, additive_reqs: List) -> Optional[Dict[str, Any]]:
+        """Build a rule for additive requirements (weighted sum >= 1.0).
+
+        For additive requirements, we need the weighted sum of owned items to be >= 1.0.
+        We generate ALL valid combinations as an OR so the randomizer can satisfy at least one.
+        """
+        if not additive_reqs:
+            return None
+
+        # Convert to list of (item, weight) tuples
+        items = []
+        for req in additive_reqs:
+            if len(req) >= 2:
+                items.append((req[0], req[1]))
+
+        if not items:
+            return None
+
+        # Sort by weight descending
+        items.sort(key=lambda x: -x[1])
+
+        # Find all valid combinations that sum to >= 1.0
+        # Use itertools to generate combinations of increasing sizes
+        from itertools import combinations
+
+        valid_combos = []
+        max_combo_size = min(len(items), 5)  # Limit to size 5 to avoid explosion
+
+        # Try combinations of increasing sizes
+        for size in range(1, max_combo_size + 1):
+            for combo in combinations(items, size):
+                total_weight = sum(w for _, w in combo)
+                if total_weight >= 0.99:  # Allow small rounding error
+                    # This combination is valid
+                    combo_items = [item for item, _ in combo]
+                    valid_combos.append(combo_items)
+
+            # If we found at least 10 valid combos at this size, stop to avoid explosion
+            if len(valid_combos) >= 20:
+                break
+
+        if not valid_combos:
+            # No valid combinations found - this shouldn't happen but fall back to True
+            logger.warning(f"No valid additive combinations found for {items}")
+            return None
+
+        # Build OR of all valid combinations
+        or_conditions = []
+        for combo in valid_combos:
+            if len(combo) == 1:
+                or_conditions.append({'type': 'item_check', 'item': combo[0]})
+            else:
+                or_conditions.append({
+                    'type': 'and',
+                    'conditions': [{'type': 'item_check', 'item': item} for item in combo]
+                })
+
+        if len(or_conditions) == 1:
+            return or_conditions[0]
+        else:
+            return {'type': 'or', 'conditions': or_conditions}
 
     def _resolve_constant(self, rule: Dict[str, Any]) -> Any:
         """Resolve a rule to a constant value if possible."""
