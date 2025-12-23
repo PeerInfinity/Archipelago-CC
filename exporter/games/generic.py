@@ -245,28 +245,31 @@ class GenericGameExportHandler(BaseGameExportHandler):
                     item_class = getattr(world, 'item_name_to_item', {}).get(item_name)
                     if item_class and hasattr(item_class, 'classification'):
                         classification = item_class.classification
-                        is_advancement = classification == ItemClassification.progression
-                        is_useful = classification == ItemClassification.useful
-                        is_trap = classification == ItemClassification.trap
+                        # Use 'in' operator to handle combined flags like progression|useful
+                        is_advancement = ItemClassification.progression in classification
+                        is_useful = ItemClassification.useful in classification
+                        is_trap = ItemClassification.trap in classification
                 except Exception as e:
                     logger.debug(f"Could not determine classification for {item_name}: {e}")
                     # Fallback: check item pool if available
                     if hasattr(world, 'multiworld'):
                         for item in world.multiworld.itempool:
                             if item.player == world.player and item.name == item_name:
-                                is_advancement = item.classification == ItemClassification.progression
-                                is_useful = item.classification == ItemClassification.useful
-                                is_trap = item.classification == ItemClassification.trap
+                                # Use 'in' operator to handle combined flags like progression|useful
+                                is_advancement = ItemClassification.progression in item.classification
+                                is_useful = ItemClassification.useful in item.classification
+                                is_trap = ItemClassification.trap in item.classification
                                 break
                         
                         # Additional fallback: check placed items in locations
                         if not (is_advancement or is_useful or is_trap):
                             for location in world.multiworld.get_locations(world.player):
-                                if (location.item and location.item.player == world.player and 
+                                if (location.item and location.item.player == world.player and
                                     location.item.name == item_name and location.item.code is not None):
-                                    is_advancement = location.item.classification == ItemClassification.progression
-                                    is_useful = location.item.classification == ItemClassification.useful
-                                    is_trap = location.item.classification == ItemClassification.trap
+                                    # Use 'in' operator to handle combined flags like progression|useful
+                                    is_advancement = ItemClassification.progression in location.item.classification
+                                    is_useful = ItemClassification.useful in location.item.classification
+                                    is_trap = ItemClassification.trap in location.item.classification
                                     break
                 
                 # Get groups if available
@@ -311,9 +314,10 @@ class GenericGameExportHandler(BaseGameExportHandler):
                             'name': item_name,
                             'id': None,
                             'groups': ['Event'],
-                            'advancement': location.item.classification == ItemClassification.progression,
-                            'useful': location.item.classification == ItemClassification.useful,
-                            'trap': location.item.classification == ItemClassification.trap,
+                            # Use 'in' operator to handle combined flags like progression|useful
+                            'advancement': ItemClassification.progression in location.item.classification,
+                            'useful': ItemClassification.useful in location.item.classification,
+                            'trap': ItemClassification.trap in location.item.classification,
                             'event': True,
                             'type': 'Event',
                             'max_count': 1

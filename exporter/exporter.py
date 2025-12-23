@@ -27,7 +27,7 @@ def classification_to_string(classification: ItemClassification) -> str:
     """Convert an ItemClassification enum to its string name.
 
     Handles combined flags by returning the most specific named combination,
-    or the base classification name.
+    or the highest priority component for unnamed combinations.
     """
     # Check for exact named combinations first (most specific)
     if classification == ItemClassification.progression_deprioritized_skip_balancing:
@@ -37,7 +37,7 @@ def classification_to_string(classification: ItemClassification) -> str:
     if classification == ItemClassification.progression_deprioritized:
         return "progression_deprioritized"
 
-    # Check individual flags
+    # Check individual flags (in priority order)
     if classification == ItemClassification.progression:
         return "progression"
     if classification == ItemClassification.useful:
@@ -46,6 +46,15 @@ def classification_to_string(classification: ItemClassification) -> str:
         return "trap"
     if classification == ItemClassification.filler:
         return "filler"
+
+    # Handle combined flags by returning the highest priority component
+    # Priority order: progression > useful > trap > filler
+    if ItemClassification.progression in classification:
+        return "progression"
+    if ItemClassification.useful in classification:
+        return "useful"
+    if ItemClassification.trap in classification:
+        return "trap"
 
     # For other combinations, use the enum's name if available
     try:

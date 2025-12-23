@@ -9,6 +9,9 @@ from BaseClasses import MultiWorld, Region, Entrance
 from .Locations import location_table, StardewValleyWorldGenLocation
 
 
+# Regions that were added after sphere calculation (from original export)
+DYNAMICALLY_ADDED_REGIONS = {"Cellar", "Waterfall", "Farmcave", "Maru's Room", "Bus Tunnel", "Leah's Cottage", "Wizard Basement", "Tent", "Sebastian's Room", "Marlon's bedroom", "Harvey's Room", "Sunroom", "Mayor's Manor", "Ticket Stand", "Movie Theater", "Elliott's House", "Tide Pools", "Public Bath", "Coop", "Barn", "Shed", "Slime Hutch", "Mines Dwarf Shop", "Kitchen", "The Queen of Sauce", "Winter Farming", "Raccoon Shop", "Bookseller Year 3 Books", "Leo's TreeHouse", "Dangerous Skull Cavern", "Island Resort", "Island Shrine", "Volcano Secret Beach", "Volcano Dwarf Shop", "Island Trader", "Gourmand Frog Cave", "Colored Crystals Cave", "Shipwreck", "Qi's Walnut Room", "Pirate Cove", "Professor Snail Cave", "Dangerous Mines - Floor 20", "Dangerous Mines - Floor 60", "Dangerous Mines - Floor 100"}
+
 def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
