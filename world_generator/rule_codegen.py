@@ -2282,6 +2282,22 @@ class RuleCodeGenerator:
                     elif arg_rule == 'True_':
                         # Handle Rule Builder format boolean True: {'rule': 'True_'}
                         arg_strs.append('True')
+                    elif arg.get('_original_ast_type') == 'helper' or arg_rule in self.known_helpers:
+                        # Nested helper call - check if we know about it
+                        nested_helper = arg_rule
+                        if nested_helper in self.known_helpers:
+                            # Check helper body - if it returns constant True/False, inline it
+                            helper_body = self.helper_bodies.get(nested_helper, {})
+                            if isinstance(helper_body, dict) and helper_body.get('type') == 'constant':
+                                const_val = helper_body.get('value')
+                                arg_strs.append(repr(const_val))
+                            else:
+                                # Complex helper - evaluate to True as approximation
+                                # (Most SM canXXX/knowsXXX helpers are simplified to True)
+                                arg_strs.append('True')
+                        else:
+                            # Unknown nested helper - assume True (optimistic approximation)
+                            arg_strs.append('True')
                     else:
                         # For complex args, try to convert
                         arg_strs.append('None')
@@ -2296,9 +2312,11 @@ class RuleCodeGenerator:
 
             return f'HelperCall({", ".join(parts)})'
 
-        # Unknown helper - return True_() as placeholder
-        self.required_imports.add('True_')
-        return 'True_()'
+        # Unknown helper - return False_() as placeholder
+        # Returning False makes locations less accessible, preventing progression issues
+        # (This matches the behavior of _convert_helper for consistency)
+        self.required_imports.add('False_')
+        return 'False_()'
 
     def _convert_placement_lookup(self, rule: Dict[str, Any]) -> str:
         """Convert placement_lookup to resolved placement data.
@@ -2458,7 +2476,10 @@ class HelperCodeGenerator:
         sig_params = ['state: "CollectionState"', 'player: int']
 
         for param in params:
-            if param in defaults:
+            # Handle variadic parameters (*args, **kwargs) - no default value allowed
+            if param.startswith('*'):
+                sig_params.append(param)
+            elif param in defaults:
                 default_val = defaults[param]
                 if isinstance(default_val, bool):
                     sig_params.append(f'{param}: bool = {default_val}')
@@ -2686,11 +2707,17 @@ class HelperCodeGenerator:
             'constant': self._expr_constant,
             'value': self._expr_constant,  # alias
             'name': self._expr_name,
+            'param_ref': self._expr_name,  # alias for helper parameter references
+            'variable': self._expr_name,  # alias
             'item_check': self._expr_item_check,
+            'item_check_count': self._expr_item_check_count,  # for SM helpers
+            'item_check_with_mapping': self._expr_item_check_with_mapping,  # for SM item name mapping
             'count_check': self._expr_count_check,
             'group_check': self._expr_group_check,
             'and': self._expr_and,
             'or': self._expr_or,
+            'all_of': self._expr_all_of,  # alias for AND with conditions list
+            'any_of': self._expr_any_of,  # alias for OR with conditions list
             'not': self._expr_not,
             'compare': self._expr_compare,
             'comparison': self._expr_compare,  # alias
@@ -2927,6 +2954,104 @@ class HelperCodeGenerator:
         """Generate not expression."""
         inner = expr.get('condition', expr.get('operand', expr.get('value', {})))
         return f"not ({self._generate_expression(inner)})"
+
+    def _expr_all_of(self, expr: Dict[str, Any]) -> str:
+        """Generate all() expression for AND of conditions.
+
+        Used by SM helpers like wand() that need to AND variadic arguments.
+        """
+        conditions = expr.get('conditions', [])
+        if not conditions:
+            return 'True'
+        if isinstance(conditions, dict):
+            # conditions is a param_ref - use all() on the parameter
+            param_name = conditions.get('name', 'args')
+            return f'all({param_name})'
+        if len(conditions) == 1:
+            return self._generate_expression(conditions[0])
+        parts = [f"({self._generate_expression(c)})" for c in conditions]
+        return ' and '.join(parts)
+
+    def _expr_any_of(self, expr: Dict[str, Any]) -> str:
+        """Generate any() expression for OR of conditions.
+
+        Used by SM helpers like wor() that need to OR variadic arguments.
+        """
+        conditions = expr.get('conditions', [])
+        if not conditions:
+            return 'False'
+        if isinstance(conditions, dict):
+            # conditions is a param_ref - use any() on the parameter
+            param_name = conditions.get('name', 'args')
+            return f'any({param_name})'
+        if len(conditions) == 1:
+            return self._generate_expression(conditions[0])
+        parts = [f"({self._generate_expression(c)})" for c in conditions]
+        return ' or '.join(parts)
+
+    def _expr_item_check_with_mapping(self, expr: Dict[str, Any]) -> str:
+        """Generate state.has() call with item name mapping for SM.
+
+        SM uses VARIA item names ('Morph', 'Super') which need to be
+        mapped to Archipelago item names ('Morph Ball', 'Super Missile').
+        """
+        item_raw = expr.get('item', '')
+        count = expr.get('count', 1)
+        mapping = expr.get('item_name_mapping', {})
+
+        # Handle item parameter reference
+        if isinstance(item_raw, dict) and item_raw.get('type') == 'param_ref':
+            param_name = item_raw.get('name', 'item')
+            # Generate code that uses the mapping dict (dict stored as module-level constant)
+            mapping_str = repr(mapping)
+            return f'state.has({mapping_str}.get({param_name}, {param_name}), player)'
+
+        # For constant items, resolve the mapping at generation time
+        if isinstance(item_raw, dict) and item_raw.get('type') == 'constant':
+            varia_name = item_raw.get('value', '')
+            ap_name = mapping.get(varia_name, varia_name)
+            return f'state.has({repr(ap_name)}, player)'
+
+        # For string items, also resolve
+        if isinstance(item_raw, str):
+            ap_name = mapping.get(item_raw, item_raw)
+            return f'state.has({repr(ap_name)}, player)'
+
+        # Fallback
+        return 'False'
+
+    def _expr_item_check_count(self, expr: Dict[str, Any]) -> str:
+        """Generate state.has() count check for SM helpers.
+
+        Handles item count comparisons like 'has at least 3 Energy Tanks'.
+        """
+        item_raw = expr.get('item', '')
+        count_raw = expr.get('count', 1)
+        compare_op = expr.get('compare', '>=')
+
+        # Handle item - could be constant or variable
+        if isinstance(item_raw, dict):
+            if item_raw.get('type') == 'param_ref':
+                item = item_raw.get('name', '_item')
+            elif item_raw.get('type') == 'constant':
+                item = repr(item_raw.get('value', ''))
+            else:
+                item = self._generate_expression(item_raw)
+        else:
+            item = repr(item_raw) if isinstance(item_raw, str) else str(item_raw)
+
+        # Handle count - could be constant or variable
+        if isinstance(count_raw, dict):
+            if count_raw.get('type') == 'param_ref':
+                count = count_raw.get('name', '_count')
+            elif count_raw.get('type') == 'constant':
+                count = str(count_raw.get('value', 1))
+            else:
+                count = self._generate_expression(count_raw)
+        else:
+            count = str(count_raw)
+
+        return f'state.has({item}, player, {count})'
 
     def _expr_compare(self, expr: Dict[str, Any]) -> str:
         """Generate comparison expression."""
