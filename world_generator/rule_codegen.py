@@ -585,6 +585,15 @@ class RuleCodeGenerator:
                     }
                     return self._convert_location_rule_ref(location_rule)
 
+                # Check if this is an AST_region_check rule (region accessibility check from AST format)
+                if rb_rule == 'AST_region_check':
+                    args = rule.get('args', {})
+                    region_rule = {
+                        'type': 'can_reach',
+                        'region': args.get('region', '')
+                    }
+                    return self._convert_can_reach_region(region_rule)
+
         # Dispatch based on rule type
         converters = {
             'constant': self._convert_constant,
@@ -2872,6 +2881,43 @@ class HelperCodeGenerator:
         if handler:
             return handler(expr)
 
+        # Handle 'rule' key format (Rule Builder format from exporter)
+        rule_type = expr.get('rule', '')
+        if rule_type:
+            # Handle AST_region_check
+            if rule_type == 'AST_region_check':
+                args = expr.get('args', {})
+                region = args.get('region', '')
+                if isinstance(region, str):
+                    return f'state.can_reach({repr(region)}, "Region", player)'
+                elif isinstance(region, dict) and region.get('type') == 'constant':
+                    region_name = region.get('value', '')
+                    return f'state.can_reach({repr(region_name)}, "Region", player)'
+                # Fallback for complex region expressions
+                region_expr = self._generate_expression(region)
+                return f'state.can_reach({region_expr}, "Region", player)'
+
+            # Handle And/Or rules
+            if rule_type in ('And', 'and'):
+                children = expr.get('children', [])
+                if not children:
+                    return 'True'
+                parts = [self._generate_expression(c) for c in children]
+                return '(' + ' and '.join(f'({p})' for p in parts) + ')'
+
+            if rule_type in ('Or', 'or'):
+                children = expr.get('children', [])
+                if not children:
+                    return 'False'
+                parts = [self._generate_expression(c) for c in children]
+                return '(' + ' or '.join(f'({p})' for p in parts) + ')'
+
+            # Handle helper calls with _original_ast_type marker
+            if expr.get('_original_ast_type') == 'helper' or rule_type in self.known_helpers:
+                helper_name = rule_type
+                func_name = self.get_function_name(helper_name)
+                return f'{func_name}(state, player)'
+
         # Unknown type - return False as placeholder to prevent progression issues
         return 'False'
 
@@ -3278,6 +3324,25 @@ class HelperCodeGenerator:
             if name == 'abs':
                 return f"abs({', '.join(arg_exprs)})"
             return f"math.{name}({', '.join(arg_exprs)})"
+
+        # total_received - count total received items from a list
+        # Format: total_received(count, [item1, item2, ...])
+        if name == 'total_received':
+            if len(args) >= 2:
+                count_expr = self._generate_expression(args[0])
+                items_arg = args[1]
+                # Handle list of items
+                if isinstance(items_arg, dict) and items_arg.get('type') == 'constant':
+                    items = items_arg.get('value', [])
+                    if isinstance(items, list):
+                        # Generate: sum(state.count(item, player) for item in [...]) >= count
+                        items_repr = ', '.join(repr(item) for item in items)
+                        return f"(sum(state.count(item, player) for item in [{items_repr}]) >= {count_expr})"
+                # Fallback for non-constant lists
+                items_expr = self._generate_expression(items_arg)
+                return f"(sum(state.count(item, player) for item in {items_expr}) >= {count_expr})"
+            # Not enough args - return False
+            return 'False'
 
         # Unknown helper - return False as safe fallback
         # This handles helpers that were blacklisted during export (too complex to export)
