@@ -16,41 +16,26 @@ class SMGameExportHandler(GenericGameExportHandler):
     This exporter transforms the Python-specific patterns into JavaScript-friendly
     helper calls that the frontend can execute.
     """
-
+    GAME_NAME = 'Super Metroid'
     # Note: AUTO_EXPORT_DISCOVERED_HELPERS has limited effect for SM because:
     # 1. Helpers are methods on SMBoolManager class, not standalone functions
     # 2. Helper calls are created in expand_rule post-processing, not during analysis
     # 3. The VARIA logic system (SMBool with difficulty) requires JS implementations
     # The JavaScript helpers in smLogic.js remain necessary for rule evaluation.
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
 
 
     def __init__(self, world=None):
-        super().__init__(world=world)
+        super().__init__()  # Base class doesn't take arguments
+        self.world = world
         self._simple_accessfrom_locations: Optional[Set[str]] = None
         self._all_accessfrom_info: Optional[Dict[str, Dict[str, str]]] = None
         self._varia_item_types: Optional[Dict[str, str]] = None
         self._accesspoint_traverse_funcs: Optional[Dict[str, Any]] = None
         self._current_exit_context: Optional[str] = None  # Track current exit being processed
         self._accessfrom_data: Optional[Dict[str, Dict[str, Any]]] = None  # Cache for AccessFrom data
-        self._is_worldgen: Optional[bool] = None  # Cache for WorldGen detection
-
-    def _is_worldgen_world(self) -> bool:
-        """Check if this is a WorldGen world (not the original SM world).
-
-        WorldGen worlds use simpler Rule Builder rules and should not have
-        VARIA-specific processing applied.
-        """
-        if self._is_worldgen is None:
-            if self.world is None:
-                self._is_worldgen = False
-            else:
-                # Check if the world is from sm_worldgen module
-                module_path = type(self.world).__module__
-                self._is_worldgen = 'sm_worldgen' in module_path
-                if self._is_worldgen:
-                    logger.info("SM: Detected WorldGen world - using generic rule handling")
-        return self._is_worldgen
+        self._current_location_context: Optional[str] = None  # Track current location being processed
 
     def _get_accesspoint_traverse_funcs(self) -> Dict[str, Any]:
         """Get traverse functions for all AccessPoints (cached).
@@ -59,17 +44,13 @@ class SMGameExportHandler(GenericGameExportHandler):
             Dict mapping AccessPoint name to traverse function
         """
         if self._accesspoint_traverse_funcs is None:
-            # Skip VARIA traverse functions for WorldGen worlds
-            if self._is_worldgen_world():
+            try:
+                from .sm_traverse_extractor import get_accesspoint_traverse_funcs
+                self._accesspoint_traverse_funcs = get_accesspoint_traverse_funcs(self.world)
+                logger.info(f"SM: Loaded traverse functions for {len(self._accesspoint_traverse_funcs)} AccessPoints")
+            except Exception as e:
+                logger.error(f"SM: Failed to extract AccessPoint traverse functions: {e}", exc_info=True)
                 self._accesspoint_traverse_funcs = {}
-            else:
-                try:
-                    from .sm_traverse_extractor import get_accesspoint_traverse_funcs
-                    self._accesspoint_traverse_funcs = get_accesspoint_traverse_funcs(self.world)
-                    logger.info(f"SM: Loaded traverse functions for {len(self._accesspoint_traverse_funcs)} AccessPoints")
-                except Exception as e:
-                    logger.error(f"SM: Failed to extract AccessPoint traverse functions: {e}", exc_info=True)
-                    self._accesspoint_traverse_funcs = {}
 
         return self._accesspoint_traverse_funcs
 
@@ -80,17 +61,13 @@ class SMGameExportHandler(GenericGameExportHandler):
             Dict mapping location names to their AccessFrom info
         """
         if self._accessfrom_data is None:
-            # Skip VARIA AccessFrom data for WorldGen worlds
-            if self._is_worldgen_world():
+            try:
+                from .sm_accessfrom_extractor import get_location_accessfrom_data
+                self._accessfrom_data = get_location_accessfrom_data(self.world)
+                logger.info(f"SM: Loaded AccessFrom data for {len(self._accessfrom_data)} locations")
+            except Exception as e:
+                logger.error(f"SM: Failed to extract AccessFrom data: {e}", exc_info=True)
                 self._accessfrom_data = {}
-            else:
-                try:
-                    from .sm_accessfrom_extractor import get_location_accessfrom_data
-                    self._accessfrom_data = get_location_accessfrom_data(self.world)
-                    logger.info(f"SM: Loaded AccessFrom data for {len(self._accessfrom_data)} locations")
-                except Exception as e:
-                    logger.error(f"SM: Failed to extract AccessFrom data: {e}", exc_info=True)
-                    self._accessfrom_data = {}
 
         return self._accessfrom_data
 
@@ -249,10 +226,6 @@ class SMGameExportHandler(GenericGameExportHandler):
         Returns:
             The custom rule to export, or None to use default handling
         """
-        # Skip VARIA-specific handling for WorldGen worlds
-        if self._is_worldgen_world():
-            return None
-
         if not hasattr(location, 'access_rule') or not location.access_rule:
             return None
 
@@ -720,10 +693,6 @@ class SMGameExportHandler(GenericGameExportHandler):
         Returns:
             Expanded and transformed rule
         """
-        # Skip VARIA-specific post-processing for WorldGen worlds
-        if self._is_worldgen_world():
-            return rule
-
         # Set exit context for expand_rule to use
         saved_exit_context = self._current_exit_context
         self._current_exit_context = exit_name
@@ -847,10 +816,6 @@ class SMGameExportHandler(GenericGameExportHandler):
         Returns:
             The unwrapped transition/traverse lambda if it was Cache.ldeco wrapped, otherwise None
         """
-        # Skip VARIA-specific handling for WorldGen worlds - use the default access_rule
-        if self._is_worldgen_world():
-            return None
-
         if not exit_name or '->' not in exit_name:
             return None
 
@@ -958,10 +923,6 @@ class SMGameExportHandler(GenericGameExportHandler):
         """
         if not rule:
             return rule
-
-        # Skip VARIA-specific expansion for WorldGen worlds - use parent class handling
-        if self._is_worldgen_world():
-            return super().expand_rule(rule, _depth)
 
         rule_type = rule.get('type')
 
@@ -1519,419 +1480,3 @@ class SMGameExportHandler(GenericGameExportHandler):
         settings['hellRuns'] = hell_runs
 
         return settings
-
-    def get_helper_definitions(self, world) -> Dict[str, Any]:
-        """Export Super Metroid helper definitions for worldgen support.
-
-        SM uses VARIA logic with SMBoolManager class methods.
-        For worldgen, we export simplified helper definitions that:
-        1. Use basic item checks instead of full SMBool difficulty system
-        2. Assume all techniques are known (knowsXXX = True)
-        3. Map VARIA item types to Archipelago item names
-
-        This allows the worldgen to generate basic Python access rules,
-        though without the full difficulty system.
-        """
-        # Get base helpers from parent class (if any discovered)
-        helpers = super().get_helper_definitions(world)
-
-        # VARIA item type to Archipelago item name mapping
-        varia_to_ap = {
-            'Morph': 'Morph Ball',
-            'Bomb': 'Bomb',
-            'Charge': 'Charge Beam',
-            'Ice': 'Ice Beam',
-            'HiJump': 'Hi-Jump Boots',
-            'SpeedBooster': 'Speed Booster',
-            'Wave': 'Wave Beam',
-            'Spazer': 'Spazer',
-            'SpringBall': 'Spring Ball',
-            'Varia': 'Varia Suit',
-            'Gravity': 'Gravity Suit',
-            'Plasma': 'Plasma Beam',
-            'Grapple': 'Grappling Beam',
-            'XRayScope': 'X-Ray Scope',
-            'SpaceJump': 'Space Jump',
-            'ScrewAttack': 'Screw Attack',
-            'ETank': 'Energy Tank',
-            'Reserve': 'Reserve Tank',
-            'Missile': 'Missile',
-            'Super': 'Super Missile',
-            'PowerBomb': 'Power Bomb',
-            'Kraid': 'Kraid',
-            'Phantoon': 'Phantoon',
-            'Draygon': 'Draygon',
-            'Ridley': 'Ridley',
-            'MotherBrain': 'Mother Brain',
-            'SporeSpawn': 'Spore Spawn',
-            'Crocomire': 'Crocomire',
-            'Botwoon': 'Botwoon',
-            'GoldenTorizo': 'Golden Torizo',
-        }
-
-        # Core boolean helper - haveItem checks if item is in inventory
-        # In VARIA: returns SMBool(item in inventory, 0)
-        # For worldgen: returns simple item check WITH VARIA->AP name mapping
-        # The mapping is included directly in the helper body for proper evaluation
-        helpers['haveItem'] = {
-            'params': ['item'],
-            'body': {
-                'type': 'item_check_with_mapping',
-                'item': {'type': 'param_ref', 'name': 'item'},
-                'count': 1,
-                'item_name_mapping': varia_to_ap
-            }
-        }
-
-        # wand - AND of SMBools, returns True if all args are True
-        # Since all canXXX helpers return True, wand of them also returns True
-        # (Simplified: nested helper calls can't be properly evaluated, so assume True)
-        helpers['wand'] = {
-            'params': ['*args'],
-            'body': {'type': 'constant', 'value': True}
-        }
-
-        # wor - OR of SMBools, returns True if any arg is True
-        # Since all canXXX helpers return True, wor of them also returns True
-        helpers['wor'] = {
-            'params': ['*args'],
-            'body': {'type': 'constant', 'value': True}
-        }
-
-        # wnot - NOT of SMBool
-        # For worldgen simplification, wnot returns False (not True = False)
-        helpers['wnot'] = {
-            'params': ['arg'],
-            'body': {'type': 'constant', 'value': False}
-        }
-
-        # SMBool constructor - for worldgen, just returns the boolean part
-        helpers['SMBool'] = {
-            'params': ['value', 'difficulty'],
-            'defaults': {'difficulty': 0},
-            'body': {'type': 'param_ref', 'name': 'value'}
-        }
-
-        # evalSMBool - evaluates SMBool against max difficulty
-        # For worldgen, we assume all difficulties are acceptable (return the bool)
-        helpers['evalSMBool'] = {
-            'params': ['smbool', 'maxDiff'],
-            'defaults': {'maxDiff': 50},
-            'body': {'type': 'param_ref', 'name': 'smbool'}
-        }
-
-        # Boss defeat check - checks if boss item is in inventory
-        helpers['bossDead'] = {
-            'params': ['bossName'],
-            'body': {
-                'type': 'item_check',
-                'item': {'type': 'param_ref', 'name': 'bossName'},
-                'count': 1
-            }
-        }
-
-        # traverse - for basic worldgen, return True (assume paths are traversable)
-        helpers['traverse'] = {
-            'params': ['accessPoint'],
-            'body': {'type': 'constant', 'value': True}
-        }
-
-        # energyReserveCountOk - check if player has enough energy
-        helpers['energyReserveCountOk'] = {
-            'params': ['count', 'difficulty'],
-            'defaults': {'difficulty': 0},
-            'body': {
-                'type': 'item_check_count',
-                'item': 'Energy Tank',
-                'count': {'type': 'param_ref', 'name': 'count'},
-                'compare': '>='
-            }
-        }
-
-        # itemCountOk - check if player has enough of an item type
-        helpers['itemCountOk'] = {
-            'params': ['item', 'count', 'difficulty'],
-            'defaults': {'difficulty': 0},
-            'body': {
-                'type': 'item_check_count',
-                'item': {'type': 'param_ref', 'name': 'item'},
-                'count': {'type': 'param_ref', 'name': 'count'},
-                'compare': '>='
-            }
-        }
-
-        # All "knows" helpers - assume techniques are known (return True)
-        # This is a simplification - in reality, they depend on preset settings
-        knows_helpers = [
-            'knowsAlcatrazEscape', 'knowsCeilingDBoost', 'knowsCrocPBsDBoost',
-            'knowsCrocPBsIce', 'knowsFirefleasWalljump', 'knowsGetAroundWallJump',
-            'knowsGravLessLevel3', 'knowsHiJumpMamaTurtle', 'knowsIceEscape',
-            'knowsIceMissileFromCroc', 'knowsKillPlasmaPiratesWithCharge',
-            'knowsKillPlasmaPiratesWithSpark', 'knowsMaridiaWallJumps',
-            'knowsMockball', 'knowsOldMBWithSpeed', 'knowsReverseGateGlitch',
-            'knowsReverseGateGlitchHiJumpLess', 'knowsRonPopeilScrew',
-            'knowsShortCharge', 'knowsSnailClip', 'knowsSpringBallJump',
-            'knowsSpringBallJumpFromWall', 'knowsXrayDboost', 'knowsXrayIce',
-        ]
-        for knows_name in knows_helpers:
-            helpers[knows_name] = {
-                'params': ['*args'],  # Accept any arguments
-                'body': {'type': 'constant', 'value': True}
-            }
-
-        # Common ability helpers - simplified implementations
-        # canUsePowerBombs - have Power Bomb and Morph Ball
-        helpers['canUsePowerBombs'] = {
-            'params': [],
-            'body': {
-                'type': 'and',
-                'conditions': [
-                    {'type': 'item_check', 'item': 'Power Bomb', 'count': 1},
-                    {'type': 'item_check', 'item': 'Morph Ball', 'count': 1}
-                ]
-            }
-        }
-
-        # canPassBombPassages - have Bomb or Power Bomb, and Morph Ball
-        helpers['canPassBombPassages'] = {
-            'params': [],
-            'body': {
-                'type': 'and',
-                'conditions': [
-                    {'type': 'item_check', 'item': 'Morph Ball', 'count': 1},
-                    {'type': 'or', 'conditions': [
-                        {'type': 'item_check', 'item': 'Bomb', 'count': 1},
-                        {'type': 'item_check', 'item': 'Power Bomb', 'count': 1}
-                    ]}
-                ]
-            }
-        }
-
-        # canFly - have Space Jump or can infinite bomb jump
-        helpers['canFly'] = {
-            'params': [],
-            'body': {
-                'type': 'or',
-                'conditions': [
-                    {'type': 'item_check', 'item': 'Space Jump', 'count': 1},
-                    {'type': 'and', 'conditions': [
-                        {'type': 'item_check', 'item': 'Morph Ball', 'count': 1},
-                        {'type': 'item_check', 'item': 'Bomb', 'count': 1}
-                    ]}
-                ]
-            }
-        }
-
-        # canOpenGreenDoors - have Super Missile
-        helpers['canOpenGreenDoors'] = {
-            'params': [],
-            'body': {'type': 'item_check', 'item': 'Super Missile', 'count': 1}
-        }
-
-        # canOpenEyeDoors - have Missile or Super Missile
-        helpers['canOpenEyeDoors'] = {
-            'params': [],
-            'body': {
-                'type': 'or',
-                'conditions': [
-                    {'type': 'item_check', 'item': 'Missile', 'count': 1},
-                    {'type': 'item_check', 'item': 'Super Missile', 'count': 1}
-                ]
-            }
-        }
-
-        # canDestroyBombWalls - have Bomb, Power Bomb, Screw Attack, or Speed Booster
-        helpers['canDestroyBombWalls'] = {
-            'params': [],
-            'body': {
-                'type': 'or',
-                'conditions': [
-                    {'type': 'and', 'conditions': [
-                        {'type': 'item_check', 'item': 'Morph Ball', 'count': 1},
-                        {'type': 'item_check', 'item': 'Bomb', 'count': 1}
-                    ]},
-                    {'type': 'and', 'conditions': [
-                        {'type': 'item_check', 'item': 'Morph Ball', 'count': 1},
-                        {'type': 'item_check', 'item': 'Power Bomb', 'count': 1}
-                    ]},
-                    {'type': 'item_check', 'item': 'Screw Attack', 'count': 1},
-                    {'type': 'item_check', 'item': 'Speed Booster', 'count': 1}
-                ]
-            }
-        }
-
-        # heatProof - have Varia Suit or Gravity Suit (depending on ROM patches)
-        helpers['heatProof'] = {
-            'params': [],
-            'body': {
-                'type': 'or',
-                'conditions': [
-                    {'type': 'item_check', 'item': 'Varia Suit', 'count': 1},
-                    {'type': 'item_check', 'item': 'Gravity Suit', 'count': 1}
-                ]
-            }
-        }
-
-        # canHellRun - simplified: need enough energy tanks OR heat protection
-        helpers['canHellRun'] = {
-            'params': ['hellRunType', 'mult', 'minE'],
-            'defaults': {'hellRunType': 'MainUpperNorfair', 'mult': 1.0, 'minE': 2},
-            'body': {
-                'type': 'or',
-                'conditions': [
-                    {'type': 'item_check', 'item': 'Varia Suit', 'count': 1},
-                    {'type': 'item_check', 'item': 'Gravity Suit', 'count': 1},
-                    {'type': 'item_check_count', 'item': 'Energy Tank', 'count': 3, 'compare': '>='}
-                ]
-            }
-        }
-
-        # canFireChargedShots - have Charge Beam
-        helpers['canFireChargedShots'] = {
-            'params': [],
-            'body': {'type': 'item_check', 'item': 'Charge Beam', 'count': 1}
-        }
-
-        # canInfiniteBombJump - have Morph Ball and Bomb
-        helpers['canInfiniteBombJump'] = {
-            'params': [],
-            'body': {
-                'type': 'and',
-                'conditions': [
-                    {'type': 'item_check', 'item': 'Morph Ball', 'count': 1},
-                    {'type': 'item_check', 'item': 'Bomb', 'count': 1}
-                ]
-            }
-        }
-
-        # canMorphJump - have Morph Ball and (Spring Ball or Hi-Jump Boots)
-        helpers['canMorphJump'] = {
-            'params': [],
-            'body': {
-                'type': 'and',
-                'conditions': [
-                    {'type': 'item_check', 'item': 'Morph Ball', 'count': 1},
-                    {'type': 'or', 'conditions': [
-                        {'type': 'item_check', 'item': 'Spring Ball', 'count': 1},
-                        {'type': 'item_check', 'item': 'Hi-Jump Boots', 'count': 1}
-                    ]}
-                ]
-            }
-        }
-
-        # canSpringBallJump - have Morph Ball and Spring Ball
-        helpers['canSpringBallJump'] = {
-            'params': [],
-            'body': {
-                'type': 'and',
-                'conditions': [
-                    {'type': 'item_check', 'item': 'Morph Ball', 'count': 1},
-                    {'type': 'item_check', 'item': 'Spring Ball', 'count': 1}
-                ]
-            }
-        }
-
-        # canUseSpringBall - have Morph Ball and Spring Ball
-        helpers['canUseSpringBall'] = {
-            'params': [],
-            'body': {
-                'type': 'and',
-                'conditions': [
-                    {'type': 'item_check', 'item': 'Morph Ball', 'count': 1},
-                    {'type': 'item_check', 'item': 'Spring Ball', 'count': 1}
-                ]
-            }
-        }
-
-        # canJumpUnderwater - have Gravity Suit or Hi-Jump Boots
-        helpers['canJumpUnderwater'] = {
-            'params': [],
-            'body': {
-                'type': 'or',
-                'conditions': [
-                    {'type': 'item_check', 'item': 'Gravity Suit', 'count': 1},
-                    {'type': 'item_check', 'item': 'Hi-Jump Boots', 'count': 1}
-                ]
-            }
-        }
-
-        # canMockball - simplified: always possible (technique)
-        helpers['canMockball'] = {
-            'params': [],
-            'body': {'type': 'constant', 'value': True}
-        }
-
-        # canShortCharge / canSimpleShortCharge - have Speed Booster
-        helpers['canShortCharge'] = {
-            'params': ['distance', 'difficulty'],
-            'defaults': {'distance': 0, 'difficulty': 0},
-            'body': {'type': 'item_check', 'item': 'Speed Booster', 'count': 1}
-        }
-        helpers['canSimpleShortCharge'] = {
-            'params': [],
-            'body': {'type': 'item_check', 'item': 'Speed Booster', 'count': 1}
-        }
-
-        # divideByDmgReduction - for worldgen, just return the input
-        helpers['divideByDmgReduction'] = {
-            'params': ['value'],
-            'body': {'type': 'param_ref', 'name': 'value'}
-        }
-
-        # int - Python int() builtin
-        helpers['int'] = {
-            'params': ['value'],
-            'body': {'type': 'param_ref', 'name': 'value'}
-        }
-
-        # All remaining canXXX helpers - return True as simplification
-        # In reality, these have complex implementations in VARIA
-        can_helpers = [
-            'canAccessBillyMays', 'canAccessDoubleChamberItems', 'canAccessEtecoons',
-            'canAccessItemsInWestSandHole', 'canAccessKraidsLair', 'canAccessSandPits',
-            'canAccessShaktoolFromPantsRoom', 'canBlueGateGlitch', 'canBotwoonExitToColosseum',
-            'canClimbBottomRedTower', 'canClimbBubbleMountain', 'canClimbColosseum',
-            'canClimbRedTower', 'canClimbWestSandHole', 'canColosseumToBotwoonExit',
-            'canDefeatBotwoon', 'canDestroyBombWallsUnderwater', 'canDoLowGauntlet',
-            'canDoOuterMaridia', 'canEnterAndLeaveGauntlet', 'canEnterAndLeaveGauntletQty',
-            'canEnterCathedral', 'canEnterNorfairReserveAreaFromBubbleMoutain',
-            'canEnterNorfairReserveAreaFromBubbleMoutainTop', 'canExitCathedral',
-            'canExitCrabHole', 'canExitDraygon', 'canExitPreciousRoom',
-            'canExitScrewAttackArea', 'canExitWaveBeam', 'canFightDraygon',
-            'canGetBackFromRidleyZone', 'canGoUpMtEverest', 'canGrappleEscape',
-            'canGreenGateGlitch', 'canHellRunBackFromGrappleEscape',
-            'canHellRunBackFromSpeedBoosterMissile', 'canHellRunToSpeedBooster',
-            'canKillBeetoms', 'canPassAmphitheaterReverse', 'canPassBotwoonHallway',
-            'canPassBowling', 'canPassCacatacAlley', 'canPassCrateriaGreenPirates',
-            'canPassDachoraRoom', 'canPassForgottenHighway', 'canPassFrogSpeedwayRightToLeft',
-            'canPassG4', 'canPassLavaPit', 'canPassLavaPitReverse',
-            'canPassLowerNorfairChozo', 'canPassMaridiaToRedTowerNode', 'canPassMoat',
-            'canPassMoatFromMoat', 'canPassMoatReverse', 'canPassMtEverest',
-            'canPassNinjaPirates', 'canPassRedKiHunters', 'canPassRedTowerToMaridiaNode',
-            'canPassSpongeBath', 'canPassTerminatorBombWall', 'canPassThreeMuskateers',
-            'canPassWastelandDessgeegas', 'canPassWorstRoom', 'canPassWorstRoomPirates',
-            'canReachCacatacAlleyFromBotowoon', 'canTraverseCrabTunnelLeftToRight',
-            'canTraverseSandPits', 'canTraverseWestSandHallLeftToRight',
-            'canUseCrocRoomToChargeSpeed',
-        ]
-        for can_name in can_helpers:
-            if can_name not in helpers:  # Don't override already defined helpers
-                helpers[can_name] = {
-                    'params': ['*args'],  # Accept any arguments (some helpers are called with booleans)
-                    'body': {'type': 'constant', 'value': True}
-                }
-
-        # Boss combat helpers - simplified, return True
-        combat_helpers = [
-            'enoughStuffCroc', 'enoughStuffGT', 'enoughStuffSporeSpawn',
-            'enoughStuffTourian', 'enoughStuffsDraygon', 'enoughStuffsKraid',
-            'enoughStuffsPhantoon', 'enoughStuffsRidley', 'getPiratesPseudoScrewCoeff',
-        ]
-        for combat_name in combat_helpers:
-            helpers[combat_name] = {
-                'params': ['*args'],  # Accept any arguments
-                'body': {'type': 'constant', 'value': True}
-            }
-
-        logger.info(f"SM: Exported {len(helpers)} helper definitions for worldgen")
-        return helpers
