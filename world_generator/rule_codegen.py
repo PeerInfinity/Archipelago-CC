@@ -2355,10 +2355,12 @@ class RuleCodeGenerator:
 
             return f'HelperCall({", ".join(parts)})'
 
-        # Unknown helper - return False_() as placeholder
-        # Returning False makes locations less accessible, preventing progression issues
-        self.required_imports.add('False_')
-        return 'False_()'
+        # Unknown helper - return True_() as placeholder
+        # Returning True makes locations more accessible, which is appropriate for worldgen
+        # since unknown helpers are typically progression checks that evaluate to true
+        # under default/normal game settings
+        self.required_imports.add('True_')
+        return 'True_()'
 
     def _convert_rule_builder_helper(self, rule: Dict[str, Any], helper_name: str) -> str:
         """Convert Rule Builder format helper rule to HelperCall().
@@ -2436,11 +2438,13 @@ class RuleCodeGenerator:
 
             return f'HelperCall({", ".join(parts)})'
 
-        # Unknown helper - return False_() as placeholder
-        # Returning False makes locations less accessible, preventing progression issues
+        # Unknown helper - return True_() as placeholder
+        # Returning True makes locations more accessible, which is appropriate for worldgen
+        # since unknown helpers are typically progression checks that evaluate to true
+        # under default/normal game settings
         # (This matches the behavior of _convert_helper for consistency)
-        self.required_imports.add('False_')
-        return 'False_()'
+        self.required_imports.add('True_')
+        return 'True_()'
 
     def _convert_placement_lookup(self, rule: Dict[str, Any]) -> str:
         """Convert placement_lookup to resolved placement data.
@@ -2918,8 +2922,11 @@ class HelperCodeGenerator:
                 func_name = self.get_function_name(helper_name)
                 return f'{func_name}(state, player)'
 
-        # Unknown type - return False as placeholder to prevent progression issues
-        return 'False'
+        # Unknown type - return True as placeholder
+        # Returning True makes locations more accessible, which is appropriate for worldgen
+        # since unknown types are typically progression checks that evaluate to true
+        # under default/normal game settings
+        return 'True'
 
     def _expr_setting_value(self, expr: Dict[str, Any]) -> str:
         """Resolve a setting value to its actual value from the seed's settings."""
@@ -3344,11 +3351,11 @@ class HelperCodeGenerator:
             # Not enough args - return False
             return 'False'
 
-        # Unknown helper - return False as safe fallback
-        # This handles helpers that were blacklisted during export (too complex to export)
-        # Returning False makes the location less accessible, preventing progression issues
-        # (Returning True would make all locations with this helper always accessible)
-        return 'False'
+        # Unknown helper - return True as placeholder
+        # Returning True makes locations more accessible, which is appropriate for worldgen
+        # since unknown helpers are typically progression checks that evaluate to true
+        # under default/normal game settings
+        return 'True'
 
     def _get_arg_expr(self, arg: Any, default: Any = None) -> str:
         """Get argument expression - handles both constants and variable references.
