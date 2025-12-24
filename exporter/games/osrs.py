@@ -16,14 +16,9 @@ logger = logging.getLogger(__name__)
 
 
 class OSRSGameExportHandler(GenericGameExportHandler):
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
-    AUTO_PRESERVE_LARGE_HELPERS = False
 
     # No blacklist - quest_points is handled via computed helper
     HELPERS_TO_EXPORT_BLACKLIST = set()
-
-    def __init__(self):
-        super().__init__()
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Export OSRS-specific settings including QP location data."""

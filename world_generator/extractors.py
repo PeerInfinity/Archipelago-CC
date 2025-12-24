@@ -46,6 +46,7 @@ class GameMetadata:
     slot_data_fields: Dict[str, Any] = field(default_factory=dict)  # Fields returned by fill_slot_data
     game_options: Dict[str, Any] = field(default_factory=dict)  # Game-specific options from settings
     resolved_settings: Dict[str, Any] = field(default_factory=dict)  # Resolved setting values from seed
+    option_definitions: Dict[str, Dict[str, Any]] = field(default_factory=dict)  # Option class definitions (type, range, choices, etc.)
     use_auto_indirect_conditions: bool = False  # When True, use auto sweep for indirect region dependencies
 
 
@@ -237,6 +238,9 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
         if k not in INTERNAL_SETTINGS:
             resolved_settings[k] = v
 
+    # Extract option definitions (type, range, choices, etc.)
+    option_definitions = settings.get('option_definitions', {})
+
     return GameMetadata(
         game_name=game_name,
         game_directory=json_data.get('game_directory', game_name.lower().replace(' ', '_')),
@@ -250,6 +254,7 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
         slot_data_fields=slot_data_fields,
         game_options=game_options,
         resolved_settings=resolved_settings,
+        option_definitions=option_definitions,
         use_auto_indirect_conditions=settings.get('use_auto_indirect_conditions', False),
     )
 

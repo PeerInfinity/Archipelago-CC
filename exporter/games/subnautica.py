@@ -8,7 +8,6 @@ logger = logging.getLogger(__name__)
 
 
 class SubnauticaGameExportHandler(GenericGameExportHandler):
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Get settings data with swim_rule exported as integer.

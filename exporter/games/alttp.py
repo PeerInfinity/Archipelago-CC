@@ -17,6 +17,17 @@ class ALttPGameExportHandler(BaseGameExportHandler):
     # Helper modules containing functions that can be exported as JSON rule definitions
     HELPER_MODULES = ['worlds.alttp.StateHelpers', 'worlds.alttp.Bosses']
 
+    # ALTTP exits are bidirectional - going through an entrance implies being able to return
+    ASSUME_BIDIRECTIONAL_EXITS = True
+
+    # Simple world attributes that can be automatically exported via base class
+    COMPUTED_SETTINGS = {
+        'treasure_hunt_required': lambda w, m, p: getattr(w, 'treasure_hunt_required', 0),
+        'can_take_damage': lambda w, m, p: getattr(w, 'can_take_damage', True),
+        'logical_heart_pieces': lambda w, m, p: getattr(w, 'logical_heart_pieces', 24),
+        'logical_heart_containers': lambda w, m, p: getattr(w, 'logical_heart_containers', 10),
+    }
+
     # Complex helpers that can't be exported (need JavaScript implementations)
     # NOTE: Use set() for empty blacklist - {} creates an empty dict!
     # All helpers now exported via computed definitions or other mechanisms
@@ -486,86 +497,51 @@ class ALttPGameExportHandler(BaseGameExportHandler):
         return dict(sorted(itempool_counts.items()))
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Extract ALTTP settings."""
-        settings_dict = {'game': multiworld.game[player]}
-        
-        # Set assume_bidirectional_exits to true for ALTTP
-        settings_dict['assume_bidirectional_exits'] = True
+        """Extract ALTTP settings.
 
-        # Helper to safely extract option values
-        def extract_option(option_name):
-            option = getattr(world.options, option_name, None)
-            # Check if the option has a 'value' attribute (like Option objects)
-            # Otherwise, return the option itself (might be a direct value like bool/int)
-            return getattr(option, 'value', option)
+        Uses base class to export all options with their definitions,
+        then adds ALTTP-specific computed world attributes.
+        """
+        # Get all options and option_definitions from base class
+        # Note: assume_bidirectional_exits is set via ASSUME_BIDIRECTIONAL_EXITS class attribute
+        settings_dict = super().get_settings_data(world, multiworld, player)
 
-        # ALTTP specific settings from multiworld
-        alttp_settings_mw = [
-            'dark_room_logic', 'retro_bow', 'swordless', 'enemy_shuffle',
-            'enemy_health', 'enemy_damage', 'bombless_start', 'glitches_required',
-            'pot_shuffle', 'dungeon_counters', 'glitch_boots', 'accessibility',
-            'mode', # Mode is crucial
-            'crystals_needed_for_gt', 'crystals_needed_for_ganon', # Crystal requirements
-            'item_functionality',  # Used by can_extend_magic
-        ]
-        for setting in alttp_settings_mw:
-             settings_dict[setting] = extract_option(setting)
-
-        # ALTTP specific settings from world or world.options
-        if hasattr(world, 'options'):
-             # Shuffle Capacity Upgrades
-             scu_option = getattr(world.options, 'shuffle_capacity_upgrades', None)
-             settings_dict['shuffle_capacity_upgrades'] = getattr(scu_option, 'value', scu_option)
-        else:
-             settings_dict['shuffle_capacity_upgrades'] = None # Or a default
-
-        # Treasure Hunt Required
-        settings_dict['treasure_hunt_required'] = getattr(world, 'treasure_hunt_required', 0) # Default 0
-
-        # Can Take Damage (world attribute, default True)
-        settings_dict['can_take_damage'] = getattr(world, 'can_take_damage', True)
+        # === ALTTP-specific computed world attributes ===
+        # Note: Simple attributes (treasure_hunt_required, can_take_damage,
+        # logical_heart_pieces, logical_heart_containers) are now handled
+        # via COMPUTED_SETTINGS class attribute in the base class.
 
         # Difficulty requirements
         if hasattr(world, 'difficulty_requirements'):
-             settings_dict['difficulty_requirements'] = {
-                 'progressive_bottle_limit': getattr(world.difficulty_requirements, 'progressive_bottle_limit', None),
-                 'boss_heart_container_limit': getattr(world.difficulty_requirements, 'boss_heart_container_limit', None),
-                 'heart_piece_limit': getattr(world.difficulty_requirements, 'heart_piece_limit', None),
-             }
+            settings_dict['difficulty_requirements'] = {
+                'progressive_bottle_limit': getattr(world.difficulty_requirements, 'progressive_bottle_limit', None),
+                'boss_heart_container_limit': getattr(world.difficulty_requirements, 'boss_heart_container_limit', None),
+                'heart_piece_limit': getattr(world.difficulty_requirements, 'heart_piece_limit', None),
+            }
         else:
-             settings_dict['difficulty_requirements'] = {}
-
-        # Logical heart limits (used by heart_count and has_hearts helpers)
-        # These can be modified during item pool generation from difficulty_requirements defaults
-        settings_dict['logical_heart_pieces'] = getattr(world, 'logical_heart_pieces', 24)
-        settings_dict['logical_heart_containers'] = getattr(world, 'logical_heart_containers', 10)
+            settings_dict['difficulty_requirements'] = {}
 
         # Medallions
         if hasattr(world, 'required_medallions'):
-             # Extract medallion names (assuming they have a 'name' attribute or similar)
-             # Handle potential errors if 'name' attribute is missing
-             medallion_names = []
-             for med in world.required_medallions:
-                 med_name = getattr(med, 'name', None)
-                 if med_name is None:
-                     # Fallback for Enum members or other objects without 'name'
-                     med_name = getattr(med, 'value', str(med))
-                 medallion_names.append(med_name)
+            medallion_names = []
+            for med in world.required_medallions:
+                med_name = getattr(med, 'name', None)
+                if med_name is None:
+                    med_name = getattr(med, 'value', str(med))
+                medallion_names.append(med_name)
 
-             settings_dict['required_medallions'] = medallion_names
-             # Store the actual values used for logic checks too, with fallbacks
-             mire_med = getattr(world, 'misery_mire_medallion', medallion_names[0] if medallion_names else None)
-             tr_med = getattr(world, 'turtle_rock_medallion', medallion_names[1] if len(medallion_names) > 1 else None)
-             settings_dict['misery_mire_medallion'] = getattr(mire_med, 'value', str(mire_med))
-             settings_dict['turtle_rock_medallion'] = getattr(tr_med, 'value', str(tr_med))
+            settings_dict['required_medallions'] = medallion_names
+            mire_med = getattr(world, 'misery_mire_medallion', medallion_names[0] if medallion_names else None)
+            tr_med = getattr(world, 'turtle_rock_medallion', medallion_names[1] if len(medallion_names) > 1 else None)
+            settings_dict['misery_mire_medallion'] = getattr(mire_med, 'value', str(mire_med))
+            settings_dict['turtle_rock_medallion'] = getattr(tr_med, 'value', str(tr_med))
         else:
-             settings_dict['required_medallions'] = []
-             settings_dict['misery_mire_medallion'] = None
-             settings_dict['turtle_rock_medallion'] = None
+            settings_dict['required_medallions'] = []
+            settings_dict['misery_mire_medallion'] = None
+            settings_dict['turtle_rock_medallion'] = None
 
         # Shop item data - maps items to regions where shops sell them
-        # This enables can_buy and can_buy_unlimited helper implementation
-        # Based on Shop.has() and Shop.has_unlimited() logic in worlds/alttp/Shops.py
+        # Enables can_buy and can_buy_unlimited helper implementation
         shop_items = {}
         if hasattr(world, 'shops'):
             for shop in world.shops:
@@ -581,25 +557,18 @@ class ALttPGameExportHandler(BaseGameExportHandler):
                     if item_name not in shop_items:
                         shop_items[item_name] = {'unlimited': [], 'limited': []}
 
-                    # has_unlimited logic: if max is set, check replacement; else item is unlimited
-                    # has logic: just check if item exists in inventory
                     if inv.get('max'):
-                        # Limited purchase with replacement when exhausted
                         replacement = inv.get('replacement')
                         if replacement:
-                            # Replacement item is unlimited
                             if replacement not in shop_items:
                                 shop_items[replacement] = {'unlimited': [], 'limited': []}
                             if region_name not in shop_items[replacement]['unlimited']:
                                 shop_items[replacement]['unlimited'].append(region_name)
-                        # Original item is limited (can only buy 'max' times)
                         if region_name not in shop_items[item_name]['limited']:
                             shop_items[item_name]['limited'].append(region_name)
                     else:
-                        # No max = unlimited purchase
                         if region_name not in shop_items[item_name]['unlimited']:
                             shop_items[item_name]['unlimited'].append(region_name)
-                        # Also available as limited (can_buy returns true for unlimited items too)
                         if region_name not in shop_items[item_name]['limited']:
                             shop_items[item_name]['limited'].append(region_name)
         settings_dict['shop_items'] = shop_items
@@ -613,67 +582,27 @@ class ALttPGameExportHandler(BaseGameExportHandler):
              "rule_format": { "version": "1.0" } # Or update if specific format version needed
          }
 
-    # Define mappings within the class or load from a helper module
-    # These map numeric option values to the string names used in Python helpers
-    alttp_setting_mappings = {
-        'dark_room_logic': {0: 'lamp', 1: 'torches', 2: 'none'},
-        'enemy_health': {0: 'easy', 1: 'default', 2: 'hard', 3: 'expert'},
-        'enemy_damage': {0: 'default', 1: 'shuffled', 2: 'chaos'},
-        'glitches_required': {0: 'no_glitches', 1: 'minor_glitches', 2: 'overworld_glitches', 3: 'hybrid_major_glitches', 4: 'no_logic'},
-        'accessibility': {0: 'items', 1: 'locations', 2: 'none'},
-        'dungeon_counters': {0: 'default', 1: 'on', 2: 'off'},
-        'pot_shuffle': {0: 'off', 1: 'on'},
-        'mode': {0: 'standard', 1: 'open', 2: 'inverted', 3: 'retro'},
-        'glitch_boots': {0: 'off', 1: 'on'},
-        'item_functionality': {0: 'normal', 1: 'hard', 2: 'expert'},
-        'shuffle_capacity_upgrades': {0: 'off', 1: 'on', 2: 'progressive'}
-    }
-    alttp_boolean_settings = [
-        'retro_bow', 'swordless', 'enemy_shuffle', 'bombless_start'
-    ]
-
     def cleanup_settings(self, settings_dict: Dict[str, Any]) -> Dict[str, Any]:
-        """Clean up ALTTP settings using specific mappings."""
-        logger.debug(f"Cleaning ALTTP settings: {settings_dict}")
-        cleaned_settings = settings_dict.copy() # Work on a copy
-        for setting_name, value in settings_dict.items():
-            # Skip error values
-            if isinstance(value, str) and value.startswith("ERROR:"):
-                continue
+        """Clean up ALTTP settings.
 
-            # Apply numeric->string mapping to match Python helper comparisons
-            if setting_name in self.alttp_setting_mappings and isinstance(value, int):
-                if value in self.alttp_setting_mappings[setting_name]:
-                    cleaned_settings[setting_name] = self.alttp_setting_mappings[setting_name][value]
-                    logger.debug(f"Mapped setting '{setting_name}' from {value} to {cleaned_settings[setting_name]}")
-                else:
-                    logger.warning(f"Unknown ALTTP setting value for {setting_name}: {value}")
-                    cleaned_settings[setting_name] = f"unknown_{value}"
-
-            # Ensure booleans are correct type
-            if setting_name in self.alttp_boolean_settings:
-                if isinstance(value, int):
-                    cleaned_settings[setting_name] = bool(value)
-                    logger.debug(f"Converted setting '{setting_name}' to boolean: {cleaned_settings[setting_name]}")
-                # Add check for string 'true'/'false' if necessary
-                elif isinstance(value, str) and value.lower() in ['true', 'false']:
-                     cleaned_settings[setting_name] = value.lower() == 'true'
-                     logger.debug(f"Converted setting '{setting_name}' str to boolean: {cleaned_settings[setting_name]}")
+        Note: Most cleanup is no longer needed since the base exporter now exports
+        Choice options as strings (via current_key) and includes option_definitions.
+        This method is kept for any edge case cleanup.
+        """
+        cleaned_settings = settings_dict.copy()
 
         # Cleanup medallion names if they were extracted directly from enum objects
         for med_key in ['misery_mire_medallion', 'turtle_rock_medallion']:
             current_value = cleaned_settings.get(med_key)
             if isinstance(current_value, str) and '(' in current_value and 'Medallion' in current_value:
-                 try:
+                try:
                     # Extract from format like 'Medallion(Bombos)'
                     extracted = current_value.split('(', 1)[1].split(')', 1)[0]
                     cleaned_settings[med_key] = extracted
                     logger.debug(f"Cleaned medallion '{med_key}' to '{extracted}'")
-                 except Exception as e:
-                     logger.warning(f"Could not clean medallion value: {current_value} - Error: {e}")
+                except Exception as e:
+                    logger.warning(f"Could not clean medallion value: {current_value} - Error: {e}")
 
-
-        logger.debug(f"Finished cleaning ALTTP settings: {cleaned_settings}")
         return cleaned_settings
 
     def get_region_attributes(self, region) -> Dict[str, Any]:

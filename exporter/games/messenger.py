@@ -9,8 +9,6 @@ logger = logging.getLogger(__name__)
 class MessengerGameExportHandler(GenericGameExportHandler):
     """Export handler for The Messenger."""
 
-    AUTO_PRESERVE_LARGE_HELPERS = False
-
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """
         Expand rules with fixes for inferred item names and location dependency patterns.

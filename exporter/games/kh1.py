@@ -10,7 +10,9 @@ logger = logging.getLogger(__name__)
 class KH1GameExportHandler(BaseGameExportHandler):
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
-    AUTO_PRESERVE_LARGE_HELPERS = False
+
+    # KH1 uses resolved_items instead of base_items for sphere inventory
+    USE_RESOLVED_ITEMS = True
 
     # Module paths containing helper functions
     HELPER_MODULES: List[str] = ['worlds.kh1.Rules']
@@ -322,10 +324,8 @@ class KH1GameExportHandler(BaseGameExportHandler):
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Extracts KH1-specific game settings for export."""
-        # Get base settings
+        # Get base settings (USE_RESOLVED_ITEMS class attribute handles use_resolved_items)
         settings_dict = super().get_settings_data(world, multiworld, player)
-
-        settings_dict['use_resolved_items'] = True
 
         # Add cached KH1 options to settings
         # (options were already cached in preprocess_world_data)

@@ -7,7 +7,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Overcooked2GameExportHandler(GenericGameExportHandler):
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     def __init__(self):
         super().__init__()
@@ -665,7 +664,7 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
         """Build a rule for additive requirements (weighted sum >= 1.0).
 
         For additive requirements, we need the weighted sum of owned items to be >= 1.0.
-        We generate ALL valid combinations as an OR so the randomizer can satisfy at least one.
+        We export this as a compact 'weighted_sum' helper that the frontend evaluates.
         """
         if not additive_reqs:
             return None
@@ -679,49 +678,19 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
         if not items:
             return None
 
-        # Sort by weight descending
+        # Sort by weight descending for optimization (check high-weight items first)
         items.sort(key=lambda x: -x[1])
 
-        # Find all valid combinations that sum to >= 1.0
-        # Use itertools to generate combinations of increasing sizes
-        from itertools import combinations
-
-        valid_combos = []
-        max_combo_size = min(len(items), 5)  # Limit to size 5 to avoid explosion
-
-        # Try combinations of increasing sizes
-        for size in range(1, max_combo_size + 1):
-            for combo in combinations(items, size):
-                total_weight = sum(w for _, w in combo)
-                if total_weight >= 0.99:  # Allow small rounding error
-                    # This combination is valid
-                    combo_items = [item for item, _ in combo]
-                    valid_combos.append(combo_items)
-
-            # If we found at least 10 valid combos at this size, stop to avoid explosion
-            if len(valid_combos) >= 20:
-                break
-
-        if not valid_combos:
-            # No valid combinations found - this shouldn't happen but fall back to True
-            logger.warning(f"No valid additive combinations found for {items}")
-            return None
-
-        # Build OR of all valid combinations
-        or_conditions = []
-        for combo in valid_combos:
-            if len(combo) == 1:
-                or_conditions.append({'type': 'item_check', 'item': combo[0]})
-            else:
-                or_conditions.append({
-                    'type': 'and',
-                    'conditions': [{'type': 'item_check', 'item': item} for item in combo]
-                })
-
-        if len(or_conditions) == 1:
-            return or_conditions[0]
-        else:
-            return {'type': 'or', 'conditions': or_conditions}
+        # Export as a compact weighted_sum helper - frontend calculates if sum >= 1.0
+        # This is MUCH more compact than expanding to all valid combinations
+        return {
+            'type': 'helper',
+            'name': 'weighted_sum',
+            'args': [
+                {'type': 'constant', 'value': 1.0},  # threshold
+                {'type': 'constant', 'value': [[item, weight] for item, weight in items]}  # items with weights
+            ]
+        }
 
     def _resolve_constant(self, rule: Dict[str, Any]) -> Any:
         """Resolve a rule to a constant value if possible."""
