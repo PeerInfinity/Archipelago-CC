@@ -487,8 +487,10 @@ class ALttPGameExportHandler(BaseGameExportHandler):
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract ALTTP settings."""
-        settings_dict = {'game': multiworld.game[player]}
-        
+        # Start with base settings (this also loads _worldgen_settings.json for worldgen worlds)
+        settings_dict = super().get_settings_data(world, multiworld, player)
+        settings_dict['game'] = multiworld.game[player]
+
         # Set assume_bidirectional_exits to true for ALTTP
         settings_dict['assume_bidirectional_exits'] = True
 
@@ -525,15 +527,15 @@ class ALttPGameExportHandler(BaseGameExportHandler):
         # Can Take Damage (world attribute, default True)
         settings_dict['can_take_damage'] = getattr(world, 'can_take_damage', True)
 
-        # Difficulty requirements
+        # Difficulty requirements - only set if world has the attribute
+        # For worldgen worlds, this will be loaded from _worldgen_settings.json by base handler
         if hasattr(world, 'difficulty_requirements'):
              settings_dict['difficulty_requirements'] = {
                  'progressive_bottle_limit': getattr(world.difficulty_requirements, 'progressive_bottle_limit', None),
                  'boss_heart_container_limit': getattr(world.difficulty_requirements, 'boss_heart_container_limit', None),
                  'heart_piece_limit': getattr(world.difficulty_requirements, 'heart_piece_limit', None),
              }
-        else:
-             settings_dict['difficulty_requirements'] = {}
+        # Don't set empty dict - let _worldgen_settings.json provide the values for worldgen worlds
 
         # Logical heart limits (used by heart_count and has_hearts helpers)
         # These can be modified during item pool generation from difficulty_requirements defaults
@@ -602,7 +604,10 @@ class ALttPGameExportHandler(BaseGameExportHandler):
                         # Also available as limited (can_buy returns true for unlimited items too)
                         if region_name not in shop_items[item_name]['limited']:
                             shop_items[item_name]['limited'].append(region_name)
-        settings_dict['shop_items'] = shop_items
+        # Only set shop_items if we have data - for worldgen worlds, this will be loaded
+        # from _worldgen_settings.json by the base handler instead
+        if shop_items:
+            settings_dict['shop_items'] = shop_items
 
         return settings_dict
 

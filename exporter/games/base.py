@@ -1076,11 +1076,29 @@ class BaseGameExportHandler:
             A dictionary mapping helper names to their rule definitions.
             Example: {"can_cut_half": {"type": "item_check", "item": "Cutter"}}
         """
-        # Check for worldgen worlds first - analyze helper functions from their Rules.py module
+        # Check for worldgen worlds first - use stored helper definitions if available
         try:
             world_module = type(world).__module__
             if '_worldgen' in world_module:
-                # This is a worldgen world - analyze helper functions from Rules.py
+                # This is a worldgen world
+                # First check for stored helper definitions (_worldgen_helpers.json)
+                # These preserve the original helper bodies with dynamic setting_value references
+                import os
+                import json
+                # Convert module path to file path: 'worlds.alttp_worldgen' -> 'worlds/alttp_worldgen'
+                world_dir = world_module.replace('.', '/')
+                helpers_path = os.path.join(world_dir, '_worldgen_helpers.json')
+                if os.path.exists(helpers_path):
+                    try:
+                        with open(helpers_path, 'r') as f:
+                            stored_helpers = json.load(f)
+                        if stored_helpers:
+                            logger.debug(f"Loaded {len(stored_helpers)} helper definitions from {helpers_path}")
+                            return stored_helpers
+                    except Exception as e:
+                        logger.debug(f"Could not load stored helpers from {helpers_path}: {e}")
+
+                # Fall back to analyzing helper functions from Rules.py
                 # world_module is like 'worlds.ahit_worldgen' - we need 'worlds.ahit_worldgen.Rules'
                 rules_module_name = world_module + '.Rules'
                 try:
