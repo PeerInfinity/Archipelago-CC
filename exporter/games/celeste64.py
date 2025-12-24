@@ -242,8 +242,3 @@ class Celeste64GameExportHandler(GenericGameExportHandler):
         self._load_logic_mappings(world)
         # Store world reference for goal_rule expansion
         self.world = world
-
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Get Celeste 64 settings (no longer need logic mappings since rules are inlined)."""
-        # Note: COMPUTED_SETTINGS handles strawberries_required export
-        return super().get_settings_data(world, multiworld, player)

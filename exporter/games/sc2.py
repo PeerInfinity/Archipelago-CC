@@ -1031,13 +1031,6 @@ class SC2GameExportHandler(GenericGameExportHandler):
         # Attribute not recognized
         return None
 
-    def expand_helper(self, helper_name: str):
-        """Expand Starcraft 2-specific helper functions."""
-        # For now, just use the generic implementation
-        # We'll add specific helper expansions as needed during testing
-        # Most helpers will be implemented in the JavaScript helper file
-        return super().expand_helper(helper_name)
-
     def get_settings_data(self, world, multiworld, player: int) -> Dict[str, Any]:
         """Extract Starcraft 2 settings for export."""
         settings_dict = super().get_settings_data(world, multiworld, player)

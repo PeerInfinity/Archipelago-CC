@@ -332,8 +332,3 @@ class SoEGameExportHandler(BaseGameExportHandler):
             import traceback
             traceback.print_exc()
             return {}
-
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Extracts SOE-specific game settings for export."""
-        # Note: USE_RESOLVED_ITEMS class attribute handles use_resolved_items setting
-        return super().get_settings_data(world, multiworld, player)

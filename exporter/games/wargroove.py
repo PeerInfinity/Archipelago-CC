@@ -120,12 +120,6 @@ class WargrooveGameExportHandler(GenericGameExportHandler):
             'Archery Lessons': ['Archery Lessons: Victory'],
         }
 
-    def expand_helper(self, helper_name: str):
-        """Expand game-specific helper functions for Wargroove."""
-        # Start with generic expansion
-        # Will add game-specific helpers as we discover them during testing
-        return super().expand_helper(helper_name)
-
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Expand Wargroove rules, inlining LogicMixin helper methods.
 
