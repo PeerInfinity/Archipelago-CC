@@ -79,6 +79,10 @@ class BaseGameExportHandler:
     # of overriding the method
     HELPERS_TO_PRESERVE: Set[str] = set()
 
+    # Whether exits should be assumed bidirectional for frontend logic
+    # Set to True for games where going through an entrance implies being able to return
+    ASSUME_BIDIRECTIONAL_EXITS: bool = False
+
     # Enable automatic helper preservation based on size
     # When enabled, helpers with more nodes than HELPER_INLINE_THRESHOLD will be
     # preserved as helper calls instead of inlined, reducing rules.json size
@@ -616,8 +620,8 @@ class BaseGameExportHandler:
             mode_val = multiworld.mode[player]
             settings_dict['mode'] = getattr(mode_val, 'value', str(mode_val))
 
-        # Add assume_bidirectional_exits setting with default false
-        settings_dict['assume_bidirectional_exits'] = False
+        # Add assume_bidirectional_exits setting from class attribute
+        settings_dict['assume_bidirectional_exits'] = self.ASSUME_BIDIRECTIONAL_EXITS
 
         # Add use_resolved_items setting from class attribute
         # When false (default), eventProcessor uses only base_items from sphere log

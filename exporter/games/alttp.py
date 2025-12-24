@@ -17,6 +17,17 @@ class ALttPGameExportHandler(BaseGameExportHandler):
     # Helper modules containing functions that can be exported as JSON rule definitions
     HELPER_MODULES = ['worlds.alttp.StateHelpers', 'worlds.alttp.Bosses']
 
+    # ALTTP exits are bidirectional - going through an entrance implies being able to return
+    ASSUME_BIDIRECTIONAL_EXITS = True
+
+    # Simple world attributes that can be automatically exported via base class
+    COMPUTED_SETTINGS = {
+        'treasure_hunt_required': lambda w, m, p: getattr(w, 'treasure_hunt_required', 0),
+        'can_take_damage': lambda w, m, p: getattr(w, 'can_take_damage', True),
+        'logical_heart_pieces': lambda w, m, p: getattr(w, 'logical_heart_pieces', 24),
+        'logical_heart_containers': lambda w, m, p: getattr(w, 'logical_heart_containers', 10),
+    }
+
     # Complex helpers that can't be exported (need JavaScript implementations)
     # NOTE: Use set() for empty blacklist - {} creates an empty dict!
     # All helpers now exported via computed definitions or other mechanisms
@@ -492,19 +503,13 @@ class ALttPGameExportHandler(BaseGameExportHandler):
         then adds ALTTP-specific computed world attributes.
         """
         # Get all options and option_definitions from base class
+        # Note: assume_bidirectional_exits is set via ASSUME_BIDIRECTIONAL_EXITS class attribute
         settings_dict = super().get_settings_data(world, multiworld, player)
 
-        # Set assume_bidirectional_exits to true for ALTTP
-        settings_dict['assume_bidirectional_exits'] = True
-
         # === ALTTP-specific computed world attributes ===
-        # These are not options but runtime-computed values
-
-        # Treasure Hunt Required
-        settings_dict['treasure_hunt_required'] = getattr(world, 'treasure_hunt_required', 0)
-
-        # Can Take Damage (world attribute, default True)
-        settings_dict['can_take_damage'] = getattr(world, 'can_take_damage', True)
+        # Note: Simple attributes (treasure_hunt_required, can_take_damage,
+        # logical_heart_pieces, logical_heart_containers) are now handled
+        # via COMPUTED_SETTINGS class attribute in the base class.
 
         # Difficulty requirements
         if hasattr(world, 'difficulty_requirements'):
@@ -515,10 +520,6 @@ class ALttPGameExportHandler(BaseGameExportHandler):
             }
         else:
             settings_dict['difficulty_requirements'] = {}
-
-        # Logical heart limits (used by heart_count and has_hearts helpers)
-        settings_dict['logical_heart_pieces'] = getattr(world, 'logical_heart_pieces', 24)
-        settings_dict['logical_heart_containers'] = getattr(world, 'logical_heart_containers', 10)
 
         # Medallions
         if hasattr(world, 'required_medallions'):
