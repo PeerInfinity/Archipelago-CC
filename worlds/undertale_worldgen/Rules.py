@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, And, CanReachEntrance, CanReachRegion, Compare, CountItem, Has, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -20,50 +20,6 @@ def _undertale_has_plot(state: "CollectionState", player: int, item = None) -> b
     return (state.has('Complete Skeleton', player) if (item == 'Complete Skeleton') else (state.has('Fish', player) if (item == 'Fish') else (state.has('Mettaton Plush', player) if (item == 'Mettaton Plush') else (state.has('DT Extractor', player) if (item == 'DT Extractor') else None))))
 
 
-# Helper definitions for frontend evaluation
-# These are looked up by name instead of being inlined at every call site
-_HELPER_DEFINITIONS = {   '_undertale_has_plot': {   'body': {   'if_false': {   'if_false': {   'if_false': {   'if_false': None,
-                                                                                           'if_true': {   'item': 'DT '
-                                                                                                                  'Extractor',
-                                                                                                          'type': 'item_check'},
-                                                                                           'test': {   'left': {   'name': 'item',
-                                                                                                                   'type': 'name'},
-                                                                                                       'op': '==',
-                                                                                                       'right': {   'type': 'constant',
-                                                                                                                    'value': 'DT '
-                                                                                                                             'Extractor'},
-                                                                                                       'type': 'compare'},
-                                                                                           'type': 'conditional'},
-                                                                           'if_true': {   'item': 'Mettaton Plush',
-                                                                                          'type': 'item_check'},
-                                                                           'test': {   'left': {   'name': 'item',
-                                                                                                   'type': 'name'},
-                                                                                       'op': '==',
-                                                                                       'right': {   'type': 'constant',
-                                                                                                    'value': 'Mettaton '
-                                                                                                             'Plush'},
-                                                                                       'type': 'compare'},
-                                                                           'type': 'conditional'},
-                                                           'if_true': {'item': 'Fish', 'type': 'item_check'},
-                                                           'test': {   'left': {'name': 'item', 'type': 'name'},
-                                                                       'op': '==',
-                                                                       'right': {'type': 'constant', 'value': 'Fish'},
-                                                                       'type': 'compare'},
-                                                           'type': 'conditional'},
-                                           'if_true': {'item': 'Complete Skeleton', 'type': 'item_check'},
-                                           'test': {   'left': {'name': 'item', 'type': 'name'},
-                                                       'op': '==',
-                                                       'right': {'type': 'constant', 'value': 'Complete Skeleton'},
-                                                       'type': 'compare'},
-                                           'type': 'conditional'},
-                               'params': ['item']}}
-
-
-def get_helper_definitions() -> dict:
-    """Return helper definitions for frontend evaluation."""
-    return _HELPER_DEFINITIONS
-
-
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player
@@ -71,341 +27,231 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("New Game", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("??? Exit", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Ruins Hub", player),
-        True_()
+        Has('Ruins Key')
     )
 
     world.set_rule(
         multiworld.get_entrance("Snowdin Hub", player),
-        True_()
+        Has('Snowdin Key')
     )
 
     world.set_rule(
         multiworld.get_entrance("Waterfall Hub", player),
-        True_()
+        Has('Waterfall Key')
     )
 
     world.set_rule(
         multiworld.get_entrance("Hotland Hub", player),
-        True_()
+        Has('Hotland Key')
     )
 
     world.set_rule(
         multiworld.get_entrance("Core Hub", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Ruins Exit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Snowdin Forest Exit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Papyrus\" Home Entrance", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Undyne\"s Home Entrance", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Cooking Show Entrance", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Lab Elevator", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("News Show Entrance", player),
-        True_()
+        Has('Core Key')
     )
 
     world.set_rule(
         multiworld.get_entrance("Core Exit", player),
-        True_()
+        HelperCall(helper_func=_undertale_has_plot, helper_name="_undertale_has_plot", args=('Mettaton Plush',))
     )
 
     world.set_rule(
         multiworld.get_entrance("New Home Exit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Last Corridor Exit", player),
-        True_()
+        Or(And(Has('Left Home Key'), Has('Right Home Key')), Compare(CountItem('Key Piece'), ">=", 5))
     )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Candy 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Candy 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Candy 3", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Candy 4", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Donut Sale", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cider Sale", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Ribbon Cracks", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Toy Knife Edge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("B.Scotch Pie Given", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Snowman", player),
-        True_()
+        CanReachRegion('Snowdin Town')
     )
 
     world.set_rule(
         multiworld.get_location("Nicecream Snowdin", player),
-        True_()
+        CanReachRegion('Snowdin Town')
     )
 
     world.set_rule(
         multiworld.get_location("Bunny 1", player),
-        True_()
+        CanReachRegion('Snowdin Town')
     )
 
     world.set_rule(
         multiworld.get_location("Bunny 2", player),
-        True_()
+        CanReachRegion('Snowdin Town')
     )
 
     world.set_rule(
         multiworld.get_location("Bunny 3", player),
-        True_()
+        CanReachRegion('Snowdin Town')
     )
 
     world.set_rule(
         multiworld.get_location("Bunny 4", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Papyrus Date", player),
-        True_()
+        CanReachRegion('Snowdin Town')
     )
 
     world.set_rule(
         multiworld.get_location("Nicecream Waterfall", player),
-        True_()
+        CanReachRegion('Waterfall')
     )
 
     world.set_rule(
         multiworld.get_location("Nicecream Punch Card", player),
-        True_()
+        And(CanReachRegion('Waterfall'), Has('Punch Card', 3))
     )
 
     world.set_rule(
         multiworld.get_location("Quiche Bench", player),
-        True_()
+        CanReachRegion('Waterfall')
     )
 
     world.set_rule(
         multiworld.get_location("Tutu Hidden", player),
-        True_()
+        CanReachRegion('Waterfall')
     )
 
     world.set_rule(
         multiworld.get_location("Card Reward", player),
-        True_()
+        CanReachRegion('Waterfall')
     )
 
     world.set_rule(
         multiworld.get_location("Grass Shoes", player),
-        True_()
+        CanReachRegion('Waterfall')
     )
 
     world.set_rule(
         multiworld.get_location("Astro 1", player),
-        True_()
+        CanReachRegion('Waterfall')
     )
 
     world.set_rule(
         multiworld.get_location("Astro 2", player),
-        True_()
+        CanReachRegion('Waterfall')
     )
 
     world.set_rule(
         multiworld.get_location("Gerson 1", player),
-        True_()
+        CanReachRegion('Waterfall')
     )
 
     world.set_rule(
         multiworld.get_location("Gerson 2", player),
-        True_()
+        CanReachRegion('Waterfall')
     )
 
     world.set_rule(
         multiworld.get_location("Gerson 3", player),
-        True_()
+        CanReachRegion('Waterfall')
     )
 
     world.set_rule(
         multiworld.get_location("Gerson 4", player),
-        True_()
+        CanReachRegion('Waterfall')
     )
 
     world.set_rule(
         multiworld.get_location("TemmieShop 1", player),
-        True_()
+        CanReachRegion('Waterfall')
     )
 
     world.set_rule(
         multiworld.get_location("TemmieShop 2", player),
-        True_()
+        CanReachRegion('Waterfall')
     )
 
     world.set_rule(
         multiworld.get_location("TemmieShop 3", player),
-        True_()
+        CanReachRegion('Waterfall')
     )
 
     world.set_rule(
         multiworld.get_location("TemmieShop 4", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undyne Date", player),
-        True_()
+        And(CanReachRegion('Waterfall'), Has('1000G', 2))
     )
 
     world.set_rule(
         multiworld.get_location("Noodles Fridge", player),
-        True_()
+        CanReachRegion('Hotland')
     )
 
     world.set_rule(
         multiworld.get_location("Pan Hidden", player),
-        True_()
+        CanReachRegion('Hotland')
     )
 
     world.set_rule(
         multiworld.get_location("Apron Hidden", player),
-        True_()
+        CanReachRegion('Cooking Show')
     )
 
     world.set_rule(
         multiworld.get_location("Bratty Catty 1", player),
-        True_()
+        CanReachRegion('News Show')
     )
 
     world.set_rule(
         multiworld.get_location("Bratty Catty 2", player),
-        True_()
+        CanReachRegion('News Show')
     )
 
     world.set_rule(
         multiworld.get_location("Bratty Catty 3", player),
-        True_()
+        CanReachRegion('News Show')
     )
 
     world.set_rule(
         multiworld.get_location("Bratty Catty 4", player),
-        True_()
+        CanReachRegion('News Show')
     )
 
     world.set_rule(
         multiworld.get_location("Burgerpants 1", player),
-        True_()
+        CanReachRegion('News Show')
     )
 
     world.set_rule(
         multiworld.get_location("Burgerpants 2", player),
-        True_()
+        CanReachRegion('News Show')
     )
 
     world.set_rule(
         multiworld.get_location("Burgerpants 3", player),
-        True_()
+        CanReachRegion('News Show')
     )
 
     world.set_rule(
         multiworld.get_location("Burgerpants 4", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Alphys Date", player),
-        True_()
+        CanReachRegion('News Show')
     )
 
     world.set_rule(
         multiworld.get_location("Trash Burger", player),
-        True_()
+        CanReachRegion('Core')
     )
 
     world.set_rule(
         multiworld.get_location("Mettaton Plot", player),
-        True_()
+        CanReachEntrance('Core Exit')
     )
 
     world.set_rule(
         multiworld.get_location("Present Knife", player),
-        True_()
+        CanReachRegion('New Home')
     )
 
     world.set_rule(
         multiworld.get_location("Present Locket", player),
-        True_()
+        CanReachRegion('New Home')
     )
 
     world.set_rule(
         multiworld.get_location("Left New Home Key", player),
-        True_()
+        CanReachRegion('New Home')
     )
 
     world.set_rule(
         multiworld.get_location("Right New Home Key", player),
-        True_()
+        CanReachRegion('New Home')
     )

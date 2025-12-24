@@ -330,8 +330,29 @@
             "name": "Forsaken Fortress - Chest Outside Upper Jail Cell",
             "id": 2326643,
             "access_rule": {
-              "rule": "can_get_inside_forsaken_fortress",
-              "_original_ast_type": "helper"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_get_inside_forsaken_fortress",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "can_fly_with_deku_leaf_indoors",
+                      "_original_ast_type": "helper"
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Hookshot",
+                        "count": 1
+                      }
+                    }
+                  ]
+                }
+              ]
             },
             "item": {
               "name": "FF Compass",
@@ -675,12 +696,10 @@
                       "_original_ast_type": "helper"
                     },
                     {
-                      "rule": "HasAny",
+                      "rule": "Has",
                       "args": {
-                        "items": [
-                          "Hookshot",
-                          "Grappling Hook"
-                        ]
+                        "item_name": "Grappling Hook",
+                        "count": 1
                       }
                     }
                   ]
@@ -1147,6 +1166,10 @@
                   "_original_ast_type": "helper"
                 },
                 {
+                  "rule": "can_destroy_seeds_hanging_by_vines",
+                  "_original_ast_type": "helper"
+                },
+                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
@@ -1177,6 +1200,10 @@
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "can_defeat_peahats",
                   "_original_ast_type": "helper"
                 },
                 {
@@ -1351,24 +1378,8 @@
                   "_original_ast_type": "helper"
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "can_fly_with_deku_leaf_indoors",
-                      "_original_ast_type": "helper"
-                    },
-                    {
-                      "rule": "has_heros_bow",
-                      "_original_ast_type": "helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot",
-                        "count": 1
-                      }
-                    }
-                  ]
+                  "rule": "has_heros_bow",
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -1585,32 +1596,8 @@
                   "_original_ast_type": "helper"
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "has_heros_bow",
-                      "_original_ast_type": "helper"
-                    },
-                    {
-                      "rule": "can_defeat_blue_bubbles",
-                      "_original_ast_type": "helper"
-                    },
-                    {
-                      "rule": "has_any_master_sword",
-                      "_original_ast_type": "helper"
-                    },
-                    {
-                      "rule": "has_heros_sword",
-                      "_original_ast_type": "helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Skull Hammer",
-                        "count": 1
-                      }
-                    }
-                  ]
+                  "rule": "can_defeat_blue_bubbles",
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -2167,22 +2154,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "can_fly_with_deku_leaf_indoors",
-                          "_original_ast_type": "helper"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Hookshot",
-                            "count": 1
-                          }
-                        }
-                      ]
                     }
                   ]
                 }
@@ -2600,17 +2571,20 @@
       "Savage Labyrinth": {
         "name": "Savage Labyrinth",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Dragon Roost Island Secret Cave": {
         "name": "Dragon Roost Island Secret Cave",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Fire Mountain Secret Cave": {
         "name": "Fire Mountain Secret Cave",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Ice Ring Isle Secret Cave": {
         "name": "Ice Ring Isle Secret Cave",
@@ -2758,17 +2732,20 @@
       "Boating Course Secret Cave": {
         "name": "Boating Course Secret Cave",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Stone Watcher Island Secret Cave": {
         "name": "Stone Watcher Island Secret Cave",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Overlook Island Secret Cave": {
         "name": "Overlook Island Secret Cave",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Bird's Peak Rock Secret Cave": {
         "name": "Bird's Peak Rock Secret Cave",
@@ -2862,7 +2839,8 @@
       "Pawprint Isle Wizzrobe Cave": {
         "name": "Pawprint Isle Wizzrobe Cave",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Diamond Steppe Island Warp Maze Cave": {
         "name": "Diamond Steppe Island Warp Maze Cave",
@@ -2922,12 +2900,14 @@
       "Rock Spire Isle Secret Cave": {
         "name": "Rock Spire Isle Secret Cave",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Shark Island Secret Cave": {
         "name": "Shark Island Secret Cave",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Cliff Plateau Isles Secret Cave": {
         "name": "Cliff Plateau Isles Secret Cave",
@@ -2946,20 +2926,8 @@
             "name": "Cliff Plateau Isles - Cave",
             "id": 2326766,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "can_defeat_boko_babas",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Grappling Hook",
-                    "count": 1
-                  }
-                }
-              ]
+              "rule": "can_defeat_boko_babas",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Piece of Heart",
@@ -2974,17 +2942,20 @@
       "Horseshoe Island Secret Cave": {
         "name": "Horseshoe Island Secret Cave",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Star Island Secret Cave": {
         "name": "Star Island Secret Cave",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Ice Ring Isle Inner Cave": {
         "name": "Ice Ring Isle Inner Cave",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Cliff Plateau Isles Inner Cave": {
         "name": "Cliff Plateau Isles Inner Cave",
@@ -3009,7 +2980,8 @@
       "Outset Fairy Fountain": {
         "name": "Outset Fairy Fountain",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Thorned Fairy Fountain": {
         "name": "Thorned Fairy Fountain",
@@ -5251,235 +5223,89 @@
   "helpers": {
     "1": {
       "can_access_boss_entrance_in_dragon_roost_cavern": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 4
-                },
-                "item": "DRC Small Key",
-                "type": "item_check"
-              },
-              {
-                "conditions": [
-                  {
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Grappling Hook",
-                          "Hookshot"
-                        ]
-                      }
-                    ],
-                    "method": "has_any",
-                    "type": "state_method"
-                  },
-                  {
-                    "name": "can_fly_with_deku_leaf_indoors",
-                    "type": "helper"
-                  },
-                  {
-                    "name": "has_ice_arrows",
-                    "type": "helper"
-                  }
-                ],
-                "type": "or"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_dragon_roost_cavern_boss_stairs"
           },
           {
-            "item": "DRC Big Key",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "DRC Big Key"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_access_boss_entrance_in_earth_temple": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_reach_earth_temple_third_crypt",
-                "type": "helper"
-              },
-              {
-                "name": "can_play_earth_gods_lyric",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_earth_temple_tall_vine_room"
           },
           {
-            "item": "ET Big Key",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "ET Big Key"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_access_boss_entrance_in_forbidden_woods": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "item": "Deku Leaf",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_fly_with_deku_leaf_indoors"
           },
           {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Bombs",
-                      "Boomerang",
-                      "Hookshot",
-                      "Skull Hammer"
-                    ]
-                  }
-                ],
-                "method": "has_any",
-                "type": "state_method"
-              },
-              {
-                "name": "has_heros_sword",
-                "type": "helper"
-              },
-              {
-                "name": "has_heros_bow",
-                "type": "helper"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "can_fan_with_deku_leaf",
-                    "type": "helper"
-                  },
-                  {
-                    "item": "Grappling Hook",
-                    "type": "item_check"
-                  }
-                ],
-                "type": "and"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_defeat_boko_babas"
           },
           {
+            "type": "or",
             "conditions": [
               {
-                "conditions": [
-                  {
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Bombs",
-                          "Boomerang",
-                          "Hookshot"
-                        ]
-                      }
-                    ],
-                    "method": "has_any",
-                    "type": "state_method"
-                  },
-                  {
-                    "name": "has_heros_bow",
-                    "type": "helper"
-                  }
-                ],
-                "type": "or"
+                "type": "helper",
+                "name": "can_defeat_door_flowers"
               },
               {
-                "item": "Grappling Hook",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Grappling Hook"
               }
-            ],
-            "type": "or"
+            ]
           },
           {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Bombs",
-                      "Skull Hammer"
-                    ]
-                  }
-                ],
-                "method": "has_any",
-                "type": "state_method"
-              },
-              {
-                "name": "has_heros_sword",
-                "type": "helper"
-              },
-              {
-                "name": "has_heros_bow",
-                "type": "helper"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_defeat_mothulas"
           },
           {
-            "item": "FW Big Key",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "FW Big Key"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_access_boss_entrance_in_forsaken_fortress": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_get_past_forsaken_fortress_gate",
-                "type": "helper"
-              },
-              {
-                "item": "Skull Hammer",
-                "type": "item_check"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_get_inside_forsaken_fortress"
           },
           {
-            "item": "Skull Hammer",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Skull Hammer"
           },
           {
+            "type": "or",
             "conditions": [
               {
-                "conditions": [
-                  {
-                    "item": "Deku Leaf",
-                    "type": "item_check"
-                  },
-                  {
-                    "name": "has_magic_meter",
-                    "type": "helper"
-                  }
-                ],
-                "type": "and"
+                "type": "helper",
+                "name": "can_fly_with_deku_leaf_indoors"
               },
               {
-                "item": "Hookshot",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Hookshot"
               },
               {
+                "type": "and",
                 "conditions": [
                   {
                     "type": "constant",
@@ -5489,148 +5315,56 @@
                     "type": "constant",
                     "value": false
                   }
-                ],
-                "type": "and"
+                ]
               }
-            ],
-            "type": "or"
+            ]
           },
           {
+            "type": "or",
             "conditions": [
               {
-                "conditions": [
-                  {
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Bombs",
-                          "Skull Hammer"
-                        ]
-                      }
-                    ],
-                    "method": "has_any",
-                    "type": "state_method"
-                  },
-                  {
-                    "name": "has_heros_sword",
-                    "type": "helper"
-                  },
-                  {
-                    "name": "has_heros_bow",
-                    "type": "helper"
-                  }
-                ],
-                "type": "or"
+                "type": "helper",
+                "name": "can_defeat_bokoblins"
               },
               {
-                "conditions": [
-                  {
-                    "item": "Deku Leaf",
-                    "type": "item_check"
-                  },
-                  {
-                    "name": "has_magic_meter",
-                    "type": "helper"
-                  },
-                  {
-                    "name": "can_play_winds_requiem",
-                    "type": "helper"
-                  }
-                ],
-                "type": "and"
+                "type": "helper",
+                "name": "can_fly_with_deku_leaf_outdoors"
               },
               {
-                "item": "Grappling Hook",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Grappling Hook"
               }
-            ],
-            "type": "or"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_access_boss_entrance_in_tower_of_the_gods": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_reach_tower_of_the_gods_second_floor",
-                "type": "helper"
-              },
-              {
-                "name": "can_bring_west_servant_of_the_tower",
-                "type": "helper"
-              },
-              {
-                "name": "can_bring_north_servant_of_the_tower",
-                "type": "helper"
-              },
-              {
-                "item": "Wind Waker",
-                "type": "item_check"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_tower_of_the_gods_third_floor"
           },
           {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Bombs",
-                      "Hookshot",
-                      "Skull Hammer"
-                    ]
-                  }
-                ],
-                "method": "has_any",
-                "type": "state_method"
-              },
-              {
-                "name": "has_heros_sword",
-                "type": "helper"
-              },
-              {
-                "name": "has_heros_bow",
-                "type": "helper"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_defeat_armos"
           },
           {
-            "item": "TotG Big Key",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "TotG Big Key"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_access_boss_entrance_in_wind_temple": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_open_wind_temple_upper_giant_grate",
-                "type": "helper"
-              },
-              {
-                "name": "can_open_wind_temple_lower_giant_grate",
-                "type": "helper"
-              },
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "item": "WT Small Key",
-                "type": "item_check"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_wind_temple_tall_basement_room"
           },
           {
+            "type": "state_method",
+            "method": "has_all",
             "args": [
               {
                 "type": "constant",
@@ -5640,91 +5374,42 @@
                   "WT Big Key"
                 ]
               }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            ]
           },
           {
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Command Melody",
-                  "Wind Waker"
-                ]
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            "type": "helper",
+            "name": "can_play_command_melody"
           },
           {
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Wind God's Aria",
-                  "Wind Waker"
-                ]
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            "type": "helper",
+            "name": "can_play_wind_gods_aria"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_access_dungeon_entrance_in_forest_haven_sector": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "item": "Grappling Hook",
-                "type": "item_check"
-              },
-              {
-                "name": "can_fly_with_deku_leaf_outdoors",
-                "type": "helper"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_access_forest_haven"
           },
           {
+            "type": "or",
             "conditions": [
               {
-                "item": "Grappling Hook",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Grappling Hook"
               },
               {
+                "type": "and",
                 "conditions": [
                   {
-                    "conditions": [
-                      {
-                        "item": "Deku Leaf",
-                        "type": "item_check"
-                      },
-                      {
-                        "name": "has_magic_meter",
-                        "type": "helper"
-                      }
-                    ],
-                    "type": "and"
+                    "type": "helper",
+                    "name": "can_fly_with_deku_leaf_indoors"
                   },
                   {
-                    "conditions": [
-                      {
-                        "item": "Deku Leaf",
-                        "type": "item_check"
-                      },
-                      {
-                        "name": "has_magic_meter",
-                        "type": "helper"
-                      },
-                      {
-                        "name": "can_play_winds_requiem",
-                        "type": "helper"
-                      }
-                    ],
-                    "type": "and"
+                    "type": "helper",
+                    "name": "can_fly_with_deku_leaf_outdoors"
                   },
                   {
                     "type": "constant",
@@ -5734,69 +5419,32 @@
                     "type": "constant",
                     "value": false
                   }
-                ],
-                "type": "and"
+                ]
               }
-            ],
-            "type": "or"
+            ]
           },
           {
-            "conditions": [
-              {
-                "item": "Deku Leaf",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              },
-              {
-                "name": "can_play_winds_requiem",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_fly_with_deku_leaf_outdoors"
           },
           {
+            "type": "or",
             "conditions": [
               {
-                "conditions": [
-                  {
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Bombs",
-                          "Boomerang",
-                          "Skull Hammer"
-                        ]
-                      }
-                    ],
-                    "method": "has_any",
-                    "type": "state_method"
-                  },
-                  {
-                    "name": "has_heros_sword",
-                    "type": "helper"
-                  }
-                ],
-                "type": "or"
+                "type": "helper",
+                "name": "can_cut_grass"
               },
               {
-                "count": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "item": "Progressive Magic Meter",
-                "type": "item_check"
+                "type": "helper",
+                "name": "has_magic_meter_upgrade"
               }
-            ],
-            "type": "or"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_access_dungeon_entrance_in_tower_of_the_gods_sector": {
+        "type": "state_method",
+        "method": "has_group_unique",
         "args": [
           {
             "type": "constant",
@@ -5806,15 +5454,15 @@
             "type": "constant",
             "value": 3
           }
-        ],
-        "method": "has_group_unique",
-        "type": "state_method"
+        ]
       },
       "can_access_dungeon_entrance_on_dragon_roost_island": {
         "type": "constant",
         "value": true
       },
       "can_access_dungeon_entrance_on_gale_isle": {
+        "type": "state_method",
+        "method": "has_all",
         "args": [
           {
             "type": "constant",
@@ -5823,396 +5471,154 @@
               "Skull Hammer"
             ]
           }
-        ],
-        "method": "has_all",
-        "type": "state_method"
+        ]
       },
       "can_access_dungeon_entrance_on_headstone_island": {
-        "item": "Power Bracelets",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Power Bracelets"
       },
       "can_access_fairy_fountain_entrance_on_eastern_fairy_island": {
-        "args": [
-          {
-            "type": "constant",
-            "value": [
-              "Bombs",
-              "Power Bracelets"
-            ]
-          }
-        ],
-        "method": "has_any",
-        "type": "state_method"
+        "type": "helper",
+        "name": "can_move_boulders"
       },
       "can_access_fairy_fountain_entrance_on_northern_fairy_island": {
         "type": "constant",
         "value": true
       },
       "can_access_fairy_fountain_entrance_on_outset_island": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_reach_outset_island_upper_level",
-                "type": "helper"
-              },
-              {
-                "name": "can_fly_with_deku_leaf_outdoors",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_access_forest_of_fairies"
           },
           {
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Bombs",
-                  "Power Bracelets"
-                ]
-              }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            "type": "helper",
+            "name": "can_move_boulders"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_access_fairy_fountain_entrance_on_southern_fairy_island": {
+        "type": "or",
         "conditions": [
           {
-            "item": "Bombs",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Bombs"
           },
           {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "item": "Progressive Bow",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "has_fire_arrows"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_access_fairy_fountain_entrance_on_thorned_fairy_island": {
-        "item": "Skull Hammer",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Skull Hammer"
       },
       "can_access_fairy_fountain_entrance_on_western_fairy_island": {
-        "item": "Skull Hammer",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Skull Hammer"
       },
       "can_access_forest_haven": {
+        "type": "or",
         "conditions": [
           {
-            "item": "Grappling Hook",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Grappling Hook"
           },
           {
-            "conditions": [
-              {
-                "item": "Deku Leaf",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              },
-              {
-                "name": "can_play_winds_requiem",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_fly_with_deku_leaf_outdoors"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_access_forest_of_fairies": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_cut_down_outset_trees",
-                "type": "helper"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "can_fly_with_deku_leaf_outdoors",
-                    "type": "helper"
-                  },
-                  {
-                    "type": "constant",
-                    "value": false
-                  }
-                ],
-                "type": "and"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_reach_outset_island_upper_level"
           },
           {
-            "conditions": [
-              {
-                "item": "Deku Leaf",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              },
-              {
-                "name": "can_play_winds_requiem",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_fly_with_deku_leaf_outdoors"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_access_ganons_tower": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_access_hyrule",
-                "type": "helper"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "has_full_power_master_sword",
-                    "type": "helper"
-                  },
-                  {
-                    "type": "constant",
-                    "value": false
-                  }
-                ],
-                "type": "or"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_get_past_hyrule_barrier"
           },
           {
+            "type": "or",
             "conditions": [
               {
-                "item": "Hookshot",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Hookshot"
               },
               {
-                "conditions": [
-                  {
-                    "item": "Deku Leaf",
-                    "type": "item_check"
-                  },
-                  {
-                    "name": "has_magic_meter",
-                    "type": "helper"
-                  }
-                ],
-                "type": "and"
+                "type": "helper",
+                "name": "can_fly_with_deku_leaf_indoors"
               }
-            ],
-            "type": "or"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_access_hyrule": {
-        "args": [
-          {
-            "type": "constant",
-            "value": "Shards"
-          },
-          {
-            "type": "constant",
-            "value": 8
-          }
-        ],
-        "method": "has_group_unique",
-        "type": "state_method"
+        "type": "helper",
+        "name": "has_all_8_triforce_shards"
       },
       "can_access_inner_entrance_in_cliff_plateau_isles_secret_cave": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Bombs",
-                      "Boomerang",
-                      "Hookshot",
-                      "Skull Hammer"
-                    ]
-                  }
-                ],
-                "method": "has_any",
-                "type": "state_method"
-              },
-              {
-                "name": "has_heros_sword",
-                "type": "helper"
-              },
-              {
-                "name": "has_heros_bow",
-                "type": "helper"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "can_fan_with_deku_leaf",
-                    "type": "helper"
-                  },
-                  {
-                    "item": "Grappling Hook",
-                    "type": "item_check"
-                  }
-                ],
-                "type": "and"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_defeat_boko_babas"
           },
           {
-            "conditions": [
-              {
-                "item": "Deku Leaf",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_fly_with_deku_leaf_indoors"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_access_inner_entrance_in_ice_ring_isle_secret_cave": {
-        "item": "Iron Boots",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Iron Boots"
       },
       "can_access_miniboss_entrance_in_earth_temple": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_reach_earth_temple_left_path",
-                "type": "helper"
-              },
-              {
-                "name": "has_fire_arrows",
-                "type": "helper"
-              },
-              {
-                "item": "Power Bracelets",
-                "type": "item_check"
-              },
-              {
-                "name": "can_defeat_floormasters",
-                "type": "helper"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "can_play_command_melody",
-                    "type": "helper"
-                  },
-                  {
-                    "name": "has_mirror_shield",
-                    "type": "helper"
-                  }
-                ],
-                "type": "or"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_earth_temple_moblins_and_poes_room"
           },
           {
+            "type": "item_check",
+            "item": "ET Small Key",
             "count": {
               "type": "constant",
               "value": 3
-            },
-            "item": "ET Small Key",
-            "type": "item_check"
+            }
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_access_miniboss_entrance_in_forbidden_woods": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "item": "Deku Leaf",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_fly_with_deku_leaf_indoors"
           },
           {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Bombs",
-                      "Boomerang",
-                      "Hookshot",
-                      "Skull Hammer"
-                    ]
-                  }
-                ],
-                "method": "has_any",
-                "type": "state_method"
-              },
-              {
-                "name": "has_heros_sword",
-                "type": "helper"
-              },
-              {
-                "name": "has_heros_bow",
-                "type": "helper"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "can_fan_with_deku_leaf",
-                    "type": "helper"
-                  },
-                  {
-                    "item": "Grappling Hook",
-                    "type": "item_check"
-                  }
-                ],
-                "type": "and"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_defeat_boko_babas"
           },
           {
+            "type": "state_method",
+            "method": "has_all",
             "args": [
               {
                 "type": "constant",
@@ -6221,338 +5627,174 @@
                   "Grappling Hook"
                 ]
               }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_access_miniboss_entrance_in_hyrule_castle": {
-        "name": "has_all_8_triforce_shards",
-        "type": "helper"
+        "type": "helper",
+        "name": "can_access_hyrule"
       },
       "can_access_miniboss_entrance_in_tower_of_the_gods": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Bombs",
-                      "TotG Small Key"
-                    ]
-                  }
-                ],
-                "method": "has_all",
-                "type": "state_method"
-              },
-              {
-                "name": "can_defeat_yellow_chuchus",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_tower_of_the_gods_second_floor"
           },
           {
+            "type": "or",
             "conditions": [
               {
-                "item": "Grappling Hook",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Grappling Hook"
               },
               {
-                "conditions": [
-                  {
-                    "item": "Deku Leaf",
-                    "type": "item_check"
-                  },
-                  {
-                    "name": "has_magic_meter",
-                    "type": "helper"
-                  }
-                ],
-                "type": "and"
+                "type": "helper",
+                "name": "can_fly_with_deku_leaf_indoors"
               }
-            ],
-            "type": "or"
+            ]
           },
           {
+            "type": "or",
             "conditions": [
               {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Command Melody",
-                      "Wind Waker"
-                    ]
-                  }
-                ],
-                "method": "has_all",
-                "type": "state_method"
+                "type": "helper",
+                "name": "can_play_command_melody"
               },
               {
-                "count": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "item": "Progressive Bow",
-                "type": "item_check"
+                "type": "helper",
+                "name": "has_heros_bow"
               }
-            ],
-            "type": "or"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_access_miniboss_entrance_in_wind_temple": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_reach_end_of_wind_temple_many_cyclones_room",
-                "type": "helper"
-              },
-              {
-                "item": "Iron Boots",
-                "type": "item_check"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_open_wind_temple_upper_giant_grate"
           },
           {
+            "type": "item_check",
+            "item": "WT Small Key",
             "count": {
               "type": "constant",
               "value": 2
-            },
-            "item": "WT Small Key",
-            "type": "item_check"
+            }
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_access_secret_cave_entrance_on_angular_isles": {
+        "type": "or",
         "conditions": [
           {
-            "conditions": [
-              {
-                "item": "Deku Leaf",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              },
-              {
-                "name": "can_play_winds_requiem",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_fly_with_deku_leaf_outdoors"
           },
           {
-            "item": "Hookshot",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Hookshot"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_access_secret_cave_entrance_on_birds_peak_rock": {
-        "item": "Bait Bag",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Bait Bag"
       },
       "can_access_secret_cave_entrance_on_boating_course": {
+        "type": "or",
         "conditions": [
           {
-            "conditions": [
-              {
-                "item": "Deku Leaf",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              },
-              {
-                "name": "can_play_winds_requiem",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_fly_with_deku_leaf_outdoors"
           },
           {
-            "item": "Hookshot",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Hookshot"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_access_secret_cave_entrance_on_bomb_island": {
-        "args": [
-          {
-            "type": "constant",
-            "value": [
-              "Bombs",
-              "Power Bracelets"
-            ]
-          }
-        ],
-        "method": "has_any",
-        "type": "state_method"
+        "type": "helper",
+        "name": "can_move_boulders"
       },
       "can_access_secret_cave_entrance_on_cliff_plateau_isles": {
         "type": "constant",
         "value": true
       },
       "can_access_secret_cave_entrance_on_diamond_steppe_island": {
-        "item": "Hookshot",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Hookshot"
       },
       "can_access_secret_cave_entrance_on_dragon_roost_island": {
-        "args": [
-          {
-            "type": "constant",
-            "value": [
-              "Bombs",
-              "Power Bracelets"
-            ]
-          }
-        ],
-        "method": "has_any",
-        "type": "state_method"
+        "type": "helper",
+        "name": "can_move_boulders"
       },
       "can_access_secret_cave_entrance_on_fire_mountain": {
-        "conditions": [
-          {
-            "count": {
-              "type": "constant",
-              "value": 2
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
-          },
-          {
-            "name": "has_magic_meter",
-            "type": "helper"
-          }
-        ],
-        "type": "and"
+        "type": "helper",
+        "name": "has_ice_arrows"
       },
       "can_access_secret_cave_entrance_on_horseshoe_island": {
-        "item": "Deku Leaf",
-        "type": "item_check"
+        "type": "helper",
+        "name": "can_fan_with_deku_leaf"
       },
       "can_access_secret_cave_entrance_on_ice_ring_isle": {
-        "conditions": [
-          {
-            "count": {
-              "type": "constant",
-              "value": 2
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
-          },
-          {
-            "name": "has_magic_meter",
-            "type": "helper"
-          }
-        ],
-        "type": "and"
+        "type": "helper",
+        "name": "has_fire_arrows"
       },
       "can_access_secret_cave_entrance_on_needle_rock_isle": {
-        "conditions": [
-          {
-            "count": {
-              "type": "constant",
-              "value": 2
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
-          },
-          {
-            "name": "has_magic_meter",
-            "type": "helper"
-          }
-        ],
-        "type": "and"
+        "type": "helper",
+        "name": "has_fire_arrows"
       },
       "can_access_secret_cave_entrance_on_outset_island": {
+        "type": "and",
         "conditions": [
           {
+            "type": "or",
             "conditions": [
               {
+                "type": "and",
                 "conditions": [
                   {
-                    "conditions": [
-                      {
-                        "name": "can_cut_down_outset_trees",
-                        "type": "helper"
-                      },
-                      {
-                        "conditions": [
-                          {
-                            "name": "can_fly_with_deku_leaf_outdoors",
-                            "type": "helper"
-                          },
-                          {
-                            "type": "constant",
-                            "value": false
-                          }
-                        ],
-                        "type": "and"
-                      }
-                    ],
-                    "type": "or"
+                    "type": "helper",
+                    "name": "can_reach_outset_island_upper_level"
                   },
                   {
-                    "conditions": [
-                      {
-                        "item": "Deku Leaf",
-                        "type": "item_check"
-                      },
-                      {
-                        "name": "has_magic_meter",
-                        "type": "helper"
-                      },
-                      {
-                        "name": "can_play_winds_requiem",
-                        "type": "helper"
-                      }
-                    ],
-                    "type": "and"
+                    "type": "helper",
+                    "name": "can_fly_with_deku_leaf_outdoors"
                   }
-                ],
-                "type": "and"
+                ]
               },
               {
-                "item": "Hookshot",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Hookshot"
               }
-            ],
-            "type": "or"
+            ]
           },
           {
-            "item": "Power Bracelets",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Power Bracelets"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_access_secret_cave_entrance_on_overlook_island": {
-        "item": "Hookshot",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Hookshot"
       },
       "can_access_secret_cave_entrance_on_pawprint_isle": {
         "type": "constant",
         "value": true
       },
       "can_access_secret_cave_entrance_on_pawprint_isle_side_isle": {
-        "item": "Hookshot",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Hookshot"
       },
       "can_access_secret_cave_entrance_on_private_oasis": {
+        "type": "state_method",
+        "method": "has_all",
         "args": [
           {
             "type": "constant",
@@ -6562,15 +5804,15 @@
               "Grappling Hook"
             ]
           }
-        ],
-        "method": "has_all",
-        "type": "state_method"
+        ]
       },
       "can_access_secret_cave_entrance_on_rock_spire_isle": {
-        "item": "Bombs",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Bombs"
       },
       "can_access_secret_cave_entrance_on_shark_island": {
+        "type": "state_method",
+        "method": "has_all",
         "args": [
           {
             "type": "constant",
@@ -6579,71 +5821,42 @@
               "Skull Hammer"
             ]
           }
-        ],
-        "method": "has_all",
-        "type": "state_method"
+        ]
       },
       "can_access_secret_cave_entrance_on_star_island": {
-        "args": [
-          {
-            "type": "constant",
-            "value": [
-              "Bombs",
-              "Power Bracelets"
-            ]
-          }
-        ],
-        "method": "has_any",
-        "type": "state_method"
+        "type": "helper",
+        "name": "can_move_boulders"
       },
       "can_access_secret_cave_entrance_on_stone_watcher_island": {
-        "item": "Power Bracelets",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Power Bracelets"
       },
       "can_activate_wind_temple_giant_fan": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_reach_end_of_wind_temple_many_cyclones_room",
-                "type": "helper"
-              },
-              {
-                "item": "Iron Boots",
-                "type": "item_check"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_open_wind_temple_upper_giant_grate"
           },
           {
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Command Melody",
-                  "Wind Waker"
-                ]
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            "type": "helper",
+            "name": "can_play_command_melody"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_aim_mirror_shield": {
+        "type": "and",
         "conditions": [
           {
-            "count": {
-              "type": "constant",
-              "value": 2
-            },
-            "item": "Progressive Shield",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_mirror_shield"
           },
           {
+            "type": "or",
             "conditions": [
               {
+                "type": "state_method",
+                "method": "has_any",
                 "args": [
                   {
                     "type": "constant",
@@ -6655,320 +5868,154 @@
                       "Wind Waker"
                     ]
                   }
-                ],
-                "method": "has_any",
-                "type": "state_method"
+                ]
               },
               {
-                "count": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "item": "Progressive Sword",
-                "type": "item_check"
+                "type": "helper",
+                "name": "has_heros_sword"
               },
               {
-                "count": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "item": "Progressive Bow",
-                "type": "item_check"
+                "type": "helper",
+                "name": "has_heros_bow"
               }
-            ],
-            "type": "or"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_bring_north_servant_of_the_tower": {
+        "type": "and",
         "conditions": [
           {
+            "type": "item_check",
+            "item": "TotG Small Key",
             "count": {
               "type": "constant",
               "value": 2
-            },
-            "item": "TotG Small Key",
-            "type": "item_check"
+            }
           },
           {
+            "type": "or",
             "conditions": [
               {
-                "conditions": [
-                  {
-                    "item": "Deku Leaf",
-                    "type": "item_check"
-                  },
-                  {
-                    "name": "has_magic_meter",
-                    "type": "helper"
-                  }
-                ],
-                "type": "and"
+                "type": "helper",
+                "name": "can_fly_with_deku_leaf_indoors"
               },
               {
                 "type": "constant",
                 "value": false
               }
-            ],
-            "type": "or"
+            ]
           },
           {
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Command Melody",
-                  "Wind Waker"
-                ]
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            "type": "helper",
+            "name": "can_play_command_melody"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_bring_west_servant_of_the_tower": {
+        "type": "and",
         "conditions": [
           {
+            "type": "or",
             "conditions": [
               {
-                "item": "Grappling Hook",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Grappling Hook"
               },
               {
-                "conditions": [
-                  {
-                    "item": "Deku Leaf",
-                    "type": "item_check"
-                  },
-                  {
-                    "name": "has_magic_meter",
-                    "type": "helper"
-                  }
-                ],
-                "type": "and"
+                "type": "helper",
+                "name": "can_fly_with_deku_leaf_indoors"
               }
-            ],
-            "type": "or"
+            ]
           },
           {
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Command Melody",
-                  "Wind Waker"
-                ]
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            "type": "helper",
+            "name": "can_play_command_melody"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_complete_all_memory_dungeons_and_bosses": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "item": "Grappling Hook",
-                "type": "item_check"
-              },
-              {
-                "name": "can_fly_with_deku_leaf_indoors",
-                "type": "helper"
-              },
-              {
-                "name": "can_defeat_gohma",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_complete_memory_dragon_roost_cavern_and_gohma"
           },
           {
-            "conditions": [
-              {
-                "name": "can_fan_with_deku_leaf",
-                "type": "helper"
-              },
-              {
-                "name": "can_fly_with_deku_leaf_indoors",
-                "type": "helper"
-              },
-              {
-                "name": "can_defeat_kalle_demos",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_complete_memory_forbidden_woods_and_kalle_demos"
           },
           {
-            "name": "can_defeat_jalhalla",
-            "type": "helper"
+            "type": "helper",
+            "name": "can_complete_memory_earth_temple_and_jalhalla"
           },
           {
-            "conditions": [
-              {
-                "name": "can_fly_with_deku_leaf_indoors",
-                "type": "helper"
-              },
-              {
-                "name": "can_defeat_molgera",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_complete_memory_wind_temple_and_molgera"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_complete_memory_dragon_roost_cavern_and_gohma": {
+        "type": "and",
         "conditions": [
           {
-            "item": "Grappling Hook",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Grappling Hook"
           },
           {
-            "conditions": [
-              {
-                "item": "Deku Leaf",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_fly_with_deku_leaf_indoors"
           },
           {
-            "item": "Grappling Hook",
-            "type": "item_check"
+            "type": "helper",
+            "name": "can_defeat_gohma"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_complete_memory_earth_temple_and_jalhalla": {
-        "conditions": [
-          {
-            "conditions": [
-              {
-                "name": "can_aim_mirror_shield",
-                "type": "helper"
-              },
-              {
-                "name": "has_light_arrows",
-                "type": "helper"
-              }
-            ],
-            "type": "or"
-          },
-          {
-            "item": "Power Bracelets",
-            "type": "item_check"
-          },
-          {
-            "name": "can_defeat_jalhalla_poes",
-            "type": "helper"
-          }
-        ],
-        "type": "and"
+        "type": "helper",
+        "name": "can_defeat_jalhalla"
       },
       "can_complete_memory_forbidden_woods_and_kalle_demos": {
+        "type": "and",
         "conditions": [
           {
-            "item": "Deku Leaf",
-            "type": "item_check"
+            "type": "helper",
+            "name": "can_fan_with_deku_leaf"
           },
           {
-            "conditions": [
-              {
-                "item": "Deku Leaf",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_fly_with_deku_leaf_indoors"
           },
           {
-            "item": "Boomerang",
-            "type": "item_check"
+            "type": "helper",
+            "name": "can_defeat_kalle_demos"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_complete_memory_wind_temple_and_molgera": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "item": "Deku Leaf",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_fly_with_deku_leaf_indoors"
           },
           {
-            "conditions": [
-              {
-                "item": "Hookshot",
-                "type": "item_check"
-              },
-              {
-                "conditions": [
-                  {
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Bombs",
-                          "Boomerang",
-                          "Grappling Hook",
-                          "Skull Hammer"
-                        ]
-                      }
-                    ],
-                    "method": "has_any",
-                    "type": "state_method"
-                  },
-                  {
-                    "name": "has_heros_sword",
-                    "type": "helper"
-                  },
-                  {
-                    "name": "has_heros_bow",
-                    "type": "helper"
-                  }
-                ],
-                "type": "or"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_defeat_molgera"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_cut_down_hanging_drc_platform": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -6977,58 +6024,50 @@
                   "Skull Hammer"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           },
           {
+            "type": "and",
             "conditions": [
               {
-                "item": "Hookshot",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Hookshot"
               },
               {
                 "type": "constant",
                 "value": false
               }
-            ],
-            "type": "and"
+            ]
           },
           {
+            "type": "and",
             "conditions": [
               {
-                "item": "Grappling Hook",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Grappling Hook"
               },
               {
                 "type": "constant",
                 "value": false
               }
-            ],
-            "type": "and"
+            ]
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_cut_down_outset_trees": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -7037,37 +6076,33 @@
                   "Skull Hammer"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           },
           {
+            "type": "and",
             "conditions": [
               {
-                "item": "Power Bracelets",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Power Bracelets"
               },
               {
                 "type": "constant",
                 "value": false
               }
-            ],
-            "type": "and"
+            ]
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_cut_grass": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -7077,24 +6112,20 @@
                   "Skull Hammer"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_armos": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -7104,70 +6135,51 @@
                   "Skull Hammer"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_blue_bubbles": {
+        "type": "or",
         "conditions": [
           {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "item": "Progressive Bow",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "has_ice_arrows"
           },
           {
-            "item": "Bombs",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Bombs"
           },
           {
+            "type": "and",
             "conditions": [
               {
+                "type": "or",
                 "conditions": [
                   {
-                    "item": "Deku Leaf",
-                    "type": "item_check"
+                    "type": "helper",
+                    "name": "can_fan_with_deku_leaf"
                   },
                   {
-                    "item": "Hookshot",
-                    "type": "item_check"
+                    "type": "item_check",
+                    "item": "Hookshot"
                   }
-                ],
-                "type": "or"
+                ]
               },
               {
+                "type": "or",
                 "conditions": [
                   {
+                    "type": "state_method",
+                    "method": "has_any",
                     "args": [
                       {
                         "type": "constant",
@@ -7176,38 +6188,28 @@
                           "Skull Hammer"
                         ]
                       }
-                    ],
-                    "method": "has_any",
-                    "type": "state_method"
+                    ]
                   },
                   {
-                    "count": {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    "item": "Progressive Sword",
-                    "type": "item_check"
+                    "type": "helper",
+                    "name": "has_heros_sword"
                   },
                   {
-                    "count": {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    "item": "Progressive Bow",
-                    "type": "item_check"
+                    "type": "helper",
+                    "name": "has_heros_bow"
                   }
-                ],
-                "type": "or"
+                ]
               }
-            ],
-            "type": "and"
+            ]
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_boko_babas": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -7218,45 +6220,37 @@
                   "Skull Hammer"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           },
           {
+            "type": "and",
             "conditions": [
               {
-                "item": "Deku Leaf",
-                "type": "item_check"
+                "type": "helper",
+                "name": "can_fan_with_deku_leaf"
               },
               {
-                "item": "Grappling Hook",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Grappling Hook"
               }
-            ],
-            "type": "and"
+            ]
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_bokoblins": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -7265,96 +6259,54 @@
                   "Skull Hammer"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_darknuts": {
+        "type": "or",
         "conditions": [
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           },
           {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 3
-                },
-                "item": "Progressive Bow",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "has_light_arrows"
           },
           {
-            "item": "Skull Hammer",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Skull Hammer"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_darknuts_easily": {
+        "type": "or",
         "conditions": [
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           },
           {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 3
-                },
-                "item": "Progressive Bow",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "has_light_arrows"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_door_flowers": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -7364,120 +6316,96 @@
                   "Hookshot"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_floormasters": {
+        "type": "or",
         "conditions": [
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           },
           {
+            "type": "and",
             "conditions": [
               {
-                "item": "Skull Hammer",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Skull Hammer"
               },
               {
                 "type": "constant",
                 "value": false
               }
-            ],
-            "type": "and"
+            ]
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_ganondorf": {
+        "type": "and",
         "conditions": [
           {
+            "type": "or",
             "conditions": [
               {
-                "count": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "item": "Progressive Sword",
-                "type": "item_check"
+                "type": "helper",
+                "name": "has_heros_sword"
               },
               {
                 "type": "constant",
                 "value": false
               }
-            ],
-            "type": "or"
+            ]
           },
           {
+            "type": "or",
             "conditions": [
               {
-                "count": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "item": "Progressive Shield",
-                "type": "item_check"
+                "type": "helper",
+                "name": "has_heros_shield"
               },
               {
+                "type": "and",
                 "conditions": [
                   {
-                    "item": "Skull Hammer",
-                    "type": "item_check"
+                    "type": "item_check",
+                    "item": "Skull Hammer"
                   },
                   {
                     "type": "constant",
                     "value": false
                   }
-                ],
-                "type": "and"
+                ]
               }
-            ],
-            "type": "or"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_defeat_gohdan": {
+        "type": "and",
         "conditions": [
           {
+            "type": "or",
             "conditions": [
               {
-                "count": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "item": "Progressive Bow",
-                "type": "item_check"
+                "type": "helper",
+                "name": "has_heros_bow"
               },
               {
+                "type": "and",
                 "conditions": [
                   {
-                    "item": "Hookshot",
-                    "type": "item_check"
+                    "type": "item_check",
+                    "item": "Hookshot"
                   },
                   {
                     "type": "constant",
@@ -7487,151 +6415,60 @@
                     "type": "constant",
                     "value": false
                   }
-                ],
-                "type": "and"
+                ]
               }
-            ],
-            "type": "or"
+            ]
           },
           {
-            "item": "Bombs",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Bombs"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_defeat_gohma": {
-        "item": "Grappling Hook",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Grappling Hook"
       },
       "can_defeat_green_chuchus": {
-        "conditions": [
-          {
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Bombs",
-                  "Skull Hammer"
-                ]
-              }
-            ],
-            "method": "has_any",
-            "type": "state_method"
-          },
-          {
-            "name": "has_heros_sword",
-            "type": "helper"
-          },
-          {
-            "name": "has_heros_bow",
-            "type": "helper"
-          }
-        ],
-        "type": "or"
+        "type": "helper",
+        "name": "can_defeat_red_chuchus"
       },
       "can_defeat_helmaroc_king": {
-        "item": "Skull Hammer",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Skull Hammer"
       },
       "can_defeat_jalhalla": {
+        "type": "and",
         "conditions": [
           {
+            "type": "or",
             "conditions": [
               {
-                "conditions": [
-                  {
-                    "name": "has_mirror_shield",
-                    "type": "helper"
-                  },
-                  {
-                    "conditions": [
-                      {
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Boomerang",
-                              "Deku Leaf",
-                              "Grappling Hook",
-                              "Hookshot",
-                              "Wind Waker"
-                            ]
-                          }
-                        ],
-                        "method": "has_any",
-                        "type": "state_method"
-                      },
-                      {
-                        "name": "has_heros_sword",
-                        "type": "helper"
-                      },
-                      {
-                        "name": "has_heros_bow",
-                        "type": "helper"
-                      }
-                    ],
-                    "type": "or"
-                  }
-                ],
-                "type": "and"
+                "type": "helper",
+                "name": "can_aim_mirror_shield"
               },
               {
-                "conditions": [
-                  {
-                    "count": {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    "item": "Progressive Bow",
-                    "type": "item_check"
-                  },
-                  {
-                    "name": "has_magic_meter",
-                    "type": "helper"
-                  }
-                ],
-                "type": "and"
+                "type": "helper",
+                "name": "has_light_arrows"
               }
-            ],
-            "type": "or"
+            ]
           },
           {
-            "item": "Power Bracelets",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Power Bracelets"
           },
           {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Bombs",
-                      "Skull Hammer"
-                    ]
-                  }
-                ],
-                "method": "has_any",
-                "type": "state_method"
-              },
-              {
-                "name": "has_heros_sword",
-                "type": "helper"
-              },
-              {
-                "name": "has_heros_bow",
-                "type": "helper"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_defeat_jalhalla_poes"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_defeat_jalhalla_poes": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -7640,67 +6477,50 @@
                   "Skull Hammer"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_kalle_demos": {
-        "item": "Boomerang",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Boomerang"
       },
       "can_defeat_mighty_darknuts": {
+        "type": "or",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "has_heros_sword",
-                "type": "helper"
-              },
-              {
-                "name": "has_light_arrows",
-                "type": "helper"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_defeat_darknuts_easily"
           },
           {
+            "type": "and",
             "conditions": [
               {
-                "item": "Skull Hammer",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Skull Hammer"
               },
               {
                 "type": "constant",
                 "value": false
               }
-            ],
-            "type": "and"
+            ]
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_moblins": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -7709,38 +6529,31 @@
                   "Skull Hammer"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_molgera": {
+        "type": "and",
         "conditions": [
           {
-            "item": "Hookshot",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Hookshot"
           },
           {
+            "type": "or",
             "conditions": [
               {
+                "type": "state_method",
+                "method": "has_any",
                 "args": [
                   {
                     "type": "constant",
@@ -7751,35 +6564,26 @@
                       "Skull Hammer"
                     ]
                   }
-                ],
-                "method": "has_any",
-                "type": "state_method"
+                ]
               },
               {
-                "count": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "item": "Progressive Sword",
-                "type": "item_check"
+                "type": "helper",
+                "name": "has_heros_sword"
               },
               {
-                "count": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "item": "Progressive Bow",
-                "type": "item_check"
+                "type": "helper",
+                "name": "has_heros_bow"
               }
-            ],
-            "type": "or"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_defeat_morths": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -7788,32 +6592,24 @@
                   "Hookshot"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_mothulas": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -7822,32 +6618,24 @@
                   "Skull Hammer"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_peahats": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -7857,131 +6645,99 @@
                   "Skull Hammer"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
+            "type": "and",
             "conditions": [
               {
-                "item": "Hookshot",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Hookshot"
               },
               {
-                "count": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "item": "Progressive Sword",
-                "type": "item_check"
+                "type": "helper",
+                "name": "has_heros_sword"
               }
-            ],
-            "type": "and"
+            ]
           },
           {
+            "type": "and",
             "conditions": [
               {
-                "item": "Deku Leaf",
-                "type": "item_check"
+                "type": "helper",
+                "name": "can_fan_with_deku_leaf"
               },
               {
-                "count": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "item": "Progressive Sword",
-                "type": "item_check"
+                "type": "helper",
+                "name": "has_heros_sword"
               }
-            ],
-            "type": "and"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_phantom_ganon": {
+        "type": "or",
         "conditions": [
           {
+            "type": "and",
             "conditions": [
               {
-                "operand": {
-                  "type": "constant",
-                  "value": false
-                },
-                "type": "not"
+                "type": "constant",
+                "value": true
               },
               {
-                "count": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "item": "Progressive Sword",
-                "type": "item_check"
+                "type": "helper",
+                "name": "has_any_master_sword"
               }
-            ],
-            "type": "and"
+            ]
           },
           {
+            "type": "and",
             "conditions": [
               {
                 "type": "constant",
                 "value": false
               },
               {
-                "item": "Skull Hammer",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Skull Hammer"
               }
-            ],
-            "type": "and"
+            ]
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_puppet_ganon": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 3
-                },
-                "item": "Progressive Bow",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "has_light_arrows"
           },
           {
+            "type": "or",
             "conditions": [
               {
-                "item": "Boomerang",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Boomerang"
               },
               {
                 "type": "constant",
                 "value": false
               }
-            ],
-            "type": "or"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_defeat_red_bubbles": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -7990,54 +6746,46 @@
                   "Skull Hammer"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           },
           {
+            "type": "and",
             "conditions": [
               {
+                "type": "or",
                 "conditions": [
                   {
-                    "item": "Deku Leaf",
-                    "type": "item_check"
+                    "type": "helper",
+                    "name": "can_fan_with_deku_leaf"
                   },
                   {
-                    "item": "Hookshot",
-                    "type": "item_check"
+                    "type": "item_check",
+                    "item": "Hookshot"
                   }
-                ],
-                "type": "or"
+                ]
               },
               {
-                "item": "Grappling Hook",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Grappling Hook"
               }
-            ],
-            "type": "and"
+            ]
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_red_chuchus": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -8046,32 +6794,24 @@
                   "Skull Hammer"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_stalfos": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -8080,41 +6820,24 @@
                   "Skull Hammer"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           },
           {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 3
-                },
-                "item": "Progressive Bow",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "has_light_arrows"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_winged_mothulas": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -8123,32 +6846,24 @@
                   "Skull Hammer"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_wizzrobes": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -8158,32 +6873,24 @@
                   "Skull Hammer"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_defeat_yellow_chuchus": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -8192,65 +6899,48 @@
                   "Skull Hammer"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
+            "type": "and",
             "conditions": [
               {
-                "item": "Boomerang",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Boomerang"
               },
               {
-                "count": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "item": "Progressive Sword",
-                "type": "item_check"
+                "type": "helper",
+                "name": "has_heros_sword"
               }
-            ],
-            "type": "and"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           },
           {
+            "type": "and",
             "conditions": [
               {
-                "item": "Deku Leaf",
-                "type": "item_check"
+                "type": "helper",
+                "name": "can_fan_with_deku_leaf"
               },
               {
-                "count": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "item": "Progressive Sword",
-                "type": "item_check"
+                "type": "helper",
+                "name": "has_heros_sword"
               }
-            ],
-            "type": "and"
+            ]
           },
           {
+            "type": "and",
             "conditions": [
               {
-                "item": "Grappling Hook",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Grappling Hook"
               },
               {
-                "count": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "item": "Progressive Sword",
-                "type": "item_check"
+                "type": "helper",
+                "name": "has_heros_sword"
               },
               {
                 "type": "constant",
@@ -8260,15 +6950,16 @@
                 "type": "constant",
                 "value": false
               }
-            ],
-            "type": "and"
+            ]
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_destroy_seeds_hanging_by_vines": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -8278,123 +6969,70 @@
                   "Hookshot"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_fan_with_deku_leaf": {
-        "item": "Deku Leaf",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Deku Leaf"
       },
       "can_fly_with_deku_leaf_indoors": {
+        "type": "and",
         "conditions": [
           {
-            "item": "Deku Leaf",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Deku Leaf"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Magic Meter",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_magic_meter"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_fly_with_deku_leaf_outdoors": {
+        "type": "and",
         "conditions": [
           {
-            "item": "Deku Leaf",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Deku Leaf"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Magic Meter",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_magic_meter"
           },
           {
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Wind Waker",
-                  "Wind's Requiem"
-                ]
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            "type": "helper",
+            "name": "can_play_winds_requiem"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_get_inside_forsaken_fortress": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "item": "Bombs",
-                "type": "item_check"
-              },
-              {
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": false
-                  },
-                  {
-                    "type": "constant",
-                    "value": false
-                  }
-                ],
-                "type": "and"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "can_open_ganons_tower_dark_portal",
-                    "type": "helper"
-                  },
-                  {
-                    "type": "constant",
-                    "value": false
-                  }
-                ],
-                "type": "and"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_get_past_forsaken_fortress_gate"
           },
           {
-            "item": "Skull Hammer",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Skull Hammer"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_get_past_forsaken_fortress_gate": {
+        "type": "or",
         "conditions": [
           {
-            "item": "Bombs",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Bombs"
           },
           {
+            "type": "and",
             "conditions": [
               {
                 "type": "constant",
@@ -8404,61 +7042,48 @@
                 "type": "constant",
                 "value": false
               }
-            ],
-            "type": "and"
+            ]
           },
           {
+            "type": "and",
             "conditions": [
               {
-                "conditions": [
-                  {
-                    "name": "can_reach_ganons_tower_phantom_ganon_room",
-                    "type": "helper"
-                  },
-                  {
-                    "item": "Boomerang",
-                    "type": "item_check"
-                  }
-                ],
-                "type": "and"
+                "type": "helper",
+                "name": "can_open_ganons_tower_dark_portal"
               },
               {
                 "type": "constant",
                 "value": false
               }
-            ],
-            "type": "and"
+            ]
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_get_past_hyrule_barrier": {
+        "type": "and",
         "conditions": [
           {
-            "name": "has_all_8_triforce_shards",
-            "type": "helper"
+            "type": "helper",
+            "name": "can_access_hyrule"
           },
           {
+            "type": "or",
             "conditions": [
               {
-                "count": {
-                  "type": "constant",
-                  "value": 4
-                },
-                "item": "Progressive Sword",
-                "type": "item_check"
+                "type": "helper",
+                "name": "has_full_power_master_sword"
               },
               {
                 "type": "constant",
                 "value": false
               }
-            ],
-            "type": "or"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_move_boulders": {
+        "type": "state_method",
+        "method": "has_any",
         "args": [
           {
             "type": "constant",
@@ -8467,198 +7092,54 @@
               "Power Bracelets"
             ]
           }
-        ],
-        "method": "has_any",
-        "type": "state_method"
+        ]
       },
       "can_open_ganons_tower_dark_portal": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_access_ganons_tower",
-                "type": "helper"
-              },
-              {
-                "name": "can_unlock_ganons_tower_four_boss_door",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_ganons_tower_phantom_ganon_room"
           },
           {
-            "item": "Boomerang",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Boomerang"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_open_wind_temple_lower_giant_grate": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_play_command_melody",
-                "type": "helper"
-              },
-              {
-                "item": "Iron Boots",
-                "type": "item_check"
-              },
-              {
-                "name": "can_fly_with_deku_leaf_indoors",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_wind_temple_kidnapping_room"
           },
           {
-            "item": "Hookshot",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Hookshot"
           },
           {
-            "conditions": [
-              {
-                "name": "has_ice_arrows",
-                "type": "helper"
-              },
-              {
-                "item": "Bombs",
-                "type": "item_check"
-              },
-              {
-                "conditions": [
-                  {
-                    "conditions": [
-                      {
-                        "name": "can_fan_with_deku_leaf",
-                        "type": "helper"
-                      },
-                      {
-                        "item": "Hookshot",
-                        "type": "item_check"
-                      }
-                    ],
-                    "type": "or"
-                  },
-                  {
-                    "conditions": [
-                      {
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Grappling Hook",
-                              "Skull Hammer"
-                            ]
-                          }
-                        ],
-                        "method": "has_any",
-                        "type": "state_method"
-                      },
-                      {
-                        "name": "has_heros_sword",
-                        "type": "helper"
-                      },
-                      {
-                        "name": "has_heros_bow",
-                        "type": "helper"
-                      }
-                    ],
-                    "type": "or"
-                  }
-                ],
-                "type": "and"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_defeat_blue_bubbles"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_open_wind_temple_upper_giant_grate": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_reach_wind_temple_kidnapping_room",
-                "type": "helper"
-              },
-              {
-                "conditions": [
-                  {
-                    "conditions": [
-                      {
-                        "item": "Iron Boots",
-                        "type": "item_check"
-                      },
-                      {
-                        "name": "can_fan_with_deku_leaf",
-                        "type": "helper"
-                      },
-                      {
-                        "name": "can_fly_with_deku_leaf_indoors",
-                        "type": "helper"
-                      },
-                      {
-                        "name": "can_cut_grass",
-                        "type": "helper"
-                      }
-                    ],
-                    "type": "and"
-                  },
-                  {
-                    "conditions": [
-                      {
-                        "item": "Hookshot",
-                        "type": "item_check"
-                      },
-                      {
-                        "name": "can_defeat_blue_bubbles",
-                        "type": "helper"
-                      },
-                      {
-                        "name": "can_fly_with_deku_leaf_indoors",
-                        "type": "helper"
-                      }
-                    ],
-                    "type": "and"
-                  },
-                  {
-                    "conditions": [
-                      {
-                        "item": "Hookshot",
-                        "type": "item_check"
-                      },
-                      {
-                        "name": "can_fly_with_deku_leaf_indoors",
-                        "type": "helper"
-                      },
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "type": "constant",
-                        "value": false
-                      }
-                    ],
-                    "type": "and"
-                  }
-                ],
-                "type": "or"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_end_of_wind_temple_many_cyclones_room"
           },
           {
-            "item": "Iron Boots",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Iron Boots"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_play_command_melody": {
+        "type": "state_method",
+        "method": "has_all",
         "args": [
           {
             "type": "constant",
@@ -8667,11 +7148,11 @@
               "Wind Waker"
             ]
           }
-        ],
-        "method": "has_all",
-        "type": "state_method"
+        ]
       },
       "can_play_earth_gods_lyric": {
+        "type": "state_method",
+        "method": "has_all",
         "args": [
           {
             "type": "constant",
@@ -8680,11 +7161,11 @@
               "Wind Waker"
             ]
           }
-        ],
-        "method": "has_all",
-        "type": "state_method"
+        ]
       },
       "can_play_wind_gods_aria": {
+        "type": "state_method",
+        "method": "has_all",
         "args": [
           {
             "type": "constant",
@@ -8693,11 +7174,11 @@
               "Wind Waker"
             ]
           }
-        ],
-        "method": "has_all",
-        "type": "state_method"
+        ]
       },
       "can_play_winds_requiem": {
+        "type": "state_method",
+        "method": "has_all",
         "args": [
           {
             "type": "constant",
@@ -8706,34 +7187,18 @@
               "Wind's Requiem"
             ]
           }
-        ],
-        "method": "has_all",
-        "type": "state_method"
+        ]
       },
       "can_reach_and_defeat_ganondorf": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_reach_ganons_tower_phantom_ganon_room",
-                "type": "helper"
-              },
-              {
-                "name": "has_light_arrows",
-                "type": "helper"
-              },
-              {
-                "name": "can_unlock_puppet_ganon_door",
-                "type": "helper"
-              },
-              {
-                "name": "can_defeat_puppet_ganon",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_and_defeat_puppet_ganon"
           },
           {
+            "type": "state_method",
+            "method": "has_all",
             "args": [
               {
                 "type": "constant",
@@ -8742,235 +7207,65 @@
                   "Hookshot"
                 ]
               }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            ]
           },
           {
-            "conditions": [
-              {
-                "conditions": [
-                  {
-                    "name": "has_heros_sword",
-                    "type": "helper"
-                  },
-                  {
-                    "type": "constant",
-                    "value": false
-                  }
-                ],
-                "type": "or"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "has_heros_shield",
-                    "type": "helper"
-                  },
-                  {
-                    "conditions": [
-                      {
-                        "item": "Skull Hammer",
-                        "type": "item_check"
-                      },
-                      {
-                        "type": "constant",
-                        "value": false
-                      }
-                    ],
-                    "type": "and"
-                  }
-                ],
-                "type": "or"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_defeat_ganondorf"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_reach_and_defeat_phantom_ganon": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "item": "Bombs",
-                "type": "item_check"
-              },
-              {
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": false
-                  },
-                  {
-                    "type": "constant",
-                    "value": false
-                  }
-                ],
-                "type": "and"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "can_open_ganons_tower_dark_portal",
-                    "type": "helper"
-                  },
-                  {
-                    "type": "constant",
-                    "value": false
-                  }
-                ],
-                "type": "and"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_get_past_forsaken_fortress_gate"
           },
           {
-            "conditions": [
-              {
-                "conditions": [
-                  {
-                    "operand": {
-                      "type": "constant",
-                      "value": false
-                    },
-                    "type": "not"
-                  },
-                  {
-                    "name": "has_any_master_sword",
-                    "type": "helper"
-                  }
-                ],
-                "type": "and"
-              },
-              {
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": false
-                  },
-                  {
-                    "item": "Skull Hammer",
-                    "type": "item_check"
-                  }
-                ],
-                "type": "and"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_defeat_phantom_ganon"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_reach_and_defeat_puppet_ganon": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_access_ganons_tower",
-                "type": "helper"
-              },
-              {
-                "name": "can_unlock_ganons_tower_four_boss_door",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_ganons_tower_phantom_ganon_room"
           },
           {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 3
-                },
-                "item": "Progressive Bow",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "has_light_arrows"
           },
           {
-            "conditions": [
-              {
-                "name": "can_defeat_moblins",
-                "type": "helper"
-              },
-              {
-                "name": "can_defeat_mighty_darknuts",
-                "type": "helper"
-              },
-              {
-                "conditions": [
-                  {
-                    "operand": {
-                      "type": "constant",
-                      "value": false
-                    },
-                    "type": "not"
-                  },
-                  {
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      }
-                    ],
-                    "type": "and"
-                  }
-                ],
-                "type": "or"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_unlock_puppet_ganon_door"
           },
           {
-            "conditions": [
-              {
-                "name": "has_light_arrows",
-                "type": "helper"
-              },
-              {
-                "conditions": [
-                  {
-                    "item": "Boomerang",
-                    "type": "item_check"
-                  },
-                  {
-                    "type": "constant",
-                    "value": false
-                  }
-                ],
-                "type": "or"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_defeat_puppet_ganon"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_reach_dragon_roost_cavern_boss_stairs": {
+        "type": "and",
         "conditions": [
           {
+            "type": "item_check",
+            "item": "DRC Small Key",
             "count": {
               "type": "constant",
               "value": 4
-            },
-            "item": "DRC Small Key",
-            "type": "item_check"
+            }
           },
           {
+            "type": "or",
             "conditions": [
               {
+                "type": "state_method",
+                "method": "has_any",
                 "args": [
                   {
                     "type": "constant",
@@ -8979,163 +7274,66 @@
                       "Hookshot"
                     ]
                   }
-                ],
-                "method": "has_any",
-                "type": "state_method"
+                ]
               },
               {
-                "conditions": [
-                  {
-                    "item": "Deku Leaf",
-                    "type": "item_check"
-                  },
-                  {
-                    "name": "has_magic_meter",
-                    "type": "helper"
-                  }
-                ],
-                "type": "and"
+                "type": "helper",
+                "name": "can_fly_with_deku_leaf_indoors"
               },
               {
-                "conditions": [
-                  {
-                    "count": {
-                      "type": "constant",
-                      "value": 2
-                    },
-                    "item": "Progressive Bow",
-                    "type": "item_check"
-                  },
-                  {
-                    "name": "has_magic_meter",
-                    "type": "helper"
-                  }
-                ],
-                "type": "and"
+                "type": "helper",
+                "name": "has_ice_arrows"
               }
-            ],
-            "type": "or"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_reach_dragon_roost_cavern_gaping_maw": {
+        "type": "and",
         "conditions": [
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "DRC Small Key",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "DRC Small Key"
           },
           {
+            "type": "or",
             "conditions": [
               {
+                "type": "and",
                 "conditions": [
                   {
+                    "type": "item_check",
+                    "item": "DRC Small Key",
                     "count": {
                       "type": "constant",
                       "value": 4
-                    },
-                    "item": "DRC Small Key",
-                    "type": "item_check"
+                    }
                   },
                   {
-                    "conditions": [
-                      {
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Bombs",
-                              "Skull Hammer"
-                            ]
-                          }
-                        ],
-                        "method": "has_any",
-                        "type": "state_method"
-                      },
-                      {
-                        "name": "has_heros_sword",
-                        "type": "helper"
-                      },
-                      {
-                        "name": "has_heros_bow",
-                        "type": "helper"
-                      },
-                      {
-                        "conditions": [
-                          {
-                            "item": "Hookshot",
-                            "type": "item_check"
-                          },
-                          {
-                            "type": "constant",
-                            "value": false
-                          }
-                        ],
-                        "type": "and"
-                      },
-                      {
-                        "conditions": [
-                          {
-                            "item": "Grappling Hook",
-                            "type": "item_check"
-                          },
-                          {
-                            "type": "constant",
-                            "value": false
-                          }
-                        ],
-                        "type": "and"
-                      }
-                    ],
-                    "type": "or"
+                    "type": "helper",
+                    "name": "can_cut_down_hanging_drc_platform"
                   }
-                ],
-                "type": "and"
+                ]
               },
               {
+                "type": "and",
                 "conditions": [
                   {
-                    "conditions": [
-                      {
-                        "item": "Deku Leaf",
-                        "type": "item_check"
-                      },
-                      {
-                        "name": "has_magic_meter",
-                        "type": "helper"
-                      }
-                    ],
-                    "type": "and"
+                    "type": "helper",
+                    "name": "can_fly_with_deku_leaf_indoors"
                   },
                   {
                     "type": "constant",
                     "value": false
                   }
-                ],
-                "type": "and"
+                ]
               },
               {
+                "type": "and",
                 "conditions": [
                   {
-                    "conditions": [
-                      {
-                        "count": {
-                          "type": "constant",
-                          "value": 2
-                        },
-                        "item": "Progressive Bow",
-                        "type": "item_check"
-                      },
-                      {
-                        "name": "has_magic_meter",
-                        "type": "helper"
-                      }
-                    ],
-                    "type": "and"
+                    "type": "helper",
+                    "name": "has_ice_arrows"
                   },
                   {
                     "type": "constant",
@@ -9145,495 +7343,167 @@
                     "type": "constant",
                     "value": false
                   }
-                ],
-                "type": "and"
-              }
-            ],
-            "type": "or"
-          }
-        ],
-        "type": "and"
-      },
-      "can_reach_earth_temple_basement": {
-        "conditions": [
-          {
-            "conditions": [
-              {
-                "name": "can_play_command_melody",
-                "type": "helper"
-              },
-              {
-                "name": "can_defeat_red_chuchus",
-                "type": "helper"
-              },
-              {
-                "name": "can_defeat_green_chuchus",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
-          },
-          {
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Command Melody",
-                  "Wind Waker"
                 ]
               }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          {
-            "conditions": [
-              {
-                "name": "has_mirror_shield",
-                "type": "helper"
-              },
-              {
-                "conditions": [
-                  {
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Boomerang",
-                          "Deku Leaf",
-                          "Grappling Hook",
-                          "Hookshot",
-                          "Wind Waker"
-                        ]
-                      }
-                    ],
-                    "method": "has_any",
-                    "type": "state_method"
-                  },
-                  {
-                    "name": "has_heros_sword",
-                    "type": "helper"
-                  },
-                  {
-                    "name": "has_heros_bow",
-                    "type": "helper"
-                  }
-                ],
-                "type": "or"
-              }
-            ],
-            "type": "and"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
-      "can_reach_earth_temple_left_path": {
+      "can_reach_earth_temple_basement": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_play_command_melody",
-                "type": "helper"
-              },
-              {
-                "name": "can_defeat_red_chuchus",
-                "type": "helper"
-              },
-              {
-                "name": "can_defeat_green_chuchus",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_earth_temple_sun_statue_room"
           },
           {
+            "type": "helper",
+            "name": "can_play_command_melody"
+          },
+          {
+            "type": "helper",
+            "name": "can_aim_mirror_shield"
+          }
+        ]
+      },
+      "can_reach_earth_temple_left_path": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "can_reach_earth_temple_sun_statue_room"
+          },
+          {
+            "type": "item_check",
+            "item": "ET Small Key",
             "count": {
               "type": "constant",
               "value": 2
-            },
-            "item": "ET Small Key",
-            "type": "item_check"
+            }
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_reach_earth_temple_many_mirrors_room": {
-        "conditions": [
-          {
-            "name": "can_reach_earth_temple_third_crypt",
-            "type": "helper"
-          },
-          {
-            "name": "can_play_earth_gods_lyric",
-            "type": "helper"
-          }
-        ],
-        "type": "and"
+        "type": "helper",
+        "name": "can_reach_earth_temple_tall_vine_room"
       },
       "can_reach_earth_temple_moblins_and_poes_room": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_reach_earth_temple_sun_statue_room",
-                "type": "helper"
-              },
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "item": "ET Small Key",
-                "type": "item_check"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_earth_temple_left_path"
           },
           {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "item": "Progressive Bow",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "has_fire_arrows"
           },
           {
-            "item": "Power Bracelets",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Power Bracelets"
           },
           {
-            "conditions": [
-              {
-                "name": "has_heros_sword",
-                "type": "helper"
-              },
-              {
-                "name": "has_heros_bow",
-                "type": "helper"
-              },
-              {
-                "conditions": [
-                  {
-                    "item": "Skull Hammer",
-                    "type": "item_check"
-                  },
-                  {
-                    "type": "constant",
-                    "value": false
-                  }
-                ],
-                "type": "and"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_defeat_floormasters"
           },
           {
+            "type": "or",
             "conditions": [
               {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Command Melody",
-                      "Wind Waker"
-                    ]
-                  }
-                ],
-                "method": "has_all",
-                "type": "state_method"
+                "type": "helper",
+                "name": "can_play_command_melody"
               },
               {
-                "count": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "item": "Progressive Shield",
-                "type": "item_check"
+                "type": "helper",
+                "name": "has_mirror_shield"
               }
-            ],
-            "type": "or"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_reach_earth_temple_redead_hub_room": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_reach_earth_temple_sun_statue_room",
-                "type": "helper"
-              },
-              {
-                "name": "can_play_command_melody",
-                "type": "helper"
-              },
-              {
-                "name": "can_aim_mirror_shield",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_earth_temple_basement"
           },
           {
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Earth God's Lyric",
-                  "Wind Waker"
-                ]
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            "type": "helper",
+            "name": "can_play_earth_gods_lyric"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_reach_earth_temple_right_path": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_play_command_melody",
-                "type": "helper"
-              },
-              {
-                "name": "can_defeat_red_chuchus",
-                "type": "helper"
-              },
-              {
-                "name": "can_defeat_green_chuchus",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_earth_temple_sun_statue_room"
           },
           {
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Command Melody",
-                  "Wind Waker"
-                ]
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            "type": "helper",
+            "name": "can_play_command_melody"
           },
           {
-            "item": "Skull Hammer",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Skull Hammer"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_reach_earth_temple_sun_statue_room": {
+        "type": "and",
         "conditions": [
           {
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Command Melody",
-                  "Wind Waker"
-                ]
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            "type": "helper",
+            "name": "can_play_command_melody"
           },
           {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Bombs",
-                      "Skull Hammer"
-                    ]
-                  }
-                ],
-                "method": "has_any",
-                "type": "state_method"
-              },
-              {
-                "name": "has_heros_sword",
-                "type": "helper"
-              },
-              {
-                "name": "has_heros_bow",
-                "type": "helper"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_defeat_red_chuchus"
           },
           {
-            "name": "can_defeat_red_chuchus",
-            "type": "helper"
+            "type": "helper",
+            "name": "can_defeat_green_chuchus"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_reach_earth_temple_tall_vine_room": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_reach_earth_temple_redead_hub_room",
-                "type": "helper"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "can_play_command_melody",
-                    "type": "helper"
-                  },
-                  {
-                    "name": "can_aim_mirror_shield",
-                    "type": "helper"
-                  }
-                ],
-                "type": "or"
-              },
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": {
-                      "ET Small Key": 3,
-                      "Power Bracelets": 1,
-                      "Skull Hammer": 1
-                    }
-                  }
-                ],
-                "method": "has_all_counts",
-                "type": "state_method"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "can_defeat_red_bubbles",
-                    "type": "helper"
-                  },
-                  {
-                    "type": "constant",
-                    "value": false
-                  }
-                ],
-                "type": "or"
-              },
-              {
-                "name": "can_play_command_melody",
-                "type": "helper"
-              },
-              {
-                "name": "can_aim_mirror_shield",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_earth_temple_third_crypt"
           },
           {
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Earth God's Lyric",
-                  "Wind Waker"
-                ]
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            "type": "helper",
+            "name": "can_play_earth_gods_lyric"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_reach_earth_temple_third_crypt": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_reach_earth_temple_basement",
-                "type": "helper"
-              },
-              {
-                "name": "can_play_earth_gods_lyric",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_earth_temple_redead_hub_room"
           },
           {
+            "type": "or",
             "conditions": [
               {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Command Melody",
-                      "Wind Waker"
-                    ]
-                  }
-                ],
-                "method": "has_all",
-                "type": "state_method"
+                "type": "helper",
+                "name": "can_play_command_melody"
               },
               {
-                "conditions": [
-                  {
-                    "name": "has_mirror_shield",
-                    "type": "helper"
-                  },
-                  {
-                    "conditions": [
-                      {
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Boomerang",
-                              "Deku Leaf",
-                              "Grappling Hook",
-                              "Hookshot",
-                              "Wind Waker"
-                            ]
-                          }
-                        ],
-                        "method": "has_any",
-                        "type": "state_method"
-                      },
-                      {
-                        "name": "has_heros_sword",
-                        "type": "helper"
-                      },
-                      {
-                        "name": "has_heros_bow",
-                        "type": "helper"
-                      }
-                    ],
-                    "type": "or"
-                  }
-                ],
-                "type": "and"
+                "type": "helper",
+                "name": "can_aim_mirror_shield"
               }
-            ],
-            "type": "or"
+            ]
           },
           {
+            "type": "state_method",
+            "method": "has_all_counts",
             "args": [
               {
                 "type": "constant",
@@ -9643,288 +7513,89 @@
                   "Skull Hammer": 1
                 }
               }
-            ],
-            "method": "has_all_counts",
-            "type": "state_method"
+            ]
           },
           {
+            "type": "or",
             "conditions": [
               {
-                "conditions": [
-                  {
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Bombs",
-                          "Skull Hammer"
-                        ]
-                      }
-                    ],
-                    "method": "has_any",
-                    "type": "state_method"
-                  },
-                  {
-                    "name": "has_heros_sword",
-                    "type": "helper"
-                  },
-                  {
-                    "name": "has_heros_bow",
-                    "type": "helper"
-                  },
-                  {
-                    "conditions": [
-                      {
-                        "conditions": [
-                          {
-                            "name": "can_fan_with_deku_leaf",
-                            "type": "helper"
-                          },
-                          {
-                            "item": "Hookshot",
-                            "type": "item_check"
-                          }
-                        ],
-                        "type": "or"
-                      },
-                      {
-                        "item": "Grappling Hook",
-                        "type": "item_check"
-                      }
-                    ],
-                    "type": "and"
-                  }
-                ],
-                "type": "or"
+                "type": "helper",
+                "name": "can_defeat_red_bubbles"
               },
               {
                 "type": "constant",
                 "value": false
               }
-            ],
-            "type": "or"
+            ]
           },
           {
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Command Melody",
-                  "Wind Waker"
-                ]
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            "type": "helper",
+            "name": "can_play_command_melody"
           },
           {
-            "conditions": [
-              {
-                "name": "has_mirror_shield",
-                "type": "helper"
-              },
-              {
-                "conditions": [
-                  {
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Boomerang",
-                          "Deku Leaf",
-                          "Grappling Hook",
-                          "Hookshot",
-                          "Wind Waker"
-                        ]
-                      }
-                    ],
-                    "method": "has_any",
-                    "type": "state_method"
-                  },
-                  {
-                    "name": "has_heros_sword",
-                    "type": "helper"
-                  },
-                  {
-                    "name": "has_heros_bow",
-                    "type": "helper"
-                  }
-                ],
-                "type": "or"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_aim_mirror_shield"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_reach_end_of_wind_temple_many_cyclones_room": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_play_command_melody",
-                "type": "helper"
-              },
-              {
-                "item": "Iron Boots",
-                "type": "item_check"
-              },
-              {
-                "name": "can_fly_with_deku_leaf_indoors",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_wind_temple_kidnapping_room"
           },
           {
+            "type": "or",
             "conditions": [
               {
+                "type": "and",
                 "conditions": [
                   {
-                    "item": "Iron Boots",
-                    "type": "item_check"
+                    "type": "item_check",
+                    "item": "Iron Boots"
                   },
                   {
-                    "item": "Deku Leaf",
-                    "type": "item_check"
+                    "type": "helper",
+                    "name": "can_fan_with_deku_leaf"
                   },
                   {
-                    "conditions": [
-                      {
-                        "item": "Deku Leaf",
-                        "type": "item_check"
-                      },
-                      {
-                        "name": "has_magic_meter",
-                        "type": "helper"
-                      }
-                    ],
-                    "type": "and"
+                    "type": "helper",
+                    "name": "can_fly_with_deku_leaf_indoors"
                   },
                   {
-                    "conditions": [
-                      {
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Bombs",
-                              "Boomerang",
-                              "Skull Hammer"
-                            ]
-                          }
-                        ],
-                        "method": "has_any",
-                        "type": "state_method"
-                      },
-                      {
-                        "name": "has_heros_sword",
-                        "type": "helper"
-                      }
-                    ],
-                    "type": "or"
+                    "type": "helper",
+                    "name": "can_cut_grass"
                   }
-                ],
-                "type": "and"
+                ]
               },
               {
+                "type": "and",
                 "conditions": [
                   {
-                    "item": "Hookshot",
-                    "type": "item_check"
+                    "type": "item_check",
+                    "item": "Hookshot"
                   },
                   {
-                    "conditions": [
-                      {
-                        "name": "has_ice_arrows",
-                        "type": "helper"
-                      },
-                      {
-                        "item": "Bombs",
-                        "type": "item_check"
-                      },
-                      {
-                        "conditions": [
-                          {
-                            "conditions": [
-                              {
-                                "name": "can_fan_with_deku_leaf",
-                                "type": "helper"
-                              },
-                              {
-                                "item": "Hookshot",
-                                "type": "item_check"
-                              }
-                            ],
-                            "type": "or"
-                          },
-                          {
-                            "conditions": [
-                              {
-                                "args": [
-                                  {
-                                    "type": "constant",
-                                    "value": [
-                                      "Grappling Hook",
-                                      "Skull Hammer"
-                                    ]
-                                  }
-                                ],
-                                "method": "has_any",
-                                "type": "state_method"
-                              },
-                              {
-                                "name": "has_heros_sword",
-                                "type": "helper"
-                              },
-                              {
-                                "name": "has_heros_bow",
-                                "type": "helper"
-                              }
-                            ],
-                            "type": "or"
-                          }
-                        ],
-                        "type": "and"
-                      }
-                    ],
-                    "type": "or"
+                    "type": "helper",
+                    "name": "can_defeat_blue_bubbles"
                   },
                   {
-                    "conditions": [
-                      {
-                        "item": "Deku Leaf",
-                        "type": "item_check"
-                      },
-                      {
-                        "name": "has_magic_meter",
-                        "type": "helper"
-                      }
-                    ],
-                    "type": "and"
+                    "type": "helper",
+                    "name": "can_fly_with_deku_leaf_indoors"
                   }
-                ],
-                "type": "and"
+                ]
               },
               {
+                "type": "and",
                 "conditions": [
                   {
-                    "item": "Hookshot",
-                    "type": "item_check"
+                    "type": "item_check",
+                    "item": "Hookshot"
                   },
                   {
-                    "conditions": [
-                      {
-                        "item": "Deku Leaf",
-                        "type": "item_check"
-                      },
-                      {
-                        "name": "has_magic_meter",
-                        "type": "helper"
-                      }
-                    ],
-                    "type": "and"
+                    "type": "helper",
+                    "name": "can_fly_with_deku_leaf_indoors"
                   },
                   {
                     "type": "constant",
@@ -9934,124 +7605,53 @@
                     "type": "constant",
                     "value": false
                   }
-                ],
-                "type": "and"
+                ]
               }
-            ],
-            "type": "or"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_reach_ganons_tower_phantom_ganon_room": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_get_past_hyrule_barrier",
-                "type": "helper"
-              },
-              {
-                "conditions": [
-                  {
-                    "item": "Hookshot",
-                    "type": "item_check"
-                  },
-                  {
-                    "name": "can_fly_with_deku_leaf_indoors",
-                    "type": "helper"
-                  }
-                ],
-                "type": "or"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_access_ganons_tower"
           },
           {
-            "conditions": [
-              {
-                "name": "can_complete_all_memory_dungeons_and_bosses",
-                "type": "helper"
-              },
-              {
-                "type": "constant",
-                "value": true
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_unlock_ganons_tower_four_boss_door"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_reach_outset_island_upper_level": {
+        "type": "or",
         "conditions": [
           {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Boomerang",
-                      "Skull Hammer"
-                    ]
-                  }
-                ],
-                "method": "has_any",
-                "type": "state_method"
-              },
-              {
-                "name": "has_heros_sword",
-                "type": "helper"
-              },
-              {
-                "conditions": [
-                  {
-                    "item": "Power Bracelets",
-                    "type": "item_check"
-                  },
-                  {
-                    "type": "constant",
-                    "value": false
-                  }
-                ],
-                "type": "and"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_cut_down_outset_trees"
           },
           {
+            "type": "and",
             "conditions": [
               {
-                "conditions": [
-                  {
-                    "item": "Deku Leaf",
-                    "type": "item_check"
-                  },
-                  {
-                    "name": "has_magic_meter",
-                    "type": "helper"
-                  },
-                  {
-                    "name": "can_play_winds_requiem",
-                    "type": "helper"
-                  }
-                ],
-                "type": "and"
+                "type": "helper",
+                "name": "can_fly_with_deku_leaf_outdoors"
               },
               {
                 "type": "constant",
                 "value": false
               }
-            ],
-            "type": "and"
+            ]
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_reach_tower_of_the_gods_second_floor": {
+        "type": "and",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_all",
             "args": [
               {
                 "type": "constant",
@@ -10060,250 +7660,79 @@
                   "TotG Small Key"
                 ]
               }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            ]
           },
           {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Bombs",
-                      "Skull Hammer"
-                    ]
-                  }
-                ],
-                "method": "has_any",
-                "type": "state_method"
-              },
-              {
-                "conditions": [
-                  {
-                    "item": "Boomerang",
-                    "type": "item_check"
-                  },
-                  {
-                    "name": "has_heros_sword",
-                    "type": "helper"
-                  }
-                ],
-                "type": "and"
-              },
-              {
-                "name": "has_heros_bow",
-                "type": "helper"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "can_fan_with_deku_leaf",
-                    "type": "helper"
-                  },
-                  {
-                    "name": "has_heros_sword",
-                    "type": "helper"
-                  }
-                ],
-                "type": "and"
-              },
-              {
-                "conditions": [
-                  {
-                    "item": "Grappling Hook",
-                    "type": "item_check"
-                  },
-                  {
-                    "name": "has_heros_sword",
-                    "type": "helper"
-                  },
-                  {
-                    "type": "constant",
-                    "value": false
-                  },
-                  {
-                    "type": "constant",
-                    "value": false
-                  }
-                ],
-                "type": "and"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_defeat_yellow_chuchus"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_reach_tower_of_the_gods_third_floor": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Bombs",
-                      "TotG Small Key"
-                    ]
-                  }
-                ],
-                "method": "has_all",
-                "type": "state_method"
-              },
-              {
-                "name": "can_defeat_yellow_chuchus",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_reach_tower_of_the_gods_second_floor"
           },
           {
-            "conditions": [
-              {
-                "conditions": [
-                  {
-                    "item": "Grappling Hook",
-                    "type": "item_check"
-                  },
-                  {
-                    "name": "can_fly_with_deku_leaf_indoors",
-                    "type": "helper"
-                  }
-                ],
-                "type": "or"
-              },
-              {
-                "name": "can_play_command_melody",
-                "type": "helper"
-              },
-              {
-                "name": "has_heros_bow",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_bring_west_servant_of_the_tower"
           },
           {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "item": "TotG Small Key",
-                "type": "item_check"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "can_fly_with_deku_leaf_indoors",
-                    "type": "helper"
-                  },
-                  {
-                    "type": "constant",
-                    "value": false
-                  }
-                ],
-                "type": "or"
-              },
-              {
-                "name": "can_play_command_melody",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_bring_north_servant_of_the_tower"
           },
           {
-            "item": "Wind Waker",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Wind Waker"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_reach_wind_temple_kidnapping_room": {
+        "type": "and",
         "conditions": [
           {
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Command Melody",
-                  "Wind Waker"
-                ]
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            "type": "helper",
+            "name": "can_play_command_melody"
           },
           {
-            "item": "Iron Boots",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Iron Boots"
           },
           {
-            "conditions": [
-              {
-                "item": "Deku Leaf",
-                "type": "item_check"
-              },
-              {
-                "name": "has_magic_meter",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_fly_with_deku_leaf_indoors"
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_reach_wind_temple_tall_basement_room": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_reach_end_of_wind_temple_many_cyclones_room",
-                "type": "helper"
-              },
-              {
-                "item": "Iron Boots",
-                "type": "item_check"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_open_wind_temple_upper_giant_grate"
           },
           {
-            "conditions": [
-              {
-                "name": "can_reach_wind_temple_kidnapping_room",
-                "type": "helper"
-              },
-              {
-                "item": "Hookshot",
-                "type": "item_check"
-              },
-              {
-                "name": "can_defeat_blue_bubbles",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_open_wind_temple_lower_giant_grate"
           },
           {
+            "type": "item_check",
+            "item": "WT Small Key",
             "count": {
               "type": "constant",
               "value": 2
-            },
-            "item": "WT Small Key",
-            "type": "item_check"
+            }
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_remove_peahat_armor": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -10314,28 +7743,24 @@
                   "Skull Hammer"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "item": "Deku Leaf",
-            "type": "item_check"
+            "type": "helper",
+            "name": "can_fan_with_deku_leaf"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_stun_magtails": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -10347,119 +7772,51 @@
                   "Skull Hammer"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Sword",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_sword"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_heros_bow"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_unlock_ganons_tower_four_boss_door": {
+        "type": "or",
         "conditions": [
           {
-            "conditions": [
-              {
-                "name": "can_complete_memory_dragon_roost_cavern_and_gohma",
-                "type": "helper"
-              },
-              {
-                "name": "can_complete_memory_forbidden_woods_and_kalle_demos",
-                "type": "helper"
-              },
-              {
-                "name": "can_complete_memory_earth_temple_and_jalhalla",
-                "type": "helper"
-              },
-              {
-                "name": "can_complete_memory_wind_temple_and_molgera",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_complete_all_memory_dungeons_and_bosses"
           },
           {
             "type": "constant",
             "value": true
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_unlock_puppet_ganon_door": {
+        "type": "and",
         "conditions": [
           {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Bombs",
-                      "Skull Hammer"
-                    ]
-                  }
-                ],
-                "method": "has_any",
-                "type": "state_method"
-              },
-              {
-                "name": "has_heros_sword",
-                "type": "helper"
-              },
-              {
-                "name": "has_heros_bow",
-                "type": "helper"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_defeat_moblins"
           },
           {
-            "conditions": [
-              {
-                "name": "can_defeat_darknuts_easily",
-                "type": "helper"
-              },
-              {
-                "conditions": [
-                  {
-                    "item": "Skull Hammer",
-                    "type": "item_check"
-                  },
-                  {
-                    "type": "constant",
-                    "value": false
-                  }
-                ],
-                "type": "and"
-              }
-            ],
-            "type": "or"
+            "type": "helper",
+            "name": "can_defeat_mighty_darknuts"
           },
           {
+            "type": "or",
             "conditions": [
               {
-                "operand": {
-                  "type": "constant",
-                  "value": false
-                },
-                "type": "not"
+                "type": "constant",
+                "value": true
               },
               {
+                "type": "and",
                 "conditions": [
                   {
                     "type": "constant",
@@ -10469,16 +7826,15 @@
                     "type": "constant",
                     "value": true
                   }
-                ],
-                "type": "and"
+                ]
               }
-            ],
-            "type": "or"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "has_all_8_triforce_shards": {
+        "type": "state_method",
+        "method": "has_group_unique",
         "args": [
           {
             "type": "constant",
@@ -10488,144 +7844,110 @@
             "type": "constant",
             "value": 8
           }
-        ],
-        "method": "has_group_unique",
-        "type": "state_method"
+        ]
       },
       "has_any_master_sword": {
+        "type": "item_check",
+        "item": "Progressive Sword",
         "count": {
           "type": "constant",
           "value": 2
-        },
-        "item": "Progressive Sword",
-        "type": "item_check"
+        }
       },
       "has_any_wallet_upgrade": {
-        "count": {
-          "type": "constant",
-          "value": 1
-        },
-        "item": "Wallet Capacity Upgrade",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Wallet Capacity Upgrade"
       },
       "has_fire_arrows": {
+        "type": "and",
         "conditions": [
           {
+            "type": "item_check",
+            "item": "Progressive Bow",
             "count": {
               "type": "constant",
               "value": 2
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            }
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Magic Meter",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_magic_meter"
           }
-        ],
-        "type": "and"
+        ]
       },
       "has_full_power_master_sword": {
+        "type": "item_check",
+        "item": "Progressive Sword",
         "count": {
           "type": "constant",
           "value": 4
-        },
-        "item": "Progressive Sword",
-        "type": "item_check"
+        }
       },
       "has_heros_bow": {
-        "count": {
-          "type": "constant",
-          "value": 1
-        },
-        "item": "Progressive Bow",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Progressive Bow"
       },
       "has_heros_shield": {
-        "count": {
-          "type": "constant",
-          "value": 1
-        },
-        "item": "Progressive Shield",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Progressive Shield"
       },
       "has_heros_sword": {
-        "count": {
-          "type": "constant",
-          "value": 1
-        },
-        "item": "Progressive Sword",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Progressive Sword"
       },
       "has_ice_arrows": {
+        "type": "and",
         "conditions": [
           {
+            "type": "item_check",
+            "item": "Progressive Bow",
             "count": {
               "type": "constant",
               "value": 2
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            }
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Magic Meter",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_magic_meter"
           }
-        ],
-        "type": "and"
+        ]
       },
       "has_light_arrows": {
+        "type": "and",
         "conditions": [
           {
+            "type": "item_check",
+            "item": "Progressive Bow",
             "count": {
               "type": "constant",
               "value": 3
-            },
-            "item": "Progressive Bow",
-            "type": "item_check"
+            }
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 1
-            },
-            "item": "Progressive Magic Meter",
-            "type": "item_check"
+            "type": "helper",
+            "name": "has_magic_meter"
           }
-        ],
-        "type": "and"
+        ]
       },
       "has_magic_meter": {
-        "count": {
-          "type": "constant",
-          "value": 1
-        },
-        "item": "Progressive Magic Meter",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Progressive Magic Meter"
       },
       "has_magic_meter_upgrade": {
+        "type": "item_check",
+        "item": "Progressive Magic Meter",
         "count": {
           "type": "constant",
           "value": 2
-        },
-        "item": "Progressive Magic Meter",
-        "type": "item_check"
+        }
       },
       "has_mirror_shield": {
+        "type": "item_check",
+        "item": "Progressive Shield",
         "count": {
           "type": "constant",
           "value": 2
-        },
-        "item": "Progressive Shield",
-        "type": "item_check"
+        }
       }
     }
   }

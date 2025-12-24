@@ -6626,7 +6626,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Rotated Shapers": {
         "name": "Rotated Shapers",
@@ -6686,7 +6686,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Colored Squares": {
         "name": "Colored Squares",
@@ -6722,7 +6722,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Progressive Symmetry": {
         "name": "Progressive Symmetry",
@@ -6746,7 +6746,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Speed Boost": {
         "name": "Speed Boost",
@@ -7664,7 +7664,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Caves Mountain Shortcut (Door)": {
         "name": "Caves Mountain Shortcut (Door)",

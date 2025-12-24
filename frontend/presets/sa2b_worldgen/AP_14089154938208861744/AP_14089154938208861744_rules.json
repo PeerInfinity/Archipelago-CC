@@ -3696,52 +3696,62 @@
       "Chao Race - Beginner": {
         "name": "Chao Race - Beginner",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Chao Karate - Beginner": {
         "name": "Chao Karate - Beginner",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Chao Race - Intermediate": {
         "name": "Chao Race - Intermediate",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Chao Karate - Standard": {
         "name": "Chao Karate - Standard",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Chao Race - Expert": {
         "name": "Chao Race - Expert",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Chao Karate - Expert": {
         "name": "Chao Karate - Expert",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Chao Karate - Super": {
         "name": "Chao Karate - Super",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Kart Race - Beginner": {
         "name": "Kart Race - Beginner",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Kart Race - Intermediate": {
         "name": "Kart Race - Intermediate",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Kart Race - Expert": {
         "name": "Kart Race - Expert",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Gate 0": {
         "name": "Gate 0",

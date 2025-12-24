@@ -3426,408 +3426,415 @@
   "helpers": {
     "1": {
       "calculate_paint_percent_available": {
+        "type": "block",
         "statements": [
           {
-            "name": "p",
             "type": "assign",
+            "name": "p",
             "value": {
-              "item": "Pick Color",
-              "type": "item_check"
+              "type": "item_check",
+              "item": "Pick Color"
             }
           },
           {
-            "name": "r",
             "type": "assign",
+            "name": "r",
             "value": {
+              "type": "min",
               "args": [
                 {
+                  "type": "state_method",
+                  "method": "count",
                   "args": [
                     {
                       "type": "constant",
                       "value": "Progressive Color Depth (Red)"
                     }
-                  ],
-                  "method": "count",
-                  "type": "state_method"
+                  ]
                 },
                 {
                   "type": "constant",
                   "value": 7
                 }
-              ],
-              "type": "min"
+              ]
             }
           },
           {
-            "name": "g",
             "type": "assign",
+            "name": "g",
             "value": {
+              "type": "min",
               "args": [
                 {
+                  "type": "state_method",
+                  "method": "count",
                   "args": [
                     {
                       "type": "constant",
                       "value": "Progressive Color Depth (Green)"
                     }
-                  ],
-                  "method": "count",
-                  "type": "state_method"
+                  ]
                 },
                 {
                   "type": "constant",
                   "value": 7
                 }
-              ],
-              "type": "min"
+              ]
             }
           },
           {
-            "name": "b",
             "type": "assign",
+            "name": "b",
             "value": {
+              "type": "min",
               "args": [
                 {
+                  "type": "state_method",
+                  "method": "count",
                   "args": [
                     {
                       "type": "constant",
                       "value": "Progressive Color Depth (Blue)"
                     }
-                  ],
-                  "method": "count",
-                  "type": "state_method"
+                  ]
                 },
                 {
                   "type": "constant",
                   "value": 7
                 }
-              ],
-              "type": "min"
+              ]
             }
           },
           {
+            "type": "if_statement",
+            "test": {
+              "type": "not",
+              "condition": {
+                "type": "name",
+                "name": "p"
+              }
+            },
             "body": [
               {
+                "type": "assign",
                 "name": "r",
-                "type": "assign",
                 "value": {
+                  "type": "min",
                   "args": [
                     {
-                      "name": "r",
-                      "type": "name"
+                      "type": "name",
+                      "name": "r"
                     },
                     {
                       "type": "constant",
                       "value": 2
                     }
-                  ],
-                  "type": "min"
+                  ]
                 }
               },
               {
+                "type": "assign",
                 "name": "g",
-                "type": "assign",
                 "value": {
+                  "type": "min",
                   "args": [
                     {
-                      "name": "g",
-                      "type": "name"
+                      "type": "name",
+                      "name": "g"
                     },
                     {
                       "type": "constant",
                       "value": 2
                     }
-                  ],
-                  "type": "min"
+                  ]
                 }
               },
               {
-                "name": "b",
                 "type": "assign",
+                "name": "b",
                 "value": {
+                  "type": "min",
                   "args": [
                     {
-                      "name": "b",
-                      "type": "name"
+                      "type": "name",
+                      "name": "b"
                     },
                     {
                       "type": "constant",
                       "value": 2
                     }
-                  ],
-                  "type": "min"
+                  ]
                 }
               }
-            ],
-            "test": {
-              "condition": {
-                "name": "p",
-                "type": "name"
-              },
-              "type": "not"
-            },
-            "type": "if_statement"
+            ]
           },
           {
-            "name": "w",
             "type": "assign",
+            "name": "w",
             "value": {
+              "type": "state_method",
+              "method": "count",
               "args": [
                 {
                   "type": "constant",
                   "value": "Progressive Canvas Width"
                 }
-              ],
-              "method": "count",
-              "type": "state_method"
+              ]
             }
           },
           {
-            "name": "h",
             "type": "assign",
+            "name": "h",
             "value": {
+              "type": "state_method",
+              "method": "count",
               "args": [
                 {
                   "type": "constant",
                   "value": "Progressive Canvas Height"
                 }
-              ],
-              "method": "count",
-              "type": "state_method"
+              ]
             }
           },
           {
             "type": "return",
             "value": {
+              "type": "binary_op",
               "left": {
+                "type": "binary_op",
                 "left": {
+                  "type": "binary_op",
                   "left": {
+                    "type": "binary_op",
                     "left": {
+                      "type": "binary_op",
                       "left": {
                         "type": "constant",
                         "value": 1
                       },
                       "op": "-",
                       "right": {
+                        "type": "binary_op",
                         "left": {
+                          "type": "function_call",
+                          "function": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "math"
+                            },
+                            "attr": "sqrt"
+                          },
                           "args": [
                             {
+                              "type": "binary_op",
                               "left": {
+                                "type": "binary_op",
                                 "left": {
+                                  "type": "binary_op",
                                   "left": {
+                                    "type": "binary_op",
                                     "left": {
+                                      "type": "binary_op",
                                       "left": {
+                                        "type": "binary_op",
                                         "left": {
                                           "type": "constant",
                                           "value": 2
                                         },
                                         "op": "**",
                                         "right": {
+                                          "type": "binary_op",
                                           "left": {
                                             "type": "constant",
                                             "value": 7
                                           },
                                           "op": "-",
                                           "right": {
-                                            "name": "r",
-                                            "type": "name"
-                                          },
-                                          "type": "binary_op"
-                                        },
-                                        "type": "binary_op"
+                                            "type": "name",
+                                            "name": "r"
+                                          }
+                                        }
                                       },
                                       "op": "-",
                                       "right": {
                                         "type": "constant",
                                         "value": 1
-                                      },
-                                      "type": "binary_op"
+                                      }
                                     },
                                     "op": "**",
                                     "right": {
                                       "type": "constant",
                                       "value": 2
-                                    },
-                                    "type": "binary_op"
+                                    }
                                   },
                                   "op": "+",
                                   "right": {
+                                    "type": "binary_op",
                                     "left": {
+                                      "type": "binary_op",
                                       "left": {
+                                        "type": "binary_op",
                                         "left": {
                                           "type": "constant",
                                           "value": 2
                                         },
                                         "op": "**",
                                         "right": {
+                                          "type": "binary_op",
                                           "left": {
                                             "type": "constant",
                                             "value": 7
                                           },
                                           "op": "-",
                                           "right": {
-                                            "name": "g",
-                                            "type": "name"
-                                          },
-                                          "type": "binary_op"
-                                        },
-                                        "type": "binary_op"
+                                            "type": "name",
+                                            "name": "g"
+                                          }
+                                        }
                                       },
                                       "op": "-",
                                       "right": {
                                         "type": "constant",
                                         "value": 1
-                                      },
-                                      "type": "binary_op"
+                                      }
                                     },
                                     "op": "**",
                                     "right": {
                                       "type": "constant",
                                       "value": 2
-                                    },
-                                    "type": "binary_op"
-                                  },
-                                  "type": "binary_op"
+                                    }
+                                  }
                                 },
                                 "op": "+",
                                 "right": {
+                                  "type": "binary_op",
                                   "left": {
+                                    "type": "binary_op",
                                     "left": {
+                                      "type": "binary_op",
                                       "left": {
                                         "type": "constant",
                                         "value": 2
                                       },
                                       "op": "**",
                                       "right": {
+                                        "type": "binary_op",
                                         "left": {
                                           "type": "constant",
                                           "value": 7
                                         },
                                         "op": "-",
                                         "right": {
-                                          "name": "b",
-                                          "type": "name"
-                                        },
-                                        "type": "binary_op"
-                                      },
-                                      "type": "binary_op"
+                                          "type": "name",
+                                          "name": "b"
+                                        }
+                                      }
                                     },
                                     "op": "-",
                                     "right": {
                                       "type": "constant",
                                       "value": 1
-                                    },
-                                    "type": "binary_op"
+                                    }
                                   },
                                   "op": "**",
                                   "right": {
                                     "type": "constant",
                                     "value": 2
-                                  },
-                                  "type": "binary_op"
-                                },
-                                "type": "binary_op"
+                                  }
+                                }
                               },
                               "op": "*",
                               "right": {
                                 "type": "constant",
                                 "value": 12
-                              },
-                              "type": "binary_op"
+                              }
                             }
-                          ],
-                          "name": "sqrt",
-                          "type": "helper"
+                          ]
                         },
                         "op": "/",
                         "right": {
                           "type": "constant",
                           "value": 765
-                        },
-                        "type": "binary_op"
-                      },
-                      "type": "binary_op"
+                        }
+                      }
                     },
                     "op": "*",
                     "right": {
+                      "type": "min",
                       "args": [
                         {
+                          "type": "binary_op",
                           "left": {
                             "type": "constant",
                             "value": 400
                           },
                           "op": "+",
                           "right": {
+                            "type": "binary_op",
                             "left": {
-                              "name": "w",
-                              "type": "name"
+                              "type": "name",
+                              "name": "w"
                             },
                             "op": "*",
                             "right": {
                               "type": "constant",
                               "value": 100
-                            },
-                            "type": "binary_op"
-                          },
-                          "type": "binary_op"
+                            }
+                          }
                         },
                         {
                           "type": "constant",
                           "value": 800
                         }
-                      ],
-                      "type": "min"
-                    },
-                    "type": "binary_op"
+                      ]
+                    }
                   },
                   "op": "*",
                   "right": {
+                    "type": "min",
                     "args": [
                       {
+                        "type": "binary_op",
                         "left": {
                           "type": "constant",
                           "value": 300
                         },
                         "op": "+",
                         "right": {
+                          "type": "binary_op",
                           "left": {
-                            "name": "h",
-                            "type": "name"
+                            "type": "name",
+                            "name": "h"
                           },
                           "op": "*",
                           "right": {
                             "type": "constant",
                             "value": 100
-                          },
-                          "type": "binary_op"
-                        },
-                        "type": "binary_op"
+                          }
+                        }
                       },
                       {
                         "type": "constant",
                         "value": 600
                       }
-                    ],
-                    "type": "min"
-                  },
-                  "type": "binary_op"
+                    ]
+                  }
                 },
                 "op": "*",
                 "right": {
                   "type": "constant",
                   "value": 80
-                },
-                "type": "binary_op"
+                }
               },
               "op": "/",
               "right": {
                 "type": "constant",
                 "value": 480000
-              },
-              "type": "binary_op"
+              }
             }
           }
-        ],
-        "type": "block"
+        ]
       }
     }
   }

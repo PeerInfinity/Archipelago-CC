@@ -9610,7 +9610,7 @@
         "event": true,
         "type": "Event",
         "max_count": 4,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Victory": {
         "name": "Victory",
@@ -9621,7 +9621,7 @@
         "event": true,
         "type": "Event",
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       }
     }
   },

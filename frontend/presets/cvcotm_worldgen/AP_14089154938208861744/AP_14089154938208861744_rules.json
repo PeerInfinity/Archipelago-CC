@@ -2672,7 +2672,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Mandragora Card": {
         "name": "Mandragora Card",
@@ -2719,7 +2719,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Manticore Card": {
         "name": "Manticore Card",
@@ -2811,7 +2811,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Venus Card": {
         "name": "Venus Card",
@@ -2858,7 +2858,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Diana Card": {
         "name": "Diana Card",
@@ -2959,7 +2959,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Tackle": {
         "name": "Tackle",
@@ -3014,7 +3014,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Last Key": {
         "name": "Last Key",

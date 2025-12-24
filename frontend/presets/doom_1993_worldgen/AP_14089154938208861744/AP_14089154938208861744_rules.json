@@ -4836,7 +4836,8 @@
       "Spawning Vats (E2M7) Red Exit": {
         "name": "Spawning Vats (E2M7) Red Exit",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Tower of Babel (E2M8) Main": {
         "name": "Tower of Babel (E2M8) Main",

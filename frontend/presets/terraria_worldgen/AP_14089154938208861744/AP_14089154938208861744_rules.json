@@ -56,9 +56,54 @@
             "name": "Traveling Merchant",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "has_n_from_list",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Guide",
+                  "Squire Slime",
+                  "Merchant",
+                  "Dye Trader",
+                  "Demolitionist",
+                  "Zoologist",
+                  "Cat",
+                  "Dog",
+                  "Painter",
+                  "Angler",
+                  "Clumsy Slime",
+                  "Nurse",
+                  "Stylist",
+                  "Golfer",
+                  "Party Girl",
+                  "Cool Slime",
+                  "Arms Dealer",
+                  "Nerdy Slime",
+                  "Surly Slime",
+                  "Dryad",
+                  "Mystic Slime",
+                  "Tavernkeep",
+                  "Goblin Tinkerer",
+                  "Witch Doctor",
+                  "Clothier",
+                  "Elder Slime",
+                  "Wizard",
+                  "Tax Collector",
+                  "Bunny",
+                  "Truffle",
+                  "Pirate",
+                  "Diva Slime",
+                  "Steampunker",
+                  "Cyborg",
+                  "Princess",
+                  "Santa Claus"
+                ],
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Traveling Merchant",
@@ -72,9 +117,11 @@
             "name": "Lifeform Analyzer",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Traveling Merchant",
+                "count": 1
+              }
             },
             "item": {
               "name": "Lifeform Analyzer",
@@ -88,9 +135,11 @@
             "name": "DPS Meter",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Traveling Merchant",
+                "count": 1
+              }
             },
             "item": {
               "name": "DPS Meter",
@@ -104,9 +153,11 @@
             "name": "Stopwatch",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Traveling Merchant",
+                "count": 1
+              }
             },
             "item": {
               "name": "Stopwatch",
@@ -216,9 +267,11 @@
             "name": "Bug Net",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Merchant",
+                "count": 1
+              }
             },
             "item": {
               "name": "Bug Net",
@@ -244,9 +297,54 @@
             "name": "Dye Trader",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "has_n_from_list",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Guide",
+                  "Squire Slime",
+                  "Merchant",
+                  "Dye Trader",
+                  "Demolitionist",
+                  "Zoologist",
+                  "Cat",
+                  "Dog",
+                  "Painter",
+                  "Angler",
+                  "Clumsy Slime",
+                  "Nurse",
+                  "Stylist",
+                  "Golfer",
+                  "Party Girl",
+                  "Cool Slime",
+                  "Arms Dealer",
+                  "Nerdy Slime",
+                  "Surly Slime",
+                  "Dryad",
+                  "Mystic Slime",
+                  "Tavernkeep",
+                  "Goblin Tinkerer",
+                  "Witch Doctor",
+                  "Clothier",
+                  "Elder Slime",
+                  "Wizard",
+                  "Tax Collector",
+                  "Bunny",
+                  "Truffle",
+                  "Pirate",
+                  "Diva Slime",
+                  "Steampunker",
+                  "Cyborg",
+                  "Princess",
+                  "Santa Claus"
+                ],
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 4
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Dye Trader",
@@ -260,9 +358,11 @@
             "name": "Dye Hard",
             "id": 8257732,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Dye Trader",
+                "count": 1
+              }
             },
             "item": {
               "name": "Reward: Lucky Coin",
@@ -276,9 +376,11 @@
             "name": "Demolitionist",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Merchant",
+                "count": 1
+              }
             },
             "item": {
               "name": "Demolitionist",
@@ -424,9 +526,11 @@
             "name": "Cat",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Zoologist",
+                "count": 1
+              }
             },
             "item": {
               "name": "Cat",
@@ -440,9 +544,13 @@
             "name": "Feeling Petty",
             "id": 8257739,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Cat",
+                  "Dog"
+                ]
+              }
             },
             "item": {
               "name": "Reward: Lava Charm",
@@ -456,9 +564,11 @@
             "name": "Dog",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Zoologist",
+                "count": 1
+              }
             },
             "item": {
               "name": "Dog",
@@ -472,9 +582,54 @@
             "name": "Painter",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "has_n_from_list",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Guide",
+                  "Squire Slime",
+                  "Merchant",
+                  "Dye Trader",
+                  "Demolitionist",
+                  "Zoologist",
+                  "Cat",
+                  "Dog",
+                  "Painter",
+                  "Angler",
+                  "Clumsy Slime",
+                  "Nurse",
+                  "Stylist",
+                  "Golfer",
+                  "Party Girl",
+                  "Cool Slime",
+                  "Arms Dealer",
+                  "Nerdy Slime",
+                  "Surly Slime",
+                  "Dryad",
+                  "Mystic Slime",
+                  "Tavernkeep",
+                  "Goblin Tinkerer",
+                  "Witch Doctor",
+                  "Clothier",
+                  "Elder Slime",
+                  "Wizard",
+                  "Tax Collector",
+                  "Bunny",
+                  "Truffle",
+                  "Pirate",
+                  "Diva Slime",
+                  "Steampunker",
+                  "Cyborg",
+                  "Princess",
+                  "Santa Claus"
+                ],
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 8
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Painter",
@@ -512,9 +667,13 @@
             "name": "Fisherman's Pocket Guide",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Angler",
+                  "Weather Radio"
+                ]
+              }
             },
             "item": {
               "name": "Fisherman's Pocket Guide",
@@ -528,9 +687,13 @@
             "name": "Weather Radio",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Angler",
+                  "Sextant"
+                ]
+              }
             },
             "item": {
               "name": "Weather Radio",
@@ -544,9 +707,13 @@
             "name": "Sextant",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Angler",
+                  "Fisherman's Pocket Guide"
+                ]
+              }
             },
             "item": {
               "name": "Sextant",
@@ -740,9 +907,11 @@
             "name": "Nurse",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Merchant",
+                "count": 1
+              }
             },
             "item": {
               "name": "Nurse",
@@ -756,9 +925,11 @@
             "name": "The Frequent Flyer",
             "id": 8257757,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Nurse",
+                "count": 1
+              }
             },
             "item": {
               "name": "Post-Goblin Army",
@@ -772,9 +943,11 @@
             "name": "Feast of Midas",
             "id": 8257758,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Bug Net",
+                "count": 1
+              }
             },
             "item": {
               "name": "Reward: Moon Charm",
@@ -932,9 +1105,11 @@
             "name": "Obsidian Skull",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Obsidian",
+                "count": 1
+              }
             },
             "item": {
               "name": "Obsidian Skull",
@@ -972,9 +1147,11 @@
             "name": "Demonite Bar",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Demonite Ore",
+                "count": 1
+              }
             },
             "item": {
               "name": "Demonite Bar",
@@ -988,9 +1165,11 @@
             "name": "Evil Sword",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Demonite Bar",
+                "count": 1
+              }
             },
             "item": {
               "name": "Evil Sword",
@@ -1040,9 +1219,54 @@
             "name": "Party Girl",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "has_n_from_list",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Guide",
+                  "Squire Slime",
+                  "Merchant",
+                  "Dye Trader",
+                  "Demolitionist",
+                  "Zoologist",
+                  "Cat",
+                  "Dog",
+                  "Painter",
+                  "Angler",
+                  "Clumsy Slime",
+                  "Nurse",
+                  "Stylist",
+                  "Golfer",
+                  "Party Girl",
+                  "Cool Slime",
+                  "Arms Dealer",
+                  "Nerdy Slime",
+                  "Surly Slime",
+                  "Dryad",
+                  "Mystic Slime",
+                  "Tavernkeep",
+                  "Goblin Tinkerer",
+                  "Witch Doctor",
+                  "Clothier",
+                  "Elder Slime",
+                  "Wizard",
+                  "Tax Collector",
+                  "Bunny",
+                  "Truffle",
+                  "Pirate",
+                  "Diva Slime",
+                  "Steampunker",
+                  "Cyborg",
+                  "Princess",
+                  "Santa Claus"
+                ],
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 14
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Party Girl",
@@ -1056,9 +1280,11 @@
             "name": "Cool Slime",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Party Girl",
+                "count": 1
+              }
             },
             "item": {
               "name": "Cool Slime",
@@ -1132,9 +1358,14 @@
             "name": "Blade of Grass",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Jungle Spores",
+                  "Stinger",
+                  "Vine"
+                ]
+              }
             },
             "item": {
               "name": "Blade of Grass",
@@ -1268,9 +1499,13 @@
             "name": "Leading Landlord",
             "id": 8257772,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Arms Dealer",
+                  "Nurse"
+                ]
+              }
             },
             "item": {
               "name": "Reward: Cloud in a Bottle",
@@ -1284,9 +1519,11 @@
             "name": "Completely Awesome",
             "id": 8257773,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Arms Dealer",
+                "count": 1
+              }
             },
             "item": {
               "name": "Post-Skeletron",
@@ -1300,9 +1537,13 @@
             "name": "Illegal Gun Parts",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Arms Dealer",
+                  "Flamethrower"
+                ]
+              }
             },
             "item": {
               "name": "Illegal Gun Parts",
@@ -1339,11 +1580,7 @@
           {
             "name": "Solidifier",
             "id": null,
-            "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
-            },
+            "access_rule": null,
             "item": {
               "name": "Solidifier",
               "player": 1,
@@ -1355,11 +1592,7 @@
           {
             "name": "Nerdy Slime",
             "id": null,
-            "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
-            },
+            "access_rule": null,
             "item": {
               "name": "Nerdy Slime",
               "player": 1,
@@ -1372,9 +1605,22 @@
             "name": "Sandstorm",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "child": {
+                    "rule": "False_"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Post-Desert Scourge",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Sandstorm",
@@ -1436,9 +1682,14 @@
             "name": "Dryad",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Post-Evil Boss",
+                  "Post-Eye of Cthulhu",
+                  "Post-Skeletron"
+                ]
+              }
             },
             "item": {
               "name": "Dryad",
@@ -1452,9 +1703,11 @@
             "name": "Pumpkin Seeds",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Dryad",
+                "count": 1
+              }
             },
             "item": {
               "name": "Pumpkin Seeds",
@@ -1468,9 +1721,13 @@
             "name": "Pumpkin",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Cactus",
+                  "Pumpkin Seeds"
+                ]
+              }
             },
             "item": {
               "name": "Pumpkin",
@@ -1484,9 +1741,34 @@
             "name": "Purification Powder",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Not",
+                      "child": {
+                        "rule": "False_"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Dryad",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Evil Powder",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Purification Powder",
@@ -1500,9 +1782,11 @@
             "name": "Mystic Slime",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Purification Powder",
+                "count": 1
+              }
             },
             "item": {
               "name": "Mystic Slime",
@@ -1527,11 +1811,7 @@
           {
             "name": "Evil Boss Part",
             "id": null,
-            "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
-            },
+            "access_rule": null,
             "item": {
               "name": "Evil Boss Part",
               "player": 1,
@@ -1544,9 +1824,11 @@
             "name": "Evil Pickaxe",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Evil Boss Part",
+                "count": 1
+              }
             },
             "item": {
               "name": "Evil Pickaxe",
@@ -1560,9 +1842,13 @@
             "name": "Obsidian Armor",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Evil Boss Part",
+                  "Obsidian"
+                ]
+              }
             },
             "item": {
               "name": "Obsidian Armor",
@@ -1576,9 +1862,11 @@
             "name": "Tavernkeep",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Post-Evil Boss",
+                "count": 1
+              }
             },
             "item": {
               "name": "Tavernkeep",
@@ -1592,9 +1880,11 @@
             "name": "Old One's Army Tier 1",
             "id": 8257787,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Tavernkeep",
+                "count": 1
+              }
             },
             "item": {
               "name": "Reward: Nature's Gift",
@@ -1608,9 +1898,7 @@
             "name": "Meteorite",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "True_"
             },
             "item": {
               "name": "Meteorite",
@@ -1624,9 +1912,13 @@
             "name": "Meteorite Bar",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Meteor Staff",
+                  "Meteorite"
+                ]
+              }
             },
             "item": {
               "name": "Meteorite Bar",
@@ -1640,9 +1932,11 @@
             "name": "Meteor Hamaxe",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Meteorite Bar",
+                "count": 1
+              }
             },
             "item": {
               "name": "Meteor Hamaxe",
@@ -1656,9 +1950,32 @@
             "name": "Hellforge",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Adamantite Pickaxe",
+                  "Astral Pickaxe",
+                  "Beastial Pickaxe",
+                  "Blossom Pickaxe",
+                  "Chlorophyte Pickaxe",
+                  "Cobalt Pickaxe",
+                  "Crystyl Crusher",
+                  "Evil Pickaxe",
+                  "Gelpick",
+                  "Genesis Pickaxe",
+                  "Laser Drill",
+                  "Luminite Pickaxe",
+                  "Molten Pickaxe",
+                  "Mythril Pickaxe",
+                  "Pickaxe Axe",
+                  "Picksaw",
+                  "Seismic Hampick",
+                  "Shardlight Pickaxe",
+                  "Shroomite Digging Claw",
+                  "Skyfringe Pickaxe",
+                  "Spectre Pickaxe"
+                ]
+              }
             },
             "item": {
               "name": "Hellforge",
@@ -1672,9 +1989,34 @@
             "name": "Hellstone",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Adamantite Pickaxe",
+                  "Astral Pickaxe",
+                  "Beastial Pickaxe",
+                  "Blossom Pickaxe",
+                  "Chlorophyte Pickaxe",
+                  "Cobalt Pickaxe",
+                  "Crystyl Crusher",
+                  "Evil Pickaxe",
+                  "Gelpick",
+                  "Genesis Pickaxe",
+                  "Laser Drill",
+                  "Luminite Pickaxe",
+                  "Molten Pickaxe",
+                  "Mythril Pickaxe",
+                  "Pickaxe Axe",
+                  "Picksaw",
+                  "Seismic Hampick",
+                  "Shardlight Pickaxe",
+                  "Shroomite Digging Claw",
+                  "Skyfringe Pickaxe",
+                  "Spectre Pickaxe",
+                  "Hardmode",
+                  "Hellstone Bar"
+                ]
+              }
             },
             "item": {
               "name": "Hellstone",
@@ -1688,9 +2030,11 @@
             "name": "Hellstone Bar",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hellstone",
+                "count": 1
+              }
             },
             "item": {
               "name": "Hellstone Bar",
@@ -1704,9 +2048,11 @@
             "name": "Fiery Greatsword",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hellstone Bar",
+                "count": 1
+              }
             },
             "item": {
               "name": "Fiery Greatsword",
@@ -1720,9 +2066,11 @@
             "name": "Molten Hamaxe",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hellstone Bar",
+                "count": 1
+              }
             },
             "item": {
               "name": "Molten Hamaxe",
@@ -1736,9 +2084,11 @@
             "name": "Molten Pickaxe",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hellstone Bar",
+                "count": 1
+              }
             },
             "item": {
               "name": "Molten Pickaxe",
@@ -1752,9 +2102,11 @@
             "name": "Miner for Fire",
             "id": 8257788,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Molten Pickaxe",
+                "count": 1
+              }
             },
             "item": {
               "name": "Hardmode",
@@ -1768,9 +2120,13 @@
             "name": "Hot Reels!",
             "id": 8257789,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Bug Net",
+                  "Hellstone Bar"
+                ]
+              }
             },
             "item": {
               "name": "Reward: Flying Carpet",
@@ -1796,9 +2152,11 @@
             "name": "Goblin Tinkerer",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Post-Goblin Army",
+                "count": 1
+              }
             },
             "item": {
               "name": "Goblin Tinkerer",
@@ -1812,9 +2170,11 @@
             "name": "Tinkerer's Workshop",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Goblin Tinkerer",
+                "count": 1
+              }
             },
             "item": {
               "name": "Tinkerer's Workshop",
@@ -1828,9 +2188,13 @@
             "name": "Mana Flower",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Nature's Gift",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Mana Flower",
@@ -1844,9 +2208,11 @@
             "name": "Rocket Boots",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Goblin Tinkerer",
+                "count": 1
+              }
             },
             "item": {
               "name": "Rocket Boots",
@@ -1860,9 +2226,14 @@
             "name": "Spectre Boots",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hermes Boots",
+                  "Rocket Boots",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Spectre Boots",
@@ -1876,9 +2247,15 @@
             "name": "Lightning Boots",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Aglet",
+                  "Anklet of the Wind",
+                  "Spectre Boots",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Lightning Boots",
@@ -1892,9 +2269,14 @@
             "name": "Frostspark Boots",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Ice Skates",
+                  "Lightning Boots",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Frostspark Boots",
@@ -1908,9 +2290,16 @@
             "name": "Lava Waders",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Lava Charm",
+                  "Obsidian Rose",
+                  "Obsidian Skull",
+                  "Tinkerer's Workshop",
+                  "Water Walking Boots"
+                ]
+              }
             },
             "item": {
               "name": "Lava Waders",
@@ -1924,9 +2313,14 @@
             "name": "Terraspark Boots",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Frostspark Boots",
+                  "Lava Waders",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Terraspark Boots",
@@ -1940,9 +2334,15 @@
             "name": "GPS",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Compass",
+                  "Depth Meter",
+                  "Gold Watch",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "GPS",
@@ -1956,9 +2356,15 @@
             "name": "Goblin Tech",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "DPS Meter",
+                  "Metal Detector",
+                  "Stopwatch",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Goblin Tech",
@@ -1972,9 +2378,15 @@
             "name": "Fish Finder",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Fisherman's Pocket Guide",
+                  "Sextant",
+                  "Tinkerer's Workshop",
+                  "Weather Radio"
+                ]
+              }
             },
             "item": {
               "name": "Fish Finder",
@@ -1988,9 +2400,11 @@
             "name": "Diving Gear",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Tinkerer's Workshop",
+                "count": 1
+              }
             },
             "item": {
               "name": "Diving Gear",
@@ -2027,11 +2441,7 @@
           {
             "name": "Bee Keeper",
             "id": null,
-            "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
-            },
+            "access_rule": null,
             "item": {
               "name": "Bee Keeper",
               "player": 1,
@@ -2043,11 +2453,7 @@
           {
             "name": "Bee Wax",
             "id": null,
-            "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
-            },
+            "access_rule": null,
             "item": {
               "name": "Bee Wax",
               "player": 1,
@@ -2060,9 +2466,11 @@
             "name": "Bee Armor",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Bee Wax",
+                "count": 1
+              }
             },
             "item": {
               "name": "Bee Armor",
@@ -2076,9 +2484,11 @@
             "name": "Not the Bees!",
             "id": 8257794,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Bee Armor",
+                "count": 1
+              }
             },
             "item": {
               "name": "Reward: Neptune's Shell",
@@ -2092,9 +2502,11 @@
             "name": "Witch Doctor",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Post-Queen Bee",
+                "count": 1
+              }
             },
             "item": {
               "name": "Witch Doctor",
@@ -2108,9 +2520,11 @@
             "name": "Pygmy Necklace",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Witch Doctor",
+                "count": 1
+              }
             },
             "item": {
               "name": "Pygmy Necklace",
@@ -2136,9 +2550,11 @@
             "name": "Clothier",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Post-Skeletron",
+                "count": 1
+              }
             },
             "item": {
               "name": "Clothier",
@@ -2152,9 +2568,11 @@
             "name": "Dungeon",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Post-Skeletron",
+                "count": 1
+              }
             },
             "item": {
               "name": "Dungeon",
@@ -2168,9 +2586,11 @@
             "name": "Dungeon Heist",
             "id": 8257798,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Dungeon",
+                "count": 1
+              }
             },
             "item": {
               "name": "Reward: Magic Mirror",
@@ -2184,9 +2604,11 @@
             "name": "Bone",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Dungeon",
+                "count": 1
+              }
             },
             "item": {
               "name": "Bone",
@@ -2200,9 +2622,11 @@
             "name": "Tally Counter",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Dungeon",
+                "count": 1
+              }
             },
             "item": {
               "name": "Tally Counter",
@@ -2216,9 +2640,15 @@
             "name": "R.E.K. 3000",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Lifeform Analyzer",
+                  "Radar",
+                  "Tally Counter",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "R.E.K. 3000",
@@ -2232,9 +2662,16 @@
             "name": "PDA",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Fish Finder",
+                  "GPS",
+                  "Goblin Tech",
+                  "R.E.K. 3000",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "PDA",
@@ -2248,9 +2685,14 @@
             "name": "Cell Phone",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Magic Mirror",
+                  "PDA",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Cell Phone",
@@ -2264,9 +2706,27 @@
             "name": "Bewitching Table",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Witch Doctor",
+                      "Wizard"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Alchemy Table",
+                      "Dungeon"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Bewitching Table",
@@ -2280,9 +2740,13 @@
             "name": "Alchemy Table",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Bewitching Table",
+                  "Dungeon"
+                ]
+              }
             },
             "item": {
               "name": "Alchemy Table",
@@ -2296,9 +2760,11 @@
             "name": "Mechanic",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Dungeon",
+                "count": 1
+              }
             },
             "item": {
               "name": "Mechanic",
@@ -2312,9 +2778,11 @@
             "name": "Wire",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Mechanic",
+                "count": 1
+              }
             },
             "item": {
               "name": "Wire",
@@ -2328,9 +2796,11 @@
             "name": "Actuator",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Mechanic",
+                "count": 1
+              }
             },
             "item": {
               "name": "Actuator",
@@ -2344,9 +2814,11 @@
             "name": "Muramasa",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Dungeon",
+                "count": 1
+              }
             },
             "item": {
               "name": "Muramasa",
@@ -2360,9 +2832,11 @@
             "name": "Cobalt Shield",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Dungeon",
+                "count": 1
+              }
             },
             "item": {
               "name": "Cobalt Shield",
@@ -2376,9 +2850,14 @@
             "name": "Obsidian Shield",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Cobalt Shield",
+                  "Obsidian Skull",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Obsidian Shield",
@@ -2392,9 +2871,13 @@
             "name": "Elder Slime",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dungeon",
+                  "Post-Skeletron"
+                ]
+              }
             },
             "item": {
               "name": "Elder Slime",
@@ -2420,9 +2903,38 @@
             "name": "Night's Edge",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Not",
+                      "child": {
+                        "rule": "False_"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Purified Gel",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Blade of Grass",
+                      "Evil Sword",
+                      "Fiery Greatsword",
+                      "Muramasa"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Night's Edge",
@@ -2436,9 +2948,11 @@
             "name": "Wall of Flesh",
             "id": 8257802,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Guide",
+                "count": 1
+              }
             },
             "item": {
               "name": "Reward: Shark Tooth Necklace",
@@ -2452,9 +2966,11 @@
             "name": "Pwnhammer",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Guide",
+                "count": 1
+              }
             },
             "item": {
               "name": "Pwnhammer",
@@ -2468,9 +2984,13 @@
             "name": "Emblem",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Avenger Emblem",
+                  "Guide"
+                ]
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2484,9 +3004,13 @@
             "name": "Fast Clock",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Hardmode",
+                  "Trifold Map"
+                ]
+              }
             },
             "item": {
               "name": "Fast Clock",
@@ -2500,9 +3024,11 @@
             "name": "Wizard",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hardmode",
+                "count": 1
+              }
             },
             "item": {
               "name": "Wizard",
@@ -2516,9 +3042,13 @@
             "name": "Titan Glove",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Hardmode",
+                  "Power Glove"
+                ]
+              }
             },
             "item": {
               "name": "Titan Glove",
@@ -2532,9 +3062,14 @@
             "name": "Power Glove",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Feral Claws",
+                  "Tinkerer's Workshop",
+                  "Titan Glove"
+                ]
+              }
             },
             "item": {
               "name": "Power Glove",
@@ -2548,9 +3083,11 @@
             "name": "Magic Quiver",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hardmode",
+                "count": 1
+              }
             },
             "item": {
               "name": "Magic Quiver",
@@ -2564,9 +3101,25 @@
             "name": "Hallowed Seeds",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Dryad",
+                      "Hardmode"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Holy Water",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Hallowed Seeds",
@@ -2580,9 +3133,13 @@
             "name": "Armor Polish",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Hardmode",
+                  "Vitamins"
+                ]
+              }
             },
             "item": {
               "name": "Armor Polish",
@@ -2596,9 +3153,11 @@
             "name": "Adhesive Bandage",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hardmode",
+                "count": 1
+              }
             },
             "item": {
               "name": "Adhesive Bandage",
@@ -2612,9 +3171,14 @@
             "name": "Medicated Bandage",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Adhesive Bandage",
+                  "Bezoar",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Medicated Bandage",
@@ -2628,9 +3192,13 @@
             "name": "Megaphone",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Hardmode",
+                  "Nazar"
+                ]
+              }
             },
             "item": {
               "name": "Megaphone",
@@ -2644,9 +3212,13 @@
             "name": "Pocket Mirror",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Blindfold",
+                  "Hardmode"
+                ]
+              }
             },
             "item": {
               "name": "Pocket Mirror",
@@ -2660,9 +3232,13 @@
             "name": "Trifold Map",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Fast Clock",
+                  "Hardmode"
+                ]
+              }
             },
             "item": {
               "name": "Trifold Map",
@@ -2676,9 +3252,14 @@
             "name": "The Plan",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Fast Clock",
+                  "Tinkerer's Workshop",
+                  "Trifold Map"
+                ]
+              }
             },
             "item": {
               "name": "The Plan",
@@ -2692,9 +3273,13 @@
             "name": "Tax Collector",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hardmode",
+                  "Purification Powder"
+                ]
+              }
             },
             "item": {
               "name": "Tax Collector",
@@ -2708,9 +3293,11 @@
             "name": "Spider Fangs",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hardmode",
+                "count": 1
+              }
             },
             "item": {
               "name": "Spider Fangs",
@@ -2724,9 +3311,11 @@
             "name": "Spider Armor",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Spider Fangs",
+                "count": 1
+              }
             },
             "item": {
               "name": "Spider Armor",
@@ -2740,9 +3329,11 @@
             "name": "Cross Necklace",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hardmode",
+                "count": 1
+              }
             },
             "item": {
               "name": "Cross Necklace",
@@ -2756,9 +3347,32 @@
             "name": "Altar",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Abyssal Warhammer",
+                      "Astral Hamaxe",
+                      "Chlorophyte Warhammer",
+                      "Grax",
+                      "Luminite Hamaxe",
+                      "Pwnhammer",
+                      "Seismic Hampick",
+                      "Spectre Hamaxe",
+                      "The Axe"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Hardmode",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Altar",
@@ -2772,9 +3386,11 @@
             "name": "Begone, Evil!",
             "id": 8257803,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Altar",
+                "count": 1
+              }
             },
             "item": {
               "name": "Reward: Obsidian Rose",
@@ -2788,9 +3404,63 @@
             "name": "Cobalt Ore",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Adamantite Pickaxe",
+                          "Astral Pickaxe",
+                          "Beastial Pickaxe",
+                          "Blossom Pickaxe",
+                          "Chlorophyte Pickaxe",
+                          "Cobalt Pickaxe",
+                          "Crystyl Crusher",
+                          "Gelpick",
+                          "Genesis Pickaxe",
+                          "Laser Drill",
+                          "Luminite Pickaxe",
+                          "Molten Pickaxe",
+                          "Mythril Pickaxe",
+                          "Pickaxe Axe",
+                          "Picksaw",
+                          "Seismic Hampick",
+                          "Shardlight Pickaxe",
+                          "Shroomite Digging Claw",
+                          "Spectre Pickaxe"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "Not",
+                      "child": {
+                        "rule": "False_"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Altar",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Cobalt Bar",
+                      "Hardmode",
+                      "Mythril Ore"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Cobalt Ore",
@@ -2804,9 +3474,15 @@
             "name": "Extra Shiny!",
             "id": 8257804,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Adamantite Ore",
+                  "Chlorophyte Ore",
+                  "Cobalt Ore",
+                  "Mythril Ore"
+                ]
+              }
             },
             "item": {
               "name": "Reward: Water Walking Boots",
@@ -2820,9 +3496,13 @@
             "name": "Cobalt Bar",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Cobalt Ore",
+                  "Hardmode"
+                ]
+              }
             },
             "item": {
               "name": "Cobalt Bar",
@@ -2836,9 +3516,11 @@
             "name": "Cobalt Pickaxe",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Cobalt Bar",
+                "count": 1
+              }
             },
             "item": {
               "name": "Cobalt Pickaxe",
@@ -2852,9 +3534,13 @@
             "name": "Blindfold",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Hardmode",
+                  "Pocket Mirror"
+                ]
+              }
             },
             "item": {
               "name": "Blindfold",
@@ -2868,9 +3554,14 @@
             "name": "Reflective Shades",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blindfold",
+                  "Pocket Mirror",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Reflective Shades",
@@ -2884,9 +3575,13 @@
             "name": "Vitamins",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Armor Polish",
+                  "Hardmode"
+                ]
+              }
             },
             "item": {
               "name": "Vitamins",
@@ -2900,9 +3595,14 @@
             "name": "Armor Bracing",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Armor Polish",
+                  "Tinkerer's Workshop",
+                  "Vitamins"
+                ]
+              }
             },
             "item": {
               "name": "Armor Bracing",
@@ -2916,9 +3616,13 @@
             "name": "Nazar",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Hardmode",
+                  "Megaphone"
+                ]
+              }
             },
             "item": {
               "name": "Nazar",
@@ -2932,9 +3636,14 @@
             "name": "Countercurse Mantra",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Megaphone",
+                  "Nazar",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Countercurse Mantra",
@@ -2948,9 +3657,17 @@
             "name": "Ankh Charm",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Armor Bracing",
+                  "Countercurse Mantra",
+                  "Medicated Bandage",
+                  "Reflective Shades",
+                  "The Plan",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Ankh Charm",
@@ -2964,9 +3681,14 @@
             "name": "Ankh Shield",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Ankh Charm",
+                  "Obsidian Shield",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Ankh Shield",
@@ -2980,9 +3702,11 @@
             "name": "Soul of Night",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hardmode",
+                "count": 1
+              }
             },
             "item": {
               "name": "Soul of Night",
@@ -2996,9 +3720,11 @@
             "name": "Hallow",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hardmode",
+                "count": 1
+              }
             },
             "item": {
               "name": "Hallow",
@@ -3012,9 +3738,14 @@
             "name": "Pixie Dust",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Hallow",
+                  "Holy Water",
+                  "Meteor Staff"
+                ]
+              }
             },
             "item": {
               "name": "Pixie Dust",
@@ -3028,9 +3759,13 @@
             "name": "Holy Water",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hallowed Seeds",
+                  "Pixie Dust"
+                ]
+              }
             },
             "item": {
               "name": "Holy Water",
@@ -3044,9 +3779,11 @@
             "name": "Unicorn Horn",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hallow",
+                "count": 1
+              }
             },
             "item": {
               "name": "Unicorn Horn",
@@ -3060,9 +3797,11 @@
             "name": "Crystal Shard",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hallow",
+                "count": 1
+              }
             },
             "item": {
               "name": "Crystal Shard",
@@ -3076,9 +3815,14 @@
             "name": "Soul of Light",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Hallow",
+                  "Light Disc",
+                  "Meteor Staff"
+                ]
+              }
             },
             "item": {
               "name": "Soul of Light",
@@ -3092,9 +3836,27 @@
             "name": "Meteor Staff",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Hardmode Anvil",
+                      "Meteorite Bar",
+                      "Pixie Dust",
+                      "Soul of Light"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Asteroid Staff",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Meteor Staff",
@@ -3108,9 +3870,11 @@
             "name": "Blessed Apple",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hallow",
+                "count": 1
+              }
             },
             "item": {
               "name": "Blessed Apple",
@@ -3124,9 +3888,11 @@
             "name": "Rod of Discord",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hallow",
+                "count": 1
+              }
             },
             "item": {
               "name": "Rod of Discord",
@@ -3140,9 +3906,11 @@
             "name": "Soul of Flight",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hardmode",
+                "count": 1
+              }
             },
             "item": {
               "name": "Soul of Flight",
@@ -3156,9 +3924,167 @@
             "name": "Head in the Clouds",
             "id": 8257807,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Ancient Manipulator",
+                      "Fragment",
+                      "Luminite Bar"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Hardmode",
+                      "Post-Golem",
+                      "Tavernkeep"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Hardmode",
+                      "Post-Plantera",
+                      "Witch Doctor"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Post-Plantera",
+                      "Solar Eclipse"
+                    ]
+                  }
+                },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Autohammer",
+                              "Shroomite Bar"
+                            ]
+                          }
+                        },
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "Or",
+                              "children": [
+                                {
+                                  "rule": "has_n_from_list",
+                                  "_original_ast_type": "helper",
+                                  "args": [
+                                    [
+                                      "Post-The Twins",
+                                      "Post-The Destroyer",
+                                      "Post-Skeletron Prime"
+                                    ],
+                                    {
+                                      "rule": "Constant",
+                                      "args": {
+                                        "value": 1
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Hardmode",
+                                      "Lihzahrd Temple",
+                                      "Post-Plantera"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Hardmode",
+                                      "Pixie Dust",
+                                      "Post-Plantera",
+                                      "Solar Eclipse",
+                                      "Soul of Light",
+                                      "Soul of Night",
+                                      "Spectre Bar"
+                                    ]
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Hardmode Anvil",
+                                "count": 1
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Pumpkin Moon",
+                            "count": 1
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Soul of Flight",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Post-Plantera",
+                      "Hallow",
+                      "Hardmode"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Bug Net",
+                      "Hardmode"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Frost Moon",
+                      "Steampunker"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Reward: Fisherman's Pocket Guide",
@@ -3172,9 +4098,13 @@
             "name": "Bunny",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hardmode",
+                  "Zoologist"
+                ]
+              }
             },
             "item": {
               "name": "Bunny",
@@ -3188,9 +4118,13 @@
             "name": "Forbidden Fragment",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hardmode",
+                  "Sandstorm"
+                ]
+              }
             },
             "item": {
               "name": "Forbidden Fragment",
@@ -3204,9 +4138,11 @@
             "name": "Don't Dread on Me",
             "id": 8257809,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hardmode",
+                "count": 1
+              }
             },
             "item": {
               "name": "Reward: Trifold Map",
@@ -3220,9 +4156,11 @@
             "name": "Truffle",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hardmode",
+                "count": 1
+              }
             },
             "item": {
               "name": "Truffle",
@@ -3236,9 +4174,11 @@
             "name": "It Can Talk?!",
             "id": 8257811,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Truffle",
+                "count": 1
+              }
             },
             "item": {
               "name": "Reward: Tally Counter",
@@ -3252,9 +4192,11 @@
             "name": "Pirate Invasion",
             "id": 8257812,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hardmode",
+                "count": 1
+              }
             },
             "item": {
               "name": "Post-Evil Boss",
@@ -3268,9 +4210,11 @@
             "name": "Pirate",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Post-Pirate Invasion",
+                "count": 1
+              }
             },
             "item": {
               "name": "Pirate",
@@ -3284,9 +4228,11 @@
             "name": "Queen Slime",
             "id": 8257813,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hallow",
+                "count": 1
+              }
             },
             "item": {
               "name": "Post-Queen Bee",
@@ -3300,9 +4246,11 @@
             "name": "Sparkle Slime Balloon",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Hallow",
+                "count": 1
+              }
             },
             "item": {
               "name": "Sparkle Slime Balloon",
@@ -3316,9 +4264,11 @@
             "name": "Diva Slime",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Sparkle Slime Balloon",
+                "count": 1
+              }
             },
             "item": {
               "name": "Diva Slime",
@@ -3332,9 +4282,19 @@
             "name": "The Great Slime Mitosis",
             "id": 8257814,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Clumsy Slime",
+                  "Cool Slime",
+                  "Diva Slime",
+                  "Elder Slime",
+                  "Mystic Slime",
+                  "Nerdy Slime",
+                  "Squire Slime",
+                  "Surly Slime"
+                ]
+              }
             },
             "item": {
               "name": "Reward: Grappling Hook",
@@ -3348,9 +4308,61 @@
             "name": "Mythril Ore",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Adamantite Pickaxe",
+                          "Astral Pickaxe",
+                          "Beastial Pickaxe",
+                          "Blossom Pickaxe",
+                          "Chlorophyte Pickaxe",
+                          "Cobalt Pickaxe",
+                          "Crystyl Crusher",
+                          "Genesis Pickaxe",
+                          "Laser Drill",
+                          "Luminite Pickaxe",
+                          "Mythril Pickaxe",
+                          "Pickaxe Axe",
+                          "Picksaw",
+                          "Seismic Hampick",
+                          "Shardlight Pickaxe",
+                          "Shroomite Digging Claw",
+                          "Spectre Pickaxe"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "Not",
+                      "child": {
+                        "rule": "False_"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Altar",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Adamantite Ore",
+                      "Hardmode",
+                      "Mythril Bar"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Mythril Ore",
@@ -3364,9 +4376,13 @@
             "name": "Mythril Bar",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Hardmode",
+                  "Mythril Ore"
+                ]
+              }
             },
             "item": {
               "name": "Mythril Bar",
@@ -3380,9 +4396,11 @@
             "name": "Hardmode Anvil",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Has",
+              "args": {
+                "item_name": "Mythril Bar",
+                "count": 1
+              }
             },
             "item": {
               "name": "Hardmode Anvil",
@@ -3396,9 +4414,13 @@
             "name": "Mythril Pickaxe",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hardmode Anvil",
+                  "Mythril Bar"
+                ]
+              }
             },
             "item": {
               "name": "Mythril Pickaxe",
@@ -3412,9 +4434,77 @@
             "name": "Adamantite Ore",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Not",
+                      "child": {
+                        "rule": "False_"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Chlorophyte Ore",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Adamantite Pickaxe",
+                          "Astral Pickaxe",
+                          "Beastial Pickaxe",
+                          "Blossom Pickaxe",
+                          "Chlorophyte Pickaxe",
+                          "Crystyl Crusher",
+                          "Genesis Pickaxe",
+                          "Laser Drill",
+                          "Luminite Pickaxe",
+                          "Mythril Pickaxe",
+                          "Pickaxe Axe",
+                          "Picksaw",
+                          "Seismic Hampick",
+                          "Shardlight Pickaxe",
+                          "Shroomite Digging Claw",
+                          "Spectre Pickaxe"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "Not",
+                      "child": {
+                        "rule": "False_"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Altar",
+                        "count": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Adamantite Bar",
+                      "Hardmode"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Adamantite Ore",
@@ -3428,9 +4518,14 @@
             "name": "Hardmode Forge",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Adamantite Ore",
+                  "Hardmode Anvil",
+                  "Hellforge"
+                ]
+              }
             },
             "item": {
               "name": "Hardmode Forge",
@@ -3444,9 +4539,25 @@
             "name": "Adamantite Bar",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Adamantite Ore",
+                      "Hardmode Forge"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Hardmode",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Adamantite Bar",
@@ -3460,9 +4571,13 @@
             "name": "Adamantite Pickaxe",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Adamantite Bar",
+                  "Hardmode Anvil"
+                ]
+              }
             },
             "item": {
               "name": "Adamantite Pickaxe",
@@ -3476,9 +4591,14 @@
             "name": "Forbidden Armor",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Adamantite Bar",
+                  "Forbidden Fragment",
+                  "Hardmode Anvil"
+                ]
+              }
             },
             "item": {
               "name": "Forbidden Armor",
@@ -3492,9 +4612,13 @@
             "name": "Mechanical Eye",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hardmode Anvil",
+                  "Soul of Light"
+                ]
+              }
             },
             "item": {
               "name": "Mechanical Eye",
@@ -3508,9 +4632,13 @@
             "name": "Mechanical Worm",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hardmode Anvil",
+                  "Soul of Night"
+                ]
+              }
             },
             "item": {
               "name": "Mechanical Worm",
@@ -3524,9 +4652,15 @@
             "name": "Mechanical Skull",
             "id": null,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hardmode Anvil",
+                  "Bone",
+                  "Soul of Light",
+                  "Soul of Night"
+                ]
+              }
             },
             "item": {
               "name": "Mechanical Skull",
@@ -3540,9 +4674,22 @@
             "name": "The Twins",
             "id": 8257818,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Not",
+                  "child": {
+                    "rule": "False_"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Mechanical Eye",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Post-The Twins",
@@ -3556,9 +4703,22 @@
             "name": "The Destroyer",
             "id": 8257820,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Not",
+                  "child": {
+                    "rule": "False_"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Mechanical Worm",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Post-The Destroyer",
@@ -3572,9 +4732,22 @@
             "name": "Skeletron Prime",
             "id": 8257822,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Not",
+                  "child": {
+                    "rule": "False_"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Mechanical Skull",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Post-Skeletron Prime",
@@ -8243,7 +9416,7 @@
         "Profaned Soul Artifact": 1,
         "Angelic Alliance": 2
       },
-      "world_directory": "terraria_worldgen"
+      "world_directory": "terraria"
     }
   },
   "game_info": {

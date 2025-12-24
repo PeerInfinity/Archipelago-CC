@@ -2405,7 +2405,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Toxic Immunity Perk": {
         "name": "Toxic Immunity Perk",
@@ -2417,7 +2417,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Explosion Immunity Perk": {
         "name": "Explosion Immunity Perk",
@@ -2429,7 +2429,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Melee Immunity Perk": {
         "name": "Melee Immunity Perk",
@@ -2441,7 +2441,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Electricity Immunity Perk": {
         "name": "Electricity Immunity Perk",
@@ -2453,7 +2453,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Tinker with Wands Everywhere Perk": {
         "name": "Tinker with Wands Everywhere Perk",
@@ -2465,7 +2465,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "All-Seeing Eye Perk": {
         "name": "All-Seeing Eye Perk",
@@ -2478,7 +2478,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Spatial Awareness Perk": {
         "name": "Spatial Awareness Perk",

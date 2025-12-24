@@ -100,48 +100,6 @@ def _hylics2worldgen_worm_room_key(state: "CollectionState", player: int) -> boo
     return state.has('WORM ROOM KEY', player)
 
 
-# Helper definitions for frontend evaluation
-# These are looked up by name instead of being inlined at every call site
-_HELPER_DEFINITIONS = {   'air_dash': {'item': 'PNEUMATOPHORE', 'type': 'item_check'},
-    'airship': {'item': 'DOCK KEY', 'type': 'item_check'},
-    'all_tokens': {'count': {'type': 'constant', 'value': 3}, 'item': 'SAGE TOKEN', 'type': 'item_check'},
-    'bridge_key': {'item': 'BRIDGE KEY', 'type': 'item_check'},
-    'cave_key': {'item': 'CAVE KEY', 'type': 'item_check'},
-    'charge_up': {'item': 'CHARGE UP', 'type': 'item_check'},
-    'clicker': {'item': 'CLICKER', 'type': 'item_check'},
-    'deep_key': {'item': 'DEEP KEY', 'type': 'item_check'},
-    'enter_foglast': {   'conditions': [   {'name': 'airship', 'type': 'helper'},
-                                           {'name': 'worm_room_key', 'type': 'helper'},
-                                           {'name': 'paddle', 'type': 'helper'}],
-                         'type': 'and'},
-    'enter_hylemxylem': {   'conditions': [   {'item': 'PNEUMATOPHORE', 'type': 'item_check'},
-                                              {'name': 'enter_wormpod', 'type': 'helper'},
-                                              {'item': 'BRIDGE KEY', 'type': 'item_check'}],
-                            'type': 'and'},
-    'enter_sageship': {   'conditions': [   {'item': 'SKULL BOMB', 'type': 'item_check'},
-                                            {'item': 'DOCK KEY', 'type': 'item_check'},
-                                            {'item': 'PADDLE', 'type': 'item_check'}],
-                          'type': 'and'},
-    'enter_wormpod': {   'conditions': [   {'item': 'DOCK KEY', 'type': 'item_check'},
-                                           {'item': 'WORM ROOM KEY', 'type': 'item_check'},
-                                           {'item': 'PADDLE', 'type': 'item_check'}],
-                         'type': 'and'},
-    'house_key': {'item': 'HOUSE KEY', 'type': 'item_check'},
-    'jail_key': {'item': 'JAIL KEY', 'type': 'item_check'},
-    'paddle': {'item': 'PADDLE', 'type': 'item_check'},
-    'paper_cup': {'item': 'PAPER CUP', 'type': 'item_check'},
-    'skull_bomb': {'item': 'SKULL BOMB', 'type': 'item_check'},
-    'tower_key': {'item': 'TOWER KEY', 'type': 'item_check'},
-    'upper_chamber_key': {'item': 'UPPER CHAMBER KEY', 'type': 'item_check'},
-    'upper_house_key': {'item': 'UPPER HOUSE KEY', 'type': 'item_check'},
-    'worm_room_key': {'item': 'WORM ROOM KEY', 'type': 'item_check'}}
-
-
-def get_helper_definitions() -> dict:
-    """Return helper definitions for frontend evaluation."""
-    return _HELPER_DEFINITIONS
-
-
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player

@@ -55,162 +55,6 @@ def _ahatintimeworldgen_painting_logic(state: "CollectionState", player: int) ->
     return bool(False)
 
 
-# Helper definitions for frontend evaluation
-# These are looked up by name instead of being inlined at every call site
-_HELPER_DEFINITIONS = {   'Difficulty': {'body': {'name': 'value', 'type': 'name'}, 'params': ['value']},
-    'can_clear_required_act': {   'body': {   'statements': [   {   'name': 'entrance',
-                                                                    'type': 'assign',
-                                                                    'value': {   'args': [   {   'name': 'act_entrance',
-                                                                                                 'type': 'name'}],
-                                                                                 'function': {   'attr': 'get_entrance',
-                                                                                                 'object': {   'attr': 'multiworld',
-                                                                                                               'object': {   'name': 'world',
-                                                                                                                             'type': 'name'},
-                                                                                                               'type': 'attribute'},
-                                                                                                 'type': 'attribute'},
-                                                                                 'type': 'function_call'}},
-                                                                {   'body': [   {   'type': 'return',
-                                                                                    'value': {   'type': 'constant',
-                                                                                                 'value': False}}],
-                                                                    'test': {   'condition': {   'args': [   {   'attr': 'connected_region',
-                                                                                                                 'object': {   'name': 'entrance',
-                                                                                                                               'type': 'name'},
-                                                                                                                 'type': 'attribute'},
-                                                                                                             {   'type': 'constant',
-                                                                                                                 'value': 'Region'}],
-                                                                                                 'method': 'can_reach',
-                                                                                                 'type': 'state_method'},
-                                                                                'type': 'not'},
-                                                                    'type': 'if_statement'},
-                                                                {   'body': [   {   'type': 'return',
-                                                                                    'value': {   'type': 'constant',
-                                                                                                 'value': True}}],
-                                                                    'test': {   'left': {   'type': 'constant',
-                                                                                            'value': 'Free Roam'},
-                                                                                'op': 'in',
-                                                                                'right': {   'attr': 'name',
-                                                                                             'object': {   'attr': 'connected_region',
-                                                                                                           'object': {   'name': 'entrance',
-                                                                                                                         'type': 'name'},
-                                                                                                           'type': 'attribute'},
-                                                                                             'type': 'attribute'},
-                                                                                'type': 'compare'},
-                                                                    'type': 'if_statement'},
-                                                                {   'name': 'name',
-                                                                    'type': 'assign',
-                                                                    'value': {   'all_simple': True,
-                                                                                 'parts': [   {   'type': 'constant',
-                                                                                                  'value': 'Act '
-                                                                                                           'Completion '
-                                                                                                           '('},
-                                                                                              {   'type': 'formatted_value',
-                                                                                                  'value': {   'attr': 'name',
-                                                                                                               'object': {   'attr': 'connected_region',
-                                                                                                                             'object': {   'name': 'entrance',
-                                                                                                                                           'type': 'name'},
-                                                                                                                             'type': 'attribute'},
-                                                                                                               'type': 'attribute'}},
-                                                                                              {   'type': 'constant',
-                                                                                                  'value': ')'}],
-                                                                                 'type': 'f_string',
-                                                                                 'value': 'Act Completion ({...})'}},
-                                                                {   'type': 'return',
-                                                                    'value': {   'function': {   'attr': 'access_rule',
-                                                                                                 'object': {   'args': [   {   'name': 'name',
-                                                                                                                               'type': 'name'}],
-                                                                                                               'function': {   'attr': 'get_location',
-                                                                                                                               'object': {   'attr': 'multiworld',
-                                                                                                                                             'object': {   'name': 'world',
-                                                                                                                                                           'type': 'name'},
-                                                                                                                                             'type': 'attribute'},
-                                                                                                                               'type': 'attribute'},
-                                                                                                               'type': 'function_call'},
-                                                                                                 'type': 'attribute'},
-                                                                                 'type': 'function_call'}}],
-                                              'type': 'block'},
-                                  'params': ['act_entrance']},
-    'can_use_hat': {   'body': {   'if_false': {   'if_false': {   'count': {   'args': [   {   'name': 'hat',
-                                                                                                'type': 'name'}],
-                                                                                'name': 'get_hat_cost',
-                                                                                'type': 'helper'},
-                                                                   'item': 'Yarn',
-                                                                   'type': 'item_check'},
-                                                   'if_true': {'type': 'constant', 'value': True},
-                                                   'test': {   'left': {   'index': {'name': 'hat', 'type': 'name'},
-                                                                           'type': 'subscript',
-                                                                           'value': {   'attr': 'hat_yarn_costs',
-                                                                                        'object': {   'name': 'world',
-                                                                                                      'type': 'name'},
-                                                                                        'type': 'attribute'}},
-                                                               'op': '<=',
-                                                               'right': {'type': 'constant', 'value': 0},
-                                                               'type': 'compare'},
-                                                   'type': 'conditional'},
-                                   'if_true': {   'item': {   'index': {'name': 'hat', 'type': 'name'},
-                                                              'type': 'subscript',
-                                                              'value': {   'type': 'constant',
-                                                                           'value': {   '0': 'Sprint Hat',
-                                                                                        '1': 'Brewing Hat',
-                                                                                        '2': 'Ice Hat',
-                                                                                        '3': 'Dweller Mask',
-                                                                                        '4': 'Time Stop Hat'}}},
-                                                  'type': 'item_check'},
-                                   'test': {'setting': 'HatItems', 'type': 'setting_value'},
-                                   'type': 'conditional'},
-                       'params': ['hat']},
-    'get_difficulty': {   'args': [{'setting': 'LogicDifficulty', 'type': 'setting_value'}],
-                          'name': 'Difficulty',
-                          'type': 'helper'},
-    'get_hat_cost': {   'body': {   'statements': [   {   'name': 'cost',
-                                                          'type': 'assign',
-                                                          'value': {'type': 'constant', 'value': 0}},
-                                                      {   'body': [   {   'name': 'cost',
-                                                                          'op': '+=',
-                                                                          'type': 'assign',
-                                                                          'value': {   'index': {   'name': 'h',
-                                                                                                    'type': 'name'},
-                                                                                       'type': 'subscript',
-                                                                                       'value': {   'attr': 'hat_yarn_costs',
-                                                                                                    'object': {   'name': 'world',
-                                                                                                                  'type': 'name'},
-                                                                                                    'type': 'attribute'}}},
-                                                                      {   'body': [{'type': 'break'}],
-                                                                          'test': {   'left': {   'name': 'h',
-                                                                                                  'type': 'name'},
-                                                                                      'op': '==',
-                                                                                      'right': {   'name': 'hat',
-                                                                                                   'type': 'name'},
-                                                                                      'type': 'compare'},
-                                                                          'type': 'if_statement'}],
-                                                          'iterable': {   'attr': 'hat_craft_order',
-                                                                          'object': {'name': 'world', 'type': 'name'},
-                                                                          'type': 'attribute'},
-                                                          'type': 'for_iter',
-                                                          'var': 'h'},
-                                                      {'type': 'return', 'value': {'name': 'cost', 'type': 'name'}}],
-                                    'type': 'block'},
-                        'params': ['hat']},
-    'has_relic_combo': {   'body': {   'count': {   'args': [   {   'index': {'name': 'relic', 'type': 'name'},
-                                                                    'type': 'subscript',
-                                                                    'value': {   'attr': 'item_name_groups',
-                                                                                 'object': {   'name': 'world',
-                                                                                               'type': 'name'},
-                                                                                 'type': 'attribute'}}],
-                                                    'name': 'len',
-                                                    'type': 'helper'},
-                                       'group': {'name': 'relic', 'type': 'name'},
-                                       'type': 'group_check'},
-                           'params': ['relic']},
-    'painting_logic': {   'args': [{'setting': 'ShuffleSubconPaintings', 'type': 'setting_value'}],
-                          'name': 'bool',
-                          'type': 'helper'}}
-
-
-def get_helper_definitions() -> dict:
-    """Return helper definitions for frontend evaluation."""
-    return _HELPER_DEFINITIONS
-
-
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player
@@ -289,12 +133,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 1", player),
-        And(CanReachRegion('Picture Perfect'), True_())
+        And(CanReachRegion('Picture Perfect'), CanReachLocation("Act Completion (Picture Perfect)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 1", player),
-        And(CanReachRegion('The Golden Vault'), True_())
+        And(CanReachRegion('The Golden Vault'), CanReachLocation("Act Completion (The Golden Vault)"))
     )
 
     world.set_rule(
@@ -304,12 +148,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 2", player),
-        And(CanReachRegion('Picture Perfect'), True_())
+        And(CanReachRegion('Picture Perfect'), CanReachLocation("Act Completion (Picture Perfect)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 2", player),
-        And(CanReachRegion('The Golden Vault'), True_())
+        And(CanReachRegion('The Golden Vault'), CanReachLocation("Act Completion (The Golden Vault)"))
     )
 
     world.set_rule(
@@ -319,12 +163,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 3", player),
-        And(CanReachRegion('Picture Perfect'), True_())
+        And(CanReachRegion('Picture Perfect'), CanReachLocation("Act Completion (Picture Perfect)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 3", player),
-        And(CanReachRegion('The Golden Vault'), True_())
+        And(CanReachRegion('The Golden Vault'), CanReachLocation("Act Completion (The Golden Vault)"))
     )
 
     world.set_rule(
@@ -334,12 +178,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 4", player),
-        And(CanReachRegion('Picture Perfect'), True_())
+        And(CanReachRegion('Picture Perfect'), CanReachLocation("Act Completion (Picture Perfect)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 4", player),
-        And(CanReachRegion('The Golden Vault'), True_())
+        And(CanReachRegion('The Golden Vault'), CanReachLocation("Act Completion (The Golden Vault)"))
     )
 
     world.set_rule(
@@ -349,12 +193,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 6", player),
-        And(CanReachRegion('Picture Perfect'), True_())
+        And(CanReachRegion('Picture Perfect'), CanReachLocation("Act Completion (Picture Perfect)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 6", player),
-        And(CanReachRegion('The Golden Vault'), True_())
+        And(CanReachRegion('The Golden Vault'), CanReachLocation("Act Completion (The Golden Vault)"))
     )
 
     world.set_rule(
@@ -364,12 +208,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 5", player),
-        And(CanReachRegion('Picture Perfect'), True_())
+        And(CanReachRegion('Picture Perfect'), CanReachLocation("Act Completion (Picture Perfect)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 5", player),
-        And(CanReachRegion('The Golden Vault'), True_())
+        And(CanReachRegion('The Golden Vault'), CanReachLocation("Act Completion (The Golden Vault)"))
     )
 
     world.set_rule(
@@ -379,12 +223,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 7", player),
-        And(CanReachRegion('Picture Perfect'), True_())
+        And(CanReachRegion('Picture Perfect'), CanReachLocation("Act Completion (Picture Perfect)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 7", player),
-        And(CanReachRegion('The Golden Vault'), True_())
+        And(CanReachRegion('The Golden Vault'), CanReachLocation("Act Completion (The Golden Vault)"))
     )
 
     world.set_rule(
@@ -429,12 +273,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Owl Express Portal - Entrance 1", player),
-        And(And(CanReachRegion('Mail Delivery Service'), True_()), And(CanReachRegion('Train Rush'), True_()))
+        And(And(CanReachRegion('Mail Delivery Service'), CanReachLocation("Act Completion (Mail Delivery Service)")), And(CanReachRegion('Train Rush'), CanReachLocation("Act Completion (Train Rush)")))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 1", player),
-        And(And(CanReachRegion('Heating Up Mafia Town'), True_()), CanReachRegion('Alpine Free Roam'))
+        And(And(CanReachRegion('Heating Up Mafia Town'), CanReachLocation("Act Completion (Heating Up Mafia Town)")), CanReachRegion('Alpine Free Roam'))
     )
 
     world.set_rule(
@@ -454,7 +298,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 2", player),
-        And(And(CanReachRegion('Heating Up Mafia Town'), True_()), CanReachRegion('Alpine Free Roam'))
+        And(And(CanReachRegion('Heating Up Mafia Town'), CanReachLocation("Act Completion (Heating Up Mafia Town)")), CanReachRegion('Alpine Free Roam'))
     )
 
     world.set_rule(
@@ -504,12 +348,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 1", player),
-        And(CanReachRegion('Down with the Mafia!'), True_())
+        And(CanReachRegion('Down with the Mafia!'), CanReachLocation("Act Completion (Down with the Mafia!)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 1", player),
-        And(CanReachRegion('Dead Bird Studio Basement'), True_())
+        And(CanReachRegion('Dead Bird Studio Basement'), CanReachLocation("Act Completion (Dead Bird Studio Basement)"))
     )
 
     world.set_rule(
@@ -519,12 +363,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 2", player),
-        And(CanReachRegion('Down with the Mafia!'), True_())
+        And(CanReachRegion('Down with the Mafia!'), CanReachLocation("Act Completion (Down with the Mafia!)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 2", player),
-        And(CanReachRegion('Dead Bird Studio Basement'), True_())
+        And(CanReachRegion('Dead Bird Studio Basement'), CanReachLocation("Act Completion (Dead Bird Studio Basement)"))
     )
 
     world.set_rule(
@@ -534,22 +378,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 3", player),
-        And(CanReachRegion('Down with the Mafia!'), True_())
+        And(CanReachRegion('Down with the Mafia!'), CanReachLocation("Act Completion (Down with the Mafia!)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 3", player),
-        And(CanReachRegion('Dead Bird Studio Basement'), True_())
+        And(CanReachRegion('Dead Bird Studio Basement'), CanReachLocation("Act Completion (Dead Bird Studio Basement)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 2: Connection 1", player),
-        And(Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic")), if_true=True_(), if_false=Conditional(test=And(False_(), Not(True_())), if_true=True_(), if_false=Has('Progressive Painting Unlock'))), Conditional(test=Not(True_()), if_true=True_(), if_false=Or(And(True_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))), Has('Umbrella'))), Has('Hookshot Badge'))
+        And(Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic")), if_true=True_(), if_false=Conditional(test=And(False_(), Not(False_())), if_true=True_(), if_false=Has('Progressive Painting Unlock'))), Conditional(test=Not(False_()), if_true=True_(), if_false=Or(And(True_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))), Has('Umbrella'))), Has('Hookshot Badge'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 3: Connection 1", player),
-        And(Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic")), if_true=True_(), if_false=Conditional(test=And(False_(), Not(True_())), if_true=True_(), if_false=Has('Progressive Painting Unlock'))), Conditional(test=Not(True_()), if_true=True_(), if_false=Or(And(True_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))), Has('Umbrella'))), Has('Hookshot Badge'))
+        And(Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic")), if_true=True_(), if_false=Conditional(test=And(False_(), Not(False_())), if_true=True_(), if_false=Has('Progressive Painting Unlock'))), Conditional(test=Not(False_()), if_true=True_(), if_false=Or(And(True_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))), Has('Umbrella'))), Has('Hookshot Badge'))
     )
 
     world.set_rule(
@@ -559,12 +403,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 4", player),
-        And(CanReachRegion('Down with the Mafia!'), True_())
+        And(CanReachRegion('Down with the Mafia!'), CanReachLocation("Act Completion (Down with the Mafia!)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 4", player),
-        And(CanReachRegion('Dead Bird Studio Basement'), True_())
+        And(CanReachRegion('Dead Bird Studio Basement'), CanReachLocation("Act Completion (Dead Bird Studio Basement)"))
     )
 
     world.set_rule(
@@ -579,12 +423,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 5", player),
-        And(CanReachRegion('Down with the Mafia!'), True_())
+        And(CanReachRegion('Down with the Mafia!'), CanReachLocation("Act Completion (Down with the Mafia!)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 5", player),
-        And(CanReachRegion('Dead Bird Studio Basement'), True_())
+        And(CanReachRegion('Dead Bird Studio Basement'), CanReachLocation("Act Completion (Dead Bird Studio Basement)"))
     )
 
     world.set_rule(
@@ -619,7 +463,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 1", player),
-        And(And(Conditional(test=Not(True_()), if_true=True_(), if_false=Or(And(True_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))), Has('Umbrella'))), Has('Hookshot Badge')), HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Crayon',)))
+        And(And(Conditional(test=Not(False_()), if_true=True_(), if_false=Or(And(True_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))), Has('Umbrella'))), Has('Hookshot Badge')), HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Crayon',)))
     )
 
     world.set_rule(
@@ -654,7 +498,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("SF Area -> SF Behind Boss Firewall", player),
-        Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic")), if_true=True_(), if_false=Conditional(test=And(False_(), Not(True_())), if_true=True_(), if_false=Has('Progressive Painting Unlock')))
+        Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic")), if_true=True_(), if_false=Conditional(test=And(False_(), Not(False_())), if_true=True_(), if_false=Has('Progressive Painting Unlock')))
     )
 
     world.set_rule(
@@ -769,7 +613,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (Toilet of Doom)", player),
-        And(Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic")), if_true=True_(), if_false=Conditional(test=And(False_(), Not(True_())), if_true=True_(), if_false=Has('Progressive Painting Unlock'))), Conditional(test=Not(True_()), if_true=True_(), if_false=Or(And(True_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))), Has('Umbrella'))), Has('Hookshot Badge'))
+        And(Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic")), if_true=True_(), if_false=Conditional(test=And(False_(), Not(False_())), if_true=True_(), if_false=Has('Progressive Painting Unlock'))), Conditional(test=Not(False_()), if_true=True_(), if_false=Or(And(True_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))), Has('Umbrella'))), Has('Hookshot Badge'))
     )
 
     world.set_rule(
@@ -789,7 +633,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Goat Refinery", player),
-        And(And(Conditional(test=Not(True_()), if_true=True_(), if_false=Or(And(False_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))), Has('Umbrella'))), Has('AFR Access'), Has('Hookshot Badge')), Has('Hookshot Badge'))
+        And(And(Conditional(test=Not(False_()), if_true=True_(), if_false=Or(And(False_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))), Has('Umbrella'))), Has('AFR Access'), Has('Hookshot Badge')), Has('Hookshot Badge'))
     )
 
     world.set_rule(

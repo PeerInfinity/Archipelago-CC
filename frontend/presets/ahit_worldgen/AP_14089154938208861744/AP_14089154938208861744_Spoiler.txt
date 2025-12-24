@@ -17,11 +17,9 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
-Hatitems:                        0
+Hatitems:                        No
 Logicdifficulty:                 -1
-Nopaintingskips:                 0
-Shufflesubconpaintings:          0
-Umbrellalogic:                   0
+Shufflesubconpaintings:          No
 
 
 Starting Items:
@@ -298,7 +296,6 @@ Playthrough:
 }
 2: {
   Act Completion (Murder on the Owl Express): Time Piece
-  Act Completion (Time Rift - Bazaar): Yarn
   Act Completion (Your Contract has Expired): Yarn
   Dead Bird Studio Basement - Small Room: Yarn
   Mafia HQ - Freezer Chest: Yarn
@@ -312,8 +309,8 @@ Playthrough:
 3: {
   Act Completion (Dead Bird Studio Basement): Relic (Burger Cushion)
   Act Completion (The Illness has Spread): Time Piece
+  Act Completion (Time Rift - Bazaar): Yarn
   Act Completion (Time Rift - Pipe): Yarn
-  Act Completion (Time Rift - Village): Yarn
   Act Completion (Toilet of Doom): Relic (UFO)
   Act Completion (Train Rush): Yarn
   Alpine Skyline - Ember Summit: Yarn
@@ -338,6 +335,7 @@ Playthrough:
   Act Completion (The Birdhouse): Umbrella
   Act Completion (The Lava Cake): Yarn
   Act Completion (The Subcon Well): Time Piece
+  Act Completion (Time Rift - Village): Yarn
   Alpine Skyline - Mystifying Time Mesa: Zipline: Time Piece
   Alpine Skyline - The Birdhouse: Brewing Crate House: Time Piece
   Alpine Skyline - The Birdhouse: Outer Edge: Yarn

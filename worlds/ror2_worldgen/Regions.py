@@ -9,6 +9,9 @@ from BaseClasses import MultiWorld, Region, Entrance
 from .Locations import location_table, RiskofRain2WorldGenLocation
 
 
+# Regions that were added after sphere calculation (from original export)
+DYNAMICALLY_ADDED_REGIONS = {"Void Fields", "Petrichor V", "Hidden Realm: Bulwark's Ambry", "Hidden Realm: Gilded Coast"}
+
 def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 

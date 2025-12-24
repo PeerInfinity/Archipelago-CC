@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Compare, Has, HasAll, HelperCall, Or
+from rule_builder import True_, False_, And, Compare, CountItem, Has, HasAll, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -21,54 +21,6 @@ def _castlevania64worldgen_location_item_name(state: "CollectionState", player: 
     if (location.item is None):
         return None
     return [location.item.name, location.item.player]
-
-
-# Helper definitions for frontend evaluation
-# These are looked up by name instead of being inlined at every call site
-_HELPER_DEFINITIONS = {   'location_item_name': {   'body': {   'statements': [   {   'name': 'location',
-                                                                'type': 'assign',
-                                                                'value': {   'args': [   {   'name': 'location',
-                                                                                             'type': 'name'}],
-                                                                             'function': {   'attr': 'get_location',
-                                                                                             'object': {   'attr': 'multiworld',
-                                                                                                           'object': {   'name': 'state',
-                                                                                                                         'type': 'name'},
-                                                                                                           'type': 'attribute'},
-                                                                                             'type': 'attribute'},
-                                                                             'type': 'function_call'}},
-                                                            {   'body': [   {   'type': 'return',
-                                                                                'value': {   'type': 'constant',
-                                                                                             'value': None}}],
-                                                                'test': {   'left': {   'attr': 'item',
-                                                                                        'object': {   'name': 'location',
-                                                                                                      'type': 'name'},
-                                                                                        'type': 'attribute'},
-                                                                            'op': 'is',
-                                                                            'right': {   'type': 'constant',
-                                                                                         'value': None},
-                                                                            'type': 'compare'},
-                                                                'type': 'if_statement'},
-                                                            {   'type': 'return',
-                                                                'value': {   'type': 'list',
-                                                                             'value': [   {   'attr': 'name',
-                                                                                              'object': {   'attr': 'item',
-                                                                                                            'object': {   'name': 'location',
-                                                                                                                          'type': 'name'},
-                                                                                                            'type': 'attribute'},
-                                                                                              'type': 'attribute'},
-                                                                                          {   'attr': 'player',
-                                                                                              'object': {   'attr': 'item',
-                                                                                                            'object': {   'name': 'location',
-                                                                                                                          'type': 'name'},
-                                                                                                            'type': 'attribute'},
-                                                                                              'type': 'attribute'}]}}],
-                                          'type': 'block'},
-                              'params': ['location']}}
-
-
-def get_helper_definitions() -> dict:
-    """Return helper definitions for frontend evaluation."""
-    return _HELPER_DEFINITIONS
 
 
 def set_rules(world: "World") -> None:
@@ -119,12 +71,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Storeroom door", player),
-        Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Villa: Storeroom statue',)), "==", True_()), Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Villa: Storeroom - Right',)), "==", True_()), Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Villa: Storeroom - Left',)), "==", True_()), Has('Storeroom Key'))))
+        Or(Compare(CountItem("Villa: Storeroom statue"), "==", ['Storeroom Key', 1]), Or(Compare(CountItem("Villa: Storeroom - Right"), "==", ['Storeroom Key', 1]), Or(Compare(CountItem("Villa: Storeroom - Left"), "==", ['Storeroom Key', 1]), Has('Storeroom Key'))))
     )
 
     world.set_rule(
         multiworld.get_entrance("To Archives door", player),
-        Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Villa: Archives rear corner',)), "==", True_()), Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Villa: Archives table',)), "==", True_()), Has('Archives Key')))
+        Or(Compare(CountItem("Villa: Archives rear corner"), "==", ['Archives Key', 1]), Or(Compare(CountItem("Villa: Archives table"), "==", ['Archives Key', 1]), Has('Archives Key')))
     )
 
     world.set_rule(
@@ -149,7 +101,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Torture Chamber door", player),
-        Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Castle Center: Torture chamber rafters',)), "==", True_()), Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Castle Center: Torture chamber instrument rack',)), "==", True_()), Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Castle Center: Mandragora shelf - Right',)), "==", True_()), Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Castle Center: Mandragora shelf - Left',)), "==", True_()), Has('Chamber Key')))))
+        Or(Compare(CountItem("Castle Center: Torture chamber rafters"), "==", ['Chamber Key', 1]), Or(Compare(CountItem("Castle Center: Torture chamber instrument rack"), "==", ['Chamber Key', 1]), Or(Compare(CountItem("Castle Center: Mandragora shelf - Right"), "==", ['Chamber Key', 1]), Or(Compare(CountItem("Castle Center: Mandragora shelf - Left"), "==", ['Chamber Key', 1]), Has('Chamber Key')))))
     )
 
     world.set_rule(
@@ -169,7 +121,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Science Door 1", player),
-        Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Tower of Science: Pick-a-door hallway locked middle room',)), "==", True_()), Has('Science Key1'))
+        Or(Compare(CountItem("Tower of Science: Pick-a-door hallway locked middle room"), "==", ['Science Key1', 1]), Has('Science Key1'))
     )
 
     world.set_rule(
@@ -184,7 +136,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Science Door 3", player),
-        Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Tower of Science: Locked Key3 room - Left',)), "==", True_()), Or(Compare(HelperCall(helper_func=_castlevania64worldgen_location_item_name, helper_name="location_item_name", args=('Tower of Science: Locked Key3 room - Right',)), "==", True_()), Has('Science Key3')))
+        Or(Compare(CountItem("Tower of Science: Locked Key3 room - Left"), "==", ['Science Key3', 1]), Or(Compare(CountItem("Tower of Science: Locked Key3 room - Right"), "==", ['Science Key3', 1]), Has('Science Key3')))
     )
 
     world.set_rule(
