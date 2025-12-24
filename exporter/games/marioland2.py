@@ -15,7 +15,6 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
     """
 
     # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
-    AUTO_PRESERVE_LARGE_HELPERS = False
 
     # All helpers are now exported to rules.json - no JavaScript implementations needed.
     # Runtime data (auto_scroll_levels, sprite_data) is exported via get_settings_data.

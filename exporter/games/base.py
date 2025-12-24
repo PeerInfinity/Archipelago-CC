@@ -86,7 +86,8 @@ class BaseGameExportHandler:
     # Enable automatic helper preservation based on size
     # When enabled, helpers with more nodes than HELPER_INLINE_THRESHOLD will be
     # preserved as helper calls instead of inlined, reducing rules.json size
-    AUTO_PRESERVE_LARGE_HELPERS: bool = True
+    # Most games work better with this disabled (17 games explicitly disable it)
+    AUTO_PRESERVE_LARGE_HELPERS: bool = False
 
     # Threshold for automatic helper preservation (only used if AUTO_PRESERVE_LARGE_HELPERS is True)
     # Helpers with more than this many nodes will be preserved as helper calls

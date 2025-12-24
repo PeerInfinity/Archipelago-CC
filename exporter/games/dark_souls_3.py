@@ -16,8 +16,6 @@ class DarkSouls3GameExportHandler(GenericGameExportHandler):
     that the frontend rule engine understands.
     """
 
-    AUTO_PRESERVE_LARGE_HELPERS = False
-
     def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Transform _can_get and _can_go_to calls into standard rule types.
 

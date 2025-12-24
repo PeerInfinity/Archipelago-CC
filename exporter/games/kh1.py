@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 class KH1GameExportHandler(BaseGameExportHandler):
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
-    AUTO_PRESERVE_LARGE_HELPERS = False
 
     # KH1 uses resolved_items instead of base_items for sphere inventory
     USE_RESOLVED_ITEMS = True

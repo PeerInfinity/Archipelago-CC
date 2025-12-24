@@ -16,7 +16,6 @@ class FFMQGameExportHandler(GenericGameExportHandler):
     """
 
     # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
-    AUTO_PRESERVE_LARGE_HELPERS = False
 
     def __init__(self, world=None):
         super().__init__(world=world)

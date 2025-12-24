@@ -10,8 +10,6 @@ logger = logging.getLogger(__name__)
 class KDL3GameExportHandler(GenericGameExportHandler):
     """Handle KDL3-specific rule expansions and f-string conversions."""
 
-    AUTO_PRESERVE_LARGE_HELPERS = False
-
     # Simple world attributes that can be automatically exported via base class
     COMPUTED_SETTINGS = {
         'copy_abilities': lambda w, m, p: getattr(w, 'copy_abilities', {}),

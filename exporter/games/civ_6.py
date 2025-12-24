@@ -12,7 +12,6 @@ class Civ6GameExportHandler(GenericGameExportHandler):
     """Handler for Civilization VI - fixes era region access rules."""
 
     # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
-    AUTO_PRESERVE_LARGE_HELPERS = False
 
     def __init__(self):
         """Initialize the handler with era requirements storage."""

@@ -13,7 +13,6 @@ class LingoGameExportHandler(GenericGameExportHandler):
     and exporting door-related data structures for rule evaluation."""
 
     # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
-    AUTO_PRESERVE_LARGE_HELPERS = False
 
     # Use auto sweep for indirect region dependencies since Lingo's custom Rules.py
     # sets access_rule directly without registering indirect_connections
