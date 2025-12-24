@@ -3393,8 +3393,35 @@ class HelperCodeGenerator:
     def _expr_any_of(self, expr: Dict[str, Any]) -> str:
         """Generate any() expression for OR of conditions.
 
-        Used by SM helpers like wor() that need to OR variadic arguments.
+        Handles two formats:
+        1. Simple conditions list: {"type": "any_of", "conditions": [...]}
+        2. Comprehension style: {"type": "any_of", "element_rule": {...}, "iterator_info": {...}}
         """
+        # Check for comprehension style (iterator_info present)
+        iterator_info = expr.get('iterator_info')
+        if iterator_info:
+            target = iterator_info.get('target', {})
+            iterator = iterator_info.get('iterator', {})
+            condition = iterator_info.get('condition')
+            element_rule = expr.get('element_rule', {'type': 'constant', 'value': True})
+
+            # Generate target variable names
+            target_expr = self._generate_expression(target)
+
+            # Generate iterator expression
+            iterator_expr = self._generate_expression(iterator)
+
+            # Generate element rule expression
+            element_expr = self._generate_expression(element_rule)
+
+            # Generate condition expression if present
+            if condition:
+                condition_expr = self._generate_expression(condition)
+                return f"any({element_expr} for {target_expr} in {iterator_expr} if {condition_expr})"
+
+            return f"any({element_expr} for {target_expr} in {iterator_expr})"
+
+        # Simple conditions list format
         conditions = expr.get('conditions', [])
         if not conditions:
             return 'False'
@@ -3553,7 +3580,7 @@ class HelperCodeGenerator:
             return self.get_helper_call(name, args)
 
         # Built-in Python functions
-        if name in ('any', 'all', 'len', 'sum', 'min', 'max', 'sorted', 'list', 'iter', 'next', 'bool', 'int', 'str', 'float'):
+        if name in ('any', 'all', 'len', 'sum', 'min', 'max', 'sorted', 'list', 'set', 'tuple', 'iter', 'next', 'bool', 'int', 'str', 'float'):
             arg_exprs = [self._generate_expression(a) for a in args]
             return f"{name}({', '.join(arg_exprs)})"
 
@@ -3628,15 +3655,27 @@ class HelperCodeGenerator:
         elif method == 'has_all':
             if len(args) >= 1:
                 # has_all expects a tuple/list of item names
-                items = self._extract_constant(args[0], [])
-                items_repr = repr(tuple(items)) if items else '()'
+                # First try to get a constant value
+                items = self._extract_constant(args[0], None)
+                if items is not None:
+                    # It's a constant list, use repr
+                    items_repr = repr(tuple(items)) if items else '()'
+                else:
+                    # It's a dynamic expression (parameter reference, helper call, etc.)
+                    items_repr = self._generate_expression(args[0])
                 return f'state.has_all({items_repr}, player)'
 
         elif method == 'has_any':
             if len(args) >= 1:
                 # has_any expects a tuple/list of item names
-                items = self._extract_constant(args[0], [])
-                items_repr = repr(tuple(items)) if items else '()'
+                # First try to get a constant value
+                items = self._extract_constant(args[0], None)
+                if items is not None:
+                    # It's a constant list, use repr
+                    items_repr = repr(tuple(items)) if items else '()'
+                else:
+                    # It's a dynamic expression (parameter reference, helper call, etc.)
+                    items_repr = self._generate_expression(args[0])
                 return f'state.has_any({items_repr}, player)'
 
         elif method == 'count':
