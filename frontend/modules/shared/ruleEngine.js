@@ -1143,6 +1143,55 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'weighted_count_true': {
+        // Weighted version of count_true for compact representation
+        // Each condition has an associated weight (multiplicity)
+        // Sum of weights for satisfied conditions must be >= count
+        const requiredCount = rule.count || 0;
+        const weightedConditions = rule.weighted_conditions || [];
+
+        if (requiredCount === 0) {
+          result = true;
+          break;
+        }
+
+        if (weightedConditions.length === 0) {
+          result = requiredCount === 0;
+          break;
+        }
+
+        let weightSum = 0;
+        let undefinedWeightSum = 0;
+
+        for (const [condition, weight] of weightedConditions) {
+          const conditionResult = evaluateRule(condition, context, depth + 1, localScope);
+          if (conditionResult === true) {
+            weightSum += weight;
+          } else if (conditionResult === undefined) {
+            undefinedWeightSum += weight;
+          }
+          // Short-circuit if we already have enough weight
+          if (weightSum >= requiredCount) {
+            result = true;
+            break;
+          }
+        }
+
+        // If we didn't short-circuit with true, determine the result
+        if (result !== true) {
+          if (weightSum >= requiredCount) {
+            result = true;
+          } else if (weightSum + undefinedWeightSum >= requiredCount) {
+            // Might have enough if some undefineds are true
+            result = undefined;
+          } else {
+            // Impossible to reach required count
+            result = false;
+          }
+        }
+        break;
+      }
+
       case 'not': {
         // Handle both 'operand' and 'condition' field names for compatibility
         const conditionToNegate = rule.operand || rule.condition;
@@ -4891,6 +4940,58 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       return undefined;
     }
 
+    // AST_count_true (from Stardew Valley) - count how many conditions are true
+    case 'AST_count_true': {
+      const requiredCount = args.count || 0;
+      const conditions = args.conditions || [];
+
+      if (requiredCount === 0) return true;
+      if (conditions.length === 0) return requiredCount === 0;
+
+      let trueCount = 0;
+      let undefinedCount = 0;
+
+      for (const condition of conditions) {
+        const conditionResult = evaluateRule(condition, context, depth + 1, localScope);
+        if (conditionResult === true) {
+          trueCount++;
+          if (trueCount >= requiredCount) return true;
+        } else if (conditionResult === undefined) {
+          undefinedCount++;
+        }
+      }
+
+      if (trueCount >= requiredCount) return true;
+      if (trueCount + undefinedCount >= requiredCount) return undefined;
+      return false;
+    }
+
+    // AST_weighted_count_true (from Stardew Valley) - weighted count of conditions
+    case 'AST_weighted_count_true': {
+      const requiredCount = args.count || 0;
+      const weightedConditions = args.weighted_conditions || [];
+
+      if (requiredCount === 0) return true;
+      if (weightedConditions.length === 0) return requiredCount === 0;
+
+      let weightSum = 0;
+      let undefinedWeightSum = 0;
+
+      for (const [condition, weight] of weightedConditions) {
+        const conditionResult = evaluateRule(condition, context, depth + 1, localScope);
+        if (conditionResult === true) {
+          weightSum += weight;
+          if (weightSum >= requiredCount) return true;
+        } else if (conditionResult === undefined) {
+          undefinedWeightSum += weight;
+        }
+      }
+
+      if (weightSum >= requiredCount) return true;
+      if (weightSum + undefinedWeightSum >= requiredCount) return undefined;
+      return false;
+    }
+
     // Reachability rules
     case 'CanReachRegion': {
       const regionName = args.region_name;
@@ -5502,6 +5603,21 @@ export function debugRule(rule, indent = 0) {
         debugRule(cond, indent + 4);
       });
       break;
+
+    case 'weighted_count_true': {
+      const totalWeight = (rule.weighted_conditions || []).reduce((sum, [, w]) => sum + w, 0);
+      log(
+        'info',
+        `${prefix}WEIGHTED_COUNT_TRUE (at least ${rule.count} of ${totalWeight} weight from ${
+          (rule.weighted_conditions || []).length
+        } unique conditions):`
+      );
+      (rule.weighted_conditions || []).forEach(([cond, weight], i) => {
+        log('info', `${prefix}  Condition ${i + 1} (weight ${weight}):`);
+        debugRule(cond, indent + 4);
+      });
+      break;
+    }
 
     case 'state_method':
       log('info', `${prefix}Method: ${rule.method}`);
