@@ -668,6 +668,60 @@ class BaseGameExportHandler:
             if options_dict:
                 settings_dict['options'] = options_dict
 
+        # Export option definitions for world generator to recreate proper Option classes
+        # This captures the option type (Choice, Range, Toggle, etc.) and metadata
+        if hasattr(world, 'options') and world.options:
+            option_definitions = {}
+            for option_name in dir(world.options):
+                if option_name.startswith('_'):
+                    continue
+                try:
+                    option = getattr(world.options, option_name)
+                    # Check if it's an Option object
+                    if not hasattr(option, 'value'):
+                        continue
+
+                    option_class = type(option)
+                    option_def = {}
+
+                    # Determine option type by checking class hierarchy
+                    # Import here to avoid circular imports
+                    from Options import Choice, Range, Toggle, DefaultOnToggle, OptionSet, OptionList, OptionDict
+
+                    if isinstance(option, OptionSet) or isinstance(option, OptionList) or isinstance(option, OptionDict):
+                        # Skip complex collection options for now
+                        continue
+                    elif isinstance(option, Range) and not isinstance(option, Choice):
+                        option_def['type'] = 'range'
+                        option_def['range_start'] = option_class.range_start
+                        option_def['range_end'] = option_class.range_end
+                        option_def['default'] = option_class.default
+                    elif isinstance(option, DefaultOnToggle):
+                        option_def['type'] = 'default_on_toggle'
+                        option_def['default'] = option_class.default
+                    elif isinstance(option, Toggle):
+                        option_def['type'] = 'toggle'
+                        option_def['default'] = option_class.default
+                    elif isinstance(option, Choice):
+                        option_def['type'] = 'choice'
+                        # Export name_lookup which maps value -> name
+                        option_def['name_lookup'] = {str(k): v for k, v in option_class.name_lookup.items()}
+                        option_def['default'] = option_class.default
+                    else:
+                        # Unknown option type, skip
+                        continue
+
+                    # Add display_name if available
+                    if hasattr(option_class, 'display_name') and option_class.display_name:
+                        option_def['display_name'] = option_class.display_name
+
+                    option_definitions[option_name] = option_def
+                except Exception as e:
+                    logger.debug(f"Failed to export option definition for '{option_name}': {e}")
+
+            if option_definitions:
+                settings_dict['option_definitions'] = option_definitions
+
         # Process computed settings from COMPUTED_SETTINGS class attribute
         if self.COMPUTED_SETTINGS:
             for setting_name, compute_func in self.COMPUTED_SETTINGS.items():
