@@ -97,7 +97,7 @@ item_table: Dict[str, ItemData] = {
     "Progressive Shield": ItemData(95, ItemClassification.progression, "a shield"),
     "Bug Catching Net": ItemData(33, ItemClassification.progression, "the Bug Net"),
     "Cane of Byrna": ItemData(24, ItemClassification.progression, "the Blue Cane"),
-    "Boss Heart Container": ItemData(62, ItemClassification.useful, "a heart"),
+    "Boss Heart Container": ItemData(62, ItemClassification.progression, "a heart"),
     "Sanctuary Heart Container": ItemData(63, ItemClassification.useful, "a heart"),
     "Piece of Heart": ItemData(23, ItemClassification.useful, "a heart piece"),
     "Rupee (1)": ItemData(52, ItemClassification.filler, "a green rupee"),

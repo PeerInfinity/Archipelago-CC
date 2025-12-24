@@ -19380,7 +19380,7 @@
         "event": false,
         "type": null,
         "max_count": 10,
-        "classification": "useful"
+        "classification": "progression"
       },
       "Sanctuary Heart Container": {
         "name": "Sanctuary Heart Container",

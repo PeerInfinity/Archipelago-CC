@@ -17471,7 +17471,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Red": {
         "name": "Red",
@@ -17483,7 +17483,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Blue": {
         "name": "Blue",
@@ -17495,7 +17495,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Yellow": {
         "name": "Yellow",
@@ -17507,7 +17507,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Green": {
         "name": "Green",
@@ -17567,7 +17567,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       ":)": {
         "name": ":)",

@@ -240,3 +240,6 @@ Playthrough:
 17: {
   Ixupi Captured Metal: Lightning Pot Bottom
 }
+18: {
+  Mystery Solved: Mt. Pleasant Tribune: 45 year Old Mystery Solved!
+}

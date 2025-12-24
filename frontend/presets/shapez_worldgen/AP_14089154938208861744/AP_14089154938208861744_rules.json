@@ -247,7 +247,9 @@
                   "rule": "can_make_stitched_shape",
                   "_original_ast_type": "helper",
                   "args": [
-                    null
+                    {
+                      "rule": "False_"
+                    }
                   ]
                 },
                 {
@@ -275,7 +277,9 @@
               "rule": "can_build_mam",
               "_original_ast_type": "helper",
               "args": [
-                null
+                {
+                  "rule": "False_"
+                }
               ]
             }
           },
@@ -289,7 +293,9 @@
                   "rule": "can_make_stitched_shape",
                   "_original_ast_type": "helper",
                   "args": [
-                    null
+                    {
+                      "rule": "False_"
+                    }
                   ]
                 },
                 {
@@ -317,9 +323,18 @@
                   "Color Mixer",
                   "Stacker"
                 ],
-                0,
-                null,
-                null
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "False_"
+                },
+                {
+                  "rule": "False_"
+                }
               ]
             }
           },
@@ -337,9 +352,18 @@
                   "Painter",
                   "Color Mixer"
                 ],
-                0,
-                null,
-                null
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "False_"
+                },
+                {
+                  "rule": "False_"
+                }
               ]
             }
           },
@@ -402,7 +426,9 @@
               "rule": "can_make_stitched_shape",
               "_original_ast_type": "helper",
               "args": [
-                null
+                {
+                  "rule": "False_"
+                }
               ]
             }
           },
@@ -424,7 +450,9 @@
                   "rule": "can_make_stitched_shape",
                   "_original_ast_type": "helper",
                   "args": [
-                    null
+                    {
+                      "rule": "False_"
+                    }
                   ]
                 },
                 {
@@ -457,7 +485,9 @@
                   "rule": "can_make_stitched_shape",
                   "_original_ast_type": "helper",
                   "args": [
-                    null
+                    {
+                      "rule": "False_"
+                    }
                   ]
                 }
               ]
@@ -486,7 +516,9 @@
                   "rule": "can_make_stitched_shape",
                   "_original_ast_type": "helper",
                   "args": [
-                    null
+                    {
+                      "rule": "False_"
+                    }
                   ]
                 }
               ]
@@ -515,7 +547,9 @@
                   "rule": "can_make_stitched_shape",
                   "_original_ast_type": "helper",
                   "args": [
-                    null
+                    {
+                      "rule": "False_"
+                    }
                   ]
                 }
               ]
@@ -684,9 +718,18 @@
                   "Color Mixer",
                   "Stacker"
                 ],
-                1,
-                null,
-                null
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 1
+                  }
+                },
+                {
+                  "rule": "False_"
+                },
+                {
+                  "rule": "False_"
+                }
               ]
             }
           }
@@ -767,9 +810,18 @@
                   "Color Mixer",
                   "Stacker"
                 ],
-                2,
-                null,
-                null
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                },
+                {
+                  "rule": "True_"
+                },
+                {
+                  "rule": "False_"
+                }
               ]
             }
           }
@@ -850,9 +902,18 @@
                   "Color Mixer",
                   "Stacker"
                 ],
-                3,
-                null,
-                null
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 3
+                  }
+                },
+                {
+                  "rule": "False_"
+                },
+                {
+                  "rule": "False_"
+                }
               ]
             }
           }
@@ -933,9 +994,18 @@
                   "Color Mixer",
                   "Stacker"
                 ],
-                4,
-                null,
-                null
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 4
+                  }
+                },
+                {
+                  "rule": "False_"
+                },
+                {
+                  "rule": "False_"
+                }
               ]
             }
           }
@@ -1162,9 +1232,18 @@
                   "Painter",
                   "Color Mixer"
                 ],
-                1,
-                null,
-                null
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 1
+                  }
+                },
+                {
+                  "rule": "False_"
+                },
+                {
+                  "rule": "False_"
+                }
               ]
             }
           }
@@ -1245,9 +1324,18 @@
                   "Painter",
                   "Color Mixer"
                 ],
-                2,
-                null,
-                null
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                },
+                {
+                  "rule": "True_"
+                },
+                {
+                  "rule": "False_"
+                }
               ]
             }
           }
@@ -1328,9 +1416,18 @@
                   "Painter",
                   "Color Mixer"
                 ],
-                3,
-                null,
-                null
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 3
+                  }
+                },
+                {
+                  "rule": "False_"
+                },
+                {
+                  "rule": "False_"
+                }
               ]
             }
           }
@@ -1425,9 +1522,18 @@
                   "Painter",
                   "Color Mixer"
                 ],
-                4,
-                null,
-                null
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 4
+                  }
+                },
+                {
+                  "rule": "False_"
+                },
+                {
+                  "rule": "False_"
+                }
               ]
             }
           }
@@ -1855,7 +1961,12 @@
               "rule": "has_x_belt_multiplier",
               "_original_ast_type": "helper",
               "args": [
-                1.6
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 1.6
+                  }
+                }
               ]
             }
           }
@@ -3076,17 +3187,20 @@
       "Shapesanity Colorful Half Mixed": {
         "name": "Shapesanity Colorful Half Mixed",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Achievements needing a MAM": {
         "name": "Achievements needing a MAM",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Shapesanity Colorful East Windmill Mixed": {
         "name": "Shapesanity Colorful East Windmill Mixed",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       }
     }
   },
@@ -3963,7 +4077,7 @@
         "event": true,
         "type": "Event",
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       }
     }
   },
@@ -4351,200 +4465,115 @@
   "helpers": {
     "1": {
       "can_build_mam": {
-        "body": {
-          "conditions": [
-            {
-              "conditions": [
-                {
-                  "name": "can_stack",
-                  "type": "helper"
-                },
-                {
-                  "conditions": [
-                    {
-                      "conditions": [
-                        {
-                          "item": "Quad Cutter",
-                          "type": "item_check"
-                        },
-                        {
-                          "condition": {
-                            "name": "floating",
-                            "type": "name"
-                          },
-                          "type": "not"
-                        }
-                      ],
-                      "type": "and"
-                    },
-                    {
-                      "conditions": [
-                        {
-                          "name": "can_cut_half",
-                          "type": "helper"
-                        },
-                        {
-                          "name": "can_rotate_90",
-                          "type": "helper"
-                        }
-                      ],
-                      "type": "and"
-                    }
-                  ],
-                  "type": "or"
-                }
-              ],
-              "type": "and"
-            },
-            {
-              "conditions": [
-                {
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Double Painter",
-                        "Painter"
-                      ]
-                    }
-                  ],
-                  "method": "has_any",
-                  "type": "state_method"
-                },
-                {
-                  "name": "can_use_quad_painter",
-                  "type": "helper"
-                }
-              ],
-              "type": "or"
-            },
-            {
-              "item": "Color Mixer",
-              "type": "item_check"
-            },
-            {
-              "conditions": [
-                {
-                  "item": "Balancer",
-                  "type": "item_check"
-                },
-                {
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Compact Merger",
-                        "Compact Splitter"
-                      ]
-                    }
-                  ],
-                  "method": "has_all",
-                  "type": "state_method"
-                }
-              ],
-              "type": "or"
-            },
-            {
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Tunnel",
-                    "Tunnel Tier II"
-                  ]
-                }
-              ],
-              "method": "has_any",
-              "type": "state_method"
-            },
-            {
-              "conditions": [
-                {
-                  "item": "Belt Reader",
-                  "type": "item_check"
-                },
-                {
-                  "item": "Item Filter",
-                  "type": "item_check"
-                },
-                {
-                  "item": "Logic Gates",
-                  "type": "item_check"
-                },
-                {
-                  "item": "Storage",
-                  "type": "item_check"
-                },
-                {
-                  "item": "Virtual Processing",
-                  "type": "item_check"
-                },
-                {
-                  "item": "Wires",
-                  "type": "item_check"
-                }
-              ],
-              "type": "and"
-            }
-          ],
-          "type": "and"
-        },
         "params": [
           "floating"
-        ]
+        ],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "can_make_stitched_shape",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "floating"
+                }
+              ]
+            },
+            {
+              "type": "helper",
+              "name": "can_paint"
+            },
+            {
+              "type": "helper",
+              "name": "can_mix_colors"
+            },
+            {
+              "type": "helper",
+              "name": "has_balancer"
+            },
+            {
+              "type": "helper",
+              "name": "has_tunnel"
+            },
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Belt Reader"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Item Filter"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Logic Gates"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Storage"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Virtual Processing"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Wires"
+                }
+              ]
+            }
+          ]
+        }
       },
       "can_cut_half": {
-        "item": "Cutter",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Cutter"
       },
       "can_make_east_windmill": {
+        "type": "and",
         "conditions": [
           {
-            "item": "Stacker",
-            "type": "item_check"
+            "type": "helper",
+            "name": "can_stack"
           },
           {
+            "type": "or",
             "conditions": [
               {
-                "item": "Quad Cutter",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Quad Cutter"
               },
               {
+                "type": "and",
                 "conditions": [
                   {
-                    "item": "Cutter",
-                    "type": "item_check"
+                    "type": "helper",
+                    "name": "can_cut_half"
                   },
                   {
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Rotator",
-                          "Rotator (180\u00b0)",
-                          "Rotator (CCW)"
-                        ]
-                      }
-                    ],
-                    "method": "has_any",
-                    "type": "state_method"
+                    "type": "helper",
+                    "name": "can_rotate_180"
                   }
-                ],
-                "type": "and"
+                ]
               }
-            ],
-            "type": "or"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_make_half_half_shape": {
+        "type": "and",
         "conditions": [
           {
-            "item": "Stacker",
-            "type": "item_check"
+            "type": "helper",
+            "name": "can_stack"
           },
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -4553,20 +4582,20 @@
                   "Quad Cutter"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "can_make_half_shape": {
+        "type": "or",
         "conditions": [
           {
-            "item": "Cutter",
-            "type": "item_check"
+            "type": "helper",
+            "name": "can_cut_half"
           },
           {
+            "type": "state_method",
+            "method": "has_all",
             "args": [
               {
                 "type": "constant",
@@ -4575,77 +4604,68 @@
                   "Stacker"
                 ]
               }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            ]
           }
-        ],
-        "type": "or"
-      },
-      "can_make_stitched_shape": {
-        "body": {
-          "conditions": [
-            {
-              "item": "Stacker",
-              "type": "item_check"
-            },
-            {
-              "conditions": [
-                {
-                  "conditions": [
-                    {
-                      "item": "Quad Cutter",
-                      "type": "item_check"
-                    },
-                    {
-                      "condition": {
-                        "name": "floating",
-                        "type": "name"
-                      },
-                      "type": "not"
-                    }
-                  ],
-                  "type": "and"
-                },
-                {
-                  "conditions": [
-                    {
-                      "item": "Cutter",
-                      "type": "item_check"
-                    },
-                    {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Rotator",
-                            "Rotator (CCW)"
-                          ]
-                        }
-                      ],
-                      "method": "has_any",
-                      "type": "state_method"
-                    }
-                  ],
-                  "type": "and"
-                }
-              ],
-              "type": "or"
-            }
-          ],
-          "type": "and"
-        },
-        "params": [
-          "floating"
         ]
       },
+      "can_make_stitched_shape": {
+        "params": [
+          "floating"
+        ],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "can_stack"
+            },
+            {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Quad Cutter"
+                    },
+                    {
+                      "type": "not",
+                      "condition": {
+                        "type": "name",
+                        "name": "floating"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "can_cut_half"
+                    },
+                    {
+                      "type": "helper",
+                      "name": "can_rotate_90"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
       "can_mix_colors": {
-        "item": "Color Mixer",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Color Mixer"
       },
       "can_paint": {
+        "type": "or",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -4654,45 +4674,17 @@
                   "Painter"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           },
           {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Quad Painter",
-                      "Wires"
-                    ]
-                  }
-                ],
-                "method": "has_all",
-                "type": "state_method"
-              },
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Constant Signal",
-                      "Switch"
-                    ]
-                  }
-                ],
-                "method": "has_any",
-                "type": "state_method"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "can_use_quad_painter"
           }
-        ],
-        "type": "or"
+        ]
       },
       "can_rotate_180": {
+        "type": "state_method",
+        "method": "has_any",
         "args": [
           {
             "type": "constant",
@@ -4702,11 +4694,11 @@
               "Rotator (CCW)"
             ]
           }
-        ],
-        "method": "has_any",
-        "type": "state_method"
+        ]
       },
       "can_rotate_90": {
+        "type": "state_method",
+        "method": "has_any",
         "args": [
           {
             "type": "constant",
@@ -4715,17 +4707,18 @@
               "Rotator (CCW)"
             ]
           }
-        ],
-        "method": "has_any",
-        "type": "state_method"
+        ]
       },
       "can_stack": {
-        "item": "Stacker",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Stacker"
       },
       "can_use_quad_painter": {
+        "type": "and",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_all",
             "args": [
               {
                 "type": "constant",
@@ -4734,11 +4727,11 @@
                   "Wires"
                 ]
               }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            ]
           },
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
                 "type": "constant",
@@ -4747,20 +4740,20 @@
                   "Switch"
                 ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "has_balancer": {
+        "type": "or",
         "conditions": [
           {
-            "item": "Balancer",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Balancer"
           },
           {
+            "type": "state_method",
+            "method": "has_all",
             "args": [
               {
                 "type": "constant",
@@ -4769,154 +4762,115 @@
                   "Compact Splitter"
                 ]
               }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            ]
           }
-        ],
-        "type": "or"
+        ]
       },
       "has_logic_list_building": {
+        "params": [
+          "buildings",
+          "index",
+          "includeuseful",
+          "floating"
+        ],
         "body": {
-          "if_false": {
-            "if_false": {
-              "if_false": {
-                "if_false": {
-                  "if_false": {
-                    "if_false": null,
-                    "if_true": {
-                      "item": "Color Mixer",
-                      "type": "item_check"
+          "type": "conditional",
+          "test": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "name",
+                "name": "includeuseful"
+              },
+              {
+                "type": "not",
+                "condition": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Trash"
                     },
-                    "test": {
-                      "left": {
-                        "index": {
-                          "name": "index",
-                          "type": "name"
-                        },
-                        "type": "subscript",
-                        "value": {
-                          "name": "buildings",
-                          "type": "name"
-                        }
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": "Color Mixer"
-                      },
-                      "type": "compare"
+                    {
+                      "type": "helper",
+                      "name": "has_balancer"
                     },
-                    "type": "conditional"
-                  },
-                  "if_true": {
-                    "conditions": [
-                      {
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Double Painter",
-                              "Painter"
-                            ]
-                          }
-                        ],
-                        "method": "has_any",
-                        "type": "state_method"
-                      },
-                      {
-                        "name": "can_use_quad_painter",
-                        "type": "helper"
-                      }
-                    ],
-                    "type": "or"
-                  },
-                  "test": {
-                    "left": {
-                      "index": {
-                        "name": "index",
-                        "type": "name"
-                      },
-                      "type": "subscript",
-                      "value": {
-                        "name": "buildings",
-                        "type": "name"
-                      }
-                    },
-                    "op": "==",
-                    "right": {
-                      "type": "constant",
-                      "value": "Painter"
-                    },
-                    "type": "compare"
-                  },
-                  "type": "conditional"
-                },
-                "if_true": {
-                  "item": "Stacker",
-                  "type": "item_check"
-                },
-                "test": {
-                  "left": {
-                    "index": {
-                      "name": "index",
-                      "type": "name"
-                    },
-                    "type": "subscript",
-                    "value": {
-                      "name": "buildings",
-                      "type": "name"
+                    {
+                      "type": "helper",
+                      "name": "has_tunnel"
                     }
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": "Stacker"
-                  },
-                  "type": "compare"
+                  ]
+                }
+              }
+            ]
+          },
+          "if_true": {
+            "type": "constant",
+            "value": false
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "subscript",
+                "value": {
+                  "type": "name",
+                  "name": "buildings"
                 },
-                "type": "conditional"
+                "index": {
+                  "type": "name",
+                  "name": "index"
+                }
               },
-              "if_true": {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Rotator",
-                      "Rotator (CCW)"
-                    ]
-                  }
-                ],
-                "method": "has_any",
-                "type": "state_method"
-              },
-              "test": {
-                "left": {
-                  "index": {
-                    "name": "index",
-                    "type": "name"
-                  },
-                  "type": "subscript",
-                  "value": {
-                    "name": "buildings",
-                    "type": "name"
-                  }
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": "Rotator"
-                },
-                "type": "compare"
-              },
-              "type": "conditional"
+              "op": "==",
+              "right": {
+                "type": "constant",
+                "value": "Cutter"
+              }
             },
             "if_true": {
-              "if_false": {
-                "item": "Cutter",
-                "type": "item_check"
+              "type": "conditional",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "compare",
+                    "left": {
+                      "type": "function_call",
+                      "function": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "buildings"
+                        },
+                        "attr": "index"
+                      },
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Stacker"
+                        }
+                      ]
+                    },
+                    "op": "<",
+                    "right": {
+                      "type": "name",
+                      "name": "index"
+                    }
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "name",
+                      "name": "floating"
+                    }
+                  }
+                ]
               },
               "if_true": {
+                "type": "state_method",
+                "method": "has_any",
                 "args": [
                   {
                     "type": "constant",
@@ -4925,140 +4879,127 @@
                       "Quad Cutter"
                     ]
                   }
-                ],
-                "method": "has_any",
-                "type": "state_method"
+                ]
               },
-              "test": {
-                "conditions": [
-                  {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Stacker"
-                        }
-                      ],
-                      "function": {
-                        "attr": "index",
-                        "object": {
-                          "name": "buildings",
-                          "type": "name"
-                        },
-                        "type": "attribute"
-                      },
-                      "type": "function_call"
-                    },
-                    "op": "<",
-                    "right": {
-                      "name": "index",
-                      "type": "name"
-                    },
-                    "type": "compare"
-                  },
-                  {
-                    "condition": {
-                      "name": "floating",
-                      "type": "name"
-                    },
-                    "type": "not"
-                  }
-                ],
-                "type": "and"
-              },
-              "type": "conditional"
+              "if_false": {
+                "type": "helper",
+                "name": "can_cut_half"
+              }
             },
-            "test": {
-              "left": {
-                "index": {
-                  "name": "index",
-                  "type": "name"
+            "if_false": {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "name",
+                    "name": "buildings"
+                  },
+                  "index": {
+                    "type": "name",
+                    "name": "index"
+                  }
                 },
-                "type": "subscript",
-                "value": {
-                  "name": "buildings",
-                  "type": "name"
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": "Rotator"
                 }
               },
-              "op": "==",
-              "right": {
-                "type": "constant",
-                "value": "Cutter"
+              "if_true": {
+                "type": "helper",
+                "name": "can_rotate_90"
               },
-              "type": "compare"
-            },
-            "type": "conditional"
-          },
-          "if_true": {
-            "type": "constant",
-            "value": false
-          },
-          "test": {
-            "conditions": [
-              {
-                "name": "includeuseful",
-                "type": "name"
-              },
-              {
-                "condition": {
-                  "conditions": [
-                    {
-                      "item": "Trash",
-                      "type": "item_check"
+              "if_false": {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "subscript",
+                    "value": {
+                      "type": "name",
+                      "name": "buildings"
                     },
-                    {
-                      "conditions": [
-                        {
-                          "item": "Balancer",
-                          "type": "item_check"
-                        },
-                        {
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Compact Merger",
-                                "Compact Splitter"
-                              ]
-                            }
-                          ],
-                          "method": "has_all",
-                          "type": "state_method"
-                        }
-                      ],
-                      "type": "or"
-                    },
-                    {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Tunnel",
-                            "Tunnel Tier II"
-                          ]
-                        }
-                      ],
-                      "method": "has_any",
-                      "type": "state_method"
+                    "index": {
+                      "type": "name",
+                      "name": "index"
                     }
-                  ],
-                  "type": "and"
+                  },
+                  "op": "==",
+                  "right": {
+                    "type": "constant",
+                    "value": "Stacker"
+                  }
                 },
-                "type": "not"
+                "if_true": {
+                  "type": "helper",
+                  "name": "can_stack"
+                },
+                "if_false": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "subscript",
+                      "value": {
+                        "type": "name",
+                        "name": "buildings"
+                      },
+                      "index": {
+                        "type": "name",
+                        "name": "index"
+                      }
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": "Painter"
+                    }
+                  },
+                  "if_true": {
+                    "type": "helper",
+                    "name": "can_paint"
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "compare",
+                      "left": {
+                        "type": "subscript",
+                        "value": {
+                          "type": "name",
+                          "name": "buildings"
+                        },
+                        "index": {
+                          "type": "name",
+                          "name": "index"
+                        }
+                      },
+                      "op": "==",
+                      "right": {
+                        "type": "constant",
+                        "value": "Color Mixer"
+                      }
+                    },
+                    "if_true": {
+                      "type": "helper",
+                      "name": "can_mix_colors"
+                    },
+                    "if_false": {
+                      "type": "constant",
+                      "value": null
+                    }
+                  }
+                }
               }
-            ],
-            "type": "and"
-          },
-          "type": "conditional"
-        },
-        "params": [
-          "buildings",
-          "index",
-          "includeuseful",
-          "floating"
-        ]
+            }
+          }
+        }
       },
       "has_tunnel": {
+        "type": "state_method",
+        "method": "has_any",
         "args": [
           {
             "type": "constant",
@@ -5067,128 +5008,126 @@
               "Tunnel Tier II"
             ]
           }
-        ],
-        "method": "has_any",
-        "type": "state_method"
+        ]
       },
       "has_x_belt_multiplier": {
+        "params": [
+          "needed"
+        ],
         "body": {
+          "type": "block",
           "statements": [
             {
-              "name": "multiplier",
               "type": "assign",
+              "name": "multiplier",
               "value": {
                 "type": "constant",
                 "value": 1.0
               }
             },
             {
+              "type": "for_range",
+              "count": {
+                "type": "state_method",
+                "method": "count",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Rising Belt Upgrade"
+                  }
+                ]
+              },
               "body": [
                 {
+                  "type": "assign",
                   "name": "multiplier",
                   "op": "*=",
-                  "type": "assign",
                   "value": {
                     "type": "constant",
                     "value": 2
                   }
                 }
               ],
-              "count": {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Rising Belt Upgrade"
-                  }
-                ],
-                "method": "count",
-                "type": "state_method"
-              },
-              "type": "for_range",
               "var": "_"
             },
             {
+              "type": "assign",
               "name": "multiplier",
               "op": "+=",
-              "type": "assign",
               "value": {
+                "type": "binary_op",
                 "left": {
+                  "type": "state_method",
+                  "method": "count",
                   "args": [
                     {
                       "type": "constant",
                       "value": "Gigantic Belt Upgrade"
                     }
-                  ],
-                  "method": "count",
-                  "type": "state_method"
+                  ]
                 },
                 "op": "*",
                 "right": {
                   "type": "constant",
                   "value": 10
-                },
-                "type": "binary_op"
+                }
               }
             },
             {
+              "type": "assign",
               "name": "multiplier",
               "op": "+=",
-              "type": "assign",
               "value": {
+                "type": "state_method",
+                "method": "count",
                 "args": [
                   {
                     "type": "constant",
                     "value": "Big Belt Upgrade"
                   }
-                ],
-                "method": "count",
-                "type": "state_method"
+                ]
               }
             },
             {
+              "type": "assign",
               "name": "multiplier",
               "op": "+=",
-              "type": "assign",
               "value": {
+                "type": "binary_op",
                 "left": {
+                  "type": "state_method",
+                  "method": "count",
                   "args": [
                     {
                       "type": "constant",
                       "value": "Small Belt Upgrade"
                     }
-                  ],
-                  "method": "count",
-                  "type": "state_method"
+                  ]
                 },
                 "op": "*",
                 "right": {
                   "type": "constant",
                   "value": 0.1
-                },
-                "type": "binary_op"
+                }
               }
             },
             {
               "type": "return",
               "value": {
+                "type": "compare",
                 "left": {
-                  "name": "multiplier",
-                  "type": "name"
+                  "type": "name",
+                  "name": "multiplier"
                 },
                 "op": ">=",
                 "right": {
-                  "name": "needed",
-                  "type": "name"
-                },
-                "type": "compare"
+                  "type": "name",
+                  "name": "needed"
+                }
               }
             }
-          ],
-          "type": "block"
-        },
-        "params": [
-          "needed"
-        ]
+          ]
+        }
       }
     }
   }

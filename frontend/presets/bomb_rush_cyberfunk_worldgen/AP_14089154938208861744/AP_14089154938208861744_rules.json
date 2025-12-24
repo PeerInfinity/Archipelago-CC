@@ -1286,7 +1286,12 @@
               "rule": "bmx",
               "_original_ast_type": "helper",
               "args": [
-                2
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                }
               ]
             },
             "item": {
@@ -1304,7 +1309,12 @@
               "rule": "current_chapter",
               "_original_ast_type": "helper",
               "args": [
-                2
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                }
               ]
             },
             "item": {
@@ -1322,7 +1332,12 @@
               "rule": "current_chapter",
               "_original_ast_type": "helper",
               "args": [
-                4
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 4
+                  }
+                }
               ]
             },
             "item": {
@@ -1340,7 +1355,12 @@
               "rule": "current_chapter",
               "_original_ast_type": "helper",
               "args": [
-                5
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 5
+                  }
+                }
               ]
             },
             "item": {
@@ -1370,7 +1390,12 @@
               "rule": "versum_hill_ch1_roadblock",
               "_original_ast_type": "helper",
               "args": [
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             }
           }
@@ -1425,7 +1450,12 @@
               "rule": "bmx",
               "_original_ast_type": "helper",
               "args": [
-                2
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                }
               ]
             },
             "item": {
@@ -1670,7 +1700,12 @@
               "rule": "inline_skates",
               "_original_ast_type": "helper",
               "args": [
-                2
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                }
               ]
             },
             "item": {
@@ -1688,7 +1723,12 @@
               "rule": "current_chapter",
               "_original_ast_type": "helper",
               "args": [
-                2
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                }
               ]
             },
             "item": {
@@ -1711,7 +1751,12 @@
               "rule": "versum_hill_ch1_roadblock",
               "_original_ast_type": "helper",
               "args": [
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             }
           }
@@ -1752,8 +1797,18 @@
               "rule": "versum_hill_rave",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             },
             "item": {
@@ -1791,7 +1846,12 @@
               "rule": "versum_hill_ch1_roadblock",
               "_original_ast_type": "helper",
               "args": [
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             }
           }
@@ -1837,7 +1897,12 @@
               "rule": "versum_hill_ch1_roadblock",
               "_original_ast_type": "helper",
               "args": [
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             }
           },
@@ -1886,7 +1951,12 @@
               "rule": "current_chapter",
               "_original_ast_type": "helper",
               "args": [
-                2
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                }
               ]
             },
             "item": {
@@ -1904,8 +1974,18 @@
               "rule": "versum_hill_rietveld",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             },
             "item": {
@@ -1923,8 +2003,18 @@
               "rule": "versum_hill_crew_battle",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             },
             "item": {
@@ -1948,7 +2038,12 @@
               "rule": "versum_hill_ch1_roadblock",
               "_original_ast_type": "helper",
               "args": [
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             }
           },
@@ -2358,7 +2453,12 @@
               "rule": "bmx",
               "_original_ast_type": "helper",
               "args": [
-                2
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                }
               ]
             },
             "item": {
@@ -2432,7 +2532,12 @@
               "rule": "current_chapter",
               "_original_ast_type": "helper",
               "args": [
-                3
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 3
+                  }
+                }
               ]
             },
             "item": {
@@ -2523,8 +2628,18 @@
               "rule": "brink_terminal_mesh",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             },
             "item": {
@@ -2598,8 +2713,18 @@
               "rule": "brink_terminal_mesh",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             },
             "item": {
@@ -2691,7 +2816,12 @@
               "rule": "inline_skates",
               "_original_ast_type": "helper",
               "args": [
-                2
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                }
               ]
             },
             "item": {
@@ -2737,8 +2867,18 @@
               "rule": "brink_terminal_crew_battle",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             },
             "item": {
@@ -2770,7 +2910,12 @@
               "rule": "millennium_mall_oldhead_ceiling",
               "_original_ast_type": "helper",
               "args": [
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             }
           },
@@ -2781,8 +2926,18 @@
               "rule": "millennium_mall_big",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             }
           }
@@ -2837,7 +2992,12 @@
               "rule": "inline_skates",
               "_original_ast_type": "helper",
               "args": [
-                2
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                }
               ]
             },
             "item": {
@@ -2919,7 +3079,12 @@
               "rule": "millennium_mall_theater",
               "_original_ast_type": "helper",
               "args": [
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             }
           }
@@ -3062,7 +3227,12 @@
               "rule": "bmx",
               "_original_ast_type": "helper",
               "args": [
-                2
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                }
               ]
             },
             "item": {
@@ -3094,7 +3264,12 @@
               "rule": "current_chapter",
               "_original_ast_type": "helper",
               "args": [
-                4
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 4
+                  }
+                }
               ]
             },
             "item": {
@@ -3117,8 +3292,18 @@
               "rule": "millennium_mall_big",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             }
           }
@@ -3150,8 +3335,18 @@
               "rule": "millennium_mall_big",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             }
           },
@@ -3228,7 +3423,12 @@
               "rule": "current_chapter",
               "_original_ast_type": "helper",
               "args": [
-                4
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 4
+                  }
+                }
               ]
             },
             "item": {
@@ -3246,8 +3446,18 @@
               "rule": "millennium_mall_crew_battle",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             },
             "item": {
@@ -3331,7 +3541,12 @@
               "rule": "bmx",
               "_original_ast_type": "helper",
               "args": [
-                2
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                }
               ]
             },
             "item": {
@@ -3430,8 +3645,18 @@
               "rule": "pyramid_island_upper_half",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             }
           }
@@ -3588,7 +3813,12 @@
               "rule": "skateboard",
               "_original_ast_type": "helper",
               "args": [
-                2
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                }
               ]
             },
             "item": {
@@ -3741,7 +3971,12 @@
               "rule": "inline_skates",
               "_original_ast_type": "helper",
               "args": [
-                2
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                }
               ]
             },
             "item": {
@@ -3815,7 +4050,12 @@
               "rule": "current_chapter",
               "_original_ast_type": "helper",
               "args": [
-                5
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 5
+                  }
+                }
               ]
             },
             "item": {
@@ -3833,8 +4073,18 @@
               "rule": "pyramid_island_crew_battle",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             },
             "item": {
@@ -3874,8 +4124,18 @@
               "rule": "pyramid_island_upper_half",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             }
           }
@@ -4016,8 +4276,18 @@
               "rule": "mataan_deep_city",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             }
           }
@@ -4136,8 +4406,18 @@
               "rule": "mataan_smoke_wall2",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             }
           }
@@ -4178,8 +4458,18 @@
               "rule": "mataan_challenge1",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             },
             "item": {
@@ -4197,8 +4487,18 @@
               "rule": "mataan_challenge2",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             },
             "item": {
@@ -4278,8 +4578,18 @@
               "rule": "mataan_deep_city",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             }
           }
@@ -4325,8 +4635,18 @@
               "rule": "mataan_deep_city",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             }
           },
@@ -4337,8 +4657,18 @@
               "rule": "mataan_deepest",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             }
           }
@@ -4436,8 +4766,18 @@
               "rule": "mataan_deepest",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             },
             "item": {
@@ -4498,8 +4838,18 @@
               "rule": "mataan_faux",
               "_original_ast_type": "helper",
               "args": [
-                0,
-                0
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                }
               ]
             },
             "item": {
@@ -6570,7 +6920,7 @@
         "event": true,
         "type": "Event",
         "max_count": 4,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Victory": {
         "name": "Victory",
@@ -6581,7 +6931,7 @@
         "event": true,
         "type": "Event",
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       }
     }
   },
@@ -7370,3247 +7720,1955 @@
   "helpers": {
     "1": {
       "bmx": {
+        "params": [
+          "movestyle"
+        ],
         "body": {
-          "if_false": {
-            "group": "bmx",
-            "type": "group_check"
-          },
-          "if_true": {
-            "type": "constant",
-            "value": true
-          },
+          "type": "conditional",
           "test": {
+            "type": "compare",
             "left": {
-              "name": "movestyle",
-              "type": "name"
+              "type": "name",
+              "name": "movestyle"
             },
             "op": "==",
             "right": {
               "type": "constant",
               "value": 1
-            },
-            "type": "compare"
+            }
           },
-          "type": "conditional"
-        },
-        "params": [
-          "movestyle"
-        ]
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "group_check",
+            "group": "bmx"
+          }
+        }
       },
       "brink_terminal_all_challenges": {
+        "type": "helper",
+        "name": "brink_terminal_challenge3"
+      },
+      "brink_terminal_challenge1": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 188
+          }
+        ]
+      },
+      "brink_terminal_challenge2": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 200
+          }
+        ]
+      },
+      "brink_terminal_challenge3": {
+        "type": "helper",
+        "name": "rep",
         "args": [
           {
             "type": "constant",
             "value": 220
           }
-        ],
-        "name": "rep",
-        "type": "helper"
-      },
-      "brink_terminal_challenge1": {
-        "count": {
-          "type": "constant",
-          "value": 188
-        },
-        "item": "rep",
-        "type": "item_check"
-      },
-      "brink_terminal_challenge2": {
-        "count": {
-          "type": "constant",
-          "value": 200
-        },
-        "item": "rep",
-        "type": "item_check"
-      },
-      "brink_terminal_challenge3": {
-        "count": {
-          "type": "constant",
-          "value": 220
-        },
-        "item": "rep",
-        "type": "item_check"
+        ]
       },
       "brink_terminal_crew_battle": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
         "body": {
-          "if_false": {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 280
-                },
-                "item": "rep",
-                "type": "item_check"
-              },
-              {
-                "if_false": {
-                  "group": "graffitil",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitil"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 6
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 62
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
           },
           "if_true": {
+            "type": "and",
             "conditions": [
               {
-                "count": {
-                  "type": "constant",
-                  "value": 280
-                },
-                "item": "rep",
-                "type": "item_check"
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 280
+                  }
+                ]
               },
               {
-                "if_false": {
-                  "group": "graffitil",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitil"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 6
-                    },
-                    "type": "binary_op"
+                "type": "helper",
+                "name": "graffitiL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
                   },
-                  "op": ">=",
-                  "right": {
+                  {
                     "type": "constant",
                     "value": 103
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
+                  }
+                ]
               }
-            ],
-            "type": "and"
+            ]
           },
-          "test": {
-            "name": "glitched",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
-        "params": [
-          "limit",
-          "glitched"
-        ]
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 280
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 62
+                  }
+                ]
+              }
+            ]
+          }
+        }
       },
       "brink_terminal_entrance": {
+        "type": "and",
         "conditions": [
           {
-            "group": "girl",
-            "type": "group_check"
+            "type": "helper",
+            "name": "is_girl"
           },
           {
-            "count": {
-              "type": "constant",
-              "value": 180
-            },
-            "item": "rep",
-            "type": "item_check"
+            "type": "helper",
+            "name": "rep",
+            "args": [
+              {
+                "type": "constant",
+                "value": 180
+              }
+            ]
           },
           {
-            "count": {
-              "left": {
+            "type": "helper",
+            "name": "current_chapter",
+            "args": [
+              {
                 "type": "constant",
                 "value": 2
-              },
-              "op": "-",
-              "right": {
-                "type": "constant",
-                "value": 1
-              },
-              "type": "binary_op"
-            },
-            "item": "Chapter Completed",
-            "type": "item_check"
+              }
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "brink_terminal_mesh": {
-        "body": {
-          "if_false": {
-            "conditions": [
-              {
-                "if_false": {
-                  "group": "graffitim",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitim"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 7
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 67
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              },
-              {
-                "if_false": {
-                  "group": "graffitixl",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitixl"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 45
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "if_false": {
-                  "group": "graffitim",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitim"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 7
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 114
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              },
-              {
-                "if_false": {
-                  "group": "graffitixl",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitixl"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 45
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
-          },
-          "test": {
-            "name": "glitched",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
         "params": [
           "limit",
           "glitched"
-        ]
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 114
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiXL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 45
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 67
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiXL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 45
+                  }
+                ]
+              }
+            ]
+          }
+        }
       },
       "brink_terminal_oldhead_dock": {
-        "count": {
-          "type": "constant",
-          "value": 320
-        },
-        "item": "rep",
-        "type": "item_check"
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 320
+          }
+        ]
       },
       "brink_terminal_oldhead_underground": {
-        "count": {
-          "type": "constant",
-          "value": 250
-        },
-        "item": "rep",
-        "type": "item_check"
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 250
+          }
+        ]
       },
       "brink_terminal_plaza": {
-        "name": "brink_terminal_challenge3",
-        "type": "helper"
+        "type": "helper",
+        "name": "brink_terminal_all_challenges"
       },
       "brink_terminal_tower": {
-        "count": {
-          "type": "constant",
-          "value": 280
-        },
-        "item": "rep",
-        "type": "item_check"
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 280
+          }
+        ]
       },
       "camera": {
-        "item": "Camera App",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Camera App"
       },
       "current_chapter": {
+        "params": [
+          "chapter"
+        ],
         "body": {
+          "type": "item_check",
+          "item": "Chapter Completed",
           "count": {
+            "type": "binary_op",
             "left": {
-              "name": "chapter",
-              "type": "name"
+              "type": "name",
+              "name": "chapter"
             },
             "op": "-",
             "right": {
               "type": "constant",
               "value": 1
-            },
-            "type": "binary_op"
-          },
-          "item": "Chapter Completed",
-          "type": "item_check"
-        },
-        "params": [
-          "chapter"
-        ]
+            }
+          }
+        }
       },
       "graffitiL": {
+        "params": [
+          "limit",
+          "spots"
+        ],
         "body": {
-          "if_false": {
-            "group": "graffitil",
-            "type": "group_check"
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "limit"
           },
           "if_true": {
+            "type": "compare",
             "left": {
+              "type": "binary_op",
               "left": {
+                "type": "state_method",
+                "method": "count_group_unique",
                 "args": [
                   {
                     "type": "constant",
                     "value": "graffitil"
                   }
-                ],
-                "method": "count_group_unique",
-                "type": "state_method"
+                ]
               },
               "op": "*",
               "right": {
                 "type": "constant",
                 "value": 6
-              },
-              "type": "binary_op"
+              }
             },
             "op": ">=",
             "right": {
-              "name": "spots",
-              "type": "name"
-            },
-            "type": "compare"
+              "type": "name",
+              "name": "spots"
+            }
           },
-          "test": {
-            "name": "limit",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
+          "if_false": {
+            "type": "group_check",
+            "group": "graffitil"
+          }
+        }
+      },
+      "graffitiM": {
         "params": [
           "limit",
           "spots"
-        ]
-      },
-      "graffitiM": {
+        ],
         "body": {
-          "if_false": {
-            "group": "graffitim",
-            "type": "group_check"
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "limit"
           },
           "if_true": {
+            "type": "compare",
             "left": {
+              "type": "binary_op",
               "left": {
+                "type": "state_method",
+                "method": "count_group_unique",
                 "args": [
                   {
                     "type": "constant",
                     "value": "graffitim"
                   }
-                ],
-                "method": "count_group_unique",
-                "type": "state_method"
+                ]
               },
               "op": "*",
               "right": {
                 "type": "constant",
                 "value": 7
-              },
-              "type": "binary_op"
+              }
             },
             "op": ">=",
             "right": {
-              "name": "spots",
-              "type": "name"
-            },
-            "type": "compare"
+              "type": "name",
+              "name": "spots"
+            }
           },
-          "test": {
-            "name": "limit",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
+          "if_false": {
+            "type": "group_check",
+            "group": "graffitim"
+          }
+        }
+      },
+      "graffitiXL": {
         "params": [
           "limit",
           "spots"
-        ]
-      },
-      "graffitiXL": {
+        ],
         "body": {
-          "if_false": {
-            "group": "graffitixl",
-            "type": "group_check"
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "limit"
           },
           "if_true": {
+            "type": "compare",
             "left": {
+              "type": "binary_op",
               "left": {
+                "type": "state_method",
+                "method": "count_group_unique",
                 "args": [
                   {
                     "type": "constant",
                     "value": "graffitixl"
                   }
-                ],
-                "method": "count_group_unique",
-                "type": "state_method"
+                ]
               },
               "op": "*",
               "right": {
                 "type": "constant",
                 "value": 4
-              },
-              "type": "binary_op"
+              }
             },
             "op": ">=",
             "right": {
-              "name": "spots",
-              "type": "name"
-            },
-            "type": "compare"
+              "type": "name",
+              "name": "spots"
+            }
           },
-          "test": {
-            "name": "limit",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
-        "params": [
-          "limit",
-          "spots"
-        ]
+          "if_false": {
+            "type": "group_check",
+            "group": "graffitixl"
+          }
+        }
       },
       "inline_skates": {
+        "params": [
+          "movestyle"
+        ],
         "body": {
-          "if_false": {
-            "group": "skates",
-            "type": "group_check"
-          },
-          "if_true": {
-            "type": "constant",
-            "value": true
-          },
+          "type": "conditional",
           "test": {
+            "type": "compare",
             "left": {
-              "name": "movestyle",
-              "type": "name"
+              "type": "name",
+              "name": "movestyle"
             },
             "op": "==",
             "right": {
               "type": "constant",
               "value": 3
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "params": [
-          "movestyle"
-        ]
-      },
-      "is_girl": {
-        "group": "girl",
-        "type": "group_check"
-      },
-      "mataan_all_challenges": {
-        "body": {
-          "conditions": [
-            {
-              "if_false": {
-                "conditions": [
-                  {
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": 880
-                      }
-                    ],
-                    "name": "rep",
-                    "type": "helper"
-                  },
-                  {
-                    "args": [
-                      {
-                        "name": "limit",
-                        "type": "name"
-                      },
-                      {
-                        "type": "constant",
-                        "value": 57
-                      }
-                    ],
-                    "name": "graffitiXL",
-                    "type": "helper"
-                  }
-                ],
-                "type": "and"
-              },
-              "if_true": {
-                "conditions": [
-                  {
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": 880
-                      }
-                    ],
-                    "name": "rep",
-                    "type": "helper"
-                  },
-                  {
-                    "args": [
-                      {
-                        "name": "limit",
-                        "type": "name"
-                      },
-                      {
-                        "type": "constant",
-                        "value": 59
-                      }
-                    ],
-                    "name": "graffitiXL",
-                    "type": "helper"
-                  }
-                ],
-                "type": "and"
-              },
-              "test": {
-                "name": "glitched",
-                "type": "name"
-              },
-              "type": "conditional"
-            },
-            {
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 920
-                }
-              ],
-              "name": "rep",
-              "type": "helper"
             }
-          ],
-          "type": "and"
-        },
-        "params": [
-          "limit",
-          "glitched"
-        ]
-      },
-      "mataan_challenge1": {
-        "body": {
-          "if_false": {
-            "conditions": [
-              {
-                "count": {
-                  "left": {
-                    "type": "constant",
-                    "value": 5
-                  },
-                  "op": "-",
-                  "right": {
-                    "type": "constant",
-                    "value": 1
-                  },
-                  "type": "binary_op"
-                },
-                "item": "Chapter Completed",
-                "type": "item_check"
-              },
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 864
-                },
-                "item": "rep",
-                "type": "item_check"
-              },
-              {
-                "if_false": {
-                  "group": "graffitil",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitil"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 6
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 98
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "count": {
-                  "left": {
-                    "type": "constant",
-                    "value": 5
-                  },
-                  "op": "-",
-                  "right": {
-                    "type": "constant",
-                    "value": 1
-                  },
-                  "type": "binary_op"
-                },
-                "item": "Chapter Completed",
-                "type": "item_check"
-              },
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 864
-                },
-                "item": "rep",
-                "type": "item_check"
-              },
-              {
-                "if_false": {
-                  "group": "graffitil",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitil"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 6
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 108
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
-          },
-          "test": {
-            "name": "glitched",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
-        "params": [
-          "limit",
-          "glitched"
-        ]
-      },
-      "mataan_challenge2": {
-        "body": {
-          "if_false": {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 880
-                },
-                "item": "rep",
-                "type": "item_check"
-              },
-              {
-                "if_false": {
-                  "group": "graffitixl",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitixl"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 57
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 880
-                },
-                "item": "rep",
-                "type": "item_check"
-              },
-              {
-                "if_false": {
-                  "group": "graffitixl",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitixl"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 59
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
-          },
-          "test": {
-            "name": "glitched",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
-        "params": [
-          "limit",
-          "glitched"
-        ]
-      },
-      "mataan_challenge3": {
-        "count": {
-          "type": "constant",
-          "value": 920
-        },
-        "item": "rep",
-        "type": "item_check"
-      },
-      "mataan_crew_battle": {
-        "body": {
-          "if_false": {
-            "conditions": [
-              {
-                "conditions": [
-                  {
-                    "args": [
-                      {
-                        "name": "limit",
-                        "type": "name"
-                      },
-                      {
-                        "name": "glitched",
-                        "type": "name"
-                      }
-                    ],
-                    "name": "mataan_all_challenges",
-                    "type": "helper"
-                  },
-                  {
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": 960
-                      }
-                    ],
-                    "name": "rep",
-                    "type": "helper"
-                  }
-                ],
-                "type": "and"
-              },
-              {
-                "if_false": {
-                  "group": "graffitim",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitim"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 7
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 117
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              },
-              {
-                "if_false": {
-                  "group": "graffitixl",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitixl"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 57
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "conditions": [
-                  {
-                    "args": [
-                      {
-                        "name": "limit",
-                        "type": "name"
-                      },
-                      {
-                        "name": "glitched",
-                        "type": "name"
-                      }
-                    ],
-                    "name": "mataan_all_challenges",
-                    "type": "helper"
-                  },
-                  {
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": 960
-                      }
-                    ],
-                    "name": "rep",
-                    "type": "helper"
-                  }
-                ],
-                "type": "and"
-              },
-              {
-                "if_false": {
-                  "group": "graffitim",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitim"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 7
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 122
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              },
-              {
-                "if_false": {
-                  "group": "graffitixl",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitixl"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 59
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
-          },
-          "test": {
-            "name": "glitched",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
-        "params": [
-          "limit",
-          "glitched"
-        ]
-      },
-      "mataan_deep_city": {
-        "body": {
-          "if_false": {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 5
-                  }
-                ],
-                "name": "current_chapter",
-                "type": "helper"
-              },
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 864
-                  }
-                ],
-                "name": "rep",
-                "type": "helper"
-              },
-              {
-                "args": [
-                  {
-                    "name": "limit",
-                    "type": "name"
-                  },
-                  {
-                    "type": "constant",
-                    "value": 98
-                  }
-                ],
-                "name": "graffitiL",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 5
-                  }
-                ],
-                "name": "current_chapter",
-                "type": "helper"
-              },
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 864
-                  }
-                ],
-                "name": "rep",
-                "type": "helper"
-              },
-              {
-                "args": [
-                  {
-                    "name": "limit",
-                    "type": "name"
-                  },
-                  {
-                    "type": "constant",
-                    "value": 108
-                  }
-                ],
-                "name": "graffitiL",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
-          },
-          "test": {
-            "name": "glitched",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
-        "params": [
-          "limit",
-          "glitched"
-        ]
-      },
-      "mataan_deepest": {
-        "body": {
-          "if_false": {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "name": "limit",
-                    "type": "name"
-                  },
-                  {
-                    "name": "glitched",
-                    "type": "name"
-                  }
-                ],
-                "name": "mataan_smoke_wall2",
-                "type": "helper"
-              },
-              {
-                "args": [
-                  {
-                    "name": "limit",
-                    "type": "name"
-                  },
-                  {
-                    "type": "constant",
-                    "value": 117
-                  }
-                ],
-                "name": "graffitiM",
-                "type": "helper"
-              },
-              {
-                "args": [
-                  {
-                    "name": "limit",
-                    "type": "name"
-                  },
-                  {
-                    "type": "constant",
-                    "value": 57
-                  }
-                ],
-                "name": "graffitiXL",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "name": "limit",
-                    "type": "name"
-                  },
-                  {
-                    "name": "glitched",
-                    "type": "name"
-                  }
-                ],
-                "name": "mataan_smoke_wall2",
-                "type": "helper"
-              },
-              {
-                "args": [
-                  {
-                    "name": "limit",
-                    "type": "name"
-                  },
-                  {
-                    "type": "constant",
-                    "value": 122
-                  }
-                ],
-                "name": "graffitiM",
-                "type": "helper"
-              },
-              {
-                "args": [
-                  {
-                    "name": "limit",
-                    "type": "name"
-                  },
-                  {
-                    "type": "constant",
-                    "value": 59
-                  }
-                ],
-                "name": "graffitiXL",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
-          },
-          "test": {
-            "name": "glitched",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
-        "params": [
-          "limit",
-          "glitched"
-        ]
-      },
-      "mataan_entrance": {
-        "count": {
-          "left": {
-            "type": "constant",
-            "value": 2
-          },
-          "op": "-",
-          "right": {
-            "type": "constant",
-            "value": 1
-          },
-          "type": "binary_op"
-        },
-        "item": "Chapter Completed",
-        "type": "item_check"
-      },
-      "mataan_faux": {
-        "body": {
-          "conditions": [
-            {
-              "args": [
-                {
-                  "name": "limit",
-                  "type": "name"
-                },
-                {
-                  "name": "glitched",
-                  "type": "name"
-                }
-              ],
-              "name": "mataan_crew_battle",
-              "type": "helper"
-            },
-            {
-              "if_false": {
-                "group": "graffitim",
-                "type": "group_check"
-              },
-              "if_true": {
-                "left": {
-                  "left": {
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "graffitim"
-                      }
-                    ],
-                    "method": "count_group_unique",
-                    "type": "state_method"
-                  },
-                  "op": "*",
-                  "right": {
-                    "type": "constant",
-                    "value": 7
-                  },
-                  "type": "binary_op"
-                },
-                "op": ">=",
-                "right": {
-                  "type": "constant",
-                  "value": 122
-                },
-                "type": "compare"
-              },
-              "test": {
-                "name": "limit",
-                "type": "name"
-              },
-              "type": "conditional"
-            }
-          ],
-          "type": "and"
-        },
-        "params": [
-          "limit",
-          "glitched"
-        ]
-      },
-      "mataan_oldhead": {
-        "count": {
-          "type": "constant",
-          "value": 935
-        },
-        "item": "rep",
-        "type": "item_check"
-      },
-      "mataan_smoke_wall": {
-        "conditions": [
-          {
-            "count": {
-              "left": {
-                "type": "constant",
-                "value": 5
-              },
-              "op": "-",
-              "right": {
-                "type": "constant",
-                "value": 1
-              },
-              "type": "binary_op"
-            },
-            "item": "Chapter Completed",
-            "type": "item_check"
-          },
-          {
-            "count": {
-              "type": "constant",
-              "value": 850
-            },
-            "item": "rep",
-            "type": "item_check"
-          }
-        ],
-        "type": "and"
-      },
-      "mataan_smoke_wall2": {
-        "body": {
-          "conditions": [
-            {
-              "conditions": [
-                {
-                  "args": [
-                    {
-                      "name": "limit",
-                      "type": "name"
-                    },
-                    {
-                      "name": "glitched",
-                      "type": "name"
-                    }
-                  ],
-                  "name": "mataan_challenge2",
-                  "type": "helper"
-                },
-                {
-                  "name": "mataan_challenge3",
-                  "type": "helper"
-                }
-              ],
-              "type": "and"
-            },
-            {
-              "count": {
-                "type": "constant",
-                "value": 960
-              },
-              "item": "rep",
-              "type": "item_check"
-            }
-          ],
-          "type": "and"
-        },
-        "params": [
-          "limit",
-          "glitched"
-        ]
-      },
-      "millennium_mall_big": {
-        "body": {
-          "if_false": {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "name": "limit",
-                    "type": "name"
-                  },
-                  {
-                    "type": "constant",
-                    "value": 72
-                  }
-                ],
-                "name": "graffitiM",
-                "type": "helper"
-              },
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 3
-                  }
-                ],
-                "name": "current_chapter",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "name": "limit",
-                    "type": "name"
-                  },
-                  {
-                    "type": "constant",
-                    "value": 114
-                  }
-                ],
-                "name": "graffitiM",
-                "type": "helper"
-              },
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 3
-                  }
-                ],
-                "name": "current_chapter",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
-          },
-          "test": {
-            "name": "glitched",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
-        "params": [
-          "limit",
-          "glitched"
-        ]
-      },
-      "millennium_mall_challenge1": {
-        "count": {
-          "type": "constant",
-          "value": 434
-        },
-        "item": "rep",
-        "type": "item_check"
-      },
-      "millennium_mall_challenge2": {
-        "count": {
-          "type": "constant",
-          "value": 442
-        },
-        "item": "rep",
-        "type": "item_check"
-      },
-      "millennium_mall_challenge3": {
-        "count": {
-          "type": "constant",
-          "value": 450
-        },
-        "item": "rep",
-        "type": "item_check"
-      },
-      "millennium_mall_challenge4": {
-        "count": {
-          "type": "constant",
-          "value": 458
-        },
-        "item": "rep",
-        "type": "item_check"
-      },
-      "millennium_mall_crew_battle": {
-        "body": {
-          "if_false": {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 491
-                },
-                "item": "rep",
-                "type": "item_check"
-              },
-              {
-                "if_false": {
-                  "group": "graffitim",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitim"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 7
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 78
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              },
-              {
-                "if_false": {
-                  "group": "graffitil",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitil"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 6
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 80
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 491
-                },
-                "item": "rep",
-                "type": "item_check"
-              },
-              {
-                "if_false": {
-                  "group": "graffitim",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitim"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 7
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 114
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              },
-              {
-                "if_false": {
-                  "group": "graffitil",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitil"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 6
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 107
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
-          },
-          "test": {
-            "name": "glitched",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
-        "params": [
-          "limit",
-          "glitched"
-        ]
-      },
-      "millennium_mall_entrance": {
-        "conditions": [
-          {
-            "count": {
-              "type": "constant",
-              "value": 380
-            },
-            "item": "rep",
-            "type": "item_check"
-          },
-          {
-            "count": {
-              "left": {
-                "type": "constant",
-                "value": 3
-              },
-              "op": "-",
-              "right": {
-                "type": "constant",
-                "value": 1
-              },
-              "type": "binary_op"
-            },
-            "item": "Chapter Completed",
-            "type": "item_check"
-          }
-        ],
-        "type": "and"
-      },
-      "millennium_mall_oldhead_ceiling": {
-        "body": {
-          "conditions": [
-            {
-              "count": {
-                "type": "constant",
-                "value": 580
-              },
-              "item": "rep",
-              "type": "item_check"
-            },
-            {
-              "conditions": [
-                {
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 491
-                    }
-                  ],
-                  "name": "rep",
-                  "type": "helper"
-                },
-                {
-                  "args": [
-                    {
-                      "name": "limit",
-                      "type": "name"
-                    },
-                    {
-                      "type": "constant",
-                      "value": 78
-                    }
-                  ],
-                  "name": "graffitiM",
-                  "type": "helper"
-                }
-              ],
-              "type": "and"
-            }
-          ],
-          "type": "or"
-        },
-        "params": [
-          "limit"
-        ]
-      },
-      "millennium_mall_oldhead_race": {
-        "count": {
-          "type": "constant",
-          "value": 530
-        },
-        "item": "rep",
-        "type": "item_check"
-      },
-      "millennium_mall_switch": {
-        "body": {
-          "if_false": {
-            "conditions": [
-              {
-                "if_false": {
-                  "group": "graffitim",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitim"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 7
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 72
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              },
-              {
-                "count": {
-                  "left": {
-                    "type": "constant",
-                    "value": 3
-                  },
-                  "op": "-",
-                  "right": {
-                    "type": "constant",
-                    "value": 1
-                  },
-                  "type": "binary_op"
-                },
-                "item": "Chapter Completed",
-                "type": "item_check"
-              }
-            ],
-            "type": "and"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "if_false": {
-                  "group": "graffitim",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitim"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 7
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 114
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              },
-              {
-                "count": {
-                  "left": {
-                    "type": "constant",
-                    "value": 3
-                  },
-                  "op": "-",
-                  "right": {
-                    "type": "constant",
-                    "value": 1
-                  },
-                  "type": "binary_op"
-                },
-                "item": "Chapter Completed",
-                "type": "item_check"
-              }
-            ],
-            "type": "and"
-          },
-          "test": {
-            "name": "glitched",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
-        "params": [
-          "limit",
-          "glitched"
-        ]
-      },
-      "millennium_mall_theater": {
-        "body": {
-          "conditions": [
-            {
-              "count": {
-                "type": "constant",
-                "value": 491
-              },
-              "item": "rep",
-              "type": "item_check"
-            },
-            {
-              "if_false": {
-                "group": "graffitim",
-                "type": "group_check"
-              },
-              "if_true": {
-                "left": {
-                  "left": {
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "graffitim"
-                      }
-                    ],
-                    "method": "count_group_unique",
-                    "type": "state_method"
-                  },
-                  "op": "*",
-                  "right": {
-                    "type": "constant",
-                    "value": 7
-                  },
-                  "type": "binary_op"
-                },
-                "op": ">=",
-                "right": {
-                  "type": "constant",
-                  "value": 78
-                },
-                "type": "compare"
-              },
-              "test": {
-                "name": "limit",
-                "type": "name"
-              },
-              "type": "conditional"
-            }
-          ],
-          "type": "and"
-        },
-        "params": [
-          "limit"
-        ]
-      },
-      "millennium_square_entrance": {
-        "count": {
-          "left": {
-            "type": "constant",
-            "value": 2
-          },
-          "op": "-",
-          "right": {
-            "type": "constant",
-            "value": 1
-          },
-          "type": "binary_op"
-        },
-        "item": "Chapter Completed",
-        "type": "item_check"
-      },
-      "pyramid_island_all_challenges": {
-        "body": {
-          "if_false": {
-            "conditions": [
-              {
-                "if_false": {
-                  "group": "graffitim",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitim"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 7
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 88
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              },
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 660
-                },
-                "item": "rep",
-                "type": "item_check"
-              }
-            ],
-            "type": "and"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "if_false": {
-                  "group": "graffitim",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitim"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 7
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 114
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              },
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 660
-                },
-                "item": "rep",
-                "type": "item_check"
-              }
-            ],
-            "type": "and"
-          },
-          "test": {
-            "name": "glitched",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
-        "params": [
-          "limit",
-          "glitched"
-        ]
-      },
-      "pyramid_island_challenge1": {
-        "conditions": [
-          {
-            "count": {
-              "type": "constant",
-              "value": 630
-            },
-            "item": "rep",
-            "type": "item_check"
-          },
-          {
-            "count": {
-              "left": {
-                "type": "constant",
-                "value": 4
-              },
-              "op": "-",
-              "right": {
-                "type": "constant",
-                "value": 1
-              },
-              "type": "binary_op"
-            },
-            "item": "Chapter Completed",
-            "type": "item_check"
-          }
-        ],
-        "type": "and"
-      },
-      "pyramid_island_challenge2": {
-        "count": {
-          "type": "constant",
-          "value": 650
-        },
-        "item": "rep",
-        "type": "item_check"
-      },
-      "pyramid_island_challenge3": {
-        "count": {
-          "type": "constant",
-          "value": 660
-        },
-        "item": "rep",
-        "type": "item_check"
-      },
-      "pyramid_island_crew_battle": {
-        "body": {
-          "if_false": {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 730
-                },
-                "item": "rep",
-                "type": "item_check"
-              },
-              {
-                "if_false": {
-                  "group": "graffitil",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitil"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 6
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 97
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 730
-                },
-                "item": "rep",
-                "type": "item_check"
-              },
-              {
-                "if_false": {
-                  "group": "graffitil",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitil"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 6
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 108
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
-          },
-          "test": {
-            "name": "glitched",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
-        "params": [
-          "limit",
-          "glitched"
-        ]
-      },
-      "pyramid_island_entrance": {
-        "count": {
-          "left": {
-            "type": "constant",
-            "value": 4
-          },
-          "op": "-",
-          "right": {
-            "type": "constant",
-            "value": 1
-          },
-          "type": "binary_op"
-        },
-        "item": "Chapter Completed",
-        "type": "item_check"
-      },
-      "pyramid_island_gate": {
-        "count": {
-          "type": "constant",
-          "value": 620
-        },
-        "item": "rep",
-        "type": "item_check"
-      },
-      "pyramid_island_oldhead": {
-        "count": {
-          "type": "constant",
-          "value": 780
-        },
-        "item": "rep",
-        "type": "item_check"
-      },
-      "pyramid_island_top": {
-        "count": {
-          "left": {
-            "type": "constant",
-            "value": 5
-          },
-          "op": "-",
-          "right": {
-            "type": "constant",
-            "value": 1
-          },
-          "type": "binary_op"
-        },
-        "item": "Chapter Completed",
-        "type": "item_check"
-      },
-      "pyramid_island_upper_half": {
-        "body": {
-          "if_false": {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "name": "limit",
-                    "type": "name"
-                  },
-                  {
-                    "type": "constant",
-                    "value": 88
-                  }
-                ],
-                "name": "graffitiM",
-                "type": "helper"
-              },
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 660
-                  }
-                ],
-                "name": "rep",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "name": "limit",
-                    "type": "name"
-                  },
-                  {
-                    "type": "constant",
-                    "value": 114
-                  }
-                ],
-                "name": "graffitiM",
-                "type": "helper"
-              },
-              {
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 660
-                  }
-                ],
-                "name": "rep",
-                "type": "helper"
-              }
-            ],
-            "type": "and"
-          },
-          "test": {
-            "name": "glitched",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
-        "params": [
-          "limit",
-          "glitched"
-        ]
-      },
-      "rep": {
-        "body": {
-          "count": {
-            "name": "required",
-            "type": "name"
-          },
-          "item": "rep",
-          "type": "item_check"
-        },
-        "params": [
-          "required"
-        ]
-      },
-      "skateboard": {
-        "body": {
-          "if_false": {
-            "group": "skateboard",
-            "type": "group_check"
           },
           "if_true": {
             "type": "constant",
             "value": true
           },
+          "if_false": {
+            "type": "group_check",
+            "group": "skates"
+          }
+        }
+      },
+      "is_girl": {
+        "type": "group_check",
+        "group": "girl"
+      },
+      "mataan_all_challenges": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "mataan_challenge2",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "limit"
+                },
+                {
+                  "type": "name",
+                  "name": "glitched"
+                }
+              ]
+            },
+            {
+              "type": "helper",
+              "name": "mataan_challenge3"
+            }
+          ]
+        }
+      },
+      "mataan_challenge1": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
           "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "current_chapter",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 5
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 864
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 108
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "current_chapter",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 5
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 864
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 98
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "mataan_challenge2": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 880
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiXL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 59
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 880
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiXL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 57
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "mataan_challenge3": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 920
+          }
+        ]
+      },
+      "mataan_crew_battle": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "mataan_smoke_wall2",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "name",
+                    "name": "glitched"
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 122
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiXL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 59
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "mataan_smoke_wall2",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "name",
+                    "name": "glitched"
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 117
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiXL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 57
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "mataan_deep_city": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "helper",
+          "name": "mataan_challenge1",
+          "args": [
+            {
+              "type": "name",
+              "name": "limit"
+            },
+            {
+              "type": "name",
+              "name": "glitched"
+            }
+          ]
+        }
+      },
+      "mataan_deepest": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "helper",
+          "name": "mataan_crew_battle",
+          "args": [
+            {
+              "type": "name",
+              "name": "limit"
+            },
+            {
+              "type": "name",
+              "name": "glitched"
+            }
+          ]
+        }
+      },
+      "mataan_entrance": {
+        "type": "helper",
+        "name": "current_chapter",
+        "args": [
+          {
+            "type": "constant",
+            "value": 2
+          }
+        ]
+      },
+      "mataan_faux": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "mataan_deepest",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "limit"
+                },
+                {
+                  "type": "name",
+                  "name": "glitched"
+                }
+              ]
+            },
+            {
+              "type": "helper",
+              "name": "graffitiM",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "limit"
+                },
+                {
+                  "type": "constant",
+                  "value": 122
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "mataan_oldhead": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 935
+          }
+        ]
+      },
+      "mataan_smoke_wall": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "current_chapter",
+            "args": [
+              {
+                "type": "constant",
+                "value": 5
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "rep",
+            "args": [
+              {
+                "type": "constant",
+                "value": 850
+              }
+            ]
+          }
+        ]
+      },
+      "mataan_smoke_wall2": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "mataan_all_challenges",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "limit"
+                },
+                {
+                  "type": "name",
+                  "name": "glitched"
+                }
+              ]
+            },
+            {
+              "type": "helper",
+              "name": "rep",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 960
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "millennium_mall_big": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "helper",
+          "name": "millennium_mall_switch",
+          "args": [
+            {
+              "type": "name",
+              "name": "limit"
+            },
+            {
+              "type": "name",
+              "name": "glitched"
+            }
+          ]
+        }
+      },
+      "millennium_mall_challenge1": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 434
+          }
+        ]
+      },
+      "millennium_mall_challenge2": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 442
+          }
+        ]
+      },
+      "millennium_mall_challenge3": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 450
+          }
+        ]
+      },
+      "millennium_mall_challenge4": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 458
+          }
+        ]
+      },
+      "millennium_mall_crew_battle": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 491
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 114
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 107
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 491
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 78
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 80
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "millennium_mall_entrance": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "rep",
+            "args": [
+              {
+                "type": "constant",
+                "value": 380
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "current_chapter",
+            "args": [
+              {
+                "type": "constant",
+                "value": 3
+              }
+            ]
+          }
+        ]
+      },
+      "millennium_mall_oldhead_ceiling": {
+        "params": [
+          "limit"
+        ],
+        "body": {
+          "type": "or",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "rep",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 580
+                }
+              ]
+            },
+            {
+              "type": "helper",
+              "name": "millennium_mall_theater",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "limit"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "millennium_mall_oldhead_race": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 530
+          }
+        ]
+      },
+      "millennium_mall_switch": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 114
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "current_chapter",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 3
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 72
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "current_chapter",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 3
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "millennium_mall_theater": {
+        "params": [
+          "limit"
+        ],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "rep",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 491
+                }
+              ]
+            },
+            {
+              "type": "helper",
+              "name": "graffitiM",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "limit"
+                },
+                {
+                  "type": "constant",
+                  "value": 78
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "millennium_square_entrance": {
+        "type": "helper",
+        "name": "current_chapter",
+        "args": [
+          {
+            "type": "constant",
+            "value": 2
+          }
+        ]
+      },
+      "pyramid_island_all_challenges": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 114
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 660
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 88
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 660
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "pyramid_island_challenge1": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "rep",
+            "args": [
+              {
+                "type": "constant",
+                "value": 630
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "current_chapter",
+            "args": [
+              {
+                "type": "constant",
+                "value": 4
+              }
+            ]
+          }
+        ]
+      },
+      "pyramid_island_challenge2": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 650
+          }
+        ]
+      },
+      "pyramid_island_challenge3": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 660
+          }
+        ]
+      },
+      "pyramid_island_crew_battle": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 730
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 108
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 730
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 97
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "pyramid_island_entrance": {
+        "type": "helper",
+        "name": "current_chapter",
+        "args": [
+          {
+            "type": "constant",
+            "value": 4
+          }
+        ]
+      },
+      "pyramid_island_gate": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 620
+          }
+        ]
+      },
+      "pyramid_island_oldhead": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 780
+          }
+        ]
+      },
+      "pyramid_island_top": {
+        "type": "helper",
+        "name": "current_chapter",
+        "args": [
+          {
+            "type": "constant",
+            "value": 5
+          }
+        ]
+      },
+      "pyramid_island_upper_half": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "helper",
+          "name": "pyramid_island_all_challenges",
+          "args": [
+            {
+              "type": "name",
+              "name": "limit"
+            },
+            {
+              "type": "name",
+              "name": "glitched"
+            }
+          ]
+        }
+      },
+      "rep": {
+        "params": [
+          "required"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "rep",
+          "count": {
+            "type": "name",
+            "name": "required"
+          }
+        }
+      },
+      "skateboard": {
+        "params": [
+          "movestyle"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
             "left": {
-              "name": "movestyle",
-              "type": "name"
+              "type": "name",
+              "name": "movestyle"
             },
             "op": "==",
             "right": {
               "type": "constant",
               "value": 2
-            },
-            "type": "compare"
+            }
           },
-          "type": "conditional"
-        },
-        "params": [
-          "movestyle"
-        ]
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "group_check",
+            "group": "skateboard"
+          }
+        }
       },
       "versum_hill_all_challenges": {
+        "type": "helper",
+        "name": "versum_hill_challenge3"
+      },
+      "versum_hill_basketball_court": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 90
+          }
+        ]
+      },
+      "versum_hill_ch1_roadblock": {
+        "params": [
+          "limit"
+        ],
+        "body": {
+          "type": "helper",
+          "name": "graffitiL",
+          "args": [
+            {
+              "type": "name",
+              "name": "limit"
+            },
+            {
+              "type": "constant",
+              "value": 10
+            }
+          ]
+        }
+      },
+      "versum_hill_challenge1": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 50
+          }
+        ]
+      },
+      "versum_hill_challenge2": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 58
+          }
+        ]
+      },
+      "versum_hill_challenge3": {
+        "type": "helper",
+        "name": "rep",
         "args": [
           {
             "type": "constant",
             "value": 65
           }
+        ]
+      },
+      "versum_hill_crew_battle": {
+        "params": [
+          "limit",
+          "glitched"
         ],
-        "name": "rep",
-        "type": "helper"
-      },
-      "versum_hill_basketball_court": {
-        "count": {
-          "type": "constant",
-          "value": 90
-        },
-        "item": "rep",
-        "type": "item_check"
-      },
-      "versum_hill_ch1_roadblock": {
         "body": {
-          "if_false": {
-            "group": "graffitil",
-            "type": "group_check"
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
           },
           "if_true": {
-            "left": {
-              "left": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
                 "args": [
                   {
                     "type": "constant",
-                    "value": "graffitil"
+                    "value": 90
                   }
-                ],
-                "method": "count_group_unique",
-                "type": "state_method"
-              },
-              "op": "*",
-              "right": {
-                "type": "constant",
-                "value": 6
-              },
-              "type": "binary_op"
-            },
-            "op": ">=",
-            "right": {
-              "type": "constant",
-              "value": 10
-            },
-            "type": "compare"
-          },
-          "test": {
-            "name": "limit",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
-        "params": [
-          "limit"
-        ]
-      },
-      "versum_hill_challenge1": {
-        "count": {
-          "type": "constant",
-          "value": 50
-        },
-        "item": "rep",
-        "type": "item_check"
-      },
-      "versum_hill_challenge2": {
-        "count": {
-          "type": "constant",
-          "value": 58
-        },
-        "item": "rep",
-        "type": "item_check"
-      },
-      "versum_hill_challenge3": {
-        "count": {
-          "type": "constant",
-          "value": 65
-        },
-        "item": "rep",
-        "type": "item_check"
-      },
-      "versum_hill_crew_battle": {
-        "body": {
-          "if_false": {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 90
-                },
-                "item": "rep",
-                "type": "item_check"
+                ]
               },
               {
-                "if_false": {
-                  "group": "graffitim",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitim"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 7
-                    },
-                    "type": "binary_op"
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
                   },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 27
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 90
-                },
-                "item": "rep",
-                "type": "item_check"
-              },
-              {
-                "if_false": {
-                  "group": "graffitim",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitim"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 7
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
+                  {
                     "type": "constant",
                     "value": 98
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
+                  }
+                ]
               }
-            ],
-            "type": "and"
+            ]
           },
-          "test": {
-            "name": "glitched",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
-        "params": [
-          "limit",
-          "glitched"
-        ]
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 90
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 27
+                  }
+                ]
+              }
+            ]
+          }
+        }
       },
       "versum_hill_entrance": {
-        "count": {
-          "type": "constant",
-          "value": 20
-        },
-        "item": "rep",
-        "type": "item_check"
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 20
+          }
+        ]
       },
       "versum_hill_oldhead": {
-        "count": {
-          "type": "constant",
-          "value": 120
-        },
-        "item": "rep",
-        "type": "item_check"
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 120
+          }
+        ]
       },
       "versum_hill_rave": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
         "body": {
-          "if_false": {
-            "conditions": [
-              {
-                "if_false": {
-                  "group": "graffitil",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitil"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 6
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 26
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              },
-              {
-                "if_false": {
-                  "group": "graffitixl",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitixl"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 10
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
           },
           "if_true": {
-            "if_false": {
-              "if_false": {
-                "conditions": [
-                  {
-                    "if_false": {
-                      "group": "graffitil",
-                      "type": "group_check"
-                    },
-                    "if_true": {
-                      "left": {
-                        "left": {
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "graffitil"
-                            }
-                          ],
-                          "method": "count_group_unique",
-                          "type": "state_method"
-                        },
-                        "op": "*",
-                        "right": {
-                          "type": "constant",
-                          "value": 6
-                        },
-                        "type": "binary_op"
-                      },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 85
-                      },
-                      "type": "compare"
-                    },
-                    "test": {
-                      "name": "limit",
-                      "type": "name"
-                    },
-                    "type": "conditional"
-                  },
-                  {
-                    "if_false": {
-                      "group": "graffitixl",
-                      "type": "group_check"
-                    },
-                    "if_true": {
-                      "left": {
-                        "left": {
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "graffitixl"
-                            }
-                          ],
-                          "method": "count_group_unique",
-                          "type": "state_method"
-                        },
-                        "op": "*",
-                        "right": {
-                          "type": "constant",
-                          "value": 4
-                        },
-                        "type": "binary_op"
-                      },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 48
-                      },
-                      "type": "compare"
-                    },
-                    "test": {
-                      "name": "limit",
-                      "type": "name"
-                    },
-                    "type": "conditional"
-                  }
-                ],
-                "type": "and"
-              },
-              "if_true": {
-                "conditions": [
-                  {
-                    "if_false": {
-                      "group": "graffitil",
-                      "type": "group_check"
-                    },
-                    "if_true": {
-                      "left": {
-                        "left": {
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "graffitil"
-                            }
-                          ],
-                          "method": "count_group_unique",
-                          "type": "state_method"
-                        },
-                        "op": "*",
-                        "right": {
-                          "type": "constant",
-                          "value": 6
-                        },
-                        "type": "binary_op"
-                      },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 89
-                      },
-                      "type": "compare"
-                    },
-                    "test": {
-                      "name": "limit",
-                      "type": "name"
-                    },
-                    "type": "conditional"
-                  },
-                  {
-                    "if_false": {
-                      "group": "graffitixl",
-                      "type": "group_check"
-                    },
-                    "if_true": {
-                      "left": {
-                        "left": {
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "graffitixl"
-                            }
-                          ],
-                          "method": "count_group_unique",
-                          "type": "state_method"
-                        },
-                        "op": "*",
-                        "right": {
-                          "type": "constant",
-                          "value": 4
-                        },
-                        "type": "binary_op"
-                      },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 51
-                      },
-                      "type": "compare"
-                    },
-                    "test": {
-                      "name": "limit",
-                      "type": "name"
-                    },
-                    "type": "conditional"
-                  }
-                ],
-                "type": "and"
-              },
-              "test": {
-                "count": {
-                  "left": {
-                    "type": "constant",
-                    "value": 3
-                  },
-                  "op": "-",
-                  "right": {
-                    "type": "constant",
-                    "value": 1
-                  },
-                  "type": "binary_op"
-                },
-                "item": "Chapter Completed",
-                "type": "item_check"
-              },
-              "type": "conditional"
-            },
-            "if_true": {
-              "conditions": [
-                {
-                  "if_false": {
-                    "group": "graffitil",
-                    "type": "group_check"
-                  },
-                  "if_true": {
-                    "left": {
-                      "left": {
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "graffitil"
-                          }
-                        ],
-                        "method": "count_group_unique",
-                        "type": "state_method"
-                      },
-                      "op": "*",
-                      "right": {
-                        "type": "constant",
-                        "value": 6
-                      },
-                      "type": "binary_op"
-                    },
-                    "op": ">=",
-                    "right": {
-                      "type": "constant",
-                      "value": 90
-                    },
-                    "type": "compare"
-                  },
-                  "test": {
-                    "name": "limit",
-                    "type": "name"
-                  },
-                  "type": "conditional"
-                },
-                {
-                  "if_false": {
-                    "group": "graffitixl",
-                    "type": "group_check"
-                  },
-                  "if_true": {
-                    "left": {
-                      "left": {
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "graffitixl"
-                          }
-                        ],
-                        "method": "count_group_unique",
-                        "type": "state_method"
-                      },
-                      "op": "*",
-                      "right": {
-                        "type": "constant",
-                        "value": 4
-                      },
-                      "type": "binary_op"
-                    },
-                    "op": ">=",
-                    "right": {
-                      "type": "constant",
-                      "value": 51
-                    },
-                    "type": "compare"
-                  },
-                  "test": {
-                    "name": "limit",
-                    "type": "name"
-                  },
-                  "type": "conditional"
-                }
-              ],
-              "type": "and"
-            },
+            "type": "conditional",
             "test": {
-              "count": {
-                "left": {
+              "type": "helper",
+              "name": "current_chapter",
+              "args": [
+                {
                   "type": "constant",
                   "value": 4
-                },
-                "op": "-",
-                "right": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "type": "binary_op"
-              },
-              "item": "Chapter Completed",
-              "type": "item_check"
+                }
+              ]
             },
-            "type": "conditional"
+            "if_true": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "graffitiL",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "limit"
+                    },
+                    {
+                      "type": "constant",
+                      "value": 90
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "graffitiXL",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "limit"
+                    },
+                    {
+                      "type": "constant",
+                      "value": 51
+                    }
+                  ]
+                }
+              ]
+            },
+            "if_false": {
+              "type": "conditional",
+              "test": {
+                "type": "helper",
+                "name": "current_chapter",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 3
+                  }
+                ]
+              },
+              "if_true": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "helper",
+                    "name": "graffitiL",
+                    "args": [
+                      {
+                        "type": "name",
+                        "name": "limit"
+                      },
+                      {
+                        "type": "constant",
+                        "value": 89
+                      }
+                    ]
+                  },
+                  {
+                    "type": "helper",
+                    "name": "graffitiXL",
+                    "args": [
+                      {
+                        "type": "name",
+                        "name": "limit"
+                      },
+                      {
+                        "type": "constant",
+                        "value": 51
+                      }
+                    ]
+                  }
+                ]
+              },
+              "if_false": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "helper",
+                    "name": "graffitiL",
+                    "args": [
+                      {
+                        "type": "name",
+                        "name": "limit"
+                      },
+                      {
+                        "type": "constant",
+                        "value": 85
+                      }
+                    ]
+                  },
+                  {
+                    "type": "helper",
+                    "name": "graffitiXL",
+                    "args": [
+                      {
+                        "type": "name",
+                        "name": "limit"
+                      },
+                      {
+                        "type": "constant",
+                        "value": 48
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
           },
-          "test": {
-            "name": "glitched",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
-        "params": [
-          "limit",
-          "glitched"
-        ]
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "graffitiL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 26
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiXL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 10
+                  }
+                ]
+              }
+            ]
+          }
+        }
       },
       "versum_hill_rietveld": {
-        "body": {
-          "if_false": {
-            "conditions": [
-              {
-                "count": {
-                  "left": {
-                    "type": "constant",
-                    "value": 2
-                  },
-                  "op": "-",
-                  "right": {
-                    "type": "constant",
-                    "value": 1
-                  },
-                  "type": "binary_op"
-                },
-                "item": "Chapter Completed",
-                "type": "item_check"
-              },
-              {
-                "if_false": {
-                  "group": "graffitim",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitim"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 7
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 67
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "count": {
-                  "left": {
-                    "type": "constant",
-                    "value": 2
-                  },
-                  "op": "-",
-                  "right": {
-                    "type": "constant",
-                    "value": 1
-                  },
-                  "type": "binary_op"
-                },
-                "item": "Chapter Completed",
-                "type": "item_check"
-              },
-              {
-                "if_false": {
-                  "group": "graffitim",
-                  "type": "group_check"
-                },
-                "if_true": {
-                  "left": {
-                    "left": {
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "graffitim"
-                        }
-                      ],
-                      "method": "count_group_unique",
-                      "type": "state_method"
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 7
-                    },
-                    "type": "binary_op"
-                  },
-                  "op": ">=",
-                  "right": {
-                    "type": "constant",
-                    "value": 114
-                  },
-                  "type": "compare"
-                },
-                "test": {
-                  "name": "limit",
-                  "type": "name"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
-          },
-          "test": {
-            "name": "glitched",
-            "type": "name"
-          },
-          "type": "conditional"
-        },
         "params": [
           "limit",
           "glitched"
-        ]
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "current_chapter",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 114
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "current_chapter",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 67
+                  }
+                ]
+              }
+            ]
+          }
+        }
       }
     }
   }

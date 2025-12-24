@@ -545,7 +545,13 @@
             "name": "Grass Land 2 - Muchimuchi",
             "id": 7799041,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "ChuChu",
+                  "ChuChu Spawn"
+                ]
+              }
             },
             "item": {
               "name": "1-Up",
@@ -1011,7 +1017,13 @@
             "name": "Grass Land 4 - 5 -> Grass Land 4 - 7",
             "connected_region": "Grass Land 4 - 7",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Stone",
+                  "Stone Ability"
+                ]
+              }
             }
           }
         ],
@@ -1091,7 +1103,13 @@
             "name": "Grass Land 4 - Chao & Goku",
             "id": 7799043,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Stone",
+                  "Stone Ability"
+                ]
+              }
             },
             "item": {
               "name": "Invincible Candy",
@@ -1447,7 +1465,13 @@
             "name": "Grass Land 5 - Mine",
             "id": 7799044,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Kine",
+                  "Kine Spawn"
+                ]
+              }
             },
             "item": {
               "name": "Heart Star",
@@ -1931,7 +1955,29 @@
             "name": "Grass Land - Boss (Whispy Woods) Purified",
             "id": 7799296,
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Grass Land - Stage Completion"
+                      }
+                    },
+                    "op": ">=",
+                    "right": 3
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 3
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Slowness",
@@ -1945,7 +1991,17 @@
             "name": "Level 1 Boss - Defeated",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": "Grass Land - Stage Completion"
+                  }
+                },
+                "op": ">=",
+                "right": 3
+              }
             },
             "item": {
               "name": "Level 1 Boss Defeated",
@@ -1960,7 +2016,29 @@
             "name": "Level 1 Boss - Purified",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Grass Land - Stage Completion"
+                      }
+                    },
+                    "op": ">=",
+                    "right": 3
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 3
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Level 1 Boss Purified",
@@ -2216,7 +2294,15 @@
             "name": "Ripple Field 1 - Kamuribana",
             "id": 7799046,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Clean",
+                  "Clean Ability",
+                  "Pitch",
+                  "Pitch Spawn"
+                ]
+              }
             },
             "item": {
               "name": "1-Up",
@@ -2348,7 +2434,27 @@
             "name": "Ripple Field 2 - Enemy 3 (Blipper)",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "ChuChu",
+                      "ChuChu Spawn"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Kine",
+                      "Kine Spawn"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "No Ability",
@@ -2565,7 +2671,15 @@
             "name": "Ripple Field 2 - Bakasa",
             "id": 7799047,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Kine",
+                  "Kine Spawn",
+                  "Parasol",
+                  "Parasol Ability"
+                ]
+              }
             },
             "item": {
               "name": "Heart Star",
@@ -2717,7 +2831,27 @@
             "name": "Ripple Field 3 - Enemy 6 (Joe)",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "ChuChu",
+                      "ChuChu Spawn"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Kine",
+                      "Kine Spawn"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "No Ability",
@@ -2975,7 +3109,27 @@
             "name": "Ripple Field 4 - Enemy 5 (Mony)",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "ChuChu",
+                      "ChuChu Spawn"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Kine",
+                      "Kine Spawn"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "No Ability",
@@ -3062,7 +3216,13 @@
             "name": "Ripple Field 4 - Toad & Little Toad",
             "id": 7799049,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Needle",
+                  "Needle Ability"
+                ]
+              }
             },
             "item": {
               "name": "Heart Star",
@@ -3198,7 +3358,27 @@
             "name": "Ripple Field 4 - Enemy 7 (Bobin)",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "ChuChu",
+                      "ChuChu Spawn"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Kine",
+                      "Kine Spawn"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Spark Ability",
@@ -3213,7 +3393,27 @@
             "name": "Ripple Field 4 - Enemy 8 (Blipper)",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "ChuChu",
+                      "ChuChu Spawn"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Kine",
+                      "Kine Spawn"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "No Ability",
@@ -3496,7 +3696,27 @@
             "name": "Ripple Field 5 - Enemy 1 (Glunk)",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "ChuChu",
+                      "ChuChu Spawn"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Kine",
+                      "Kine Spawn"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "No Ability",
@@ -3511,7 +3731,27 @@
             "name": "Ripple Field 5 - Enemy 2 (Joe)",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "ChuChu",
+                      "ChuChu Spawn"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Kine",
+                      "Kine Spawn"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "No Ability",
@@ -3531,7 +3771,13 @@
             "name": "Ripple Field 5 - 3 -> Ripple Field 5 - 8",
             "connected_region": "Ripple Field 5 - 8",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Kine",
+                  "Kine Spawn"
+                ]
+              }
             }
           },
           {
@@ -3547,7 +3793,27 @@
             "name": "Ripple Field 5 - Enemy 3 (Bobin)",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "ChuChu",
+                      "ChuChu Spawn"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Kine",
+                      "Kine Spawn"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Spark Ability",
@@ -3562,7 +3828,27 @@
             "name": "Ripple Field 5 - Enemy 4 (Mony)",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "ChuChu",
+                      "ChuChu Spawn"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Kine",
+                      "Kine Spawn"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "No Ability",
@@ -3633,7 +3919,13 @@
             "name": "Ripple Field 5 - 5 -> Ripple Field 5 - 7",
             "connected_region": "Ripple Field 5 - 7",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Kine",
+                  "Kine Spawn"
+                ]
+              }
             }
           }
         ],
@@ -3809,7 +4101,19 @@
             "name": "Ripple Field 5 - Mama Pitch",
             "id": 7799050,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Burning",
+                  "Burning Ability",
+                  "Kine",
+                  "Kine Spawn",
+                  "Pitch",
+                  "Pitch Spawn",
+                  "Stone",
+                  "Stone Ability"
+                ]
+              }
             },
             "item": {
               "name": "Invincible Candy",
@@ -3858,7 +4162,13 @@
             "name": "Ripple Field 5 - Complete",
             "id": 7798794,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Kine",
+                  "Kine Spawn"
+                ]
+              }
             },
             "item": {
               "name": "Slowness",
@@ -4314,7 +4624,29 @@
             "name": "Ripple Field - Boss (Acro) Purified",
             "id": 7799297,
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Ripple Field - Stage Completion"
+                      }
+                    },
+                    "op": ">=",
+                    "right": 3
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 6
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Heart Star",
@@ -4328,7 +4660,17 @@
             "name": "Level 2 Boss - Defeated",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": "Ripple Field - Stage Completion"
+                  }
+                },
+                "op": ">=",
+                "right": 3
+              }
             },
             "item": {
               "name": "Level 2 Boss Defeated",
@@ -4343,7 +4685,29 @@
             "name": "Level 2 Boss - Purified",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Ripple Field - Stage Completion"
+                      }
+                    },
+                    "op": ">=",
+                    "right": 3
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 6
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Level 2 Boss Purified",
@@ -5252,7 +5616,13 @@
             "name": "Sand Canyon 2 - Auntie",
             "id": 7799053,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Clean",
+                  "Clean Ability"
+                ]
+              }
             },
             "item": {
               "name": "Gooey Bag",
@@ -5898,7 +6268,27 @@
             "name": "Sand Canyon 4 - Enemy 7 (Bobin)",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "ChuChu",
+                      "ChuChu Spawn"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Kine",
+                      "Kine Spawn"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Spark Ability",
@@ -5913,7 +6303,27 @@
             "name": "Sand Canyon 4 - Enemy 8 (Joe)",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "ChuChu",
+                      "ChuChu Spawn"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Kine",
+                      "Kine Spawn"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "No Ability",
@@ -5928,7 +6338,27 @@
             "name": "Sand Canyon 4 - Enemy 9 (Mony)",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "ChuChu",
+                      "ChuChu Spawn"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Kine",
+                      "Kine Spawn"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "No Ability",
@@ -5943,7 +6373,27 @@
             "name": "Sand Canyon 4 - Enemy 10 (Blipper)",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "ChuChu",
+                      "ChuChu Spawn"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Kine",
+                      "Kine Spawn"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "No Ability",
@@ -6501,7 +6951,15 @@
             "name": "Sand Canyon 5 - Nyupun",
             "id": 7799056,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "ChuChu",
+                  "ChuChu Spawn",
+                  "Cutter",
+                  "Cutter Ability"
+                ]
+              }
             },
             "item": {
               "name": "Heart Star",
@@ -6521,7 +6979,13 @@
             "name": "Sand Canyon 5 - Complete",
             "id": 7798800,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Cutter",
+                  "Cutter Ability"
+                ]
+              }
             },
             "item": {
               "name": "Eject Ability",
@@ -6555,7 +7019,13 @@
             "name": "Sand Canyon 5 - 9 -> Sand Canyon 5 - 6",
             "connected_region": "Sand Canyon 5 - 6",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Cutter",
+                  "Cutter Ability"
+                ]
+              }
             }
           },
           {
@@ -8048,7 +8518,29 @@
             "name": "Sand Canyon - Boss (Pon & Con) Purified",
             "id": 7799298,
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Sand Canyon - Stage Completion"
+                      }
+                    },
+                    "op": ">=",
+                    "right": 3
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 9
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Heart Star",
@@ -8062,7 +8554,17 @@
             "name": "Level 3 Boss - Defeated",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": "Sand Canyon - Stage Completion"
+                  }
+                },
+                "op": ">=",
+                "right": 3
+              }
             },
             "item": {
               "name": "Level 3 Boss Defeated",
@@ -8077,7 +8579,29 @@
             "name": "Level 3 Boss - Purified",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Sand Canyon - Stage Completion"
+                      }
+                    },
+                    "op": ">=",
+                    "right": 3
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 9
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Level 3 Boss Purified",
@@ -8559,7 +9083,15 @@
             "name": "Cloudy Park 1 - Hibanamodoki",
             "id": 7799058,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Clean",
+                  "Clean Ability",
+                  "Coo",
+                  "Coo Spawn"
+                ]
+              }
             },
             "item": {
               "name": "Pitch",
@@ -9003,7 +9535,13 @@
             "name": "Cloudy Park 2 - Piyo & Keko",
             "id": 7799059,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Needle",
+                  "Needle Ability"
+                ]
+              }
             },
             "item": {
               "name": "Burning",
@@ -9793,7 +10331,13 @@
             "name": "Cloudy Park 4 - Mikarin & Kagami Mocchi",
             "id": 7799061,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coo",
+                  "Coo Spawn"
+                ]
+              }
             },
             "item": {
               "name": "Heart Star",
@@ -10148,7 +10692,13 @@
             "name": "Cloudy Park 5 - Pick",
             "id": 7799062,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Rick",
+                  "Rick Spawn"
+                ]
+              }
             },
             "item": {
               "name": "Heart Star",
@@ -10750,7 +11300,29 @@
             "name": "Cloudy Park - Boss (Ado) Purified",
             "id": 7799299,
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Cloudy Park - Stage Completion"
+                      }
+                    },
+                    "op": ">=",
+                    "right": 3
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 12
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Heart Star",
@@ -10764,7 +11336,17 @@
             "name": "Level 4 Boss - Defeated",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": "Cloudy Park - Stage Completion"
+                  }
+                },
+                "op": ">=",
+                "right": 3
+              }
             },
             "item": {
               "name": "Level 4 Boss Defeated",
@@ -10779,7 +11361,29 @@
             "name": "Level 4 Boss - Purified",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Cloudy Park - Stage Completion"
+                      }
+                    },
+                    "op": ">=",
+                    "right": 3
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 12
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Level 4 Boss Purified",
@@ -11124,7 +11728,13 @@
             "name": "Iceberg 1 - Kogoesou",
             "id": 7799064,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Burning",
+                  "Burning Ability"
+                ]
+              }
             },
             "item": {
               "name": "1-Up",
@@ -11534,7 +12144,13 @@
             "name": "Iceberg 2 - Samus",
             "id": 7799065,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Ice",
+                  "Ice Ability"
+                ]
+              }
             },
             "item": {
               "name": "1-Up",
@@ -12149,7 +12765,13 @@
             "name": "Iceberg 4 - 2 -> Iceberg 4 - 16",
             "connected_region": "Iceberg 4 - 16",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Burning",
+                  "Burning Ability"
+                ]
+              }
             }
           },
           {
@@ -12163,7 +12785,13 @@
             "name": "Iceberg 4 - 2 -> Iceberg 4 - 17",
             "connected_region": "Iceberg 4 - 17",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Burning",
+                  "Burning Ability"
+                ]
+              }
             }
           }
         ],
@@ -12267,7 +12895,13 @@
             "name": "Iceberg 4 - 7 -> Iceberg 4 - 13",
             "connected_region": "Iceberg 4 - 13",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Burning",
+                  "Burning Ability"
+                ]
+              }
             }
           }
         ],
@@ -12431,7 +13065,15 @@
             "name": "Iceberg 4 - Animal 2",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Burning",
+                  "Burning Ability",
+                  "Coo",
+                  "Coo Spawn"
+                ]
+              }
             },
             "item": {
               "name": "Coo Spawn",
@@ -12446,7 +13088,17 @@
             "name": "Iceberg 4 - Animal 3",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Burning",
+                  "Burning Ability",
+                  "ChuChu",
+                  "ChuChu Spawn",
+                  "Coo",
+                  "Coo Spawn"
+                ]
+              }
             },
             "item": {
               "name": "Pitch Spawn",
@@ -12633,7 +13285,17 @@
             "name": "Iceberg 4 - Name",
             "id": 7799067,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Burning",
+                  "Burning Ability",
+                  "ChuChu",
+                  "ChuChu Spawn",
+                  "Coo",
+                  "Coo Spawn"
+                ]
+              }
             },
             "item": {
               "name": "Gooey Bag",
@@ -12653,7 +13315,13 @@
             "name": "Iceberg 4 - Complete",
             "id": 7798811,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Burning",
+                  "Burning Ability"
+                ]
+              }
             },
             "item": {
               "name": "Heart Star",
@@ -13774,7 +14442,13 @@
             "name": "Iceberg 5 - Shiro",
             "id": 7799068,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Nago",
+                  "Nago Spawn"
+                ]
+              }
             },
             "item": {
               "name": "1-Up",
@@ -14450,7 +15124,29 @@
             "name": "Iceberg - Boss (Dedede) Purified",
             "id": 7799300,
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Iceberg - Stage Completion"
+                      }
+                    },
+                    "op": ">=",
+                    "right": 3
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 15
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Ice",
@@ -14464,7 +15160,17 @@
             "name": "Level 5 Boss - Defeated",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": "Iceberg - Stage Completion"
+                  }
+                },
+                "op": ">=",
+                "right": 3
+              }
             },
             "item": {
               "name": "Level 5 Boss Defeated",
@@ -14479,7 +15185,29 @@
             "name": "Level 5 Boss - Purified",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Iceberg - Stage Completion"
+                      }
+                    },
+                    "op": ">=",
+                    "right": 3
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 15
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Level 5 Boss Purified",
@@ -14506,7 +15234,28 @@
             "name": "To Level 6",
             "connected_region": "Hyper Zone",
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Heart Star",
+                    "count": 15
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Level 1 Boss Purified",
+                      "Level 2 Boss Purified",
+                      "Level 3 Boss Purified",
+                      "Level 4 Boss Purified",
+                      "Level 5 Boss Purified"
+                    ]
+                  }
+                }
+              ]
             }
           }
         ],
@@ -14568,7 +15317,13 @@
             "name": "To Level 2",
             "connected_region": "Ripple Field",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Level 1 Boss Defeated",
+                  "Level 1 Boss Purified"
+                ]
+              }
             }
           }
         ],
@@ -14630,7 +15385,13 @@
             "name": "To Level 3",
             "connected_region": "Sand Canyon",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Level 2 Boss Defeated",
+                  "Level 2 Boss Purified"
+                ]
+              }
             }
           }
         ],
@@ -14692,7 +15453,13 @@
             "name": "To Level 4",
             "connected_region": "Cloudy Park",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Level 3 Boss Defeated",
+                  "Level 3 Boss Purified"
+                ]
+              }
             }
           }
         ],
@@ -14754,7 +15521,13 @@
             "name": "To Level 5",
             "connected_region": "Iceberg",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Level 4 Boss Defeated",
+                  "Level 4 Boss Purified"
+                ]
+              }
             }
           }
         ],

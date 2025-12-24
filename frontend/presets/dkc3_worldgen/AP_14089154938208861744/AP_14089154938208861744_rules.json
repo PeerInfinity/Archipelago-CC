@@ -32,14 +32,40 @@
             "name": "Overworld 2",
             "connected_region": "Overworld 2",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Boat Upgrade",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld 4",
             "connected_region": "Overworld 4",
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "DK Coin"
+                      }
+                    },
+                    "op": ">=",
+                    "right": 30
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Boat Upgrade",
+                    "count": 3
+                  }
+                }
+              ]
             }
           },
           {
@@ -80,7 +106,11 @@
             "name": "Overworld 3",
             "connected_region": "Overworld 3",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Boat Upgrade",
+                "count": 3
+              }
             }
           },
           {
@@ -307,7 +337,10 @@
             "name": "Arich's Hoard Region",
             "connected_region": "Arich's Hoard Region",
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Riverside Race - Flag"
+              }
             }
           }
         ],
@@ -424,7 +457,10 @@
             "name": "Sky-High Secret Region",
             "connected_region": "Sky-High Secret Region",
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Bleak's House"
+              }
             }
           }
         ],
@@ -609,42 +645,166 @@
             "name": "Stampede Sprint",
             "connected_region": "Stampede Sprint",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": "Bonus Coin"
+                  }
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "Arithmetic",
+                  "args": {
+                    "left": 15,
+                    "op": "*",
+                    "right": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": 0,
+                        "op": "+",
+                        "right": 1
+                      }
+                    }
+                  }
+                }
+              }
             }
           },
           {
             "name": "Criss Kross Cliffs",
             "connected_region": "Criss Kross Cliffs",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": "Bonus Coin"
+                  }
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "Arithmetic",
+                  "args": {
+                    "left": 15,
+                    "op": "*",
+                    "right": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": 1,
+                        "op": "+",
+                        "right": 1
+                      }
+                    }
+                  }
+                }
+              }
             }
           },
           {
             "name": "Tyrant Twin Tussle",
             "connected_region": "Tyrant Twin Tussle",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": "Bonus Coin"
+                  }
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "Arithmetic",
+                  "args": {
+                    "left": 15,
+                    "op": "*",
+                    "right": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": 2,
+                        "op": "+",
+                        "right": 1
+                      }
+                    }
+                  }
+                }
+              }
             }
           },
           {
             "name": "Swoopy Salvo",
             "connected_region": "Swoopy Salvo",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": "Bonus Coin"
+                  }
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "Arithmetic",
+                  "args": {
+                    "left": 15,
+                    "op": "*",
+                    "right": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": 3,
+                        "op": "+",
+                        "right": 1
+                      }
+                    }
+                  }
+                }
+              }
             }
           },
           {
             "name": "Rocket Rush",
             "connected_region": "Rocket Rush",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": "Bonus Coin"
+                  }
+                },
+                "op": ">=",
+                "right": {
+                  "rule": "Arithmetic",
+                  "args": {
+                    "left": 15,
+                    "op": "*",
+                    "right": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": 4,
+                        "op": "+",
+                        "right": 1
+                      }
+                    }
+                  }
+                }
+              }
             }
           },
           {
             "name": "Kastle KAOS Region",
             "connected_region": "Kastle KAOS Region",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Krematoa Cog",
+                "count": 5
+              }
             }
           }
         ],
@@ -3487,7 +3647,8 @@
       "Sky-High Secret Region": {
         "name": "Sky-High Secret Region",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Glacial Grotto Region": {
         "name": "Glacial Grotto Region",
@@ -3512,7 +3673,8 @@
       "Clifftop Cache Region": {
         "name": "Clifftop Cache Region",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Sewer Stockpile Region": {
         "name": "Sewer Stockpile Region",
@@ -3537,37 +3699,44 @@
       "Bazaar's General Store Region": {
         "name": "Bazaar's General Store Region",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Bramble's Bungalow Region": {
         "name": "Bramble's Bungalow Region",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Flower Spot Region": {
         "name": "Flower Spot Region",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Barter's Swap Shop Region": {
         "name": "Barter's Swap Shop Region",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Barnacle's Island Region": {
         "name": "Barnacle's Island Region",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Blue's Beach Hut Region": {
         "name": "Blue's Beach Hut Region",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Bizzard's Basecamp Region": {
         "name": "Bizzard's Basecamp Region",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       }
     }
   },

@@ -9,6 +9,9 @@ from BaseClasses import MultiWorld, Region, Entrance
 from .Locations import location_table, SonicAdventure2BattleWorldGenLocation
 
 
+# Regions that were added after sphere calculation (from original export)
+DYNAMICALLY_ADDED_REGIONS = {"Chao Race - Beginner", "Chao Karate - Beginner", "Chao Race - Intermediate", "Chao Karate - Standard", "Chao Race - Expert", "Chao Karate - Expert", "Chao Karate - Super", "Kart Race - Beginner", "Kart Race - Intermediate", "Kart Race - Expert"}
+
 def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 

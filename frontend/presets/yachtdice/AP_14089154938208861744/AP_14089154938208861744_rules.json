@@ -7072,7 +7072,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Dice Fragment": {
         "name": "Dice Fragment",

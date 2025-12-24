@@ -1107,7 +1107,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Metal Blade": {
         "name": "Metal Blade",
@@ -1119,7 +1119,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Crash Bomber": {
         "name": "Crash Bomber",
@@ -1144,7 +1144,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Item 2 - Rocket": {
         "name": "Item 2 - Rocket",
@@ -1157,7 +1157,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Item 3 - Bouncy": {
         "name": "Item 3 - Bouncy",
@@ -1170,7 +1170,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "1-Up": {
         "name": "1-Up",
@@ -1698,102 +1698,42 @@
   "helpers": {
     "1": {
       "can_defeat_enough_rbms": {
+        "params": [
+          "required",
+          "boss_requirements"
+        ],
         "body": {
+          "type": "block",
           "statements": [
             {
-              "name": "can_defeat",
               "type": "assign",
+              "name": "can_defeat",
               "value": {
                 "type": "constant",
                 "value": 0
               }
             },
             {
+              "type": "for_iter",
+              "iterable": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "boss_requirements"
+                  },
+                  "attr": "items"
+                }
+              },
               "body": [
                 {
-                  "body": [
-                    {
-                      "body": [
-                        {
-                          "name": "can_defeat",
-                          "op": "+=",
-                          "type": "assign",
-                          "value": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        },
-                        {
-                          "body": [
-                            {
-                              "type": "return",
-                              "value": {
-                                "type": "constant",
-                                "value": true
-                              }
-                            }
-                          ],
-                          "test": {
-                            "left": {
-                              "name": "can_defeat",
-                              "type": "name"
-                            },
-                            "op": ">=",
-                            "right": {
-                              "name": "required",
-                              "type": "name"
-                            },
-                            "type": "compare"
-                          },
-                          "type": "if_statement"
-                        }
-                      ],
-                      "test": {
-                        "args": [
-                          {
-                            "function": {
-                              "body": {
-                                "index": {
-                                  "name": "x",
-                                  "type": "name"
-                                },
-                                "type": "subscript",
-                                "value": {
-                                  "type": "constant",
-                                  "value": {
-                                    "1": "Atomic Fire",
-                                    "2": "Air Shooter",
-                                    "3": "Leaf Shield",
-                                    "4": "Bubble Lead",
-                                    "5": "Quick Boomerang",
-                                    "6": "Crash Bomber",
-                                    "7": "Metal Blade",
-                                    "8": "Time Stopper"
-                                  }
-                                }
-                              },
-                              "params": [
-                                "x"
-                              ],
-                              "type": "lambda"
-                            },
-                            "iterable": {
-                              "name": "reqs",
-                              "type": "name"
-                            },
-                            "type": "map"
-                          }
-                        ],
-                        "method": "has_all",
-                        "type": "state_method"
-                      },
-                      "type": "if_statement"
-                    }
-                  ],
+                  "type": "if_statement",
                   "test": {
+                    "type": "compare",
                     "left": {
-                      "name": "boss",
-                      "type": "name"
+                      "type": "name",
+                      "name": "boss"
                     },
                     "op": "in",
                     "right": {
@@ -1808,24 +1748,60 @@
                         "6": "Metal Man Defeated",
                         "7": "Crash Man Defeated"
                       }
-                    },
-                    "type": "compare"
+                    }
                   },
-                  "type": "if_statement"
+                  "body": [
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "state_method",
+                        "method": "has_all",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      "body": [
+                        {
+                          "type": "assign",
+                          "name": "can_defeat",
+                          "op": "+=",
+                          "value": {
+                            "type": "constant",
+                            "value": 1
+                          }
+                        },
+                        {
+                          "type": "if_statement",
+                          "test": {
+                            "type": "compare",
+                            "left": {
+                              "type": "name",
+                              "name": "can_defeat"
+                            },
+                            "op": ">=",
+                            "right": {
+                              "type": "name",
+                              "name": "required"
+                            }
+                          },
+                          "body": [
+                            {
+                              "type": "return",
+                              "value": {
+                                "type": "constant",
+                                "value": true
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
                 }
               ],
-              "iterable": {
-                "function": {
-                  "attr": "items",
-                  "object": {
-                    "name": "boss_requirements",
-                    "type": "name"
-                  },
-                  "type": "attribute"
-                },
-                "type": "function_call"
-              },
-              "type": "for_iter",
               "vars": [
                 "boss",
                 "reqs"
@@ -1838,13 +1814,8 @@
                 "value": false
               }
             }
-          ],
-          "type": "block"
-        },
-        "params": [
-          "required",
-          "boss_requirements"
-        ]
+          ]
+        }
       }
     }
   }

@@ -8830,6 +8830,7 @@
         "start_inventory_from_pool": {},
         "start_location_hints": []
       },
+      "use_paren_number_accumulator": true,
       "HatItems": false,
       "UmbrellaLogic": false,
       "ShuffleSubconPaintings": false,

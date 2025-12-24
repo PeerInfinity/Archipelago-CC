@@ -89,5 +89,5 @@ item_table: Dict[str, ItemData] = {
     "Upgrade Shapes Draining Trap": ItemData(20010771, ItemClassification.filler),
     "Belt": ItemData(20010772, ItemClassification.progression),
     "Extractor": ItemData(20010773, ItemClassification.progression),
-    "Goal": ItemData(None, ItemClassification.progression_skip_balancing),
+    "Goal": ItemData(None, ItemClassification.progression),
 }

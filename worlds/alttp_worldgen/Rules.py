@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Compare, Conditional, CountItem, False_, Has, HasAny, HasGroup, HelperCall, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -44,11 +44,11 @@ def _alinktothepastworldgen_can_bomb_or_bonk(state: "CollectionState", player: i
 
 
 def _alinktothepastworldgen_can_buy(state: "CollectionState", player: int, item = None) -> bool:
-    return True
+    return any(state.can_reach(region, "Region", player) for region in {'Red Potion': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)', 'Potion Shop'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)', 'Potion Shop']}, 'Small Heart': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)']}, 'Bombs (10)': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)']}, 'Red Shield': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Bee': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Arrows (10)': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Blue Shield': {'unlimited': ['Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop'], 'limited': ['Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop']}, 'Green Potion': {'unlimited': ['Potion Shop'], 'limited': ['Potion Shop']}, 'Blue Potion': {'unlimited': ['Potion Shop'], 'limited': ['Potion Shop']}, 'Bomb Upgrade (+5)': {'unlimited': [], 'limited': ['Capacity Upgrade']}, 'Arrow Upgrade (+5)': {'unlimited': [], 'limited': ['Capacity Upgrade']}}[item]['limited'])
 
 
 def _alinktothepastworldgen_can_buy_unlimited(state: "CollectionState", player: int, item = None) -> bool:
-    return True
+    return any(state.can_reach(region, "Region", player) for region in {'Red Potion': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)', 'Potion Shop'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)', 'Potion Shop']}, 'Small Heart': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)']}, 'Bombs (10)': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)']}, 'Red Shield': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Bee': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Arrows (10)': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Blue Shield': {'unlimited': ['Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop'], 'limited': ['Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop']}, 'Green Potion': {'unlimited': ['Potion Shop'], 'limited': ['Potion Shop']}, 'Blue Potion': {'unlimited': ['Potion Shop'], 'limited': ['Potion Shop']}, 'Bomb Upgrade (+5)': {'unlimited': [], 'limited': ['Capacity Upgrade']}, 'Arrow Upgrade (+5)': {'unlimited': [], 'limited': ['Capacity Upgrade']}}[item]['unlimited'])
 
 
 def _alinktothepastworldgen_can_extend_magic(state: "CollectionState", player: int, smallmagic = 16, fullrefill: bool = False) -> bool:
@@ -160,2285 +160,6 @@ def _alinktothepastworldgen_can_defeat_boss(state: "CollectionState", player: in
     return _alinktothepastworldgen_can_kill_most_things(state, player, 1)
 
 
-# Helper definitions for frontend evaluation
-# These are looked up by name instead of being inlined at every call site
-_HELPER_DEFINITIONS = {   'GanonDefeatRule': {   'statements': [   {   'body': [   {   'type': 'return',
-                                                                 'value': {   'conditions': [   {   'item': 'Hammer',
-                                                                                                    'type': 'item_check'},
-                                                                                                {   'conditions': [   {   'item': 'Fire '
-                                                                                                                                  'Rod',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Lamp',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'or'},
-                                                                                                {   'item': 'Silver '
-                                                                                                            'Bow',
-                                                                                                    'type': 'item_check'},
-                                                                                                {   'conditions': [   {   'conditions': [   {   'item': 'Bow',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Silver '
-                                                                                                                                                        'Bow',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'},
-                                                                                                                      {   'args': [   {   'type': 'constant',
-                                                                                                                                          'value': 0}],
-                                                                                                                          'name': 'can_hold_arrows',
-                                                                                                                          'type': 'helper'}],
-                                                                                                    'type': 'and'}],
-                                                                              'type': 'and'}}],
-                                                 'test': {'type': 'constant', 'value': False},
-                                                 'type': 'if_statement'},
-                                             {   'name': 'can_hurt',
-                                                 'type': 'assign',
-                                                 'value': {   'conditions': [   {   'item': 'Master Sword',
-                                                                                    'type': 'item_check'},
-                                                                                {   'item': 'Tempered Sword',
-                                                                                    'type': 'item_check'},
-                                                                                {   'item': 'Golden Sword',
-                                                                                    'type': 'item_check'}],
-                                                              'type': 'or'}},
-                                             {   'name': 'common',
-                                                 'type': 'assign',
-                                                 'value': {   'conditions': [   {'name': 'can_hurt', 'type': 'name'},
-                                                                                {   'conditions': [   {   'item': 'Fire '
-                                                                                                                  'Rod',
-                                                                                                          'type': 'item_check'},
-                                                                                                      {   'item': 'Lamp',
-                                                                                                          'type': 'item_check'}],
-                                                                                    'type': 'or'}],
-                                                              'type': 'and'}},
-                                             {   'body': [   {   'type': 'return',
-                                                                 'value': {   'conditions': [   {   'name': 'common',
-                                                                                                    'type': 'name'},
-                                                                                                {   'conditions': [   {   'item': 'Tempered '
-                                                                                                                                  'Sword',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Golden '
-                                                                                                                                  'Sword',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'conditions': [   {   'item': 'Silver '
-                                                                                                                                                        'Bow',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'conditions': [   {   'conditions': [   {   'item': 'Bow',
-                                                                                                                                                                                            'type': 'item_check'},
-                                                                                                                                                                                        {   'item': 'Silver '
-                                                                                                                                                                                                    'Bow',
-                                                                                                                                                                                            'type': 'item_check'}],
-                                                                                                                                                                      'type': 'or'},
-                                                                                                                                                                  {   'args': [   {   'type': 'constant',
-                                                                                                                                                                                      'value': 0}],
-                                                                                                                                                                      'name': 'can_hold_arrows',
-                                                                                                                                                                      'type': 'helper'}],
-                                                                                                                                                'type': 'and'}],
-                                                                                                                          'type': 'and'},
-                                                                                                                      {   'item': 'Lamp',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'statements': [   {   'name': '_h6_basemagic',
-                                                                                                                                                'type': 'assign',
-                                                                                                                                                'value': {   'type': 'constant',
-                                                                                                                                                             'value': 8}},
-                                                                                                                                            {   'name': '_h6_basemagic',
-                                                                                                                                                'type': 'assign',
-                                                                                                                                                'value': {   'if_false': {   'if_false': {   'name': '_h6_basemagic',
-                                                                                                                                                                                             'type': 'name'},
-                                                                                                                                                                             'if_true': {   'type': 'constant',
-                                                                                                                                                                                            'value': 16},
-                                                                                                                                                                             'test': {   'item': 'Magic '
-                                                                                                                                                                                                 'Upgrade '
-                                                                                                                                                                                                 '(1/2)',
-                                                                                                                                                                                         'type': 'item_check'},
-                                                                                                                                                                             'type': 'conditional'},
-                                                                                                                                                             'if_true': {   'type': 'constant',
-                                                                                                                                                                            'value': 32},
-                                                                                                                                                             'test': {   'item': 'Magic '
-                                                                                                                                                                                 'Upgrade '
-                                                                                                                                                                                 '(1/4)',
-                                                                                                                                                                         'type': 'item_check'},
-                                                                                                                                                             'type': 'conditional'}},
-                                                                                                                                            {   'name': '_h6_basemagic',
-                                                                                                                                                'type': 'assign',
-                                                                                                                                                'value': {   'if_false': {   'name': '_h6_basemagic',
-                                                                                                                                                                             'type': 'name'},
-                                                                                                                                                             'if_true': {   'if_false': {   'if_false': {   'left': {   'name': '_h6_basemagic',
-                                                                                                                                                                                                                        'type': 'name'},
-                                                                                                                                                                                                            'op': '+',
-                                                                                                                                                                                                            'right': {   'left': {   'name': '_h6_basemagic',
-                                                                                                                                                                                                                                     'type': 'name'},
-                                                                                                                                                                                                                         'op': '*',
-                                                                                                                                                                                                                         'right': {   'args': [   ],
-                                                                                                                                                                                                                                      'name': 'bottle_count',
-                                                                                                                                                                                                                                      'type': 'helper'},
-                                                                                                                                                                                                                         'type': 'binary_op'},
-                                                                                                                                                                                                            'type': 'binary_op'},
-                                                                                                                                                                                            'if_true': {   'left': {   'name': '_h6_basemagic',
-                                                                                                                                                                                                                       'type': 'name'},
-                                                                                                                                                                                                           'op': '+',
-                                                                                                                                                                                                           'right': {   'args': [   {   'left': {   'left': {   'name': '_h6_basemagic',
-                                                                                                                                                                                                                                                                'type': 'name'},
-                                                                                                                                                                                                                                                    'op': '*',
-                                                                                                                                                                                                                                                    'right': {   'type': 'constant',
-                                                                                                                                                                                                                                                                 'value': 0.25},
-                                                                                                                                                                                                                                                    'type': 'binary_op'},
-                                                                                                                                                                                                                                        'op': '*',
-                                                                                                                                                                                                                                        'right': {   'args': [   ],
-                                                                                                                                                                                                                                                     'name': 'bottle_count',
-                                                                                                                                                                                                                                                     'type': 'helper'},
-                                                                                                                                                                                                                                        'type': 'binary_op'}],
-                                                                                                                                                                                                                        'name': 'int',
-                                                                                                                                                                                                                        'type': 'helper'},
-                                                                                                                                                                                                           'type': 'binary_op'},
-                                                                                                                                                                                            'test': {   'conditions': [   {   'left': {   'type': 'constant',
-                                                                                                                                                                                                                                          'value': 'hard'},
-                                                                                                                                                                                                                              'op': '==',
-                                                                                                                                                                                                                              'right': {   'type': 'constant',
-                                                                                                                                                                                                                                           'value': 'expert'},
-                                                                                                                                                                                                                              'type': 'compare'},
-                                                                                                                                                                                                                          {   'condition': {   'type': 'constant',
-                                                                                                                                                                                                                                               'value': False},
-                                                                                                                                                                                                                              'type': 'not'}],
-                                                                                                                                                                                                        'type': 'and'},
-                                                                                                                                                                                            'type': 'conditional'},
-                                                                                                                                                                            'if_true': {   'left': {   'name': '_h6_basemagic',
-                                                                                                                                                                                                       'type': 'name'},
-                                                                                                                                                                                           'op': '+',
-                                                                                                                                                                                           'right': {   'args': [   {   'left': {   'left': {   'name': '_h6_basemagic',
-                                                                                                                                                                                                                                                'type': 'name'},
-                                                                                                                                                                                                                                    'op': '*',
-                                                                                                                                                                                                                                    'right': {   'type': 'constant',
-                                                                                                                                                                                                                                                 'value': 0.5},
-                                                                                                                                                                                                                                    'type': 'binary_op'},
-                                                                                                                                                                                                                        'op': '*',
-                                                                                                                                                                                                                        'right': {   'args': [   ],
-                                                                                                                                                                                                                                     'name': 'bottle_count',
-                                                                                                                                                                                                                                     'type': 'helper'},
-                                                                                                                                                                                                                        'type': 'binary_op'}],
-                                                                                                                                                                                                        'name': 'int',
-                                                                                                                                                                                                        'type': 'helper'},
-                                                                                                                                                                                           'type': 'binary_op'},
-                                                                                                                                                                            'test': {   'conditions': [   {   'left': {   'type': 'constant',
-                                                                                                                                                                                                                          'value': 'hard'},
-                                                                                                                                                                                                              'op': '==',
-                                                                                                                                                                                                              'right': {   'type': 'constant',
-                                                                                                                                                                                                                           'value': 'hard'},
-                                                                                                                                                                                                              'type': 'compare'},
-                                                                                                                                                                                                          {   'condition': {   'type': 'constant',
-                                                                                                                                                                                                                               'value': False},
-                                                                                                                                                                                                              'type': 'not'}],
-                                                                                                                                                                                        'type': 'and'},
-                                                                                                                                                                            'type': 'conditional'},
-                                                                                                                                                             'test': {   'conditions': [   {   'args': [   {   'type': 'constant',
-                                                                                                                                                                                                               'value': 'Green '
-                                                                                                                                                                                                                        'Potion'}],
-                                                                                                                                                                                               'name': 'can_buy_unlimited',
-                                                                                                                                                                                               'type': 'helper'},
-                                                                                                                                                                                           {   'args': [   {   'type': 'constant',
-                                                                                                                                                                                                               'value': 'Blue '
-                                                                                                                                                                                                                        'Potion'}],
-                                                                                                                                                                                               'name': 'can_buy_unlimited',
-                                                                                                                                                                                               'type': 'helper'}],
-                                                                                                                                                                         'type': 'or'},
-                                                                                                                                                             'type': 'conditional'}},
-                                                                                                                                            {   'type': 'return',
-                                                                                                                                                'value': {   'left': {   'name': '_h6_basemagic',
-                                                                                                                                                                         'type': 'name'},
-                                                                                                                                                             'op': '>=',
-                                                                                                                                                             'right': {   'type': 'constant',
-                                                                                                                                                                          'value': 12},
-                                                                                                                                                             'type': 'compare'}}],
-                                                                                                                          'type': 'block'}],
-                                                                                                    'type': 'or'}],
-                                                                              'type': 'and'}}],
-                                                 'orelse': [   {   'type': 'return',
-                                                                   'value': {   'conditions': [   {   'name': 'common',
-                                                                                                      'type': 'name'},
-                                                                                                  {   'item': 'Silver '
-                                                                                                              'Bow',
-                                                                                                      'type': 'item_check'},
-                                                                                                  {   'conditions': [   {   'conditions': [   {   'item': 'Bow',
-                                                                                                                                                  'type': 'item_check'},
-                                                                                                                                              {   'item': 'Silver '
-                                                                                                                                                          'Bow',
-                                                                                                                                                  'type': 'item_check'}],
-                                                                                                                            'type': 'or'},
-                                                                                                                        {   'args': [   {   'type': 'constant',
-                                                                                                                                            'value': 0}],
-                                                                                                                            'name': 'can_hold_arrows',
-                                                                                                                            'type': 'helper'}],
-                                                                                                      'type': 'and'}],
-                                                                                'type': 'and'}}],
-                                                 'test': {   'left': {'type': 'constant', 'value': 'no_glitches'},
-                                                             'op': '!=',
-                                                             'right': {'type': 'constant', 'value': 'no_glitches'},
-                                                             'type': 'compare'},
-                                                 'type': 'if_statement'}],
-                           'type': 'block'},
-    'basement_key_rule': {   'count': {'type': 'constant', 'value': 2},
-                             'item': 'Small Key (Hyrule Castle)',
-                             'type': 'count_check'},
-    'bottle_count': {   'args': [   {   'setting': 'difficulty_requirements.progressive_bottle_limit',
-                                        'type': 'setting_value'},
-                                    {'group': 'Bottles', 'type': 'group_count'}],
-                        'type': 'min'},
-    'can_activate_crystal_switch': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                   'name': 'has_sword',
-                                                                                   'type': 'helper'},
-                                                                               {   'item': 'Hammer',
-                                                                                   'type': 'item_check'}],
-                                                             'type': 'or'},
-                                                         {   'statements': [   {   'name': '_h9_bombs',
-                                                                                   'type': 'assign',
-                                                                                   'value': {   'type': 'constant',
-                                                                                                'value': 10}},
-                                                                               {   'name': '_h9_bombs',
-                                                                                   'op': '+=',
-                                                                                   'type': 'assign',
-                                                                                   'value': {   'left': {   'left': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                                    'value': 'Bomb '
-                                                                                                                                                             'Upgrade '
-                                                                                                                                                             '(+5)'}],
-                                                                                                                                    'method': 'count',
-                                                                                                                                    'type': 'state_method'},
-                                                                                                                        'op': '*',
-                                                                                                                        'right': {   'type': 'constant',
-                                                                                                                                     'value': 5},
-                                                                                                                        'type': 'binary_op'},
-                                                                                                            'op': '+',
-                                                                                                            'right': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                                     'value': 'Bomb '
-                                                                                                                                                              'Upgrade '
-                                                                                                                                                              '(+10)'}],
-                                                                                                                                     'method': 'count',
-                                                                                                                                     'type': 'state_method'},
-                                                                                                                         'op': '*',
-                                                                                                                         'right': {   'type': 'constant',
-                                                                                                                                      'value': 10},
-                                                                                                                         'type': 'binary_op'},
-                                                                                                            'type': 'binary_op'},
-                                                                                                'op': '+',
-                                                                                                'right': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                         'value': 'Bomb '
-                                                                                                                                                  'Upgrade '
-                                                                                                                                                  '(50)'}],
-                                                                                                                         'method': 'count',
-                                                                                                                         'type': 'state_method'},
-                                                                                                             'op': '*',
-                                                                                                             'right': {   'type': 'constant',
-                                                                                                                          'value': 50},
-                                                                                                             'type': 'binary_op'},
-                                                                                                'type': 'binary_op'}},
-                                                                               {   'name': '_h9_bombs',
-                                                                                   'op': '+=',
-                                                                                   'type': 'assign',
-                                                                                   'value': {   'args': [   {   'type': 'constant',
-                                                                                                                'value': 0},
-                                                                                                            {   'left': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                                        'value': 'Bomb '
-                                                                                                                                                                 'Upgrade '
-                                                                                                                                                                 '(+5)'}],
-                                                                                                                                        'method': 'count',
-                                                                                                                                        'type': 'state_method'},
-                                                                                                                            'op': '-',
-                                                                                                                            'right': {   'type': 'constant',
-                                                                                                                                         'value': 6},
-                                                                                                                            'type': 'binary_op'},
-                                                                                                                'op': '*',
-                                                                                                                'right': {   'type': 'constant',
-                                                                                                                             'value': 10},
-                                                                                                                'type': 'binary_op'}],
-                                                                                                'type': 'max'}},
-                                                                               {   'body': [   {   'name': '_h9_bombs',
-                                                                                                   'op': '+=',
-                                                                                                   'type': 'assign',
-                                                                                                   'value': {   'type': 'constant',
-                                                                                                                'value': 40}}],
-                                                                                   'test': {   'conditions': [   {   'condition': {   'type': 'constant',
-                                                                                                                                      'value': 'off'},
-                                                                                                                     'type': 'not'},
-                                                                                                                 {   'item': 'Capacity '
-                                                                                                                             'Upgrade '
-                                                                                                                             'Shop',
-                                                                                                                     'type': 'item_check'}],
-                                                                                               'type': 'and'},
-                                                                                   'type': 'if_statement'},
-                                                                               {   'type': 'return',
-                                                                                   'value': {   'left': {   'name': '_h9_bombs',
-                                                                                                            'type': 'name'},
-                                                                                                'op': '>=',
-                                                                                                'right': {   'args': [   {   'type': 'constant',
-                                                                                                                             'value': 1},
-                                                                                                                         {   'type': 'constant',
-                                                                                                                             'value': 50}],
-                                                                                                             'type': 'min'},
-                                                                                                'type': 'compare'}}],
-                                                             'type': 'block'},
-                                                         {   'conditions': [   {   'conditions': [   {   'item': 'Bow',
-                                                                                                         'type': 'item_check'},
-                                                                                                     {   'item': 'Silver '
-                                                                                                                 'Bow',
-                                                                                                         'type': 'item_check'}],
-                                                                                   'type': 'or'},
-                                                                               {   'args': [   {   'type': 'constant',
-                                                                                                   'value': 0}],
-                                                                                   'name': 'can_hold_arrows',
-                                                                                   'type': 'helper'}],
-                                                             'type': 'and'},
-                                                         {   'args': [   {   'type': 'constant',
-                                                                             'value': [   'Blue Boomerang',
-                                                                                          'Cane of Byrna',
-                                                                                          'Cane of Somaria',
-                                                                                          'Fire Rod',
-                                                                                          'Hookshot',
-                                                                                          'Ice Rod',
-                                                                                          'Red Boomerang']}],
-                                                             'method': 'has_any',
-                                                             'type': 'state_method'}],
-                                       'type': 'or'},
-    'can_bomb_or_bonk': {   'conditions': [   {'item': 'Pegasus Boots', 'type': 'item_check'},
-                                              {   'statements': [   {   'name': '_h11_bombs',
-                                                                        'type': 'assign',
-                                                                        'value': {'type': 'constant', 'value': 10}},
-                                                                    {   'name': '_h11_bombs',
-                                                                        'op': '+=',
-                                                                        'type': 'assign',
-                                                                        'value': {   'left': {   'left': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                         'value': 'Bomb '
-                                                                                                                                                  'Upgrade '
-                                                                                                                                                  '(+5)'}],
-                                                                                                                         'method': 'count',
-                                                                                                                         'type': 'state_method'},
-                                                                                                             'op': '*',
-                                                                                                             'right': {   'type': 'constant',
-                                                                                                                          'value': 5},
-                                                                                                             'type': 'binary_op'},
-                                                                                                 'op': '+',
-                                                                                                 'right': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                          'value': 'Bomb '
-                                                                                                                                                   'Upgrade '
-                                                                                                                                                   '(+10)'}],
-                                                                                                                          'method': 'count',
-                                                                                                                          'type': 'state_method'},
-                                                                                                              'op': '*',
-                                                                                                              'right': {   'type': 'constant',
-                                                                                                                           'value': 10},
-                                                                                                              'type': 'binary_op'},
-                                                                                                 'type': 'binary_op'},
-                                                                                     'op': '+',
-                                                                                     'right': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                              'value': 'Bomb '
-                                                                                                                                       'Upgrade '
-                                                                                                                                       '(50)'}],
-                                                                                                              'method': 'count',
-                                                                                                              'type': 'state_method'},
-                                                                                                  'op': '*',
-                                                                                                  'right': {   'type': 'constant',
-                                                                                                               'value': 50},
-                                                                                                  'type': 'binary_op'},
-                                                                                     'type': 'binary_op'}},
-                                                                    {   'name': '_h11_bombs',
-                                                                        'op': '+=',
-                                                                        'type': 'assign',
-                                                                        'value': {   'args': [   {   'type': 'constant',
-                                                                                                     'value': 0},
-                                                                                                 {   'left': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                             'value': 'Bomb '
-                                                                                                                                                      'Upgrade '
-                                                                                                                                                      '(+5)'}],
-                                                                                                                             'method': 'count',
-                                                                                                                             'type': 'state_method'},
-                                                                                                                 'op': '-',
-                                                                                                                 'right': {   'type': 'constant',
-                                                                                                                              'value': 6},
-                                                                                                                 'type': 'binary_op'},
-                                                                                                     'op': '*',
-                                                                                                     'right': {   'type': 'constant',
-                                                                                                                  'value': 10},
-                                                                                                     'type': 'binary_op'}],
-                                                                                     'type': 'max'}},
-                                                                    {   'body': [   {   'name': '_h11_bombs',
-                                                                                        'op': '+=',
-                                                                                        'type': 'assign',
-                                                                                        'value': {   'type': 'constant',
-                                                                                                     'value': 40}}],
-                                                                        'test': {   'conditions': [   {   'condition': {   'type': 'constant',
-                                                                                                                           'value': 'off'},
-                                                                                                          'type': 'not'},
-                                                                                                      {   'item': 'Capacity '
-                                                                                                                  'Upgrade '
-                                                                                                                  'Shop',
-                                                                                                          'type': 'item_check'}],
-                                                                                    'type': 'and'},
-                                                                        'type': 'if_statement'},
-                                                                    {   'type': 'return',
-                                                                        'value': {   'left': {   'name': '_h11_bombs',
-                                                                                                 'type': 'name'},
-                                                                                     'op': '>=',
-                                                                                     'right': {   'args': [   {   'type': 'constant',
-                                                                                                                  'value': 1},
-                                                                                                              {   'type': 'constant',
-                                                                                                                  'value': 50}],
-                                                                                                  'type': 'min'},
-                                                                                     'type': 'compare'}}],
-                                                  'type': 'block'}],
-                            'type': 'or'},
-    'can_buy': {   'body': {   'element_rule': {'region': {'name': 'region', 'type': 'name'}, 'type': 'can_reach'},
-                               'iterator_info': {   'iterator': {   'index': {'type': 'constant', 'value': 'limited'},
-                                                                    'type': 'subscript',
-                                                                    'value': {   'index': {   'name': 'item',
-                                                                                              'type': 'name'},
-                                                                                 'type': 'subscript',
-                                                                                 'value': {   'type': 'constant',
-                                                                                              'value': {   'Arrow Upgrade (+5)': {   'limited': [   'Capacity '
-                                                                                                                                                    'Upgrade'],
-                                                                                                                                     'unlimited': [   ]},
-                                                                                                           'Arrows (10)': {   'limited': [   'Red '
-                                                                                                                                             'Shield '
-                                                                                                                                             'Shop'],
-                                                                                                                              'unlimited': [   'Red '
-                                                                                                                                               'Shield '
-                                                                                                                                               'Shop']},
-                                                                                                           'Bee': {   'limited': [   'Red '
-                                                                                                                                     'Shield '
-                                                                                                                                     'Shop'],
-                                                                                                                      'unlimited': [   'Red '
-                                                                                                                                       'Shield '
-                                                                                                                                       'Shop']},
-                                                                                                           'Blue Potion': {   'limited': [   'Potion '
-                                                                                                                                             'Shop'],
-                                                                                                                              'unlimited': [   'Potion '
-                                                                                                                                               'Shop']},
-                                                                                                           'Blue Shield': {   'limited': [   'Dark '
-                                                                                                                                             'Lake '
-                                                                                                                                             'Hylia '
-                                                                                                                                             'Shop',
-                                                                                                                                             'Dark '
-                                                                                                                                             'World '
-                                                                                                                                             'Lumberjack '
-                                                                                                                                             'Shop',
-                                                                                                                                             'Village '
-                                                                                                                                             'of '
-                                                                                                                                             'Outcasts '
-                                                                                                                                             'Shop',
-                                                                                                                                             'Dark '
-                                                                                                                                             'World '
-                                                                                                                                             'Potion '
-                                                                                                                                             'Shop'],
-                                                                                                                              'unlimited': [   'Dark '
-                                                                                                                                               'Lake '
-                                                                                                                                               'Hylia '
-                                                                                                                                               'Shop',
-                                                                                                                                               'Dark '
-                                                                                                                                               'World '
-                                                                                                                                               'Lumberjack '
-                                                                                                                                               'Shop',
-                                                                                                                                               'Village '
-                                                                                                                                               'of '
-                                                                                                                                               'Outcasts '
-                                                                                                                                               'Shop',
-                                                                                                                                               'Dark '
-                                                                                                                                               'World '
-                                                                                                                                               'Potion '
-                                                                                                                                               'Shop']},
-                                                                                                           'Bomb Upgrade (+5)': {   'limited': [   'Capacity '
-                                                                                                                                                   'Upgrade'],
-                                                                                                                                    'unlimited': [   ]},
-                                                                                                           'Bombs (10)': {   'limited': [   'Cave '
-                                                                                                                                            'Shop '
-                                                                                                                                            '(Dark '
-                                                                                                                                            'Death '
-                                                                                                                                            'Mountain)',
-                                                                                                                                            'Dark '
-                                                                                                                                            'Lake '
-                                                                                                                                            'Hylia '
-                                                                                                                                            'Shop',
-                                                                                                                                            'Dark '
-                                                                                                                                            'World '
-                                                                                                                                            'Lumberjack '
-                                                                                                                                            'Shop',
-                                                                                                                                            'Village '
-                                                                                                                                            'of '
-                                                                                                                                            'Outcasts '
-                                                                                                                                            'Shop',
-                                                                                                                                            'Dark '
-                                                                                                                                            'World '
-                                                                                                                                            'Potion '
-                                                                                                                                            'Shop',
-                                                                                                                                            'Light '
-                                                                                                                                            'World '
-                                                                                                                                            'Death '
-                                                                                                                                            'Mountain '
-                                                                                                                                            'Shop',
-                                                                                                                                            'Kakariko '
-                                                                                                                                            'Shop',
-                                                                                                                                            'Cave '
-                                                                                                                                            'Shop '
-                                                                                                                                            '(Lake '
-                                                                                                                                            'Hylia)'],
-                                                                                                                             'unlimited': [   'Cave '
-                                                                                                                                              'Shop '
-                                                                                                                                              '(Dark '
-                                                                                                                                              'Death '
-                                                                                                                                              'Mountain)',
-                                                                                                                                              'Dark '
-                                                                                                                                              'Lake '
-                                                                                                                                              'Hylia '
-                                                                                                                                              'Shop',
-                                                                                                                                              'Dark '
-                                                                                                                                              'World '
-                                                                                                                                              'Lumberjack '
-                                                                                                                                              'Shop',
-                                                                                                                                              'Village '
-                                                                                                                                              'of '
-                                                                                                                                              'Outcasts '
-                                                                                                                                              'Shop',
-                                                                                                                                              'Dark '
-                                                                                                                                              'World '
-                                                                                                                                              'Potion '
-                                                                                                                                              'Shop',
-                                                                                                                                              'Light '
-                                                                                                                                              'World '
-                                                                                                                                              'Death '
-                                                                                                                                              'Mountain '
-                                                                                                                                              'Shop',
-                                                                                                                                              'Kakariko '
-                                                                                                                                              'Shop',
-                                                                                                                                              'Cave '
-                                                                                                                                              'Shop '
-                                                                                                                                              '(Lake '
-                                                                                                                                              'Hylia)']},
-                                                                                                           'Green Potion': {   'limited': [   'Potion '
-                                                                                                                                              'Shop'],
-                                                                                                                               'unlimited': [   'Potion '
-                                                                                                                                                'Shop']},
-                                                                                                           'Red Potion': {   'limited': [   'Cave '
-                                                                                                                                            'Shop '
-                                                                                                                                            '(Dark '
-                                                                                                                                            'Death '
-                                                                                                                                            'Mountain)',
-                                                                                                                                            'Dark '
-                                                                                                                                            'Lake '
-                                                                                                                                            'Hylia '
-                                                                                                                                            'Shop',
-                                                                                                                                            'Dark '
-                                                                                                                                            'World '
-                                                                                                                                            'Lumberjack '
-                                                                                                                                            'Shop',
-                                                                                                                                            'Village '
-                                                                                                                                            'of '
-                                                                                                                                            'Outcasts '
-                                                                                                                                            'Shop',
-                                                                                                                                            'Dark '
-                                                                                                                                            'World '
-                                                                                                                                            'Potion '
-                                                                                                                                            'Shop',
-                                                                                                                                            'Light '
-                                                                                                                                            'World '
-                                                                                                                                            'Death '
-                                                                                                                                            'Mountain '
-                                                                                                                                            'Shop',
-                                                                                                                                            'Kakariko '
-                                                                                                                                            'Shop',
-                                                                                                                                            'Cave '
-                                                                                                                                            'Shop '
-                                                                                                                                            '(Lake '
-                                                                                                                                            'Hylia)',
-                                                                                                                                            'Potion '
-                                                                                                                                            'Shop'],
-                                                                                                                             'unlimited': [   'Cave '
-                                                                                                                                              'Shop '
-                                                                                                                                              '(Dark '
-                                                                                                                                              'Death '
-                                                                                                                                              'Mountain)',
-                                                                                                                                              'Dark '
-                                                                                                                                              'Lake '
-                                                                                                                                              'Hylia '
-                                                                                                                                              'Shop',
-                                                                                                                                              'Dark '
-                                                                                                                                              'World '
-                                                                                                                                              'Lumberjack '
-                                                                                                                                              'Shop',
-                                                                                                                                              'Village '
-                                                                                                                                              'of '
-                                                                                                                                              'Outcasts '
-                                                                                                                                              'Shop',
-                                                                                                                                              'Dark '
-                                                                                                                                              'World '
-                                                                                                                                              'Potion '
-                                                                                                                                              'Shop',
-                                                                                                                                              'Light '
-                                                                                                                                              'World '
-                                                                                                                                              'Death '
-                                                                                                                                              'Mountain '
-                                                                                                                                              'Shop',
-                                                                                                                                              'Kakariko '
-                                                                                                                                              'Shop',
-                                                                                                                                              'Cave '
-                                                                                                                                              'Shop '
-                                                                                                                                              '(Lake '
-                                                                                                                                              'Hylia)',
-                                                                                                                                              'Potion '
-                                                                                                                                              'Shop']},
-                                                                                                           'Red Shield': {   'limited': [   'Red '
-                                                                                                                                            'Shield '
-                                                                                                                                            'Shop'],
-                                                                                                                             'unlimited': [   'Red '
-                                                                                                                                              'Shield '
-                                                                                                                                              'Shop']},
-                                                                                                           'Small Heart': {   'limited': [   'Cave '
-                                                                                                                                             'Shop '
-                                                                                                                                             '(Dark '
-                                                                                                                                             'Death '
-                                                                                                                                             'Mountain)',
-                                                                                                                                             'Light '
-                                                                                                                                             'World '
-                                                                                                                                             'Death '
-                                                                                                                                             'Mountain '
-                                                                                                                                             'Shop',
-                                                                                                                                             'Kakariko '
-                                                                                                                                             'Shop',
-                                                                                                                                             'Cave '
-                                                                                                                                             'Shop '
-                                                                                                                                             '(Lake '
-                                                                                                                                             'Hylia)'],
-                                                                                                                              'unlimited': [   'Cave '
-                                                                                                                                               'Shop '
-                                                                                                                                               '(Dark '
-                                                                                                                                               'Death '
-                                                                                                                                               'Mountain)',
-                                                                                                                                               'Light '
-                                                                                                                                               'World '
-                                                                                                                                               'Death '
-                                                                                                                                               'Mountain '
-                                                                                                                                               'Shop',
-                                                                                                                                               'Kakariko '
-                                                                                                                                               'Shop',
-                                                                                                                                               'Cave '
-                                                                                                                                               'Shop '
-                                                                                                                                               '(Lake '
-                                                                                                                                               'Hylia)']}}}}},
-                                                    'target': {'name': 'region', 'type': 'name'}},
-                               'type': 'any_of'},
-                   'params': ['item']},
-    'can_buy_unlimited': {   'body': {   'element_rule': {   'region': {'name': 'region', 'type': 'name'},
-                                                             'type': 'can_reach'},
-                                         'iterator_info': {   'iterator': {   'index': {   'type': 'constant',
-                                                                                           'value': 'unlimited'},
-                                                                              'type': 'subscript',
-                                                                              'value': {   'index': {   'name': 'item',
-                                                                                                        'type': 'name'},
-                                                                                           'type': 'subscript',
-                                                                                           'value': {   'type': 'constant',
-                                                                                                        'value': {   'Arrow Upgrade (+5)': {   'limited': [   'Capacity '
-                                                                                                                                                              'Upgrade'],
-                                                                                                                                               'unlimited': [   ]},
-                                                                                                                     'Arrows (10)': {   'limited': [   'Red '
-                                                                                                                                                       'Shield '
-                                                                                                                                                       'Shop'],
-                                                                                                                                        'unlimited': [   'Red '
-                                                                                                                                                         'Shield '
-                                                                                                                                                         'Shop']},
-                                                                                                                     'Bee': {   'limited': [   'Red '
-                                                                                                                                               'Shield '
-                                                                                                                                               'Shop'],
-                                                                                                                                'unlimited': [   'Red '
-                                                                                                                                                 'Shield '
-                                                                                                                                                 'Shop']},
-                                                                                                                     'Blue Potion': {   'limited': [   'Potion '
-                                                                                                                                                       'Shop'],
-                                                                                                                                        'unlimited': [   'Potion '
-                                                                                                                                                         'Shop']},
-                                                                                                                     'Blue Shield': {   'limited': [   'Dark '
-                                                                                                                                                       'Lake '
-                                                                                                                                                       'Hylia '
-                                                                                                                                                       'Shop',
-                                                                                                                                                       'Dark '
-                                                                                                                                                       'World '
-                                                                                                                                                       'Lumberjack '
-                                                                                                                                                       'Shop',
-                                                                                                                                                       'Village '
-                                                                                                                                                       'of '
-                                                                                                                                                       'Outcasts '
-                                                                                                                                                       'Shop',
-                                                                                                                                                       'Dark '
-                                                                                                                                                       'World '
-                                                                                                                                                       'Potion '
-                                                                                                                                                       'Shop'],
-                                                                                                                                        'unlimited': [   'Dark '
-                                                                                                                                                         'Lake '
-                                                                                                                                                         'Hylia '
-                                                                                                                                                         'Shop',
-                                                                                                                                                         'Dark '
-                                                                                                                                                         'World '
-                                                                                                                                                         'Lumberjack '
-                                                                                                                                                         'Shop',
-                                                                                                                                                         'Village '
-                                                                                                                                                         'of '
-                                                                                                                                                         'Outcasts '
-                                                                                                                                                         'Shop',
-                                                                                                                                                         'Dark '
-                                                                                                                                                         'World '
-                                                                                                                                                         'Potion '
-                                                                                                                                                         'Shop']},
-                                                                                                                     'Bomb Upgrade (+5)': {   'limited': [   'Capacity '
-                                                                                                                                                             'Upgrade'],
-                                                                                                                                              'unlimited': [   ]},
-                                                                                                                     'Bombs (10)': {   'limited': [   'Cave '
-                                                                                                                                                      'Shop '
-                                                                                                                                                      '(Dark '
-                                                                                                                                                      'Death '
-                                                                                                                                                      'Mountain)',
-                                                                                                                                                      'Dark '
-                                                                                                                                                      'Lake '
-                                                                                                                                                      'Hylia '
-                                                                                                                                                      'Shop',
-                                                                                                                                                      'Dark '
-                                                                                                                                                      'World '
-                                                                                                                                                      'Lumberjack '
-                                                                                                                                                      'Shop',
-                                                                                                                                                      'Village '
-                                                                                                                                                      'of '
-                                                                                                                                                      'Outcasts '
-                                                                                                                                                      'Shop',
-                                                                                                                                                      'Dark '
-                                                                                                                                                      'World '
-                                                                                                                                                      'Potion '
-                                                                                                                                                      'Shop',
-                                                                                                                                                      'Light '
-                                                                                                                                                      'World '
-                                                                                                                                                      'Death '
-                                                                                                                                                      'Mountain '
-                                                                                                                                                      'Shop',
-                                                                                                                                                      'Kakariko '
-                                                                                                                                                      'Shop',
-                                                                                                                                                      'Cave '
-                                                                                                                                                      'Shop '
-                                                                                                                                                      '(Lake '
-                                                                                                                                                      'Hylia)'],
-                                                                                                                                       'unlimited': [   'Cave '
-                                                                                                                                                        'Shop '
-                                                                                                                                                        '(Dark '
-                                                                                                                                                        'Death '
-                                                                                                                                                        'Mountain)',
-                                                                                                                                                        'Dark '
-                                                                                                                                                        'Lake '
-                                                                                                                                                        'Hylia '
-                                                                                                                                                        'Shop',
-                                                                                                                                                        'Dark '
-                                                                                                                                                        'World '
-                                                                                                                                                        'Lumberjack '
-                                                                                                                                                        'Shop',
-                                                                                                                                                        'Village '
-                                                                                                                                                        'of '
-                                                                                                                                                        'Outcasts '
-                                                                                                                                                        'Shop',
-                                                                                                                                                        'Dark '
-                                                                                                                                                        'World '
-                                                                                                                                                        'Potion '
-                                                                                                                                                        'Shop',
-                                                                                                                                                        'Light '
-                                                                                                                                                        'World '
-                                                                                                                                                        'Death '
-                                                                                                                                                        'Mountain '
-                                                                                                                                                        'Shop',
-                                                                                                                                                        'Kakariko '
-                                                                                                                                                        'Shop',
-                                                                                                                                                        'Cave '
-                                                                                                                                                        'Shop '
-                                                                                                                                                        '(Lake '
-                                                                                                                                                        'Hylia)']},
-                                                                                                                     'Green Potion': {   'limited': [   'Potion '
-                                                                                                                                                        'Shop'],
-                                                                                                                                         'unlimited': [   'Potion '
-                                                                                                                                                          'Shop']},
-                                                                                                                     'Red Potion': {   'limited': [   'Cave '
-                                                                                                                                                      'Shop '
-                                                                                                                                                      '(Dark '
-                                                                                                                                                      'Death '
-                                                                                                                                                      'Mountain)',
-                                                                                                                                                      'Dark '
-                                                                                                                                                      'Lake '
-                                                                                                                                                      'Hylia '
-                                                                                                                                                      'Shop',
-                                                                                                                                                      'Dark '
-                                                                                                                                                      'World '
-                                                                                                                                                      'Lumberjack '
-                                                                                                                                                      'Shop',
-                                                                                                                                                      'Village '
-                                                                                                                                                      'of '
-                                                                                                                                                      'Outcasts '
-                                                                                                                                                      'Shop',
-                                                                                                                                                      'Dark '
-                                                                                                                                                      'World '
-                                                                                                                                                      'Potion '
-                                                                                                                                                      'Shop',
-                                                                                                                                                      'Light '
-                                                                                                                                                      'World '
-                                                                                                                                                      'Death '
-                                                                                                                                                      'Mountain '
-                                                                                                                                                      'Shop',
-                                                                                                                                                      'Kakariko '
-                                                                                                                                                      'Shop',
-                                                                                                                                                      'Cave '
-                                                                                                                                                      'Shop '
-                                                                                                                                                      '(Lake '
-                                                                                                                                                      'Hylia)',
-                                                                                                                                                      'Potion '
-                                                                                                                                                      'Shop'],
-                                                                                                                                       'unlimited': [   'Cave '
-                                                                                                                                                        'Shop '
-                                                                                                                                                        '(Dark '
-                                                                                                                                                        'Death '
-                                                                                                                                                        'Mountain)',
-                                                                                                                                                        'Dark '
-                                                                                                                                                        'Lake '
-                                                                                                                                                        'Hylia '
-                                                                                                                                                        'Shop',
-                                                                                                                                                        'Dark '
-                                                                                                                                                        'World '
-                                                                                                                                                        'Lumberjack '
-                                                                                                                                                        'Shop',
-                                                                                                                                                        'Village '
-                                                                                                                                                        'of '
-                                                                                                                                                        'Outcasts '
-                                                                                                                                                        'Shop',
-                                                                                                                                                        'Dark '
-                                                                                                                                                        'World '
-                                                                                                                                                        'Potion '
-                                                                                                                                                        'Shop',
-                                                                                                                                                        'Light '
-                                                                                                                                                        'World '
-                                                                                                                                                        'Death '
-                                                                                                                                                        'Mountain '
-                                                                                                                                                        'Shop',
-                                                                                                                                                        'Kakariko '
-                                                                                                                                                        'Shop',
-                                                                                                                                                        'Cave '
-                                                                                                                                                        'Shop '
-                                                                                                                                                        '(Lake '
-                                                                                                                                                        'Hylia)',
-                                                                                                                                                        'Potion '
-                                                                                                                                                        'Shop']},
-                                                                                                                     'Red Shield': {   'limited': [   'Red '
-                                                                                                                                                      'Shield '
-                                                                                                                                                      'Shop'],
-                                                                                                                                       'unlimited': [   'Red '
-                                                                                                                                                        'Shield '
-                                                                                                                                                        'Shop']},
-                                                                                                                     'Small Heart': {   'limited': [   'Cave '
-                                                                                                                                                       'Shop '
-                                                                                                                                                       '(Dark '
-                                                                                                                                                       'Death '
-                                                                                                                                                       'Mountain)',
-                                                                                                                                                       'Light '
-                                                                                                                                                       'World '
-                                                                                                                                                       'Death '
-                                                                                                                                                       'Mountain '
-                                                                                                                                                       'Shop',
-                                                                                                                                                       'Kakariko '
-                                                                                                                                                       'Shop',
-                                                                                                                                                       'Cave '
-                                                                                                                                                       'Shop '
-                                                                                                                                                       '(Lake '
-                                                                                                                                                       'Hylia)'],
-                                                                                                                                        'unlimited': [   'Cave '
-                                                                                                                                                         'Shop '
-                                                                                                                                                         '(Dark '
-                                                                                                                                                         'Death '
-                                                                                                                                                         'Mountain)',
-                                                                                                                                                         'Light '
-                                                                                                                                                         'World '
-                                                                                                                                                         'Death '
-                                                                                                                                                         'Mountain '
-                                                                                                                                                         'Shop',
-                                                                                                                                                         'Kakariko '
-                                                                                                                                                         'Shop',
-                                                                                                                                                         'Cave '
-                                                                                                                                                         'Shop '
-                                                                                                                                                         '(Lake '
-                                                                                                                                                         'Hylia)']}}}}},
-                                                              'target': {'name': 'region', 'type': 'name'}},
-                                         'type': 'any_of'},
-                             'params': ['item']},
-    'can_defeat_boss': {   'body': {   'conditions': [   {'args': [], 'name': 'has_melee_weapon', 'type': 'helper'},
-                                                         {'item': 'Cane of Somaria', 'type': 'item_check'},
-                                                         {   'conditions': [   {   'item': 'Cane of Byrna',
-                                                                                   'type': 'item_check'},
-                                                                               {   'conditions': [   {   'left': {   'type': 'constant',
-                                                                                                                     'value': 1},
-                                                                                                         'op': '<',
-                                                                                                         'right': {   'type': 'constant',
-                                                                                                                      'value': 6},
-                                                                                                         'type': 'compare'},
-                                                                                                     {   'args': [],
-                                                                                                         'name': 'can_extend_magic',
-                                                                                                         'type': 'helper'}],
-                                                                                   'type': 'or'}],
-                                                             'type': 'and'},
-                                                         {'args': [], 'name': 'can_shoot_arrows', 'type': 'helper'},
-                                                         {'item': 'Fire Rod', 'type': 'item_check'},
-                                                         {   'conditions': [   {   'left': {   'type': 'constant',
-                                                                                               'value': 'default'},
-                                                                                   'op': 'in',
-                                                                                   'right': {   'type': 'list',
-                                                                                                'value': [   {   'type': 'constant',
-                                                                                                                 'value': 'easy'},
-                                                                                                             {   'type': 'constant',
-                                                                                                                 'value': 'default'}]},
-                                                                                   'type': 'compare'},
-                                                                               {   'args': [   {   'left': {   'type': 'constant',
-                                                                                                               'value': 1},
-                                                                                                   'op': '*',
-                                                                                                   'right': {   'type': 'constant',
-                                                                                                                'value': 4},
-                                                                                                   'type': 'binary_op'}],
-                                                                                   'name': 'can_use_bombs',
-                                                                                   'type': 'helper'}],
-                                                             'type': 'and'}],
-                                       'type': 'or'},
-                           'params': ['location_name', 'boss_type']},
-    'can_extend_magic': {   'body': {   'statements': [   {   'name': 'basemagic',
-                                                              'type': 'assign',
-                                                              'value': {'type': 'constant', 'value': 8}},
-                                                          {   'name': 'basemagic',
-                                                              'type': 'assign',
-                                                              'value': {   'if_false': {   'if_false': {   'name': 'basemagic',
-                                                                                                           'type': 'name'},
-                                                                                           'if_true': {   'type': 'constant',
-                                                                                                          'value': 16},
-                                                                                           'test': {   'item': 'Magic '
-                                                                                                               'Upgrade '
-                                                                                                               '(1/2)',
-                                                                                                       'type': 'item_check'},
-                                                                                           'type': 'conditional'},
-                                                                           'if_true': {'type': 'constant', 'value': 32},
-                                                                           'test': {   'item': 'Magic Upgrade (1/4)',
-                                                                                       'type': 'item_check'},
-                                                                           'type': 'conditional'}},
-                                                          {   'name': 'basemagic',
-                                                              'type': 'assign',
-                                                              'value': {   'if_false': {   'name': 'basemagic',
-                                                                                           'type': 'name'},
-                                                                           'if_true': {   'if_false': {   'if_false': {   'left': {   'name': 'basemagic',
-                                                                                                                                      'type': 'name'},
-                                                                                                                          'op': '+',
-                                                                                                                          'right': {   'left': {   'name': 'basemagic',
-                                                                                                                                                   'type': 'name'},
-                                                                                                                                       'op': '*',
-                                                                                                                                       'right': {   'args': [   {   'setting': 'difficulty_requirements.progressive_bottle_limit',
-                                                                                                                                                                    'type': 'setting_value'},
-                                                                                                                                                                {   'group': 'Bottles',
-                                                                                                                                                                    'type': 'group_count'}],
-                                                                                                                                                    'type': 'min'},
-                                                                                                                                       'type': 'binary_op'},
-                                                                                                                          'type': 'binary_op'},
-                                                                                                          'if_true': {   'left': {   'name': 'basemagic',
-                                                                                                                                     'type': 'name'},
-                                                                                                                         'op': '+',
-                                                                                                                         'right': {   'args': [   {   'left': {   'left': {   'name': 'basemagic',
-                                                                                                                                                                              'type': 'name'},
-                                                                                                                                                                  'op': '*',
-                                                                                                                                                                  'right': {   'type': 'constant',
-                                                                                                                                                                               'value': 0.25},
-                                                                                                                                                                  'type': 'binary_op'},
-                                                                                                                                                      'op': '*',
-                                                                                                                                                      'right': {   'args': [   ],
-                                                                                                                                                                   'name': 'bottle_count',
-                                                                                                                                                                   'type': 'helper'},
-                                                                                                                                                      'type': 'binary_op'}],
-                                                                                                                                      'name': 'int',
-                                                                                                                                      'type': 'helper'},
-                                                                                                                         'type': 'binary_op'},
-                                                                                                          'test': {   'conditions': [   {   'left': {   'type': 'constant',
-                                                                                                                                                        'value': 'hard'},
-                                                                                                                                            'op': '==',
-                                                                                                                                            'right': {   'type': 'constant',
-                                                                                                                                                         'value': 'expert'},
-                                                                                                                                            'type': 'compare'},
-                                                                                                                                        {   'condition': {   'name': 'fullrefill',
-                                                                                                                                                             'type': 'name'},
-                                                                                                                                            'type': 'not'}],
-                                                                                                                      'type': 'and'},
-                                                                                                          'type': 'conditional'},
-                                                                                          'if_true': {   'left': {   'name': 'basemagic',
-                                                                                                                     'type': 'name'},
-                                                                                                         'op': '+',
-                                                                                                         'right': {   'args': [   {   'left': {   'left': {   'name': 'basemagic',
-                                                                                                                                                              'type': 'name'},
-                                                                                                                                                  'op': '*',
-                                                                                                                                                  'right': {   'type': 'constant',
-                                                                                                                                                               'value': 0.5},
-                                                                                                                                                  'type': 'binary_op'},
-                                                                                                                                      'op': '*',
-                                                                                                                                      'right': {   'args': [   ],
-                                                                                                                                                   'name': 'bottle_count',
-                                                                                                                                                   'type': 'helper'},
-                                                                                                                                      'type': 'binary_op'}],
-                                                                                                                      'name': 'int',
-                                                                                                                      'type': 'helper'},
-                                                                                                         'type': 'binary_op'},
-                                                                                          'test': {   'conditions': [   {   'left': {   'type': 'constant',
-                                                                                                                                        'value': 'hard'},
-                                                                                                                            'op': '==',
-                                                                                                                            'right': {   'type': 'constant',
-                                                                                                                                         'value': 'hard'},
-                                                                                                                            'type': 'compare'},
-                                                                                                                        {   'condition': {   'name': 'fullrefill',
-                                                                                                                                             'type': 'name'},
-                                                                                                                            'type': 'not'}],
-                                                                                                      'type': 'and'},
-                                                                                          'type': 'conditional'},
-                                                                           'test': {   'conditions': [   {   'element_rule': {   'region': {   'name': 'region',
-                                                                                                                                               'type': 'name'},
-                                                                                                                                 'type': 'can_reach'},
-                                                                                                             'iterator_info': {   'iterator': {   'index': {   'type': 'constant',
-                                                                                                                                                               'value': 'unlimited'},
-                                                                                                                                                  'type': 'subscript',
-                                                                                                                                                  'value': {   'index': {   'type': 'constant',
-                                                                                                                                                                            'value': 'Green '
-                                                                                                                                                                                     'Potion'},
-                                                                                                                                                               'type': 'subscript',
-                                                                                                                                                               'value': {   'type': 'constant',
-                                                                                                                                                                            'value': {   'Arrow Upgrade (+5)': {   'limited': [   'Capacity '
-                                                                                                                                                                                                                                  'Upgrade'],
-                                                                                                                                                                                                                   'unlimited': [   ]},
-                                                                                                                                                                                         'Arrows (10)': {   'limited': [   'Red '
-                                                                                                                                                                                                                           'Shield '
-                                                                                                                                                                                                                           'Shop'],
-                                                                                                                                                                                                            'unlimited': [   'Red '
-                                                                                                                                                                                                                             'Shield '
-                                                                                                                                                                                                                             'Shop']},
-                                                                                                                                                                                         'Bee': {   'limited': [   'Red '
-                                                                                                                                                                                                                   'Shield '
-                                                                                                                                                                                                                   'Shop'],
-                                                                                                                                                                                                    'unlimited': [   'Red '
-                                                                                                                                                                                                                     'Shield '
-                                                                                                                                                                                                                     'Shop']},
-                                                                                                                                                                                         'Blue Potion': {   'limited': [   'Potion '
-                                                                                                                                                                                                                           'Shop'],
-                                                                                                                                                                                                            'unlimited': [   'Potion '
-                                                                                                                                                                                                                             'Shop']},
-                                                                                                                                                                                         'Blue Shield': {   'limited': [   'Dark '
-                                                                                                                                                                                                                           'Lake '
-                                                                                                                                                                                                                           'Hylia '
-                                                                                                                                                                                                                           'Shop',
-                                                                                                                                                                                                                           'Dark '
-                                                                                                                                                                                                                           'World '
-                                                                                                                                                                                                                           'Lumberjack '
-                                                                                                                                                                                                                           'Shop',
-                                                                                                                                                                                                                           'Village '
-                                                                                                                                                                                                                           'of '
-                                                                                                                                                                                                                           'Outcasts '
-                                                                                                                                                                                                                           'Shop',
-                                                                                                                                                                                                                           'Dark '
-                                                                                                                                                                                                                           'World '
-                                                                                                                                                                                                                           'Potion '
-                                                                                                                                                                                                                           'Shop'],
-                                                                                                                                                                                                            'unlimited': [   'Dark '
-                                                                                                                                                                                                                             'Lake '
-                                                                                                                                                                                                                             'Hylia '
-                                                                                                                                                                                                                             'Shop',
-                                                                                                                                                                                                                             'Dark '
-                                                                                                                                                                                                                             'World '
-                                                                                                                                                                                                                             'Lumberjack '
-                                                                                                                                                                                                                             'Shop',
-                                                                                                                                                                                                                             'Village '
-                                                                                                                                                                                                                             'of '
-                                                                                                                                                                                                                             'Outcasts '
-                                                                                                                                                                                                                             'Shop',
-                                                                                                                                                                                                                             'Dark '
-                                                                                                                                                                                                                             'World '
-                                                                                                                                                                                                                             'Potion '
-                                                                                                                                                                                                                             'Shop']},
-                                                                                                                                                                                         'Bomb Upgrade (+5)': {   'limited': [   'Capacity '
-                                                                                                                                                                                                                                 'Upgrade'],
-                                                                                                                                                                                                                  'unlimited': [   ]},
-                                                                                                                                                                                         'Bombs (10)': {   'limited': [   'Cave '
-                                                                                                                                                                                                                          'Shop '
-                                                                                                                                                                                                                          '(Dark '
-                                                                                                                                                                                                                          'Death '
-                                                                                                                                                                                                                          'Mountain)',
-                                                                                                                                                                                                                          'Dark '
-                                                                                                                                                                                                                          'Lake '
-                                                                                                                                                                                                                          'Hylia '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Dark '
-                                                                                                                                                                                                                          'World '
-                                                                                                                                                                                                                          'Lumberjack '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Village '
-                                                                                                                                                                                                                          'of '
-                                                                                                                                                                                                                          'Outcasts '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Dark '
-                                                                                                                                                                                                                          'World '
-                                                                                                                                                                                                                          'Potion '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Light '
-                                                                                                                                                                                                                          'World '
-                                                                                                                                                                                                                          'Death '
-                                                                                                                                                                                                                          'Mountain '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Kakariko '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Cave '
-                                                                                                                                                                                                                          'Shop '
-                                                                                                                                                                                                                          '(Lake '
-                                                                                                                                                                                                                          'Hylia)'],
-                                                                                                                                                                                                           'unlimited': [   'Cave '
-                                                                                                                                                                                                                            'Shop '
-                                                                                                                                                                                                                            '(Dark '
-                                                                                                                                                                                                                            'Death '
-                                                                                                                                                                                                                            'Mountain)',
-                                                                                                                                                                                                                            'Dark '
-                                                                                                                                                                                                                            'Lake '
-                                                                                                                                                                                                                            'Hylia '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Dark '
-                                                                                                                                                                                                                            'World '
-                                                                                                                                                                                                                            'Lumberjack '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Village '
-                                                                                                                                                                                                                            'of '
-                                                                                                                                                                                                                            'Outcasts '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Dark '
-                                                                                                                                                                                                                            'World '
-                                                                                                                                                                                                                            'Potion '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Light '
-                                                                                                                                                                                                                            'World '
-                                                                                                                                                                                                                            'Death '
-                                                                                                                                                                                                                            'Mountain '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Kakariko '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Cave '
-                                                                                                                                                                                                                            'Shop '
-                                                                                                                                                                                                                            '(Lake '
-                                                                                                                                                                                                                            'Hylia)']},
-                                                                                                                                                                                         'Green Potion': {   'limited': [   'Potion '
-                                                                                                                                                                                                                            'Shop'],
-                                                                                                                                                                                                             'unlimited': [   'Potion '
-                                                                                                                                                                                                                              'Shop']},
-                                                                                                                                                                                         'Red Potion': {   'limited': [   'Cave '
-                                                                                                                                                                                                                          'Shop '
-                                                                                                                                                                                                                          '(Dark '
-                                                                                                                                                                                                                          'Death '
-                                                                                                                                                                                                                          'Mountain)',
-                                                                                                                                                                                                                          'Dark '
-                                                                                                                                                                                                                          'Lake '
-                                                                                                                                                                                                                          'Hylia '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Dark '
-                                                                                                                                                                                                                          'World '
-                                                                                                                                                                                                                          'Lumberjack '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Village '
-                                                                                                                                                                                                                          'of '
-                                                                                                                                                                                                                          'Outcasts '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Dark '
-                                                                                                                                                                                                                          'World '
-                                                                                                                                                                                                                          'Potion '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Light '
-                                                                                                                                                                                                                          'World '
-                                                                                                                                                                                                                          'Death '
-                                                                                                                                                                                                                          'Mountain '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Kakariko '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Cave '
-                                                                                                                                                                                                                          'Shop '
-                                                                                                                                                                                                                          '(Lake '
-                                                                                                                                                                                                                          'Hylia)',
-                                                                                                                                                                                                                          'Potion '
-                                                                                                                                                                                                                          'Shop'],
-                                                                                                                                                                                                           'unlimited': [   'Cave '
-                                                                                                                                                                                                                            'Shop '
-                                                                                                                                                                                                                            '(Dark '
-                                                                                                                                                                                                                            'Death '
-                                                                                                                                                                                                                            'Mountain)',
-                                                                                                                                                                                                                            'Dark '
-                                                                                                                                                                                                                            'Lake '
-                                                                                                                                                                                                                            'Hylia '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Dark '
-                                                                                                                                                                                                                            'World '
-                                                                                                                                                                                                                            'Lumberjack '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Village '
-                                                                                                                                                                                                                            'of '
-                                                                                                                                                                                                                            'Outcasts '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Dark '
-                                                                                                                                                                                                                            'World '
-                                                                                                                                                                                                                            'Potion '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Light '
-                                                                                                                                                                                                                            'World '
-                                                                                                                                                                                                                            'Death '
-                                                                                                                                                                                                                            'Mountain '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Kakariko '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Cave '
-                                                                                                                                                                                                                            'Shop '
-                                                                                                                                                                                                                            '(Lake '
-                                                                                                                                                                                                                            'Hylia)',
-                                                                                                                                                                                                                            'Potion '
-                                                                                                                                                                                                                            'Shop']},
-                                                                                                                                                                                         'Red Shield': {   'limited': [   'Red '
-                                                                                                                                                                                                                          'Shield '
-                                                                                                                                                                                                                          'Shop'],
-                                                                                                                                                                                                           'unlimited': [   'Red '
-                                                                                                                                                                                                                            'Shield '
-                                                                                                                                                                                                                            'Shop']},
-                                                                                                                                                                                         'Small Heart': {   'limited': [   'Cave '
-                                                                                                                                                                                                                           'Shop '
-                                                                                                                                                                                                                           '(Dark '
-                                                                                                                                                                                                                           'Death '
-                                                                                                                                                                                                                           'Mountain)',
-                                                                                                                                                                                                                           'Light '
-                                                                                                                                                                                                                           'World '
-                                                                                                                                                                                                                           'Death '
-                                                                                                                                                                                                                           'Mountain '
-                                                                                                                                                                                                                           'Shop',
-                                                                                                                                                                                                                           'Kakariko '
-                                                                                                                                                                                                                           'Shop',
-                                                                                                                                                                                                                           'Cave '
-                                                                                                                                                                                                                           'Shop '
-                                                                                                                                                                                                                           '(Lake '
-                                                                                                                                                                                                                           'Hylia)'],
-                                                                                                                                                                                                            'unlimited': [   'Cave '
-                                                                                                                                                                                                                             'Shop '
-                                                                                                                                                                                                                             '(Dark '
-                                                                                                                                                                                                                             'Death '
-                                                                                                                                                                                                                             'Mountain)',
-                                                                                                                                                                                                                             'Light '
-                                                                                                                                                                                                                             'World '
-                                                                                                                                                                                                                             'Death '
-                                                                                                                                                                                                                             'Mountain '
-                                                                                                                                                                                                                             'Shop',
-                                                                                                                                                                                                                             'Kakariko '
-                                                                                                                                                                                                                             'Shop',
-                                                                                                                                                                                                                             'Cave '
-                                                                                                                                                                                                                             'Shop '
-                                                                                                                                                                                                                             '(Lake '
-                                                                                                                                                                                                                             'Hylia)']}}}}},
-                                                                                                                                  'target': {   'name': 'region',
-                                                                                                                                                'type': 'name'}},
-                                                                                                             'type': 'any_of'},
-                                                                                                         {   'element_rule': {   'region': {   'name': 'region',
-                                                                                                                                               'type': 'name'},
-                                                                                                                                 'type': 'can_reach'},
-                                                                                                             'iterator_info': {   'iterator': {   'index': {   'type': 'constant',
-                                                                                                                                                               'value': 'unlimited'},
-                                                                                                                                                  'type': 'subscript',
-                                                                                                                                                  'value': {   'index': {   'type': 'constant',
-                                                                                                                                                                            'value': 'Blue '
-                                                                                                                                                                                     'Potion'},
-                                                                                                                                                               'type': 'subscript',
-                                                                                                                                                               'value': {   'type': 'constant',
-                                                                                                                                                                            'value': {   'Arrow Upgrade (+5)': {   'limited': [   'Capacity '
-                                                                                                                                                                                                                                  'Upgrade'],
-                                                                                                                                                                                                                   'unlimited': [   ]},
-                                                                                                                                                                                         'Arrows (10)': {   'limited': [   'Red '
-                                                                                                                                                                                                                           'Shield '
-                                                                                                                                                                                                                           'Shop'],
-                                                                                                                                                                                                            'unlimited': [   'Red '
-                                                                                                                                                                                                                             'Shield '
-                                                                                                                                                                                                                             'Shop']},
-                                                                                                                                                                                         'Bee': {   'limited': [   'Red '
-                                                                                                                                                                                                                   'Shield '
-                                                                                                                                                                                                                   'Shop'],
-                                                                                                                                                                                                    'unlimited': [   'Red '
-                                                                                                                                                                                                                     'Shield '
-                                                                                                                                                                                                                     'Shop']},
-                                                                                                                                                                                         'Blue Potion': {   'limited': [   'Potion '
-                                                                                                                                                                                                                           'Shop'],
-                                                                                                                                                                                                            'unlimited': [   'Potion '
-                                                                                                                                                                                                                             'Shop']},
-                                                                                                                                                                                         'Blue Shield': {   'limited': [   'Dark '
-                                                                                                                                                                                                                           'Lake '
-                                                                                                                                                                                                                           'Hylia '
-                                                                                                                                                                                                                           'Shop',
-                                                                                                                                                                                                                           'Dark '
-                                                                                                                                                                                                                           'World '
-                                                                                                                                                                                                                           'Lumberjack '
-                                                                                                                                                                                                                           'Shop',
-                                                                                                                                                                                                                           'Village '
-                                                                                                                                                                                                                           'of '
-                                                                                                                                                                                                                           'Outcasts '
-                                                                                                                                                                                                                           'Shop',
-                                                                                                                                                                                                                           'Dark '
-                                                                                                                                                                                                                           'World '
-                                                                                                                                                                                                                           'Potion '
-                                                                                                                                                                                                                           'Shop'],
-                                                                                                                                                                                                            'unlimited': [   'Dark '
-                                                                                                                                                                                                                             'Lake '
-                                                                                                                                                                                                                             'Hylia '
-                                                                                                                                                                                                                             'Shop',
-                                                                                                                                                                                                                             'Dark '
-                                                                                                                                                                                                                             'World '
-                                                                                                                                                                                                                             'Lumberjack '
-                                                                                                                                                                                                                             'Shop',
-                                                                                                                                                                                                                             'Village '
-                                                                                                                                                                                                                             'of '
-                                                                                                                                                                                                                             'Outcasts '
-                                                                                                                                                                                                                             'Shop',
-                                                                                                                                                                                                                             'Dark '
-                                                                                                                                                                                                                             'World '
-                                                                                                                                                                                                                             'Potion '
-                                                                                                                                                                                                                             'Shop']},
-                                                                                                                                                                                         'Bomb Upgrade (+5)': {   'limited': [   'Capacity '
-                                                                                                                                                                                                                                 'Upgrade'],
-                                                                                                                                                                                                                  'unlimited': [   ]},
-                                                                                                                                                                                         'Bombs (10)': {   'limited': [   'Cave '
-                                                                                                                                                                                                                          'Shop '
-                                                                                                                                                                                                                          '(Dark '
-                                                                                                                                                                                                                          'Death '
-                                                                                                                                                                                                                          'Mountain)',
-                                                                                                                                                                                                                          'Dark '
-                                                                                                                                                                                                                          'Lake '
-                                                                                                                                                                                                                          'Hylia '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Dark '
-                                                                                                                                                                                                                          'World '
-                                                                                                                                                                                                                          'Lumberjack '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Village '
-                                                                                                                                                                                                                          'of '
-                                                                                                                                                                                                                          'Outcasts '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Dark '
-                                                                                                                                                                                                                          'World '
-                                                                                                                                                                                                                          'Potion '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Light '
-                                                                                                                                                                                                                          'World '
-                                                                                                                                                                                                                          'Death '
-                                                                                                                                                                                                                          'Mountain '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Kakariko '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Cave '
-                                                                                                                                                                                                                          'Shop '
-                                                                                                                                                                                                                          '(Lake '
-                                                                                                                                                                                                                          'Hylia)'],
-                                                                                                                                                                                                           'unlimited': [   'Cave '
-                                                                                                                                                                                                                            'Shop '
-                                                                                                                                                                                                                            '(Dark '
-                                                                                                                                                                                                                            'Death '
-                                                                                                                                                                                                                            'Mountain)',
-                                                                                                                                                                                                                            'Dark '
-                                                                                                                                                                                                                            'Lake '
-                                                                                                                                                                                                                            'Hylia '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Dark '
-                                                                                                                                                                                                                            'World '
-                                                                                                                                                                                                                            'Lumberjack '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Village '
-                                                                                                                                                                                                                            'of '
-                                                                                                                                                                                                                            'Outcasts '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Dark '
-                                                                                                                                                                                                                            'World '
-                                                                                                                                                                                                                            'Potion '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Light '
-                                                                                                                                                                                                                            'World '
-                                                                                                                                                                                                                            'Death '
-                                                                                                                                                                                                                            'Mountain '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Kakariko '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Cave '
-                                                                                                                                                                                                                            'Shop '
-                                                                                                                                                                                                                            '(Lake '
-                                                                                                                                                                                                                            'Hylia)']},
-                                                                                                                                                                                         'Green Potion': {   'limited': [   'Potion '
-                                                                                                                                                                                                                            'Shop'],
-                                                                                                                                                                                                             'unlimited': [   'Potion '
-                                                                                                                                                                                                                              'Shop']},
-                                                                                                                                                                                         'Red Potion': {   'limited': [   'Cave '
-                                                                                                                                                                                                                          'Shop '
-                                                                                                                                                                                                                          '(Dark '
-                                                                                                                                                                                                                          'Death '
-                                                                                                                                                                                                                          'Mountain)',
-                                                                                                                                                                                                                          'Dark '
-                                                                                                                                                                                                                          'Lake '
-                                                                                                                                                                                                                          'Hylia '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Dark '
-                                                                                                                                                                                                                          'World '
-                                                                                                                                                                                                                          'Lumberjack '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Village '
-                                                                                                                                                                                                                          'of '
-                                                                                                                                                                                                                          'Outcasts '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Dark '
-                                                                                                                                                                                                                          'World '
-                                                                                                                                                                                                                          'Potion '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Light '
-                                                                                                                                                                                                                          'World '
-                                                                                                                                                                                                                          'Death '
-                                                                                                                                                                                                                          'Mountain '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Kakariko '
-                                                                                                                                                                                                                          'Shop',
-                                                                                                                                                                                                                          'Cave '
-                                                                                                                                                                                                                          'Shop '
-                                                                                                                                                                                                                          '(Lake '
-                                                                                                                                                                                                                          'Hylia)',
-                                                                                                                                                                                                                          'Potion '
-                                                                                                                                                                                                                          'Shop'],
-                                                                                                                                                                                                           'unlimited': [   'Cave '
-                                                                                                                                                                                                                            'Shop '
-                                                                                                                                                                                                                            '(Dark '
-                                                                                                                                                                                                                            'Death '
-                                                                                                                                                                                                                            'Mountain)',
-                                                                                                                                                                                                                            'Dark '
-                                                                                                                                                                                                                            'Lake '
-                                                                                                                                                                                                                            'Hylia '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Dark '
-                                                                                                                                                                                                                            'World '
-                                                                                                                                                                                                                            'Lumberjack '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Village '
-                                                                                                                                                                                                                            'of '
-                                                                                                                                                                                                                            'Outcasts '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Dark '
-                                                                                                                                                                                                                            'World '
-                                                                                                                                                                                                                            'Potion '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Light '
-                                                                                                                                                                                                                            'World '
-                                                                                                                                                                                                                            'Death '
-                                                                                                                                                                                                                            'Mountain '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Kakariko '
-                                                                                                                                                                                                                            'Shop',
-                                                                                                                                                                                                                            'Cave '
-                                                                                                                                                                                                                            'Shop '
-                                                                                                                                                                                                                            '(Lake '
-                                                                                                                                                                                                                            'Hylia)',
-                                                                                                                                                                                                                            'Potion '
-                                                                                                                                                                                                                            'Shop']},
-                                                                                                                                                                                         'Red Shield': {   'limited': [   'Red '
-                                                                                                                                                                                                                          'Shield '
-                                                                                                                                                                                                                          'Shop'],
-                                                                                                                                                                                                           'unlimited': [   'Red '
-                                                                                                                                                                                                                            'Shield '
-                                                                                                                                                                                                                            'Shop']},
-                                                                                                                                                                                         'Small Heart': {   'limited': [   'Cave '
-                                                                                                                                                                                                                           'Shop '
-                                                                                                                                                                                                                           '(Dark '
-                                                                                                                                                                                                                           'Death '
-                                                                                                                                                                                                                           'Mountain)',
-                                                                                                                                                                                                                           'Light '
-                                                                                                                                                                                                                           'World '
-                                                                                                                                                                                                                           'Death '
-                                                                                                                                                                                                                           'Mountain '
-                                                                                                                                                                                                                           'Shop',
-                                                                                                                                                                                                                           'Kakariko '
-                                                                                                                                                                                                                           'Shop',
-                                                                                                                                                                                                                           'Cave '
-                                                                                                                                                                                                                           'Shop '
-                                                                                                                                                                                                                           '(Lake '
-                                                                                                                                                                                                                           'Hylia)'],
-                                                                                                                                                                                                            'unlimited': [   'Cave '
-                                                                                                                                                                                                                             'Shop '
-                                                                                                                                                                                                                             '(Dark '
-                                                                                                                                                                                                                             'Death '
-                                                                                                                                                                                                                             'Mountain)',
-                                                                                                                                                                                                                             'Light '
-                                                                                                                                                                                                                             'World '
-                                                                                                                                                                                                                             'Death '
-                                                                                                                                                                                                                             'Mountain '
-                                                                                                                                                                                                                             'Shop',
-                                                                                                                                                                                                                             'Kakariko '
-                                                                                                                                                                                                                             'Shop',
-                                                                                                                                                                                                                             'Cave '
-                                                                                                                                                                                                                             'Shop '
-                                                                                                                                                                                                                             '(Lake '
-                                                                                                                                                                                                                             'Hylia)']}}}}},
-                                                                                                                                  'target': {   'name': 'region',
-                                                                                                                                                'type': 'name'}},
-                                                                                                             'type': 'any_of'}],
-                                                                                       'type': 'or'},
-                                                                           'type': 'conditional'}},
-                                                          {   'type': 'return',
-                                                              'value': {   'left': {   'name': 'basemagic',
-                                                                                       'type': 'name'},
-                                                                           'op': '>=',
-                                                                           'right': {   'name': 'smallmagic',
-                                                                                        'type': 'name'},
-                                                                           'type': 'compare'}}],
-                                        'type': 'block'},
-                            'params': ['smallmagic', 'fullrefill']},
-    'can_get_good_bee': {   'statements': [   {   'name': 'cave',
-                                                  'type': 'assign',
-                                                  'value': {'region': 'Good Bee Cave', 'type': 'region_reference'}},
-                                              {   'type': 'return',
-                                                  'value': {   'conditions': [   {   'group': 'Bottles',
-                                                                                     'type': 'group_check'},
-                                                                                 {   'item': 'Bug Catching Net',
-                                                                                     'type': 'item_check'},
-                                                                                 {   'conditions': [   {   'item': 'Pegasus '
-                                                                                                                   'Boots',
-                                                                                                           'type': 'item_check'},
-                                                                                                       {   'conditions': [   {   'conditions': [   {   'item': 'Fighter '
-                                                                                                                                                               'Sword',
-                                                                                                                                                       'type': 'item_check'},
-                                                                                                                                                   {   'item': 'Master '
-                                                                                                                                                               'Sword',
-                                                                                                                                                       'type': 'item_check'},
-                                                                                                                                                   {   'item': 'Tempered '
-                                                                                                                                                               'Sword',
-                                                                                                                                                       'type': 'item_check'},
-                                                                                                                                                   {   'item': 'Golden '
-                                                                                                                                                               'Sword',
-                                                                                                                                                       'type': 'item_check'}],
-                                                                                                                                 'type': 'or'},
-                                                                                                                             {   'item': 'Quake',
-                                                                                                                                 'type': 'item_check'}],
-                                                                                                           'type': 'and'}],
-                                                                                     'type': 'or'},
-                                                                                 {   'args': [],
-                                                                                     'function': {   'attr': 'can_reach',
-                                                                                                     'object': {   'name': 'cave',
-                                                                                                                   'type': 'name'},
-                                                                                                     'type': 'attribute'},
-                                                                                     'type': 'function_call'},
-                                                                                 {   'if_false': {   'if_false': {   'attr': 'is_dark_world',
-                                                                                                                     'region': {   'name': 'cave',
-                                                                                                                                   'type': 'name'},
-                                                                                                                     'type': 'region_attribute'},
-                                                                                                     'if_true': {   'attr': 'is_light_world',
-                                                                                                                    'region': {   'name': 'cave',
-                                                                                                                                  'type': 'name'},
-                                                                                                                    'type': 'region_attribute'},
-                                                                                                     'test': {   'left': {   'type': 'constant',
-                                                                                                                             'value': 'open'},
-                                                                                                                 'op': '!=',
-                                                                                                                 'right': {   'type': 'constant',
-                                                                                                                              'value': 'inverted'},
-                                                                                                                 'type': 'compare'},
-                                                                                                     'type': 'conditional'},
-                                                                                     'if_true': {   'type': 'constant',
-                                                                                                    'value': True},
-                                                                                     'test': {   'item': 'Moon Pearl',
-                                                                                                 'type': 'item_check'},
-                                                                                     'type': 'conditional'}],
-                                                               'type': 'and'}}],
-                            'type': 'block'},
-    'can_hold_arrows': {   'body': {   'statements': [   {   'body': [   {   'body': [   {   'type': 'return',
-                                                                                             'value': {   'type': 'constant',
-                                                                                                          'value': True}}],
-                                                                             'test': {   'left': {   'name': 'quantity',
-                                                                                                     'type': 'name'},
-                                                                                         'op': '==',
-                                                                                         'right': {   'type': 'constant',
-                                                                                                      'value': 0},
-                                                                                         'type': 'compare'},
-                                                                             'type': 'if_statement'},
-                                                                         {   'body': [   {   'name': 'arrows',
-                                                                                             'type': 'assign',
-                                                                                             'value': {   'type': 'constant',
-                                                                                                          'value': 70}}],
-                                                                             'orelse': [   {   'name': 'arrows',
-                                                                                               'type': 'assign',
-                                                                                               'value': {   'left': {   'left': {   'type': 'constant',
-                                                                                                                                    'value': 30},
-                                                                                                                        'op': '+',
-                                                                                                                        'right': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                                                 'value': 'Arrow '
-                                                                                                                                                                          'Upgrade '
-                                                                                                                                                                          '(+5)'}],
-                                                                                                                                                 'method': 'count',
-                                                                                                                                                 'type': 'state_method'},
-                                                                                                                                     'op': '*',
-                                                                                                                                     'right': {   'type': 'constant',
-                                                                                                                                                  'value': 5},
-                                                                                                                                     'type': 'binary_op'},
-                                                                                                                        'type': 'binary_op'},
-                                                                                                            'op': '+',
-                                                                                                            'right': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                                     'value': 'Arrow '
-                                                                                                                                                              'Upgrade '
-                                                                                                                                                              '(+10)'}],
-                                                                                                                                     'method': 'count',
-                                                                                                                                     'type': 'state_method'},
-                                                                                                                         'op': '*',
-                                                                                                                         'right': {   'type': 'constant',
-                                                                                                                                      'value': 10},
-                                                                                                                         'type': 'binary_op'},
-                                                                                                            'type': 'binary_op'}},
-                                                                                           {   'name': 'arrows',
-                                                                                               'op': '+=',
-                                                                                               'type': 'assign',
-                                                                                               'value': {   'args': [   {   'type': 'constant',
-                                                                                                                            'value': 0},
-                                                                                                                        {   'left': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                                                    'value': 'Arrow '
-                                                                                                                                                                             'Upgrade '
-                                                                                                                                                                             '(+5)'}],
-                                                                                                                                                    'method': 'count',
-                                                                                                                                                    'type': 'state_method'},
-                                                                                                                                        'op': '-',
-                                                                                                                                        'right': {   'type': 'constant',
-                                                                                                                                                     'value': 6},
-                                                                                                                                        'type': 'binary_op'},
-                                                                                                                            'op': '*',
-                                                                                                                            'right': {   'type': 'constant',
-                                                                                                                                         'value': 10},
-                                                                                                                            'type': 'binary_op'}],
-                                                                                                            'type': 'max'}}],
-                                                                             'test': {   'item': 'Arrow Upgrade (70)',
-                                                                                         'type': 'item_check'},
-                                                                             'type': 'if_statement'},
-                                                                         {   'type': 'return',
-                                                                             'value': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                      'value': 70},
-                                                                                                                  {   'name': 'arrows',
-                                                                                                                      'type': 'name'}],
-                                                                                                      'type': 'min'},
-                                                                                          'op': '>=',
-                                                                                          'right': {   'name': 'quantity',
-                                                                                                       'type': 'name'},
-                                                                                          'type': 'compare'}}],
-                                                             'test': {'type': 'constant', 'value': 'off'},
-                                                             'type': 'if_statement'},
-                                                         {   'type': 'return',
-                                                             'value': {   'conditions': [   {   'left': {   'name': 'quantity',
-                                                                                                            'type': 'name'},
-                                                                                                'op': '<=',
-                                                                                                'right': {   'type': 'constant',
-                                                                                                             'value': 30},
-                                                                                                'type': 'compare'},
-                                                                                            {   'item': 'Capacity '
-                                                                                                        'Upgrade Shop',
-                                                                                                'type': 'item_check'}],
-                                                                          'type': 'or'}}],
-                                       'type': 'block'},
-                           'params': ['quantity']},
-    'can_kill_most_things': {   'body': {   'conditions': [   {   'conditions': [   {   'args': [],
-                                                                                        'name': 'has_sword',
-                                                                                        'type': 'helper'},
-                                                                                    {   'item': 'Hammer',
-                                                                                        'type': 'item_check'}],
-                                                                  'type': 'or'},
-                                                              {'item': 'Cane of Somaria', 'type': 'item_check'},
-                                                              {   'conditions': [   {   'item': 'Cane of Byrna',
-                                                                                        'type': 'item_check'},
-                                                                                    {   'conditions': [   {   'left': {   'name': 'enemies',
-                                                                                                                          'type': 'name'},
-                                                                                                              'op': '<',
-                                                                                                              'right': {   'type': 'constant',
-                                                                                                                           'value': 6},
-                                                                                                              'type': 'compare'},
-                                                                                                          {   'statements': [   {   'name': '_h22_basemagic',
-                                                                                                                                    'type': 'assign',
-                                                                                                                                    'value': {   'type': 'constant',
-                                                                                                                                                 'value': 8}},
-                                                                                                                                {   'name': '_h22_basemagic',
-                                                                                                                                    'type': 'assign',
-                                                                                                                                    'value': {   'if_false': {   'if_false': {   'name': '_h22_basemagic',
-                                                                                                                                                                                 'type': 'name'},
-                                                                                                                                                                 'if_true': {   'type': 'constant',
-                                                                                                                                                                                'value': 16},
-                                                                                                                                                                 'test': {   'item': 'Magic '
-                                                                                                                                                                                     'Upgrade '
-                                                                                                                                                                                     '(1/2)',
-                                                                                                                                                                             'type': 'item_check'},
-                                                                                                                                                                 'type': 'conditional'},
-                                                                                                                                                 'if_true': {   'type': 'constant',
-                                                                                                                                                                'value': 32},
-                                                                                                                                                 'test': {   'item': 'Magic '
-                                                                                                                                                                     'Upgrade '
-                                                                                                                                                                     '(1/4)',
-                                                                                                                                                             'type': 'item_check'},
-                                                                                                                                                 'type': 'conditional'}},
-                                                                                                                                {   'name': '_h22_basemagic',
-                                                                                                                                    'type': 'assign',
-                                                                                                                                    'value': {   'if_false': {   'name': '_h22_basemagic',
-                                                                                                                                                                 'type': 'name'},
-                                                                                                                                                 'if_true': {   'if_false': {   'if_false': {   'left': {   'name': '_h22_basemagic',
-                                                                                                                                                                                                            'type': 'name'},
-                                                                                                                                                                                                'op': '+',
-                                                                                                                                                                                                'right': {   'left': {   'name': '_h22_basemagic',
-                                                                                                                                                                                                                         'type': 'name'},
-                                                                                                                                                                                                             'op': '*',
-                                                                                                                                                                                                             'right': {   'args': [   ],
-                                                                                                                                                                                                                          'name': 'bottle_count',
-                                                                                                                                                                                                                          'type': 'helper'},
-                                                                                                                                                                                                             'type': 'binary_op'},
-                                                                                                                                                                                                'type': 'binary_op'},
-                                                                                                                                                                                'if_true': {   'left': {   'name': '_h22_basemagic',
-                                                                                                                                                                                                           'type': 'name'},
-                                                                                                                                                                                               'op': '+',
-                                                                                                                                                                                               'right': {   'args': [   {   'left': {   'left': {   'name': '_h22_basemagic',
-                                                                                                                                                                                                                                                    'type': 'name'},
-                                                                                                                                                                                                                                        'op': '*',
-                                                                                                                                                                                                                                        'right': {   'type': 'constant',
-                                                                                                                                                                                                                                                     'value': 0.25},
-                                                                                                                                                                                                                                        'type': 'binary_op'},
-                                                                                                                                                                                                                            'op': '*',
-                                                                                                                                                                                                                            'right': {   'args': [   ],
-                                                                                                                                                                                                                                         'name': 'bottle_count',
-                                                                                                                                                                                                                                         'type': 'helper'},
-                                                                                                                                                                                                                            'type': 'binary_op'}],
-                                                                                                                                                                                                            'name': 'int',
-                                                                                                                                                                                                            'type': 'helper'},
-                                                                                                                                                                                               'type': 'binary_op'},
-                                                                                                                                                                                'test': {   'conditions': [   {   'left': {   'type': 'constant',
-                                                                                                                                                                                                                              'value': 'hard'},
-                                                                                                                                                                                                                  'op': '==',
-                                                                                                                                                                                                                  'right': {   'type': 'constant',
-                                                                                                                                                                                                                               'value': 'expert'},
-                                                                                                                                                                                                                  'type': 'compare'},
-                                                                                                                                                                                                              {   'condition': {   'type': 'constant',
-                                                                                                                                                                                                                                   'value': False},
-                                                                                                                                                                                                                  'type': 'not'}],
-                                                                                                                                                                                            'type': 'and'},
-                                                                                                                                                                                'type': 'conditional'},
-                                                                                                                                                                'if_true': {   'left': {   'name': '_h22_basemagic',
-                                                                                                                                                                                           'type': 'name'},
-                                                                                                                                                                               'op': '+',
-                                                                                                                                                                               'right': {   'args': [   {   'left': {   'left': {   'name': '_h22_basemagic',
-                                                                                                                                                                                                                                    'type': 'name'},
-                                                                                                                                                                                                                        'op': '*',
-                                                                                                                                                                                                                        'right': {   'type': 'constant',
-                                                                                                                                                                                                                                     'value': 0.5},
-                                                                                                                                                                                                                        'type': 'binary_op'},
-                                                                                                                                                                                                            'op': '*',
-                                                                                                                                                                                                            'right': {   'args': [   ],
-                                                                                                                                                                                                                         'name': 'bottle_count',
-                                                                                                                                                                                                                         'type': 'helper'},
-                                                                                                                                                                                                            'type': 'binary_op'}],
-                                                                                                                                                                                            'name': 'int',
-                                                                                                                                                                                            'type': 'helper'},
-                                                                                                                                                                               'type': 'binary_op'},
-                                                                                                                                                                'test': {   'conditions': [   {   'left': {   'type': 'constant',
-                                                                                                                                                                                                              'value': 'hard'},
-                                                                                                                                                                                                  'op': '==',
-                                                                                                                                                                                                  'right': {   'type': 'constant',
-                                                                                                                                                                                                               'value': 'hard'},
-                                                                                                                                                                                                  'type': 'compare'},
-                                                                                                                                                                                              {   'condition': {   'type': 'constant',
-                                                                                                                                                                                                                   'value': False},
-                                                                                                                                                                                                  'type': 'not'}],
-                                                                                                                                                                            'type': 'and'},
-                                                                                                                                                                'type': 'conditional'},
-                                                                                                                                                 'test': {   'conditions': [   {   'args': [   {   'type': 'constant',
-                                                                                                                                                                                                   'value': 'Green '
-                                                                                                                                                                                                            'Potion'}],
-                                                                                                                                                                                   'name': 'can_buy_unlimited',
-                                                                                                                                                                                   'type': 'helper'},
-                                                                                                                                                                               {   'args': [   {   'type': 'constant',
-                                                                                                                                                                                                   'value': 'Blue '
-                                                                                                                                                                                                            'Potion'}],
-                                                                                                                                                                                   'name': 'can_buy_unlimited',
-                                                                                                                                                                                   'type': 'helper'}],
-                                                                                                                                                             'type': 'or'},
-                                                                                                                                                 'type': 'conditional'}},
-                                                                                                                                {   'type': 'return',
-                                                                                                                                    'value': {   'left': {   'name': '_h22_basemagic',
-                                                                                                                                                             'type': 'name'},
-                                                                                                                                                 'op': '>=',
-                                                                                                                                                 'right': {   'type': 'constant',
-                                                                                                                                                              'value': 16},
-                                                                                                                                                 'type': 'compare'}}],
-                                                                                                              'type': 'block'}],
-                                                                                        'type': 'or'}],
-                                                                  'type': 'and'},
-                                                              {   'conditions': [   {   'conditions': [   {   'item': 'Bow',
-                                                                                                              'type': 'item_check'},
-                                                                                                          {   'item': 'Silver '
-                                                                                                                      'Bow',
-                                                                                                              'type': 'item_check'}],
-                                                                                        'type': 'or'},
-                                                                                    {   'args': [   {   'type': 'constant',
-                                                                                                        'value': 0}],
-                                                                                        'name': 'can_hold_arrows',
-                                                                                        'type': 'helper'}],
-                                                                  'type': 'and'},
-                                                              {'item': 'Fire Rod', 'type': 'item_check'},
-                                                              {   'conditions': [   {   'left': {   'type': 'constant',
-                                                                                                    'value': 'default'},
-                                                                                        'op': 'in',
-                                                                                        'right': {   'type': 'list',
-                                                                                                     'value': [   {   'type': 'constant',
-                                                                                                                      'value': 'easy'},
-                                                                                                                  {   'type': 'constant',
-                                                                                                                      'value': 'default'}]},
-                                                                                        'type': 'compare'},
-                                                                                    {   'statements': [   {   'name': '_h24_bombs',
-                                                                                                              'type': 'assign',
-                                                                                                              'value': {   'type': 'constant',
-                                                                                                                           'value': 10}},
-                                                                                                          {   'name': '_h24_bombs',
-                                                                                                              'op': '+=',
-                                                                                                              'type': 'assign',
-                                                                                                              'value': {   'left': {   'left': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                                                               'value': 'Bomb '
-                                                                                                                                                                                        'Upgrade '
-                                                                                                                                                                                        '(+5)'}],
-                                                                                                                                                               'method': 'count',
-                                                                                                                                                               'type': 'state_method'},
-                                                                                                                                                   'op': '*',
-                                                                                                                                                   'right': {   'type': 'constant',
-                                                                                                                                                                'value': 5},
-                                                                                                                                                   'type': 'binary_op'},
-                                                                                                                                       'op': '+',
-                                                                                                                                       'right': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                                                                'value': 'Bomb '
-                                                                                                                                                                                         'Upgrade '
-                                                                                                                                                                                         '(+10)'}],
-                                                                                                                                                                'method': 'count',
-                                                                                                                                                                'type': 'state_method'},
-                                                                                                                                                    'op': '*',
-                                                                                                                                                    'right': {   'type': 'constant',
-                                                                                                                                                                 'value': 10},
-                                                                                                                                                    'type': 'binary_op'},
-                                                                                                                                       'type': 'binary_op'},
-                                                                                                                           'op': '+',
-                                                                                                                           'right': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                                                    'value': 'Bomb '
-                                                                                                                                                                             'Upgrade '
-                                                                                                                                                                             '(50)'}],
-                                                                                                                                                    'method': 'count',
-                                                                                                                                                    'type': 'state_method'},
-                                                                                                                                        'op': '*',
-                                                                                                                                        'right': {   'type': 'constant',
-                                                                                                                                                     'value': 50},
-                                                                                                                                        'type': 'binary_op'},
-                                                                                                                           'type': 'binary_op'}},
-                                                                                                          {   'name': '_h24_bombs',
-                                                                                                              'op': '+=',
-                                                                                                              'type': 'assign',
-                                                                                                              'value': {   'args': [   {   'type': 'constant',
-                                                                                                                                           'value': 0},
-                                                                                                                                       {   'left': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                                                                   'value': 'Bomb '
-                                                                                                                                                                                            'Upgrade '
-                                                                                                                                                                                            '(+5)'}],
-                                                                                                                                                                   'method': 'count',
-                                                                                                                                                                   'type': 'state_method'},
-                                                                                                                                                       'op': '-',
-                                                                                                                                                       'right': {   'type': 'constant',
-                                                                                                                                                                    'value': 6},
-                                                                                                                                                       'type': 'binary_op'},
-                                                                                                                                           'op': '*',
-                                                                                                                                           'right': {   'type': 'constant',
-                                                                                                                                                        'value': 10},
-                                                                                                                                           'type': 'binary_op'}],
-                                                                                                                           'type': 'max'}},
-                                                                                                          {   'body': [   {   'name': '_h24_bombs',
-                                                                                                                              'op': '+=',
-                                                                                                                              'type': 'assign',
-                                                                                                                              'value': {   'type': 'constant',
-                                                                                                                                           'value': 40}}],
-                                                                                                              'test': {   'conditions': [   {   'condition': {   'type': 'constant',
-                                                                                                                                                                 'value': 'off'},
-                                                                                                                                                'type': 'not'},
-                                                                                                                                            {   'item': 'Capacity '
-                                                                                                                                                        'Upgrade '
-                                                                                                                                                        'Shop',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'and'},
-                                                                                                              'type': 'if_statement'},
-                                                                                                          {   'type': 'return',
-                                                                                                              'value': {   'left': {   'name': '_h24_bombs',
-                                                                                                                                       'type': 'name'},
-                                                                                                                           'op': '>=',
-                                                                                                                           'right': {   'args': [   {   'left': {   'name': 'enemies',
-                                                                                                                                                                    'type': 'name'},
-                                                                                                                                                        'op': '*',
-                                                                                                                                                        'right': {   'type': 'constant',
-                                                                                                                                                                     'value': 4},
-                                                                                                                                                        'type': 'binary_op'},
-                                                                                                                                                    {   'type': 'constant',
-                                                                                                                                                        'value': 50}],
-                                                                                                                                        'type': 'min'},
-                                                                                                                           'type': 'compare'}}],
-                                                                                        'type': 'block'}],
-                                                                  'type': 'and'}],
-                                            'type': 'or'},
-                                'params': ['enemies']},
-    'can_lift_heavy_rocks': {'item': 'Titans Mitts', 'type': 'item_check'},
-    'can_lift_rocks': {   'conditions': [   {'item': 'Power Glove', 'type': 'item_check'},
-                                            {'item': 'Titans Mitts', 'type': 'item_check'}],
-                          'type': 'or'},
-    'can_melt_things': {   'conditions': [   {'item': 'Fire Rod', 'type': 'item_check'},
-                                             {   'conditions': [   {'item': 'Bombos', 'type': 'item_check'},
-                                                                   {   'conditions': [   {   'type': 'constant',
-                                                                                             'value': False},
-                                                                                         {   'conditions': [   {   'item': 'Fighter '
-                                                                                                                           'Sword',
-                                                                                                                   'type': 'item_check'},
-                                                                                                               {   'item': 'Master '
-                                                                                                                           'Sword',
-                                                                                                                   'type': 'item_check'},
-                                                                                                               {   'item': 'Tempered '
-                                                                                                                           'Sword',
-                                                                                                                   'type': 'item_check'},
-                                                                                                               {   'item': 'Golden '
-                                                                                                                           'Sword',
-                                                                                                                   'type': 'item_check'}],
-                                                                                             'type': 'or'}],
-                                                                       'type': 'or'}],
-                                                 'type': 'and'}],
-                           'type': 'or'},
-    'can_retrieve_tablet': {   'conditions': [   {'item': 'Book of Mudora', 'type': 'item_check'},
-                                                 {   'conditions': [   {   'conditions': [   {   'item': 'Master Sword',
-                                                                                                 'type': 'item_check'},
-                                                                                             {   'item': 'Tempered '
-                                                                                                         'Sword',
-                                                                                                 'type': 'item_check'},
-                                                                                             {   'item': 'Golden Sword',
-                                                                                                 'type': 'item_check'}],
-                                                                           'type': 'or'},
-                                                                       {   'conditions': [   {   'type': 'constant',
-                                                                                                 'value': False},
-                                                                                             {   'item': 'Hammer',
-                                                                                                 'type': 'item_check'}],
-                                                                           'type': 'and'}],
-                                                     'type': 'or'}],
-                               'type': 'and'},
-    'can_shoot_arrows': {   'body': {   'conditions': [   {   'conditions': [   {'item': 'Bow', 'type': 'item_check'},
-                                                                                {   'item': 'Silver Bow',
-                                                                                    'type': 'item_check'}],
-                                                              'type': 'or'},
-                                                          {   'statements': [   {   'body': [   {   'body': [   {   'type': 'return',
-                                                                                                                    'value': {   'type': 'constant',
-                                                                                                                                 'value': True}}],
-                                                                                                    'test': {   'left': {   'name': 'count',
-                                                                                                                            'type': 'name'},
-                                                                                                                'op': '==',
-                                                                                                                'right': {   'type': 'constant',
-                                                                                                                             'value': 0},
-                                                                                                                'type': 'compare'},
-                                                                                                    'type': 'if_statement'},
-                                                                                                {   'body': [   {   'name': '_h28_arrows',
-                                                                                                                    'type': 'assign',
-                                                                                                                    'value': {   'type': 'constant',
-                                                                                                                                 'value': 70}}],
-                                                                                                    'orelse': [   {   'name': '_h28_arrows',
-                                                                                                                      'type': 'assign',
-                                                                                                                      'value': {   'left': {   'left': {   'type': 'constant',
-                                                                                                                                                           'value': 30},
-                                                                                                                                               'op': '+',
-                                                                                                                                               'right': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                                                                        'value': 'Arrow '
-                                                                                                                                                                                                 'Upgrade '
-                                                                                                                                                                                                 '(+5)'}],
-                                                                                                                                                                        'method': 'count',
-                                                                                                                                                                        'type': 'state_method'},
-                                                                                                                                                            'op': '*',
-                                                                                                                                                            'right': {   'type': 'constant',
-                                                                                                                                                                         'value': 5},
-                                                                                                                                                            'type': 'binary_op'},
-                                                                                                                                               'type': 'binary_op'},
-                                                                                                                                   'op': '+',
-                                                                                                                                   'right': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                                                            'value': 'Arrow '
-                                                                                                                                                                                     'Upgrade '
-                                                                                                                                                                                     '(+10)'}],
-                                                                                                                                                            'method': 'count',
-                                                                                                                                                            'type': 'state_method'},
-                                                                                                                                                'op': '*',
-                                                                                                                                                'right': {   'type': 'constant',
-                                                                                                                                                             'value': 10},
-                                                                                                                                                'type': 'binary_op'},
-                                                                                                                                   'type': 'binary_op'}},
-                                                                                                                  {   'name': '_h28_arrows',
-                                                                                                                      'op': '+=',
-                                                                                                                      'type': 'assign',
-                                                                                                                      'value': {   'args': [   {   'type': 'constant',
-                                                                                                                                                   'value': 0},
-                                                                                                                                               {   'left': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                                                                           'value': 'Arrow '
-                                                                                                                                                                                                    'Upgrade '
-                                                                                                                                                                                                    '(+5)'}],
-                                                                                                                                                                           'method': 'count',
-                                                                                                                                                                           'type': 'state_method'},
-                                                                                                                                                               'op': '-',
-                                                                                                                                                               'right': {   'type': 'constant',
-                                                                                                                                                                            'value': 6},
-                                                                                                                                                               'type': 'binary_op'},
-                                                                                                                                                   'op': '*',
-                                                                                                                                                   'right': {   'type': 'constant',
-                                                                                                                                                                'value': 10},
-                                                                                                                                                   'type': 'binary_op'}],
-                                                                                                                                   'type': 'max'}}],
-                                                                                                    'test': {   'item': 'Arrow '
-                                                                                                                        'Upgrade '
-                                                                                                                        '(70)',
-                                                                                                                'type': 'item_check'},
-                                                                                                    'type': 'if_statement'},
-                                                                                                {   'type': 'return',
-                                                                                                    'value': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                             'value': 70},
-                                                                                                                                         {   'name': '_h28_arrows',
-                                                                                                                                             'type': 'name'}],
-                                                                                                                             'type': 'min'},
-                                                                                                                 'op': '>=',
-                                                                                                                 'right': {   'name': 'count',
-                                                                                                                              'type': 'name'},
-                                                                                                                 'type': 'compare'}}],
-                                                                                    'test': {   'type': 'constant',
-                                                                                                'value': 'off'},
-                                                                                    'type': 'if_statement'},
-                                                                                {   'type': 'return',
-                                                                                    'value': {   'conditions': [   {   'left': {   'name': 'count',
-                                                                                                                                   'type': 'name'},
-                                                                                                                       'op': '<=',
-                                                                                                                       'right': {   'type': 'constant',
-                                                                                                                                    'value': 30},
-                                                                                                                       'type': 'compare'},
-                                                                                                                   {   'item': 'Capacity '
-                                                                                                                               'Upgrade '
-                                                                                                                               'Shop',
-                                                                                                                       'type': 'item_check'}],
-                                                                                                 'type': 'or'}}],
-                                                              'type': 'block'}],
-                                        'type': 'and'},
-                            'params': ['count']},
-    'can_use_bombs': {   'body': {   'statements': [   {   'name': 'bombs',
-                                                           'type': 'assign',
-                                                           'value': {'type': 'constant', 'value': 10}},
-                                                       {   'name': 'bombs',
-                                                           'op': '+=',
-                                                           'type': 'assign',
-                                                           'value': {   'left': {   'left': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                            'value': 'Bomb '
-                                                                                                                                     'Upgrade '
-                                                                                                                                     '(+5)'}],
-                                                                                                            'method': 'count',
-                                                                                                            'type': 'state_method'},
-                                                                                                'op': '*',
-                                                                                                'right': {   'type': 'constant',
-                                                                                                             'value': 5},
-                                                                                                'type': 'binary_op'},
-                                                                                    'op': '+',
-                                                                                    'right': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                             'value': 'Bomb '
-                                                                                                                                      'Upgrade '
-                                                                                                                                      '(+10)'}],
-                                                                                                             'method': 'count',
-                                                                                                             'type': 'state_method'},
-                                                                                                 'op': '*',
-                                                                                                 'right': {   'type': 'constant',
-                                                                                                              'value': 10},
-                                                                                                 'type': 'binary_op'},
-                                                                                    'type': 'binary_op'},
-                                                                        'op': '+',
-                                                                        'right': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                 'value': 'Bomb '
-                                                                                                                          'Upgrade '
-                                                                                                                          '(50)'}],
-                                                                                                 'method': 'count',
-                                                                                                 'type': 'state_method'},
-                                                                                     'op': '*',
-                                                                                     'right': {   'type': 'constant',
-                                                                                                  'value': 50},
-                                                                                     'type': 'binary_op'},
-                                                                        'type': 'binary_op'}},
-                                                       {   'name': 'bombs',
-                                                           'op': '+=',
-                                                           'type': 'assign',
-                                                           'value': {   'args': [   {'type': 'constant', 'value': 0},
-                                                                                    {   'left': {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                'value': 'Bomb '
-                                                                                                                                         'Upgrade '
-                                                                                                                                         '(+5)'}],
-                                                                                                                'method': 'count',
-                                                                                                                'type': 'state_method'},
-                                                                                                    'op': '-',
-                                                                                                    'right': {   'type': 'constant',
-                                                                                                                 'value': 6},
-                                                                                                    'type': 'binary_op'},
-                                                                                        'op': '*',
-                                                                                        'right': {   'type': 'constant',
-                                                                                                     'value': 10},
-                                                                                        'type': 'binary_op'}],
-                                                                        'type': 'max'}},
-                                                       {   'body': [   {   'name': 'bombs',
-                                                                           'op': '+=',
-                                                                           'type': 'assign',
-                                                                           'value': {'type': 'constant', 'value': 40}}],
-                                                           'test': {   'conditions': [   {   'condition': {   'type': 'constant',
-                                                                                                              'value': 'off'},
-                                                                                             'type': 'not'},
-                                                                                         {   'item': 'Capacity Upgrade '
-                                                                                                     'Shop',
-                                                                                             'type': 'item_check'}],
-                                                                       'type': 'and'},
-                                                           'type': 'if_statement'},
-                                                       {   'type': 'return',
-                                                           'value': {   'left': {'name': 'bombs', 'type': 'name'},
-                                                                        'op': '>=',
-                                                                        'right': {   'args': [   {   'name': 'quantity',
-                                                                                                     'type': 'name'},
-                                                                                                 {   'type': 'constant',
-                                                                                                     'value': 50}],
-                                                                                     'type': 'min'},
-                                                                        'type': 'compare'}}],
-                                     'type': 'block'},
-                         'params': ['quantity']},
-    'cross_peg_bridge': {   'conditions': [   {'item': 'Hammer', 'type': 'item_check'},
-                                              {'item': 'Moon Pearl', 'type': 'item_check'}],
-                            'type': 'and'},
-    'has_beam_sword': {   'conditions': [   {'item': 'Master Sword', 'type': 'item_check'},
-                                            {'item': 'Tempered Sword', 'type': 'item_check'},
-                                            {'item': 'Golden Sword', 'type': 'item_check'}],
-                          'type': 'or'},
-    'has_crystals': {   'body': {   'statements': [   {   'name': 'found',
-                                                          'type': 'assign',
-                                                          'value': {'group': 'Crystals', 'type': 'group_count'}},
-                                                      {   'type': 'return',
-                                                          'value': {   'left': {'name': 'found', 'type': 'name'},
-                                                                       'op': '>=',
-                                                                       'right': {'name': 'count', 'type': 'name'},
-                                                                       'type': 'compare'}}],
-                                    'type': 'block'},
-                        'params': ['count']},
-    'has_fire_source': {   'conditions': [   {'item': 'Fire Rod', 'type': 'item_check'},
-                                             {'item': 'Lamp', 'type': 'item_check'}],
-                           'type': 'or'},
-    'has_hearts': {   'body': {   'left': {   'statements': [   {   'name': '_h29_max_heart_pieces',
-                                                                    'type': 'assign',
-                                                                    'value': {'type': 'constant', 'value': 24}},
-                                                                {   'name': '_h29_max_heart_containers',
-                                                                    'type': 'assign',
-                                                                    'value': {'type': 'constant', 'value': 10}},
-                                                                {   'type': 'return',
-                                                                    'value': {   'left': {   'left': {   'left': {   'args': [   {   'args': [   {   'type': 'constant',
-                                                                                                                                                     'value': 'Boss '
-                                                                                                                                                              'Heart '
-                                                                                                                                                              'Container'}],
-                                                                                                                                     'method': 'count',
-                                                                                                                                     'type': 'state_method'},
-                                                                                                                                 {   'name': '_h29_max_heart_containers',
-                                                                                                                                     'type': 'name'}],
-                                                                                                                     'type': 'min'},
-                                                                                                         'op': '+',
-                                                                                                         'right': {   'args': [   {   'type': 'constant',
-                                                                                                                                      'value': 'Sanctuary '
-                                                                                                                                               'Heart '
-                                                                                                                                               'Container'}],
-                                                                                                                      'method': 'count',
-                                                                                                                      'type': 'state_method'},
-                                                                                                         'type': 'binary_op'},
-                                                                                             'op': '+',
-                                                                                             'right': {   'left': {   'args': [   {   'args': [   {   'type': 'constant',
-                                                                                                                                                      'value': 'Piece '
-                                                                                                                                                               'of '
-                                                                                                                                                               'Heart'}],
-                                                                                                                                      'method': 'count',
-                                                                                                                                      'type': 'state_method'},
-                                                                                                                                  {   'name': '_h29_max_heart_pieces',
-                                                                                                                                      'type': 'name'}],
-                                                                                                                      'type': 'min'},
-                                                                                                          'op': '//',
-                                                                                                          'right': {   'type': 'constant',
-                                                                                                                       'value': 4},
-                                                                                                          'type': 'binary_op'},
-                                                                                             'type': 'binary_op'},
-                                                                                 'op': '+',
-                                                                                 'right': {   'type': 'constant',
-                                                                                              'value': 3},
-                                                                                 'type': 'binary_op'}}],
-                                              'type': 'block'},
-                                  'op': '>=',
-                                  'right': {'name': 'count', 'type': 'name'},
-                                  'type': 'compare'},
-                      'params': ['count']},
-    'has_melee_weapon': {   'conditions': [   {   'conditions': [   {'item': 'Fighter Sword', 'type': 'item_check'},
-                                                                    {'item': 'Master Sword', 'type': 'item_check'},
-                                                                    {'item': 'Tempered Sword', 'type': 'item_check'},
-                                                                    {'item': 'Golden Sword', 'type': 'item_check'}],
-                                                  'type': 'or'},
-                                              {'item': 'Hammer', 'type': 'item_check'}],
-                            'type': 'or'},
-    'has_misery_mire_medallion': {'item': {'type': 'constant', 'value': 'Quake'}, 'type': 'item_check'},
-    'has_sword': {   'conditions': [   {'item': 'Fighter Sword', 'type': 'item_check'},
-                                       {'item': 'Master Sword', 'type': 'item_check'},
-                                       {'item': 'Tempered Sword', 'type': 'item_check'},
-                                       {'item': 'Golden Sword', 'type': 'item_check'}],
-                     'type': 'or'},
-    'has_turtle_rock_medallion': {'item': {'type': 'constant', 'value': 'Ether'}, 'type': 'item_check'},
-    'heart_count': {   'statements': [   {   'name': 'max_heart_pieces',
-                                             'type': 'assign',
-                                             'value': {'type': 'constant', 'value': 24}},
-                                         {   'name': 'max_heart_containers',
-                                             'type': 'assign',
-                                             'value': {'type': 'constant', 'value': 10}},
-                                         {   'type': 'return',
-                                             'value': {   'left': {   'left': {   'left': {   'args': [   {   'args': [   {   'type': 'constant',
-                                                                                                                              'value': 'Boss '
-                                                                                                                                       'Heart '
-                                                                                                                                       'Container'}],
-                                                                                                              'method': 'count',
-                                                                                                              'type': 'state_method'},
-                                                                                                          {   'name': 'max_heart_containers',
-                                                                                                              'type': 'name'}],
-                                                                                              'type': 'min'},
-                                                                                  'op': '+',
-                                                                                  'right': {   'args': [   {   'type': 'constant',
-                                                                                                               'value': 'Sanctuary '
-                                                                                                                        'Heart '
-                                                                                                                        'Container'}],
-                                                                                               'method': 'count',
-                                                                                               'type': 'state_method'},
-                                                                                  'type': 'binary_op'},
-                                                                      'op': '+',
-                                                                      'right': {   'left': {   'args': [   {   'args': [   {   'type': 'constant',
-                                                                                                                               'value': 'Piece '
-                                                                                                                                        'of '
-                                                                                                                                        'Heart'}],
-                                                                                                               'method': 'count',
-                                                                                                               'type': 'state_method'},
-                                                                                                           {   'name': 'max_heart_pieces',
-                                                                                                               'type': 'name'}],
-                                                                                               'type': 'min'},
-                                                                                   'op': '//',
-                                                                                   'right': {   'type': 'constant',
-                                                                                                'value': 4},
-                                                                                   'type': 'binary_op'},
-                                                                      'type': 'binary_op'},
-                                                          'op': '+',
-                                                          'right': {'type': 'constant', 'value': 3},
-                                                          'type': 'binary_op'}}],
-                       'type': 'block'},
-    'is_not_bunny': {   'body': {   'if_false': {   'if_false': {   'attr': 'is_dark_world',
-                                                                    'region': {'name': 'region', 'type': 'name'},
-                                                                    'type': 'region_attribute'},
-                                                    'if_true': {   'attr': 'is_light_world',
-                                                                   'region': {'name': 'region', 'type': 'name'},
-                                                                   'type': 'region_attribute'},
-                                                    'test': {   'left': {'type': 'constant', 'value': 'open'},
-                                                                'op': '!=',
-                                                                'right': {'type': 'constant', 'value': 'inverted'},
-                                                                'type': 'compare'},
-                                                    'type': 'conditional'},
-                                    'if_true': {'type': 'constant', 'value': True},
-                                    'test': {'item': 'Moon Pearl', 'type': 'item_check'},
-                                    'type': 'conditional'},
-                        'params': ['region']}}
-
-
-def get_helper_definitions() -> dict:
-    """Return helper definitions for frontend evaluation."""
-    return _HELPER_DEFINITIONS
-
-
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player
@@ -2446,2418 +167,1193 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("Links House S&Q", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sanctuary S&Q", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Old Man S&Q", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Blinds Hideout", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Hyrule Castle Secret Entrance Drop", player),
-        True_()
+        CanReachLocation('Old Man')
     )
 
     world.set_rule(
         multiworld.get_entrance("Zoras River", player),
-        True_()
+        Or(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), Has('Flippers'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Kings Grave Outer Rocks", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dam", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Links House", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tavern North", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Chicken House", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Aginahs Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sahasrahlas Hut", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kakariko Well Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kakariko Well Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Blacksmiths Hut", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks")
     )
 
     world.set_rule(
         multiworld.get_entrance("Bat Cave Drop Ledge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Bat Cave Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sick Kids House", player),
-        True_()
+        Has('Hammer')
     )
 
     world.set_rule(
         multiworld.get_entrance("Hobo Bridge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Lost Woods Hideout Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Lost Woods Hideout Stump", player),
-        True_()
+        Has('Flippers')
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumberjack Tree Tree", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Lumberjack Tree Cave", player),
-        True_()
+        And(Has('Beat Agahnim 1'), Has('Pegasus Boots'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Mini Moldorm Cave", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Rod Cave", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")
     )
 
     world.set_rule(
         multiworld.get_entrance("Lake Hylia Central Island Pier", player),
-        True_()
+        Has('Flippers')
     )
 
     world.set_rule(
         multiworld.get_entrance("Bonk Rock Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Library", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Potion Shop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Two Brothers House (East)", player),
-        True_()
+        Has('Pegasus Boots')
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Palace Stairs", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Eastern Palace", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Master Sword Meadow", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sanctuary", player),
-        True_()
+        Has('Book of Mudora')
     )
 
     world.set_rule(
         multiworld.get_entrance("Sanctuary Grave", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks")
     )
 
     world.set_rule(
         multiworld.get_entrance("Death Mountain Entrance Rock", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks")
     )
 
     world.set_rule(
         multiworld.get_entrance("Flute Spot 1", player),
-        True_()
+        Has('Activated Flute')
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark Desert Teleporter", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks"), Has('Activated Flute'))
     )
 
     world.set_rule(
         multiworld.get_entrance("East Hyrule Teleporter", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), Has('Hammer'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("South Hyrule Teleporter", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), Has('Hammer'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Kakariko Teleporter", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Elder House (East)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Elder House (West)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("North Fairy Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("North Fairy Cave Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Lost Woods Gamble", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Snitch Lady (East)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Snitch Lady (West)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tavern (Front)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Bush Covered House", player),
-        True_()
+        And(Or(And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), Has('Hammer')), HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks")), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Light World Bomb Hut", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kakariko Shop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Long Fairy Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Good Bee Cave", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")
     )
 
     world.set_rule(
         multiworld.get_entrance("20 Rupee Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Cave Shop (Lake Hylia)", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks")
     )
 
     world.set_rule(
         multiworld.get_entrance("Waterfall of Wishing", player),
-        True_()
+        Has('Flippers')
     )
 
     world.set_rule(
         multiworld.get_entrance("Hyrule Castle Main Gate", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("Bonk Fairy (Light)", player),
-        True_()
+        Has('Pegasus Boots')
     )
 
     world.set_rule(
         multiworld.get_entrance("50 Rupee Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Fortune Teller (Light)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Lake Hylia Fairy", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks")
     )
 
     world.set_rule(
         multiworld.get_entrance("Light Hype Fairy", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Desert Fairy", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Lumberjack House", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Lake Hylia Fortune Teller", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kakariko Gamble Game", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")
     )
 
     world.set_rule(
         multiworld.get_entrance("Top of Pyramid", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Old Man Cave (West)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Death Mountain Entrance Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Capacity Upgrade", player),
-        True_()
+        Has('Beat Agahnim 1')
     )
 
     world.set_rule(
         multiworld.get_entrance("Lake Hylia Central Island Teleporter", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Hyrule Castle Secret Entrance Exit", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks")
     )
 
     world.set_rule(
         multiworld.get_entrance("Kings Grave", player),
-        True_()
+        Has('Pegasus Boots')
     )
 
     world.set_rule(
         multiworld.get_entrance("Kings Grave Inner Rocks", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("North Fairy Cave Exit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Links House Exit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Chris Houlihan Room Exit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Elder House Exit (East)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Elder House Exit (West)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kakariko Well (top to bottom)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kakariko Well Exit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Bat Cave Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Bat Cave Door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Bat Cave Exit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Lost Woods Hideout (top to bottom)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Lost Woods Hideout Exit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Lumberjack Tree (top to bottom)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Lumberjack Tree Exit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Cave 45", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Graveyard Cave", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks")
     )
 
     world.set_rule(
         multiworld.get_entrance("Two Brothers House Exit (East)", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_bomb_or_bonk, helper_name="can_bomb_or_bonk")
     )
 
     world.set_rule(
         multiworld.get_entrance("Two Brothers House Exit (West)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Two Brothers House (West)", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_bomb_or_bonk, helper_name="can_bomb_or_bonk")
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Palace Entrance (North) Rocks", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Desert Palace Entrance (West)", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks")
     )
 
     world.set_rule(
         multiworld.get_entrance("Checkerboard Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Desert Palace Entrance (South)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Desert Palace Stairs Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Desert Palace Entrance (East)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Desert Palace Entrance (North)", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks")
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Ledge Return Rocks", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Desert Palace Pots (Outer)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Desert Palace Exit (West)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Desert Palace Exit (East)", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks")
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Palace East Wing", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Desert Palace Exit (South)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Desert Palace Pots (Inner)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Desert Palace Exit (North)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Eastern Palace Exit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Hyrule Castle Secret Entrance Stairs", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Hyrule Castle Entrance (South)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Hyrule Castle Entrance (East)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Hyrule Castle Entrance (West)", player),
-        True_()
+        Has('Small Key (Desert Palace)', 4)
     )
 
     world.set_rule(
         multiworld.get_entrance("Agahnims Tower", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Hyrule Castle Ledge Courtyard Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Hyrule Castle Exit (East)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Hyrule Castle Exit (West)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Hyrule Castle Exit (South)", player),
-        True_()
+        Or(HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword"), Has('Beat Agahnim 1'), Has('Cape'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Throne Room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sewer Drop", player),
-        True_()
+        Has('Lamp')
     )
 
     world.set_rule(
         multiworld.get_entrance("Sewers Door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sanctuary Push Door", player),
-        True_()
+        Or(And(Compare('open', "==", 'standard'), Compare(False_(), "==", 'universal')), Has('Small Key (Hyrule Castle)', 4))
     )
 
     world.set_rule(
         multiworld.get_entrance("Sewers Back Door", player),
-        True_()
+        And(Has('Small Key (Hyrule Castle)', 4), Has('Lamp'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Sewers Secret Room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sanctuary Exit", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_bomb_or_bonk, helper_name="can_bomb_or_bonk")
     )
 
     world.set_rule(
         multiworld.get_entrance("Agahnim 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Agahnims Tower Exit", player),
-        True_()
+        And(And(Has('Small Key (Agahnims Tower)', 4), HelperCall(helper_func=_alinktothepastworldgen_has_sword, helper_name="has_sword")), Has('Lamp'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Old Man Cave Exit (East)", player),
-        True_()
+        Has('Lamp')
     )
 
     world.set_rule(
         multiworld.get_entrance("Old Man Cave Exit (West)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Old Man House Exit (Bottom)", player),
-        True_()
+        False_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Old Man House Front to Back", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Old Man House Exit (Top)", player),
-        True_()
+        Has('Lamp')
     )
 
     world.set_rule(
         multiworld.get_entrance("Old Man House Back to Front", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Old Man Cave (East)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Old Man House (Bottom)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Old Man House (Top)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Death Mountain Return Cave (East)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Spectacle Rock Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Spectacle Rock Cave Peak", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Spectacle Rock Cave (Bottom)", player),
-        True_()
+        Has('Lamp')
     )
 
     world.set_rule(
         multiworld.get_entrance("Broken Bridge (West)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Death Mountain Teleporter", player),
-        True_()
+        Has('Hookshot')
     )
 
     world.set_rule(
         multiworld.get_entrance("Death Mountain Return Cave Exit (West)", player),
-        True_()
+        Has('Lamp')
     )
 
     world.set_rule(
         multiworld.get_entrance("Death Mountain Return Cave Exit (East)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Death Mountain Return Ledge Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Death Mountain Return Cave (West)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Spectacle Rock Cave Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Spectacle Rock Cave Exit (Top)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Spectacle Rock Cave Exit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Spectacle Rock Cave Peak Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Spectacle Rock Cave Exit (Peak)", player),
-        True_()
+        Has('Lamp')
     )
 
     world.set_rule(
         multiworld.get_entrance("Broken Bridge (East)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Paradox Cave (Bottom)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Paradox Cave (Middle)", player),
-        True_()
+        Has('Hookshot')
     )
 
     world.set_rule(
         multiworld.get_entrance("East Death Mountain Teleporter", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Hookshot Fairy", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks")
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Ascension Rocks", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Spiral Cave (Bottom)", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks")
     )
 
     world.set_rule(
         multiworld.get_entrance("Paradox Cave Push Block Reverse", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Paradox Cave Exit (Bottom)", player),
-        True_()
+        False_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Light World Death Mountain Shop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Paradox Cave Push Block", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")
     )
 
     world.set_rule(
         multiworld.get_entrance("Paradox Cave Bomb Jump", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Paradox Cave Exit (Middle)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Paradox Cave Exit (Top)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Paradox Cave Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Paradox Cave (Top)", player),
-        True_()
+        False_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Death Mountain (Top)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Spiral Cave Ledge Access", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("East Death Mountain Drop", player),
-        True_()
+        Has('Hammer')
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Teleporter", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Fairy Ascension Ledge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Spiral Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Spiral Cave Ledge Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Spiral Cave (top to bottom)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Spiral Cave Exit (Top)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Spiral Cave Exit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Fairy Ascension Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Fairy Ascension Cave (Bottom)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Fairy Ascension Cave Climb", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Fairy Ascension Cave Exit (Bottom)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Fairy Ascension Cave Pots", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Fairy Ascension Cave Exit (Top)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Fairy Ascension Cave Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Fairy Ascension Ledge Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Fairy Ascension Cave (Top)", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks"), Has('Hammer'))
     )
 
     world.set_rule(
         multiworld.get_entrance("East Death Mountain (Top)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tower of Hera", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Death Mountain Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Spectacle Rock Drop", player),
-        True_()
+        Has('Hammer')
     )
 
     world.set_rule(
         multiworld.get_entrance("Tower of Hera Small Key Door", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_activate_crystal_switch, helper_name="can_activate_crystal_switch"), Or(False_(), Has('Small Key (Tower of Hera)')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Tower of Hera Big Key Door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tower of Hera Exit", player),
-        True_()
+        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_activate_crystal_switch, helper_name="can_activate_crystal_switch"), Has('Big Key (Tower of Hera)')), Or(And(HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), Has('Silver Bow')), HelperCall(helper_func=_alinktothepastworldgen_has_melee_weapon, helper_name="has_melee_weapon"), Has('Cane of Byrna'), Has('Cane of Somaria')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Fairy", player),
-        True_()
+        And(And(CanReachRegion('Big Bomb Shop'), CanReachRegion('East Dark World'), Has('Crystal 5'), Has('Crystal 6')), Or(And(Has('Beat Agahnim 1'), Has('Magic Mirror')), HelperCall(helper_func=_alinktothepastworldgen_cross_peg_bridge, helper_name="cross_peg_bridge")))
     )
 
     world.set_rule(
         multiworld.get_entrance("South Dark World Bridge", player),
-        True_()
+        And(Has('Hammer'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark Lake Hylia Drop (East)", player),
-        True_()
+        And(Has('Flippers'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hyrule Castle Ledge Mirror Spot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dark Lake Hylia Fairy", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Palace of Darkness Hint", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("East Dark World Hint", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Hole", player),
-        True_()
+        Or(True_(), Has('Beat Agahnim 2'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Northeast Dark World Broken Bridge Pass", player),
-        True_()
+        And(Or(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), Has('Flippers'), Has('Hammer')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Catfish Exit Rock", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks")
     )
 
     world.set_rule(
         multiworld.get_entrance("West Dark World Gap", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dark World Potion Shop", player),
-        True_()
+        And(Has('Hookshot'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("East Dark World Broken Bridge Pass", player),
-        True_()
+        And(Or(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), Has('Hammer')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Catfish Entrance Rock", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks")
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark Lake Hylia Teleporter", player),
-        True_()
+        And(Has('Flippers'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark Lake Hylia Drop (South)", player),
-        True_()
+        And(Has('Flippers'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hype Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Swamp Palace", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Village of Outcasts Heavy Rock", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Maze Race Mirror Spot", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("Cave 45 Mirror Spot", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("East Dark World Bridge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Big Bomb Shop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Archery Game", player),
-        True_()
+        And(Has('Hammer'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Bonk Fairy (Dark)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dark Lake Hylia Shop", player),
-        True_()
+        And(Has('Moon Pearl'), Has('Pegasus Boots'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Bombos Tablet Mirror Spot", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("Lake Hylia Island Mirror Spot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("East Dark World Pier", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dark Lake Hylia Ledge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Ice Palace", player),
-        True_()
+        And(Has('Flippers'), Has('Magic Mirror'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Lake Hylia Central Island Mirror Spot", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark Lake Hylia Ledge Drop", player),
-        True_()
+        And(Has('Flippers'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark Lake Hylia Ledge Fairy", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dark Lake Hylia Ledge Hint", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark Lake Hylia Ledge Spike Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Village of Outcasts Drop", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("East Dark World River Pier", player),
-        True_()
+        And(Has('Flippers'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Brewery", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("C-Shaped House", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Chest Game", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Thieves Town", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_entrance("Graveyard Ledge Mirror Spot", player),
-        True_()
+        And(Has('Magic Mirror'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Kings Grave Mirror Spot", player),
-        True_()
+        And(Has('Magic Mirror'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Bumper Cave Entrance Rock", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Skull Woods Forest", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Village of Outcasts Pegs", player),
-        True_()
+        And(Has('Hammer'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Village of Outcasts Eastern Rocks", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Red Shield Shop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dark Sanctuary Hint", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Fortune Teller (Dark)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dark World Lumberjack Shop", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Grassy Lawn Pegs", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Village of Outcasts Shop", player),
-        True_()
+        And(Has('Hammer'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Bat Cave Drop Ledge Mirror Spot", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark World Hammer Peg Cave", player),
-        True_()
+        And(Has('Hammer'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Peg Area Rocks", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Bumper Cave (Bottom)", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Bumper Cave Entrance Mirror Spot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Bumper Cave Entrance Drop", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("Bumper Cave Exit (Bottom)", player),
-        True_()
+        And(Or(Has('Cape'), Has('Hookshot')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Bumper Cave Exit (Top)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Bumper Cave Ledge Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Bumper Cave (Top)", player),
-        True_()
+        And(Has('Cape'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Bumper Cave Ledge Mirror Spot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Skull Woods First Section Hole (East)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Skull Woods First Section Hole (West)", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section Hole (North)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Skull Woods First Section Door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Skull Woods Second Section Door (East)", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods Second Section Hole", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Skull Woods Second Section Door (West)", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods Final Section", player),
-        True_()
+        And(Has('Fire Rod'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Misery Mire", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mire Shed", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_has_misery_mire_medallion, helper_name="has_misery_mire_medallion"), HelperCall(helper_func=_alinktothepastworldgen_has_sword, helper_name="has_sword"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Ledge (Northeast) Mirror Spot", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Ledge Mirror Spot", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Palace Stairs Mirror Spot", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Palace Entrance (North) Mirror Spot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dark Desert Hint", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dark Desert Fairy", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Spike Cave", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("Spectacle Rock Mirror Spot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dark Death Mountain Fairy", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dark Death Mountain Drop (East)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dark Death Mountain Drop (West)", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Superbunny Cave (Top)", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_has_crystals, helper_name="has_crystals", args=(7,))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hookshot Cave", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("East Death Mountain (Top) Mirror Spot", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dark Death Mountain Ledge (East)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dark Death Mountain Ledge (West)", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_has_sword, helper_name="has_sword"), HelperCall(helper_func=_alinktothepastworldgen_has_turtle_rock_medallion, helper_name="has_turtle_rock_medallion"), CanReachRegion('Turtle Rock (Top)'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Mimic Cave Mirror Spot", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("Spiral Cave Mirror Spot", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("Isolated Ledge Mirror Spot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Turtle Rock Isolated Ledge Entrance", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Superbunny Cave (Bottom)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Cave Shop (Dark Death Mountain)", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Ascension Mirror Spot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Superbunny Cave Exit (Top)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Superbunny Cave Climb", player),
-        True_()
+        And(Has('Magic Mirror'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Superbunny Cave Exit (Bottom)", player),
-        True_()
+        False_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hookshot Cave Exit (South)", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_entrance("Hookshot Cave Bomb Wall (South)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Hookshot Cave Exit (North)", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hookshot Cave Bomb Wall (North)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Floating Island Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Hookshot Cave Back Entrance", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")
     )
 
     world.set_rule(
         multiworld.get_entrance("Floating Island Mirror Spot", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Turtle Rock Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mimic Cave", player),
-        True_()
+        Has('Magic Mirror')
     )
 
     world.set_rule(
         multiworld.get_entrance("Swamp Palace Moat", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Swamp Palace Exit", player),
-        True_()
+        And(And(Has('Flippers'), Has('Open Floodgate')), Has('Magic Mirror'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Swamp Palace Small Key Door", player),
-        True_()
+        Has('Small Key (Swamp Palace)')
     )
 
     world.set_rule(
         multiworld.get_entrance("Swamp Palace (Center)", player),
-        True_()
+        And(Has('Small Key (Swamp Palace)', 3), Has('Hammer'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Swamp Palace (North)", player),
-        True_()
+        And(Has('Small Key (Swamp Palace)', 5), Has('Hookshot'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Swamp Palace (West)", player),
-        True_()
+        Has('Small Key (Swamp Palace)', 6)
     )
 
     world.set_rule(
         multiworld.get_entrance("Thieves Town Big Key Door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Thieves Town Exit", player),
-        True_()
+        Has('Big Key (Thieves Town)')
     )
 
     world.set_rule(
         multiworld.get_entrance("Blind Fight", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Skull Woods First Section Exit", player),
-        True_()
+        And(Has('Small Key (Thieves Town)', 3), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section Bomb Jump", player),
-        True_()
+        False_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section South Door", player),
-        True_()
+        Has('Small Key (Skull Woods)', 5)
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section West Door", player),
-        True_()
+        Has('Small Key (Skull Woods)', 5)
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section (Right) North Door", player),
-        True_()
+        And(Has('Small Key (Skull Woods)', 5), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section (Left) Door to Exit", player),
-        True_()
+        And(Has('Small Key (Skull Woods)', 5), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section (Left) Door to Right", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section (Top) One-Way Path", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods Second Section (Drop)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Skull Woods Second Section Exit (East)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Skull Woods Second Section Exit (West)", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods Torch Room", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Skull Woods Final Section Exit", player),
-        True_()
+        And(Has('Small Key (Skull Woods)', 4), HelperCall(helper_func=_alinktothepastworldgen_has_sword, helper_name="has_sword"), Has('Fire Rod'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Palace (Second Section)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Ice Palace Exit", player),
-        True_()
+        And(Has('Small Key (Ice Palace)'), HelperCall(helper_func=_alinktothepastworldgen_can_melt_things, helper_name="can_melt_things"), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Palace (Main)", player),
-        True_()
+        Has('Small Key (Ice Palace)', 2)
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Palace (East)", player),
-        True_()
+        And(Or(Conditional(test=True_(), if_true=Has('Small Key (Ice Palace)', 4), if_false=Has('Small Key (Ice Palace)', 6)), Has('Hookshot')), Or(True_(), Has('Cane of Byrna'), Has('Cape'), Has('Hookshot')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Palace (Kholdstare)", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), Or(And(Has('Small Key (Ice Palace)', 5), Has('Cane of Somaria')), Has('Small Key (Ice Palace)', 6)), Has('Big Key (Ice Palace)'), Has('Hammer'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Palace (East Top)", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), Has('Hammer'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Misery Mire Entrance Gap", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Misery Mire Exit", player),
-        True_()
+        And(Or(HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=_alinktothepastworldgen_has_sword, helper_name="has_sword"), Has('Cane of Somaria'), Has('Fire Rod'), Has('Hammer'), Has('Ice Rod')), Or(Has('Hookshot'), Has('Pegasus Boots')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Misery Mire (West)", player),
-        True_()
+        Conditional(test=Or(Compare(['Bombs (3)', 1], "in", [['Big Key (Misery Mire)', 1]]), Compare(['Big Key (Misery Mire)', 1], "in", [['Big Key (Misery Mire)', 1]])), if_true=Has('Small Key (Misery Mire)', 5), if_false=Has('Small Key (Misery Mire)', 6))
     )
 
     world.set_rule(
         multiworld.get_entrance("Misery Mire Big Key Door", player),
-        True_()
+        Has('Big Key (Misery Mire)')
     )
 
     world.set_rule(
         multiworld.get_entrance("Misery Mire (Vitreous)", player),
-        True_()
+        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Cane of Somaria')), Has('Lamp'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Entrance Gap", player),
-        True_()
+        And(Has('Cane of Somaria'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Exit (Front)", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Entrance to Pokey Room", player),
-        True_()
+        Has('Small Key (Turtle Rock)')
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Entrance Gap Reverse", player),
-        True_()
+        Has('Cane of Somaria')
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Pokey Room) (North)", player),
-        True_()
+        Has('Small Key (Turtle Rock)', 2)
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Pokey Room) (South)", player),
-        True_()
+        Conditional(test=True_(), if_true=Has('Small Key (Turtle Rock)', 4), if_false=Has('Small Key (Turtle Rock)', 6))
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Chain Chomp Room) (North)", player),
-        True_()
+        Has('Small Key (Turtle Rock)', 3)
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Chain Chomp Room) (South)", player),
-        True_()
+        Conditional(test=False_(), if_true=Has('Small Key (Turtle Rock)', 3), if_false=Has('Small Key (Turtle Rock)', 5))
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Chain Chomp Staircase", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Big Key Door", player),
-        True_()
+        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_bomb_or_bonk, helper_name="can_bomb_or_bonk"), HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(10,)), Has('Big Key (Turtle Rock)')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Second Section Bomb Wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Turtle Rock Ledge Exit (West)", player),
-        True_()
+        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(10,)), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Second Section from Bomb Wall", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Big Chest) (North)", player),
-        True_()
+        And(Or(Has('Cane of Somaria'), Has('Hookshot')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Ledge Exit (East)", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Dark Room Staircase", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Turtle Rock Big Key Door Reverse", player),
-        True_()
+        Has('Small Key (Turtle Rock)', 5)
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Dark Room) (North)", player),
-        True_()
+        And(Has('Cane of Somaria'), Has('Lamp'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Dark Room) (South)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Turtle Rock Isolated Ledge Exit", player),
-        True_()
+        And(Has('Cane of Somaria'), Has('Lamp'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Eye Bridge from Bomb Wall", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Dark Room (South)", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Trinexx)", player),
-        True_()
+        And(And(Has('Small Key (Turtle Rock)', 6), Has('Big Key (Turtle Rock)'), Has('Cane of Somaria')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Eye Bridge Bomb Wall", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Bridge Room", player),
-        True_()
+        Has('Small Key (Palace of Darkness)')
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Bonk Wall", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Palace of Darkness Exit", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_bomb_or_bonk, helper_name="can_bomb_or_bonk"), HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Big Key Chest Staircase", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Or(And(Compare(['Boss Heart Container', 1], "in", [['Small Key (Palace of Darkness)', 1]]), Has('Small Key (Palace of Darkness)', 3)), Has('Small Key (Palace of Darkness)', 6)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness (North)", player),
-        True_()
+        Has('Small Key (Palace of Darkness)', 4)
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Big Key Door", player),
-        True_()
+        And(And(Has('Small Key (Palace of Darkness)', 6), HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), Has('Big Key (Palace of Darkness)'), Has('Hammer')), Has('Lamp'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Hammer Peg Drop", player),
-        True_()
+        Has('Hammer')
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Spike Statue Room Door", player),
-        True_()
+        Or(And(Compare(['Piece of Heart', 1], "in", [['Small Key (Palace of Darkness)', 1]]), Has('Small Key (Palace of Darkness)', 4)), Has('Small Key (Palace of Darkness)', 6))
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Maze Door", player),
-        True_()
+        And(Has('Small Key (Palace of Darkness)', 6), Has('Lamp'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Tile Room)", player),
-        True_()
+        Has('Cane of Somaria')
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Hookshot Room)", player),
-        True_()
+        And(Or(Has('Hookshot'), Has('Pegasus Boots')), Has('Hammer'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower Big Key Door", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Ganons Tower Exit", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), Has('Big Key (Ganons Tower)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Tile Room) Key Door", player),
-        True_()
+        And(Or(And(Has('Small Key (Ganons Tower)', 5), False_()), Has('Small Key (Ganons Tower)', 7)), Has('Fire Rod'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Bottom) (East)", player),
-        True_()
+        Or(And(Has('Small Key (Ganons Tower)', 5), False_()), Has('Small Key (Ganons Tower)', 7))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Map Room)", player),
-        True_()
+        Or(And(Compare(['Progressive Shield', 1], "in", [['Big Key (Ganons Tower)', 1]]), Has('Small Key (Ganons Tower)', 6)), Has('Small Key (Ganons Tower)', 8))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Double Switch Room)", player),
-        True_()
+        And(Has('Small Key (Ganons Tower)', 6), Has('Hookshot'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Firesnake Room)", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Ganons Tower (Bottom) (West)", player),
-        True_()
+        Or(And(Has('Small Key (Ganons Tower)', 5), True_()), Has('Small Key (Ganons Tower)', 7))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower Torch Rooms", player),
-        True_()
+        And(True_(), HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(8,)), HelperCall(helper_func=_alinktothepastworldgen_has_fire_source, helper_name="has_fire_source"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower Moldorm Door", player),
-        True_()
+        And(Has('Small Key (Ganons Tower)', 8), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower Moldorm Gap", player),
-        True_()
+        And(True_(), Has('Hookshot'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ganon Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Pyramid Exit", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Pyramid Entrance", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Pyramid Drop", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword"), Has('Moon Pearl'))
     )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Mushroom", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bottle Merchant", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Flute Spot", player),
-        True_()
+        Has('Shovel')
     )
 
     world.set_rule(
         multiworld.get_location("Sunken Treasure", player),
-        True_()
+        Has('Open Floodgate')
     )
 
     world.set_rule(
         multiworld.get_location("Purple Chest", player),
-        True_()
+        Has('Pick Up Purple Chest')
     )
 
     world.set_rule(
         multiworld.get_location("Flute Activation Spot", player),
-        True_()
+        Has('Flute')
     )
 
     world.set_rule(
         multiworld.get_location("Blind's Hideout - Top", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Blind's Hideout - Left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Blind's Hideout - Right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Blind's Hideout - Far Left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Blind's Hideout - Far Right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Link's Uncle", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Secret Passage", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("King Zora", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")
     )
 
     world.set_rule(
         multiworld.get_location("Zora's Ledge", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Waterfall Fairy - Left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Waterfall Fairy - Right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("King's Tomb", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floodgate", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floodgate Chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Link's House", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Kakariko Tavern", player),
-        True_()
+        Has('Flippers')
     )
 
     world.set_rule(
         multiworld.get_location("Chicken House", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")
     )
 
     world.set_rule(
         multiworld.get_location("Aginah's Cave", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")
     )
 
     world.set_rule(
         multiworld.get_location("Sahasrahla's Hut - Left", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_bomb_or_bonk, helper_name="can_bomb_or_bonk")
     )
 
     world.set_rule(
         multiworld.get_location("Sahasrahla's Hut - Middle", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_bomb_or_bonk, helper_name="can_bomb_or_bonk")
     )
 
     world.set_rule(
         multiworld.get_location("Sahasrahla's Hut - Right", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_bomb_or_bonk, helper_name="can_bomb_or_bonk")
     )
 
     world.set_rule(
         multiworld.get_location("Sahasrahla", player),
-        True_()
+        Has('Green Pendant')
     )
 
     world.set_rule(
         multiworld.get_location("Kakariko Well - Top", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Kakariko Well - Left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Kakariko Well - Middle", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Kakariko Well - Right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Kakariko Well - Bottom", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")
     )
 
     world.set_rule(
         multiworld.get_location("Blacksmith", player),
-        True_()
+        Has('Return Smith')
     )
 
     world.set_rule(
         multiworld.get_location("Missing Smith", player),
-        True_()
+        And(CanReachRegion('Blacksmiths Hut'), Has('Get Frog'))
     )
 
     world.set_rule(
         multiworld.get_location("Magic Bat", player),
-        True_()
+        Has('Magic Powder')
     )
 
     world.set_rule(
         multiworld.get_location("Sick Kid", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hobo", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lost Woods Hideout", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lumberjack Tree", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cave 45", player),
-        True_()
+        HasGroup('Bottles')
     )
 
     world.set_rule(
         multiworld.get_location("Graveyard Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Checkerboard Cave", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")
     )
 
     world.set_rule(
         multiworld.get_location("Mini Moldorm Cave - Far Left", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,))
     )
 
     world.set_rule(
         multiworld.get_location("Mini Moldorm Cave - Left", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,))
     )
 
     world.set_rule(
         multiworld.get_location("Mini Moldorm Cave - Right", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,))
     )
 
     world.set_rule(
         multiworld.get_location("Mini Moldorm Cave - Far Right", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,))
     )
 
     world.set_rule(
         multiworld.get_location("Mini Moldorm Cave - Generous Guy", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Ice Rod Cave", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bonk Rock Cave", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,))
     )
 
     world.set_rule(
         multiworld.get_location("Library", player),
-        True_()
+        Has('Pegasus Boots')
     )
 
     world.set_rule(
         multiworld.get_location("Potion Shop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lake Hylia Island", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Capacity Upgrade Shop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Maze Race", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Desert Ledge", player),
-        True_()
+        Has('Mushroom')
     )
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Big Chest", player),
-        True_()
+        Has('Big Key (Desert Palace)')
     )
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Torch", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Desert Palace - Map Chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Desert Palace - Compass Chest", player),
-        True_()
+        Has('Pegasus Boots')
     )
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Big Key Chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Desert Palace - Desert Tiles 1 Pot Key", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(3,))
     )
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Beamos Hall Pot Key", player),
-        True_()
+        And(Has('Small Key (Desert Palace)', 2), HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,)))
     )
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Desert Tiles 2 Pot Key", player),
-        True_()
+        And(Has('Small Key (Desert Palace)', 3), HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,)))
     )
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Boss", player),
-        True_()
+        And(Has('Small Key (Desert Palace)', 4), True_(), HelperCall(helper_func=_alinktothepastworldgen_has_fire_source, helper_name="has_fire_source"), Has('Big Key (Desert Palace)'))
     )
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Prize", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Eastern Palace - Compass Chest", player),
-        True_()
+        And(And(Has('Small Key (Desert Palace)', 4), True_(), HelperCall(helper_func=_alinktothepastworldgen_has_fire_source, helper_name="has_fire_source"), Has('Big Key (Desert Palace)')), True_())
     )
 
     world.set_rule(
         multiworld.get_location("Eastern Palace - Big Chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Eastern Palace - Cannonball Chest", player),
-        True_()
+        Has('Big Key (Eastern Palace)')
     )
 
     world.set_rule(
         multiworld.get_location("Eastern Palace - Dark Square Pot Key", player),
-        True_()
+        Has('Lamp')
     )
 
     world.set_rule(
         multiworld.get_location("Eastern Palace - Dark Eyegore Key Drop", player),
-        True_()
+        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(1,)), Has('Big Key (Eastern Palace)')), Has('Lamp'))
     )
 
     world.set_rule(
         multiworld.get_location("Eastern Palace - Big Key Chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Eastern Palace - Map Chest", player),
-        True_()
+        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(5,)), Or(And(True_(), Has('Small Key (Eastern Palace)')), Has('Small Key (Eastern Palace)', 2))), Has('Lamp'))
     )
 
     world.set_rule(
         multiworld.get_location("Eastern Palace - Boss", player),
-        True_()
+        And(And(And(Has('Small Key (Eastern Palace)', 2), True_(), Has('Big Key (Eastern Palace)')), HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows")), Has('Lamp'))
     )
 
     world.set_rule(
         multiworld.get_location("Eastern Palace - Prize", player),
-        True_()
+        And(And(And(Has('Small Key (Eastern Palace)', 2), True_(), Has('Big Key (Eastern Palace)')), HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows")), Has('Lamp'))
     )
 
     world.set_rule(
         multiworld.get_location("Master Sword Pedestal", player),
-        True_()
+        And(Has('Blue Pendant'), Has('Green Pendant'), Has('Red Pendant'))
     )
 
     world.set_rule(
         multiworld.get_location("Hyrule Castle - Boomerang Chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hyrule Castle - Map Chest", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_basement_key_rule, helper_name="basement_key_rule"), HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(1,)))
     )
 
     world.set_rule(
         multiworld.get_location("Hyrule Castle - Zelda's Chest", player),
-        True_()
+        And(Has('Small Key (Hyrule Castle)', 4), Or(True_(), HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(1,))), Has('Big Key (Hyrule Castle)'))
     )
 
     world.set_rule(
         multiworld.get_location("Hyrule Castle - Map Guard Key Drop", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(1,))
     )
 
     world.set_rule(
         multiworld.get_location("Hyrule Castle - Boomerang Guard Key Drop", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_basement_key_rule, helper_name="basement_key_rule"), HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(2,)))
     )
 
     world.set_rule(
         multiworld.get_location("Hyrule Castle - Big Key Drop", player),
-        True_()
+        And(Has('Small Key (Hyrule Castle)', 4), HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(1,)))
     )
 
     world.set_rule(
         multiworld.get_location("Sewers - Dark Cross", player),
-        True_()
+        Has('Lamp')
     )
 
     world.set_rule(
         multiworld.get_location("Sewers - Key Rat Key Drop", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sewers - Secret Room - Left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sewers - Secret Room - Middle", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sewers - Secret Room - Right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sanctuary", player),
-        True_()
+        And(Has('Small Key (Hyrule Castle)', 3), HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(1,)))
     )
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Room 03", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,))
     )
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Dark Maze", player),
-        True_()
+        And(And(Has('Small Key (Agahnims Tower)'), HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,))), Has('Lamp'))
     )
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Dark Archer Key Drop", player),
-        True_()
+        And(And(Has('Small Key (Agahnims Tower)', 2), HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,))), Has('Lamp'))
     )
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Circle of Pots Key Drop", player),
-        True_()
+        And(And(Has('Small Key (Agahnims Tower)', 3), HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,))), Has('Lamp'))
     )
 
     world.set_rule(
@@ -4867,87 +1363,67 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Old Man", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Spectacle Rock Cave", player),
-        True_()
+        Has('Lamp')
     )
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Lower - Far Left", player),
-        True_()
+        Or(HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword"), HasAny('Cane of Somaria', 'Fire Rod'))
     )
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Lower - Left", player),
-        True_()
+        Or(HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword"), HasAny('Cane of Somaria', 'Fire Rod'))
     )
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Lower - Right", player),
-        True_()
+        Or(HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword"), HasAny('Cane of Somaria', 'Fire Rod'))
     )
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Lower - Far Right", player),
-        True_()
+        Or(HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword"), HasAny('Cane of Somaria', 'Fire Rod'))
     )
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Lower - Middle", player),
-        True_()
+        Or(HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword"), HasAny('Cane of Somaria', 'Fire Rod'))
     )
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Upper - Left", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")
     )
 
     world.set_rule(
         multiworld.get_location("Paradox Cave Upper - Right", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Spiral Cave", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")
     )
 
     world.set_rule(
         multiworld.get_location("Ether Tablet", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Spectacle Rock", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_retrieve_tablet, helper_name="can_retrieve_tablet")
     )
 
     world.set_rule(
         multiworld.get_location("Tower of Hera - Basement Cage", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_activate_crystal_switch, helper_name="can_activate_crystal_switch")
     )
 
     world.set_rule(
         multiworld.get_location("Tower of Hera - Map Chest", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_activate_crystal_switch, helper_name="can_activate_crystal_switch")
     )
 
     world.set_rule(
         multiworld.get_location("Tower of Hera - Big Key Chest", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Hera - Compass Chest", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_has_fire_source, helper_name="has_fire_source")
     )
 
     world.set_rule(
         multiworld.get_location("Tower of Hera - Big Chest", player),
-        True_()
+        Has('Big Key (Tower of Hera)')
     )
 
     world.set_rule(
@@ -4961,781 +1437,756 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Pyramid", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Catfish", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Stumpy", player),
-        True_()
+        And(And(And(Has('Moon Pearl'), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Digging Game", player),
-        True_()
+        And(And(And(Has('Moon Pearl'), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Bombos Tablet", player),
-        True_()
+        HelperCall(helper_func=_alinktothepastworldgen_can_retrieve_tablet, helper_name="can_retrieve_tablet")
     )
 
     world.set_rule(
         multiworld.get_location("Hype Cave - Top", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Hype Cave - Middle Right", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Hype Cave - Middle Left", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Hype Cave - Bottom", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hype Cave - Generous Guy", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Frog", player),
-        True_()
+        And(And(And(And(And(And(And(And(And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_heavy_rocks, helper_name="can_lift_heavy_rocks"), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Dark Blacksmith Ruins", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Peg Cave", player),
-        True_()
+        Has('Return Smith')
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Fairy - Left", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Fairy - Right", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Brewery", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("C-Shaped House", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Chest Game", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bumper Cave Ledge", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Mire Shed - Left", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Mire Shed - Right", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Superbunny Cave - Top", player),
-        True_()
+        And(Has('Moon Pearl'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Superbunny Cave - Bottom", player),
-        True_()
+        And(Has('Moon Pearl'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Spike Cave", player),
-        True_()
+        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), Or(And(HelperCall(helper_func=_alinktothepastworldgen_can_extend_magic, helper_name="can_extend_magic", args=(16, True,)), Has('Cape')), And(Or(And(True_(), Or(HelperCall(helper_func=_alinktothepastworldgen_has_hearts, helper_name="has_hearts", args=(4,)), Has('Pegasus Boots'))), HelperCall(helper_func=_alinktothepastworldgen_can_extend_magic, helper_name="can_extend_magic", args=(12, True,))), Has('Cane of Byrna'))), Has('Hammer')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Hookshot Cave - Top Right", player),
-        True_()
+        And(And(Has('Hookshot'), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Hookshot Cave - Top Left", player),
-        True_()
+        And(And(Has('Hookshot'), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Hookshot Cave - Bottom Right", player),
-        True_()
+        And(And(Or(Has('Hookshot'), Has('Pegasus Boots')), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Hookshot Cave - Bottom Left", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_location("Floating Island", player),
-        True_()
+        And(And(Has('Hookshot'), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Mimic Cave", player),
-        True_()
+        And(Or(And(Compare('default', "in", ['easy', 'default']), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs", args=(4,))), HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword"), Has('Cane of Somaria')), Has('Hammer'))
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Entrance", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Map Chest", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Pot Row Pot Key", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Trench 1 Pot Key", player),
-        True_()
+        And(Has('Small Key (Swamp Palace)', 2), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Big Chest", player),
-        True_()
+        And(Or(False_(), Has('Big Key (Swamp Palace)')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Compass Chest", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Hookshot Pot Key", player),
-        True_()
+        And(Has('Hookshot'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Trench 2 Pot Key", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Big Key Chest", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - West Chest", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Flooded Room - Left", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Flooded Room - Right", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Waterway Pot Key", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Waterfall Room", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Boss", player),
-        True_()
+        And(And(Has('Small Key (Swamp Palace)', 6), True_()), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Prize", player),
-        True_()
+        And(And(Has('Small Key (Swamp Palace)', 6), True_()), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Big Key Chest", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Map Chest", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Compass Chest", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Ambush Chest", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Attic", player),
-        True_()
+        And(Has('Small Key (Thieves Town)', 3), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Big Chest", player),
-        True_()
+        And(And(Or(And(False_(), Has('Small Key (Thieves Town)', 2)), Has('Small Key (Thieves Town)', 3)), Has('Hammer')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Hallway Pot Key", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Spike Switch Pot Key", player),
-        True_()
+        And(Has('Small Key (Thieves Town)'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Blind's Cell", player),
-        True_()
+        And(Has('Small Key (Thieves Town)'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Boss", player),
-        True_()
+        And(True_(), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Prize", player),
-        True_()
+        And(True_(), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Map Chest", player),
-        True_()
+        And(And(And(Has('Moon Pearl'), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Pinball Room", player),
-        True_()
+        And(And(Has('Moon Pearl'), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Compass Chest", player),
-        True_()
+        And(Has('Moon Pearl'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Pot Prison", player),
-        True_()
+        And(Has('Moon Pearl'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Big Chest", player),
-        True_()
+        And(And(Or(And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Big Key (Skull Woods)')), False_()), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Big Key Chest", player),
-        True_()
+        And(And(Has('Moon Pearl'), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - West Lobby Pot Key", player),
-        True_()
+        And(And(Has('Moon Pearl'), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Bridge Room", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Spike Corner Key Drop", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Boss", player),
-        True_()
+        And(And(Has('Small Key (Skull Woods)', 5), True_()), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Prize", player),
-        True_()
+        And(And(Has('Small Key (Skull Woods)', 5), True_()), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Jelly Key Drop", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_melt_things, helper_name="can_melt_things"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Compass Chest", player),
-        True_()
+        And(And(Has('Small Key (Ice Palace)'), HelperCall(helper_func=_alinktothepastworldgen_can_melt_things, helper_name="can_melt_things")), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Conveyor Key Drop", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Freezor Chest", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Many Pots Pot Key", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Big Chest", player),
-        True_()
+        And(Has('Big Key (Ice Palace)'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Iced T Room", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Spike Room", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Big Key Chest", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Map Chest", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Hammer Block Key Drop", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Boss", player),
-        True_()
+        And(True_(), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Prize", player),
-        True_()
+        And(True_(), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Big Chest", player),
-        True_()
+        And(Has('Big Key (Misery Mire)'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Map Chest", player),
-        True_()
+        And(Or(And(Has('Small Key (Misery Mire)', 2), HelperCall(helper_func=_alinktothepastworldgen_can_activate_crystal_switch, helper_name="can_activate_crystal_switch")), Has('Small Key (Misery Mire)', 4)), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Main Lobby", player),
-        True_()
+        And(Or(And(Has('Small Key (Misery Mire)', 3), HelperCall(helper_func=_alinktothepastworldgen_can_activate_crystal_switch, helper_name="can_activate_crystal_switch")), Has('Small Key (Misery Mire)', 5)), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Bridge Chest", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Spike Chest", player),
-        True_()
+        And(Or(And(True_(), HelperCall(helper_func=_alinktothepastworldgen_has_hearts, helper_name="has_hearts", args=(4,))), Has('Cane of Byrna'), Has('Cape')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Spikes Pot Key", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Fishbone Pot Key", player),
-        True_()
+        And(Or(Has('Small Key (Misery Mire)', 4), Has('Big Key (Misery Mire)')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Conveyor Crystal Key Drop", player),
-        True_()
+        And(Conditional(test=Or(False_(), True_(), False_()), if_true=Has('Small Key (Misery Mire)', 4), if_false=Has('Small Key (Misery Mire)', 5)), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Compass Chest", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_has_fire_source, helper_name="has_fire_source"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Big Key Chest", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_has_fire_source, helper_name="has_fire_source"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Boss", player),
-        True_()
+        And(True_(), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Prize", player),
-        True_()
+        And(True_(), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Compass Chest", player),
-        True_()
+        And(And(Has('Cane of Somaria'), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Roller Room - Left", player),
-        True_()
+        And(And(And(Has('Cane of Somaria'), Has('Fire Rod')), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Roller Room - Right", player),
-        True_()
+        And(And(And(Has('Cane of Somaria'), Has('Fire Rod')), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Pokey 1 Key Drop", player),
-        True_()
+        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(5,)), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Chain Chomps", player),
-        True_()
+        And(And(Or(HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword"), HasAny('Blue Boomerang', 'Cane of Somaria', 'Fire Rod', 'Hookshot', 'Ice Rod', 'Red Boomerang')), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Big Key Chest", player),
-        True_()
+        And(And(And(And(And(Compare(CountItem('Small Key (Turtle Rock)'), ">=", Conditional(test=True_(), if_true=False_(), if_false=Conditional(test=False_(), if_true=True_(), if_false=True_()))), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Pokey 2 Key Drop", player),
-        True_()
+        And(And(And(And(And(HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(5,)), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Big Chest", player),
-        True_()
+        And(And(Or(Has('Cane of Somaria'), Has('Hookshot')), Has('Big Key (Turtle Rock)')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Crystaroller Room", player),
-        True_()
+        And(Has('Moon Pearl'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Eye Bridge - Bottom Left", player),
-        True_()
+        And(And(And(Or(Has('Cane of Byrna'), Has('Cape'), Has('Mirror Shield')), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Eye Bridge - Bottom Right", player),
-        True_()
+        And(And(And(Or(Has('Cane of Byrna'), Has('Cape'), Has('Mirror Shield')), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Eye Bridge - Top Left", player),
-        True_()
+        And(And(And(Or(Has('Cane of Byrna'), Has('Cape'), Has('Mirror Shield')), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Eye Bridge - Top Right", player),
-        True_()
+        And(And(And(Or(Has('Cane of Byrna'), Has('Cape'), Has('Mirror Shield')), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Boss", player),
-        True_()
+        And(True_(), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Prize", player),
-        True_()
+        And(True_(), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Shooter Room", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - The Arena - Bridge", player),
-        True_()
+        And(Has('Moon Pearl'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Stalfos Basement", player),
-        True_()
+        And(Has('Moon Pearl'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Big Key Chest", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - The Arena - Ledge", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Map Chest", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Compass Chest", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Dark Basement - Left", player),
-        True_()
+        And(Has('Lamp'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Dark Basement - Right", player),
-        True_()
+        And(Has('Lamp'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Dark Maze - Top", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Dark Maze - Bottom", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Big Chest", player),
-        True_()
+        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Big Key (Palace of Darkness)')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Harmless Hellway", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Boss", player),
-        True_()
+        And(True_(), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Prize", player),
-        True_()
+        And(True_(), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Bob's Torch", player),
-        True_()
+        And(Has('Moon Pearl'), Has('Pegasus Boots'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Hope Room - Left", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Hope Room - Right", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Conveyor Cross Pot Key", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Tile Room", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Compass Room - Top Left", player),
-        True_()
+        And(And(Or(And(Has('Small Key (Ganons Tower)', 5), False_()), Has('Small Key (Ganons Tower)', 7)), Or(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Cane of Somaria')), Has('Fire Rod')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Compass Room - Top Right", player),
-        True_()
+        And(And(Or(And(Has('Small Key (Ganons Tower)', 5), False_()), Has('Small Key (Ganons Tower)', 7)), Or(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Cane of Somaria')), Has('Fire Rod')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Compass Room - Bottom Left", player),
-        True_()
+        And(And(Or(And(Has('Small Key (Ganons Tower)', 5), False_()), Has('Small Key (Ganons Tower)', 7)), Or(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Cane of Somaria')), Has('Fire Rod')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Compass Room - Bottom Right", player),
-        True_()
+        And(And(Or(And(Has('Small Key (Ganons Tower)', 5), False_()), Has('Small Key (Ganons Tower)', 7)), Or(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Cane of Somaria')), Has('Fire Rod')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Conveyor Star Pits Pot Key", player),
-        True_()
+        And(And(Or(And(Has('Small Key (Ganons Tower)', 5), False_()), Has('Small Key (Ganons Tower)', 7)), Or(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Cane of Somaria')), Has('Fire Rod')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - DMs Room - Top Left", player),
-        True_()
+        And(Has('Hookshot'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - DMs Room - Top Right", player),
-        True_()
+        And(Has('Hookshot'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - DMs Room - Bottom Left", player),
-        True_()
+        And(Has('Hookshot'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - DMs Room - Bottom Right", player),
-        True_()
+        And(Has('Hookshot'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Double Switch Pot Key", player),
-        True_()
+        And(Or(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Cane of Somaria')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Map Chest", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Firesnake Room", player),
-        True_()
+        And(Or(And(Has('Small Key (Ganons Tower)', 5), Or(True_(), False_())), Has('Small Key (Ganons Tower)', 7)), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Randomizer Room - Top Left", player),
-        True_()
+        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Or(And(Has('Small Key (Ganons Tower)', 6), True_()), Has('Small Key (Ganons Tower)', 8))), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Randomizer Room - Top Right", player),
-        True_()
+        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Or(And(Has('Small Key (Ganons Tower)', 6), True_()), Has('Small Key (Ganons Tower)', 8))), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Randomizer Room - Bottom Left", player),
-        True_()
+        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Or(And(Has('Small Key (Ganons Tower)', 6), True_()), Has('Small Key (Ganons Tower)', 8))), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Randomizer Room - Bottom Right", player),
-        True_()
+        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Or(And(Has('Small Key (Ganons Tower)', 6), True_()), Has('Small Key (Ganons Tower)', 8))), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Bob's Chest", player),
-        True_()
+        And(Has('Moon Pearl'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Big Chest", player),
-        True_()
+        And(And(Has('Big Key (Ganons Tower)'), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Big Key Room - Left", player),
-        True_()
+        And(And(And(HelperCall(helper_func=_alinktothepastworldgen_can_defeat_boss, helper_name="can_defeat_boss", args=('Ganons Tower - Big Key Room - Left', 'bottom',)), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Big Key Room - Right", player),
-        True_()
+        And(And(And(HelperCall(helper_func=_alinktothepastworldgen_can_defeat_boss, helper_name="can_defeat_boss", args=('Ganons Tower - Big Key Room - Right', 'bottom',)), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Big Key Chest", player),
-        True_()
+        And(And(And(HelperCall(helper_func=_alinktothepastworldgen_can_defeat_boss, helper_name="can_defeat_boss", args=('Ganons Tower - Big Key Chest', 'bottom',)), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Mini Helmasaur Room - Left", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Mini Helmasaur Room - Right", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Pre-Moldorm Chest", player),
-        True_()
+        And(And(Has('Small Key (Ganons Tower)', 7), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Mini Helmasaur Key Drop", player),
-        True_()
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(1,)), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Validation Chest", player),
-        True_()
+        Has('Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Agahnim 2", player),
-        True_()
+        And(True_(), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganon", player),
-        True_()
+        And(And(And(HelperCall(helper_func=_alinktothepastworldgen_GanonDefeatRule, helper_name="GanonDefeatRule"), HelperCall(helper_func=_alinktothepastworldgen_has_crystals, helper_name="has_crystals", args=(7,))), Has('Beat Agahnim 2')), Has('Moon Pearl'))
     )

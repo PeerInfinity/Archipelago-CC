@@ -733,48 +733,48 @@
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "location_item_name",
-                      "_original_ast_type": "helper",
-                      "args": [
-                        "Villa: Storeroom statue"
-                      ]
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Villa: Storeroom statue"
+                      }
                     },
                     "op": "==",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": [
+                      "Storeroom Key",
+                      1
+                    ]
                   }
                 },
                 {
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "location_item_name",
-                      "_original_ast_type": "helper",
-                      "args": [
-                        "Villa: Storeroom - Right"
-                      ]
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Villa: Storeroom - Right"
+                      }
                     },
                     "op": "==",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": [
+                      "Storeroom Key",
+                      1
+                    ]
                   }
                 },
                 {
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "location_item_name",
-                      "_original_ast_type": "helper",
-                      "args": [
-                        "Villa: Storeroom - Left"
-                      ]
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Villa: Storeroom - Left"
+                      }
                     },
                     "op": "==",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": [
+                      "Storeroom Key",
+                      1
+                    ]
                   }
                 },
                 {
@@ -797,32 +797,32 @@
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "location_item_name",
-                      "_original_ast_type": "helper",
-                      "args": [
-                        "Villa: Archives rear corner"
-                      ]
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Villa: Archives rear corner"
+                      }
                     },
                     "op": "==",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": [
+                      "Archives Key",
+                      1
+                    ]
                   }
                 },
                 {
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "location_item_name",
-                      "_original_ast_type": "helper",
-                      "args": [
-                        "Villa: Archives table"
-                      ]
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Villa: Archives table"
+                      }
                     },
                     "op": "==",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": [
+                      "Archives Key",
+                      1
+                    ]
                   }
                 },
                 {
@@ -2189,64 +2189,64 @@
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "location_item_name",
-                      "_original_ast_type": "helper",
-                      "args": [
-                        "Castle Center: Torture chamber rafters"
-                      ]
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Castle Center: Torture chamber rafters"
+                      }
                     },
                     "op": "==",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": [
+                      "Chamber Key",
+                      1
+                    ]
                   }
                 },
                 {
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "location_item_name",
-                      "_original_ast_type": "helper",
-                      "args": [
-                        "Castle Center: Torture chamber instrument rack"
-                      ]
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Castle Center: Torture chamber instrument rack"
+                      }
                     },
                     "op": "==",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": [
+                      "Chamber Key",
+                      1
+                    ]
                   }
                 },
                 {
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "location_item_name",
-                      "_original_ast_type": "helper",
-                      "args": [
-                        "Castle Center: Mandragora shelf - Right"
-                      ]
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Castle Center: Mandragora shelf - Right"
+                      }
                     },
                     "op": "==",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": [
+                      "Chamber Key",
+                      1
+                    ]
                   }
                 },
                 {
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "location_item_name",
-                      "_original_ast_type": "helper",
-                      "args": [
-                        "Castle Center: Mandragora shelf - Left"
-                      ]
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Castle Center: Mandragora shelf - Left"
+                      }
                     },
                     "op": "==",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": [
+                      "Chamber Key",
+                      1
+                    ]
                   }
                 },
                 {
@@ -3320,16 +3320,16 @@
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "location_item_name",
-                      "_original_ast_type": "helper",
-                      "args": [
-                        "Tower of Science: Pick-a-door hallway locked middle room"
-                      ]
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Tower of Science: Pick-a-door hallway locked middle room"
+                      }
                     },
                     "op": "==",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": [
+                      "Science Key1",
+                      1
+                    ]
                   }
                 },
                 {
@@ -3443,32 +3443,32 @@
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "location_item_name",
-                      "_original_ast_type": "helper",
-                      "args": [
-                        "Tower of Science: Locked Key3 room - Left"
-                      ]
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Tower of Science: Locked Key3 room - Left"
+                      }
                     },
                     "op": "==",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": [
+                      "Science Key3",
+                      1
+                    ]
                   }
                 },
                 {
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "location_item_name",
-                      "_original_ast_type": "helper",
-                      "args": [
-                        "Tower of Science: Locked Key3 room - Right"
-                      ]
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Tower of Science: Locked Key3 room - Right"
+                      }
                     },
                     "op": "==",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": [
+                      "Science Key3",
+                      1
+                    ]
                   }
                 },
                 {
@@ -4755,34 +4755,55 @@
   "helpers": {
     "1": {
       "location_item_name": {
+        "params": [
+          "location"
+        ],
         "body": {
+          "type": "block",
           "statements": [
             {
-              "name": "location",
               "type": "assign",
+              "name": "location",
               "value": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
                 "args": [
                   {
-                    "name": "location",
-                    "type": "name"
+                    "type": "name",
+                    "name": "location"
                   }
-                ],
-                "function": {
-                  "attr": "get_location",
-                  "object": {
-                    "attr": "multiworld",
-                    "object": {
-                      "name": "state",
-                      "type": "name"
-                    },
-                    "type": "attribute"
-                  },
-                  "type": "attribute"
-                },
-                "type": "function_call"
+                ]
               }
             },
             {
+              "type": "if_statement",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "item"
+                },
+                "op": "is",
+                "right": {
+                  "type": "constant",
+                  "value": null
+                }
+              },
               "body": [
                 {
                   "type": "return",
@@ -4791,24 +4812,7 @@
                     "value": null
                   }
                 }
-              ],
-              "test": {
-                "left": {
-                  "attr": "item",
-                  "object": {
-                    "name": "location",
-                    "type": "name"
-                  },
-                  "type": "attribute"
-                },
-                "op": "is",
-                "right": {
-                  "type": "constant",
-                  "value": null
-                },
-                "type": "compare"
-              },
-              "type": "if_statement"
+              ]
             },
             {
               "type": "return",
@@ -4816,38 +4820,34 @@
                 "type": "list",
                 "value": [
                   {
-                    "attr": "name",
+                    "type": "attribute",
                     "object": {
-                      "attr": "item",
+                      "type": "attribute",
                       "object": {
-                        "name": "location",
-                        "type": "name"
+                        "type": "name",
+                        "name": "location"
                       },
-                      "type": "attribute"
+                      "attr": "item"
                     },
-                    "type": "attribute"
+                    "attr": "name"
                   },
                   {
-                    "attr": "player",
+                    "type": "attribute",
                     "object": {
-                      "attr": "item",
+                      "type": "attribute",
                       "object": {
-                        "name": "location",
-                        "type": "name"
+                        "type": "name",
+                        "name": "location"
                       },
-                      "type": "attribute"
+                      "attr": "item"
                     },
-                    "type": "attribute"
+                    "attr": "player"
                   }
                 ]
               }
             }
-          ],
-          "type": "block"
-        },
-        "params": [
-          "location"
-        ]
+          ]
+        }
       }
     }
   }

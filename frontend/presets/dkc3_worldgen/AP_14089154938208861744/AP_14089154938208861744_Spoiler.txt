@@ -17,8 +17,6 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
-Dk Coins For Gyrocopter:         30
-Krematoa Bonus Coin Cost:        15
 
 
 Locations:
@@ -251,7 +249,6 @@ Playthrough:
   Bazza's Blockade - Bonus 2: DK Coin
   Bazza's Blockade - DK Coin: Bonus Coin
   Bazza's Blockade - Flag: Krematoa Cog
-  Belcha's Burrow: Bonus Coin
   Blazing Bazukas - Bonus 1: DK Coin
   Blazing Bazukas - Bonus 2: Krematoa Cog
   Blazing Bazukas - DK Coin: DK Coin
@@ -266,10 +263,6 @@ Playthrough:
   Creepy Caverns - Bonus 2: Bonus Coin
   Creepy Caverns - DK Coin: DK Coin
   Creepy Caverns - Flag: Bonus Coin
-  Criss Kross Cliffs - Bonus 1: Bonus Coin
-  Criss Kross Cliffs - Bonus 2: DK Coin
-  Criss Kross Cliffs - DK Coin: Bonus Coin
-  Criss Kross Cliffs - Flag: Bonus Coin
   Demolition Drain-Pipe - Bonus 1: Bonus Coin
   Demolition Drain-Pipe - DK Coin: Bonus Coin
   Fire-Ball Frenzy - Bonus 2: Bonus Coin
@@ -281,7 +274,6 @@ Playthrough:
   Floodlit Fish - Bonus 1: Krematoa Cog
   Floodlit Fish - Bonus 2: Bonus Coin
   Glacial Grotto: DK Coin
-  Hill-Top Hoard: DK Coin
   KAOS Karnage: DK Coin
   Knautilus: DK Coin
   Koindozer Klamber - Bonus 1: DK Coin
@@ -324,7 +316,6 @@ Playthrough:
   Ripsaw Rage - Bonus 2: Bonus Coin
   Ripsaw Rage - Flag: Bonus Coin
   Rocket Barrel Ride - Bonus 1: Bonus Coin
-  Rocket Rush - Flag: Krematoa Cog
   Ropey Rumpus - Bonus 2: DK Coin
   Ropey Rumpus - Flag: Bonus Coin
   Sewer Stockpile: DK Coin
@@ -332,21 +323,30 @@ Playthrough:
   Stampede Sprint - Bonus 3: Bonus Coin
   Stampede Sprint - DK Coin: DK Coin
   Stampede Sprint - Flag: Bonus Coin
-  Swoopy Salvo - Bonus 1: Bonus Coin
-  Swoopy Salvo - Bonus 2: DK Coin
-  Swoopy Salvo - Bonus 3: Bonus Coin
-  Swoopy Salvo - DK Coin: Bonus Coin
-  Swoopy Salvo - Flag: Bonus Coin
   Tearaway Toboggan - Bonus 1: Bonus Coin
   Tearaway Toboggan - Bonus 2: DK Coin
   Tearaway Toboggan - DK Coin: Bonus Coin
   Tracker Barrel Trek - Bonus 2: Bonus Coin
   Tracker Barrel Trek - DK Coin: Bonus Coin
-  Tyrant Twin Tussle - Bonus 1: DK Coin
-  Tyrant Twin Tussle - Bonus 2: Bonus Coin
-  Tyrant Twin Tussle - Bonus 3: Bonus Coin
   Undercover Cove: DK Coin
 }
 3: {
+  Belcha's Burrow: Bonus Coin
+  Criss Kross Cliffs - Bonus 1: Bonus Coin
+  Criss Kross Cliffs - Bonus 2: DK Coin
+  Criss Kross Cliffs - DK Coin: Bonus Coin
+  Criss Kross Cliffs - Flag: Bonus Coin
+  Hill-Top Hoard: DK Coin
+  Rocket Rush - Flag: Krematoa Cog
+  Swoopy Salvo - Bonus 1: Bonus Coin
+  Swoopy Salvo - Bonus 2: DK Coin
+  Swoopy Salvo - Bonus 3: Bonus Coin
+  Swoopy Salvo - DK Coin: Bonus Coin
+  Swoopy Salvo - Flag: Bonus Coin
+  Tyrant Twin Tussle - Bonus 1: DK Coin
+  Tyrant Twin Tussle - Bonus 2: Bonus Coin
+  Tyrant Twin Tussle - Bonus 3: Bonus Coin
+}
+4: {
   Kastle KAOS: Donkey Kong
 }

@@ -9164,199 +9164,169 @@
   "helpers": {
     "1": {
       "_has_beast_and_soup_form": {
+        "type": "and",
         "conditions": [
           {
-            "item": "Beast Form",
-            "type": "item_check"
+            "type": "helper",
+            "name": "_has_beast_form"
           },
           {
-            "args": [
-              {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Hot Soup"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Hot Soup x 2"
-                  }
-                ],
-                "type": "set"
-              }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            "type": "helper",
+            "name": "_has_hot_soup"
           }
-        ],
-        "type": "and"
-      },
-      "_has_beast_form": {
-        "item": "Beast Form",
-        "type": "item_check"
-      },
-      "_has_beast_form_or_arnassi_armor": {
-        "conditions": [
-          {
-            "item": "Beast Form",
-            "type": "item_check"
-          },
-          {
-            "item": "Arnassi Armor",
-            "type": "item_check"
-          }
-        ],
-        "type": "or"
-      },
-      "_has_bind_song": {
-        "item": "Bind Song",
-        "type": "item_check"
-      },
-      "_has_damaging_item": {
-        "body": {
-          "conditions": [
-            {
-              "item": "Baby Blaster",
-              "type": "item_check"
-            },
-            {
-              "item": "Baby Nautilus",
-              "type": "item_check"
-            },
-            {
-              "item": "Baby Piranha",
-              "type": "item_check"
-            },
-            {
-              "item": "Beast Form",
-              "type": "item_check"
-            },
-            {
-              "item": "Energy Form",
-              "type": "item_check"
-            },
-            {
-              "item": "Li and Li Song",
-              "type": "item_check"
-            },
-            {
-              "item": "Nature Form",
-              "type": "item_check"
-            }
-          ],
-          "type": "or"
-        },
-        "params": [
-          "damaging_items"
         ]
       },
-      "_has_dual_form": {
+      "_has_beast_form": {
+        "type": "item_check",
+        "item": "Beast Form"
+      },
+      "_has_beast_form_or_arnassi_armor": {
+        "type": "or",
         "conditions": [
           {
-            "item": "Li and Li Song",
-            "type": "item_check"
+            "type": "helper",
+            "name": "_has_beast_form"
           },
           {
-            "item": "Dual Form",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Arnassi Armor"
           }
+        ]
+      },
+      "_has_bind_song": {
+        "type": "item_check",
+        "item": "Bind Song"
+      },
+      "_has_damaging_item": {
+        "params": [
+          "damaging_items"
         ],
-        "type": "and"
+        "body": {
+          "type": "or",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Baby Blaster"
+            },
+            {
+              "type": "item_check",
+              "item": "Baby Nautilus"
+            },
+            {
+              "type": "item_check",
+              "item": "Baby Piranha"
+            },
+            {
+              "type": "item_check",
+              "item": "Beast Form"
+            },
+            {
+              "type": "item_check",
+              "item": "Energy Form"
+            },
+            {
+              "type": "item_check",
+              "item": "Li and Li Song"
+            },
+            {
+              "type": "item_check",
+              "item": "Nature Form"
+            }
+          ]
+        }
+      },
+      "_has_dual_form": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "_has_li"
+          },
+          {
+            "type": "item_check",
+            "item": "Dual Form"
+          }
+        ]
       },
       "_has_energy_attack_item": {
+        "type": "or",
         "conditions": [
           {
-            "item": "Energy Form",
-            "type": "item_check"
+            "type": "helper",
+            "name": "_has_energy_form"
           },
           {
-            "conditions": [
-              {
-                "name": "_has_li",
-                "type": "helper"
-              },
-              {
-                "item": "Dual Form",
-                "type": "item_check"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "_has_dual_form"
           }
-        ],
-        "type": "or"
+        ]
       },
       "_has_energy_form": {
-        "item": "Energy Form",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Energy Form"
       },
       "_has_fish_form": {
-        "item": "Fish Form",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Fish Form"
       },
       "_has_hot_soup": {
+        "type": "state_method",
+        "method": "has_any",
         "args": [
           {
-            "elements": [
-              {
-                "type": "constant",
-                "value": "Hot Soup"
-              },
-              {
-                "type": "constant",
-                "value": "Hot Soup x 2"
-              }
-            ],
-            "type": "set"
+            "type": "constant",
+            "value": [
+              "Hot Soup",
+              "Hot Soup x 2"
+            ]
           }
-        ],
-        "method": "has_any",
-        "type": "state_method"
+        ]
       },
       "_has_li": {
-        "item": "Li and Li Song",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Li and Li Song"
       },
       "_has_light": {
+        "type": "or",
         "conditions": [
           {
-            "item": "Baby Dumbo",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Baby Dumbo"
           },
           {
-            "item": "Sun Form",
-            "type": "item_check"
+            "type": "helper",
+            "name": "_has_sun_form"
           }
-        ],
-        "type": "or"
+        ]
       },
       "_has_nature_form": {
-        "item": "Nature Form",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Nature Form"
       },
       "_has_spirit_form": {
-        "item": "Spirit Form",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Spirit Form"
       },
       "_has_sun_crystal": {
+        "type": "and",
         "conditions": [
           {
-            "item": "Has Sun Crystal",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Has Sun Crystal"
           },
           {
-            "item": "Bind Song",
-            "type": "item_check"
+            "type": "helper",
+            "name": "_has_bind_song"
           }
-        ],
-        "type": "and"
+        ]
       },
       "_has_sun_form": {
-        "item": "Sun Form",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Sun Form"
       },
       "_has_tongue_cleared": {
-        "item": "Body Tongue cleared",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Body Tongue cleared"
       }
     }
   }

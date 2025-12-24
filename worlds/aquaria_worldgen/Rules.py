@@ -84,64 +84,6 @@ def _has_tongue_cleared(state: "CollectionState", player: int) -> bool:
     return state.has('Body Tongue cleared', player)
 
 
-# Helper definitions for frontend evaluation
-# These are looked up by name instead of being inlined at every call site
-_HELPER_DEFINITIONS = {   '_has_beast_and_soup_form': {   'conditions': [   {'item': 'Beast Form', 'type': 'item_check'},
-                                                      {   'args': [   {   'elements': [   {   'type': 'constant',
-                                                                                              'value': 'Hot Soup'},
-                                                                                          {   'type': 'constant',
-                                                                                              'value': 'Hot Soup x 2'}],
-                                                                          'type': 'set'}],
-                                                          'method': 'has_any',
-                                                          'type': 'state_method'}],
-                                    'type': 'and'},
-    '_has_beast_form': {'item': 'Beast Form', 'type': 'item_check'},
-    '_has_beast_form_or_arnassi_armor': {   'conditions': [   {'item': 'Beast Form', 'type': 'item_check'},
-                                                              {'item': 'Arnassi Armor', 'type': 'item_check'}],
-                                            'type': 'or'},
-    '_has_bind_song': {'item': 'Bind Song', 'type': 'item_check'},
-    '_has_damaging_item': {   'body': {   'conditions': [   {'item': 'Baby Blaster', 'type': 'item_check'},
-                                                            {'item': 'Baby Nautilus', 'type': 'item_check'},
-                                                            {'item': 'Baby Piranha', 'type': 'item_check'},
-                                                            {'item': 'Beast Form', 'type': 'item_check'},
-                                                            {'item': 'Energy Form', 'type': 'item_check'},
-                                                            {'item': 'Li and Li Song', 'type': 'item_check'},
-                                                            {'item': 'Nature Form', 'type': 'item_check'}],
-                                          'type': 'or'},
-                              'params': ['damaging_items']},
-    '_has_dual_form': {   'conditions': [   {'item': 'Li and Li Song', 'type': 'item_check'},
-                                            {'item': 'Dual Form', 'type': 'item_check'}],
-                          'type': 'and'},
-    '_has_energy_attack_item': {   'conditions': [   {'item': 'Energy Form', 'type': 'item_check'},
-                                                     {   'conditions': [   {'name': '_has_li', 'type': 'helper'},
-                                                                           {'item': 'Dual Form', 'type': 'item_check'}],
-                                                         'type': 'and'}],
-                                   'type': 'or'},
-    '_has_energy_form': {'item': 'Energy Form', 'type': 'item_check'},
-    '_has_fish_form': {'item': 'Fish Form', 'type': 'item_check'},
-    '_has_hot_soup': {   'args': [   {   'elements': [   {'type': 'constant', 'value': 'Hot Soup'},
-                                                         {'type': 'constant', 'value': 'Hot Soup x 2'}],
-                                         'type': 'set'}],
-                         'method': 'has_any',
-                         'type': 'state_method'},
-    '_has_li': {'item': 'Li and Li Song', 'type': 'item_check'},
-    '_has_light': {   'conditions': [   {'item': 'Baby Dumbo', 'type': 'item_check'},
-                                        {'item': 'Sun Form', 'type': 'item_check'}],
-                      'type': 'or'},
-    '_has_nature_form': {'item': 'Nature Form', 'type': 'item_check'},
-    '_has_spirit_form': {'item': 'Spirit Form', 'type': 'item_check'},
-    '_has_sun_crystal': {   'conditions': [   {'item': 'Has Sun Crystal', 'type': 'item_check'},
-                                              {'item': 'Bind Song', 'type': 'item_check'}],
-                            'type': 'and'},
-    '_has_sun_form': {'item': 'Sun Form', 'type': 'item_check'},
-    '_has_tongue_cleared': {'item': 'Body Tongue cleared', 'type': 'item_check'}}
-
-
-def get_helper_definitions() -> dict:
-    """Return helper definitions for frontend evaluation."""
-    return _HELPER_DEFINITIONS
-
-
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player

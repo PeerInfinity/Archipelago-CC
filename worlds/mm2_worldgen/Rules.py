@@ -20,107 +20,11 @@ def _megaman2worldgen_can_defeat_enough_rbms(state: "CollectionState", player: i
     can_defeat = 0
     for boss, reqs in boss_requirements.items():
         if (boss in {0: 'Heat Man Defeated', 1: 'Air Man Defeated', 2: 'Wood Man Defeated', 3: 'Bubble Man Defeated', 4: 'Quick Man Defeated', 5: 'Flash Man Defeated', 6: 'Metal Man Defeated', 7: 'Crash Man Defeated'}):
-            if state.has_all((), player):
+            if state.has_all(True, player):
                 can_defeat += 1
                 if (can_defeat >= required):
                     return True
     return False
-
-
-# Helper definitions for frontend evaluation
-# These are looked up by name instead of being inlined at every call site
-_HELPER_DEFINITIONS = {   'can_defeat_enough_rbms': {   'body': {   'statements': [   {   'name': 'can_defeat',
-                                                                    'type': 'assign',
-                                                                    'value': {'type': 'constant', 'value': 0}},
-                                                                {   'body': [   {   'body': [   {   'body': [   {   'name': 'can_defeat',
-                                                                                                                    'op': '+=',
-                                                                                                                    'type': 'assign',
-                                                                                                                    'value': {   'type': 'constant',
-                                                                                                                                 'value': 1}},
-                                                                                                                {   'body': [   {   'type': 'return',
-                                                                                                                                    'value': {   'type': 'constant',
-                                                                                                                                                 'value': True}}],
-                                                                                                                    'test': {   'left': {   'name': 'can_defeat',
-                                                                                                                                            'type': 'name'},
-                                                                                                                                'op': '>=',
-                                                                                                                                'right': {   'name': 'required',
-                                                                                                                                             'type': 'name'},
-                                                                                                                                'type': 'compare'},
-                                                                                                                    'type': 'if_statement'}],
-                                                                                                    'test': {   'args': [   {   'function': {   'body': {   'index': {   'name': 'x',
-                                                                                                                                                                         'type': 'name'},
-                                                                                                                                                            'type': 'subscript',
-                                                                                                                                                            'value': {   'type': 'constant',
-                                                                                                                                                                         'value': {   '1': 'Atomic '
-                                                                                                                                                                                           'Fire',
-                                                                                                                                                                                      '2': 'Air '
-                                                                                                                                                                                           'Shooter',
-                                                                                                                                                                                      '3': 'Leaf '
-                                                                                                                                                                                           'Shield',
-                                                                                                                                                                                      '4': 'Bubble '
-                                                                                                                                                                                           'Lead',
-                                                                                                                                                                                      '5': 'Quick '
-                                                                                                                                                                                           'Boomerang',
-                                                                                                                                                                                      '6': 'Crash '
-                                                                                                                                                                                           'Bomber',
-                                                                                                                                                                                      '7': 'Metal '
-                                                                                                                                                                                           'Blade',
-                                                                                                                                                                                      '8': 'Time '
-                                                                                                                                                                                           'Stopper'}}},
-                                                                                                                                                'params': [   'x'],
-                                                                                                                                                'type': 'lambda'},
-                                                                                                                                'iterable': {   'name': 'reqs',
-                                                                                                                                                'type': 'name'},
-                                                                                                                                'type': 'map'}],
-                                                                                                                'method': 'has_all',
-                                                                                                                'type': 'state_method'},
-                                                                                                    'type': 'if_statement'}],
-                                                                                    'test': {   'left': {   'name': 'boss',
-                                                                                                            'type': 'name'},
-                                                                                                'op': 'in',
-                                                                                                'right': {   'type': 'constant',
-                                                                                                             'value': {   '0': 'Heat '
-                                                                                                                               'Man '
-                                                                                                                               'Defeated',
-                                                                                                                          '1': 'Air '
-                                                                                                                               'Man '
-                                                                                                                               'Defeated',
-                                                                                                                          '2': 'Wood '
-                                                                                                                               'Man '
-                                                                                                                               'Defeated',
-                                                                                                                          '3': 'Bubble '
-                                                                                                                               'Man '
-                                                                                                                               'Defeated',
-                                                                                                                          '4': 'Quick '
-                                                                                                                               'Man '
-                                                                                                                               'Defeated',
-                                                                                                                          '5': 'Flash '
-                                                                                                                               'Man '
-                                                                                                                               'Defeated',
-                                                                                                                          '6': 'Metal '
-                                                                                                                               'Man '
-                                                                                                                               'Defeated',
-                                                                                                                          '7': 'Crash '
-                                                                                                                               'Man '
-                                                                                                                               'Defeated'}},
-                                                                                                'type': 'compare'},
-                                                                                    'type': 'if_statement'}],
-                                                                    'iterable': {   'function': {   'attr': 'items',
-                                                                                                    'object': {   'name': 'boss_requirements',
-                                                                                                                  'type': 'name'},
-                                                                                                    'type': 'attribute'},
-                                                                                    'type': 'function_call'},
-                                                                    'type': 'for_iter',
-                                                                    'vars': ['boss', 'reqs']},
-                                                                {   'type': 'return',
-                                                                    'value': {'type': 'constant', 'value': False}}],
-                                              'type': 'block'},
-                                  'params': ['required', 'boss_requirements']}}
-
-
-def get_helper_definitions() -> dict:
-    """Return helper definitions for frontend evaluation."""
-    return _HELPER_DEFINITIONS
 
 
 def set_rules(world: "World") -> None:

@@ -9,6 +9,9 @@ from BaseClasses import MultiWorld, Region, Entrance
 from .Locations import location_table, TheWindWakerWorldGenLocation
 
 
+# Regions that were added after sphere calculation (from original export)
+DYNAMICALLY_ADDED_REGIONS = {"Savage Labyrinth", "Dragon Roost Island Secret Cave", "Fire Mountain Secret Cave", "Boating Course Secret Cave", "Stone Watcher Island Secret Cave", "Overlook Island Secret Cave", "Pawprint Isle Wizzrobe Cave", "Rock Spire Isle Secret Cave", "Shark Island Secret Cave", "Horseshoe Island Secret Cave", "Star Island Secret Cave", "Ice Ring Isle Inner Cave", "Outset Fairy Fountain"}
+
 def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 

@@ -48,12 +48,13 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 4
               }
             },
             "item": {
@@ -71,12 +72,13 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 5
               }
             },
             "item": {
@@ -94,12 +96,13 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 5
               }
             },
             "item": {
@@ -117,12 +120,13 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 5
               }
             },
             "item": {
@@ -183,12 +187,13 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 20
               }
             },
             "item": {
@@ -206,12 +211,13 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 50
               }
             },
             "item": {
@@ -229,12 +235,13 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 250
               }
             },
             "item": {
@@ -313,12 +320,13 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 100
               }
             },
             "item": {
@@ -336,12 +344,13 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 140
               }
             },
             "item": {
@@ -480,12 +489,13 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 5
               }
             },
             "item": {
@@ -503,12 +513,13 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 5
               }
             },
             "item": {
@@ -644,12 +655,13 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 5
               }
             },
             "item": {
@@ -786,12 +798,13 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 75
               }
             },
             "item": {
@@ -809,12 +822,13 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 75
               }
             },
             "item": {
@@ -864,12 +878,13 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 5
               }
             },
             "item": {
@@ -955,12 +970,13 @@
               "rule": "Compare",
               "args": {
                 "left": {
-                  "rule": "True_"
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
                 },
                 "op": ">=",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 5
               }
             },
             "item": {
