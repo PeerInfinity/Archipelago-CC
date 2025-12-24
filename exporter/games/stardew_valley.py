@@ -361,49 +361,55 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
 
             # Handle Count rule (requires N of M conditions to be true)
             elif rule_type == 'Count':
-                conditions = []
-
-                # IMPORTANT: Count uses a Counter to track duplicate rules!
+                # Count uses a Counter to track duplicate rules
                 # rule_obj.rules contains only UNIQUE rules
                 # rule_obj.counter contains the multiplicity of each rule
-                # We need to expand duplicates to preserve the correct count
+                # We use weighted_count_true for compact representation
+
+                weighted_conditions = []
+                total_weight = 0
+
                 if hasattr(rule_obj, 'counter') and hasattr(rule_obj, 'rules'):
-                    # Use counter to expand duplicate rules
                     for sub_rule in rule_obj.rules:
                         serialized = self._serialize_stardew_rule(sub_rule)
                         if serialized:
-                            # Add this condition multiple times based on its count
                             multiplicity = rule_obj.counter.get(sub_rule, 1)
-                            for _ in range(multiplicity):
-                                conditions.append(serialized)
+                            weighted_conditions.append([serialized, multiplicity])
+                            total_weight += multiplicity
                 elif hasattr(rule_obj, 'rules'):
-                    # Fallback: just use rules directly (older code path)
+                    # Fallback: just use rules directly with weight 1
                     for sub_rule in rule_obj.rules:
                         serialized = self._serialize_stardew_rule(sub_rule)
                         if serialized:
-                            conditions.append(serialized)
+                            weighted_conditions.append([serialized, 1])
+                            total_weight += 1
 
-                # Count rule is "at least N of these conditions must be true"
-                count_required = rule_obj.count if hasattr(rule_obj, 'count') else len(conditions)
+                count_required = rule_obj.count if hasattr(rule_obj, 'count') else total_weight
 
-                if count_required == len(conditions):
-                    # All conditions required = AND
+                if count_required == total_weight:
+                    # All conditions required = AND (unwrap weights)
+                    conditions = []
+                    for cond, weight in weighted_conditions:
+                        for _ in range(weight):
+                            conditions.append(cond)
                     return {
                         'type': 'and',
                         'conditions': conditions
                     }
                 elif count_required == 1:
-                    # At least 1 required = OR
+                    # At least 1 required = OR (unwrap weights, dedupe)
+                    conditions = [cond for cond, _ in weighted_conditions]
                     return {
                         'type': 'or',
                         'conditions': conditions
                     }
                 else:
-                    # N of M - use count_true rule type
+                    # N of M - use weighted_count_true for compact representation
+                    # Frontend evaluates: sum of weights for satisfied conditions >= count
                     return {
-                        'type': 'count_true',
+                        'type': 'weighted_count_true',
                         'count': count_required,
-                        'conditions': conditions
+                        'weighted_conditions': weighted_conditions
                     }
 
             # Unknown rule type - log and return a helper reference

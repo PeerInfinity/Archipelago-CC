@@ -7,7 +7,7 @@ for that file.
 
 import json
 import re
-from typing import Dict, List, Set
+from typing import Any, Dict, List, Set
 from .constants import BUILTIN_SETTINGS
 from .extractors import ExtractedData, ItemData, LocationData, ExitData, HelperData
 from .rule_codegen import RuleCodeGenerator, HelperCodeGenerator, is_trivial_rule
@@ -691,33 +691,41 @@ def _collect_rule_settings(data: ExtractedData) -> Set[str]:
     return settings - BUILTIN_SETTINGS
 
 
-def _generate_option_class(setting_name: str, default_value) -> tuple:
-    """Generate an option class for a setting.
+def _generate_option_class_from_definition(setting_name: str, option_def: Dict[str, Any]) -> tuple:
+    """Generate an option class from an option definition.
+
+    Args:
+        setting_name: The name of the setting (e.g., 'bat_logic')
+        option_def: The option definition dict with type, default, etc.
 
     Returns:
-        Tuple of (class_code, field_code, import_name) or (None, None, None) if unsupported type.
+        Tuple of (class_code, field_code, import_name) or (None, None, None) if unsupported.
     """
     class_name = ''.join(word.capitalize() for word in setting_name.split('_'))
-    display_name = ' '.join(word.capitalize() for word in setting_name.split('_'))
+    display_name = option_def.get('display_name', ' '.join(word.capitalize() for word in setting_name.split('_')))
+    option_type = option_def.get('type')
+    default = option_def.get('default', 0)
 
-    if isinstance(default_value, bool):
+    if option_type == 'choice':
+        # Generate Choice option with option_<name> = <value> for each choice
+        name_lookup = option_def.get('name_lookup', {})
+        option_lines = []
+        for value_str, name in sorted(name_lookup.items(), key=lambda x: int(x[0])):
+            option_lines.append(f'    option_{name} = {value_str}')
+        options_code = '\n'.join(option_lines)
+
         class_code = f'''
-class {class_name}(Toggle):
+class {class_name}(Choice):
     """Option for {display_name}."""
     display_name = "{display_name}"
-    default = {default_value}
+{options_code}
+    default = {default}
 '''
-        return class_code, f'    {setting_name}: {class_name}', 'Toggle'
+        return class_code, f'    {setting_name}: {class_name}', 'Choice'
 
-    if isinstance(default_value, int):
-        # Handle negative defaults by adjusting range_start
-        range_start = min(0, default_value)
-        if default_value <= 10:
-            range_end = max(100, default_value * 2)
-        elif default_value <= 100:
-            range_end = max(100, default_value + 50)
-        else:
-            range_end = default_value * 2
+    elif option_type == 'range':
+        range_start = option_def.get('range_start', 0)
+        range_end = option_def.get('range_end', 100)
 
         class_code = f'''
 class {class_name}(Range):
@@ -725,9 +733,25 @@ class {class_name}(Range):
     display_name = "{display_name}"
     range_start = {range_start}
     range_end = {range_end}
-    default = {default_value}
+    default = {default}
 '''
         return class_code, f'    {setting_name}: {class_name}', 'Range'
+
+    elif option_type == 'default_on_toggle':
+        class_code = f'''
+class {class_name}(DefaultOnToggle):
+    """Option for {display_name}."""
+    display_name = "{display_name}"
+'''
+        return class_code, f'    {setting_name}: {class_name}', 'DefaultOnToggle'
+
+    elif option_type == 'toggle':
+        class_code = f'''
+class {class_name}(Toggle):
+    """Option for {display_name}."""
+    display_name = "{display_name}"
+'''
+        return class_code, f'    {setting_name}: {class_name}', 'Toggle'
 
     return None, None, None
 
@@ -736,16 +760,26 @@ def generate_options_py(data: ExtractedData) -> str:
     """Generate Options.py file content."""
     game_name = data.metadata.game_name
     class_name = sanitize_class_name(game_name)
-    resolved_settings = data.metadata.resolved_settings
+    option_definitions = data.metadata.option_definitions
 
-    used_settings = _collect_rule_settings(data)
     imports_needed = {'Toggle'}  # Always need Toggle for RandomizeItems
     option_classes = []
     option_fields = []
 
-    for setting_name in sorted(used_settings):
-        default_value = resolved_settings.get(setting_name, 0)
-        class_code, field_code, import_name = _generate_option_class(setting_name, default_value)
+    # Skip options that are part of PerGameCommonOptions (already inherited)
+    skip_options = {
+        'accessibility', 'progression_balancing', 'local_items', 'non_local_items',
+        'start_inventory', 'start_hints', 'start_location_hints', 'exclude_locations',
+        'priority_locations', 'item_links', 'plando_items'
+    }
+
+    # Generate option classes from definitions
+    for setting_name in sorted(option_definitions.keys()):
+        if setting_name in skip_options:
+            continue
+
+        option_def = option_definitions[setting_name]
+        class_code, field_code, import_name = _generate_option_class_from_definition(setting_name, option_def)
         if class_code:
             option_classes.append(class_code)
             option_fields.append(field_code)

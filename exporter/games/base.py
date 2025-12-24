@@ -33,6 +33,11 @@ class BaseGameExportHandler:
     # These settings are automatically added to the exported settings by get_settings_data
     COMPUTED_SETTINGS: Dict[str, Callable] = {}
 
+    # List of option names to export at the top level of settings_dict
+    # These are simple world.options.<name>.value extractions
+    # Example: ['difficulty', 'logic_percent'] exports both as settings_dict['difficulty'], etc.
+    EXPORTED_OPTIONS: List[str] = []
+
     # List of module paths containing item name constants (e.g., ['worlds.shapez.data.strings'])
     # The exporter will look for classes like ITEMS with attributes that map to item names
     ITEM_NAME_MODULES: List[str] = []
@@ -79,10 +84,15 @@ class BaseGameExportHandler:
     # of overriding the method
     HELPERS_TO_PRESERVE: Set[str] = set()
 
+    # Whether exits should be assumed bidirectional for frontend logic
+    # Set to True for games where going through an entrance implies being able to return
+    ASSUME_BIDIRECTIONAL_EXITS: bool = False
+
     # Enable automatic helper preservation based on size
     # When enabled, helpers with more nodes than HELPER_INLINE_THRESHOLD will be
     # preserved as helper calls instead of inlined, reducing rules.json size
-    AUTO_PRESERVE_LARGE_HELPERS: bool = True
+    # Most games work better with this disabled (17 games explicitly disable it)
+    AUTO_PRESERVE_LARGE_HELPERS: bool = False
 
     # Threshold for automatic helper preservation (only used if AUTO_PRESERVE_LARGE_HELPERS is True)
     # Helpers with more than this many nodes will be preserved as helper calls
@@ -616,8 +626,8 @@ class BaseGameExportHandler:
             mode_val = multiworld.mode[player]
             settings_dict['mode'] = getattr(mode_val, 'value', str(mode_val))
 
-        # Add assume_bidirectional_exits setting with default false
-        settings_dict['assume_bidirectional_exits'] = False
+        # Add assume_bidirectional_exits setting from class attribute
+        settings_dict['assume_bidirectional_exits'] = self.ASSUME_BIDIRECTIONAL_EXITS
 
         # Add use_resolved_items setting from class attribute
         # When false (default), eventProcessor uses only base_items from sphere log
@@ -668,6 +678,60 @@ class BaseGameExportHandler:
             if options_dict:
                 settings_dict['options'] = options_dict
 
+        # Export option definitions for world generator to recreate proper Option classes
+        # This captures the option type (Choice, Range, Toggle, etc.) and metadata
+        if hasattr(world, 'options') and world.options:
+            option_definitions = {}
+            for option_name in dir(world.options):
+                if option_name.startswith('_'):
+                    continue
+                try:
+                    option = getattr(world.options, option_name)
+                    # Check if it's an Option object
+                    if not hasattr(option, 'value'):
+                        continue
+
+                    option_class = type(option)
+                    option_def = {}
+
+                    # Determine option type by checking class hierarchy
+                    # Import here to avoid circular imports
+                    from Options import Choice, Range, Toggle, DefaultOnToggle, OptionSet, OptionList, OptionDict
+
+                    if isinstance(option, OptionSet) or isinstance(option, OptionList) or isinstance(option, OptionDict):
+                        # Skip complex collection options for now
+                        continue
+                    elif isinstance(option, Range) and not isinstance(option, Choice):
+                        option_def['type'] = 'range'
+                        option_def['range_start'] = option_class.range_start
+                        option_def['range_end'] = option_class.range_end
+                        option_def['default'] = option_class.default
+                    elif isinstance(option, DefaultOnToggle):
+                        option_def['type'] = 'default_on_toggle'
+                        option_def['default'] = option_class.default
+                    elif isinstance(option, Toggle):
+                        option_def['type'] = 'toggle'
+                        option_def['default'] = option_class.default
+                    elif isinstance(option, Choice):
+                        option_def['type'] = 'choice'
+                        # Export name_lookup which maps value -> name
+                        option_def['name_lookup'] = {str(k): v for k, v in option_class.name_lookup.items()}
+                        option_def['default'] = option_class.default
+                    else:
+                        # Unknown option type, skip
+                        continue
+
+                    # Add display_name if available
+                    if hasattr(option_class, 'display_name') and option_class.display_name:
+                        option_def['display_name'] = option_class.display_name
+
+                    option_definitions[option_name] = option_def
+                except Exception as e:
+                    logger.debug(f"Failed to export option definition for '{option_name}': {e}")
+
+            if option_definitions:
+                settings_dict['option_definitions'] = option_definitions
+
         # Process computed settings from COMPUTED_SETTINGS class attribute
         if self.COMPUTED_SETTINGS:
             for setting_name, compute_func in self.COMPUTED_SETTINGS.items():
@@ -676,6 +740,17 @@ class BaseGameExportHandler:
                     settings_dict[setting_name] = value
                 except Exception as e:
                     logger.warning(f"Failed to compute setting '{setting_name}': {e}")
+
+        # Process EXPORTED_OPTIONS - simple option value extractions
+        if self.EXPORTED_OPTIONS:
+            for option_name in self.EXPORTED_OPTIONS:
+                try:
+                    if hasattr(world, 'options') and hasattr(world.options, option_name):
+                        option = getattr(world.options, option_name)
+                        if hasattr(option, 'value'):
+                            settings_dict[option_name] = option.value
+                except Exception as e:
+                    logger.warning(f"Failed to export option '{option_name}': {e}")
 
         # For worldgen worlds, load additional settings from _worldgen_settings.json
         # This is needed because worldgen worlds don't have the original world's computed

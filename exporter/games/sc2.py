@@ -34,7 +34,6 @@ except ImportError:
 class SC2GameExportHandler(GenericGameExportHandler):
     """Export handler for Starcraft 2 game-specific rules and items."""
 
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     # Module containing helper functions
     HELPER_MODULES = ['worlds.sc2.rules']
@@ -1030,13 +1029,6 @@ class SC2GameExportHandler(GenericGameExportHandler):
 
         # Attribute not recognized
         return None
-
-    def expand_helper(self, helper_name: str):
-        """Expand Starcraft 2-specific helper functions."""
-        # For now, just use the generic implementation
-        # We'll add specific helper expansions as needed during testing
-        # Most helpers will be implemented in the JavaScript helper file
-        return super().expand_helper(helper_name)
 
     def get_settings_data(self, world, multiworld, player: int) -> Dict[str, Any]:
         """Extract Starcraft 2 settings for export."""

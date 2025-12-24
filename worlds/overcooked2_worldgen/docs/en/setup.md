@@ -1,4 +1,4 @@
-# Overcooked! 2 WorldGen Setup Guide
+# Overcooked\! 2 WorldGen Setup Guide
 
 ## Required Software
 
@@ -8,7 +8,7 @@
 
 1. Download the game's .apworld file
 2. Place it in your Archipelago/lib/worlds folder
-3. Generate a multiworld with Overcooked! 2 WorldGen
+3. Generate a multiworld with Overcooked\! 2 WorldGen
 
 ## Joining a Game
 

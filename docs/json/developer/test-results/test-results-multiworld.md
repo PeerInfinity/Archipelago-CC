@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-23 06:36:13
+**Generated:** 2025-12-24 06:39:37
 
 ## Summary
 
@@ -36,7 +36,7 @@
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Aquaria | ✅ Passed | ✅ Passed | 1 | 1 | 3.4KB | ✅ |
-| Bomb Rush Cyberfunk | ✅ Passed | ❌ Failed | 1 | 1 | 6.8KB | 40.3KB |
+| Bomb Rush Cyberfunk | ✅ Passed | ❌ Failed | 1 | 1 | 1.5KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 16.4KB | ✅ |
 | Castlevania 64 | ✅ Passed | ❌ Failed | 1 | 1 | ✅ | ✅ |
@@ -81,13 +81,13 @@
 | Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | ❌ Failed | 5 | 5 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Starcraft 2 | ❌ Failed | — | 6 | 6 | 39.9KB | 86.3KB |
+| Starcraft 2 | ❌ Failed | — | 6 | 6 | 53.7KB | 86.3KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 20.6KB | 10.7KB |
 | Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 7.0KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | 14.0KB | ✅ |
 | Super Mario World | ✅ Passed | ❌ Failed | 6 | 6 | ✅ | ✅ |
-| Super Metroid | ❌ Failed | — | 6 | 6 | 90.6KB | 114.6KB |
+| Super Metroid | ❌ Failed | — | 6 | 6 | 72.0KB | 114.6KB |
 | TOEM original | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | ❌ Failed | 6 | 6 | ✅ | ✅ |
 | Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 19.3KB | ✅ |

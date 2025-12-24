@@ -26,8 +26,6 @@ class AHitGameExportHandler(GenericGameExportHandler):
     # Module containing helper functions for definition export
     HELPER_MODULES = ['worlds.ahit.Rules']
 
-    AUTO_PRESERVE_LARGE_HELPERS = False
-
     # Preserve these helpers as helper calls (don't inline their bodies)
     # This is necessary for complex helpers that reference runtime objects
     HELPERS_TO_PRESERVE: Set[str] = {

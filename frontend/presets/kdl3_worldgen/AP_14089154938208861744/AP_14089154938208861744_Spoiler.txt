@@ -17,6 +17,8 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Open World:                      1
+Ow Boss Requirement:             3
 
 
 Locations:

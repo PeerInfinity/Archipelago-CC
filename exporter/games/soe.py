@@ -15,6 +15,9 @@ class SoEGameExportHandler(BaseGameExportHandler):
     to helper calls.
     """
 
+    # SOE uses resolved_items instead of base_items for sphere inventory
+    USE_RESOLVED_ITEMS = True
+
     def __init__(self):
         super().__init__()
         # Import pyevermizer to get progress constants
@@ -329,9 +332,3 @@ class SoEGameExportHandler(BaseGameExportHandler):
             import traceback
             traceback.print_exc()
             return {}
-
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Extracts SOE-specific game settings for export."""
-        settings_dict = super().get_settings_data(world, multiworld, player)
-        settings_dict['use_resolved_items'] = True
-        return settings_dict

@@ -11,7 +11,18 @@ logger = logging.getLogger(__name__)
 
 class BlasphemousGameExportHandler(BaseGameExportHandler):
     """Blasphemous-specific rule expander with direct logic data conversion."""
-    
+
+    # Blasphemous uses resolved_items instead of base_items for sphere inventory
+    # This is because Blasphemous has complex event items that are computed dynamically
+    USE_RESOLVED_ITEMS = True
+
+    # Blasphemous needs items from the sphere log to be added upfront to the inventory
+    # (especially starting items in sphere 0 that don't come from checking locations)
+    ADD_SPHERE_ITEMS_UPFRONT = True
+
+    # Export difficulty option at top level of settings
+    EXPORTED_OPTIONS = ['difficulty']
+
     def __init__(self, world=None):
         """Initialize handler with world reference."""
         super().__init__(world=world)
@@ -48,29 +59,6 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
             logger.warning("Could not import Blasphemous logic data")
             self.regions_data = []
             self.locations_data = []
-
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Export Blasphemous-specific settings including difficulty."""
-        settings_dict = super().get_settings_data(world, multiworld, player)
-
-        # Export difficulty setting with default value of 1 (normal)
-        if hasattr(world, 'options') and hasattr(world.options, 'difficulty'):
-            difficulty_value = world.options.difficulty.value
-        else:
-            difficulty_value = 1  # Default to normal difficulty
-
-        settings_dict['difficulty'] = difficulty_value
-
-        # Blasphemous uses resolved_items instead of base_items for sphere inventory
-        # This is because Blasphemous has complex event items that are computed dynamically
-        settings_dict['use_resolved_items'] = True
-
-        # Blasphemous needs items from the sphere log to be added upfront to the inventory
-        # (especially starting items in sphere 0 that don't come from checking locations)
-        # Most other games should get items naturally from checking locations
-        settings_dict['add_sphere_items_upfront'] = True
-
-        return settings_dict
 
     def override_rule_analysis(self, rule_func, rule_target_name: str = None) -> Optional[Dict[str, Any]]:
         """Override rule analysis for Blasphemous to reconstruct from original logic data."""
