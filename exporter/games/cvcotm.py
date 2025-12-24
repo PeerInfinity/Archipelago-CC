@@ -9,10 +9,6 @@ logger = logging.getLogger(__name__)
 class CvCotMGameExportHandler(GenericGameExportHandler):
     """Expander for Castlevania - Circle of the Moon specific functions."""
 
-
-    def __init__(self):
-        super().__init__()
-
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """Return CvCotM item data with corrected classifications.
 
