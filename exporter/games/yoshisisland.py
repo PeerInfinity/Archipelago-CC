@@ -158,10 +158,8 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract Yoshi's Island settings."""
-        settings_dict = {'game': multiworld.game[player]}
-
-        # Set assume_bidirectional_exits to false for Yoshi's Island
-        settings_dict['assume_bidirectional_exits'] = False
+        # Get base settings (ASSUME_BIDIRECTIONAL_EXITS = False is the default)
+        settings_dict = super().get_settings_data(world, multiworld, player)
 
         # Default values for Yoshi's Island options (used for WorldGen worlds that lack these options)
         # These match the defaults in the original Yoshi's Island world
