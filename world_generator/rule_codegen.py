@@ -646,6 +646,28 @@ class RuleCodeGenerator:
                     }
                     return self._convert_placement_lookup(placement_rule)
 
+                # Check if this is an AST_placement_search rule (check if item is at any of listed locations)
+                if rb_rule == 'AST_placement_search':
+                    args = rule.get('args', {})
+                    item_name = args.get('item', '')
+                    locations = args.get('locations', [])
+                    # Extract location names from the [location, player] pairs
+                    location_names = []
+                    for loc in locations:
+                        if isinstance(loc, list) and loc:
+                            location_names.append(loc[0])
+                        elif isinstance(loc, str):
+                            location_names.append(loc)
+                    # Check if the item is at any of these locations using known placements
+                    for loc_name in location_names:
+                        if loc_name in self.placements and self.placements[loc_name] == item_name:
+                            # Item is at one of the locations - return True
+                            self.required_imports.add('True_')
+                            return 'True_()'
+                    # Item is not at any of the locations - return False
+                    self.required_imports.add('False_')
+                    return 'False_()'
+
                 # Check if this is an AST_function_call rule (option.to_bool() style calls)
                 if rb_rule == 'AST_function_call':
                     return self._convert_ast_function_call(rule)
@@ -711,8 +733,9 @@ class RuleCodeGenerator:
 
             # If count is a complex expression (dict), use Compare(CountItem(...), ">=", expr)
             if isinstance(count, dict):
-                # Convert the count expression to Python code
-                count_expr = self._convert_rule(count)
+                # Use _convert_compare_operand to preserve numeric SettingValue values
+                # instead of _convert_rule which converts them to boolean True_/False_
+                count_expr = self._convert_compare_operand(count)
                 self.required_imports.add('Compare')
                 self.required_imports.add('CountItem')
                 return f'Compare(CountItem({repr(item_name)}), ">=", {count_expr})'
@@ -1970,12 +1993,11 @@ class RuleCodeGenerator:
                     return 'False_()'
                 # For other strings (like 'normal', 'light_and_darkness'), return as string literal
                 return repr(value)
-            # Handle integer values - convert to boolean rules based on truthiness
-            # This is needed because integer settings used in boolean contexts (like Not())
-            # require rule objects, not raw integers
+            # Handle integer values - return as-is for use in count/arithmetic contexts
+            # In cases where they're used in boolean contexts (like Not()), the caller
+            # is responsible for appropriate handling via Compare(value, ">", 0)
             elif isinstance(value, int):
-                self.required_imports.add('True_' if value else 'False_')
-                return 'True_()' if value else 'False_()'
+                return repr(value)
             else:
                 return repr(value)
 
@@ -3156,6 +3178,26 @@ class HelperCodeGenerator:
                 func_name = self.get_function_name(helper_name)
                 return f'{func_name}(state, player)'
 
+            # Handle AST_placement_search (check if item is at any of listed locations)
+            if rule_type == 'AST_placement_search':
+                args = expr.get('args', {})
+                item_name = args.get('item', '')
+                locations = args.get('locations', [])
+                # Extract location names from the [location, player] pairs
+                location_names = []
+                for loc in locations:
+                    if isinstance(loc, list) and loc:
+                        location_names.append(loc[0])
+                    elif isinstance(loc, str):
+                        location_names.append(loc)
+                # Check if the item is at any of these locations using known placements
+                for loc_name in location_names:
+                    if loc_name in self.placements and self.placements[loc_name] == item_name:
+                        # Item is at one of the locations
+                        return 'True'
+                # Item is not at any of the locations
+                return 'False'
+
         # Unknown type - return True as placeholder
         # Returning True makes locations more accessible, which is appropriate for worldgen
         # since unknown types are typically progression checks that evaluate to true
@@ -3394,8 +3436,35 @@ class HelperCodeGenerator:
     def _expr_any_of(self, expr: Dict[str, Any]) -> str:
         """Generate any() expression for OR of conditions.
 
-        Used by SM helpers like wor() that need to OR variadic arguments.
+        Handles two formats:
+        1. Simple conditions list: {"type": "any_of", "conditions": [...]}
+        2. Comprehension style: {"type": "any_of", "element_rule": {...}, "iterator_info": {...}}
         """
+        # Check for comprehension style (iterator_info present)
+        iterator_info = expr.get('iterator_info')
+        if iterator_info:
+            target = iterator_info.get('target', {})
+            iterator = iterator_info.get('iterator', {})
+            condition = iterator_info.get('condition')
+            element_rule = expr.get('element_rule', {'type': 'constant', 'value': True})
+
+            # Generate target variable names
+            target_expr = self._generate_expression(target)
+
+            # Generate iterator expression
+            iterator_expr = self._generate_expression(iterator)
+
+            # Generate element rule expression
+            element_expr = self._generate_expression(element_rule)
+
+            # Generate condition expression if present
+            if condition:
+                condition_expr = self._generate_expression(condition)
+                return f"any({element_expr} for {target_expr} in {iterator_expr} if {condition_expr})"
+
+            return f"any({element_expr} for {target_expr} in {iterator_expr})"
+
+        # Simple conditions list format
         conditions = expr.get('conditions', [])
         if not conditions:
             return 'False'
@@ -3554,7 +3623,7 @@ class HelperCodeGenerator:
             return self.get_helper_call(name, args)
 
         # Built-in Python functions
-        if name in ('any', 'all', 'len', 'sum', 'min', 'max', 'sorted', 'list', 'iter', 'next', 'bool', 'int', 'str', 'float'):
+        if name in ('any', 'all', 'len', 'sum', 'min', 'max', 'sorted', 'list', 'set', 'tuple', 'iter', 'next', 'bool', 'int', 'str', 'float'):
             arg_exprs = [self._generate_expression(a) for a in args]
             return f"{name}({', '.join(arg_exprs)})"
 
@@ -3629,15 +3698,27 @@ class HelperCodeGenerator:
         elif method == 'has_all':
             if len(args) >= 1:
                 # has_all expects a tuple/list of item names
-                items = self._extract_constant(args[0], [])
-                items_repr = repr(tuple(items)) if items else '()'
+                # First try to get a constant value
+                items = self._extract_constant(args[0], None)
+                if items is not None:
+                    # It's a constant list, use repr
+                    items_repr = repr(tuple(items)) if items else '()'
+                else:
+                    # It's a dynamic expression (parameter reference, helper call, etc.)
+                    items_repr = self._generate_expression(args[0])
                 return f'state.has_all({items_repr}, player)'
 
         elif method == 'has_any':
             if len(args) >= 1:
                 # has_any expects a tuple/list of item names
-                items = self._extract_constant(args[0], [])
-                items_repr = repr(tuple(items)) if items else '()'
+                # First try to get a constant value
+                items = self._extract_constant(args[0], None)
+                if items is not None:
+                    # It's a constant list, use repr
+                    items_repr = repr(tuple(items)) if items else '()'
+                else:
+                    # It's a dynamic expression (parameter reference, helper call, etc.)
+                    items_repr = self._generate_expression(args[0])
                 return f'state.has_any({items_repr}, player)'
 
         elif method == 'count':
