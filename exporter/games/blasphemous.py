@@ -11,7 +11,11 @@ logger = logging.getLogger(__name__)
 
 class BlasphemousGameExportHandler(BaseGameExportHandler):
     """Blasphemous-specific rule expander with direct logic data conversion."""
-    
+
+    # Blasphemous uses resolved_items instead of base_items for sphere inventory
+    # This is because Blasphemous has complex event items that are computed dynamically
+    USE_RESOLVED_ITEMS = True
+
     def __init__(self, world=None):
         """Initialize handler with world reference."""
         super().__init__(world=world)
@@ -51,6 +55,7 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Export Blasphemous-specific settings including difficulty."""
+        # Note: USE_RESOLVED_ITEMS class attribute handles use_resolved_items setting
         settings_dict = super().get_settings_data(world, multiworld, player)
 
         # Export difficulty setting with default value of 1 (normal)
@@ -60,10 +65,6 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
             difficulty_value = 1  # Default to normal difficulty
 
         settings_dict['difficulty'] = difficulty_value
-
-        # Blasphemous uses resolved_items instead of base_items for sphere inventory
-        # This is because Blasphemous has complex event items that are computed dynamically
-        settings_dict['use_resolved_items'] = True
 
         # Blasphemous needs items from the sphere log to be added upfront to the inventory
         # (especially starting items in sphere 0 that don't come from checking locations)
