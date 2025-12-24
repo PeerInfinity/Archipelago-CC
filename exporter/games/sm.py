@@ -23,8 +23,6 @@ class SMGameExportHandler(GenericGameExportHandler):
     # 3. The VARIA logic system (SMBool with difficulty) requires JS implementations
     # The JavaScript helpers in smLogic.js remain necessary for rule evaluation.
     AUTO_EXPORT_DISCOVERED_HELPERS = True
-    AUTO_PRESERVE_LARGE_HELPERS = False
-
 
     def __init__(self, world=None):
         super().__init__(world=world)

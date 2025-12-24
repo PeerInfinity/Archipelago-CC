@@ -17,8 +17,6 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
     - Region visit tracking
     """
 
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
-    AUTO_PRESERVE_LARGE_HELPERS = False
 
     # Use resolved_items from sphere log for event item handling
     USE_RESOLVED_ITEMS = True

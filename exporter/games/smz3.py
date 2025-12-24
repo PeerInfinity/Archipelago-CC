@@ -14,7 +14,6 @@ logger = logging.getLogger(__name__)
 
 
 class SMZ3GameExportHandler(GenericGameExportHandler):
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     def __init__(self):
         super().__init__()

@@ -128,3 +128,45 @@ function checkStarRequirements(snapshot, requirements, stars) {
     // All requirements met
     return true;
 }
+
+/**
+ * Check if weighted sum of owned items meets a threshold
+ *
+ * This is a compact representation of additive requirements.
+ * Instead of expanding all valid combinations as OR conditions,
+ * we export the items and weights and evaluate the sum at runtime.
+ *
+ * @param {Object} snapshot - Game state snapshot
+ * @param {Object} staticData - Static game data
+ * @param {number} threshold - Minimum weight sum required (typically 1.0)
+ * @param {Array} itemsWithWeights - Array of [itemName, weight] pairs
+ * @returns {boolean} True if sum of weights for owned items >= threshold
+ */
+export function weighted_sum(snapshot, staticData, threshold, itemsWithWeights) {
+    if (!snapshot || !snapshot.inventory) {
+        return false;
+    }
+
+    if (!Array.isArray(itemsWithWeights)) {
+        console.warn('[Overcooked2 helpers] weighted_sum: itemsWithWeights is not an array', itemsWithWeights);
+        return false;
+    }
+
+    let totalWeight = 0;
+    for (const pair of itemsWithWeights) {
+        if (Array.isArray(pair) && pair.length >= 2) {
+            const itemName = pair[0];
+            const weight = pair[1];
+            if (snapshot.inventory[itemName]) {
+                totalWeight += weight;
+                // Early exit optimization: if we've already met the threshold, we're done
+                if (totalWeight >= threshold - 0.001) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    // Check if threshold is met (with tolerance for floating point)
+    return totalWeight >= threshold - 0.001;
+}

@@ -33,6 +33,11 @@ class BaseGameExportHandler:
     # These settings are automatically added to the exported settings by get_settings_data
     COMPUTED_SETTINGS: Dict[str, Callable] = {}
 
+    # List of option names to export at the top level of settings_dict
+    # These are simple world.options.<name>.value extractions
+    # Example: ['difficulty', 'logic_percent'] exports both as settings_dict['difficulty'], etc.
+    EXPORTED_OPTIONS: List[str] = []
+
     # List of module paths containing item name constants (e.g., ['worlds.shapez.data.strings'])
     # The exporter will look for classes like ITEMS with attributes that map to item names
     ITEM_NAME_MODULES: List[str] = []
@@ -86,7 +91,8 @@ class BaseGameExportHandler:
     # Enable automatic helper preservation based on size
     # When enabled, helpers with more nodes than HELPER_INLINE_THRESHOLD will be
     # preserved as helper calls instead of inlined, reducing rules.json size
-    AUTO_PRESERVE_LARGE_HELPERS: bool = True
+    # Most games work better with this disabled (17 games explicitly disable it)
+    AUTO_PRESERVE_LARGE_HELPERS: bool = False
 
     # Threshold for automatic helper preservation (only used if AUTO_PRESERVE_LARGE_HELPERS is True)
     # Helpers with more than this many nodes will be preserved as helper calls
@@ -734,6 +740,17 @@ class BaseGameExportHandler:
                     settings_dict[setting_name] = value
                 except Exception as e:
                     logger.warning(f"Failed to compute setting '{setting_name}': {e}")
+
+        # Process EXPORTED_OPTIONS - simple option value extractions
+        if self.EXPORTED_OPTIONS:
+            for option_name in self.EXPORTED_OPTIONS:
+                try:
+                    if hasattr(world, 'options') and hasattr(world.options, option_name):
+                        option = getattr(world.options, option_name)
+                        if hasattr(option, 'value'):
+                            settings_dict[option_name] = option.value
+                except Exception as e:
+                    logger.warning(f"Failed to export option '{option_name}': {e}")
 
         # For worldgen worlds, load additional settings from _worldgen_settings.json
         # This is needed because worldgen worlds don't have the original world's computed

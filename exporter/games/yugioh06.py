@@ -12,7 +12,6 @@ class Yugioh06GameExportHandler(GenericGameExportHandler):
 
     # Disable automatic helper export (use old behavior)
     AUTO_EXPORT_DISCOVERED_HELPERS = False
-    AUTO_PRESERVE_LARGE_HELPERS = False
 
     # Custom helper functions defined in worlds/yugioh06/rules.py and fusions.py
     # These helpers are implemented in JavaScript and should not be inlined.

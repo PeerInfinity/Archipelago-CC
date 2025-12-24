@@ -7,8 +7,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 class JakAndDaxterGameExportHandler(GenericGameExportHandler):
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
-    AUTO_PRESERVE_LARGE_HELPERS = False
 
     # Enable processing of resolved_items from sphere log
     # This allows "Reachable Orbs" (computed by Python during generation)
