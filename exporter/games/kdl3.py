@@ -12,6 +12,11 @@ class KDL3GameExportHandler(GenericGameExportHandler):
 
     AUTO_PRESERVE_LARGE_HELPERS = False
 
+    # Simple world attributes that can be automatically exported via base class
+    COMPUTED_SETTINGS = {
+        'copy_abilities': lambda w, m, p: getattr(w, 'copy_abilities', {}),
+    }
+
     # Module path for helper functions
     HELPER_MODULES = ['worlds.kdl3.rules']
 
@@ -54,15 +59,9 @@ class KDL3GameExportHandler(GenericGameExportHandler):
             self.level_names_inverse = {}
 
     def get_settings_data(self, world, multiworld, player):
-        """Override to add KDL3-specific settings like copy_abilities."""
+        """Override to add KDL3-specific settings like ability_map."""
+        # Note: COMPUTED_SETTINGS handles copy_abilities export
         settings = super().get_settings_data(world, multiworld, player)
-
-        # Export copy_abilities dictionary if it exists on the world
-        if hasattr(world, 'copy_abilities'):
-            settings['copy_abilities'] = world.copy_abilities
-            logger.debug(f"Exported copy_abilities: {len(world.copy_abilities)} entries")
-        else:
-            logger.warning("World does not have copy_abilities attribute")
 
         # Export ability_map as a dictionary mapping ability names to helper function names
         # This is needed for the dynamic function dispatch pattern:

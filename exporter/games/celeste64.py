@@ -14,6 +14,11 @@ logger = logging.getLogger(__name__)
 class Celeste64GameExportHandler(GenericGameExportHandler):
     """Celeste 64 expander that inlines rules from logic mappings."""
 
+    # Simple world attributes that can be automatically exported via base class
+    COMPUTED_SETTINGS = {
+        'strawberries_required': lambda w, m, p: getattr(w, 'strawberries_required', 0),
+    }
+
     def __init__(self, world=None):
         """Initialize with world instance to access options."""
         super().__init__(world=world)
@@ -240,10 +245,5 @@ class Celeste64GameExportHandler(GenericGameExportHandler):
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Get Celeste 64 settings (no longer need logic mappings since rules are inlined)."""
-        settings_dict = super().get_settings_data(world, multiworld, player)
-
-        # Export strawberries_required for reference
-        if hasattr(world, 'strawberries_required'):
-            settings_dict['strawberries_required'] = world.strawberries_required
-
-        return settings_dict
+        # Note: COMPUTED_SETTINGS handles strawberries_required export
+        return super().get_settings_data(world, multiworld, player)
