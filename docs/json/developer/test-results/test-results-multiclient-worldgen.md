@@ -6,33 +6,32 @@
 
 [View Original Template Results](./test-results-multiclient.md)
 
-**Generated:** 2025-12-23 06:36:13
+**Generated:** 2025-12-24 06:39:37
 
 ## Summary
 
-- **Total Games:** 71
-- **Passed:** 56 (78.9%)
-- **Failed:** 15 (21.1%)
+- **Total Games:** 63
+- **Passed:** 62 (98.4%)
+- **Failed:** 1 (1.6%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 56/56 (100.0% of passed)
-- **Passing with Generic Logic:** 56/56 (100.0% of passed)
-- **Passing with Both Generic:** 56/56 (100.0% of passed)
+- **Passing with Generic Exporter:** 62/62 (100.0% of passed)
+- **Passing with Generic Logic:** 62/62 (100.0% of passed)
+- **Passing with Both Generic:** 62/62 (100.0% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Exporter | GameLogic |
 |-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|----------|----------|
-| A Hat in Time WorldGen | ❌ Failed | 5 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| A Link to the Past WorldGen | ❌ Failed | 2 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
+| A Hat in Time WorldGen | ❌ Failed | 0 | ❌ | 112/232 | 111/223 | 1/9 | ❌ | 110/232 | ✅ | ✅ |
+| A Link to the Past WorldGen | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 19/19 | ✅ | 268/268 | ✅ | ✅ |
 | A Short Hike WorldGen | ✅ Passed | 0 | ✅ | 131/131 | 131/131 | 0/0 | ✅ | 131/131 | ✅ | ✅ |
 | APQuest WorldGen | ✅ Passed | 0 | ✅ | 8/8 | 6/6 | 2/2 | ✅ | 8/8 | ✅ | ✅ |
 | Adventure WorldGen | ✅ Passed | 0 | ✅ | 25/25 | 24/24 | 1/1 | ✅ | 25/25 | ✅ | ✅ |
 | Aquaria WorldGen | ✅ Passed | 0 | ✅ | 237/237 | 218/218 | 19/19 | ✅ | 237/237 | ✅ | ✅ |
-| Bomb Rush Cyberfunk WorldGen | ❌ Failed | 3 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Bumper Stickers WorldGen | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | ✅ | ✅ |
 | Castlevania - Circle of the Moon WorldGen | ✅ Passed | 0 | ✅ | 125/125 | 124/124 | 1/1 | ✅ | 125/125 | ✅ | ✅ |
 | Castlevania 64 WorldGen | ✅ Passed | 0 | ✅ | 215/215 | 213/213 | 2/2 | ✅ | 215/215 | ✅ | ✅ |
@@ -53,11 +52,8 @@
 | Heretic WorldGen | ✅ Passed | 0 | ✅ | 502/502 | 502/502 | 0/0 | ✅ | 502/502 | ✅ | ✅ |
 | Hylics 2 WorldGen | ✅ Passed | 0 | ✅ | 134/134 | 133/133 | 1/1 | ✅ | 134/134 | ✅ | ✅ |
 | Inscryption WorldGen | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | ✅ | ✅ |
-| Kingdom Hearts 2 WorldGen | ❌ Failed | 2 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 4.0KB | ✅ |
-| Kingdom Hearts WorldGen | ❌ Failed | 3 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Kirby's Dream Land 3 WorldGen | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | 0 | ✅ | 298/298 | 291/291 | 7/7 | ✅ | 298/298 | ✅ | ✅ |
-| Lingo WorldGen | ❌ Failed | 3 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Links Awakening DX WorldGen | ✅ Passed | 0 | ✅ | 226/226 | 220/220 | 6/6 | ✅ | 226/226 | ✅ | ✅ |
 | Lufia II Ancient Cave WorldGen | ✅ Passed | 0 | ✅ | 40/40 | 35/35 | 5/5 | ✅ | 40/40 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga WorldGen | ✅ Passed | 0 | ✅ | 557/557 | 556/556 | 1/1 | ✅ | 557/557 | ✅ | ✅ |
@@ -66,36 +62,32 @@
 | MegaMan Battle Network 3 WorldGen | ✅ Passed | 0 | ✅ | 264/264 | 263/263 | 1/1 | ✅ | 264/264 | ✅ | ✅ |
 | Meritous WorldGen | ✅ Passed | 0 | ✅ | 109/109 | 104/104 | 5/5 | ✅ | 109/109 | ✅ | ✅ |
 | Metamath WorldGen | ✅ Passed | 0 | ✅ | 9/9 | 9/9 | 0/0 | ✅ | 9/9 | ✅ | ✅ |
-| Muse Dash WorldGen | ❌ Failed | 3 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
+| Muse Dash WorldGen | ✅ Passed | 0 | ✅ | 90/90 | 90/90 | 0/0 | ✅ | 90/90 | ✅ | ✅ |
 | Noita WorldGen | ✅ Passed | 0 | ✅ | 117/117 | 109/109 | 8/8 | ✅ | 117/117 | ✅ | ✅ |
 | Old School Runescape WorldGen | ✅ Passed | 0 | ✅ | 76/76 | 54/54 | 22/22 | ✅ | 76/76 | ✅ | ✅ |
 | Overcooked\! 2 WorldGen | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | ✅ | ✅ |
 | Paint WorldGen | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | ✅ | ✅ |
 | Risk of Rain 2 WorldGen | ✅ Passed | 0 | ✅ | 223/223 | 221/221 | 2/2 | ✅ | 223/223 | ✅ | ✅ |
 | Saving Princess WorldGen | ✅ Passed | 0 | ✅ | 37/37 | 36/36 | 1/1 | ✅ | 37/37 | ✅ | ✅ |
-| Secret of Evermore WorldGen | ✅ Passed | 0 | ✅ | 340/340 | 339/339 | 1/1 | ✅ | 340/340 | ✅ | ✅ |
 | Shivers WorldGen | ✅ Passed | 0 | ✅ | 114/114 | 76/76 | 38/38 | ✅ | 114/114 | ✅ | ✅ |
 | Sonic Adventure 2 Battle WorldGen | ✅ Passed | 0 | ✅ | 207/207 | 206/206 | 1/1 | ✅ | 207/207 | ✅ | ✅ |
-| Starcraft 2 WorldGen | ❌ Failed | 4 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Stardew Valley WorldGen | ❌ Failed | 3 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Subnautica WorldGen | ❌ Failed | 0 | ❌ | 0/135 | 0/131 | 0/4 | ❌ | 0/135 | ✅ | ✅ |
+| Starcraft 2 WorldGen | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | ✅ | ✅ |
+| Subnautica WorldGen | ✅ Passed | 0 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | ✅ | ✅ |
 | Super Mario 64 WorldGen | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | ✅ | ✅ |
-| Super Mario Land 2 WorldGen | ❌ Failed | 3 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
+| Super Mario Land 2 WorldGen | ✅ Passed | 0 | ✅ | 60/60 | 53/53 | 7/7 | ✅ | 60/60 | ✅ | ✅ |
 | Super Mario World WorldGen | ✅ Passed | 0 | ✅ | 108/108 | 108/108 | 0/0 | ✅ | 108/108 | ✅ | ✅ |
-| Super Metroid WorldGen | ✅ Passed | 0 | ✅ | 109/109 | 100/100 | 9/9 | ✅ | 109/109 | ✅ | ✅ |
 | TOEM original WorldGen | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |
 | TOEM rule builder WorldGen | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |
 | Terraria WorldGen | ✅ Passed | 0 | ✅ | 244/244 | 63/63 | 181/181 | ✅ | 244/244 | ✅ | ✅ |
 | The Legend of Zelda WorldGen | ✅ Passed | 0 | ✅ | 165/165 | 155/155 | 10/10 | ✅ | 165/165 | ✅ | ✅ |
-| The Messenger WorldGen | ❌ Failed | 3 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
+| The Messenger WorldGen | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | ✅ | ✅ |
 | The Wind Waker WorldGen | ✅ Passed | 0 | ✅ | 109/109 | 108/108 | 1/1 | ✅ | 109/109 | ✅ | ✅ |
-| Timespinner WorldGen | ❌ Failed | 1 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | ✅ | ✅ |
+| Timespinner WorldGen | ✅ Passed | 0 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | ✅ | ✅ |
 | Undertale WorldGen | ✅ Passed | 0 | ✅ | 51/51 | 48/48 | 3/3 | ✅ | 51/51 | ✅ | ✅ |
 | VVVVVV WorldGen | ✅ Passed | 0 | ✅ | 20/20 | 20/20 | 0/0 | ✅ | 20/20 | ✅ | ✅ |
 | Wargroove WorldGen | ✅ Passed | 0 | ✅ | 39/39 | 38/38 | 1/1 | ✅ | 39/39 | ✅ | ✅ |
 | WebDevJourney WorldGen | ✅ Passed | 0 | ✅ | 62/62 | 61/61 | 1/1 | ✅ | 62/62 | ✅ | ✅ |
-| Yacht Dice WorldGen | ❌ Failed | 3 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Yoshi's Island WorldGen | ❌ Failed | 1 | ✅ | 207/207 | 191/191 | 16/16 | ✅ | 207/207 | ✅ | ✅ |
+| Yoshi's Island WorldGen | ✅ Passed | 0 | ✅ | 207/207 | 191/191 | 16/16 | ✅ | 207/207 | ✅ | ✅ |
 | shapez WorldGen | ✅ Passed | 0 | ✅ | 140/140 | 139/139 | 1/1 | ✅ | 140/140 | ✅ | ✅ |
 
 ## Notes
