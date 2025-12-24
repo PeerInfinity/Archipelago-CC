@@ -24,11 +24,8 @@ class PaintGameExportHandler(GenericGameExportHandler):
     have their own rules that shouldn't be overwritten.
     """
 
-    # Enable auto-export for discovered helpers.
-    # calculate_paint_percent_available can now be exported thanks to support for:
-    # - world.options.<setting> pattern (converted to setting_value)
-    # - sqrt() function (handled as helper type)
-    # - if_statement with multiple assignments in body
+    # Export Paint-specific option values at top level of settings
+    EXPORTED_OPTIONS = ['canvas_size_increment', 'logic_percent']
 
     # Blacklist paint_percent_available - it has caching logic with state mutation
     # (state.paint_percent_stale) that doesn't translate to the pure function model.
@@ -47,29 +44,6 @@ class PaintGameExportHandler(GenericGameExportHandler):
             if 'paint_worldgen' in module_path:
                 self._is_worldgen = True
                 logger.debug("Paint: Handler initialized for Paint WorldGen - skipping rule overrides")
-
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Export Paint-specific settings including canvas_size_increment and logic_percent."""
-        # Get base settings from parent class
-        settings_dict = super().get_settings_data(world, multiworld, player)
-
-        # Add Paint-specific settings
-        try:
-            if hasattr(world, 'options'):
-                # Export canvas_size_increment option
-                if hasattr(world.options, 'canvas_size_increment'):
-                    settings_dict['canvas_size_increment'] = world.options.canvas_size_increment.value
-                    logger.debug(f"Exported canvas_size_increment = {world.options.canvas_size_increment.value}")
-
-                # Export logic_percent option
-                if hasattr(world.options, 'logic_percent'):
-                    settings_dict['logic_percent'] = world.options.logic_percent.value
-                    logger.debug(f"Exported logic_percent = {world.options.logic_percent.value}")
-
-        except Exception as e:
-            logger.warning(f"Failed to export Paint settings: {e}")
-
-        return settings_dict
 
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Override rule analysis for Paint location access rules.
