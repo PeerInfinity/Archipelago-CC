@@ -502,6 +502,8 @@ class ALttPGameExportHandler(BaseGameExportHandler):
             return getattr(option, 'value', option)
 
         # ALTTP specific settings from multiworld
+        # Only set if value is not None - for worldgen worlds, these are loaded
+        # from _worldgen_settings.json by base handler and shouldn't be overwritten
         alttp_settings_mw = [
             'dark_room_logic', 'retro_bow', 'swordless', 'enemy_shuffle',
             'enemy_health', 'enemy_damage', 'bombless_start', 'glitches_required',
@@ -511,15 +513,19 @@ class ALttPGameExportHandler(BaseGameExportHandler):
             'item_functionality',  # Used by can_extend_magic
         ]
         for setting in alttp_settings_mw:
-             settings_dict[setting] = extract_option(setting)
+             value = extract_option(setting)
+             if value is not None:
+                 settings_dict[setting] = value
 
         # ALTTP specific settings from world or world.options
+        # Only set if value is not None - for worldgen worlds, loaded from _worldgen_settings.json
         if hasattr(world, 'options'):
              # Shuffle Capacity Upgrades
              scu_option = getattr(world.options, 'shuffle_capacity_upgrades', None)
-             settings_dict['shuffle_capacity_upgrades'] = getattr(scu_option, 'value', scu_option)
-        else:
-             settings_dict['shuffle_capacity_upgrades'] = None # Or a default
+             scu_value = getattr(scu_option, 'value', scu_option)
+             if scu_value is not None:
+                 settings_dict['shuffle_capacity_upgrades'] = scu_value
+        # Don't set to None - let _worldgen_settings.json provide the value for worldgen worlds
 
         # Treasure Hunt Required
         settings_dict['treasure_hunt_required'] = getattr(world, 'treasure_hunt_required', 0) # Default 0
@@ -542,8 +548,9 @@ class ALttPGameExportHandler(BaseGameExportHandler):
         settings_dict['logical_heart_pieces'] = getattr(world, 'logical_heart_pieces', 24)
         settings_dict['logical_heart_containers'] = getattr(world, 'logical_heart_containers', 10)
 
-        # Medallions
-        if hasattr(world, 'required_medallions'):
+        # Medallions - only set if world has required_medallions attribute
+        # For worldgen worlds, these are loaded from _worldgen_settings.json by base handler
+        if hasattr(world, 'required_medallions') and world.required_medallions:
              # Extract medallion names (assuming they have a 'name' attribute or similar)
              # Handle potential errors if 'name' attribute is missing
              medallion_names = []
@@ -560,10 +567,7 @@ class ALttPGameExportHandler(BaseGameExportHandler):
              tr_med = getattr(world, 'turtle_rock_medallion', medallion_names[1] if len(medallion_names) > 1 else None)
              settings_dict['misery_mire_medallion'] = getattr(mire_med, 'value', str(mire_med))
              settings_dict['turtle_rock_medallion'] = getattr(tr_med, 'value', str(tr_med))
-        else:
-             settings_dict['required_medallions'] = []
-             settings_dict['misery_mire_medallion'] = None
-             settings_dict['turtle_rock_medallion'] = None
+        # Don't set empty values - let _worldgen_settings.json provide the values for worldgen worlds
 
         # Shop item data - maps items to regions where shops sell them
         # This enables can_buy and can_buy_unlimited helper implementation
