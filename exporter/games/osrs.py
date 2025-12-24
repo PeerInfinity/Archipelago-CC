@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 
 
 class OSRSGameExportHandler(GenericGameExportHandler):
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     # No blacklist - quest_points is handled via computed helper
     HELPERS_TO_EXPORT_BLACKLIST = set()

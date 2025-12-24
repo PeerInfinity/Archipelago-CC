@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 class Civ6GameExportHandler(GenericGameExportHandler):
     """Handler for Civilization VI - fixes era region access rules."""
 
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     def __init__(self):
         """Initialize the handler with era requirements storage."""

@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 class TLoZGameExportHandler(GenericGameExportHandler):
     """Export handler for The Legend of Zelda."""
 
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

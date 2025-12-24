@@ -13,7 +13,6 @@ class MMBN3GameExportHandler(GenericGameExportHandler):
     definition that the frontend can evaluate.
     """
 
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     def get_helper_definitions(self, world) -> Dict[str, Any]:
         """

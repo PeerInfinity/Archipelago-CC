@@ -12,7 +12,6 @@ class LingoGameExportHandler(GenericGameExportHandler):
     """Export handler for Lingo that handles AccessRequirements string sorting, door variable resolution,
     and exporting door-related data structures for rule evaluation."""
 
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     # Use auto sweep for indirect region dependencies since Lingo's custom Rules.py
     # sets access_rule directly without registering indirect_connections

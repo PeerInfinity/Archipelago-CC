@@ -7,7 +7,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 class TWWGameExportHandler(GenericGameExportHandler):
-    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     AUTO_PRESERVE_LARGE_HELPERS = True
 
     # Define where to find helper functions
