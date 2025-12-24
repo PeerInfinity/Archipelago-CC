@@ -873,7 +873,9 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
                 continue
 
             item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Place item without locking - canonical placements are not truly locked
+            location.item = item
+            item.location = location
 
             # Remove the item from the pool if it exists
             for pool_item in self.multiworld.itempool[:]:
