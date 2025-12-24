@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-23 06:36:13
+**Generated:** 2025-12-24 04:26:30
 
-**Source Data Created:** 2025-12-23T05:52:48.234528
+**Source Data Created:** 2025-12-24T04:26:29.774361
 
-**Source Data Last Updated:** 2025-12-23T05:52:48.234533
+**Source Data Last Updated:** 2025-12-24T04:26:29.774366
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 70 (95.9%)
-- **Failed:** 3 (4.1%)
+- **Passed:** 72 (98.6%)
+- **Failed:** 1 (1.4%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 28/70 (40.0% of passed)
-- **Passing with Generic Logic:** 63/70 (90.0% of passed)
-- **Passing with Both Generic:** 28/70 (40.0% of passed)
+- **Passing with Generic Exporter:** 28/72 (38.9% of passed)
+- **Passing with Generic Logic:** 64/72 (88.9% of passed)
+- **Passing with Both Generic:** 28/72 (38.9% of passed)
 
 ## Test Results
 
@@ -36,7 +36,7 @@
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Aquaria | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 3.4KB | ✅ |
-| Bomb Rush Cyberfunk | ❌ Failed | 0 | 2.1 | 10.9 | 🟡 19.3% | 6.8KB | 40.3KB |
+| Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.9 | 10.9 | 🟢 Complete | 1.5KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | 0 | 4.4 | 4.4 | 🟢 Complete | 16.4KB | ✅ |
 | Castlevania 64 | ✅ Passed | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ✅ |
@@ -81,7 +81,7 @@
 | Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ❌ Failed | 0 | 7.1 | 15.5 | 🟡 45.8% | 39.9KB | 86.3KB |
+| Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 53.7KB | 86.3KB |
 | Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 20.6KB | 10.7KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 7.0KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 14.6KB | ✅ |
