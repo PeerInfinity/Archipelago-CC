@@ -197,19 +197,21 @@ Playthrough:
 }
 5: {
   Branding specialist 2: Compact Splitter
-  Goal: Goal
   I'll use it later: Constant Signal
   I've seen that before ...: Double Painter
-  Level 22: Big Belt Upgrade
   Memories from the past: Tunnel
-  Miner Upgrade Tier VIII: Rotator (180°)
-  Painting Upgrade Tier VI: Painter
   Preparing to launch: Big Belt Upgrade
-  Processors Upgrade Tier V: Compact Merger
-  Processors Upgrade Tier VIII: Blueprints
   Shapesanity 35: Rotator
   Shapesanity 4: Big Belt Upgrade
   Shapesanity 42: Big Belt Upgrade
   Shapesanity 44: Trash
+}
+6: {
+  Goal: Goal
+  Level 22: Big Belt Upgrade
+  Miner Upgrade Tier VIII: Rotator (180°)
+  Painting Upgrade Tier VI: Painter
+  Processors Upgrade Tier V: Compact Merger
+  Processors Upgrade Tier VIII: Blueprints
   Wires: Big Belt Upgrade
 }

@@ -382,7 +382,8 @@ def run_all_promptfiles(project_root):
         (['--helper-export', '--CC'], 'helper-export.txt'),
         (['--new-rule-types', '--CC'], 'new-rule-types.txt'),
         (['--gen-errors', '--CC'], 'gen-errors.txt'),
-        (['--worldgen-gen-failures', '--worldgen-test-mode', 'canonical'], 'worldgen-gen-failures.txt'),
+        (['--worldgen-world-failures', '--worldgen-test-mode', 'canonical'], 'worldgen-world-failures.txt'),
+        (['--worldgen-seed-failures', '--worldgen-test-mode', 'canonical'], 'worldgen-seed-failures.txt'),
         (['--worldgen-spoiler-failures', '--worldgen-test-mode', 'canonical'], 'worldgen-spoiler-failures.txt'),
         (['--worldgen-crossval-failures', '--worldgen-test-mode', 'canonical'], 'worldgen-crossval-failures.txt'),
     ]
@@ -551,8 +552,39 @@ def load_worldgen_test_results(project_root, test_mode='canonical'):
         return {}
 
 
-def get_worldgen_gen_failures(project_root, test_mode='canonical'):
-    """Get list of games that failed at the Test Gen stage.
+def get_worldgen_world_failures(project_root, test_mode='canonical'):
+    """Get list of games that failed at Stage 1: World Generation.
+
+    World generation failures occur when the world generator fails to create
+    the _worldgen Python world files from rules.json.
+
+    Returns list of dicts with game_name, template, error, and other details.
+    """
+    data = load_worldgen_test_results(project_root, test_mode)
+    results = data.get('results', {})
+    failures = []
+
+    for game_name, result in results.items():
+        test_world = result.get('test_world', {})
+        world_gen = test_world.get('world_generation', {})
+
+        # Check if world generation itself failed
+        if not world_gen.get('success', True):
+            failures.append({
+                'game_name': game_name,
+                'template': result.get('template', f'{game_name}.yaml'),
+                'error': world_gen.get('error', 'Unknown error'),
+                'world_dir': world_gen.get('world_dir'),
+            })
+
+    return failures
+
+
+def get_worldgen_seed_failures(project_root, test_mode='canonical'):
+    """Get list of games that failed at Stage 2: Seed Generation.
+
+    Seed generation failures occur when the _worldgen world files were created
+    successfully, but running Generate.py with them fails.
 
     Returns list of dicts with game_name, template, error, and other details.
     """
@@ -581,7 +613,10 @@ def get_worldgen_gen_failures(project_root, test_mode='canonical'):
 
 
 def get_worldgen_spoiler_failures(project_root, test_mode='canonical'):
-    """Get list of games that failed at the Test Spoiler stage.
+    """Get list of games that failed at Stage 3: Spoiler Test.
+
+    Spoiler test failures occur when the _worldgen world generates a seed
+    successfully, but the spoiler test fails against its own rules.
 
     Returns list of dicts with game_name, template, and other details.
     """
@@ -611,13 +646,10 @@ def get_worldgen_spoiler_failures(project_root, test_mode='canonical'):
 
 
 def get_worldgen_crossval_failures(project_root, test_mode='canonical'):
-    """Get list of games that failed at the Cross-Validation stage.
+    """Get list of games that failed at Stage 4: Cross-Validation.
 
-    Cross-validation failures occur when:
-    - Seed generation succeeded
-    - The worldgen world's own spoiler test passed
-    - But the original sphere log fails against the worldgen rules
-
+    Cross-validation failures occur when the _worldgen world passes its own
+    spoiler test, but fails when validated against the original world's sphere log.
     This indicates the worldgen world has different accessibility logic than the original.
 
     Returns list of dicts with game_name, template, and other details.
@@ -649,17 +681,62 @@ def get_worldgen_crossval_failures(project_root, test_mode='canonical'):
     return failures
 
 
-def categorize_worldgen_error(error_msg):
-    """Categorize a worldgen error message into a type for targeted debugging.
+def categorize_world_generation_error(error_msg):
+    """Categorize a Stage 1 (world generation) error message.
+
+    These are errors that occur when creating the _worldgen Python files,
+    not when running Generate.py with them.
 
     Returns a tuple of (category, details).
     """
     if not error_msg:
         return ('unknown', None)
 
+    import re
+
+    # Check for comparison operator type errors (common issue)
+    if "not supported between instances of" in error_msg:
+        match = re.search(r"'([^']+)' not supported between instances of '([^']+)' and '([^']+)'", error_msg)
+        if match:
+            return ('comparison_type_error', {
+                'operator': match.group(1),
+                'left_type': match.group(2),
+                'right_type': match.group(3)
+            })
+        return ('comparison_type_error', {'message': error_msg})
+
+    if 'KeyError' in error_msg:
+        match = re.search(r"KeyError: (.+)", error_msg)
+        key = match.group(1) if match else None
+        return ('key_error', {'key': key})
+
+    if 'TypeError' in error_msg:
+        return ('type_error', {'message': error_msg})
+
+    if 'SyntaxError' in error_msg:
+        return ('syntax_error', {'message': error_msg})
+
+    if 'AttributeError' in error_msg:
+        return ('attribute_error', {'message': error_msg})
+
+    return ('other', {'message': error_msg})
+
+
+def categorize_seed_generation_error(error_msg):
+    """Categorize a Stage 2 (seed generation) error message.
+
+    These are errors that occur when running Generate.py with the _worldgen world,
+    after the world files have been created successfully.
+
+    Returns a tuple of (category, details).
+    """
+    if not error_msg:
+        return ('unknown', None)
+
+    import re
+
     if 'NameError' in error_msg:
         # Extract the undefined name
-        import re
         match = re.search(r"name '([^']+)' is not defined", error_msg)
         undefined_name = match.group(1) if match else None
         return ('name_error', {'undefined_name': undefined_name})
@@ -668,7 +745,6 @@ def categorize_worldgen_error(error_msg):
         return ('fill_error', None)
 
     if 'KeyError' in error_msg:
-        import re
         match = re.search(r"KeyError: (.+)", error_msg)
         key = match.group(1) if match else None
         return ('key_error', {'key': key})
@@ -682,8 +758,12 @@ def categorize_worldgen_error(error_msg):
     return ('other', {'message': error_msg})
 
 
-def generate_worldgen_gen_failure_prompt(game_name, template_file, error_msg, world_mapping, seed=1):
-    """Generate a prompt for debugging a WorldGen Test Gen failure."""
+def generate_worldgen_world_failure_prompt(game_name, template_file, error_msg, world_mapping, seed=1):
+    """Generate a prompt for debugging a Stage 1: World Generation failure.
+
+    These failures occur when the world generator fails to create the _worldgen
+    Python world files from rules.json.
+    """
     setup_doc = "CC/cloud-setup.md"
     debug_doc = "CC/debugging-worldgen-failures.md"
 
@@ -694,7 +774,164 @@ def generate_worldgen_gen_failure_prompt(game_name, template_file, error_msg, wo
     else:
         world_dir = game_name.lower().replace(' ', '')
 
-    error_category, error_details = categorize_worldgen_error(error_msg)
+    error_category, error_details = categorize_world_generation_error(error_msg)
+
+    # Build error-specific guidance
+    error_guidance = ""
+    if error_category == 'comparison_type_error' and error_details:
+        operator = error_details.get('operator', '?')
+        left_type = error_details.get('left_type', '?')
+        right_type = error_details.get('right_type', '?')
+        error_guidance = f"""
+## Error Analysis
+
+This is a **comparison type error** - the operator `{operator}` was used with incompatible types: `{left_type}` and `{right_type}`.
+
+This typically means:
+1. A rule in rules.json has a comparison where one operand is a complex object (dict) instead of a simple value
+2. The rule code generator (`world_generator/rule_codegen.py`) doesn't handle this operand type
+
+**Investigation commands:**
+```bash
+# Find rules with comparison operators in the rules.json
+python -c "
+import json
+with open('frontend/presets/{world_dir}/AP_14089154938208861744/AP_14089154938208861744_rules.json') as f:
+    data = json.load(f)
+
+def find_comparisons(obj, path=''):
+    if isinstance(obj, dict):
+        if obj.get('op') in ['<', '<=', '>', '>=']:
+            print(f'{{path}}: {{obj}}')
+        for k, v in obj.items():
+            find_comparisons(v, f'{{path}}.{{k}}')
+    elif isinstance(obj, list):
+        for i, v in enumerate(obj):
+            find_comparisons(v, f'{{path}}[{{i}}]')
+find_comparisons(data)
+"
+
+# Check the rule code generator for comparison handling
+grep -n "def.*comparison\\|'<='\\|'>='\\|generate.*compare" world_generator/rule_codegen.py
+```
+"""
+    elif error_category == 'key_error':
+        key = error_details.get('key', 'unknown') if error_details else 'unknown'
+        error_guidance = f"""
+## Error Analysis
+
+This is a **KeyError** during world generation for key: `{key}`
+
+This typically means:
+1. The world generator's extractors expected data that wasn't in rules.json
+2. A rule references something that doesn't exist
+
+**Investigation commands:**
+```bash
+# Check what the extractor is looking for
+grep -n "{key}" world_generator/extractors.py
+
+# Check if the key exists in rules.json
+python -c "
+import json
+with open('frontend/presets/{world_dir}/AP_14089154938208861744/AP_14089154938208861744_rules.json') as f:
+    data = json.load(f)
+print('{key}' in str(data))
+"
+```
+"""
+    elif error_category == 'syntax_error':
+        error_guidance = f"""
+## Error Analysis
+
+This is a **SyntaxError** - the world generator produced invalid Python syntax.
+
+**Investigation commands:**
+```bash
+# Run the world generator directly to see the full error
+python -c "
+from world_generator.generator import WorldGenerator
+gen = WorldGenerator()
+gen.generate_from_rules('frontend/presets/{world_dir}/AP_14089154938208861744/AP_14089154938208861744_rules.json', 'worlds/{world_dir}_worldgen')
+"
+
+# If a partial world was generated, check the syntax
+python -m py_compile worlds/{world_dir}_worldgen/__init__.py
+```
+"""
+    else:
+        error_guidance = f"""
+## Error Analysis
+
+Error type: **{error_category}**
+
+Review the error message and check the world generator code for issues.
+"""
+
+    return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
+
+Then, please read {debug_doc} - specifically **Stage 1: World Generation Failures**.
+
+## Game Information
+
+- **Game**: {game_name}
+- **Template**: `{template_file}`
+- **World directory**: `worlds/{world_dir}/`
+- **WorldGen directory**: `worlds/{world_dir}_worldgen/` (failed to create)
+
+## The Error
+
+```
+{error_msg}
+```
+{error_guidance}
+
+## Test Commands
+
+```bash
+source .venv/bin/activate
+
+# Run the world generator directly to see the full error
+python -c "
+from world_generator.generator import WorldGenerator
+gen = WorldGenerator()
+gen.generate_from_rules('frontend/presets/{world_dir}/AP_14089154938208861744/AP_14089154938208861744_rules.json', 'worlds/{world_dir}_worldgen')
+"
+
+# Or run through the test script
+python scripts/test/test-world-generator.py --include-list "{template_file}" --phase generate-test-worlds --canonical-seed1
+```
+
+## Goal
+
+Fix the world generator so that it can successfully create the `{game_name} WorldGen` world files.
+
+## Reference Files
+
+- `world_generator/generator.py` - Main entry point
+- `world_generator/rule_codegen.py` - Converts rules to Python code
+- `world_generator/extractors.py` - Extracts data from rules.json
+- `world_generator/templates.py` - Generates Python world code
+"""
+
+
+def generate_worldgen_seed_failure_prompt(game_name, template_file, error_msg, world_mapping, seed=1):
+    """Generate a prompt for debugging a Stage 2: Seed Generation failure.
+
+    These failures occur when the _worldgen world files were created successfully,
+    but running Generate.py with them fails.
+    """
+    setup_doc = "CC/cloud-setup.md"
+    debug_doc = "CC/debugging-worldgen-failures.md"
+
+    # Get world directory from mapping
+    world_dir = None
+    if game_name in world_mapping:
+        world_dir = world_mapping[game_name].get('world_directory', game_name.lower().replace(' ', ''))
+    else:
+        world_dir = game_name.lower().replace(' ', '')
+
+    error_category, error_details = categorize_seed_generation_error(error_msg)
 
     # Build error-specific guidance
     error_guidance = ""
@@ -792,7 +1029,7 @@ Review the error message and check the generated world code for issues.
 
     return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
 
-Then, please read {debug_doc}
+Then, please read {debug_doc} - specifically **Stage 2: Seed Generation Failures**.
 
 ## Game Information
 
@@ -830,7 +1067,7 @@ Fix the world generator so that `{game_name} WorldGen` can successfully generate
 
 
 def generate_worldgen_spoiler_failure_prompt(game_name, template_file, world_mapping, seed=1):
-    """Generate a prompt for debugging a WorldGen Test Spoiler failure."""
+    """Generate a prompt for debugging a Stage 3: Spoiler Test failure."""
     setup_doc = "CC/cloud-setup.md"
     debug_doc = "CC/debugging-worldgen-failures.md"
 
@@ -843,7 +1080,7 @@ def generate_worldgen_spoiler_failure_prompt(game_name, template_file, world_map
 
     return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
 
-Then, please read {debug_doc}
+Then, please read {debug_doc} - specifically **Stage 3: Spoiler Test Failures**.
 
 ## Game Information
 
@@ -856,7 +1093,7 @@ Then, please read {debug_doc}
 
 The `{game_name} WorldGen` world generates a seed successfully, but the **spoiler test fails**.
 
-This means the generated rules don't match the original world's logic - locations that should be accessible aren't (or vice versa).
+This means the generated rules have internal inconsistencies - the worldgen world's sphere log doesn't validate against its own rules.
 
 ## Test Commands
 
@@ -912,7 +1149,7 @@ The rules generated by the world generator must produce the same accessibility l
 
 
 def generate_worldgen_crossval_failure_prompt(game_name, template_file, world_mapping, seed=1):
-    """Generate a prompt for debugging a WorldGen Cross-Validation failure.
+    """Generate a prompt for debugging a Stage 4: Cross-Validation failure.
 
     Cross-validation failures occur when the worldgen world passes its own spoiler test
     but fails when validated against the original world's sphere log. This means the
@@ -930,7 +1167,7 @@ def generate_worldgen_crossval_failure_prompt(game_name, template_file, world_ma
 
     return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
 
-Then, please read {debug_doc} - specifically the **Cross-Validation Failures** section.
+Then, please read {debug_doc} - specifically **Stage 4: Cross-Validation Failures**.
 
 ## Game Information
 
@@ -1389,12 +1626,14 @@ def main():
                        help='Generate prompts for games with JavaScript helpers to investigate implementing new rule types')
     parser.add_argument('--gen-errors', action='store_true',
                        help='Generate prompts for games that pass spoiler tests but have generation errors')
-    parser.add_argument('--worldgen-gen-failures', action='store_true',
-                       help='Generate prompts for WorldGen worlds that fail at seed generation (Test Gen failures)')
+    parser.add_argument('--worldgen-world-failures', action='store_true',
+                       help='Generate prompts for WorldGen Stage 1 failures (world generator fails to create _worldgen files)')
+    parser.add_argument('--worldgen-seed-failures', action='store_true',
+                       help='Generate prompts for WorldGen Stage 2 failures (seed generation fails with _worldgen world)')
     parser.add_argument('--worldgen-spoiler-failures', action='store_true',
-                       help='Generate prompts for WorldGen worlds that fail spoiler tests (Test Spoiler failures)')
+                       help='Generate prompts for WorldGen Stage 3 failures (spoiler test fails)')
     parser.add_argument('--worldgen-crossval-failures', action='store_true',
-                       help='Generate prompts for WorldGen worlds that fail cross-validation (pass own spoiler test but fail with original sphere log)')
+                       help='Generate prompts for WorldGen Stage 4 failures (cross-validation fails)')
     parser.add_argument('--worldgen-test-mode', type=str, choices=['canonical', 'random'], default='canonical',
                        help='Which world generator test results to use (default: canonical)')
     parser.add_argument('--all-promptfiles', action='store_true',
@@ -1471,9 +1710,9 @@ def main():
         print("Error: --gen-errors and --new-rule-types are mutually exclusive")
         sys.exit(1)
 
-    worldgen_modes = [args.worldgen_gen_failures, args.worldgen_spoiler_failures, args.worldgen_crossval_failures]
+    worldgen_modes = [args.worldgen_world_failures, args.worldgen_seed_failures, args.worldgen_spoiler_failures, args.worldgen_crossval_failures]
     if sum(worldgen_modes) > 1:
-        print("Error: --worldgen-gen-failures, --worldgen-spoiler-failures, and --worldgen-crossval-failures are mutually exclusive")
+        print("Error: --worldgen-world-failures, --worldgen-seed-failures, --worldgen-spoiler-failures, and --worldgen-crossval-failures are mutually exclusive")
         sys.exit(1)
 
     if any(worldgen_modes) and (args.multiclient or args.multiworld):
@@ -1514,7 +1753,7 @@ def main():
     # Load appropriate exclude list based on mode if not explicitly provided
     if args.skip_list is None:
         # Determine the appropriate test_type based on mode
-        if args.worldgen_gen_failures or args.worldgen_spoiler_failures or args.worldgen_crossval_failures or args.only_worldgen or args.include_pattern == "WorldGen":
+        if args.worldgen_world_failures or args.worldgen_seed_failures or args.worldgen_spoiler_failures or args.worldgen_crossval_failures or args.only_worldgen or args.include_pattern == "WorldGen":
             exclude_test_type = 'worldgen'
         else:
             # For spoiler/multiclient/multiworld tests, use 'main' (permanent + main test exclusions)
@@ -1530,14 +1769,14 @@ def main():
     world_mapping = load_world_mapping(project_root)
 
     # Handle worldgen modes - these iterate through failures, not templates
-    if args.worldgen_gen_failures or args.worldgen_spoiler_failures or args.worldgen_crossval_failures:
+    if args.worldgen_world_failures or args.worldgen_seed_failures or args.worldgen_spoiler_failures or args.worldgen_crossval_failures:
         quiet_mode = (args.text or args.prompt or args.promptfile) and not args.loud
         collected_prompts = [] if args.promptfile else None
 
-        if args.worldgen_gen_failures:
-            failures = get_worldgen_gen_failures(project_root, args.worldgen_test_mode)
+        if args.worldgen_world_failures:
+            failures = get_worldgen_world_failures(project_root, args.worldgen_test_mode)
             if not quiet_mode:
-                print(f"Found {len(failures)} WorldGen Test Gen failures ({args.worldgen_test_mode} mode)")
+                print(f"Found {len(failures)} WorldGen Stage 1 (World Generation) failures ({args.worldgen_test_mode} mode)")
 
             for i, failure in enumerate(sorted(failures, key=lambda x: x['game_name'])):
                 game_name = failure['game_name']
@@ -1550,7 +1789,39 @@ def main():
                     print(f"Error: {error_msg[:80]}...")
                     print('='*60)
 
-                prompt = generate_worldgen_gen_failure_prompt(
+                prompt = generate_worldgen_world_failure_prompt(
+                    game_name, template_file, error_msg, world_mapping, args.seed
+                )
+
+                if args.promptfile:
+                    collected_prompts.append(prompt)
+                else:
+                    print(prompt)
+                    if args.text or args.prompt:
+                        return 0
+
+                if args.max_files and (i + 1) >= args.max_files:
+                    if not quiet_mode:
+                        print(f"\n Reached maximum file limit ({args.max_files}), stopping...")
+                    break
+
+        elif args.worldgen_seed_failures:
+            failures = get_worldgen_seed_failures(project_root, args.worldgen_test_mode)
+            if not quiet_mode:
+                print(f"Found {len(failures)} WorldGen Stage 2 (Seed Generation) failures ({args.worldgen_test_mode} mode)")
+
+            for i, failure in enumerate(sorted(failures, key=lambda x: x['game_name'])):
+                game_name = failure['game_name']
+                template_file = failure['template']
+                error_msg = failure['error']
+
+                if not quiet_mode:
+                    print(f"\n{'='*60}")
+                    print(f"[{i+1}/{len(failures)}] {game_name}")
+                    print(f"Error: {error_msg[:80]}...")
+                    print('='*60)
+
+                prompt = generate_worldgen_seed_failure_prompt(
                     game_name, template_file, error_msg, world_mapping, args.seed
                 )
 
@@ -1569,7 +1840,7 @@ def main():
         elif args.worldgen_spoiler_failures:
             failures = get_worldgen_spoiler_failures(project_root, args.worldgen_test_mode)
             if not quiet_mode:
-                print(f"Found {len(failures)} WorldGen Test Spoiler failures ({args.worldgen_test_mode} mode)")
+                print(f"Found {len(failures)} WorldGen Stage 3 (Spoiler Test) failures ({args.worldgen_test_mode} mode)")
 
             for i, failure in enumerate(sorted(failures, key=lambda x: x['game_name'])):
                 game_name = failure['game_name']
@@ -1599,7 +1870,7 @@ def main():
         elif args.worldgen_crossval_failures:
             failures = get_worldgen_crossval_failures(project_root, args.worldgen_test_mode)
             if not quiet_mode:
-                print(f"Found {len(failures)} WorldGen Cross-Validation failures ({args.worldgen_test_mode} mode)")
+                print(f"Found {len(failures)} WorldGen Stage 4 (Cross-Validation) failures ({args.worldgen_test_mode} mode)")
 
             for i, failure in enumerate(sorted(failures, key=lambda x: x['game_name'])):
                 game_name = failure['game_name']

@@ -144,21 +144,25 @@ Playthrough:
   Meridian Defeat: Meridian Defeated
 }
 3: {
-  Ataraxia Defeat: Ataraxia Defeated
   Beta Cache 8: PSI Key 2
   Gamma Cache 12: Dodge Enhancer
   Reward Chest 8: Metabolism
 }
 4: {
-  Alpha Cache 13: Shield Boost
-  Gamma Cache 18: PSI Key 1
-  Merodach Defeat: Merodach Defeated
+  Ataraxia Defeat: Ataraxia Defeated
 }
 5: {
+  Alpha Cache 13: Shield Boost
+  Gamma Cache 18: PSI Key 1
+}
+6: {
+  Merodach Defeat: Merodach Defeated
+}
+7: {
   Place of Power: Cursed Seal
   The Last Place You'll Look: Agate Knife
 }
-6: {
+8: {
   Wervyn Anixil: Victory
   Wervyn Anixil?: Full Victory
 }

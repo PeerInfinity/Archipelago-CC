@@ -2198,7 +2198,8 @@ King Zora (Player2)
 Lake Hylia Island (Player2)
         Links House -> Links House Exit
    =>   Light World -> East Hyrule Teleporter
-   =>   East Dark World -> Dark Lake Hylia Drop (East)
+   =>   East Dark World -> Northeast Dark World Broken Bridge Pass
+   =>   Northeast Dark World -> Dark Lake Hylia Teleporter
    =>   Dark Lake Hylia -> Lake Hylia Island Mirror Spot
    =>   Lake Hylia Island
 Lava Cake Cleared (Player1)
@@ -2308,10 +2309,9 @@ Mafia Town - Yellow Sphere Building Chest (Player1)
    =>   Mafia Town Area (HUMT)
 Mafia of Cooks - Page: Fish Pile (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Battle of the Birds
-   =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   She Came from Outer Space -> Battle of the Birds - Act 2: Connection 1
-   =>   Down with the Mafia! -> Time Rift - Mafia of Cooks Portal - Entrance 4
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Mimic Cave (Player2)
         Links House -> Links House Exit

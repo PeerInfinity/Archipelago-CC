@@ -1,6 +1,6 @@
 """Starcraft 2 game-specific export handler."""
 
-from typing import Dict, Any, Optional, Callable
+from typing import Dict, Any, Optional, Callable, List
 from .generic import GenericGameExportHandler
 import logging
 
@@ -47,7 +47,8 @@ class SC2GameExportHandler(GenericGameExportHandler):
         'weapon_armor_upgrade_count',
         # is_item_placement - state check method, not applicable in frontend
         'is_item_placement',
-        # competent_comp helpers - complex conditional logic, but could work if dependencies are met
+        # competent_comp helpers - complex conditional logic with parametric upgrade_level
+        # Too complex to simplify without causing fill errors
         'terran_competent_comp', 'protoss_competent_comp', 'zerg_competent_comp',
         # defense_rating helpers - now exported with game_info support
         # 'terran_defense_rating', 'protoss_defense_rating', 'zerg_defense_rating',
@@ -90,6 +91,379 @@ class SC2GameExportHandler(GenericGameExportHandler):
                             pass
         return closure_vars
 
+    def _get_simplified_helper(self, helper_name: str, args: List[Dict[str, Any]] = None) -> Optional[Dict[str, Any]]:
+        """
+        Get simplified logic for blacklisted helpers.
+
+        Some helpers can't be fully exported because they call other blacklisted helpers
+        or use complex patterns. For these, we provide simplified approximations that
+        capture the most common accessibility paths.
+
+        Args:
+            helper_name: Name of the helper to simplify
+            args: List of argument rules passed to the helper (already expanded)
+
+        Returns:
+            Simplified rule dict if available, None otherwise
+        """
+        args = args or []
+
+        # weapon_armor_upgrade_count: Takes an item name and returns its count
+        # We simplify it to a count_item check for the progressive item
+        if helper_name == 'weapon_armor_upgrade_count':
+            if args and isinstance(args[0], dict):
+                # Extract the item name from the first argument
+                arg = args[0]
+                item_name = None
+                if arg.get('type') == 'constant':
+                    item_name = arg.get('value', '')
+                elif arg.get('rule') == 'Constant':
+                    item_name = arg.get('args', {}).get('value', '')
+
+                if item_name:
+                    return {
+                        'type': 'count_item',
+                        'item': item_name
+                    }
+            # If we can't extract the item name, return None to fall back to True_
+            return None
+
+        # terran_competent_ground_to_air: Common paths include having Goliath or Cyclone
+        # Full logic: has(Goliath) OR (has_any(Marine, Dominion Trooper) AND bio_heal AND weapons >= 2)
+        #             OR (advanced_tactics AND (has(Cyclone) OR has_all(Thor, Payload)))
+        # We use has_any(Goliath, Cyclone, Thor) to cover multiple progression paths
+        if helper_name == 'terran_competent_ground_to_air':
+            return {
+                'type': 'or',
+                'conditions': [
+                    {'type': 'item_check', 'item': 'Goliath'},
+                    {'type': 'item_check', 'item': 'Cyclone'},
+                    {'type': 'item_check', 'item': 'Thor'}
+                ]
+            }
+
+        # protoss_competent_ground_to_air: Common path is Dragoon or Stalker
+        if helper_name == 'protoss_competent_ground_to_air':
+            return {
+                'type': 'or',
+                'conditions': [
+                    {'type': 'item_check', 'item': 'Dragoon'},
+                    {'type': 'item_check', 'item': 'Stalker'}
+                ]
+            }
+
+        # zerg_competent_ground_to_air: Common path is Hydralisk
+        if helper_name == 'zerg_competent_ground_to_air':
+            return {'type': 'item_check', 'item': 'Hydralisk'}
+
+        # terran_welcome_to_the_jungle_requirement: Requires power_rating >= 5 and
+        # (common_unit + competent_ground_to_air) or (advanced + basic_unit + air_anti_air)
+        # Without advanced_tactics, competent_ground_to_air requires:
+        #   - Goliath, OR
+        #   - (Marine OR Dominion Trooper) AND bio_heal AND infantry_weapon >= 2
+        # Note: Thor/Cyclone only count with advanced_tactics (not handled here for simplicity)
+        if helper_name == 'terran_welcome_to_the_jungle_requirement':
+            return {
+                'type': 'or',
+                'conditions': [
+                    # Path 1: Goliath alone provides competent ground-to-air
+                    {'type': 'item_check', 'item': 'Goliath'},
+                    # Path 2: (Marine OR Dominion Trooper) + bio_heal + infantry_weapon >= 2
+                    {
+                        'type': 'and',
+                        'conditions': [
+                            {
+                                'type': 'or',
+                                'conditions': [
+                                    {'type': 'item_check', 'item': 'Marine'},
+                                    {'type': 'item_check', 'item': 'Dominion Trooper'}
+                                ]
+                            },
+                            {
+                                'type': 'or',
+                                'conditions': [
+                                    {'type': 'item_check', 'item': 'Medic'},
+                                    {'type': 'item_check', 'item': 'Medivac'}
+                                ]
+                            },
+                            {
+                                'type': 'compare',
+                                'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Weapon'},
+                                'op': '>=',
+                                'right': {'type': 'constant', 'value': 2}
+                            }
+                        ]
+                    }
+                ]
+            }
+
+        # zerg_welcome_to_the_jungle_requirement: Similar requirements for Zerg
+        if helper_name == 'zerg_welcome_to_the_jungle_requirement':
+            return {'type': 'item_check', 'item': 'Hydralisk'}
+
+        # protoss_welcome_to_the_jungle_requirement: Similar requirements for Protoss
+        if helper_name == 'protoss_welcome_to_the_jungle_requirement':
+            return {
+                'type': 'or',
+                'conditions': [
+                    {'type': 'item_check', 'item': 'Stalker'},
+                    {'type': 'item_check', 'item': 'Dragoon'}
+                ]
+            }
+
+        # terran_beats_protoss_deathball: Requires air attack capability + weapon/armor >= 2
+        # Original: ((Banshee OR Battlecruiser OR (Liberator+Raid Artillery)) AND anti_air)
+        #           OR (competent_comp AND air_anti_air)
+        #           AND weapon_armor_min >= 2
+        # Simplified: (Banshee OR Battlecruiser) AND ship_weapon >= 2
+        if helper_name == 'terran_beats_protoss_deathball':
+            return {
+                'type': 'and',
+                'conditions': [
+                    {
+                        'type': 'or',
+                        'conditions': [
+                            {'type': 'item_check', 'item': 'Banshee'},
+                            {'type': 'item_check', 'item': 'Battlecruiser'}
+                        ]
+                    },
+                    {
+                        'type': 'compare',
+                        'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Weapon'},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': 2}
+                    }
+                ]
+            }
+
+        # terran_base_trasher: Requires competent_comp + very_hard weapon/armor + base destruction
+        # Original: terran_competent_comp AND very_hard_weapon_armor >= 3 (without advanced_tactics)
+        #           AND ((Siege Tank + Jump Jets) OR (Battlecruiser + ATX) OR (Liberator + Raid Artillery))
+        # Simplified: Ship Weapon >= 3 AND ((Siege Tank + Jump Jets) OR (Battlecruiser + ATX))
+        if helper_name == 'terran_base_trasher':
+            return {
+                'type': 'and',
+                'conditions': [
+                    # very_hard_weapon_armor_level requires all >= 3 without advanced_tactics
+                    # Ship weapon is usually the bottleneck
+                    {
+                        'type': 'compare',
+                        'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Weapon'},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': 3}
+                    },
+                    # Base destruction capability
+                    {
+                        'type': 'or',
+                        'conditions': [
+                            {
+                                'type': 'and',
+                                'conditions': [
+                                    {'type': 'item_check', 'item': 'Siege Tank'},
+                                    {'type': 'item_check', 'item': 'Jump Jets (Siege Tank)'}
+                                ]
+                            },
+                            {
+                                'type': 'and',
+                                'conditions': [
+                                    {'type': 'item_check', 'item': 'Battlecruiser'},
+                                    {'type': 'item_check', 'item': 'ATX Laser Battery (Battlecruiser)'}
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+
+        # terran_all_in_requirement: Requires very_hard weapon/armor + beats_kerrigan + competent_comp
+        # Original: very_hard_weapon_armor >= 3 AND (Marine OR Dominion Trooper OR Banshee)
+        #           AND terran_competent_comp
+        # Simplified: Ship Weapon >= 3 AND (Marine OR Banshee)
+        if helper_name == 'terran_all_in_requirement':
+            return {
+                'type': 'and',
+                'conditions': [
+                    # very_hard_weapon_armor_level requires all >= 3
+                    {
+                        'type': 'compare',
+                        'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Weapon'},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': 3}
+                    },
+                    # beats_kerrigan requirement
+                    {
+                        'type': 'or',
+                        'conditions': [
+                            {'type': 'item_check', 'item': 'Marine'},
+                            {'type': 'item_check', 'item': 'Banshee'}
+                        ]
+                    }
+                ]
+            }
+
+        # terran_competent_comp: Requires terran_competent_anti_air and one of the main
+        # combat-capable units/combos PLUS progressive upgrades. The full version requires:
+        # - upgrade_level=1: weapons >= 2 (infantry) or >= 1 (air/mech)
+        # - upgrade_level=2: weapons >= 3 (infantry) or >= 2 (air/mech)
+        # We check the args to determine upgrade_level and set appropriate requirements.
+        if helper_name == 'terran_competent_comp':
+            # Determine upgrade level from args (default is 1)
+            upgrade_level = 1
+            if args:
+                for arg in args:
+                    if isinstance(arg, dict):
+                        if arg.get('type') == 'constant':
+                            val = arg.get('value')
+                            if isinstance(val, int):
+                                upgrade_level = val
+                                break
+
+            conditions = [
+                {'type': 'helper', 'name': 'terran_competent_anti_air'},
+                {
+                    'type': 'or',
+                    'conditions': [
+                        {'type': 'item_check', 'item': 'Thor'},
+                        {'type': 'item_check', 'item': 'Siege Tank'},
+                        {'type': 'item_check', 'item': 'Battlecruiser'},
+                        {'type': 'item_check', 'item': 'Banshee'},
+                        {'type': 'item_check', 'item': 'Goliath'}
+                    ]
+                },
+                {
+                    'type': 'or',
+                    'conditions': [
+                        {'type': 'item_check', 'item': 'Progressive Terran Infantry Weapon'},
+                        {'type': 'item_check', 'item': 'Progressive Terran Vehicle Weapon'},
+                        {'type': 'item_check', 'item': 'Progressive Terran Ship Weapon'}
+                    ]
+                }
+            ]
+
+            # For upgrade_level >= 2, require specific weapon AND armor counts per path:
+            # - Infantry: weapons >= 3 AND armor >= 2 (upgrade_level + 1 for weapons)
+            # - Vehicle: weapons >= 2 AND armor >= 2
+            # - Ship: weapons >= 2 AND armor >= 2
+            if upgrade_level >= 2:
+                conditions.append({
+                    'type': 'or',
+                    'conditions': [
+                        # Infantry path: weapons >= 3 AND armor >= 2
+                        {
+                            'type': 'and',
+                            'conditions': [
+                                {
+                                    'type': 'compare',
+                                    'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Weapon'},
+                                    'op': '>=',
+                                    'right': {'type': 'constant', 'value': 3}
+                                },
+                                {
+                                    'type': 'compare',
+                                    'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Armor'},
+                                    'op': '>=',
+                                    'right': {'type': 'constant', 'value': 2}
+                                }
+                            ]
+                        },
+                        # Vehicle path: weapons >= 2 AND armor >= 2
+                        {
+                            'type': 'and',
+                            'conditions': [
+                                {
+                                    'type': 'compare',
+                                    'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Weapon'},
+                                    'op': '>=',
+                                    'right': {'type': 'constant', 'value': 2}
+                                },
+                                {
+                                    'type': 'compare',
+                                    'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Armor'},
+                                    'op': '>=',
+                                    'right': {'type': 'constant', 'value': 2}
+                                }
+                            ]
+                        },
+                        # Ship path: weapons >= 2 AND armor >= 2
+                        {
+                            'type': 'and',
+                            'conditions': [
+                                {
+                                    'type': 'compare',
+                                    'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Weapon'},
+                                    'op': '>=',
+                                    'right': {'type': 'constant', 'value': 2}
+                                },
+                                {
+                                    'type': 'compare',
+                                    'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Armor'},
+                                    'op': '>=',
+                                    'right': {'type': 'constant', 'value': 2}
+                                }
+                            ]
+                        }
+                    ]
+                })
+
+            return {
+                'type': 'and',
+                'conditions': conditions
+            }
+
+        # protoss_competent_comp: Requires anti-air (Stalker/Dragoon) and strong units
+        # Self-contained version since protoss_competent_anti_air may not be exported
+        if helper_name == 'protoss_competent_comp':
+            return {
+                'type': 'and',
+                'conditions': [
+                    {
+                        'type': 'or',
+                        'conditions': [
+                            {'type': 'item_check', 'item': 'Stalker'},
+                            {'type': 'item_check', 'item': 'Dragoon'},
+                            {'type': 'item_check', 'item': 'Phoenix'},
+                            {'type': 'item_check', 'item': 'Void Ray'}
+                        ]
+                    },
+                    {
+                        'type': 'or',
+                        'conditions': [
+                            {'type': 'item_check', 'item': 'Immortal'},
+                            {'type': 'item_check', 'item': 'Colossus'},
+                            {'type': 'item_check', 'item': 'Carrier'},
+                            {'type': 'item_check', 'item': 'Void Ray'}
+                        ]
+                    }
+                ]
+            }
+
+        # zerg_competent_comp: Requires anti-air (Hydralisk/Corruptor) and strong units
+        # Self-contained version since zerg_competent_anti_air may not be exported
+        if helper_name == 'zerg_competent_comp':
+            return {
+                'type': 'and',
+                'conditions': [
+                    {
+                        'type': 'or',
+                        'conditions': [
+                            {'type': 'item_check', 'item': 'Hydralisk'},
+                            {'type': 'item_check', 'item': 'Corruptor'},
+                            {'type': 'item_check', 'item': 'Mutalisk'}
+                        ]
+                    },
+                    {
+                        'type': 'or',
+                        'conditions': [
+                            {'type': 'item_check', 'item': 'Ultralisk'},
+                            {'type': 'item_check', 'item': 'Brood Lord'},
+                            {'type': 'item_check', 'item': 'Hydralisk'}
+                        ]
+                    }
+                ]
+            }
+
+        # No simplified version available
+        return None
 
     def override_rule_analysis(self, rule_func: Callable, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """
@@ -105,9 +479,15 @@ class SC2GameExportHandler(GenericGameExportHandler):
         logger.debug(f"[SC2] override_rule_analysis called for '{rule_target_name}' with func_name='{func_name}'")
 
         # Check if this is a complex helper method that should not be expanded
+        # For blacklisted helpers, use custom simplified logic where available,
+        # otherwise return True_ (overly permissive is safer than blocking progression)
         if func_name in self.HELPERS_TO_EXPORT_BLACKLIST:
-            logger.debug(f"[SC2] Converting complex helper method '{func_name}' to helper call")
-            return {'type': 'helper', 'name': func_name, 'args': []}
+            simplified = self._get_simplified_helper(func_name)
+            if simplified:
+                logger.debug(f"[SC2] Blacklisted helper '{func_name}' - using simplified export")
+                return simplified
+            logger.debug(f"[SC2] Blacklisted helper '{func_name}' - returning True_ (no simplified version)")
+            return {'type': 'constant', 'value': True}
 
         # Handle count_missions pattern (from CountMissionsEntryRule.to_lambda)
         if func_name == 'count_missions':
@@ -307,6 +687,20 @@ class SC2GameExportHandler(GenericGameExportHandler):
         if not rule or not isinstance(rule, dict):
             return rule
 
+        # Check for helper AST nodes with blacklisted helper names
+        # The analyzer may create these directly before expand_rule is called
+        if rule.get('type') == 'helper':
+            helper_name = rule.get('name', '')
+            if helper_name in self.HELPERS_TO_EXPORT_BLACKLIST:
+                # Get expanded args for the helper
+                helper_args = [self.expand_rule(arg, _depth + 1) for arg in rule.get('args', [])]
+                simplified = self._get_simplified_helper(helper_name, helper_args)
+                if simplified:
+                    logger.debug(f"[SC2] Blacklisted helper AST node '{helper_name}' - using simplified export")
+                    return simplified
+                logger.debug(f"[SC2] Blacklisted helper AST node '{helper_name}' - returning True_")
+                return {'type': 'constant', 'value': True}
+
         # Check for the pattern: function_call with function being attribute access on "logic"
         # This pattern looks like:
         # {
@@ -322,13 +716,24 @@ class SC2GameExportHandler(GenericGameExportHandler):
             function = rule.get('function', {})
             if function.get('type') == 'attribute':
                 obj = function.get('object', {})
-                if obj.get('type') == 'name' and obj.get('name') == 'logic':
-                    # This is a logic.method_name() call - convert to helper
+                obj_name = obj.get('name') if obj.get('type') == 'name' else None
+                # Handle both 'logic' and 'self' as they're both used for SC2Logic methods
+                if obj_name in ('logic', 'self'):
+                    # This is a logic.method_name() or self.method_name() call - convert to helper
                     method_name = function.get('attr')
                     # Recursively process args first
                     args = [self.expand_rule(arg, _depth + 1) for arg in rule.get('args', [])]
 
-                    logger.debug(f"[SC2] Converting logic.{method_name}() to helper call")
+                    # Check if this helper is blacklisted
+                    if method_name in self.HELPERS_TO_EXPORT_BLACKLIST:
+                        simplified = self._get_simplified_helper(method_name, args)
+                        if simplified:
+                            logger.debug(f"[SC2] Blacklisted helper '{method_name}' - using simplified export")
+                            return simplified
+                        logger.debug(f"[SC2] Blacklisted helper '{method_name}' - returning True_")
+                        return {'type': 'constant', 'value': True}
+
+                    logger.debug(f"[SC2] Converting {obj_name}.{method_name}() to helper call")
 
                     # Register the helper usage for automatic discovery
                     self.register_helper_usage(method_name)
@@ -390,6 +795,16 @@ class SC2GameExportHandler(GenericGameExportHandler):
                 }
 
                 if attr_name in known_helpers:
+                    # Check if this helper is blacklisted
+                    if attr_name in self.HELPERS_TO_EXPORT_BLACKLIST:
+                        # Helpers accessed without parentheses have no args
+                        simplified = self._get_simplified_helper(attr_name, [])
+                        if simplified:
+                            logger.debug(f"[SC2] Blacklisted helper '{attr_name}' - using simplified export")
+                            return simplified
+                        logger.debug(f"[SC2] Blacklisted helper '{attr_name}' - returning True_")
+                        return {'type': 'constant', 'value': True}
+
                     # This is a helper method accessed without parentheses
                     # Convert to a helper call
                     logger.debug(f"[SC2] Converting {obj_name}.{attr_name} to helper call (method accessed as attribute)")

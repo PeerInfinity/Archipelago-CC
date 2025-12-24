@@ -306,9 +306,6 @@ Playthrough:
   Numberman Code 13: CACDCPas
   Numberman Code 14: Unlocker
   Numberman Code 15: Unlocker
-  Numberman Code 25: CYokaPas
-  Numberman Code 29: BlckMnd
-  Numberman Code 31: DynaWave V
   SciLab Vending Machine BMD: Recov120 S
   Undernet 6 Central BMD: CSciPass
   Undernet 7 Upper BMD: Unlocker
@@ -326,17 +323,18 @@ Playthrough:
   Job: Hide and seek! Second Child: HoleMetr H
   Job: Hide and seek! Third Child: Press
   Tamako's HP PMD: Shake1 S
-  Villain: GrabBack K
   Yoka Zoo Garbage: PETCase
 }
 5: {
   ACDC SonicWav W Trade: Unlocker
   Beach Hospital Bed BMD: Progressive Undernet Rank
   Beach Hospital Plaque: Bubbler C
-  Hades GrabBack K Trade: Unlocker
   Hospital 1 North BMD: Unlocker
   Hospital 2 Central BMD: Unlocker
   Hospital 3 Central BMD: Progressive Undernet Rank
+  Numberman Code 25: CYokaPas
+  Numberman Code 29: BlckMnd
+  Numberman Code 31: DynaWave V
   Undernet 1 South BMD: Shadow J
   Undernet 2 Lower BMD: WideSwrd C
   Undernet 2 Upper BMD: Progressive Undernet Rank
@@ -345,4 +343,8 @@ Playthrough:
 }
 6: {
   Alpha Defeated: Victory
+  Villain: GrabBack K
+}
+7: {
+  Hades GrabBack K Trade: Unlocker
 }

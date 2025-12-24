@@ -27,7 +27,7 @@ def classification_to_string(classification: ItemClassification) -> str:
     """Convert an ItemClassification enum to its string name.
 
     Handles combined flags by returning the most specific named combination,
-    or the base classification name.
+    or the highest priority component for unnamed combinations.
     """
     # Check for exact named combinations first (most specific)
     if classification == ItemClassification.progression_deprioritized_skip_balancing:
@@ -37,7 +37,7 @@ def classification_to_string(classification: ItemClassification) -> str:
     if classification == ItemClassification.progression_deprioritized:
         return "progression_deprioritized"
 
-    # Check individual flags
+    # Check individual flags (in priority order)
     if classification == ItemClassification.progression:
         return "progression"
     if classification == ItemClassification.useful:
@@ -47,12 +47,48 @@ def classification_to_string(classification: ItemClassification) -> str:
     if classification == ItemClassification.filler:
         return "filler"
 
+    # Handle combined flags by returning the highest priority component
+    # Priority order: progression > useful > trap > filler
+    if ItemClassification.progression in classification:
+        return "progression"
+    if ItemClassification.useful in classification:
+        return "useful"
+    if ItemClassification.trap in classification:
+        return "trap"
+
     # For other combinations, use the enum's name if available
     try:
         return classification.name
     except (AttributeError, ValueError):
         # Fallback: return string representation
         return str(classification)
+
+
+# Classification priority for determining which classification wins when
+# multiple copies of an item exist with different classifications.
+# Higher number = higher priority (should win over lower priority)
+CLASSIFICATION_PRIORITY = {
+    'filler': 0,
+    'trap': 1,
+    'useful': 2,
+    'progression': 3,
+    'progression_skip_balancing': 3,
+    'progression_deprioritized': 3,
+    'progression_deprioritized_skip_balancing': 3,
+}
+
+
+def classification_has_higher_priority(new_classification: str, current_classification: str) -> bool:
+    """Check if new_classification has higher priority than current_classification.
+
+    Used when multiple copies of an item exist with different classifications
+    (e.g., Muse Dash where first song copy is progression, duplicates are useful).
+    The highest priority classification should be used.
+    """
+    new_priority = CLASSIFICATION_PRIORITY.get(new_classification, 0)
+    current_priority = CLASSIFICATION_PRIORITY.get(current_classification, 0)
+    return new_priority > current_priority
+
 
 # Module-level cache for rule analysis results
 _rule_analysis_cache: Dict[Tuple[int, int, Optional[int]], Any] = {}
@@ -1717,10 +1753,14 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
                 item_entry['max_count'] = 1
                 items_data[item_name] = item_entry
             else:
-                # Item already exists, update classification if not already set
+                # Item already exists, update classification if new one has higher priority
+                # This handles cases like Muse Dash where first song copy is progression
+                # but duplicates are useful - we want the highest priority classification
                 item_data = items_data[item_name]
-                if item_data.get('classification') == 'filler':
-                    item_data['classification'] = classification_to_string(item_classification)
+                new_classification = classification_to_string(item_classification)
+                current_classification = item_data.get('classification', 'filler')
+                if classification_has_higher_priority(new_classification, current_classification):
+                    item_data['classification'] = new_classification
                 # Add hint_text if not already set and differs from name
                 item_hint = getattr(location.item, 'hint_text', item_name)
                 if item_hint and item_hint != item_name:
@@ -1760,10 +1800,12 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
                 item_entry['max_count'] = 1
                 items_data[item_name] = item_entry
             else:
-                # Item already exists, update classification if not already set
+                # Item already exists, update classification if new one has higher priority
                 item_data = items_data[item_name]
-                if item_data.get('classification') == 'filler':
-                    item_data['classification'] = classification_to_string(item_classification)
+                new_classification = classification_to_string(item_classification)
+                current_classification = item_data.get('classification', 'filler')
+                if classification_has_higher_priority(new_classification, current_classification):
+                    item_data['classification'] = new_classification
                 # Add hint_text if not already set and differs from name
                 item_hint = getattr(item, 'hint_text', item_name)
                 if item_hint and item_hint != item_name:

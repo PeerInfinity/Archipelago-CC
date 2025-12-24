@@ -82,15 +82,23 @@ def _extract_region_dependencies(rule: dict, helpers: Dict[str, 'HelperData'] = 
                 dependencies.append(region)
 
     # Check for helper calls and resolve them
+    # Handle both formats:
+    # 1. type='helper' with name='helper_name' (standard format)
+    # 2. _original_ast_type='helper' with rule='helper_name' (AST export format)
+    helper_name = None
     if rule_type == 'helper':
         helper_name = rule.get('name', '')
-        if helper_name and helper_name not in visited_helpers and helper_name in helpers:
-            visited_helpers.add(helper_name)
-            helper_data = helpers[helper_name]
-            if helper_data.body:
-                for dep in _extract_region_dependencies(helper_data.body, helpers, visited_helpers):
-                    if dep not in dependencies:
-                        dependencies.append(dep)
+    elif rule.get('_original_ast_type') == 'helper':
+        # AST export format: helper name is in 'rule' field
+        helper_name = rule.get('rule', '')
+
+    if helper_name and helper_name not in visited_helpers and helper_name in helpers:
+        visited_helpers.add(helper_name)
+        helper_data = helpers[helper_name]
+        if helper_data.body:
+            for dep in _extract_region_dependencies(helper_data.body, helpers, visited_helpers):
+                if dep not in dependencies:
+                    dependencies.append(dep)
 
     # Recurse into nested rules
     for key in ('conditions', 'children', 'if_true', 'if_false', 'test', 'args', 'left', 'right'):
@@ -613,38 +621,10 @@ def generate_rules_py(data: ExtractedData) -> str:
     if helper_generator.uses_math:
         math_import = 'import math\n'
 
-    # Build helper definitions dict for exporter
-    # This stores helper bodies so they can be looked up by name instead of inlined at every call site
-    helper_definitions_section = ''
-    if helper_bodies:
-        helper_defs = {}
-        for helper_name, body in helper_bodies.items():
-            # Expand nested helper references so body is self-contained
-            expanded_body = rule_builder_generator._expand_helper_refs(body)
-            # Include params if available for proper argument binding
-            if helper_name in helper_params and helper_params[helper_name]:
-                helper_defs[helper_name] = {
-                    'params': helper_params[helper_name],
-                    'body': expanded_body
-                }
-            else:
-                helper_defs[helper_name] = expanded_body
-
-        # Format as Python dict literal using repr() for valid Python syntax
-        # (json.dumps produces JSON false/true/null, we need Python False/True/None)
-        import pprint
-        helper_defs_str = pprint.pformat(helper_defs, indent=4, width=120)
-        helper_definitions_section = f'''
-
-# Helper definitions for frontend evaluation
-# These are looked up by name instead of being inlined at every call site
-_HELPER_DEFINITIONS = {helper_defs_str}
-
-
-def get_helper_definitions() -> dict:
-    """Return helper definitions for frontend evaluation."""
-    return _HELPER_DEFINITIONS
-'''
+    # Note: Helper definitions for frontend evaluation are no longer stored as AST
+    # in the generated Rules.py. Instead, when the exporter runs on a worldgen world,
+    # it analyzes the Python helper functions and converts them back to AST format.
+    # This keeps the generated code clean and readable.
 
     return f'''"""
 Access rules for {game_name}.
@@ -658,7 +638,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
     from worlds.AutoWorld import World
-{helpers_section}{helper_definitions_section}
+{helpers_section}
 
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""

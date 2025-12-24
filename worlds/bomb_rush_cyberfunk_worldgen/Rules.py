@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _bombrushcyberfunkworldgen_bmx(state: "CollectionState", player: int, movestyle = None) -> bool:
+def _bombrushcyberfunkworldgen_bmx(state: "CollectionState", player: int, movestyle) -> bool:
     return (True if (movestyle == 1) else state.has_group('bmx', player))
 
 
@@ -36,7 +36,7 @@ def _bombrushcyberfunkworldgen_brink_terminal_challenge3(state: "CollectionState
     return _bombrushcyberfunkworldgen_rep(state, player, 220)
 
 
-def _bombrushcyberfunkworldgen_brink_terminal_crew_battle(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_brink_terminal_crew_battle(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_rep(state, player, 280)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 103)) if glitched else (_bombrushcyberfunkworldgen_rep(state, player, 280)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 62)))
 
 
@@ -44,7 +44,7 @@ def _bombrushcyberfunkworldgen_brink_terminal_entrance(state: "CollectionState",
     return (_bombrushcyberfunkworldgen_is_girl(state, player)) and (_bombrushcyberfunkworldgen_rep(state, player, 180)) and (_bombrushcyberfunkworldgen_current_chapter(state, player, 2))
 
 
-def _bombrushcyberfunkworldgen_brink_terminal_mesh(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_brink_terminal_mesh(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 114)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 45)) if glitched else (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 67)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 45)))
 
 
@@ -68,23 +68,23 @@ def _bombrushcyberfunkworldgen_camera(state: "CollectionState", player: int) -> 
     return state.has('Camera App', player)
 
 
-def _bombrushcyberfunkworldgen_current_chapter(state: "CollectionState", player: int, chapter = None) -> bool:
+def _bombrushcyberfunkworldgen_current_chapter(state: "CollectionState", player: int, chapter) -> bool:
     return state.has('Chapter Completed', player, (chapter - 1))
 
 
-def _bombrushcyberfunkworldgen_graffitiL(state: "CollectionState", player: int, limit = None, spots = None) -> bool:
+def _bombrushcyberfunkworldgen_graffitiL(state: "CollectionState", player: int, limit, spots) -> bool:
     return (((state.count_group_unique('graffitil', player) * 6) >= spots) if limit else state.has_group('graffitil', player))
 
 
-def _bombrushcyberfunkworldgen_graffitiM(state: "CollectionState", player: int, limit = None, spots = None) -> bool:
+def _bombrushcyberfunkworldgen_graffitiM(state: "CollectionState", player: int, limit, spots) -> bool:
     return (((state.count_group_unique('graffitim', player) * 7) >= spots) if limit else state.has_group('graffitim', player))
 
 
-def _bombrushcyberfunkworldgen_graffitiXL(state: "CollectionState", player: int, limit = None, spots = None) -> bool:
+def _bombrushcyberfunkworldgen_graffitiXL(state: "CollectionState", player: int, limit, spots) -> bool:
     return (((state.count_group_unique('graffitixl', player) * 4) >= spots) if limit else state.has_group('graffitixl', player))
 
 
-def _bombrushcyberfunkworldgen_inline_skates(state: "CollectionState", player: int, movestyle = None) -> bool:
+def _bombrushcyberfunkworldgen_inline_skates(state: "CollectionState", player: int, movestyle) -> bool:
     return (True if (movestyle == 3) else state.has_group('skates', player))
 
 
@@ -92,15 +92,15 @@ def _bombrushcyberfunkworldgen_is_girl(state: "CollectionState", player: int) ->
     return state.has_group('girl', player)
 
 
-def _bombrushcyberfunkworldgen_mataan_all_challenges(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_mataan_all_challenges(state: "CollectionState", player: int, limit, glitched) -> bool:
     return (_bombrushcyberfunkworldgen_mataan_challenge2(state, player, limit, glitched)) and (_bombrushcyberfunkworldgen_mataan_challenge3(state, player))
 
 
-def _bombrushcyberfunkworldgen_mataan_challenge1(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_mataan_challenge1(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_current_chapter(state, player, 5)) and (_bombrushcyberfunkworldgen_rep(state, player, 864)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 108)) if glitched else (_bombrushcyberfunkworldgen_current_chapter(state, player, 5)) and (_bombrushcyberfunkworldgen_rep(state, player, 864)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 98)))
 
 
-def _bombrushcyberfunkworldgen_mataan_challenge2(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_mataan_challenge2(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_rep(state, player, 880)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 59)) if glitched else (_bombrushcyberfunkworldgen_rep(state, player, 880)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 57)))
 
 
@@ -108,15 +108,15 @@ def _bombrushcyberfunkworldgen_mataan_challenge3(state: "CollectionState", playe
     return _bombrushcyberfunkworldgen_rep(state, player, 920)
 
 
-def _bombrushcyberfunkworldgen_mataan_crew_battle(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_mataan_crew_battle(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_mataan_smoke_wall2(state, player, limit, glitched)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 122)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 59)) if glitched else (_bombrushcyberfunkworldgen_mataan_smoke_wall2(state, player, limit, glitched)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 117)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 57)))
 
 
-def _bombrushcyberfunkworldgen_mataan_deep_city(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_mataan_deep_city(state: "CollectionState", player: int, limit, glitched) -> bool:
     return _bombrushcyberfunkworldgen_mataan_challenge1(state, player, limit, glitched)
 
 
-def _bombrushcyberfunkworldgen_mataan_deepest(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_mataan_deepest(state: "CollectionState", player: int, limit, glitched) -> bool:
     return _bombrushcyberfunkworldgen_mataan_crew_battle(state, player, limit, glitched)
 
 
@@ -124,7 +124,7 @@ def _bombrushcyberfunkworldgen_mataan_entrance(state: "CollectionState", player:
     return _bombrushcyberfunkworldgen_current_chapter(state, player, 2)
 
 
-def _bombrushcyberfunkworldgen_mataan_faux(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_mataan_faux(state: "CollectionState", player: int, limit, glitched) -> bool:
     return (_bombrushcyberfunkworldgen_mataan_deepest(state, player, limit, glitched)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 122))
 
 
@@ -136,11 +136,11 @@ def _bombrushcyberfunkworldgen_mataan_smoke_wall(state: "CollectionState", playe
     return (_bombrushcyberfunkworldgen_current_chapter(state, player, 5)) and (_bombrushcyberfunkworldgen_rep(state, player, 850))
 
 
-def _bombrushcyberfunkworldgen_mataan_smoke_wall2(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_mataan_smoke_wall2(state: "CollectionState", player: int, limit, glitched) -> bool:
     return (_bombrushcyberfunkworldgen_mataan_all_challenges(state, player, limit, glitched)) and (_bombrushcyberfunkworldgen_rep(state, player, 960))
 
 
-def _bombrushcyberfunkworldgen_millennium_mall_big(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_millennium_mall_big(state: "CollectionState", player: int, limit, glitched) -> bool:
     return _bombrushcyberfunkworldgen_millennium_mall_switch(state, player, limit, glitched)
 
 
@@ -160,7 +160,7 @@ def _bombrushcyberfunkworldgen_millennium_mall_challenge4(state: "CollectionStat
     return _bombrushcyberfunkworldgen_rep(state, player, 458)
 
 
-def _bombrushcyberfunkworldgen_millennium_mall_crew_battle(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_millennium_mall_crew_battle(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_rep(state, player, 491)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 114)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 107)) if glitched else (_bombrushcyberfunkworldgen_rep(state, player, 491)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 78)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 80)))
 
 
@@ -168,7 +168,7 @@ def _bombrushcyberfunkworldgen_millennium_mall_entrance(state: "CollectionState"
     return (_bombrushcyberfunkworldgen_rep(state, player, 380)) and (_bombrushcyberfunkworldgen_current_chapter(state, player, 3))
 
 
-def _bombrushcyberfunkworldgen_millennium_mall_oldhead_ceiling(state: "CollectionState", player: int, limit = None) -> bool:
+def _bombrushcyberfunkworldgen_millennium_mall_oldhead_ceiling(state: "CollectionState", player: int, limit) -> bool:
     return (_bombrushcyberfunkworldgen_rep(state, player, 580)) or (_bombrushcyberfunkworldgen_millennium_mall_theater(state, player, limit))
 
 
@@ -176,11 +176,11 @@ def _bombrushcyberfunkworldgen_millennium_mall_oldhead_race(state: "CollectionSt
     return _bombrushcyberfunkworldgen_rep(state, player, 530)
 
 
-def _bombrushcyberfunkworldgen_millennium_mall_switch(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_millennium_mall_switch(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 114)) and (_bombrushcyberfunkworldgen_current_chapter(state, player, 3)) if glitched else (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 72)) and (_bombrushcyberfunkworldgen_current_chapter(state, player, 3)))
 
 
-def _bombrushcyberfunkworldgen_millennium_mall_theater(state: "CollectionState", player: int, limit = None) -> bool:
+def _bombrushcyberfunkworldgen_millennium_mall_theater(state: "CollectionState", player: int, limit) -> bool:
     return (_bombrushcyberfunkworldgen_rep(state, player, 491)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 78))
 
 
@@ -188,7 +188,7 @@ def _bombrushcyberfunkworldgen_millennium_square_entrance(state: "CollectionStat
     return _bombrushcyberfunkworldgen_current_chapter(state, player, 2)
 
 
-def _bombrushcyberfunkworldgen_pyramid_island_all_challenges(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_pyramid_island_all_challenges(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 114)) and (_bombrushcyberfunkworldgen_rep(state, player, 660)) if glitched else (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 88)) and (_bombrushcyberfunkworldgen_rep(state, player, 660)))
 
 
@@ -204,7 +204,7 @@ def _bombrushcyberfunkworldgen_pyramid_island_challenge3(state: "CollectionState
     return _bombrushcyberfunkworldgen_rep(state, player, 660)
 
 
-def _bombrushcyberfunkworldgen_pyramid_island_crew_battle(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_pyramid_island_crew_battle(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_rep(state, player, 730)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 108)) if glitched else (_bombrushcyberfunkworldgen_rep(state, player, 730)) and (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 97)))
 
 
@@ -224,15 +224,15 @@ def _bombrushcyberfunkworldgen_pyramid_island_top(state: "CollectionState", play
     return _bombrushcyberfunkworldgen_current_chapter(state, player, 5)
 
 
-def _bombrushcyberfunkworldgen_pyramid_island_upper_half(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_pyramid_island_upper_half(state: "CollectionState", player: int, limit, glitched) -> bool:
     return _bombrushcyberfunkworldgen_pyramid_island_all_challenges(state, player, limit, glitched)
 
 
-def _bombrushcyberfunkworldgen_rep(state: "CollectionState", player: int, required = None) -> bool:
+def _bombrushcyberfunkworldgen_rep(state: "CollectionState", player: int, required) -> bool:
     return state.has('rep', player, required)
 
 
-def _bombrushcyberfunkworldgen_skateboard(state: "CollectionState", player: int, movestyle = None) -> bool:
+def _bombrushcyberfunkworldgen_skateboard(state: "CollectionState", player: int, movestyle) -> bool:
     return (True if (movestyle == 2) else state.has_group('skateboard', player))
 
 
@@ -244,7 +244,7 @@ def _bombrushcyberfunkworldgen_versum_hill_basketball_court(state: "CollectionSt
     return _bombrushcyberfunkworldgen_rep(state, player, 90)
 
 
-def _bombrushcyberfunkworldgen_versum_hill_ch1_roadblock(state: "CollectionState", player: int, limit = None) -> bool:
+def _bombrushcyberfunkworldgen_versum_hill_ch1_roadblock(state: "CollectionState", player: int, limit) -> bool:
     return _bombrushcyberfunkworldgen_graffitiL(state, player, limit, 10)
 
 
@@ -260,7 +260,7 @@ def _bombrushcyberfunkworldgen_versum_hill_challenge3(state: "CollectionState", 
     return _bombrushcyberfunkworldgen_rep(state, player, 65)
 
 
-def _bombrushcyberfunkworldgen_versum_hill_crew_battle(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_versum_hill_crew_battle(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_rep(state, player, 90)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 98)) if glitched else (_bombrushcyberfunkworldgen_rep(state, player, 90)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 27)))
 
 
@@ -272,11 +272,11 @@ def _bombrushcyberfunkworldgen_versum_hill_oldhead(state: "CollectionState", pla
     return _bombrushcyberfunkworldgen_rep(state, player, 120)
 
 
-def _bombrushcyberfunkworldgen_versum_hill_rave(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_versum_hill_rave(state: "CollectionState", player: int, limit, glitched) -> bool:
     return (((_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 90)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 51)) if _bombrushcyberfunkworldgen_current_chapter(state, player, 4) else ((_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 89)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 51)) if _bombrushcyberfunkworldgen_current_chapter(state, player, 3) else (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 85)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 48)))) if glitched else (_bombrushcyberfunkworldgen_graffitiL(state, player, limit, 26)) and (_bombrushcyberfunkworldgen_graffitiXL(state, player, limit, 10)))
 
 
-def _bombrushcyberfunkworldgen_versum_hill_rietveld(state: "CollectionState", player: int, limit = None, glitched = None) -> bool:
+def _bombrushcyberfunkworldgen_versum_hill_rietveld(state: "CollectionState", player: int, limit, glitched) -> bool:
     return ((_bombrushcyberfunkworldgen_current_chapter(state, player, 2)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 114)) if glitched else (_bombrushcyberfunkworldgen_current_chapter(state, player, 2)) and (_bombrushcyberfunkworldgen_graffitiM(state, player, limit, 67)))
 
 

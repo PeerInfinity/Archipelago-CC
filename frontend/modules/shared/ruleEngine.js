@@ -485,6 +485,13 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
     return rbResult;
   }
 
+  // Handle plain object literals (dicts) that are not rules
+  // These are literal values passed as arguments to helpers (e.g., location data dicts)
+  // They have neither 'type' (AST format) nor 'rule' (Rule Builder format) properties
+  if (!rule.type && !rule.rule) {
+    return rule;
+  }
+
   let result;
   let ruleType = rule?.type;
 

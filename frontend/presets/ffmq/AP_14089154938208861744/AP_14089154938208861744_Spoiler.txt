@@ -598,8 +598,7 @@ Doom Castle B2 - Sun Door Chest
 Dualhead Hydra
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Lava Dome
    =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
    =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
@@ -633,8 +632,8 @@ Flamerus Rex
 Freezer Crab
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Subregion Fireburg to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Falls Basin
    =>   Fall Basin
 Giant Tree 2F - Mushroom Tunnel West Box
@@ -698,8 +697,8 @@ Gidrah
 Ice Golem
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Subregion Fireburg to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
    =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
@@ -716,15 +715,15 @@ Ice Golem
 Ice Pyramid 1F Statue
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Subregion Fireburg to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby
 Ice Pyramid 3F Statue
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Subregion Fireburg to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
    =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
@@ -733,8 +732,8 @@ Ice Pyramid 3F Statue
 Ice Pyramid 4F - Chest
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Subregion Fireburg to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
    =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
@@ -747,8 +746,8 @@ Ice Pyramid 4F - Chest
 Ice Pyramid 4F Statue
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Subregion Fireburg to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
    =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
@@ -761,8 +760,8 @@ Ice Pyramid 4F Statue
 Ice Pyramid 5F Statue
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Subregion Fireburg to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
    =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
@@ -778,8 +777,8 @@ Ice Pyramid 5F Statue
 Ice Pyramid B1 - West Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Subregion Fireburg to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
    =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
@@ -792,8 +791,7 @@ Ice Pyramid B1 - West Box
 Jinn
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Mine
    =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior South East Platforms
    =>   Mine Exterior South East Platforms
@@ -812,8 +810,7 @@ Kaeli Companion
 Lava Dome - Exterior Dead End Caldera Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Lava Dome
    =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
    =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
@@ -827,8 +824,7 @@ Lava Dome - Exterior Dead End Caldera Box
 Lava Dome - Hydra Room Northwest Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Lava Dome
    =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
    =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
@@ -842,8 +838,7 @@ Lava Dome - Hydra Room Northwest Box
 Lava Dome - U-Bend Room North Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Lava Dome
    =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
    =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
@@ -852,8 +847,7 @@ Lava Dome - U-Bend Room North Box
 Lava Dome Plate
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Lava Dome
    =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Big Jump Room Left
    =>   Lava Dome Big Jump Room Main Area -> Lava Dome Big Jump Room - Lower Right Stairs
@@ -887,8 +881,7 @@ Mac Ship Steering Wheel
 Medusa
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Volcano
    =>   Volcano Base -> Volcano Base - Left Stairs Script
    =>   Volcano Left Path -> Volcano Left Path - To Volcano Cross Right-Left
@@ -897,8 +890,7 @@ Medusa
 Mine - Cliff Northeast Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Mine
    =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior South East Platforms
    =>   Mine Exterior South East Platforms -> Mine Exterior - To Cliff
@@ -906,8 +898,7 @@ Mine - Cliff Northeast Box
 Mine - Crescent Room Chest
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Mine
    =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior North Ledge
    =>   Mine Exterior North Ledge -> Mine Exterior - To Crescent Room
@@ -915,16 +906,14 @@ Mine - Crescent Room Chest
 Mine - Parallel Room East Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Mine
    =>   Mine Exterior North West Platforms -> Mine Exterior - To Parallel Room
    =>   Mine Parallel Room
 Mine - Parallel Room West Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Mine
    =>   Mine Exterior North West Platforms -> Mine Exterior - To Parallel Room
    =>   Mine Parallel Room
@@ -1116,8 +1105,8 @@ Pazuzu's Tower 6F - Chest
 Phanquid
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Subregion Fireburg to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Wintry Cave
    =>   Wintry Cave 1F - East Ledge -> Wintry Cave 1F - East Ledge to Wintry Cave 1F - Central Space
    =>   Wintry Cave 1F - Central Space -> Wintry Cave 1F - Central Space to Wintry Cave 1F - West Ledge
@@ -1127,23 +1116,21 @@ Phanquid
 Phoebe Companion
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Subregion Fireburg to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Libra Temple
    =>   Libra Temple
 Reuben Companion
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Fireburg
    =>   Fireburg Upper Plaza -> Fireburg - Reuben House
    =>   Reuben's House
 Reuben's dad Saved
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Mine
    =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior South East Platforms
    =>   Mine Exterior South East Platforms -> Mine Exterior - To Cliff
@@ -1215,8 +1202,8 @@ Stone Golem
 Summer Aquaria
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Subregion Fireburg to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Aquaria
    =>   Aquaria
 Tristam Bone Dungeon Item Given
@@ -1250,8 +1237,7 @@ Twinhead Wyvern
 Volcano - Base East Right Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Volcano
    =>   Volcano Base
 Windia - Inn Bedroom South Box
@@ -1273,8 +1259,8 @@ Windia - Kaeli
 Wintry Cave 2F - West Left Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Subregion Fireburg to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Wintry Cave
    =>   Wintry Cave 1F - East Ledge -> Wintry Cave 1F - East Ledge to Wintry Cave 1F - Central Space
    =>   Wintry Cave 1F - Central Space -> Wintry Cave 1F - Central Space to Wintry Cave 1F - West Ledge

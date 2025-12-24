@@ -33,5 +33,6 @@
     "total_seals": 45,
     "traps": "false"
   },
+  "use_paren_number_accumulator": true,
   "world_directory": "messenger"
 }

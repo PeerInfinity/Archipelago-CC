@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, False_, Has, HelperCall, Or, True_
+from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Conditional, False_, Has, HelperCall, Not, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -129,52 +129,38 @@ _HELPER_DEFINITIONS = {   'Difficulty': {'body': {'name': 'value', 'type': 'name
                                                                                  'type': 'function_call'}}],
                                               'type': 'block'},
                                   'params': ['act_entrance']},
-    'can_use_hat': {   'body': {   'if_false': {   'count': {   'statements': [   {   'name': '_h1_cost',
-                                                                                      'type': 'assign',
-                                                                                      'value': {   'type': 'constant',
-                                                                                                   'value': 0}},
-                                                                                  {   'body': [   {   'name': '_h1_cost',
-                                                                                                      'op': '+=',
-                                                                                                      'type': 'assign',
-                                                                                                      'value': {   'index': {   'name': 'h',
-                                                                                                                                'type': 'name'},
-                                                                                                                   'type': 'subscript',
-                                                                                                                   'value': {   'attr': 'hat_yarn_costs',
-                                                                                                                                'object': {   'name': 'world',
-                                                                                                                                              'type': 'name'},
-                                                                                                                                'type': 'attribute'}}},
-                                                                                                  {   'body': [   {   'type': 'break'}],
-                                                                                                      'test': {   'left': {   'name': 'h',
-                                                                                                                              'type': 'name'},
-                                                                                                                  'op': '==',
-                                                                                                                  'right': {   'name': 'hat',
-                                                                                                                               'type': 'name'},
-                                                                                                                  'type': 'compare'},
-                                                                                                      'type': 'if_statement'}],
-                                                                                      'iterable': {   'attr': 'hat_craft_order',
-                                                                                                      'object': {   'name': 'world',
-                                                                                                                    'type': 'name'},
-                                                                                                      'type': 'attribute'},
-                                                                                      'type': 'for_iter',
-                                                                                      'var': 'h'},
-                                                                                  {   'type': 'return',
-                                                                                      'value': {   'name': '_h1_cost',
-                                                                                                   'type': 'name'}}],
-                                                                'type': 'block'},
-                                                   'item': 'Yarn',
-                                                   'type': 'item_check'},
-                                   'if_true': {'type': 'constant', 'value': True},
-                                   'test': {   'left': {   'index': {'name': 'hat', 'type': 'name'},
-                                                           'type': 'subscript',
-                                                           'value': {   'attr': 'hat_yarn_costs',
-                                                                        'object': {'name': 'world', 'type': 'name'},
-                                                                        'type': 'attribute'}},
-                                               'op': '<=',
-                                               'right': {'type': 'constant', 'value': 0},
-                                               'type': 'compare'},
+    'can_use_hat': {   'body': {   'if_false': {   'if_false': {   'count': {   'args': [   {   'name': 'hat',
+                                                                                                'type': 'name'}],
+                                                                                'name': 'get_hat_cost',
+                                                                                'type': 'helper'},
+                                                                   'item': 'Yarn',
+                                                                   'type': 'item_check'},
+                                                   'if_true': {'type': 'constant', 'value': True},
+                                                   'test': {   'left': {   'index': {'name': 'hat', 'type': 'name'},
+                                                                           'type': 'subscript',
+                                                                           'value': {   'attr': 'hat_yarn_costs',
+                                                                                        'object': {   'name': 'world',
+                                                                                                      'type': 'name'},
+                                                                                        'type': 'attribute'}},
+                                                               'op': '<=',
+                                                               'right': {'type': 'constant', 'value': 0},
+                                                               'type': 'compare'},
+                                                   'type': 'conditional'},
+                                   'if_true': {   'item': {   'index': {'name': 'hat', 'type': 'name'},
+                                                              'type': 'subscript',
+                                                              'value': {   'type': 'constant',
+                                                                           'value': {   '0': 'Sprint Hat',
+                                                                                        '1': 'Brewing Hat',
+                                                                                        '2': 'Ice Hat',
+                                                                                        '3': 'Dweller Mask',
+                                                                                        '4': 'Time Stop Hat'}}},
+                                                  'type': 'item_check'},
+                                   'test': {'setting': 'HatItems', 'type': 'setting_value'},
                                    'type': 'conditional'},
                        'params': ['hat']},
-    'get_difficulty': {'setting': 'LogicDifficulty', 'type': 'setting_value'},
+    'get_difficulty': {   'args': [{'setting': 'LogicDifficulty', 'type': 'setting_value'}],
+                          'name': 'Difficulty',
+                          'type': 'helper'},
     'get_hat_cost': {   'body': {   'statements': [   {   'name': 'cost',
                                                           'type': 'assign',
                                                           'value': {'type': 'constant', 'value': 0}},
@@ -233,7 +219,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Telescope -> Mafia Town", player),
-        Has('Time Piece')
+        True_()
     )
 
     world.set_rule(
@@ -558,12 +544,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 2: Connection 1", player),
-        And(True_(), True_(), Has('Hookshot Badge'))
+        And(Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic")), if_true=True_(), if_false=Conditional(test=And(False_(), Not(True_())), if_true=True_(), if_false=Has('Progressive Painting Unlock'))), Conditional(test=Not(True_()), if_true=True_(), if_false=Or(And(True_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))), Has('Umbrella'))), Has('Hookshot Badge'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 3: Connection 1", player),
-        And(True_(), True_(), Has('Hookshot Badge'))
+        And(Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic")), if_true=True_(), if_false=Conditional(test=And(False_(), Not(True_())), if_true=True_(), if_false=Has('Progressive Painting Unlock'))), Conditional(test=Not(True_()), if_true=True_(), if_false=Or(And(True_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))), Has('Umbrella'))), Has('Hookshot Badge'))
     )
 
     world.set_rule(
@@ -633,7 +619,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 1", player),
-        And(And(True_(), Has('Hookshot Badge')), HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Crayon',)))
+        And(And(Conditional(test=Not(True_()), if_true=True_(), if_false=Or(And(True_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))), Has('Umbrella'))), Has('Hookshot Badge')), HelperCall(helper_func=_ahatintimeworldgen_has_relic_combo, helper_name="has_relic_combo", args=('Crayon',)))
     )
 
     world.set_rule(
@@ -668,7 +654,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("SF Area -> SF Behind Boss Firewall", player),
-        True_()
+        Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic")), if_true=True_(), if_false=Conditional(test=And(False_(), Not(True_())), if_true=True_(), if_false=Has('Progressive Painting Unlock')))
     )
 
     world.set_rule(
@@ -783,7 +769,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (Toilet of Doom)", player),
-        And(True_(), True_(), Has('Hookshot Badge'))
+        And(Conditional(test=Not(HelperCall(helper_func=_ahatintimeworldgen_painting_logic, helper_name="painting_logic")), if_true=True_(), if_false=Conditional(test=And(False_(), Not(True_())), if_true=True_(), if_false=Has('Progressive Painting Unlock'))), Conditional(test=Not(True_()), if_true=True_(), if_false=Or(And(True_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))), Has('Umbrella'))), Has('Hookshot Badge'))
     )
 
     world.set_rule(
@@ -803,7 +789,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Goat Refinery", player),
-        And(And(True_(), Has('AFR Access'), Has('Hookshot Badge')), Has('Hookshot Badge'))
+        And(And(Conditional(test=Not(True_()), if_true=True_(), if_false=Or(And(False_(), HelperCall(helper_func=_ahatintimeworldgen_can_use_hat, helper_name="can_use_hat", args=(1,))), Has('Umbrella'))), Has('AFR Access'), Has('Hookshot Badge')), Has('Hookshot Badge'))
     )
 
     world.set_rule(
