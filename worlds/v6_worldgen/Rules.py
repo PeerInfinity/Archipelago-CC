@@ -23,45 +23,6 @@ def _has_trinket_range(state: "CollectionState", player: int, start = None, end 
     return True
 
 
-# Helper definitions for frontend evaluation
-# These are looked up by name instead of being inlined at every call site
-_HELPER_DEFINITIONS = {   '_has_trinket_range': {   'body': {   'statements': [   {   'body': [   {   'body': [   {   'type': 'return',
-                                                                                                'value': {   'type': 'constant',
-                                                                                                             'value': False}}],
-                                                                                'test': {   'condition': {   'item': {   'left': {   'type': 'constant',
-                                                                                                                                     'value': 'Trinket '},
-                                                                                                                         'op': '+',
-                                                                                                                         'right': {   'args': [   {   'type': 'constant',
-                                                                                                                                                      'value': 2}],
-                                                                                                                                      'function': {   'attr': 'zfill',
-                                                                                                                                                      'object': {   'args': [   {   'left': {   'name': 'i',
-                                                                                                                                                                                                'type': 'name'},
-                                                                                                                                                                                    'op': '+',
-                                                                                                                                                                                    'right': {   'type': 'constant',
-                                                                                                                                                                                                 'value': 1},
-                                                                                                                                                                                    'type': 'binary_op'}],
-                                                                                                                                                                    'name': 'str',
-                                                                                                                                                                    'type': 'helper'},
-                                                                                                                                                      'type': 'attribute'},
-                                                                                                                                      'type': 'function_call'},
-                                                                                                                         'type': 'binary_op'},
-                                                                                                             'type': 'item_check'},
-                                                                                            'type': 'not'},
-                                                                                'type': 'if_statement'}],
-                                                                'count': {'name': 'start', 'type': 'name'},
-                                                                'type': 'for_range',
-                                                                'var': 'i'},
-                                                            {   'type': 'return',
-                                                                'value': {'type': 'constant', 'value': True}}],
-                                          'type': 'block'},
-                              'params': ['start', 'end']}}
-
-
-def get_helper_definitions() -> dict:
-    """Return helper definitions for frontend evaluation."""
-    return _HELPER_DEFINITIONS
-
-
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player

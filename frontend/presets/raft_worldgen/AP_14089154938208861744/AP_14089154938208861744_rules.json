@@ -7154,5 +7154,534 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "raft_big_islands_available": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "bool",
+            "args": [
+              {
+                "type": "constant",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_access_radio_tower"
+          }
+        ]
+      },
+      "raft_can_access_balboa_island": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_navigate"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_drive"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_access_caravan_island": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_navigate"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_drive"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_access_radio_tower": {
+        "type": "helper",
+        "name": "raft_can_navigate"
+      },
+      "raft_can_access_tangaroa": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_navigate"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_drive"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_access_temperance": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_navigate"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_drive"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_access_utopia": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_navigate"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_drive"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_access_radio_tower"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_access_vasagatan"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_access_balboa_island"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_access_caravan_island"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_access_tangaroa"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_access_varuna_point"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_access_temperance"
+          },
+          {
+            "type": "constant",
+            "value": true
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_shovel"
+          }
+        ]
+      },
+      "raft_can_access_varuna_point": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_navigate"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_drive"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_access_vasagatan": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_navigate"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_capture_animals": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_craft_netLauncher"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_netCanister"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_grassPlot"
+          }
+        ]
+      },
+      "raft_can_complete_temperance": {
+        "type": "helper",
+        "name": "raft_can_access_temperance"
+      },
+      "raft_can_craft_antenna": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_craft_circuitBoard"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_bolt"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_craft_battery": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_craft_birdNest": {
+        "type": "constant",
+        "value": true
+      },
+      "raft_can_craft_bolt": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_craft_circuitBoard": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_craft_engine": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_circuitBoard"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_craft_grassPlot": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_get_dirt"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_craft_hinge": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_craft_machete": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_bolt"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_craft_netCanister": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_craft_netLauncher": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_bolt"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_craft_plasticBottle": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_craft_reciever": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_craft_circuitBoard"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_hinge"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_craft_shears": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_hinge"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_craft_shovel": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items"
+          },
+          {
+            "type": "constant",
+            "value": true
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_bolt"
+          }
+        ]
+      },
+      "raft_can_craft_steeringWheel": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_bolt"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_hinge"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_craft_ziplineTool": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_craft_hinge"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_bolt"
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
+      },
+      "raft_can_drive": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "raft_can_craft_engine"
+              },
+              {
+                "type": "helper",
+                "name": "raft_can_craft_steeringWheel"
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "raft_paddleboard_mode_enabled"
+          }
+        ]
+      },
+      "raft_can_find_titanium": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "constant",
+            "value": true
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_battery"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_shovel"
+          }
+        ]
+      },
+      "raft_can_get_dirt": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_craft_shovel"
+          },
+          {
+            "type": "helper",
+            "name": "raft_big_islands_available"
+          }
+        ]
+      },
+      "raft_can_navigate": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_craft_battery"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_reciever"
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_antenna"
+          }
+        ]
+      },
+      "raft_can_smelt_items": {
+        "type": "constant",
+        "value": true
+      },
+      "raft_paddleboard_mode_enabled": {
+        "type": "helper",
+        "name": "bool",
+        "args": [
+          {
+            "type": "constant",
+            "value": 0
+          }
+        ]
+      }
+    }
+  }
 }

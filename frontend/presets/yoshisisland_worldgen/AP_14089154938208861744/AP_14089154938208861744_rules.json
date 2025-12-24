@@ -6793,8 +6793,38 @@
   },
   "settings": {
     "1": {
-      "error": "Error exporting settings for player 1: '>=' not supported between instances of 'NoneType' and 'int'",
-      "details": "Failed to read game settings. Check logs for more information."
+      "game": "Yoshi's Island WorldGen",
+      "assume_bidirectional_exits": false,
+      "StageLogic": 0,
+      "HiddenObjectVisibility": 1,
+      "ShuffleMiddleRings": 0,
+      "ItemLogic": 0,
+      "BowserDoorMode": 0,
+      "LuigiPiecesRequired": 25,
+      "CastleClearCondition": 0,
+      "CastleOpenCondition": 5,
+      "game_logic": "Easy",
+      "midring_start": true,
+      "clouds_always_visible": false,
+      "consumable_logic": true,
+      "bowser_door": 0,
+      "luigi_pieces": 25,
+      "boss_order": [
+        "Burt The Bashful's Boss Room",
+        "Salvo The Slime's Boss Room",
+        "Bigger Boo's Boss Room",
+        "Roger The Ghost's Boss Room",
+        "Prince Froggy's Boss Room",
+        "Naval Piranha's Boss Room",
+        "Marching Milde's Boss Room",
+        "Hookbill The Koopa's Boss Room",
+        "Sluggy The Unshaven's Boss Room",
+        "Raphael The Raven's Boss Room",
+        "Tap-Tap The Red Nose's Boss Room"
+      ],
+      "castle_unlock": 5,
+      "boss_unlock": 0,
+      "world_directory": "yoshisisland_worldgen"
     }
   },
   "game_info": {
@@ -6896,4712 +6926,741 @@
   "helpers": {
     "1": {
       "_14Boss": {
-        "if_false": {
-          "if_false": {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 5
-                },
-                "item": "Egg Capacity Upgrade",
-                "type": "item_check"
-              },
-              {
-                "item": "Egg Plant",
-                "type": "item_check"
-              }
-            ],
-            "type": "or"
-          },
-          "if_true": {
-            "item": "Egg Plant",
-            "type": "item_check"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "item": "Egg Plant",
-          "type": "item_check"
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+        "type": "item_check",
+        "item": "Egg Plant"
       },
       "_14CanFightBoss": {
-        "if_false": null,
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
+        "type": "conditional",
         "test": {
+          "type": "state_method",
+          "method": "can_reach",
           "args": [
             {
-              "index": {
-                "type": "constant",
-                "value": 0
-              },
-              "type": "subscript",
-              "value": {
-                "type": "constant",
-                "value": [
-                  "Burt The Bashful's Boss Room",
-                  "Salvo The Slime's Boss Room",
-                  "Bigger Boo's Boss Room",
-                  "Roger The Ghost's Boss Room",
-                  "Prince Froggy's Boss Room",
-                  "Naval Piranha's Boss Room",
-                  "Marching Milde's Boss Room",
-                  "Hookbill The Koopa's Boss Room",
-                  "Sluggy The Unshaven's Boss Room",
-                  "Raphael The Raven's Boss Room",
-                  "Tap-Tap The Red Nose's Boss Room"
-                ]
-              }
+              "type": "constant",
+              "value": "Burt The Bashful's Boss Room"
             },
             {
               "type": "constant",
               "value": "Location"
             }
-          ],
-          "method": "can_reach",
-          "type": "state_method"
+          ]
         },
-        "type": "conditional"
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "constant",
+          "value": null
+        }
       },
       "_14Clear": {
-        "if_false": {
-          "if_false": {
-            "args": [
-              {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Key"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Spring Ball"
-                  }
-                ],
-                "type": "set"
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          "if_true": {
-            "args": [
-              {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Key"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Spring Ball"
-                  }
-                ],
-                "type": "set"
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "args": [
-            {
-              "elements": [
-                {
-                  "type": "constant",
-                  "value": "Key"
-                },
-                {
-                  "type": "constant",
-                  "value": "Spring Ball"
-                }
-              ],
-              "type": "set"
-            }
-          ],
-          "method": "has_all",
-          "type": "state_method"
-        },
-        "test": {
-          "left": {
+        "type": "state_method",
+        "method": "has_all",
+        "args": [
+          {
             "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+            "value": [
+              "Key",
+              "Spring Ball"
+            ]
+          }
+        ]
       },
       "_17Game": {
-        "if_false": {
-          "if_false": {
-            "item": "Key",
-            "type": "item_check"
-          },
-          "if_true": {
-            "item": "Key",
-            "type": "item_check"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "item": "Key",
-          "type": "item_check"
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+        "type": "item_check",
+        "item": "Key"
       },
       "_18Boss": {
-        "if_false": {
-          "if_false": {
-            "type": "constant",
-            "value": true
-          },
-          "if_true": {
-            "type": "constant",
-            "value": true
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+        "type": "constant",
+        "value": true
       },
       "_18CanFightBoss": {
-        "if_false": null,
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
+        "type": "conditional",
         "test": {
+          "type": "state_method",
+          "method": "can_reach",
           "args": [
             {
-              "index": {
-                "type": "constant",
-                "value": 1
-              },
-              "type": "subscript",
-              "value": {
-                "type": "constant",
-                "value": [
-                  "Burt The Bashful's Boss Room",
-                  "Salvo The Slime's Boss Room",
-                  "Bigger Boo's Boss Room",
-                  "Roger The Ghost's Boss Room",
-                  "Prince Froggy's Boss Room",
-                  "Naval Piranha's Boss Room",
-                  "Marching Milde's Boss Room",
-                  "Hookbill The Koopa's Boss Room",
-                  "Sluggy The Unshaven's Boss Room",
-                  "Raphael The Raven's Boss Room",
-                  "Tap-Tap The Red Nose's Boss Room"
-                ]
-              }
+              "type": "constant",
+              "value": "Salvo The Slime's Boss Room"
             },
             {
               "type": "constant",
               "value": "Location"
             }
-          ],
-          "method": "can_reach",
-          "type": "state_method"
+          ]
         },
-        "type": "conditional"
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "constant",
+          "value": null
+        }
       },
       "_18Clear": {
-        "if_false": {
-          "if_false": {
-            "args": [
-              {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Arrow Wheel"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Key"
-                  }
-                ],
-                "type": "set"
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          "if_true": {
-            "args": [
-              {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Arrow Wheel"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Key"
-                  }
-                ],
-                "type": "set"
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "args": [
-            {
-              "elements": [
-                {
-                  "type": "constant",
-                  "value": "Arrow Wheel"
-                },
-                {
-                  "type": "constant",
-                  "value": "Key"
-                }
-              ],
-              "type": "set"
-            }
-          ],
-          "method": "has_all",
-          "type": "state_method"
-        },
-        "test": {
-          "left": {
+        "type": "state_method",
+        "method": "has_all",
+        "args": [
+          {
             "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+            "value": [
+              "Arrow Wheel",
+              "Key"
+            ]
+          }
+        ]
       },
       "_24Boss": {
-        "if_false": {
-          "if_false": {
-            "type": "constant",
-            "value": true
-          },
-          "if_true": {
-            "type": "constant",
-            "value": true
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+        "type": "constant",
+        "value": true
       },
       "_24CanFightBoss": {
-        "if_false": null,
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
+        "type": "conditional",
         "test": {
+          "type": "state_method",
+          "method": "can_reach",
           "args": [
             {
-              "index": {
-                "type": "constant",
-                "value": 2
-              },
-              "type": "subscript",
-              "value": {
-                "type": "constant",
-                "value": [
-                  "Burt The Bashful's Boss Room",
-                  "Salvo The Slime's Boss Room",
-                  "Bigger Boo's Boss Room",
-                  "Roger The Ghost's Boss Room",
-                  "Prince Froggy's Boss Room",
-                  "Naval Piranha's Boss Room",
-                  "Marching Milde's Boss Room",
-                  "Hookbill The Koopa's Boss Room",
-                  "Sluggy The Unshaven's Boss Room",
-                  "Raphael The Raven's Boss Room",
-                  "Tap-Tap The Red Nose's Boss Room"
-                ]
-              }
+              "type": "constant",
+              "value": "Bigger Boo's Boss Room"
             },
             {
               "type": "constant",
               "value": "Location"
             }
-          ],
-          "method": "can_reach",
-          "type": "state_method"
+          ]
         },
-        "type": "conditional"
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "constant",
+          "value": null
+        }
       },
       "_24Clear": {
-        "if_false": {
-          "if_false": {
-            "item": "! Switch",
-            "type": "item_check"
-          },
-          "if_true": {
-            "args": [
-              {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "! Switch"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Dashed Stairs"
-                  }
-                ],
-                "type": "set"
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "args": [
-            {
-              "elements": [
-                {
-                  "type": "constant",
-                  "value": "! Switch"
-                },
-                {
-                  "type": "constant",
-                  "value": "Dashed Stairs"
-                },
-                {
-                  "type": "constant",
-                  "value": "Key"
-                }
-              ],
-              "type": "set"
-            }
-          ],
-          "method": "has_all",
-          "type": "state_method"
-        },
-        "test": {
-          "left": {
+        "type": "state_method",
+        "method": "has_all",
+        "args": [
+          {
             "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+            "value": [
+              "! Switch",
+              "Dashed Stairs",
+              "Key"
+            ]
+          }
+        ]
       },
       "_26Game": {
-        "if_false": {
-          "if_false": {
-            "args": [
-              {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Key"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Large Spring Ball"
-                  }
-                ],
-                "type": "set"
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          "if_true": {
-            "args": [
-              {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Key"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Large Spring Ball"
-                  }
-                ],
-                "type": "set"
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "args": [
-            {
-              "elements": [
-                {
-                  "type": "constant",
-                  "value": "Key"
-                },
-                {
-                  "type": "constant",
-                  "value": "Large Spring Ball"
-                }
-              ],
-              "type": "set"
-            }
-          ],
-          "method": "has_all",
-          "type": "state_method"
-        },
-        "test": {
-          "left": {
+        "type": "state_method",
+        "method": "has_all",
+        "args": [
+          {
             "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+            "value": [
+              "Key",
+              "Large Spring Ball"
+            ]
+          }
+        ]
       },
       "_27Game": {
-        "if_false": {
-          "if_false": {
-            "item": "Key",
-            "type": "item_check"
-          },
-          "if_true": {
-            "item": "Key",
-            "type": "item_check"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "item": "Key",
-          "type": "item_check"
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+        "type": "item_check",
+        "item": "Key"
       },
       "_28Boss": {
-        "if_false": {
-          "if_false": {
-            "type": "constant",
-            "value": true
-          },
-          "if_true": {
-            "type": "constant",
-            "value": true
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+        "type": "constant",
+        "value": true
       },
       "_28CanFightBoss": {
-        "if_false": null,
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
+        "type": "conditional",
         "test": {
+          "type": "state_method",
+          "method": "can_reach",
           "args": [
             {
-              "index": {
-                "type": "constant",
-                "value": 3
-              },
-              "type": "subscript",
-              "value": {
-                "type": "constant",
-                "value": [
-                  "Burt The Bashful's Boss Room",
-                  "Salvo The Slime's Boss Room",
-                  "Bigger Boo's Boss Room",
-                  "Roger The Ghost's Boss Room",
-                  "Prince Froggy's Boss Room",
-                  "Naval Piranha's Boss Room",
-                  "Marching Milde's Boss Room",
-                  "Hookbill The Koopa's Boss Room",
-                  "Sluggy The Unshaven's Boss Room",
-                  "Raphael The Raven's Boss Room",
-                  "Tap-Tap The Red Nose's Boss Room"
-                ]
-              }
+              "type": "constant",
+              "value": "Roger The Ghost's Boss Room"
             },
             {
               "type": "constant",
               "value": "Location"
             }
-          ],
-          "method": "can_reach",
-          "type": "state_method"
+          ]
         },
-        "type": "conditional"
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "constant",
+          "value": null
+        }
       },
       "_28Clear": {
-        "if_false": {
-          "if_false": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "state_method",
+            "method": "has_all",
             "args": [
               {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Arrow Wheel"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Key"
-                  }
-                ],
-                "type": "set"
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          "if_true": {
-            "args": [
-              {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Arrow Wheel"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Key"
-                  }
-                ],
-                "type": "set"
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "conditions": [
-            {
-              "args": [
-                {
-                  "elements": [
-                    {
-                      "type": "constant",
-                      "value": "Arrow Wheel"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Key"
-                    }
-                  ],
-                  "type": "set"
-                }
-              ],
-              "method": "has_all",
-              "type": "state_method"
-            },
-            {
-              "count": {
                 "type": "constant",
-                "value": 1
-              },
-              "item": "Egg Capacity Upgrade",
-              "type": "item_check"
-            }
-          ],
-          "type": "and"
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
+                "value": [
+                  "Arrow Wheel",
+                  "Key"
+                ]
+              }
+            ]
           },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+          {
+            "type": "item_check",
+            "item": "Egg Capacity Upgrade"
+          }
+        ]
       },
       "_34Boss": {
-        "if_false": {
-          "if_false": {
-            "type": "constant",
-            "value": true
-          },
-          "if_true": {
-            "type": "constant",
-            "value": true
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "item": "Giant Eggs",
-          "type": "item_check"
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+        "type": "item_check",
+        "item": "Giant Eggs"
       },
       "_34CanFightBoss": {
-        "if_false": null,
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
+        "type": "conditional",
         "test": {
+          "type": "state_method",
+          "method": "can_reach",
           "args": [
             {
-              "index": {
-                "type": "constant",
-                "value": 4
-              },
-              "type": "subscript",
-              "value": {
-                "type": "constant",
-                "value": [
-                  "Burt The Bashful's Boss Room",
-                  "Salvo The Slime's Boss Room",
-                  "Bigger Boo's Boss Room",
-                  "Roger The Ghost's Boss Room",
-                  "Prince Froggy's Boss Room",
-                  "Naval Piranha's Boss Room",
-                  "Marching Milde's Boss Room",
-                  "Hookbill The Koopa's Boss Room",
-                  "Sluggy The Unshaven's Boss Room",
-                  "Raphael The Raven's Boss Room",
-                  "Tap-Tap The Red Nose's Boss Room"
-                ]
-              }
+              "type": "constant",
+              "value": "Prince Froggy's Boss Room"
             },
             {
               "type": "constant",
               "value": "Location"
             }
-          ],
-          "method": "can_reach",
-          "type": "state_method"
+          ]
         },
-        "type": "conditional"
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "constant",
+          "value": null
+        }
       },
       "_34Clear": {
-        "if_false": {
-          "if_false": {
-            "type": "constant",
-            "value": true
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "item": "Dashed Platform",
-                "type": "item_check"
-              },
-              {
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "item": "Middle Ring",
-                    "type": "item_check"
-                  }
-                ],
-                "type": "or"
-              }
-            ],
-            "type": "or"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "item": "Dashed Platform",
-          "type": "item_check"
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+        "type": "item_check",
+        "item": "Dashed Platform"
       },
       "_38Boss": {
-        "if_false": {
-          "if_false": {
-            "type": "constant",
-            "value": true
-          },
-          "if_true": {
-            "type": "constant",
-            "value": true
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+        "type": "constant",
+        "value": true
       },
       "_38CanFightBoss": {
-        "if_false": null,
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
+        "type": "conditional",
         "test": {
+          "type": "state_method",
+          "method": "can_reach",
           "args": [
             {
-              "index": {
-                "type": "constant",
-                "value": 5
-              },
-              "type": "subscript",
-              "value": {
-                "type": "constant",
-                "value": [
-                  "Burt The Bashful's Boss Room",
-                  "Salvo The Slime's Boss Room",
-                  "Bigger Boo's Boss Room",
-                  "Roger The Ghost's Boss Room",
-                  "Prince Froggy's Boss Room",
-                  "Naval Piranha's Boss Room",
-                  "Marching Milde's Boss Room",
-                  "Hookbill The Koopa's Boss Room",
-                  "Sluggy The Unshaven's Boss Room",
-                  "Raphael The Raven's Boss Room",
-                  "Tap-Tap The Red Nose's Boss Room"
-                ]
-              }
+              "type": "constant",
+              "value": "Naval Piranha's Boss Room"
             },
             {
               "type": "constant",
               "value": "Location"
             }
-          ],
-          "method": "can_reach",
-          "type": "state_method"
+          ]
         },
-        "type": "conditional"
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "constant",
+          "value": null
+        }
       },
       "_38Clear": {
-        "if_false": {
-          "if_false": {
-            "type": "constant",
-            "value": true
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "item": "Egg Capacity Upgrade",
-                "type": "item_check"
-              },
-              {
-                "if_false": {
-                  "if_false": {
-                    "conditions": [
-                      {
-                        "name": "bandit_bonus",
-                        "type": "helper"
-                      },
-                      {
-                        "name": "item_bonus",
-                        "type": "helper"
-                      }
-                    ],
-                    "type": "or"
-                  },
-                  "if_true": {
-                    "name": "item_bonus",
-                    "type": "helper"
-                  },
-                  "test": {
-                    "left": {
-                      "type": "constant",
-                      "value": "Easy"
-                    },
-                    "op": "==",
-                    "right": {
-                      "type": "constant",
-                      "value": "Easy"
-                    },
-                    "type": "compare"
-                  },
-                  "type": "conditional"
-                },
-                "if_true": {
-                  "type": "constant",
-                  "value": false
-                },
-                "test": {
-                  "condition": {
-                    "type": "constant",
-                    "value": true
-                  },
-                  "type": "not"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "or"
-          },
-          "test": {
-            "left": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Egg Capacity Upgrade",
+            "count": {
               "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "conditions": [
-            {
-              "count": {
-                "type": "constant",
-                "value": 3
-              },
-              "item": "Egg Capacity Upgrade",
-              "type": "item_check"
-            },
-            {
-              "if_false": {
-                "if_false": {
-                  "conditions": [
-                    {
-                      "name": "bandit_bonus",
-                      "type": "helper"
-                    },
-                    {
-                      "name": "item_bonus",
-                      "type": "helper"
-                    }
-                  ],
-                  "type": "or"
-                },
-                "if_true": {
-                  "name": "item_bonus",
-                  "type": "helper"
-                },
-                "test": {
-                  "left": {
-                    "type": "constant",
-                    "value": "Easy"
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": "Easy"
-                  },
-                  "type": "compare"
-                },
-                "type": "conditional"
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "test": {
-                "condition": {
-                  "type": "constant",
-                  "value": true
-                },
-                "type": "not"
-              },
-              "type": "conditional"
+              "value": 3
             }
-          ],
-          "type": "or"
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
           },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+          {
+            "type": "helper",
+            "name": "combat_item"
+          }
+        ]
       },
       "_44Boss": {
-        "if_false": {
-          "if_false": {
-            "type": "constant",
-            "value": true
-          },
-          "if_true": {
-            "type": "constant",
-            "value": true
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+        "type": "constant",
+        "value": true
       },
       "_44CanFightBoss": {
-        "if_false": null,
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
+        "type": "conditional",
         "test": {
+          "type": "state_method",
+          "method": "can_reach",
           "args": [
             {
-              "index": {
-                "type": "constant",
-                "value": 6
-              },
-              "type": "subscript",
-              "value": {
-                "type": "constant",
-                "value": [
-                  "Burt The Bashful's Boss Room",
-                  "Salvo The Slime's Boss Room",
-                  "Bigger Boo's Boss Room",
-                  "Roger The Ghost's Boss Room",
-                  "Prince Froggy's Boss Room",
-                  "Naval Piranha's Boss Room",
-                  "Marching Milde's Boss Room",
-                  "Hookbill The Koopa's Boss Room",
-                  "Sluggy The Unshaven's Boss Room",
-                  "Raphael The Raven's Boss Room",
-                  "Tap-Tap The Red Nose's Boss Room"
-                ]
-              }
+              "type": "constant",
+              "value": "Marching Milde's Boss Room"
             },
             {
               "type": "constant",
               "value": "Location"
             }
-          ],
-          "method": "can_reach",
-          "type": "state_method"
+          ]
         },
-        "type": "conditional"
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "constant",
+          "value": null
+        }
       },
       "_44Clear": {
-        "if_false": {
-          "if_false": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "state_method",
+            "method": "has_all",
             "args": [
               {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Arrow Wheel"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Bucket"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Dashed Stairs"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Key"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Vanishing Arrow Wheel"
-                  }
-                ],
-                "type": "set"
+                "type": "constant",
+                "value": [
+                  "Arrow Wheel",
+                  "Bucket",
+                  "Dashed Stairs",
+                  "Key",
+                  "Vanishing Arrow Wheel"
+                ]
               }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            ]
           },
-          "if_true": {
-            "args": [
+          {
+            "type": "or",
+            "conditions": [
               {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Arrow Wheel"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Bucket"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Dashed Stairs"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Key"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Vanishing Arrow Wheel"
-                  }
-                ],
-                "type": "set"
+                "type": "item_check",
+                "item": "Egg Capacity Upgrade"
+              },
+              {
+                "type": "helper",
+                "name": "combat_item"
               }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "conditions": [
-            {
-              "args": [
-                {
-                  "elements": [
-                    {
-                      "type": "constant",
-                      "value": "Arrow Wheel"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Bucket"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Dashed Stairs"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Key"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Vanishing Arrow Wheel"
-                    }
-                  ],
-                  "type": "set"
-                }
-              ],
-              "method": "has_all",
-              "type": "state_method"
-            },
-            {
-              "conditions": [
-                {
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  },
-                  "item": "Egg Capacity Upgrade",
-                  "type": "item_check"
-                },
-                {
-                  "if_false": {
-                    "if_false": {
-                      "conditions": [
-                        {
-                          "name": "bandit_bonus",
-                          "type": "helper"
-                        },
-                        {
-                          "name": "item_bonus",
-                          "type": "helper"
-                        }
-                      ],
-                      "type": "or"
-                    },
-                    "if_true": {
-                      "name": "item_bonus",
-                      "type": "helper"
-                    },
-                    "test": {
-                      "left": {
-                        "type": "constant",
-                        "value": "Easy"
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": "Easy"
-                      },
-                      "type": "compare"
-                    },
-                    "type": "conditional"
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": false
-                  },
-                  "test": {
-                    "condition": {
-                      "type": "constant",
-                      "value": true
-                    },
-                    "type": "not"
-                  },
-                  "type": "conditional"
-                }
-              ],
-              "type": "or"
-            }
-          ],
-          "type": "and"
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+            ]
+          }
+        ]
       },
       "_47Game": {
-        "if_false": {
-          "if_false": {
-            "args": [
-              {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Key"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Large Spring Ball"
-                  }
-                ],
-                "type": "set"
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          "if_true": {
-            "args": [
-              {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Key"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Large Spring Ball"
-                  }
-                ],
-                "type": "set"
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "args": [
-            {
-              "elements": [
-                {
-                  "type": "constant",
-                  "value": "Key"
-                },
-                {
-                  "type": "constant",
-                  "value": "Large Spring Ball"
-                }
-              ],
-              "type": "set"
-            }
-          ],
-          "method": "has_all",
-          "type": "state_method"
-        },
-        "test": {
-          "left": {
+        "type": "state_method",
+        "method": "has_all",
+        "args": [
+          {
             "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+            "value": [
+              "Key",
+              "Large Spring Ball"
+            ]
+          }
+        ]
       },
       "_48Boss": {
-        "if_false": {
-          "if_false": {
-            "count": {
+        "type": "item_check",
+        "item": "Egg Capacity Upgrade",
+        "count": {
+          "type": "constant",
+          "value": 3
+        }
+      },
+      "_48CanFightBoss": {
+        "type": "conditional",
+        "test": {
+          "type": "state_method",
+          "method": "can_reach",
+          "args": [
+            {
               "type": "constant",
-              "value": 1
+              "value": "Hookbill The Koopa's Boss Room"
             },
+            {
+              "type": "constant",
+              "value": "Location"
+            }
+          ]
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "constant",
+          "value": null
+        }
+      },
+      "_48Clear": {
+        "type": "state_method",
+        "method": "has_all",
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Dashed Stairs",
+              "Key",
+              "Large Spring Ball",
+              "Vanishing Arrow Wheel"
+            ]
+          }
+        ]
+      },
+      "_54Boss": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
             "item": "Egg Capacity Upgrade",
-            "type": "item_check"
-          },
-          "if_true": {
             "count": {
               "type": "constant",
               "value": 2
-            },
-            "item": "Egg Capacity Upgrade",
-            "type": "item_check"
+            }
           },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "count": {
-            "type": "constant",
-            "value": 3
-          },
-          "item": "Egg Capacity Upgrade",
-          "type": "item_check"
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+          {
+            "type": "item_check",
+            "item": "Egg Plant"
+          }
+        ]
       },
-      "_48CanFightBoss": {
-        "if_false": null,
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
+      "_54CanFightBoss": {
+        "type": "conditional",
         "test": {
+          "type": "state_method",
+          "method": "can_reach",
           "args": [
             {
-              "index": {
-                "type": "constant",
-                "value": 7
-              },
-              "type": "subscript",
-              "value": {
-                "type": "constant",
-                "value": [
-                  "Burt The Bashful's Boss Room",
-                  "Salvo The Slime's Boss Room",
-                  "Bigger Boo's Boss Room",
-                  "Roger The Ghost's Boss Room",
-                  "Prince Froggy's Boss Room",
-                  "Naval Piranha's Boss Room",
-                  "Marching Milde's Boss Room",
-                  "Hookbill The Koopa's Boss Room",
-                  "Sluggy The Unshaven's Boss Room",
-                  "Raphael The Raven's Boss Room",
-                  "Tap-Tap The Red Nose's Boss Room"
-                ]
-              }
+              "type": "constant",
+              "value": "Sluggy The Unshaven's Boss Room"
             },
             {
               "type": "constant",
               "value": "Location"
             }
-          ],
-          "method": "can_reach",
-          "type": "state_method"
-        },
-        "type": "conditional"
-      },
-      "_48Clear": {
-        "if_false": {
-          "if_false": {
-            "args": [
-              {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Key"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Large Spring Ball"
-                  }
-                ],
-                "type": "set"
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          "if_true": {
-            "args": [
-              {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Dashed Stairs"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Key"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Large Spring Ball"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Vanishing Arrow Wheel"
-                  }
-                ],
-                "type": "set"
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
+          ]
         },
         "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "constant",
+          "value": null
+        }
+      },
+      "_54Clear": {
+        "type": "state_method",
+        "method": "has_all",
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Dashed Platform",
+              "Dashed Stairs",
+              "Platform Ghost"
+            ]
+          }
+        ]
+      },
+      "_58Boss": {
+        "type": "constant",
+        "value": true
+      },
+      "_58CanFightBoss": {
+        "type": "conditional",
+        "test": {
+          "type": "state_method",
+          "method": "can_reach",
           "args": [
             {
-              "elements": [
-                {
-                  "type": "constant",
-                  "value": "Dashed Stairs"
-                },
-                {
-                  "type": "constant",
-                  "value": "Key"
-                },
-                {
-                  "type": "constant",
-                  "value": "Large Spring Ball"
-                },
-                {
-                  "type": "constant",
-                  "value": "Vanishing Arrow Wheel"
-                }
-              ],
-              "type": "set"
+              "type": "constant",
+              "value": "Raphael The Raven's Boss Room"
+            },
+            {
+              "type": "constant",
+              "value": "Location"
             }
-          ],
-          "method": "has_all",
-          "type": "state_method"
+          ]
         },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
+        "if_true": {
+          "type": "constant",
+          "value": true
         },
-        "type": "conditional"
-      },
-      "_54Boss": {
         "if_false": {
-          "if_false": {
+          "type": "constant",
+          "value": null
+        }
+      },
+      "_58Clear": {
+        "type": "state_method",
+        "method": "has_all",
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Arrow Wheel",
+              "Large Spring Ball"
+            ]
+          }
+        ]
+      },
+      "_64Boss": {
+        "type": "item_check",
+        "item": "Egg Plant"
+      },
+      "_64CanFightBoss": {
+        "type": "conditional",
+        "test": {
+          "type": "state_method",
+          "method": "can_reach",
+          "args": [
+            {
+              "type": "constant",
+              "value": "Tap-Tap The Red Nose's Boss Room"
+            },
+            {
+              "type": "constant",
+              "value": "Location"
+            }
+          ]
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "constant",
+          "value": null
+        }
+      },
+      "_64Clear": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Egg Plant",
+                  "Key",
+                  "Large Spring Ball",
+                  "Spring Ball"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "or",
             "conditions": [
               {
-                "item": "Egg Plant",
-                "type": "item_check"
+                "type": "item_check",
+                "item": "Egg Capacity Upgrade",
+                "count": {
+                  "type": "constant",
+                  "value": 3
+                }
               },
               {
+                "type": "helper",
+                "name": "combat_item"
+              }
+            ]
+          }
+        ]
+      },
+      "_68Clear": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Egg Plant",
+                  "Giant Eggs",
+                  "Helicopter Morph"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "_68Route"
+          }
+        ]
+      },
+      "_68CollectibleRoute": {
+        "type": "constant",
+        "value": true
+      },
+      "_68Route": {
+        "type": "constant",
+        "value": true
+      },
+      "bandit_bonus": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Bandit Consumables"
+          },
+          {
+            "type": "item_check",
+            "item": "Bandit Watermelons"
+          }
+        ]
+      },
+      "bowserdoor_1": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "! Switch",
+                  "Egg Plant"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "item_check",
+            "item": "Egg Capacity Upgrade",
+            "count": {
+              "type": "constant",
+              "value": 2
+            }
+          }
+        ]
+      },
+      "bowserdoor_2": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "and",
                 "conditions": [
                   {
+                    "type": "item_check",
+                    "item": "Egg Capacity Upgrade",
                     "count": {
                       "type": "constant",
                       "value": 3
-                    },
-                    "item": "Egg Capacity Upgrade",
-                    "type": "item_check"
+                    }
                   },
                   {
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "item": "Middle Ring",
-                        "type": "item_check"
-                      }
-                    ],
-                    "type": "or"
+                    "type": "item_check",
+                    "item": "Egg Plant"
                   }
-                ],
-                "type": "and"
-              }
-            ],
-            "type": "or"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "conditions": [
-                  {
-                    "count": {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    "item": "Egg Capacity Upgrade",
-                    "type": "item_check"
-                  },
-                  {
-                    "item": "Egg Plant",
-                    "type": "item_check"
-                  }
-                ],
-                "type": "and"
-              },
-              {
-                "conditions": [
-                  {
-                    "count": {
-                      "type": "constant",
-                      "value": 5
-                    },
-                    "item": "Egg Capacity Upgrade",
-                    "type": "item_check"
-                  },
-                  {
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "item": "Middle Ring",
-                        "type": "item_check"
-                      }
-                    ],
-                    "type": "or"
-                  }
-                ],
-                "type": "and"
-              }
-            ],
-            "type": "or"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "conditions": [
-            {
-              "count": {
-                "type": "constant",
-                "value": 2
-              },
-              "item": "Egg Capacity Upgrade",
-              "type": "item_check"
-            },
-            {
-              "item": "Egg Plant",
-              "type": "item_check"
-            }
-          ],
-          "type": "and"
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
-      },
-      "_54CanFightBoss": {
-        "if_false": null,
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "test": {
-          "args": [
-            {
-              "index": {
-                "type": "constant",
-                "value": 8
-              },
-              "type": "subscript",
-              "value": {
-                "type": "constant",
-                "value": [
-                  "Burt The Bashful's Boss Room",
-                  "Salvo The Slime's Boss Room",
-                  "Bigger Boo's Boss Room",
-                  "Roger The Ghost's Boss Room",
-                  "Prince Froggy's Boss Room",
-                  "Naval Piranha's Boss Room",
-                  "Marching Milde's Boss Room",
-                  "Hookbill The Koopa's Boss Room",
-                  "Sluggy The Unshaven's Boss Room",
-                  "Raphael The Raven's Boss Room",
-                  "Tap-Tap The Red Nose's Boss Room"
                 ]
+              },
+              {
+                "type": "helper",
+                "name": "combat_item"
               }
-            },
-            {
-              "type": "constant",
-              "value": "Location"
-            }
-          ],
-          "method": "can_reach",
-          "type": "state_method"
-        },
-        "type": "conditional"
-      },
-      "_54Clear": {
-        "if_false": {
-          "if_false": {
-            "args": [
-              {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Dashed Stairs"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Platform Ghost"
-                  }
-                ],
-                "type": "set"
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          "if_true": {
-            "args": [
-              {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Dashed Platform"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Dashed Stairs"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Platform Ghost"
-                  }
-                ],
-                "type": "set"
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "args": [
-            {
-              "elements": [
-                {
-                  "type": "constant",
-                  "value": "Dashed Platform"
-                },
-                {
-                  "type": "constant",
-                  "value": "Dashed Stairs"
-                },
-                {
-                  "type": "constant",
-                  "value": "Platform Ghost"
-                }
-              ],
-              "type": "set"
-            }
-          ],
-          "method": "has_all",
-          "type": "state_method"
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
-      },
-      "_58Boss": {
-        "if_false": {
-          "if_false": {
-            "type": "constant",
-            "value": true
-          },
-          "if_true": {
-            "type": "constant",
-            "value": true
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
-      },
-      "_58CanFightBoss": {
-        "if_false": null,
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "test": {
-          "args": [
-            {
-              "index": {
-                "type": "constant",
-                "value": 9
-              },
-              "type": "subscript",
-              "value": {
-                "type": "constant",
-                "value": [
-                  "Burt The Bashful's Boss Room",
-                  "Salvo The Slime's Boss Room",
-                  "Bigger Boo's Boss Room",
-                  "Roger The Ghost's Boss Room",
-                  "Prince Froggy's Boss Room",
-                  "Naval Piranha's Boss Room",
-                  "Marching Milde's Boss Room",
-                  "Hookbill The Koopa's Boss Room",
-                  "Sluggy The Unshaven's Boss Room",
-                  "Raphael The Raven's Boss Room",
-                  "Tap-Tap The Red Nose's Boss Room"
-                ]
-              }
-            },
-            {
-              "type": "constant",
-              "value": "Location"
-            }
-          ],
-          "method": "can_reach",
-          "type": "state_method"
-        },
-        "type": "conditional"
-      },
-      "_58Clear": {
-        "if_false": {
-          "if_false": {
-            "args": [
-              {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Arrow Wheel"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Large Spring Ball"
-                  }
-                ],
-                "type": "set"
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          "if_true": {
-            "args": [
-              {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Arrow Wheel"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Large Spring Ball"
-                  }
-                ],
-                "type": "set"
-              }
-            ],
-            "method": "has_all",
-            "type": "state_method"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "args": [
-            {
-              "elements": [
-                {
-                  "type": "constant",
-                  "value": "Arrow Wheel"
-                },
-                {
-                  "type": "constant",
-                  "value": "Large Spring Ball"
-                }
-              ],
-              "type": "set"
-            }
-          ],
-          "method": "has_all",
-          "type": "state_method"
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
-      },
-      "_64Boss": {
-        "if_false": {
-          "if_false": {
-            "type": "constant",
-            "value": true
-          },
-          "if_true": {
-            "item": "Egg Plant",
-            "type": "item_check"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "item": "Egg Plant",
-          "type": "item_check"
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
-      },
-      "_64CanFightBoss": {
-        "if_false": null,
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "test": {
-          "args": [
-            {
-              "index": {
-                "type": "constant",
-                "value": 10
-              },
-              "type": "subscript",
-              "value": {
-                "type": "constant",
-                "value": [
-                  "Burt The Bashful's Boss Room",
-                  "Salvo The Slime's Boss Room",
-                  "Bigger Boo's Boss Room",
-                  "Roger The Ghost's Boss Room",
-                  "Prince Froggy's Boss Room",
-                  "Naval Piranha's Boss Room",
-                  "Marching Milde's Boss Room",
-                  "Hookbill The Koopa's Boss Room",
-                  "Sluggy The Unshaven's Boss Room",
-                  "Raphael The Raven's Boss Room",
-                  "Tap-Tap The Red Nose's Boss Room"
-                ]
-              }
-            },
-            {
-              "type": "constant",
-              "value": "Location"
-            }
-          ],
-          "method": "can_reach",
-          "type": "state_method"
-        },
-        "type": "conditional"
-      },
-      "_64Clear": {
-        "if_false": {
-          "if_false": {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "elements": [
-                      {
-                        "type": "constant",
-                        "value": "Egg Plant"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Key"
-                      }
-                    ],
-                    "type": "set"
-                  }
-                ],
-                "method": "has_all",
-                "type": "state_method"
-              },
-              {
-                "conditions": [
-                  {
-                    "count": {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    "item": "Egg Capacity Upgrade",
-                    "type": "item_check"
-                  },
-                  {
-                    "if_false": {
-                      "if_false": {
-                        "conditions": [
-                          {
-                            "name": "bandit_bonus",
-                            "type": "helper"
-                          },
-                          {
-                            "name": "item_bonus",
-                            "type": "helper"
-                          }
-                        ],
-                        "type": "or"
-                      },
-                      "if_true": {
-                        "name": "item_bonus",
-                        "type": "helper"
-                      },
-                      "test": {
-                        "left": {
-                          "type": "constant",
-                          "value": "Easy"
-                        },
-                        "op": "==",
-                        "right": {
-                          "type": "constant",
-                          "value": "Easy"
-                        },
-                        "type": "compare"
-                      },
-                      "type": "conditional"
-                    },
-                    "if_true": {
-                      "type": "constant",
-                      "value": false
-                    },
-                    "test": {
-                      "condition": {
-                        "type": "constant",
-                        "value": true
-                      },
-                      "type": "not"
-                    },
-                    "type": "conditional"
-                  }
-                ],
-                "type": "or"
-              }
-            ],
-            "type": "and"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "elements": [
-                      {
-                        "type": "constant",
-                        "value": "Egg Plant"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Key"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Large Spring Ball"
-                      }
-                    ],
-                    "type": "set"
-                  }
-                ],
-                "method": "has_all",
-                "type": "state_method"
-              },
-              {
-                "conditions": [
-                  {
-                    "count": {
-                      "type": "constant",
-                      "value": 2
-                    },
-                    "item": "Egg Capacity Upgrade",
-                    "type": "item_check"
-                  },
-                  {
-                    "if_false": {
-                      "if_false": {
-                        "conditions": [
-                          {
-                            "name": "bandit_bonus",
-                            "type": "helper"
-                          },
-                          {
-                            "name": "item_bonus",
-                            "type": "helper"
-                          }
-                        ],
-                        "type": "or"
-                      },
-                      "if_true": {
-                        "name": "item_bonus",
-                        "type": "helper"
-                      },
-                      "test": {
-                        "left": {
-                          "type": "constant",
-                          "value": "Easy"
-                        },
-                        "op": "==",
-                        "right": {
-                          "type": "constant",
-                          "value": "Easy"
-                        },
-                        "type": "compare"
-                      },
-                      "type": "conditional"
-                    },
-                    "if_true": {
-                      "type": "constant",
-                      "value": false
-                    },
-                    "test": {
-                      "condition": {
-                        "type": "constant",
-                        "value": true
-                      },
-                      "type": "not"
-                    },
-                    "type": "conditional"
-                  }
-                ],
-                "type": "or"
-              }
-            ],
-            "type": "and"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "conditions": [
-            {
-              "args": [
-                {
-                  "elements": [
-                    {
-                      "type": "constant",
-                      "value": "Egg Plant"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Key"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Large Spring Ball"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Spring Ball"
-                    }
-                  ],
-                  "type": "set"
-                }
-              ],
-              "method": "has_all",
-              "type": "state_method"
-            },
-            {
-              "conditions": [
-                {
-                  "count": {
-                    "type": "constant",
-                    "value": 3
-                  },
-                  "item": "Egg Capacity Upgrade",
-                  "type": "item_check"
-                },
-                {
-                  "if_false": {
-                    "if_false": {
-                      "conditions": [
-                        {
-                          "name": "bandit_bonus",
-                          "type": "helper"
-                        },
-                        {
-                          "name": "item_bonus",
-                          "type": "helper"
-                        }
-                      ],
-                      "type": "or"
-                    },
-                    "if_true": {
-                      "name": "item_bonus",
-                      "type": "helper"
-                    },
-                    "test": {
-                      "left": {
-                        "type": "constant",
-                        "value": "Easy"
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": "Easy"
-                      },
-                      "type": "compare"
-                    },
-                    "type": "conditional"
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": false
-                  },
-                  "test": {
-                    "condition": {
-                      "type": "constant",
-                      "value": true
-                    },
-                    "type": "not"
-                  },
-                  "type": "conditional"
-                }
-              ],
-              "type": "or"
-            }
-          ],
-          "type": "and"
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
-      },
-      "_68Clear": {
-        "if_false": {
-          "if_false": {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "elements": [
-                      {
-                        "type": "constant",
-                        "value": "Giant Eggs"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Helicopter Morph"
-                      }
-                    ],
-                    "type": "set"
-                  }
-                ],
-                "method": "has_all",
-                "type": "state_method"
-              },
-              {
-                "if_false": {
-                  "if_false": {
-                    "if_false": {
-                      "if_false": {
-                        "if_false": {
-                          "if_false": null,
-                          "if_true": {
-                            "conditions": [
-                              {
-                                "name": "bowserdoor_1",
-                                "type": "helper"
-                              },
-                              {
-                                "name": "bowserdoor_2",
-                                "type": "helper"
-                              },
-                              {
-                                "name": "bowserdoor_3",
-                                "type": "helper"
-                              }
-                            ],
-                            "type": "and"
-                          },
-                          "test": {
-                            "left": {
-                              "type": "constant",
-                              "value": 0
-                            },
-                            "op": "==",
-                            "right": {
-                              "type": "constant",
-                              "value": 5
-                            },
-                            "type": "compare"
-                          },
-                          "type": "conditional"
-                        },
-                        "if_true": {
-                          "type": "constant",
-                          "value": true
-                        },
-                        "test": {
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 4
-                          },
-                          "type": "compare"
-                        },
-                        "type": "conditional"
-                      },
-                      "if_true": {
-                        "type": "constant",
-                        "value": true
-                      },
-                      "test": {
-                        "left": {
-                          "type": "constant",
-                          "value": 0
-                        },
-                        "op": "==",
-                        "right": {
-                          "type": "constant",
-                          "value": 3
-                        },
-                        "type": "compare"
-                      },
-                      "type": "conditional"
-                    },
-                    "if_true": {
-                      "name": "bowserdoor_2",
-                      "type": "helper"
-                    },
-                    "test": {
-                      "left": {
-                        "type": "constant",
-                        "value": 0
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": 2
-                      },
-                      "type": "compare"
-                    },
-                    "type": "conditional"
-                  },
-                  "if_true": {
-                    "name": "bowserdoor_1",
-                    "type": "helper"
-                  },
-                  "test": {
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "==",
-                    "right": {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    "type": "compare"
-                  },
-                  "type": "conditional"
-                },
-                "if_true": {
-                  "type": "constant",
-                  "value": true
-                },
-                "test": {
-                  "left": {
-                    "type": "constant",
-                    "value": 0
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": 0
-                  },
-                  "type": "compare"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "args": [
-                  {
-                    "elements": [
-                      {
-                        "type": "constant",
-                        "value": "Egg Plant"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Giant Eggs"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Helicopter Morph"
-                      }
-                    ],
-                    "type": "set"
-                  }
-                ],
-                "method": "has_all",
-                "type": "state_method"
-              },
-              {
-                "if_false": {
-                  "if_false": {
-                    "if_false": {
-                      "if_false": {
-                        "if_false": {
-                          "if_false": null,
-                          "if_true": {
-                            "conditions": [
-                              {
-                                "name": "bowserdoor_1",
-                                "type": "helper"
-                              },
-                              {
-                                "name": "bowserdoor_2",
-                                "type": "helper"
-                              },
-                              {
-                                "name": "bowserdoor_3",
-                                "type": "helper"
-                              }
-                            ],
-                            "type": "and"
-                          },
-                          "test": {
-                            "left": {
-                              "type": "constant",
-                              "value": 0
-                            },
-                            "op": "==",
-                            "right": {
-                              "type": "constant",
-                              "value": 5
-                            },
-                            "type": "compare"
-                          },
-                          "type": "conditional"
-                        },
-                        "if_true": {
-                          "type": "constant",
-                          "value": true
-                        },
-                        "test": {
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 4
-                          },
-                          "type": "compare"
-                        },
-                        "type": "conditional"
-                      },
-                      "if_true": {
-                        "type": "constant",
-                        "value": true
-                      },
-                      "test": {
-                        "left": {
-                          "type": "constant",
-                          "value": 0
-                        },
-                        "op": "==",
-                        "right": {
-                          "type": "constant",
-                          "value": 3
-                        },
-                        "type": "compare"
-                      },
-                      "type": "conditional"
-                    },
-                    "if_true": {
-                      "name": "bowserdoor_2",
-                      "type": "helper"
-                    },
-                    "test": {
-                      "left": {
-                        "type": "constant",
-                        "value": 0
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": 2
-                      },
-                      "type": "compare"
-                    },
-                    "type": "conditional"
-                  },
-                  "if_true": {
-                    "name": "bowserdoor_1",
-                    "type": "helper"
-                  },
-                  "test": {
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "==",
-                    "right": {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    "type": "compare"
-                  },
-                  "type": "conditional"
-                },
-                "if_true": {
-                  "type": "constant",
-                  "value": true
-                },
-                "test": {
-                  "left": {
-                    "type": "constant",
-                    "value": 0
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": 0
-                  },
-                  "type": "compare"
-                },
-                "type": "conditional"
-              }
-            ],
-            "type": "and"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "conditions": [
-            {
-              "args": [
-                {
-                  "elements": [
-                    {
-                      "type": "constant",
-                      "value": "Egg Plant"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Giant Eggs"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Helicopter Morph"
-                    }
-                  ],
-                  "type": "set"
-                }
-              ],
-              "method": "has_all",
-              "type": "state_method"
-            },
-            {
-              "if_false": {
-                "if_false": {
-                  "if_false": {
-                    "if_false": {
-                      "if_false": {
-                        "if_false": null,
-                        "if_true": {
-                          "conditions": [
-                            {
-                              "name": "bowserdoor_1",
-                              "type": "helper"
-                            },
-                            {
-                              "name": "bowserdoor_2",
-                              "type": "helper"
-                            },
-                            {
-                              "name": "bowserdoor_3",
-                              "type": "helper"
-                            }
-                          ],
-                          "type": "and"
-                        },
-                        "test": {
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 5
-                          },
-                          "type": "compare"
-                        },
-                        "type": "conditional"
-                      },
-                      "if_true": {
-                        "type": "constant",
-                        "value": true
-                      },
-                      "test": {
-                        "left": {
-                          "type": "constant",
-                          "value": 0
-                        },
-                        "op": "==",
-                        "right": {
-                          "type": "constant",
-                          "value": 4
-                        },
-                        "type": "compare"
-                      },
-                      "type": "conditional"
-                    },
-                    "if_true": {
-                      "type": "constant",
-                      "value": true
-                    },
-                    "test": {
-                      "left": {
-                        "type": "constant",
-                        "value": 0
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": 3
-                      },
-                      "type": "compare"
-                    },
-                    "type": "conditional"
-                  },
-                  "if_true": {
-                    "name": "bowserdoor_2",
-                    "type": "helper"
-                  },
-                  "test": {
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "==",
-                    "right": {
-                      "type": "constant",
-                      "value": 2
-                    },
-                    "type": "compare"
-                  },
-                  "type": "conditional"
-                },
-                "if_true": {
-                  "name": "bowserdoor_1",
-                  "type": "helper"
-                },
-                "test": {
-                  "left": {
-                    "type": "constant",
-                    "value": 0
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": 1
-                  },
-                  "type": "compare"
-                },
-                "type": "conditional"
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "test": {
-                "left": {
-                  "type": "constant",
-                  "value": 0
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": 0
-                },
-                "type": "compare"
-              },
-              "type": "conditional"
-            }
-          ],
-          "type": "and"
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
-      },
-      "_68CollectibleRoute": {
-        "if_false": {
-          "if_false": {
-            "if_false": {
-              "if_false": {
-                "if_false": {
-                  "if_false": null,
-                  "if_true": {
-                    "if_false": {
-                      "if_false": {
-                        "item": "Egg Plant",
-                        "type": "item_check"
-                      },
-                      "if_true": {
-                        "conditions": [
-                          {
-                            "item": "Egg Plant",
-                            "type": "item_check"
-                          },
-                          {
-                            "count": {
-                              "type": "constant",
-                              "value": 1
-                            },
-                            "item": "Egg Capacity Upgrade",
-                            "type": "item_check"
-                          }
-                        ],
-                        "type": "and"
-                      },
-                      "test": {
-                        "left": {
-                          "type": "constant",
-                          "value": "Easy"
-                        },
-                        "op": "==",
-                        "right": {
-                          "type": "constant",
-                          "value": "Normal"
-                        },
-                        "type": "compare"
-                      },
-                      "type": "conditional"
-                    },
-                    "if_true": {
-                      "conditions": [
-                        {
-                          "args": [
-                            {
-                              "elements": [
-                                {
-                                  "type": "constant",
-                                  "value": "! Switch"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": "Egg Plant"
-                                }
-                              ],
-                              "type": "set"
-                            }
-                          ],
-                          "method": "has_all",
-                          "type": "state_method"
-                        },
-                        {
-                          "count": {
-                            "type": "constant",
-                            "value": 2
-                          },
-                          "item": "Egg Capacity Upgrade",
-                          "type": "item_check"
-                        }
-                      ],
-                      "type": "and"
-                    },
-                    "test": {
-                      "left": {
-                        "type": "constant",
-                        "value": "Easy"
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": "Easy"
-                      },
-                      "type": "compare"
-                    },
-                    "type": "conditional"
-                  },
-                  "test": {
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "==",
-                    "right": {
-                      "type": "constant",
-                      "value": 5
-                    },
-                    "type": "compare"
-                  },
-                  "type": "conditional"
-                },
-                "if_true": {
-                  "type": "constant",
-                  "value": true
-                },
-                "test": {
-                  "left": {
-                    "type": "constant",
-                    "value": 0
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": 4
-                  },
-                  "type": "compare"
-                },
-                "type": "conditional"
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "test": {
-                "left": {
-                  "type": "constant",
-                  "value": 0
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": 3
-                },
-                "type": "compare"
-              },
-              "type": "conditional"
-            },
-            "if_true": {
-              "if_false": {
-                "if_false": {
-                  "conditions": [
-                    {
-                      "conditions": [
-                        {
-                          "conditions": [
-                            {
-                              "count": {
-                                "type": "constant",
-                                "value": 1
-                              },
-                              "item": "Egg Capacity Upgrade",
-                              "type": "item_check"
-                            },
-                            {
-                              "item": "Egg Plant",
-                              "type": "item_check"
-                            }
-                          ],
-                          "type": "and"
-                        },
-                        {
-                          "name": "combat_item",
-                          "type": "helper"
-                        }
-                      ],
-                      "type": "or"
-                    },
-                    {
-                      "item": "Key",
-                      "type": "item_check"
-                    }
-                  ],
-                  "type": "and"
-                },
-                "if_true": {
-                  "conditions": [
-                    {
-                      "conditions": [
-                        {
-                          "conditions": [
-                            {
-                              "count": {
-                                "type": "constant",
-                                "value": 2
-                              },
-                              "item": "Egg Capacity Upgrade",
-                              "type": "item_check"
-                            },
-                            {
-                              "item": "Egg Plant",
-                              "type": "item_check"
-                            }
-                          ],
-                          "type": "and"
-                        },
-                        {
-                          "name": "combat_item",
-                          "type": "helper"
-                        }
-                      ],
-                      "type": "or"
-                    },
-                    {
-                      "item": "Key",
-                      "type": "item_check"
-                    }
-                  ],
-                  "type": "and"
-                },
-                "test": {
-                  "left": {
-                    "type": "constant",
-                    "value": "Easy"
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": "Normal"
-                  },
-                  "type": "compare"
-                },
-                "type": "conditional"
-              },
-              "if_true": {
-                "conditions": [
-                  {
-                    "conditions": [
-                      {
-                        "conditions": [
-                          {
-                            "count": {
-                              "type": "constant",
-                              "value": 3
-                            },
-                            "item": "Egg Capacity Upgrade",
-                            "type": "item_check"
-                          },
-                          {
-                            "item": "Egg Plant",
-                            "type": "item_check"
-                          }
-                        ],
-                        "type": "and"
-                      },
-                      {
-                        "name": "combat_item",
-                        "type": "helper"
-                      }
-                    ],
-                    "type": "or"
-                  },
-                  {
-                    "item": "Key",
-                    "type": "item_check"
-                  }
-                ],
-                "type": "and"
-              },
-              "test": {
-                "left": {
-                  "type": "constant",
-                  "value": "Easy"
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": "Easy"
-                },
-                "type": "compare"
-              },
-              "type": "conditional"
-            },
-            "test": {
-              "left": {
-                "type": "constant",
-                "value": 0
-              },
-              "op": "==",
-              "right": {
-                "type": "constant",
-                "value": 2
-              },
-              "type": "compare"
-            },
-            "type": "conditional"
-          },
-          "if_true": {
-            "if_false": {
-              "if_false": {
-                "item": "Egg Plant",
-                "type": "item_check"
-              },
-              "if_true": {
-                "conditions": [
-                  {
-                    "item": "Egg Plant",
-                    "type": "item_check"
-                  },
-                  {
-                    "count": {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    "item": "Egg Capacity Upgrade",
-                    "type": "item_check"
-                  }
-                ],
-                "type": "and"
-              },
-              "test": {
-                "left": {
-                  "type": "constant",
-                  "value": "Easy"
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": "Normal"
-                },
-                "type": "compare"
-              },
-              "type": "conditional"
-            },
-            "if_true": {
-              "conditions": [
-                {
-                  "args": [
-                    {
-                      "elements": [
-                        {
-                          "type": "constant",
-                          "value": "! Switch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Egg Plant"
-                        }
-                      ],
-                      "type": "set"
-                    }
-                  ],
-                  "method": "has_all",
-                  "type": "state_method"
-                },
-                {
-                  "count": {
-                    "type": "constant",
-                    "value": 2
-                  },
-                  "item": "Egg Capacity Upgrade",
-                  "type": "item_check"
-                }
-              ],
-              "type": "and"
-            },
-            "test": {
-              "left": {
-                "type": "constant",
-                "value": "Easy"
-              },
-              "op": "==",
-              "right": {
-                "type": "constant",
-                "value": "Easy"
-              },
-              "type": "compare"
-            },
-            "type": "conditional"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": 0
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": 1
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": 0
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": 0
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
-      },
-      "_68Route": {
-        "if_false": {
-          "if_false": {
-            "if_false": {
-              "if_false": {
-                "if_false": {
-                  "if_false": null,
-                  "if_true": {
-                    "conditions": [
-                      {
-                        "if_false": {
-                          "if_false": {
-                            "item": "Egg Plant",
-                            "type": "item_check"
-                          },
-                          "if_true": {
-                            "conditions": [
-                              {
-                                "item": "Egg Plant",
-                                "type": "item_check"
-                              },
-                              {
-                                "count": {
-                                  "type": "constant",
-                                  "value": 1
-                                },
-                                "item": "Egg Capacity Upgrade",
-                                "type": "item_check"
-                              }
-                            ],
-                            "type": "and"
-                          },
-                          "test": {
-                            "left": {
-                              "type": "constant",
-                              "value": "Easy"
-                            },
-                            "op": "==",
-                            "right": {
-                              "type": "constant",
-                              "value": "Normal"
-                            },
-                            "type": "compare"
-                          },
-                          "type": "conditional"
-                        },
-                        "if_true": {
-                          "conditions": [
-                            {
-                              "args": [
-                                {
-                                  "elements": [
-                                    {
-                                      "type": "constant",
-                                      "value": "! Switch"
-                                    },
-                                    {
-                                      "type": "constant",
-                                      "value": "Egg Plant"
-                                    }
-                                  ],
-                                  "type": "set"
-                                }
-                              ],
-                              "method": "has_all",
-                              "type": "state_method"
-                            },
-                            {
-                              "count": {
-                                "type": "constant",
-                                "value": 2
-                              },
-                              "item": "Egg Capacity Upgrade",
-                              "type": "item_check"
-                            }
-                          ],
-                          "type": "and"
-                        },
-                        "test": {
-                          "left": {
-                            "type": "constant",
-                            "value": "Easy"
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": "Easy"
-                          },
-                          "type": "compare"
-                        },
-                        "type": "conditional"
-                      },
-                      {
-                        "if_false": {
-                          "if_false": {
-                            "conditions": [
-                              {
-                                "conditions": [
-                                  {
-                                    "conditions": [
-                                      {
-                                        "count": {
-                                          "type": "constant",
-                                          "value": 1
-                                        },
-                                        "item": "Egg Capacity Upgrade",
-                                        "type": "item_check"
-                                      },
-                                      {
-                                        "item": "Egg Plant",
-                                        "type": "item_check"
-                                      }
-                                    ],
-                                    "type": "and"
-                                  },
-                                  {
-                                    "name": "combat_item",
-                                    "type": "helper"
-                                  }
-                                ],
-                                "type": "or"
-                              },
-                              {
-                                "item": "Key",
-                                "type": "item_check"
-                              }
-                            ],
-                            "type": "and"
-                          },
-                          "if_true": {
-                            "conditions": [
-                              {
-                                "conditions": [
-                                  {
-                                    "conditions": [
-                                      {
-                                        "count": {
-                                          "type": "constant",
-                                          "value": 2
-                                        },
-                                        "item": "Egg Capacity Upgrade",
-                                        "type": "item_check"
-                                      },
-                                      {
-                                        "item": "Egg Plant",
-                                        "type": "item_check"
-                                      }
-                                    ],
-                                    "type": "and"
-                                  },
-                                  {
-                                    "name": "combat_item",
-                                    "type": "helper"
-                                  }
-                                ],
-                                "type": "or"
-                              },
-                              {
-                                "item": "Key",
-                                "type": "item_check"
-                              }
-                            ],
-                            "type": "and"
-                          },
-                          "test": {
-                            "left": {
-                              "type": "constant",
-                              "value": "Easy"
-                            },
-                            "op": "==",
-                            "right": {
-                              "type": "constant",
-                              "value": "Normal"
-                            },
-                            "type": "compare"
-                          },
-                          "type": "conditional"
-                        },
-                        "if_true": {
-                          "conditions": [
-                            {
-                              "conditions": [
-                                {
-                                  "conditions": [
-                                    {
-                                      "count": {
-                                        "type": "constant",
-                                        "value": 3
-                                      },
-                                      "item": "Egg Capacity Upgrade",
-                                      "type": "item_check"
-                                    },
-                                    {
-                                      "item": "Egg Plant",
-                                      "type": "item_check"
-                                    }
-                                  ],
-                                  "type": "and"
-                                },
-                                {
-                                  "name": "combat_item",
-                                  "type": "helper"
-                                }
-                              ],
-                              "type": "or"
-                            },
-                            {
-                              "item": "Key",
-                              "type": "item_check"
-                            }
-                          ],
-                          "type": "and"
-                        },
-                        "test": {
-                          "left": {
-                            "type": "constant",
-                            "value": "Easy"
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": "Easy"
-                          },
-                          "type": "compare"
-                        },
-                        "type": "conditional"
-                      },
-                      {
-                        "if_false": {
-                          "if_false": {
-                            "type": "constant",
-                            "value": true
-                          },
-                          "if_true": {
-                            "type": "constant",
-                            "value": true
-                          },
-                          "test": {
-                            "left": {
-                              "type": "constant",
-                              "value": "Easy"
-                            },
-                            "op": "==",
-                            "right": {
-                              "type": "constant",
-                              "value": "Normal"
-                            },
-                            "type": "compare"
-                          },
-                          "type": "conditional"
-                        },
-                        "if_true": {
-                          "type": "constant",
-                          "value": true
-                        },
-                        "test": {
-                          "left": {
-                            "type": "constant",
-                            "value": "Easy"
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": "Easy"
-                          },
-                          "type": "compare"
-                        },
-                        "type": "conditional"
-                      }
-                    ],
-                    "type": "and"
-                  },
-                  "test": {
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "==",
-                    "right": {
-                      "type": "constant",
-                      "value": 5
-                    },
-                    "type": "compare"
-                  },
-                  "type": "conditional"
-                },
-                "if_true": {
-                  "type": "constant",
-                  "value": true
-                },
-                "test": {
-                  "left": {
-                    "type": "constant",
-                    "value": 0
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": 4
-                  },
-                  "type": "compare"
-                },
-                "type": "conditional"
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "test": {
-                "left": {
-                  "type": "constant",
-                  "value": 0
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": 3
-                },
-                "type": "compare"
-              },
-              "type": "conditional"
-            },
-            "if_true": {
-              "if_false": {
-                "if_false": {
-                  "conditions": [
-                    {
-                      "conditions": [
-                        {
-                          "conditions": [
-                            {
-                              "count": {
-                                "type": "constant",
-                                "value": 1
-                              },
-                              "item": "Egg Capacity Upgrade",
-                              "type": "item_check"
-                            },
-                            {
-                              "item": "Egg Plant",
-                              "type": "item_check"
-                            }
-                          ],
-                          "type": "and"
-                        },
-                        {
-                          "name": "combat_item",
-                          "type": "helper"
-                        }
-                      ],
-                      "type": "or"
-                    },
-                    {
-                      "item": "Key",
-                      "type": "item_check"
-                    }
-                  ],
-                  "type": "and"
-                },
-                "if_true": {
-                  "conditions": [
-                    {
-                      "conditions": [
-                        {
-                          "conditions": [
-                            {
-                              "count": {
-                                "type": "constant",
-                                "value": 2
-                              },
-                              "item": "Egg Capacity Upgrade",
-                              "type": "item_check"
-                            },
-                            {
-                              "item": "Egg Plant",
-                              "type": "item_check"
-                            }
-                          ],
-                          "type": "and"
-                        },
-                        {
-                          "name": "combat_item",
-                          "type": "helper"
-                        }
-                      ],
-                      "type": "or"
-                    },
-                    {
-                      "item": "Key",
-                      "type": "item_check"
-                    }
-                  ],
-                  "type": "and"
-                },
-                "test": {
-                  "left": {
-                    "type": "constant",
-                    "value": "Easy"
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": "Normal"
-                  },
-                  "type": "compare"
-                },
-                "type": "conditional"
-              },
-              "if_true": {
-                "conditions": [
-                  {
-                    "conditions": [
-                      {
-                        "conditions": [
-                          {
-                            "count": {
-                              "type": "constant",
-                              "value": 3
-                            },
-                            "item": "Egg Capacity Upgrade",
-                            "type": "item_check"
-                          },
-                          {
-                            "item": "Egg Plant",
-                            "type": "item_check"
-                          }
-                        ],
-                        "type": "and"
-                      },
-                      {
-                        "name": "combat_item",
-                        "type": "helper"
-                      }
-                    ],
-                    "type": "or"
-                  },
-                  {
-                    "item": "Key",
-                    "type": "item_check"
-                  }
-                ],
-                "type": "and"
-              },
-              "test": {
-                "left": {
-                  "type": "constant",
-                  "value": "Easy"
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": "Easy"
-                },
-                "type": "compare"
-              },
-              "type": "conditional"
-            },
-            "test": {
-              "left": {
-                "type": "constant",
-                "value": 0
-              },
-              "op": "==",
-              "right": {
-                "type": "constant",
-                "value": 2
-              },
-              "type": "compare"
-            },
-            "type": "conditional"
-          },
-          "if_true": {
-            "if_false": {
-              "if_false": {
-                "item": "Egg Plant",
-                "type": "item_check"
-              },
-              "if_true": {
-                "conditions": [
-                  {
-                    "item": "Egg Plant",
-                    "type": "item_check"
-                  },
-                  {
-                    "count": {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    "item": "Egg Capacity Upgrade",
-                    "type": "item_check"
-                  }
-                ],
-                "type": "and"
-              },
-              "test": {
-                "left": {
-                  "type": "constant",
-                  "value": "Easy"
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": "Normal"
-                },
-                "type": "compare"
-              },
-              "type": "conditional"
-            },
-            "if_true": {
-              "conditions": [
-                {
-                  "args": [
-                    {
-                      "elements": [
-                        {
-                          "type": "constant",
-                          "value": "! Switch"
-                        },
-                        {
-                          "type": "constant",
-                          "value": "Egg Plant"
-                        }
-                      ],
-                      "type": "set"
-                    }
-                  ],
-                  "method": "has_all",
-                  "type": "state_method"
-                },
-                {
-                  "count": {
-                    "type": "constant",
-                    "value": 2
-                  },
-                  "item": "Egg Capacity Upgrade",
-                  "type": "item_check"
-                }
-              ],
-              "type": "and"
-            },
-            "test": {
-              "left": {
-                "type": "constant",
-                "value": "Easy"
-              },
-              "op": "==",
-              "right": {
-                "type": "constant",
-                "value": "Easy"
-              },
-              "type": "compare"
-            },
-            "type": "conditional"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": 0
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": 1
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": 0
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": 0
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
-      },
-      "bandit_bonus": {
-        "conditions": [
-          {
-            "item": "Bandit Consumables",
-            "type": "item_check"
+            ]
           },
           {
-            "item": "Bandit Watermelons",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Key"
           }
-        ],
-        "type": "or"
-      },
-      "bowserdoor_1": {
-        "if_false": {
-          "if_false": {
-            "item": "Egg Plant",
-            "type": "item_check"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "item": "Egg Plant",
-                "type": "item_check"
-              },
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 1
-                },
-                "item": "Egg Capacity Upgrade",
-                "type": "item_check"
-              }
-            ],
-            "type": "and"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "conditions": [
-            {
-              "args": [
-                {
-                  "elements": [
-                    {
-                      "type": "constant",
-                      "value": "! Switch"
-                    },
-                    {
-                      "type": "constant",
-                      "value": "Egg Plant"
-                    }
-                  ],
-                  "type": "set"
-                }
-              ],
-              "method": "has_all",
-              "type": "state_method"
-            },
-            {
-              "count": {
-                "type": "constant",
-                "value": 2
-              },
-              "item": "Egg Capacity Upgrade",
-              "type": "item_check"
-            }
-          ],
-          "type": "and"
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
-      },
-      "bowserdoor_2": {
-        "if_false": {
-          "if_false": {
-            "conditions": [
-              {
-                "conditions": [
-                  {
-                    "conditions": [
-                      {
-                        "count": {
-                          "type": "constant",
-                          "value": 1
-                        },
-                        "item": "Egg Capacity Upgrade",
-                        "type": "item_check"
-                      },
-                      {
-                        "item": "Egg Plant",
-                        "type": "item_check"
-                      }
-                    ],
-                    "type": "and"
-                  },
-                  {
-                    "if_false": {
-                      "if_false": {
-                        "conditions": [
-                          {
-                            "name": "bandit_bonus",
-                            "type": "helper"
-                          },
-                          {
-                            "name": "item_bonus",
-                            "type": "helper"
-                          }
-                        ],
-                        "type": "or"
-                      },
-                      "if_true": {
-                        "name": "item_bonus",
-                        "type": "helper"
-                      },
-                      "test": {
-                        "left": {
-                          "type": "constant",
-                          "value": "Easy"
-                        },
-                        "op": "==",
-                        "right": {
-                          "type": "constant",
-                          "value": "Easy"
-                        },
-                        "type": "compare"
-                      },
-                      "type": "conditional"
-                    },
-                    "if_true": {
-                      "type": "constant",
-                      "value": false
-                    },
-                    "test": {
-                      "condition": {
-                        "type": "constant",
-                        "value": true
-                      },
-                      "type": "not"
-                    },
-                    "type": "conditional"
-                  }
-                ],
-                "type": "or"
-              },
-              {
-                "item": "Key",
-                "type": "item_check"
-              }
-            ],
-            "type": "and"
-          },
-          "if_true": {
-            "conditions": [
-              {
-                "conditions": [
-                  {
-                    "conditions": [
-                      {
-                        "count": {
-                          "type": "constant",
-                          "value": 2
-                        },
-                        "item": "Egg Capacity Upgrade",
-                        "type": "item_check"
-                      },
-                      {
-                        "item": "Egg Plant",
-                        "type": "item_check"
-                      }
-                    ],
-                    "type": "and"
-                  },
-                  {
-                    "if_false": {
-                      "if_false": {
-                        "conditions": [
-                          {
-                            "name": "bandit_bonus",
-                            "type": "helper"
-                          },
-                          {
-                            "name": "item_bonus",
-                            "type": "helper"
-                          }
-                        ],
-                        "type": "or"
-                      },
-                      "if_true": {
-                        "name": "item_bonus",
-                        "type": "helper"
-                      },
-                      "test": {
-                        "left": {
-                          "type": "constant",
-                          "value": "Easy"
-                        },
-                        "op": "==",
-                        "right": {
-                          "type": "constant",
-                          "value": "Easy"
-                        },
-                        "type": "compare"
-                      },
-                      "type": "conditional"
-                    },
-                    "if_true": {
-                      "type": "constant",
-                      "value": false
-                    },
-                    "test": {
-                      "condition": {
-                        "type": "constant",
-                        "value": true
-                      },
-                      "type": "not"
-                    },
-                    "type": "conditional"
-                  }
-                ],
-                "type": "or"
-              },
-              {
-                "item": "Key",
-                "type": "item_check"
-              }
-            ],
-            "type": "and"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "conditions": [
-            {
-              "conditions": [
-                {
-                  "conditions": [
-                    {
-                      "count": {
-                        "type": "constant",
-                        "value": 3
-                      },
-                      "item": "Egg Capacity Upgrade",
-                      "type": "item_check"
-                    },
-                    {
-                      "item": "Egg Plant",
-                      "type": "item_check"
-                    }
-                  ],
-                  "type": "and"
-                },
-                {
-                  "if_false": {
-                    "if_false": {
-                      "conditions": [
-                        {
-                          "name": "bandit_bonus",
-                          "type": "helper"
-                        },
-                        {
-                          "name": "item_bonus",
-                          "type": "helper"
-                        }
-                      ],
-                      "type": "or"
-                    },
-                    "if_true": {
-                      "name": "item_bonus",
-                      "type": "helper"
-                    },
-                    "test": {
-                      "left": {
-                        "type": "constant",
-                        "value": "Easy"
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": "Easy"
-                      },
-                      "type": "compare"
-                    },
-                    "type": "conditional"
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": false
-                  },
-                  "test": {
-                    "condition": {
-                      "type": "constant",
-                      "value": true
-                    },
-                    "type": "not"
-                  },
-                  "type": "conditional"
-                }
-              ],
-              "type": "or"
-            },
-            {
-              "item": "Key",
-              "type": "item_check"
-            }
-          ],
-          "type": "and"
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+        ]
       },
       "bowserdoor_3": {
-        "if_false": {
-          "if_false": {
-            "type": "constant",
-            "value": true
-          },
-          "if_true": {
-            "type": "constant",
-            "value": true
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Normal"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
-          },
-          "type": "compare"
-        },
-        "type": "conditional"
+        "type": "constant",
+        "value": true
       },
       "cansee_clouds": {
-        "if_false": {
-          "conditions": [
-            {
-              "type": "constant",
-              "value": false
-            },
-            {
-              "item": "Secret Lens",
-              "type": "item_check"
-            },
-            {
-              "if_false": {
-                "if_false": {
-                  "conditions": [
-                    {
-                      "name": "bandit_bonus",
-                      "type": "helper"
-                    },
-                    {
-                      "name": "item_bonus",
-                      "type": "helper"
-                    }
-                  ],
-                  "type": "or"
-                },
-                "if_true": {
-                  "name": "item_bonus",
-                  "type": "helper"
-                },
-                "test": {
-                  "left": {
-                    "type": "constant",
-                    "value": "Easy"
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": "Easy"
-                  },
-                  "type": "compare"
-                },
-                "type": "conditional"
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "test": {
-                "condition": {
-                  "type": "constant",
-                  "value": true
-                },
-                "type": "not"
-              },
-              "type": "conditional"
-            }
-          ],
-          "type": "or"
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "test": {
-          "left": {
-            "type": "constant",
-            "value": "Easy"
+        "type": "or",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "default_vis"
           },
-          "op": "!=",
-          "right": {
-            "type": "constant",
-            "value": "Easy"
+          {
+            "type": "item_check",
+            "item": "Secret Lens"
           },
-          "type": "compare"
-        },
-        "type": "conditional"
+          {
+            "type": "helper",
+            "name": "combat_item"
+          }
+        ]
       },
       "castle_access": {
+        "type": "item_check",
+        "item": "Boss Clear",
         "count": {
           "type": "constant",
           "value": 5
-        },
-        "item": "Boss Clear",
-        "type": "item_check"
+        }
       },
       "castle_clear": {
+        "type": "item_check",
+        "item": "Boss Clear",
         "count": {
           "type": "constant",
           "value": 0
-        },
-        "item": "Boss Clear",
-        "type": "item_check"
+        }
       },
       "combat_item": {
-        "if_false": {
-          "if_false": {
-            "conditions": [
-              {
-                "conditions": [
-                  {
-                    "item": "Bandit Consumables",
-                    "type": "item_check"
-                  },
-                  {
-                    "item": "Bandit Watermelons",
-                    "type": "item_check"
-                  }
-                ],
-                "type": "or"
-              },
-              {
-                "item": "Bonus Consumables",
-                "type": "item_check"
-              }
-            ],
-            "type": "or"
-          },
-          "if_true": {
-            "item": "Bonus Consumables",
-            "type": "item_check"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "type": "constant",
-          "value": false
-        },
-        "test": {
-          "condition": {
-            "type": "constant",
-            "value": true
-          },
-          "type": "not"
-        },
-        "type": "conditional"
+        "type": "helper",
+        "name": "item_bonus"
       },
       "default_vis": {
         "type": "constant",
         "value": false
       },
       "has_midring": {
+        "type": "or",
         "conditions": [
           {
             "type": "constant",
             "value": true
           },
           {
-            "item": "Middle Ring",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Middle Ring"
           }
-        ],
-        "type": "or"
+        ]
       },
       "item_bonus": {
-        "item": "Bonus Consumables",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "Bonus Consumables"
       },
       "melon_item": {
-        "if_false": {
-          "if_false": {
-            "conditions": [
-              {
-                "item": "Bandit Watermelons",
-                "type": "item_check"
-              },
-              {
-                "item": "Bonus Consumables",
-                "type": "item_check"
-              }
-            ],
-            "type": "or"
-          },
-          "if_true": {
-            "item": "Bonus Consumables",
-            "type": "item_check"
-          },
-          "test": {
-            "left": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Easy"
-            },
-            "type": "compare"
-          },
-          "type": "conditional"
-        },
-        "if_true": {
-          "type": "constant",
-          "value": false
-        },
-        "test": {
-          "condition": {
-            "type": "constant",
-            "value": true
-          },
-          "type": "not"
-        },
-        "type": "conditional"
+        "type": "helper",
+        "name": "item_bonus"
       }
     }
   }

@@ -4308,12 +4308,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 1
                       }
                     },
                     {
@@ -4355,12 +4356,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 1
                       }
                     },
                     {
@@ -4395,12 +4397,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 1
                       }
                     },
                     {
@@ -4441,12 +4444,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 2
                       }
                     },
                     {
@@ -4481,12 +4485,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 2
                       }
                     },
                     {
@@ -4527,12 +4532,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 3
                       }
                     },
                     {
@@ -4567,12 +4573,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 3
                       }
                     },
                     {
@@ -4607,12 +4614,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 3
                       }
                     },
                     {
@@ -4653,12 +4661,13 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "True_"
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
                         },
                         "op": ">=",
-                        "right": {
-                          "rule": "True_"
-                        }
+                        "right": 4
                       }
                     },
                     {
@@ -4725,7 +4734,8 @@
       "Void Fields": {
         "name": "Void Fields",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Victory": {
         "name": "Victory",
@@ -4750,12 +4760,14 @@
       "Petrichor V": {
         "name": "Petrichor V",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Hidden Realm: Bulwark's Ambry": {
         "name": "Hidden Realm: Bulwark's Ambry",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Hidden Realm: Bazaar Between Time": {
         "name": "Hidden Realm: Bazaar Between Time",
@@ -4779,7 +4791,8 @@
       "Hidden Realm: Gilded Coast": {
         "name": "Hidden Realm: Gilded Coast",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       }
     }
   },

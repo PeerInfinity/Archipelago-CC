@@ -813,11 +813,67 @@
   "helpers": {
     "1": {
       "_has_trinket_range": {
+        "params": [
+          "start",
+          "end"
+        ],
         "body": {
+          "type": "block",
           "statements": [
             {
+              "type": "for_range",
+              "count": {
+                "type": "name",
+                "name": "start"
+              },
               "body": [
                 {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "not",
+                    "condition": {
+                      "type": "item_check",
+                      "item": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "constant",
+                          "value": "Trinket "
+                        },
+                        "op": "+",
+                        "right": {
+                          "type": "function_call",
+                          "function": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "helper",
+                              "name": "str",
+                              "args": [
+                                {
+                                  "type": "binary_op",
+                                  "left": {
+                                    "type": "name",
+                                    "name": "i"
+                                  },
+                                  "op": "+",
+                                  "right": {
+                                    "type": "constant",
+                                    "value": 1
+                                  }
+                                }
+                              ]
+                            },
+                            "attr": "zfill"
+                          },
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": 2
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
                   "body": [
                     {
                       "type": "return",
@@ -826,60 +882,9 @@
                         "value": false
                       }
                     }
-                  ],
-                  "test": {
-                    "condition": {
-                      "item": {
-                        "left": {
-                          "type": "constant",
-                          "value": "Trinket "
-                        },
-                        "op": "+",
-                        "right": {
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": 2
-                            }
-                          ],
-                          "function": {
-                            "attr": "zfill",
-                            "object": {
-                              "args": [
-                                {
-                                  "left": {
-                                    "name": "i",
-                                    "type": "name"
-                                  },
-                                  "op": "+",
-                                  "right": {
-                                    "type": "constant",
-                                    "value": 1
-                                  },
-                                  "type": "binary_op"
-                                }
-                              ],
-                              "name": "str",
-                              "type": "helper"
-                            },
-                            "type": "attribute"
-                          },
-                          "type": "function_call"
-                        },
-                        "type": "binary_op"
-                      },
-                      "type": "item_check"
-                    },
-                    "type": "not"
-                  },
-                  "type": "if_statement"
+                  ]
                 }
               ],
-              "count": {
-                "name": "start",
-                "type": "name"
-              },
-              "type": "for_range",
               "var": "i"
             },
             {
@@ -889,13 +894,8 @@
                 "value": true
               }
             }
-          ],
-          "type": "block"
-        },
-        "params": [
-          "start",
-          "end"
-        ]
+          ]
+        }
       }
     }
   }

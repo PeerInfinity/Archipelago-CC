@@ -1174,7 +1174,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Metal Blade": {
         "name": "Metal Blade",
@@ -1186,7 +1186,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful"
+        "classification": "progression"
       },
       "Crash Bomber": {
         "name": "Crash Bomber",
@@ -1211,7 +1211,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful|skip_balancing"
+        "classification": "progression"
       },
       "Item 2 - Rocket": {
         "name": "Item 2 - Rocket",
@@ -1224,7 +1224,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful|skip_balancing"
+        "classification": "progression"
       },
       "Item 3 - Bouncy": {
         "name": "Item 3 - Bouncy",
@@ -1237,7 +1237,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression|useful|skip_balancing"
+        "classification": "progression"
       },
       "1-Up": {
         "name": "1-Up",

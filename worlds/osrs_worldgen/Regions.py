@@ -9,6 +9,9 @@ from BaseClasses import MultiWorld, Region, Entrance
 from .Locations import location_table, OldSchoolRunescapeWorldGenLocation
 
 
+# Regions that were added after sphere calculation (from original export)
+DYNAMICALLY_ADDED_REGIONS = {"Mind Runes", "Spinning Wheel", "Sheep", "Furnace", "Bronze Ores", "Coal Ore", "Bronze Anvil", "Anvil", "Shrimp Spot", "Bowl", "Meat", "Cooking Apple", "Pie Dish", "Cake Tin", "Windmill", "Egg", "Milk", "Cheese", "Tomato", "Canoe Tree", "Goblin", "Guard", "Deadly Red Spider", "Moss Giant", "Ice Giant", "Lesser Demon", "Rune Essence", "Crafting Moulds", "Law Runes", "Imps", "Clay Ore", "Onion", "Potato", "Big Bones", "Makeover", "Limpwurt Root", "Bar", "Red Spider Eggs"}
+
 def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 

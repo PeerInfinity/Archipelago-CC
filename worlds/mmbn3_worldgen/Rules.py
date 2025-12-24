@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Compare, Has, HasAll, HelperCall, Or, True_
+from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Compare, Has, HasAll, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -18,148 +18,6 @@ if TYPE_CHECKING:
 # Helper functions
 def _megamanbattlenetwork3worldgen_explore_score(state: "CollectionState", player: int) -> bool:
     return (999 if (state.can_reach('WWW Island', "Region", player) == True) else (((((((((3 if (state.can_reach('SciLab Overworld', "Region", player) == True) else 0) + (1 if (state.can_reach('SciLab Cyberworld', "Region", player) == True) else 0)) + (2 if (state.can_reach('Yoka Overworld', "Region", player) == True) else 0)) + (1 if (state.can_reach('Yoka Cyberworld', "Region", player) == True) else 0)) + (3 if (state.can_reach('Beach Overworld', "Region", player) == True) else 0)) + (1 if (state.can_reach('Beach Cyberworld', "Region", player) == True) else 0)) + (2 if (state.can_reach('Undernet', "Region", player) == True) else 0)) + (1 if (state.can_reach('Deep Undernet', "Region", player) == True) else 0)) + (1 if (state.can_reach('Secret Area', "Region", player) == True) else 0)))
-
-
-# Helper definitions for frontend evaluation
-# These are looked up by name instead of being inlined at every call site
-_HELPER_DEFINITIONS = {   'explore_score': {   'if_false': {   'left': {   'left': {   'left': {   'left': {   'left': {   'left': {   'left': {   'left': {   'if_false': {   'type': 'constant',
-                                                                                                                                                         'value': 0},
-                                                                                                                                         'if_true': {   'type': 'constant',
-                                                                                                                                                        'value': 3},
-                                                                                                                                         'test': {   'left': {   'region': {   'type': 'constant',
-                                                                                                                                                                               'value': 'SciLab '
-                                                                                                                                                                                        'Overworld'},
-                                                                                                                                                                 'type': 'can_reach'},
-                                                                                                                                                     'op': '==',
-                                                                                                                                                     'right': {   'type': 'constant',
-                                                                                                                                                                  'value': True},
-                                                                                                                                                     'type': 'compare'},
-                                                                                                                                         'type': 'conditional'},
-                                                                                                                             'op': '+',
-                                                                                                                             'right': {   'if_false': {   'type': 'constant',
-                                                                                                                                                          'value': 0},
-                                                                                                                                          'if_true': {   'type': 'constant',
-                                                                                                                                                         'value': 1},
-                                                                                                                                          'test': {   'left': {   'region': {   'type': 'constant',
-                                                                                                                                                                                'value': 'SciLab '
-                                                                                                                                                                                         'Cyberworld'},
-                                                                                                                                                                  'type': 'can_reach'},
-                                                                                                                                                      'op': '==',
-                                                                                                                                                      'right': {   'type': 'constant',
-                                                                                                                                                                   'value': True},
-                                                                                                                                                      'type': 'compare'},
-                                                                                                                                          'type': 'conditional'},
-                                                                                                                             'type': 'binary_op'},
-                                                                                                                 'op': '+',
-                                                                                                                 'right': {   'if_false': {   'type': 'constant',
-                                                                                                                                              'value': 0},
-                                                                                                                              'if_true': {   'type': 'constant',
-                                                                                                                                             'value': 2},
-                                                                                                                              'test': {   'left': {   'region': {   'type': 'constant',
-                                                                                                                                                                    'value': 'Yoka '
-                                                                                                                                                                             'Overworld'},
-                                                                                                                                                      'type': 'can_reach'},
-                                                                                                                                          'op': '==',
-                                                                                                                                          'right': {   'type': 'constant',
-                                                                                                                                                       'value': True},
-                                                                                                                                          'type': 'compare'},
-                                                                                                                              'type': 'conditional'},
-                                                                                                                 'type': 'binary_op'},
-                                                                                                     'op': '+',
-                                                                                                     'right': {   'if_false': {   'type': 'constant',
-                                                                                                                                  'value': 0},
-                                                                                                                  'if_true': {   'type': 'constant',
-                                                                                                                                 'value': 1},
-                                                                                                                  'test': {   'left': {   'region': {   'type': 'constant',
-                                                                                                                                                        'value': 'Yoka '
-                                                                                                                                                                 'Cyberworld'},
-                                                                                                                                          'type': 'can_reach'},
-                                                                                                                              'op': '==',
-                                                                                                                              'right': {   'type': 'constant',
-                                                                                                                                           'value': True},
-                                                                                                                              'type': 'compare'},
-                                                                                                                  'type': 'conditional'},
-                                                                                                     'type': 'binary_op'},
-                                                                                         'op': '+',
-                                                                                         'right': {   'if_false': {   'type': 'constant',
-                                                                                                                      'value': 0},
-                                                                                                      'if_true': {   'type': 'constant',
-                                                                                                                     'value': 3},
-                                                                                                      'test': {   'left': {   'region': {   'type': 'constant',
-                                                                                                                                            'value': 'Beach '
-                                                                                                                                                     'Overworld'},
-                                                                                                                              'type': 'can_reach'},
-                                                                                                                  'op': '==',
-                                                                                                                  'right': {   'type': 'constant',
-                                                                                                                               'value': True},
-                                                                                                                  'type': 'compare'},
-                                                                                                      'type': 'conditional'},
-                                                                                         'type': 'binary_op'},
-                                                                             'op': '+',
-                                                                             'right': {   'if_false': {   'type': 'constant',
-                                                                                                          'value': 0},
-                                                                                          'if_true': {   'type': 'constant',
-                                                                                                         'value': 1},
-                                                                                          'test': {   'left': {   'region': {   'type': 'constant',
-                                                                                                                                'value': 'Beach '
-                                                                                                                                         'Cyberworld'},
-                                                                                                                  'type': 'can_reach'},
-                                                                                                      'op': '==',
-                                                                                                      'right': {   'type': 'constant',
-                                                                                                                   'value': True},
-                                                                                                      'type': 'compare'},
-                                                                                          'type': 'conditional'},
-                                                                             'type': 'binary_op'},
-                                                                 'op': '+',
-                                                                 'right': {   'if_false': {   'type': 'constant',
-                                                                                              'value': 0},
-                                                                              'if_true': {   'type': 'constant',
-                                                                                             'value': 2},
-                                                                              'test': {   'left': {   'region': {   'type': 'constant',
-                                                                                                                    'value': 'Undernet'},
-                                                                                                      'type': 'can_reach'},
-                                                                                          'op': '==',
-                                                                                          'right': {   'type': 'constant',
-                                                                                                       'value': True},
-                                                                                          'type': 'compare'},
-                                                                              'type': 'conditional'},
-                                                                 'type': 'binary_op'},
-                                                     'op': '+',
-                                                     'right': {   'if_false': {'type': 'constant', 'value': 0},
-                                                                  'if_true': {'type': 'constant', 'value': 1},
-                                                                  'test': {   'left': {   'region': {   'type': 'constant',
-                                                                                                        'value': 'Deep '
-                                                                                                                 'Undernet'},
-                                                                                          'type': 'can_reach'},
-                                                                              'op': '==',
-                                                                              'right': {   'type': 'constant',
-                                                                                           'value': True},
-                                                                              'type': 'compare'},
-                                                                  'type': 'conditional'},
-                                                     'type': 'binary_op'},
-                                         'op': '+',
-                                         'right': {   'if_false': {'type': 'constant', 'value': 0},
-                                                      'if_true': {'type': 'constant', 'value': 1},
-                                                      'test': {   'left': {   'region': {   'type': 'constant',
-                                                                                            'value': 'Secret Area'},
-                                                                              'type': 'can_reach'},
-                                                                  'op': '==',
-                                                                  'right': {'type': 'constant', 'value': True},
-                                                                  'type': 'compare'},
-                                                      'type': 'conditional'},
-                                         'type': 'binary_op'},
-                         'if_true': {'type': 'constant', 'value': 999},
-                         'test': {   'left': {   'region': {'type': 'constant', 'value': 'WWW Island'},
-                                                 'type': 'can_reach'},
-                                     'op': '==',
-                                     'right': {'type': 'constant', 'value': True},
-                                     'type': 'compare'},
-                         'type': 'conditional'}}
-
-
-def get_helper_definitions() -> dict:
-    """Return helper definitions for frontend evaluation."""
-    return _HELPER_DEFINITIONS
 
 
 def set_rules(world: "World") -> None:
@@ -240,7 +98,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Yoka Overworld -> Secret Area", player),
-        And(Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_()), Has('Hammer'))
+        And(Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 12), Has('Hammer'))
     )
 
     world.set_rule(
@@ -280,7 +138,88 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Beach Cyberworld -> Undernet", player),
-        And(Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_()), Has('Press'))
+        And(Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 8), Has('Press'))
+    )
+    # Register indirect conditions for proper sphere calculation
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Cyberworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Overworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Cyberworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Beach Overworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Beach Cyberworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Undernet"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Deep Undernet"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Secret Area"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("WWW Island"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Cyberworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Overworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Cyberworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Beach Overworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Beach Cyberworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Undernet"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Deep Undernet"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Secret Area"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("WWW Island"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
     )
     # Location rules
     world.set_rule(
@@ -300,117 +239,117 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Numberman Code 09", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 2)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 10", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 2)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 11", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 2)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 12", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 2)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 13", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 2)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 14", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 2)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 15", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 2)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 16", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 2)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 17", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 4)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 18", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 4)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 19", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 4)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 20", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 4)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 21", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 4)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 22", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 4)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 23", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 4)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 24", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 4)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 25", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 8)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 26", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 8)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 27", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 8)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 28", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 8)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 29", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 10)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 30", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 10)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 31", player),
-        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", True_())
+        Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 10)
     )
 
     world.set_rule(

@@ -64,39 +64,6 @@ def _castlevaniacircleofthemoonworldgen_can_open_ceremonial_door(state: "Collect
     return state.has('Last Key', player)
 
 
-# Helper definitions for frontend evaluation
-# These are looked up by name instead of being inlined at every call site
-_HELPER_DEFINITIONS = {   'broke_iron_maidens': {'item': {'type': 'constant', 'value': 'Maiden Detonator'}, 'type': 'item_check'},
-    'can_open_ceremonial_door': {   'count': {'type': 'constant', 'value': 1},
-                                    'item': {'type': 'constant', 'value': 'Last Key'},
-                                    'type': 'item_check'},
-    'can_touch_water': {'item': {'type': 'constant', 'value': 'Cleansing'}, 'type': 'item_check'},
-    'has_ice_or_stone': {   'conditions': [   {   'args': [   {   'type': 'constant',
-                                                                  'value': ['Serpent Card', 'Cockatrice Card']}],
-                                                  'method': 'has_any',
-                                                  'type': 'state_method'},
-                                              {   'args': [   {   'type': 'constant',
-                                                                  'value': ['Mercury Card', 'Mars Card']}],
-                                                  'method': 'has_any',
-                                                  'type': 'state_method'}],
-                            'type': 'and'},
-    'has_jump_level_1': {   'args': [{'type': 'constant', 'value': ['Double', 'Roc Wing']}],
-                            'method': 'has_any',
-                            'type': 'state_method'},
-    'has_jump_level_2': {'item': {'type': 'constant', 'value': 'Roc Wing'}, 'type': 'item_check'},
-    'has_jump_level_3': {'item': {'type': 'constant', 'value': 'Roc Wing'}, 'type': 'item_check'},
-    'has_jump_level_4': {'item': {'type': 'constant', 'value': 'Roc Wing'}, 'type': 'item_check'},
-    'has_jump_level_5': {'item': {'type': 'constant', 'value': 'Roc Wing'}, 'type': 'item_check'},
-    'has_kick': {'item': {'type': 'constant', 'value': 'Kick Boots'}, 'type': 'item_check'},
-    'has_push': {'item': {'type': 'constant', 'value': 'Heavy Ring'}, 'type': 'item_check'},
-    'has_tackle': {'item': {'type': 'constant', 'value': 'Tackle'}, 'type': 'item_check'}}
-
-
-def get_helper_definitions() -> dict:
-    """Return helper definitions for frontend evaluation."""
-    return _HELPER_DEFINITIONS
-
-
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player

@@ -17,10 +17,8 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
-Early Beth:                      1
-Early Lightning:                 0
-Ixupi Captures Needed:           10
-Puzzle Hints Required:           1
+Early Beth:                      Yes
+Early Lightning:                 No
 
 
 Locations:
@@ -180,7 +178,6 @@ Playthrough:
   Clock Chains: Set Time
   Final Riddle: Planets Aligned: Ash Pot Top
   Ixupi Captured Sand: Oil Pot Bottom
-  Mystery Solved: Mt. Pleasant Tribune: 45 year Old Mystery Solved!
   Orrery: Aligned Planets
   Puzzle Hint Found: Basilisk Bone Fragments: Cloth Pot Top
   Puzzle Solved Anansi Music Box: Wax Pot Top
@@ -239,4 +236,7 @@ Playthrough:
 }
 17: {
   Ixupi Captured Metal: Lightning Pot Bottom
+}
+18: {
+  Mystery Solved: Mt. Pleasant Tribune: 45 year Old Mystery Solved!
 }

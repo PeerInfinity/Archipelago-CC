@@ -24,21 +24,6 @@ def _faxanaduworldgen_has_any_magic(state: "CollectionState", player: int) -> bo
     return state.has_any(('Death', 'Deluge', 'Fire', 'Thunder', 'Tilte'), player)
 
 
-# Helper definitions for frontend evaluation
-# These are looked up by name instead of being inlined at every call site
-_HELPER_DEFINITIONS = {   'can_buy_in_eolis': {   'args': [{'type': 'constant', 'value': ['Deluge', 'Progressive Sword', 'Ring of Elf']}],
-                            'method': 'has_any',
-                            'type': 'state_method'},
-    'has_any_magic': {   'args': [{'type': 'constant', 'value': ['Death', 'Deluge', 'Fire', 'Thunder', 'Tilte']}],
-                         'method': 'has_any',
-                         'type': 'state_method'}}
-
-
-def get_helper_definitions() -> dict:
-    """Return helper definitions for frontend evaluation."""
-    return _HELPER_DEFINITIONS
-
-
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player

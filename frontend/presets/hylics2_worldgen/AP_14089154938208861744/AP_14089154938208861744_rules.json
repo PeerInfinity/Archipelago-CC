@@ -3510,7 +3510,7 @@
         "event": true,
         "type": "Event",
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       }
     }
   },
@@ -3800,144 +3800,131 @@
   "helpers": {
     "1": {
       "air_dash": {
-        "item": "PNEUMATOPHORE",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "PNEUMATOPHORE"
       },
       "airship": {
-        "item": "DOCK KEY",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "DOCK KEY"
       },
       "all_tokens": {
+        "type": "item_check",
+        "item": "SAGE TOKEN",
         "count": {
           "type": "constant",
           "value": 3
-        },
-        "item": "SAGE TOKEN",
-        "type": "item_check"
+        }
       },
       "bridge_key": {
-        "item": "BRIDGE KEY",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "BRIDGE KEY"
       },
       "cave_key": {
-        "item": "CAVE KEY",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "CAVE KEY"
       },
       "charge_up": {
-        "item": "CHARGE UP",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "CHARGE UP"
       },
       "clicker": {
-        "item": "CLICKER",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "CLICKER"
       },
       "deep_key": {
-        "item": "DEEP KEY",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "DEEP KEY"
       },
       "enter_foglast": {
-        "conditions": [
-          {
-            "name": "airship",
-            "type": "helper"
-          },
-          {
-            "name": "worm_room_key",
-            "type": "helper"
-          },
-          {
-            "name": "paddle",
-            "type": "helper"
-          }
-        ],
-        "type": "and"
+        "type": "helper",
+        "name": "enter_wormpod"
       },
       "enter_hylemxylem": {
+        "type": "and",
         "conditions": [
           {
-            "item": "PNEUMATOPHORE",
-            "type": "item_check"
+            "type": "helper",
+            "name": "air_dash"
           },
           {
-            "name": "enter_wormpod",
-            "type": "helper"
+            "type": "helper",
+            "name": "enter_foglast"
           },
           {
-            "item": "BRIDGE KEY",
-            "type": "item_check"
+            "type": "helper",
+            "name": "bridge_key"
           }
-        ],
-        "type": "and"
+        ]
       },
       "enter_sageship": {
+        "type": "and",
         "conditions": [
           {
-            "item": "SKULL BOMB",
-            "type": "item_check"
+            "type": "helper",
+            "name": "skull_bomb"
           },
           {
-            "item": "DOCK KEY",
-            "type": "item_check"
+            "type": "helper",
+            "name": "airship"
           },
           {
-            "item": "PADDLE",
-            "type": "item_check"
+            "type": "helper",
+            "name": "paddle"
           }
-        ],
-        "type": "and"
+        ]
       },
       "enter_wormpod": {
+        "type": "and",
         "conditions": [
           {
-            "item": "DOCK KEY",
-            "type": "item_check"
+            "type": "helper",
+            "name": "airship"
           },
           {
-            "item": "WORM ROOM KEY",
-            "type": "item_check"
+            "type": "helper",
+            "name": "worm_room_key"
           },
           {
-            "item": "PADDLE",
-            "type": "item_check"
+            "type": "helper",
+            "name": "paddle"
           }
-        ],
-        "type": "and"
+        ]
       },
       "house_key": {
-        "item": "HOUSE KEY",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "HOUSE KEY"
       },
       "jail_key": {
-        "item": "JAIL KEY",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "JAIL KEY"
       },
       "paddle": {
-        "item": "PADDLE",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "PADDLE"
       },
       "paper_cup": {
-        "item": "PAPER CUP",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "PAPER CUP"
       },
       "skull_bomb": {
-        "item": "SKULL BOMB",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "SKULL BOMB"
       },
       "tower_key": {
-        "item": "TOWER KEY",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "TOWER KEY"
       },
       "upper_chamber_key": {
-        "item": "UPPER CHAMBER KEY",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "UPPER CHAMBER KEY"
       },
       "upper_house_key": {
-        "item": "UPPER HOUSE KEY",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "UPPER HOUSE KEY"
       },
       "worm_room_key": {
-        "item": "WORM ROOM KEY",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "WORM ROOM KEY"
       }
     }
   }

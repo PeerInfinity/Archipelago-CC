@@ -67,9 +67,7 @@
                   "_original_ast_type": "helper"
                 },
                 "op": ">",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 6
               }
             },
             "item": {
@@ -91,9 +89,7 @@
                   "_original_ast_type": "helper"
                 },
                 "op": ">",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 2
               }
             },
             "item": {
@@ -185,9 +181,7 @@
                   "_original_ast_type": "helper"
                 },
                 "op": ">",
-                "right": {
-                  "rule": "True_"
-                }
+                "right": 2
               }
             },
             "item": {
@@ -3160,9 +3154,7 @@
                       "_original_ast_type": "helper"
                     },
                     "op": ">",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 12
                   }
                 },
                 {
@@ -3243,9 +3235,7 @@
                       "_original_ast_type": "helper"
                     },
                     "op": ">",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 16
                   }
                 },
                 {
@@ -3993,9 +3983,7 @@
                       "_original_ast_type": "helper"
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 32
                   }
                 },
                 {
@@ -4306,9 +4294,7 @@
                       "_original_ast_type": "helper"
                     },
                     "op": ">=",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 32
                   }
                 },
                 {
@@ -4518,9 +4504,7 @@
                       "_original_ast_type": "helper"
                     },
                     "op": ">",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 32
                   }
                 },
                 {
@@ -6268,22 +6252,26 @@
       "Mind Runes": {
         "name": "Mind Runes",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Spinning Wheel": {
         "name": "Spinning Wheel",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Sheep": {
         "name": "Sheep",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Furnace": {
         "name": "Furnace",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Chisel": {
         "name": "Chisel",
@@ -6303,9 +6291,7 @@
                       "_original_ast_type": "helper"
                     },
                     "op": ">",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 8
                   }
                 },
                 {
@@ -6482,9 +6468,7 @@
                       "_original_ast_type": "helper"
                     },
                     "op": ">",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 4
                   }
                 },
                 {
@@ -6652,7 +6636,8 @@
       "Bronze Ores": {
         "name": "Bronze Ores",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Iron Ore": {
         "name": "Iron Ore",
@@ -6789,7 +6774,8 @@
       "Coal Ore": {
         "name": "Coal Ore",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Gold Ore": {
         "name": "Gold Ore",
@@ -6809,9 +6795,7 @@
                       "_original_ast_type": "helper"
                     },
                     "op": ">",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 6
                   }
                 },
                 {
@@ -6894,17 +6878,20 @@
       "Bronze Anvil": {
         "name": "Bronze Anvil",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Anvil": {
         "name": "Anvil",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Shrimp Spot": {
         "name": "Shrimp Spot",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Fly Fishing Spot": {
         "name": "Fly Fishing Spot",
@@ -6970,9 +6957,7 @@
                       "_original_ast_type": "helper"
                     },
                     "op": ">",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 6
                   }
                 },
                 {
@@ -7100,27 +7085,32 @@
       "Bowl": {
         "name": "Bowl",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Meat": {
         "name": "Meat",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Cooking Apple": {
         "name": "Cooking Apple",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Pie Dish": {
         "name": "Pie Dish",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Cake Tin": {
         "name": "Cake Tin",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Wheat": {
         "name": "Wheat",
@@ -7140,9 +7130,7 @@
                       "_original_ast_type": "helper"
                     },
                     "op": ">",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 6
                   }
                 },
                 {
@@ -7270,27 +7258,32 @@
       "Windmill": {
         "name": "Windmill",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Egg": {
         "name": "Egg",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Milk": {
         "name": "Milk",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Cheese": {
         "name": "Cheese",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Tomato": {
         "name": "Tomato",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Oak Tree": {
         "name": "Oak Tree",
@@ -7399,12 +7392,14 @@
       "Canoe Tree": {
         "name": "Canoe Tree",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Goblin": {
         "name": "Goblin",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Barbarian": {
         "name": "Barbarian",
@@ -7455,7 +7450,8 @@
       "Guard": {
         "name": "Guard",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Hill Giant": {
         "name": "Hill Giant",
@@ -7481,9 +7477,7 @@
                       "_original_ast_type": "helper"
                     },
                     "op": ">",
-                    "right": {
-                      "rule": "True_"
-                    }
+                    "right": 2
                   }
                 }
               ]
@@ -7501,32 +7495,38 @@
       "Deadly Red Spider": {
         "name": "Deadly Red Spider",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Moss Giant": {
         "name": "Moss Giant",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Ice Giant": {
         "name": "Ice Giant",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Lesser Demon": {
         "name": "Lesser Demon",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Rune Essence": {
         "name": "Rune Essence",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Crafting Moulds": {
         "name": "Crafting Moulds",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Nature Runes": {
         "name": "Nature Runes",
@@ -7565,32 +7565,38 @@
       "Law Runes": {
         "name": "Law Runes",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Imps": {
         "name": "Imps",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Clay Ore": {
         "name": "Clay Ore",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Onion": {
         "name": "Onion",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Potato": {
         "name": "Potato",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Big Bones": {
         "name": "Big Bones",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Duck": {
         "name": "Duck",
@@ -7618,17 +7624,20 @@
       "Makeover": {
         "name": "Makeover",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Limpwurt Root": {
         "name": "Limpwurt Root",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Bar": {
         "name": "Bar",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       },
       "Haystack": {
         "name": "Haystack",
@@ -7656,7 +7665,8 @@
       "Red Spider Eggs": {
         "name": "Red Spider Eggs",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       }
     }
   },

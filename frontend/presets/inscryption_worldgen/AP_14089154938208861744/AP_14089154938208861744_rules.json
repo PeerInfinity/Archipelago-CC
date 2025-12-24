@@ -2305,7 +2305,8 @@
       "Epilogue": {
         "name": "Epilogue",
         "exits": [],
-        "locations": []
+        "locations": [],
+        "dynamically_added": true
       }
     }
   },

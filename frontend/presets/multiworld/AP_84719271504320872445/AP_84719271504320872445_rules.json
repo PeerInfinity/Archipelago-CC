@@ -33891,7 +33891,7 @@
         "hint_text": "a heart",
         "id": 62,
         "groups": [],
-        "classification": "progression|useful",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -34446,6 +34446,7 @@
         "start_inventory_from_pool": {},
         "start_location_hints": []
       },
+      "use_paren_number_accumulator": true,
       "HatItems": false,
       "UmbrellaLogic": false,
       "ShuffleSubconPaintings": false,

@@ -1153,232 +1153,141 @@
   "helpers": {
     "1": {
       "all_weapons": {
+        "type": "state_method",
+        "method": "has_all",
         "args": [
           {
-            "elements": [
-              {
-                "type": "constant",
-                "value": "Flamethrower"
-              },
-              {
-                "type": "constant",
-                "value": "Ice Spreadshot"
-              },
-              {
-                "type": "constant",
-                "value": "Volt Laser"
-              }
-            ],
-            "type": "set"
+            "type": "constant",
+            "value": [
+              "Flamethrower",
+              "Ice Spreadshot",
+              "Volt Laser"
+            ]
           }
-        ],
-        "method": "has_all",
-        "type": "state_method"
+        ]
       },
       "can_hover": {
+        "type": "and",
         "conditions": [
           {
+            "type": "item_check",
+            "item": "Faster Reload",
             "count": {
               "type": "constant",
               "value": 4
-            },
-            "item": "Faster Reload",
-            "type": "item_check"
+            }
           },
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Flamethrower"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Ice Spreadshot"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Volt Laser"
-                  }
-                ],
-                "type": "set"
+                "type": "constant",
+                "value": [
+                  "Flamethrower",
+                  "Ice Spreadshot",
+                  "Volt Laser"
+                ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       },
       "is_gate_unlocked": {
+        "type": "and",
         "conditions": [
           {
+            "type": "state_method",
+            "method": "has_all",
             "args": [
               {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Arctic Key"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Cave Key"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Swamp Key"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Volcanic Key"
-                  }
-                ],
-                "type": "set"
+                "type": "constant",
+                "value": [
+                  "Arctic Key",
+                  "Cave Key",
+                  "Swamp Key",
+                  "Volcanic Key"
+                ]
               }
-            ],
-            "method": "has_all",
-            "type": "state_method"
+            ]
           },
           {
-            "conditions": [
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "item": "Life Extension",
-                "type": "item_check"
-              },
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "item": "Clip Extension",
-                "type": "item_check"
-              },
-              {
-                "count": {
-                  "type": "constant",
-                  "value": 4
-                },
-                "item": "Faster Reload",
-                "type": "item_check"
-              },
-              {
-                "item": "Powered Blaster",
-                "type": "item_check"
-              },
-              {
-                "args": [
-                  {
-                    "elements": [
-                      {
-                        "type": "constant",
-                        "value": "Flamethrower"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Ice Spreadshot"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Volt Laser"
-                      }
-                    ],
-                    "type": "set"
-                  }
-                ],
-                "method": "has_any",
-                "type": "state_method"
-              }
-            ],
-            "type": "and"
+            "type": "helper",
+            "name": "super_nice_check"
           }
-        ],
-        "type": "and"
+        ]
       },
       "is_power_on": {
-        "item": "System Power",
-        "type": "item_check"
+        "type": "item_check",
+        "item": "System Power"
       },
       "nice_check": {
+        "type": "and",
         "conditions": [
           {
-            "item": "Life Extension",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Life Extension"
           },
           {
-            "item": "Clip Extension",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Clip Extension"
           },
           {
+            "type": "item_check",
+            "item": "Faster Reload",
             "count": {
               "type": "constant",
               "value": 2
-            },
-            "item": "Faster Reload",
-            "type": "item_check"
+            }
           }
-        ],
-        "type": "and"
+        ]
       },
       "super_nice_check": {
+        "type": "and",
         "conditions": [
           {
-            "count": {
-              "type": "constant",
-              "value": 2
-            },
+            "type": "item_check",
             "item": "Life Extension",
-            "type": "item_check"
-          },
-          {
             "count": {
               "type": "constant",
               "value": 2
-            },
-            "item": "Clip Extension",
-            "type": "item_check"
+            }
           },
           {
+            "type": "item_check",
+            "item": "Clip Extension",
+            "count": {
+              "type": "constant",
+              "value": 2
+            }
+          },
+          {
+            "type": "item_check",
+            "item": "Faster Reload",
             "count": {
               "type": "constant",
               "value": 4
-            },
-            "item": "Faster Reload",
-            "type": "item_check"
+            }
           },
           {
-            "item": "Powered Blaster",
-            "type": "item_check"
+            "type": "item_check",
+            "item": "Powered Blaster"
           },
           {
+            "type": "state_method",
+            "method": "has_any",
             "args": [
               {
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Flamethrower"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Ice Spreadshot"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Volt Laser"
-                  }
-                ],
-                "type": "set"
+                "type": "constant",
+                "value": [
+                  "Flamethrower",
+                  "Ice Spreadshot",
+                  "Volt Laser"
+                ]
               }
-            ],
-            "method": "has_any",
-            "type": "state_method"
+            ]
           }
-        ],
-        "type": "and"
+        ]
       }
     }
   }

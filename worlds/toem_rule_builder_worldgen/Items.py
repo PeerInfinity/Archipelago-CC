@@ -160,5 +160,5 @@ item_table: Dict[str, ItemData] = {
     "Beret": ItemData(135, ItemClassification.filler),
     "Jamal Green - Photo of Home": ItemData(136, ItemClassification.filler, "Jamal Green   Photo of Home"),
     "Launchable Socks - Squirrel Photography": ItemData(137, ItemClassification.filler, "Launchable Socks   Squirrel Photography"),
-    "TOEM Experienced": ItemData(None, ItemClassification.progression_skip_balancing),
+    "TOEM Experienced": ItemData(None, ItemClassification.progression),
 }

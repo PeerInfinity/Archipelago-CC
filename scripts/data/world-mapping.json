@@ -1,7 +1,7 @@
 {
   "A Hat in Time": {
     "exporter_path": "exporter/games/ahit.py",
-    "exporter_size": 11405,
+    "exporter_size": 11548,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -91,7 +91,7 @@
   },
   "Aquaria": {
     "exporter_path": "exporter/games/aquaria.py",
-    "exporter_size": 3341,
+    "exporter_size": 3463,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -109,7 +109,7 @@
   },
   "Archipelago": {
     "exporter_path": "exporter/games/generic.py",
-    "exporter_size": 14361,
+    "exporter_size": 14756,
     "game_logic_path": "frontend/modules/shared/gameLogic/generic/genericLogic.js",
     "game_logic_size": 8898,
     "has_custom_exporter": true,
@@ -163,7 +163,7 @@
   },
   "Castlevania - Circle of the Moon": {
     "exporter_path": "exporter/games/cvcotm.py",
-    "exporter_size": 15411,
+    "exporter_size": 16814,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -558,11 +558,11 @@
     "world_directory": "kh2"
   },
   "Kingdom Hearts 2 WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/kh2_worldgen.py",
+    "exporter_size": 4136,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "kh2_worldgen"
   },
@@ -820,7 +820,7 @@
   },
   "Old School Runescape": {
     "exporter_path": "exporter/games/osrs.py",
-    "exporter_size": 6056,
+    "exporter_size": 6362,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -838,14 +838,14 @@
   },
   "Overcooked! 2": {
     "exporter_path": "exporter/games/overcooked2.py",
-    "exporter_size": 26723,
+    "exporter_size": 31912,
     "game_logic_path": "frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js",
     "game_logic_size": 5262,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "overcooked2"
   },
-  "Overcooked\\! 2 WorldGen": {
+  "Overcooked! 2 WorldGen": {
     "exporter_path": null,
     "exporter_size": 0,
     "game_logic_path": null,
@@ -1036,7 +1036,7 @@
   },
   "Starcraft 2": {
     "exporter_path": "exporter/games/sc2.py",
-    "exporter_size": 34805,
+    "exporter_size": 54978,
     "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
     "game_logic_size": 88384,
     "has_custom_exporter": true,
@@ -1153,7 +1153,7 @@
   },
   "Super Metroid": {
     "exporter_path": "exporter/games/sm.py",
-    "exporter_size": 75332,
+    "exporter_size": 92786,
     "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
     "game_logic_size": 117398,
     "has_custom_exporter": true,
@@ -1261,7 +1261,7 @@
   },
   "The Messenger": {
     "exporter_path": "exporter/games/messenger.py",
-    "exporter_size": 11475,
+    "exporter_size": 11970,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1315,7 +1315,7 @@
   },
   "Timespinner": {
     "exporter_path": "exporter/games/timespinner.py",
-    "exporter_size": 4135,
+    "exporter_size": 4702,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1432,7 +1432,7 @@
   },
   "Yoshi's Island": {
     "exporter_path": "exporter/games/yoshisisland.py",
-    "exporter_size": 11075,
+    "exporter_size": 12071,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,

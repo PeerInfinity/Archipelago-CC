@@ -71,7 +71,7 @@ def _starcraft2worldgen_terran_air(state: "CollectionState", player: int) -> boo
 
 
 def _starcraft2worldgen_terran_air_anti_air(state: "CollectionState", player: int) -> bool:
-    return (state.has('Viking', player)) or ((state.has('Advanced Laser Technology (Wraith)', player)) and (state.has('Wraith', player))) or ((state.has('ATX Laser Battery (Battlecruiser)', player)) and (state.has('Battlecruiser', player))) or ((False) and ((state.has('Battlecruiser', player)) or (state.has('Valkyrie', player)) or (state.has('Wraith', player))) and ((True >= 2)))
+    return (state.has('Viking', player)) or ((state.has('Advanced Laser Technology (Wraith)', player)) and (state.has('Wraith', player))) or ((state.has('ATX Laser Battery (Battlecruiser)', player)) and (state.has('Battlecruiser', player))) or ((False) and ((state.has('Battlecruiser', player)) or (state.has('Valkyrie', player)) or (state.has('Wraith', player))) and ((state.count('Progressive Terran Ship Weapon', player) >= 2)))
 
 
 def _starcraft2worldgen_terran_basic_anti_air(state: "CollectionState", player: int) -> bool:
@@ -121,7 +121,7 @@ def _starcraft2worldgen_terran_early_tech(state: "CollectionState", player: int)
 
 
 def _starcraft2worldgen_terran_maw_requirement(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Battlecruiser', player)) and (((True >= 2)) or (state.has('ATX Laser Battery (Battlecruiser)', player)))) or ((_starcraft2worldgen_terran_air(state, player)) and (((state.has('Banshee', player)) or (state.has('Battlecruiser', player)) or (state.has('Goliath', player)) or (state.has('Thor', player)) or (state.has('Viking', player)) or (state.has('Warhound', player)) or (state.has('Wraith', player))) or ((state.has('Liberator', player)) and (state.has('Raid Artillery (Liberator)', player))) or ((state.has('Flechette Missiles (Valkyrie)', player)) and (state.has('Valkyrie', player))) or ((state.has('Marauder', player)) and (_starcraft2worldgen_terran_bio_heal(state, player)))) and (((state.has('Cyclone', player)) or (state.has('Goliath', player)) or (state.has('Viking', player))) or (((state.has('Battlecruiser', player)) or (state.has('Valkyrie', player)) or (state.has('Wraith', player))) and ((True >= 2))) or ((state.has('Progressive High Impact Payload (Thor)', player)) and (state.has('Thor', player)))) and (True) and (_starcraft2worldgen_terran_competent_anti_air(state, player)) and (_starcraft2worldgen_terran_sustainable_mech_heal(state, player)))
+    return ((state.has('Battlecruiser', player)) and (((state.count('Progressive Terran Ship Weapon', player) >= 2)) or (state.has('ATX Laser Battery (Battlecruiser)', player)))) or ((_starcraft2worldgen_terran_air(state, player)) and (((state.has('Banshee', player)) or (state.has('Battlecruiser', player)) or (state.has('Goliath', player)) or (state.has('Thor', player)) or (state.has('Viking', player)) or (state.has('Warhound', player)) or (state.has('Wraith', player))) or ((state.has('Liberator', player)) and (state.has('Raid Artillery (Liberator)', player))) or ((state.has('Flechette Missiles (Valkyrie)', player)) and (state.has('Valkyrie', player))) or ((state.has('Marauder', player)) and (_starcraft2worldgen_terran_bio_heal(state, player)))) and (((state.has('Cyclone', player)) or (state.has('Goliath', player)) or (state.has('Viking', player))) or (((state.has('Battlecruiser', player)) or (state.has('Valkyrie', player)) or (state.has('Wraith', player))) and ((state.count('Progressive Terran Ship Weapon', player) >= 2))) or ((state.has('Progressive High Impact Payload (Thor)', player)) and (state.has('Thor', player)))) and ((_starcraft2worldgen_terran_competent_anti_air(state, player)) and ((state.has('Thor', player)) or (state.has('Siege Tank', player)) or (state.has('Battlecruiser', player)) or (state.has('Banshee', player)) or (state.has('Goliath', player))) and ((state.has('Progressive Terran Infantry Weapon', player)) or (state.has('Progressive Terran Vehicle Weapon', player)) or (state.has('Progressive Terran Ship Weapon', player)))) and (_starcraft2worldgen_terran_competent_anti_air(state, player)) and (_starcraft2worldgen_terran_sustainable_mech_heal(state, player)))
 
 
 def _starcraft2worldgen_terran_moderate_anti_air(state: "CollectionState", player: int) -> bool:
@@ -140,749 +140,6 @@ def _starcraft2worldgen_terran_power_rating(state: "CollectionState", player: in
 
 def _starcraft2worldgen_terran_sustainable_mech_heal(state: "CollectionState", player: int) -> bool:
     return (state.has('Science Vessel', player)) or (((state.has('Field Response Theta', player)) or (state.has('Medic', player))) and (state.has('Adaptive Medpacks (Medic)', player))) or ((state.count('Progressive Regenerative Bio-Steel (Terran)', player) >= 3)) or ((False) and (((state.has('Bio Mechanical Repair Drone (Raven)', player)) and (state.has('Raven', player))) or ((state.count('Progressive Regenerative Bio-Steel (Terran)', player) >= 2))))
-
-
-# Helper definitions for frontend evaluation
-# These are looked up by name instead of being inlined at every call site
-_HELPER_DEFINITIONS = {   'marine_medic_firebat_upgrade': {   'conditions': [   {'name': 'marine_medic_upgrade', 'type': 'helper'},
-                                                          {   'left': {   'args': [   {   'type': 'constant',
-                                                                                          'value': 'Progressive '
-                                                                                                   'Stimpack '
-                                                                                                   '(Firebat)'}],
-                                                                          'method': 'count',
-                                                                          'type': 'state_method'},
-                                                              'op': '>=',
-                                                              'right': {'type': 'constant', 'value': 2},
-                                                              'type': 'compare'},
-                                                          {   'conditions': [   {   'item': 'Juggernaut Plating '
-                                                                                            '(Firebat)',
-                                                                                    'type': 'item_check'},
-                                                                                {   'item': 'Nano Projectors (Firebat)',
-                                                                                    'type': 'item_check'}],
-                                                              'type': 'or'}],
-                                        'type': 'or'},
-    'marine_medic_upgrade': {   'conditions': [   {   'conditions': [   {   'item': 'Combat Shield (Marine)',
-                                                                            'type': 'item_check'},
-                                                                        {   'item': 'Magrail Munitions (Marine)',
-                                                                            'type': 'item_check'},
-                                                                        {   'item': 'Stabilizer Medpacks (Medic)',
-                                                                            'type': 'item_check'}],
-                                                      'type': 'or'},
-                                                  {   'conditions': [   {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                        'value': 'Progressive '
-                                                                                                                 'Stimpack '
-                                                                                                                 '(Marine)'}],
-                                                                                        'method': 'count',
-                                                                                        'type': 'state_method'},
-                                                                            'op': '>=',
-                                                                            'right': {'type': 'constant', 'value': 2},
-                                                                            'type': 'compare'},
-                                                                        {   'count': {'type': 'constant', 'value': 1},
-                                                                            'group': 'Missions',
-                                                                            'type': 'group_check'}],
-                                                      'type': 'and'},
-                                                  {   'conditions': [   {'type': 'constant', 'value': False},
-                                                                        {   'item': 'Laser Targeting System (Marine)',
-                                                                            'type': 'item_check'}],
-                                                      'type': 'and'}],
-                                'type': 'or'},
-    'min2': {   'body': {   'if_false': {'name': 'b', 'type': 'name'},
-                            'if_true': {'name': 'a', 'type': 'name'},
-                            'test': {   'left': {'name': 'a', 'type': 'name'},
-                                        'op': '<=',
-                                        'right': {'name': 'b', 'type': 'name'},
-                                        'type': 'compare'},
-                            'type': 'conditional'},
-                'params': ['a', 'b']},
-    'nova_anti_air_weapon': {   'conditions': [   {'item': 'Blazefire Gunblade (Nova Weapon)', 'type': 'item_check'},
-                                                  {'item': 'C20A Canister Rifle (Nova Weapon)', 'type': 'item_check'},
-                                                  {'item': 'Plasma Rifle (Nova Weapon)', 'type': 'item_check'}],
-                                'type': 'or'},
-    'nova_full_stealth': {   'left': {   'args': [   {   'type': 'constant',
-                                                         'value': 'Progressive Stealth Suit Module (Nova Suit '
-                                                                  'Module)'}],
-                                         'method': 'count',
-                                         'type': 'state_method'},
-                             'op': '>=',
-                             'right': {'type': 'constant', 'value': 2},
-                             'type': 'compare'},
-    'nova_heal': {   'conditions': [   {'item': 'Armored Suit Module (Nova Suit Module)', 'type': 'item_check'},
-                                       {'item': 'Stim Infusion (Nova Gadget)', 'type': 'item_check'}],
-                     'type': 'or'},
-    'nova_ranged_weapon': {   'conditions': [   {'item': 'C20A Canister Rifle (Nova Weapon)', 'type': 'item_check'},
-                                                {'item': 'Hellfire Shotgun (Nova Weapon)', 'type': 'item_check'},
-                                                {'item': 'Plasma Rifle (Nova Weapon)', 'type': 'item_check'}],
-                              'type': 'or'},
-    'soa_power_rating': {   'statements': [   {   'name': 'power_rating',
-                                                  'type': 'assign',
-                                                  'value': {'type': 'constant', 'value': 0}},
-                                              {   'body': [   {   'body': [   {   'name': 'power_rating',
-                                                                                  'op': '+=',
-                                                                                  'type': 'assign',
-                                                                                  'value': {   'name': 'rating',
-                                                                                               'type': 'name'}},
-                                                                              {'type': 'break'}],
-                                                                  'test': {   'item': {'name': 'item', 'type': 'name'},
-                                                                              'type': 'item_check'},
-                                                                  'type': 'if_statement'}],
-                                                  'iterable': {   'function': {   'attr': 'items',
-                                                                                  'object': {   'type': 'constant',
-                                                                                                'value': {   'Purifier Beam (Spear of Adun)': 3,
-                                                                                                             'Solar Bombardment (Spear of Adun)': 3,
-                                                                                                             'Time Stop (Spear of Adun)': 4}},
-                                                                                  'type': 'attribute'},
-                                                                  'type': 'function_call'},
-                                                  'type': 'for_iter',
-                                                  'vars': ['item', 'rating']},
-                                              {   'name': 'found_main_weapon',
-                                                  'type': 'assign',
-                                                  'value': {'type': 'constant', 'value': False}},
-                                              {   'body': [   {   'name': 'count',
-                                                                  'type': 'assign',
-                                                                  'value': {'type': 'constant', 'value': 1}},
-                                                              {   'name': 'count',
-                                                                  'type': 'assign',
-                                                                  'value': {   'if_false': {   'name': 'count',
-                                                                                               'type': 'name'},
-                                                                               'if_true': {   'type': 'constant',
-                                                                                              'value': 2},
-                                                                               'test': {   'left': {   'name': 'item',
-                                                                                                       'type': 'name'},
-                                                                                           'op': '==',
-                                                                                           'right': {   'type': 'constant',
-                                                                                                        'value': 'Progressive '
-                                                                                                                 'Proxy '
-                                                                                                                 'Pylon '
-                                                                                                                 '(Spear '
-                                                                                                                 'of '
-                                                                                                                 'Adun)'},
-                                                                                           'type': 'compare'},
-                                                                               'type': 'conditional'}},
-                                                              {   'body': [   {   'body': [   {   'name': 'power_rating',
-                                                                                                  'op': '+=',
-                                                                                                  'type': 'assign',
-                                                                                                  'value': {   'name': 'rating',
-                                                                                                               'type': 'name'}},
-                                                                                              {   'name': 'found_main_weapon',
-                                                                                                  'type': 'assign',
-                                                                                                  'value': {   'type': 'constant',
-                                                                                                               'value': True}}],
-                                                                                  'orelse': [   {   'name': 'power_rating',
-                                                                                                    'op': '+=',
-                                                                                                    'type': 'assign',
-                                                                                                    'value': {   'left': {   'name': 'rating',
-                                                                                                                             'type': 'name'},
-                                                                                                                 'op': '//',
-                                                                                                                 'right': {   'type': 'constant',
-                                                                                                                              'value': 2},
-                                                                                                                 'type': 'binary_op'}},
-                                                                                                {'type': 'break'}],
-                                                                                  'test': {   'condition': {   'name': 'found_main_weapon',
-                                                                                                               'type': 'name'},
-                                                                                              'type': 'not'},
-                                                                                  'type': 'if_statement'}],
-                                                                  'test': {   'count': {   'name': 'count',
-                                                                                           'type': 'name'},
-                                                                              'item': {'name': 'item', 'type': 'name'},
-                                                                              'type': 'item_check'},
-                                                                  'type': 'if_statement'}],
-                                                  'iterable': {   'function': {   'attr': 'items',
-                                                                                  'object': {   'type': 'constant',
-                                                                                                'value': {   'Deploy Fenix (Spear of Adun)': 7,
-                                                                                                             'Orbital Strike (Spear of Adun)': 4,
-                                                                                                             'Progressive Proxy Pylon (Spear of Adun)': 5,
-                                                                                                             'Shield Overcharge (Spear of Adun)': 5,
-                                                                                                             'Solar Lance (Spear of Adun)': 8,
-                                                                                                             'Temporal Field (Spear of Adun)': 6}},
-                                                                                  'type': 'attribute'},
-                                                                  'type': 'function_call'},
-                                                  'type': 'for_iter',
-                                                  'vars': ['item', 'rating']},
-                                              {   'body': [   {   'name': 'power_rating',
-                                                                  'op': '+=',
-                                                                  'type': 'assign',
-                                                                  'value': {'type': 'constant', 'value': 2}}],
-                                                  'test': {'item': 'Mass Recall (Spear of Adun)', 'type': 'item_check'},
-                                                  'type': 'if_statement'},
-                                              {'type': 'return', 'value': {'name': 'power_rating', 'type': 'name'}}],
-                            'type': 'block'},
-    'terran_air': {   'conditions': [   {   'conditions': [   {'item': 'Banshee', 'type': 'item_check'},
-                                                              {'item': 'Battlecruiser', 'type': 'item_check'},
-                                                              {'item': 'Viking', 'type': 'item_check'},
-                                                              {'item': 'Wraith', 'type': 'item_check'}],
-                                            'type': 'or'},
-                                        {   'conditions': [   {   'item': 'Flechette Missiles (Valkyrie)',
-                                                                  'type': 'item_check'},
-                                                              {'item': 'Valkyrie', 'type': 'item_check'}],
-                                            'type': 'and'},
-                                        {   'conditions': [   {'item': 'Liberator', 'type': 'item_check'},
-                                                              {   'item': 'Raid Artillery (Liberator)',
-                                                                  'type': 'item_check'}],
-                                            'type': 'and'},
-                                        {   'conditions': [   {'type': 'constant', 'value': False},
-                                                              {   'conditions': [   {   'conditions': [   {   'conditions': [   {   'item': 'Hercules',
-                                                                                                                                    'type': 'item_check'},
-                                                                                                                                {   'item': 'Medivac',
-                                                                                                                                    'type': 'item_check'}],
-                                                                                                              'type': 'or'},
-                                                                                                          {   'name': 'terran_common_unit',
-                                                                                                              'type': 'helper'}],
-                                                                                        'type': 'and'},
-                                                                                    {   'conditions': [   {   'item': 'Hunter-Seeker '
-                                                                                                                      'Weapon '
-                                                                                                                      '(Raven)',
-                                                                                                              'type': 'item_check'},
-                                                                                                          {   'item': 'Raven',
-                                                                                                              'type': 'item_check'}],
-                                                                                        'type': 'and'}],
-                                                                  'type': 'or'}],
-                                            'type': 'and'}],
-                      'type': 'or'},
-    'terran_air_anti_air': {   'conditions': [   {'item': 'Viking', 'type': 'item_check'},
-                                                 {   'conditions': [   {   'item': 'Advanced Laser Technology (Wraith)',
-                                                                           'type': 'item_check'},
-                                                                       {'item': 'Wraith', 'type': 'item_check'}],
-                                                     'type': 'and'},
-                                                 {   'conditions': [   {   'item': 'ATX Laser Battery (Battlecruiser)',
-                                                                           'type': 'item_check'},
-                                                                       {'item': 'Battlecruiser', 'type': 'item_check'}],
-                                                     'type': 'and'},
-                                                 {   'conditions': [   {'type': 'constant', 'value': False},
-                                                                       {   'conditions': [   {   'item': 'Battlecruiser',
-                                                                                                 'type': 'item_check'},
-                                                                                             {   'item': 'Valkyrie',
-                                                                                                 'type': 'item_check'},
-                                                                                             {   'item': 'Wraith',
-                                                                                                 'type': 'item_check'}],
-                                                                           'type': 'or'},
-                                                                       {   'left': {'type': 'constant', 'value': True},
-                                                                           'op': '>=',
-                                                                           'right': {'type': 'constant', 'value': 2},
-                                                                           'type': 'compare'}],
-                                                     'type': 'and'}],
-                               'type': 'or'},
-    'terran_basic_anti_air': {   'conditions': [   {   'conditions': [   {'item': 'Brynhilds', 'type': 'item_check'},
-                                                                         {   'item': 'Bulwark Company',
-                                                                             'type': 'item_check'},
-                                                                         {'item': "Hel's Angels", 'type': 'item_check'},
-                                                                         {   'item': 'Missile Turret',
-                                                                             'type': 'item_check'},
-                                                                         {'item': 'Sky Fury', 'type': 'item_check'},
-                                                                         {   'item': 'Son of Korhal',
-                                                                             'type': 'item_check'},
-                                                                         {   'item': 'Spartan Company',
-                                                                             'type': 'item_check'},
-                                                                         {'item': 'War Pigs', 'type': 'item_check'},
-                                                                         {   'item': 'Winged Nightmares',
-                                                                             'type': 'item_check'}],
-                                                       'type': 'or'},
-                                                   {'name': 'terran_moderate_anti_air', 'type': 'helper'},
-                                                   {   'conditions': [   {'type': 'constant', 'value': False},
-                                                                         {   'conditions': [   {   'item': 'Blackhammer',
-                                                                                                   'type': 'item_check'},
-                                                                                               {   'item': "Emperor's "
-                                                                                                           'Guardian',
-                                                                                                   'type': 'item_check'},
-                                                                                               {   'item': "Emperor's "
-                                                                                                           'Shadow',
-                                                                                                   'type': 'item_check'},
-                                                                                               {   'item': 'Night Hawk',
-                                                                                                   'type': 'item_check'},
-                                                                                               {   'item': 'Pride of '
-                                                                                                           'Augustgrad',
-                                                                                                   'type': 'item_check'},
-                                                                                               {   'item': 'Widow Mine',
-                                                                                                   'type': 'item_check'}],
-                                                                             'type': 'or'}],
-                                                       'type': 'and'}],
-                                 'type': 'or'},
-    'terran_bio_heal': {   'conditions': [   {   'conditions': [   {   'item': 'Field Response Theta',
-                                                                       'type': 'item_check'},
-                                                                   {'item': 'Medic', 'type': 'item_check'},
-                                                                   {'item': 'Medivac', 'type': 'item_check'}],
-                                                 'type': 'or'},
-                                             {   'conditions': [   {'type': 'constant', 'value': False},
-                                                                   {   'conditions': [   {   'item': 'Bio Mechanical '
-                                                                                                     'Repair Drone '
-                                                                                                     '(Raven)',
-                                                                                             'type': 'item_check'},
-                                                                                         {   'item': 'Raven',
-                                                                                             'type': 'item_check'}],
-                                                                       'type': 'and'}],
-                                                 'type': 'and'}],
-                           'type': 'or'},
-    'terran_common_unit': {   'args': [   {   'attr': 'basic_terran_units',
-                                              'object': {'name': 'self', 'type': 'name'},
-                                              'type': 'attribute'}],
-                              'method': 'has_any',
-                              'type': 'state_method'},
-    'terran_competent_anti_air': {   'conditions': [   {   'conditions': [   {'item': 'Goliath', 'type': 'item_check'},
-                                                                             {'item': 'Cyclone', 'type': 'item_check'},
-                                                                             {'item': 'Thor', 'type': 'item_check'}],
-                                                           'type': 'or'},
-                                                       {'name': 'terran_air_anti_air', 'type': 'helper'}],
-                                     'type': 'or'},
-    'terran_defense_rating': {   'body': {   'statements': [   {   'name': 'defense_score',
-                                                                   'type': 'assign',
-                                                                   'value': {   'element_rule': {   'index': {   'name': 'item',
-                                                                                                                 'type': 'name'},
-                                                                                                    'type': 'subscript',
-                                                                                                    'value': {   'type': 'constant',
-                                                                                                                 'value': {   'Banshee': 1,
-                                                                                                                              'Battlecruiser': 1,
-                                                                                                                              'Devastator Turret': 2,
-                                                                                                                              'Liberator': 4,
-                                                                                                                              'Perdition Turret': 2,
-                                                                                                                              'Planetary Fortress': 3,
-                                                                                                                              'Siege Tank': 5,
-                                                                                                                              'Vulture': 1,
-                                                                                                                              'Widow Mine': 1}}},
-                                                                                'iterator_info': {   'condition': {   'item': {   'name': 'item',
-                                                                                                                                  'type': 'name'},
-                                                                                                                      'type': 'item_check'},
-                                                                                                     'iterator': {   'type': 'constant',
-                                                                                                                     'value': {   'Banshee': 1,
-                                                                                                                                  'Battlecruiser': 1,
-                                                                                                                                  'Devastator Turret': 2,
-                                                                                                                                  'Liberator': 4,
-                                                                                                                                  'Perdition Turret': 2,
-                                                                                                                                  'Planetary Fortress': 3,
-                                                                                                                                  'Siege Tank': 5,
-                                                                                                                                  'Vulture': 1,
-                                                                                                                                  'Widow Mine': 1}},
-                                                                                                     'target': {   'name': 'item',
-                                                                                                                   'type': 'name'},
-                                                                                                     'type': 'comprehension_details'},
-                                                                                'type': 'sum_of'}},
-                                                               {   'body': [   {   'name': 'defense_score',
-                                                                                   'op': '+=',
-                                                                                   'type': 'assign',
-                                                                                   'value': {   'type': 'constant',
-                                                                                                'value': 3}}],
-                                                                   'orelse': [   {   'body': [   {   'name': 'defense_score',
-                                                                                                     'op': '+=',
-                                                                                                     'type': 'assign',
-                                                                                                     'value': {   'type': 'constant',
-                                                                                                                  'value': 2}}],
-                                                                                     'test': {   'conditions': [   {   'name': 'zerg_enemy',
-                                                                                                                       'type': 'name'},
-                                                                                                                   {   'item': 'Firebat',
-                                                                                                                       'type': 'item_check'},
-                                                                                                                   {   'item': 'Bunker',
-                                                                                                                       'type': 'item_check'}],
-                                                                                                 'type': 'and'},
-                                                                                     'type': 'if_statement'}],
-                                                                   'test': {   'conditions': [   {   'args': [   {   'type': 'constant',
-                                                                                                                     'value': [   'Dominion '
-                                                                                                                                  'Trooper',
-                                                                                                                                  'Marauder',
-                                                                                                                                  'Marine']}],
-                                                                                                     'method': 'has_any',
-                                                                                                     'type': 'state_method'},
-                                                                                                 {   'item': 'Bunker',
-                                                                                                     'type': 'item_check'}],
-                                                                               'type': 'and'},
-                                                                   'type': 'if_statement'},
-                                                               {   'body': [   {   'name': 'defense_score',
-                                                                                   'op': '+=',
-                                                                                   'type': 'assign',
-                                                                                   'value': {   'type': 'constant',
-                                                                                                'value': 2}}],
-                                                                   'test': {   'args': [   {   'type': 'constant',
-                                                                                               'value': [   'Maelstrom '
-                                                                                                            'Rounds '
-                                                                                                            '(Siege '
-                                                                                                            'Tank)',
-                                                                                                            'Siege '
-                                                                                                            'Tank']}],
-                                                                               'method': 'has_all',
-                                                                               'type': 'state_method'},
-                                                                   'type': 'if_statement'},
-                                                               {   'body': [   {   'name': 'defense_score',
-                                                                                   'op': '+=',
-                                                                                   'type': 'assign',
-                                                                                   'value': {   'type': 'constant',
-                                                                                                'value': 1}}],
-                                                                   'test': {   'args': [   {   'type': 'constant',
-                                                                                               'value': [   'Graduating '
-                                                                                                            'Range '
-                                                                                                            '(Siege '
-                                                                                                            'Tank)',
-                                                                                                            'Siege '
-                                                                                                            'Tank']}],
-                                                                               'method': 'has_all',
-                                                                               'type': 'state_method'},
-                                                                   'type': 'if_statement'},
-                                                               {   'body': [   {   'name': 'defense_score',
-                                                                                   'op': '+=',
-                                                                                   'type': 'assign',
-                                                                                   'value': {   'type': 'constant',
-                                                                                                'value': 1}}],
-                                                                   'test': {   'args': [   {   'type': 'constant',
-                                                                                               'value': [   'Concealment '
-                                                                                                            '(Widow '
-                                                                                                            'Mine)',
-                                                                                                            'Widow '
-                                                                                                            'Mine']}],
-                                                                               'method': 'has_all',
-                                                                               'type': 'state_method'},
-                                                                   'type': 'if_statement'},
-                                                               {   'body': [   {   'name': 'defense_score',
-                                                                                   'op': '+=',
-                                                                                   'type': 'assign',
-                                                                                   'value': {   'type': 'constant',
-                                                                                                'value': 2}}],
-                                                                   'test': {   'args': [   {   'type': 'constant',
-                                                                                               'value': [   'Shredder '
-                                                                                                            'Rounds '
-                                                                                                            '(Viking)',
-                                                                                                            'Viking']}],
-                                                                               'method': 'has_all',
-                                                                               'type': 'state_method'},
-                                                                   'type': 'if_statement'},
-                                                               {   'body': [   {   'name': 'defense_score',
-                                                                                   'op': '+=',
-                                                                                   'type': 'assign',
-                                                                                   'value': {   'element_rule': {   'index': {   'name': 'item',
-                                                                                                                                 'type': 'name'},
-                                                                                                                    'type': 'subscript',
-                                                                                                                    'value': {   'type': 'constant',
-                                                                                                                                 'value': {   'Hive Mind Emulator': 3,
-                                                                                                                                              'Liberator': -2,
-                                                                                                                                              'Perdition Turret': 2,
-                                                                                                                                              'Psi Disrupter': 3}}},
-                                                                                                'iterator_info': {   'condition': {   'item': {   'name': 'item',
-                                                                                                                                                  'type': 'name'},
-                                                                                                                                      'type': 'item_check'},
-                                                                                                                     'iterator': {   'type': 'constant',
-                                                                                                                                     'value': {   'Hive Mind Emulator': 3,
-                                                                                                                                                  'Liberator': -2,
-                                                                                                                                                  'Perdition Turret': 2,
-                                                                                                                                                  'Psi Disrupter': 3}},
-                                                                                                                     'target': {   'name': 'item',
-                                                                                                                                   'type': 'name'},
-                                                                                                                     'type': 'comprehension_details'},
-                                                                                                'type': 'sum_of'}}],
-                                                                   'test': {'name': 'zerg_enemy', 'type': 'name'},
-                                                                   'type': 'if_statement'},
-                                                               {   'body': [   {   'name': 'defense_score',
-                                                                                   'op': '+=',
-                                                                                   'type': 'assign',
-                                                                                   'value': {   'args': [   {   'type': 'constant',
-                                                                                                                'value': 2},
-                                                                                                            {   'element_rule': {   'index': {   'name': 'item',
-                                                                                                                                                 'type': 'name'},
-                                                                                                                                    'type': 'subscript',
-                                                                                                                                    'value': {   'type': 'constant',
-                                                                                                                                                 'value': {   'Missile Turret': 2}}},
-                                                                                                                'iterator_info': {   'condition': {   'item': {   'name': 'item',
-                                                                                                                                                                  'type': 'name'},
-                                                                                                                                                      'type': 'item_check'},
-                                                                                                                                     'iterator': {   'type': 'constant',
-                                                                                                                                                     'value': {   'Missile Turret': 2}},
-                                                                                                                                     'target': {   'name': 'item',
-                                                                                                                                                   'type': 'name'},
-                                                                                                                                     'type': 'comprehension_details'},
-                                                                                                                'type': 'sum_of'}],
-                                                                                                'name': 'min2',
-                                                                                                'type': 'helper'}}],
-                                                                   'test': {'name': 'air_enemy', 'type': 'name'},
-                                                                   'type': 'if_statement'},
-                                                               {   'body': [   {   'name': 'defense_score',
-                                                                                   'op': '+=',
-                                                                                   'type': 'assign',
-                                                                                   'value': {   'type': 'constant',
-                                                                                                'value': 2}}],
-                                                                   'test': {   'conditions': [   {   'name': 'air_enemy',
-                                                                                                     'type': 'name'},
-                                                                                                 {   'name': 'zerg_enemy',
-                                                                                                     'type': 'name'},
-                                                                                                 {   'item': 'Valkyrie',
-                                                                                                     'type': 'item_check'}],
-                                                                               'type': 'and'},
-                                                                   'type': 'if_statement'},
-                                                               {   'body': [   {   'name': 'defense_score',
-                                                                                   'op': '+=',
-                                                                                   'type': 'assign',
-                                                                                   'value': {   'type': 'constant',
-                                                                                                'value': 2}}],
-                                                                   'test': {'type': 'constant', 'value': False},
-                                                                   'type': 'if_statement'},
-                                                               {   'type': 'return',
-                                                                   'value': {'name': 'defense_score', 'type': 'name'}}],
-                                             'type': 'block'},
-                                 'params': ['zerg_enemy', 'air_enemy']},
-    'terran_early_tech': {   'conditions': [   {   'conditions': [   {'item': 'Dominion Trooper', 'type': 'item_check'},
-                                                                     {'item': 'Firebat', 'type': 'item_check'},
-                                                                     {'item': 'Hellion', 'type': 'item_check'},
-                                                                     {'item': 'Marauder', 'type': 'item_check'},
-                                                                     {'item': 'Marine', 'type': 'item_check'},
-                                                                     {'item': 'Reaper', 'type': 'item_check'}],
-                                                   'type': 'or'},
-                                               {   'conditions': [   {'type': 'constant', 'value': False},
-                                                                     {   'conditions': [   {   'item': 'Banshee',
-                                                                                               'type': 'item_check'},
-                                                                                           {   'item': 'Diamondback',
-                                                                                               'type': 'item_check'},
-                                                                                           {   'item': 'Goliath',
-                                                                                               'type': 'item_check'},
-                                                                                           {   'item': 'Viking',
-                                                                                               'type': 'item_check'}],
-                                                                         'type': 'or'}],
-                                                   'type': 'and'}],
-                             'type': 'or'},
-    'terran_maw_requirement': {   'conditions': [   {   'conditions': [   {   'item': 'Battlecruiser',
-                                                                              'type': 'item_check'},
-                                                                          {   'conditions': [   {   'left': {   'type': 'constant',
-                                                                                                                'value': True},
-                                                                                                    'op': '>=',
-                                                                                                    'right': {   'type': 'constant',
-                                                                                                                 'value': 2},
-                                                                                                    'type': 'compare'},
-                                                                                                {   'item': 'ATX Laser '
-                                                                                                            'Battery '
-                                                                                                            '(Battlecruiser)',
-                                                                                                    'type': 'item_check'}],
-                                                                              'type': 'or'}],
-                                                        'type': 'and'},
-                                                    {   'conditions': [   {'name': 'terran_air', 'type': 'helper'},
-                                                                          {   'conditions': [   {   'conditions': [   {   'item': 'Banshee',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Battlecruiser',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Goliath',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Thor',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Viking',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Warhound',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Wraith',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'or'},
-                                                                                                {   'conditions': [   {   'item': 'Liberator',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Raid '
-                                                                                                                                  'Artillery '
-                                                                                                                                  '(Liberator)',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'item': 'Flechette '
-                                                                                                                                  'Missiles '
-                                                                                                                                  '(Valkyrie)',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Valkyrie',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'item': 'Marauder',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'name': 'terran_bio_heal',
-                                                                                                                          'type': 'helper'}],
-                                                                                                    'type': 'and'}],
-                                                                              'type': 'or'},
-                                                                          {   'conditions': [   {   'conditions': [   {   'item': 'Cyclone',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Goliath',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Viking',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'or'},
-                                                                                                {   'conditions': [   {   'conditions': [   {   'item': 'Battlecruiser',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Valkyrie',
-                                                                                                                                                'type': 'item_check'},
-                                                                                                                                            {   'item': 'Wraith',
-                                                                                                                                                'type': 'item_check'}],
-                                                                                                                          'type': 'or'},
-                                                                                                                      {   'left': {   'type': 'constant',
-                                                                                                                                      'value': True},
-                                                                                                                          'op': '>=',
-                                                                                                                          'right': {   'type': 'constant',
-                                                                                                                                       'value': 2},
-                                                                                                                          'type': 'compare'}],
-                                                                                                    'type': 'and'},
-                                                                                                {   'conditions': [   {   'item': 'Progressive '
-                                                                                                                                  'High '
-                                                                                                                                  'Impact '
-                                                                                                                                  'Payload '
-                                                                                                                                  '(Thor)',
-                                                                                                                          'type': 'item_check'},
-                                                                                                                      {   'item': 'Thor',
-                                                                                                                          'type': 'item_check'}],
-                                                                                                    'type': 'and'}],
-                                                                              'type': 'or'},
-                                                                          {'type': 'constant', 'value': True},
-                                                                          {   'name': 'terran_competent_anti_air',
-                                                                              'type': 'helper'},
-                                                                          {   'name': 'terran_sustainable_mech_heal',
-                                                                              'type': 'helper'}],
-                                                        'type': 'and'}],
-                                  'type': 'or'},
-    'terran_moderate_anti_air': {   'conditions': [   {'name': 'terran_competent_anti_air', 'type': 'helper'},
-                                                      {   'conditions': [   {   'conditions': [   {   'item': 'Battlecruiser',
-                                                                                                      'type': 'item_check'},
-                                                                                                  {   'item': 'Cyclone',
-                                                                                                      'type': 'item_check'},
-                                                                                                  {   'item': 'Dominion '
-                                                                                                              'Trooper',
-                                                                                                      'type': 'item_check'},
-                                                                                                  {   'item': 'Marine',
-                                                                                                      'type': 'item_check'},
-                                                                                                  {   'item': 'Thor',
-                                                                                                      'type': 'item_check'},
-                                                                                                  {   'item': 'Valkyrie',
-                                                                                                      'type': 'item_check'},
-                                                                                                  {   'item': 'Wraith',
-                                                                                                      'type': 'item_check'}],
-                                                                                'type': 'or'},
-                                                                            {   'conditions': [   {   'conditions': [   {   'item': 'Medivac',
-                                                                                                                            'type': 'item_check'},
-                                                                                                                        {   'item': 'Siege '
-                                                                                                                                    'Tank',
-                                                                                                                            'type': 'item_check'}],
-                                                                                                      'type': 'and'},
-                                                                                                  {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                  'value': 'Progressive '
-                                                                                                                                           'Transport '
-                                                                                                                                           'Hook '
-                                                                                                                                           '(Siege '
-                                                                                                                                           'Tank)'}],
-                                                                                                                  'method': 'count',
-                                                                                                                  'type': 'state_method'},
-                                                                                                      'op': '>=',
-                                                                                                      'right': {   'type': 'constant',
-                                                                                                                   'value': 2},
-                                                                                                      'type': 'compare'}],
-                                                                                'type': 'and'},
-                                                                            {   'conditions': [   {   'type': 'constant',
-                                                                                                      'value': False},
-                                                                                                  {   'conditions': [   {   'item': 'Ghost',
-                                                                                                                            'type': 'item_check'},
-                                                                                                                        {   'item': 'Liberator',
-                                                                                                                            'type': 'item_check'},
-                                                                                                                        {   'item': 'Spectre',
-                                                                                                                            'type': 'item_check'}],
-                                                                                                      'type': 'or'}],
-                                                                                'type': 'and'}],
-                                                          'type': 'or'}],
-                                    'type': 'or'},
-    'terran_power_rating': {   'statements': [   {   'name': 'power_score',
-                                                     'type': 'assign',
-                                                     'value': {'type': 'constant', 'value': 0}},
-                                                 {   'name': 'power_score',
-                                                     'op': '+=',
-                                                     'type': 'assign',
-                                                     'value': {   'element_rule': {'name': 'rating', 'type': 'name'},
-                                                                  'iterator_info': {   'condition': {   'item': {   'name': 'item',
-                                                                                                                    'type': 'name'},
-                                                                                                        'type': 'item_check'},
-                                                                                       'iterator': {   'function': {   'attr': 'items',
-                                                                                                                       'object': {   'type': 'constant',
-                                                                                                                                     'value': {   'Automated Refinery (Terran)': 4,
-                                                                                                                                                  'Command Center Reactor (Command Center)': 2,
-                                                                                                                                                  'Extra Supplies (Command Center)': 2,
-                                                                                                                                                  'MULE (Command Center)': 4,
-                                                                                                                                                  'Micro-Filtering (Terran)': 2,
-                                                                                                                                                  'Orbital Depots (Terran)': 2,
-                                                                                                                                                  'Tech Reactor (Terran)': 2}},
-                                                                                                                       'type': 'attribute'},
-                                                                                                       'type': 'function_call'},
-                                                                                       'target': {   'type': 'list',
-                                                                                                     'value': [   {   'name': 'item',
-                                                                                                                      'type': 'name'},
-                                                                                                                  {   'name': 'rating',
-                                                                                                                      'type': 'name'}]},
-                                                                                       'type': 'comprehension_details'},
-                                                                  'type': 'sum_of'}},
-                                                 {   'body': [   {   'name': 'power_score',
-                                                                     'op': '+=',
-                                                                     'type': 'assign',
-                                                                     'value': {   'name': 'soa_power_rating',
-                                                                                  'type': 'helper'}}],
-                                                     'test': {   'left': {'type': 'constant', 'value': 4},
-                                                                 'op': '==',
-                                                                 'right': {'type': 'constant', 'value': 'everywhere'},
-                                                                 'type': 'compare'},
-                                                     'type': 'if_statement'},
-                                                 {   'body': [   {   'name': 'power_score',
-                                                                     'op': '+=',
-                                                                     'type': 'assign',
-                                                                     'value': {   'element_rule': {   'name': 'rating',
-                                                                                                      'type': 'name'},
-                                                                                  'iterator_info': {   'condition': {   'item': {   'name': 'item',
-                                                                                                                                    'type': 'name'},
-                                                                                                                        'type': 'item_check'},
-                                                                                                       'iterator': {   'function': {   'attr': 'items',
-                                                                                                                                       'object': {   'type': 'constant',
-                                                                                                                                                     'value': {   'Guardian Shell (Spear of Adun)': 4,
-                                                                                                                                                                  'Overwatch (Spear of Adun)': 2}},
-                                                                                                                                       'type': 'attribute'},
-                                                                                                                       'type': 'function_call'},
-                                                                                                       'target': {   'type': 'list',
-                                                                                                                     'value': [   {   'name': 'item',
-                                                                                                                                      'type': 'name'},
-                                                                                                                                  {   'name': 'rating',
-                                                                                                                                      'type': 'name'}]},
-                                                                                                       'type': 'comprehension_details'},
-                                                                                  'type': 'sum_of'}}],
-                                                     'test': {   'left': {'type': 'constant', 'value': 4},
-                                                                 'op': '==',
-                                                                 'right': {'type': 'constant', 'value': 'everywhere'},
-                                                                 'type': 'compare'},
-                                                     'type': 'if_statement'},
-                                                 {'type': 'return', 'value': {'name': 'power_score', 'type': 'name'}}],
-                               'type': 'block'},
-    'terran_sustainable_mech_heal': {   'conditions': [   {'item': 'Science Vessel', 'type': 'item_check'},
-                                                          {   'conditions': [   {   'conditions': [   {   'item': 'Field '
-                                                                                                                  'Response '
-                                                                                                                  'Theta',
-                                                                                                          'type': 'item_check'},
-                                                                                                      {   'item': 'Medic',
-                                                                                                          'type': 'item_check'}],
-                                                                                    'type': 'or'},
-                                                                                {   'item': 'Adaptive Medpacks (Medic)',
-                                                                                    'type': 'item_check'}],
-                                                              'type': 'and'},
-                                                          {   'left': {   'args': [   {   'type': 'constant',
-                                                                                          'value': 'Progressive '
-                                                                                                   'Regenerative '
-                                                                                                   'Bio-Steel '
-                                                                                                   '(Terran)'}],
-                                                                          'method': 'count',
-                                                                          'type': 'state_method'},
-                                                              'op': '>=',
-                                                              'right': {'type': 'constant', 'value': 3},
-                                                              'type': 'compare'},
-                                                          {   'conditions': [   {'type': 'constant', 'value': False},
-                                                                                {   'conditions': [   {   'conditions': [   {   'item': 'Bio '
-                                                                                                                                        'Mechanical '
-                                                                                                                                        'Repair '
-                                                                                                                                        'Drone '
-                                                                                                                                        '(Raven)',
-                                                                                                                                'type': 'item_check'},
-                                                                                                                            {   'item': 'Raven',
-                                                                                                                                'type': 'item_check'}],
-                                                                                                          'type': 'and'},
-                                                                                                      {   'left': {   'args': [   {   'type': 'constant',
-                                                                                                                                      'value': 'Progressive '
-                                                                                                                                               'Regenerative '
-                                                                                                                                               'Bio-Steel '
-                                                                                                                                               '(Terran)'}],
-                                                                                                                      'method': 'count',
-                                                                                                                      'type': 'state_method'},
-                                                                                                          'op': '>=',
-                                                                                                          'right': {   'type': 'constant',
-                                                                                                                       'value': 2},
-                                                                                                          'type': 'compare'}],
-                                                                                    'type': 'or'}],
-                                                              'type': 'and'}],
-                                        'type': 'or'}}
-
-
-def get_helper_definitions() -> dict:
-    """Return helper definitions for frontend evaluation."""
-    return _HELPER_DEFINITIONS
 
 
 def set_rules(world: "World") -> None:
@@ -1012,6 +269,41 @@ def set_rules(world: "World") -> None:
     )
     # Location rules
     world.set_rule(
+        multiworld.get_location("All-In (Terran): Victory", player),
+        And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 3), Or(Has('Banshee'), Has('Marine')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("All-In (Terran): First Kerrigan Attack", player),
+        And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 3), Or(Has('Banshee'), Has('Marine')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("All-In (Terran): Second Kerrigan Attack", player),
+        And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 3), Or(Has('Banshee'), Has('Marine')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("All-In (Terran): Third Kerrigan Attack", player),
+        And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 3), Or(Has('Banshee'), Has('Marine')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("All-In (Terran): Fourth Kerrigan Attack", player),
+        And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 3), Or(Has('Banshee'), Has('Marine')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("All-In (Terran): Fifth Kerrigan Attack", player),
+        And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 3), Or(Has('Banshee'), Has('Marine')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beat All-In (Terran)", player),
+        And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 3), Or(Has('Banshee'), Has('Marine')))
+    )
+
+    world.set_rule(
         multiworld.get_location("Evacuation (Terran): Victory", player),
         And(HelperCall(helper_func=_starcraft2worldgen_terran_early_tech, helper_name="terran_early_tech"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")))
     )
@@ -1028,17 +320,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): Flawless", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_early_tech, helper_name="terran_early_tech"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(True, False,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_early_tech, helper_name="terran_early_tech"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")))
     )
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): Western Zerg Base", player),
-        And(And(Has('Jump Jets (Siege Tank)'), Has('Siege Tank')), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"))
+        And(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 3), Or(And(Has('ATX Laser Battery (Battlecruiser)'), Has('Battlecruiser')), And(Has('Jump Jets (Siege Tank)'), Has('Siege Tank')))), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"))
     )
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): Eastern Zerg Base", player),
-        And(And(Has('Jump Jets (Siege Tank)'), Has('Siege Tank')), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"))
+        And(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 3), Or(And(Has('ATX Laser Battery (Battlecruiser)'), Has('Battlecruiser')), And(Has('Jump Jets (Siege Tank)'), Has('Siege Tank')))), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"))
     )
 
     world.set_rule(
@@ -1088,7 +380,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Victory", player),
-        Or(And(True_(), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon'))), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
@@ -1103,17 +395,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): South Far Prisoners", player),
-        Or(And(True_(), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon'))), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): North Prisoners", player),
-        Or(And(True_(), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon'))), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Mothership", player),
-        Or(And(True_(), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon'))), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
@@ -1123,67 +415,67 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Middle Rip Field Generator", player),
-        Or(And(True_(), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon'))), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Southeast Rip Field Generator", player),
-        Or(And(True_(), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon'))), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Stargate Rip Field Generator", player),
-        Or(And(True_(), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon'))), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Northwest Rip Field Generator", player),
-        Or(And(True_(), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon'))), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): West Rip Field Generator", player),
-        Or(And(True_(), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon'))), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Maw of the Void (Terran): Southwest Rip Field Generator", player),
-        Or(And(True_(), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon'))), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Maw of the Void (Terran)", player),
-        Or(And(True_(), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(True_(), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(True_(), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
+        Or(And(And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon'))), HelperCall(helper_func=_starcraft2worldgen_terran_air, helper_name="terran_air"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), HelperCall(helper_func=_starcraft2worldgen_terran_sustainable_mech_heal, helper_name="terran_sustainable_mech_heal"), Or(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), HasAny('Battlecruiser', 'Valkyrie', 'Wraith')), HasAll('Progressive High Impact Payload (Thor)', 'Thor'), HasAny('Cyclone', 'Goliath', 'Viking')), Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_bio_heal, helper_name="terran_bio_heal"), Has('Marauder')), HasAll('Flechette Missiles (Valkyrie)', 'Valkyrie'), HasAll('Liberator', 'Raid Artillery (Liberator)'), HasAny('Banshee', 'Battlecruiser', 'Goliath', 'Thor', 'Viking', 'Warhound', 'Wraith'))), And(Or(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Has('ATX Laser Battery (Battlecruiser)')), Has('Battlecruiser')))
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): Victory", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6), True_())
+        And(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Or(Has('Banshee'), Has('Battlecruiser'))), Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6))
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): South Relic", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6), True_())
+        And(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Or(Has('Banshee'), Has('Battlecruiser'))), Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6))
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): East Relic", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6), True_())
+        And(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Or(Has('Banshee'), Has('Battlecruiser'))), Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6))
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): Middle Base", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6), True_())
+        And(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Or(Has('Banshee'), Has('Battlecruiser'))), Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6))
     )
 
     world.set_rule(
         multiworld.get_location("Supernova (Terran): Southeast Base", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6), True_())
+        And(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Or(Has('Banshee'), Has('Battlecruiser'))), Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Supernova (Terran)", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6), True_())
+        And(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Or(Has('Banshee'), Has('Battlecruiser'))), Compare(HelperCall(helper_func=_starcraft2worldgen_terran_power_rating, helper_name="terran_power_rating"), ">=", 6))
     )
 
     world.set_rule(
@@ -1238,22 +530,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Victory", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(False, True,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Left Relic", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 6), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(False, False,)), ">=", 6), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Right Ground Relic", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 6), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(False, False,)), ">=", 6), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Right Cliff Relic", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 6), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(False, False,)), ">=", 6), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
@@ -1263,42 +555,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Door Outer Layer", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 6), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(False, False,)), ">=", 6), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Door Thermal Barrier", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(False, True,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Cutting Through the Core", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(False, True,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Structure Access Imminent", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(False, True,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Northwestern Protoss Base", player),
-        And(And(Has('Jump Jets (Siege Tank)'), Has('Siege Tank')), Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Or(Has('Banshee'), Has('Battlecruiser'))), And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 3), Or(And(Has('ATX Laser Battery (Battlecruiser)'), Has('Battlecruiser')), And(Has('Jump Jets (Siege Tank)'), Has('Siege Tank')))), Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(False, True,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Northeastern Protoss Base", player),
-        And(And(Has('Jump Jets (Siege Tank)'), Has('Siege Tank')), Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Or(Has('Banshee'), Has('Battlecruiser'))), And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 3), Or(And(Has('ATX Laser Battery (Battlecruiser)'), Has('Battlecruiser')), And(Has('Jump Jets (Siege Tank)'), Has('Siege Tank')))), Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(False, True,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
         multiworld.get_location("The Dig (Terran): Eastern Protoss Base", player),
-        And(And(Has('Jump Jets (Siege Tank)'), Has('Siege Tank')), Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), True_(), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
+        And(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Or(Has('Banshee'), Has('Battlecruiser'))), And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 3), Or(And(Has('ATX Laser Battery (Battlecruiser)'), Has('Battlecruiser')), And(Has('Jump Jets (Siege Tank)'), Has('Siege Tank')))), Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(False, True,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
     )
 
     world.set_rule(
         multiworld.get_location("Beat The Dig (Terran)", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(False, True,)), ">=", 8), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(And(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_moderate_anti_air, helper_name="terran_moderate_anti_air")), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air")), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_marine_medic_upgrade, helper_name="marine_medic_upgrade")))
     )
 
     world.set_rule(
@@ -1403,7 +695,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Smash and Grab (Terran): Defeat Kerrigan", player),
-        And(And(Has('Jump Jets (Siege Tank)'), Has('Siege Tank')), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
+        And(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 3), Or(And(Has('ATX Laser Battery (Battlecruiser)'), Has('Battlecruiser')), And(Has('Jump Jets (Siege Tank)'), Has('Siege Tank')))), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
     )
 
     world.set_rule(
@@ -1438,52 +730,102 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): Victory", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(True, False,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): Left Infestor", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(True, False,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): Right Infestor", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(True, False,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): North Infested Command Center", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(True, False,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): South Infested Command Center", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(True, False,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): Northwest Bar", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(True, False,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): North Bar", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(True, False,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Outbreak (Terran): South Bar", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(True, False,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Outbreak (Terran)", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None, None,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(True, False,)), ">=", 4), Or(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Has('Reaper')))
     )
 
     world.set_rule(
         multiworld.get_location("Haven's Fall (Terran): North Hive", player),
         And(HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shatter the Sky (Terran): Victory", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(And(Compare(CountItem("Progressive Terran Infantry Armor"), ">=", 2), Compare(CountItem("Progressive Terran Infantry Weapon"), ">=", 3)), And(Compare(CountItem("Progressive Terran Ship Armor"), ">=", 2), Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2)), And(Compare(CountItem("Progressive Terran Vehicle Armor"), ">=", 2), Compare(CountItem("Progressive Terran Vehicle Weapon"), ">=", 2))), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shatter the Sky (Terran): Close Coolant Tower", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shatter the Sky (Terran): Northwest Coolant Tower", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shatter the Sky (Terran): Southeast Coolant Tower", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(And(Compare(CountItem("Progressive Terran Infantry Armor"), ">=", 2), Compare(CountItem("Progressive Terran Infantry Weapon"), ">=", 3)), And(Compare(CountItem("Progressive Terran Ship Armor"), ">=", 2), Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2)), And(Compare(CountItem("Progressive Terran Vehicle Armor"), ">=", 2), Compare(CountItem("Progressive Terran Vehicle Weapon"), ">=", 2))), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shatter the Sky (Terran): Southwest Coolant Tower", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(And(Compare(CountItem("Progressive Terran Infantry Armor"), ">=", 2), Compare(CountItem("Progressive Terran Infantry Weapon"), ">=", 3)), And(Compare(CountItem("Progressive Terran Ship Armor"), ">=", 2), Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2)), And(Compare(CountItem("Progressive Terran Vehicle Armor"), ">=", 2), Compare(CountItem("Progressive Terran Vehicle Weapon"), ">=", 2))), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shatter the Sky (Terran): Leviathan", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(And(Compare(CountItem("Progressive Terran Infantry Armor"), ">=", 2), Compare(CountItem("Progressive Terran Infantry Weapon"), ">=", 3)), And(Compare(CountItem("Progressive Terran Ship Armor"), ">=", 2), Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2)), And(Compare(CountItem("Progressive Terran Vehicle Armor"), ">=", 2), Compare(CountItem("Progressive Terran Vehicle Weapon"), ">=", 2))), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shatter the Sky (Terran): East Hatchery", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shatter the Sky (Terran): North Hatchery", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Shatter the Sky (Terran): Mid Hatchery", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beat Shatter the Sky (Terran)", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(And(Compare(CountItem("Progressive Terran Infantry Armor"), ">=", 2), Compare(CountItem("Progressive Terran Infantry Weapon"), ">=", 3)), And(Compare(CountItem("Progressive Terran Ship Armor"), ">=", 2), Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2)), And(Compare(CountItem("Progressive Terran Vehicle Armor"), ">=", 2), Compare(CountItem("Progressive Terran Vehicle Weapon"), ">=", 2))), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
     )
 
     world.set_rule(
@@ -1537,38 +879,113 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Welcome to the Jungle (Terran): Victory", player),
+        Or(And(Compare(CountItem("Progressive Terran Infantry Weapon"), ">=", 2), Or(Has('Dominion Trooper'), Has('Marine')), Or(Has('Medic'), Has('Medivac'))), Has('Goliath'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Welcome to the Jungle (Terran): West Relic", player),
+        Or(And(Compare(CountItem("Progressive Terran Infantry Weapon"), ">=", 2), Or(Has('Dominion Trooper'), Has('Marine')), Or(Has('Medic'), Has('Medivac'))), Has('Goliath'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Welcome to the Jungle (Terran): North-East Relic", player),
+        Or(And(Compare(CountItem("Progressive Terran Infantry Weapon"), ">=", 2), Or(Has('Dominion Trooper'), Has('Marine')), Or(Has('Medic'), Has('Medivac'))), Has('Goliath'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Welcome to the Jungle (Terran): Middle Base", player),
+        Or(And(Compare(CountItem("Progressive Terran Infantry Weapon"), ">=", 2), Or(Has('Dominion Trooper'), Has('Marine')), Or(Has('Medic'), Has('Medivac'))), Has('Goliath'))
+    )
+
+    world.set_rule(
         multiworld.get_location("Welcome to the Jungle (Terran): Protoss Cleared", player),
-        And(And(Has('Jump Jets (Siege Tank)'), Has('Siege Tank')), True_(), True_())
+        And(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Or(Has('Banshee'), Has('Battlecruiser'))), And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 3), Or(And(Has('ATX Laser Battery (Battlecruiser)'), Has('Battlecruiser')), And(Has('Jump Jets (Siege Tank)'), Has('Siege Tank')))), Or(And(Compare(CountItem("Progressive Terran Infantry Weapon"), ">=", 2), Or(Has('Dominion Trooper'), Has('Marine')), Or(Has('Medic'), Has('Medivac'))), Has('Goliath')))
     )
 
     world.set_rule(
         multiworld.get_location("Welcome to the Jungle (Terran): No Terrazine Nodes Sealed", player),
-        And(True_(), True_(), Or(Has('Cyclone'), Has('Goliath'), Has('Thor')))
+        And(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Or(Has('Banshee'), Has('Battlecruiser'))), Or(And(Compare(CountItem("Progressive Terran Infantry Weapon"), ">=", 2), Or(Has('Dominion Trooper'), Has('Marine')), Or(Has('Medic'), Has('Medivac'))), Has('Goliath')), Or(Has('Cyclone'), Has('Goliath'), Has('Thor')))
     )
 
     world.set_rule(
         multiworld.get_location("Welcome to the Jungle (Terran): Up to 1 Terrazine Node Sealed", player),
-        And(True_(), True_(), Or(Has('Cyclone'), Has('Goliath'), Has('Thor')))
+        And(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Or(Has('Banshee'), Has('Battlecruiser'))), Or(And(Compare(CountItem("Progressive Terran Infantry Weapon"), ">=", 2), Or(Has('Dominion Trooper'), Has('Marine')), Or(Has('Medic'), Has('Medivac'))), Has('Goliath')), Or(Has('Cyclone'), Has('Goliath'), Has('Thor')))
     )
 
     world.set_rule(
         multiworld.get_location("Welcome to the Jungle (Terran): Up to 2 Terrazine Nodes Sealed", player),
-        And(True_(), True_())
+        And(And(Compare(CountItem("Progressive Terran Ship Weapon"), ">=", 2), Or(Has('Banshee'), Has('Battlecruiser'))), Or(And(Compare(CountItem("Progressive Terran Infantry Weapon"), ">=", 2), Or(Has('Dominion Trooper'), Has('Marine')), Or(Has('Medic'), Has('Medivac'))), Has('Goliath')))
     )
 
     world.set_rule(
         multiworld.get_location("Welcome to the Jungle (Terran): Up to 3 Terrazine Nodes Sealed", player),
-        And(True_(), True_())
+        And(And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon'))), Or(And(Compare(CountItem("Progressive Terran Infantry Weapon"), ">=", 2), Or(Has('Dominion Trooper'), Has('Marine')), Or(Has('Medic'), Has('Medivac'))), Has('Goliath')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Welcome to the Jungle (Terran): Up to 4 Terrazine Nodes Sealed", player),
+        Or(And(Compare(CountItem("Progressive Terran Infantry Weapon"), ">=", 2), Or(Has('Dominion Trooper'), Has('Marine')), Or(Has('Medic'), Has('Medivac'))), Has('Goliath'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Welcome to the Jungle (Terran): Up to 5 Terrazine Nodes Sealed", player),
+        Or(And(Compare(CountItem("Progressive Terran Infantry Weapon"), ">=", 2), Or(Has('Dominion Trooper'), Has('Marine')), Or(Has('Medic'), Has('Medivac'))), Has('Goliath'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beat Welcome to the Jungle (Terran)", player),
+        Or(And(Compare(CountItem("Progressive Terran Infantry Weapon"), ">=", 2), Or(Has('Dominion Trooper'), Has('Marine')), Or(Has('Medic'), Has('Medivac'))), Has('Goliath'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Media Blitz (Terran): Victory", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Media Blitz (Terran): Tower 1", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Media Blitz (Terran): Tower 2", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Media Blitz (Terran): Tower 3", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
     )
 
     world.set_rule(
         multiworld.get_location("Media Blitz (Terran): Science Facility", player),
-        Or(False_(), True_())
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon'))), False_())
+    )
+
+    world.set_rule(
+        multiworld.get_location("Media Blitz (Terran): All Barracks", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Media Blitz (Terran): All Factories", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
     )
 
     world.set_rule(
         multiworld.get_location("Media Blitz (Terran): All Starports", player),
-        Or(False_(), True_())
+        Or(And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon'))), False_())
+    )
+
+    world.set_rule(
+        multiworld.get_location("Media Blitz (Terran): Odin Not Trashed", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beat Media Blitz (Terran)", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
     )
 
     world.set_rule(
@@ -1633,7 +1050,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Victory", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(True,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air")))
     )
 
     world.set_rule(
@@ -1643,7 +1060,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Third Group Rescued", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(True,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Zero Hour (Terran): First Hatchery", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Zero Hour (Terran): Second Hatchery", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Zero Hour (Terran): Third Hatchery", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Zero Hour (Terran): Fourth Hatchery", player),
+        And(HelperCall(helper_func=_starcraft2worldgen_terran_competent_anti_air, helper_name="terran_competent_anti_air"), Or(Has('Banshee'), Has('Battlecruiser'), Has('Goliath'), Has('Siege Tank'), Has('Thor')), Or(Has('Progressive Terran Infantry Weapon'), Has('Progressive Terran Ship Weapon'), Has('Progressive Terran Vehicle Weapon')))
     )
 
     world.set_rule(
@@ -1653,17 +1090,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Hold Just a Little Longer", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(True,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
     )
 
     world.set_rule(
         multiworld.get_location("Zero Hour (Terran): Cavalry's on the Way", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(True,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"))
     )
 
     world.set_rule(
         multiworld.get_location("Beat Zero Hour (Terran)", player),
-        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(None,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air")))
+        And(Compare(HelperCall(helper_func=_starcraft2worldgen_terran_defense_rating, helper_name="terran_defense_rating", args=(True,)), ">=", 2), HelperCall(helper_func=_starcraft2worldgen_terran_common_unit, helper_name="terran_common_unit"), Or(False_(), HelperCall(helper_func=_starcraft2worldgen_terran_basic_anti_air, helper_name="terran_basic_anti_air")))
     )
 
     world.set_rule(

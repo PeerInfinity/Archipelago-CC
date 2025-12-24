@@ -18731,5 +18731,1450 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "haveItem": {
+        "params": [
+          "item"
+        ],
+        "body": {
+          "type": "item_check_with_mapping",
+          "item": {
+            "type": "param_ref",
+            "name": "item"
+          },
+          "count": 1,
+          "item_name_mapping": {
+            "Morph": "Morph Ball",
+            "Bomb": "Bomb",
+            "Charge": "Charge Beam",
+            "Ice": "Ice Beam",
+            "HiJump": "Hi-Jump Boots",
+            "SpeedBooster": "Speed Booster",
+            "Wave": "Wave Beam",
+            "Spazer": "Spazer",
+            "SpringBall": "Spring Ball",
+            "Varia": "Varia Suit",
+            "Gravity": "Gravity Suit",
+            "Plasma": "Plasma Beam",
+            "Grapple": "Grappling Beam",
+            "XRayScope": "X-Ray Scope",
+            "SpaceJump": "Space Jump",
+            "ScrewAttack": "Screw Attack",
+            "ETank": "Energy Tank",
+            "Reserve": "Reserve Tank",
+            "Missile": "Missile",
+            "Super": "Super Missile",
+            "PowerBomb": "Power Bomb",
+            "Kraid": "Kraid",
+            "Phantoon": "Phantoon",
+            "Draygon": "Draygon",
+            "Ridley": "Ridley",
+            "MotherBrain": "Mother Brain",
+            "SporeSpawn": "Spore Spawn",
+            "Crocomire": "Crocomire",
+            "Botwoon": "Botwoon",
+            "GoldenTorizo": "Golden Torizo"
+          }
+        }
+      },
+      "wand": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "wor": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "wnot": {
+        "params": [
+          "arg"
+        ],
+        "body": {
+          "type": "constant",
+          "value": false
+        }
+      },
+      "SMBool": {
+        "params": [
+          "value",
+          "difficulty"
+        ],
+        "defaults": {
+          "difficulty": 0
+        },
+        "body": {
+          "type": "param_ref",
+          "name": "value"
+        }
+      },
+      "evalSMBool": {
+        "params": [
+          "smbool",
+          "maxDiff"
+        ],
+        "defaults": {
+          "maxDiff": 50
+        },
+        "body": {
+          "type": "param_ref",
+          "name": "smbool"
+        }
+      },
+      "bossDead": {
+        "params": [
+          "bossName"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": {
+            "type": "param_ref",
+            "name": "bossName"
+          },
+          "count": 1
+        }
+      },
+      "traverse": {
+        "params": [
+          "accessPoint"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "energyReserveCountOk": {
+        "params": [
+          "count",
+          "difficulty"
+        ],
+        "defaults": {
+          "difficulty": 0
+        },
+        "body": {
+          "type": "item_check_count",
+          "item": "Energy Tank",
+          "count": {
+            "type": "param_ref",
+            "name": "count"
+          },
+          "compare": ">="
+        }
+      },
+      "itemCountOk": {
+        "params": [
+          "item",
+          "count",
+          "difficulty"
+        ],
+        "defaults": {
+          "difficulty": 0
+        },
+        "body": {
+          "type": "item_check_count",
+          "item": {
+            "type": "param_ref",
+            "name": "item"
+          },
+          "count": {
+            "type": "param_ref",
+            "name": "count"
+          },
+          "compare": ">="
+        }
+      },
+      "knowsAlcatrazEscape": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsCeilingDBoost": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsCrocPBsDBoost": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsCrocPBsIce": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsFirefleasWalljump": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsGetAroundWallJump": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsGravLessLevel3": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsHiJumpMamaTurtle": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsIceEscape": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsIceMissileFromCroc": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsKillPlasmaPiratesWithCharge": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsKillPlasmaPiratesWithSpark": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsMaridiaWallJumps": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsMockball": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsOldMBWithSpeed": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsReverseGateGlitch": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsReverseGateGlitchHiJumpLess": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsRonPopeilScrew": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsShortCharge": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsSnailClip": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsSpringBallJump": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsSpringBallJumpFromWall": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsXrayDboost": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "knowsXrayIce": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canUsePowerBombs": {
+        "params": [],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Power Bomb",
+              "count": 1
+            },
+            {
+              "type": "item_check",
+              "item": "Morph Ball",
+              "count": 1
+            }
+          ]
+        }
+      },
+      "canPassBombPassages": {
+        "params": [],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Morph Ball",
+              "count": 1
+            },
+            {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Bomb",
+                  "count": 1
+                },
+                {
+                  "type": "item_check",
+                  "item": "Power Bomb",
+                  "count": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "canFly": {
+        "params": [],
+        "body": {
+          "type": "or",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Space Jump",
+              "count": 1
+            },
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Morph Ball",
+                  "count": 1
+                },
+                {
+                  "type": "item_check",
+                  "item": "Bomb",
+                  "count": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "canOpenGreenDoors": {
+        "params": [],
+        "body": {
+          "type": "item_check",
+          "item": "Super Missile",
+          "count": 1
+        }
+      },
+      "canOpenEyeDoors": {
+        "params": [],
+        "body": {
+          "type": "or",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Missile",
+              "count": 1
+            },
+            {
+              "type": "item_check",
+              "item": "Super Missile",
+              "count": 1
+            }
+          ]
+        }
+      },
+      "canDestroyBombWalls": {
+        "params": [],
+        "body": {
+          "type": "or",
+          "conditions": [
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Morph Ball",
+                  "count": 1
+                },
+                {
+                  "type": "item_check",
+                  "item": "Bomb",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Morph Ball",
+                  "count": 1
+                },
+                {
+                  "type": "item_check",
+                  "item": "Power Bomb",
+                  "count": 1
+                }
+              ]
+            },
+            {
+              "type": "item_check",
+              "item": "Screw Attack",
+              "count": 1
+            },
+            {
+              "type": "item_check",
+              "item": "Speed Booster",
+              "count": 1
+            }
+          ]
+        }
+      },
+      "heatProof": {
+        "params": [],
+        "body": {
+          "type": "or",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Varia Suit",
+              "count": 1
+            },
+            {
+              "type": "item_check",
+              "item": "Gravity Suit",
+              "count": 1
+            }
+          ]
+        }
+      },
+      "canHellRun": {
+        "params": [
+          "hellRunType",
+          "mult",
+          "minE"
+        ],
+        "defaults": {
+          "hellRunType": "MainUpperNorfair",
+          "mult": 1.0,
+          "minE": 2
+        },
+        "body": {
+          "type": "or",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Varia Suit",
+              "count": 1
+            },
+            {
+              "type": "item_check",
+              "item": "Gravity Suit",
+              "count": 1
+            },
+            {
+              "type": "item_check_count",
+              "item": "Energy Tank",
+              "count": 3,
+              "compare": ">="
+            }
+          ]
+        }
+      },
+      "canFireChargedShots": {
+        "params": [],
+        "body": {
+          "type": "item_check",
+          "item": "Charge Beam",
+          "count": 1
+        }
+      },
+      "canInfiniteBombJump": {
+        "params": [],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Morph Ball",
+              "count": 1
+            },
+            {
+              "type": "item_check",
+              "item": "Bomb",
+              "count": 1
+            }
+          ]
+        }
+      },
+      "canMorphJump": {
+        "params": [],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Morph Ball",
+              "count": 1
+            },
+            {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Spring Ball",
+                  "count": 1
+                },
+                {
+                  "type": "item_check",
+                  "item": "Hi-Jump Boots",
+                  "count": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "canSpringBallJump": {
+        "params": [],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Morph Ball",
+              "count": 1
+            },
+            {
+              "type": "item_check",
+              "item": "Spring Ball",
+              "count": 1
+            }
+          ]
+        }
+      },
+      "canUseSpringBall": {
+        "params": [],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Morph Ball",
+              "count": 1
+            },
+            {
+              "type": "item_check",
+              "item": "Spring Ball",
+              "count": 1
+            }
+          ]
+        }
+      },
+      "canJumpUnderwater": {
+        "params": [],
+        "body": {
+          "type": "or",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Gravity Suit",
+              "count": 1
+            },
+            {
+              "type": "item_check",
+              "item": "Hi-Jump Boots",
+              "count": 1
+            }
+          ]
+        }
+      },
+      "canMockball": {
+        "params": [],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canShortCharge": {
+        "params": [
+          "distance",
+          "difficulty"
+        ],
+        "defaults": {
+          "distance": 0,
+          "difficulty": 0
+        },
+        "body": {
+          "type": "item_check",
+          "item": "Speed Booster",
+          "count": 1
+        }
+      },
+      "canSimpleShortCharge": {
+        "params": [],
+        "body": {
+          "type": "item_check",
+          "item": "Speed Booster",
+          "count": 1
+        }
+      },
+      "divideByDmgReduction": {
+        "params": [
+          "value"
+        ],
+        "body": {
+          "type": "param_ref",
+          "name": "value"
+        }
+      },
+      "int": {
+        "params": [
+          "value"
+        ],
+        "body": {
+          "type": "param_ref",
+          "name": "value"
+        }
+      },
+      "canAccessBillyMays": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canAccessDoubleChamberItems": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canAccessEtecoons": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canAccessItemsInWestSandHole": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canAccessKraidsLair": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canAccessSandPits": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canAccessShaktoolFromPantsRoom": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canBlueGateGlitch": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canBotwoonExitToColosseum": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canClimbBottomRedTower": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canClimbBubbleMountain": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canClimbColosseum": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canClimbRedTower": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canClimbWestSandHole": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canColosseumToBotwoonExit": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canDefeatBotwoon": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canDestroyBombWallsUnderwater": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canDoLowGauntlet": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canDoOuterMaridia": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canEnterAndLeaveGauntlet": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canEnterAndLeaveGauntletQty": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canEnterCathedral": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canEnterNorfairReserveAreaFromBubbleMoutain": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canEnterNorfairReserveAreaFromBubbleMoutainTop": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canExitCathedral": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canExitCrabHole": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canExitDraygon": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canExitPreciousRoom": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canExitScrewAttackArea": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canExitWaveBeam": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canFightDraygon": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canGetBackFromRidleyZone": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canGoUpMtEverest": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canGrappleEscape": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canGreenGateGlitch": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canHellRunBackFromGrappleEscape": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canHellRunBackFromSpeedBoosterMissile": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canHellRunToSpeedBooster": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canKillBeetoms": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassAmphitheaterReverse": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassBotwoonHallway": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassBowling": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassCacatacAlley": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassCrateriaGreenPirates": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassDachoraRoom": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassForgottenHighway": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassFrogSpeedwayRightToLeft": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassG4": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassLavaPit": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassLavaPitReverse": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassLowerNorfairChozo": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassMaridiaToRedTowerNode": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassMoat": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassMoatFromMoat": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassMoatReverse": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassMtEverest": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassNinjaPirates": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassRedKiHunters": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassRedTowerToMaridiaNode": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassSpongeBath": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassTerminatorBombWall": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassThreeMuskateers": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassWastelandDessgeegas": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassWorstRoom": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canPassWorstRoomPirates": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canReachCacatacAlleyFromBotowoon": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canTraverseCrabTunnelLeftToRight": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canTraverseSandPits": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canTraverseWestSandHallLeftToRight": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "canUseCrocRoomToChargeSpeed": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "enoughStuffCroc": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "enoughStuffGT": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "enoughStuffSporeSpawn": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "enoughStuffTourian": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "enoughStuffsDraygon": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "enoughStuffsKraid": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "enoughStuffsPhantoon": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "enoughStuffsRidley": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "getPiratesPseudoScrewCoeff": {
+        "params": [
+          "*args"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      }
+    }
+  }
 }

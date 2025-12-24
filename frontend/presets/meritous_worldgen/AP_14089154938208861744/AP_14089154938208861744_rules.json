@@ -405,14 +405,14 @@
                   "rule": "HasGroup",
                   "args": {
                     "group": "Important Artifacts",
-                    "count": 1
+                    "count": 2
                   }
                 },
                 {
                   "rule": "HasGroup",
                   "args": {
                     "group": "PSI Keys",
-                    "count": 1
+                    "count": 2
                   }
                 }
               ]
@@ -785,14 +785,14 @@
                   "rule": "HasGroup",
                   "args": {
                     "group": "Important Artifacts",
-                    "count": 1
+                    "count": 3
                   }
                 },
                 {
                   "rule": "HasGroup",
                   "args": {
                     "group": "PSI Keys",
-                    "count": 1
+                    "count": 3
                   }
                 }
               ]

@@ -2808,6 +2808,8 @@
   "helpers": {
     "1": {
       "can_buy_in_eolis": {
+        "type": "state_method",
+        "method": "has_any",
         "args": [
           {
             "type": "constant",
@@ -2817,11 +2819,11 @@
               "Ring of Elf"
             ]
           }
-        ],
-        "method": "has_any",
-        "type": "state_method"
+        ]
       },
       "has_any_magic": {
+        "type": "state_method",
+        "method": "has_any",
         "args": [
           {
             "type": "constant",
@@ -2833,9 +2835,7 @@
               "Tilte"
             ]
           }
-        ],
-        "method": "has_any",
-        "type": "state_method"
+        ]
       }
     }
   }

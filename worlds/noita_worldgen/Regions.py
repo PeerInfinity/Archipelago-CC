@@ -9,6 +9,9 @@ from BaseClasses import MultiWorld, Region, Entrance
 from .Locations import location_table, NoitaWorldGenLocation
 
 
+# Regions that were added after sphere calculation (from original export)
+DYNAMICALLY_ADDED_REGIONS = {"Abyss Orb Room", "Ancient Laboratory", "Below Lava Lake", "Collapsed Mines", "Desert", "Dragoncave", "Floating Island", "Friend Cave", "Fungal Caverns", "Lake", "Lukki Lair", "Magical Temple", "Meat Realm", "Pyramid", "Sandcave", "Snow Chasm", "Snowy Wasteland", "The Sky", "The Tower", "The Work (Hell)", "West Meat Realm"}
+
 def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 

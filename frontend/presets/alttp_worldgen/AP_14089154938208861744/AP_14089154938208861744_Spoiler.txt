@@ -18,13 +18,10 @@ Item Links:
 Plando Items:                    
 Randomize Items:                 No
 Bombless Start:                  No
-Crystals Needed For Ganon:       7
-Crystals Needed For Gt:          7
 Enemy Shuffle:                   No
 Logical Heart Containers:        10
 Logical Heart Pieces:            24
 Retro Bow:                       No
-Small Key Shuffle:               0
 Swordless:                       No
 
 
@@ -328,6 +325,7 @@ Playthrough:
 3: {
   Castle Tower - Room 03: Small Key (Agahnims Tower)
   Eastern Palace - Big Key Chest: Big Key (Eastern Palace)
+  Paradox Cave Lower - Far Right: Boss Heart Container
   Paradox Cave Lower - Left: Bottle (Red Potion)
   Paradox Cave Lower - Right: Magic Mirror
   Paradox Cave Upper - Left: Book of Mudora
@@ -340,6 +338,7 @@ Playthrough:
   Desert Palace - Desert Tiles 1 Pot Key: Small Key (Desert Palace)
   Desert Palace - Map Chest: Big Key (Desert Palace)
   Eastern Palace - Dark Eyegore Key Drop: Small Key (Eastern Palace)
+  Sick Kid: Boss Heart Container
   Tower of Hera - Map Chest: Big Key (Tower of Hera)
 }
 5: {
@@ -357,6 +356,7 @@ Playthrough:
   Desert Palace - Desert Tiles 2 Pot Key: Small Key (Desert Palace)
 }
 8: {
+  Brewery: Boss Heart Container
   Bumper Cave Ledge: Progressive Sword
   C-Shaped House: Bottle (Blue Potion)
   Catfish: Progressive Glove
@@ -383,6 +383,7 @@ Playthrough:
   Thieves' Town - Blind's Cell: Small Key (Thieves Town)
   Thieves' Town - Spike Switch Pot Key: Small Key (Thieves Town)
   Waterfall Fairy - Left: Bottle (Blue Potion)
+  Zora's Ledge: Boss Heart Container
 }
 10: {
   Ice Palace - Compass Chest: Progressive Sword
@@ -427,6 +428,7 @@ Playthrough:
   Turtle Rock - Roller Room - Left: Big Key (Turtle Rock)
 }
 14: {
+  Bonk Rock Cave: Boss Heart Container
   Desert Palace - Torch: Bug Catching Net
   Misery Mire - Big Chest: Small Key (Misery Mire)
   Misery Mire - Prize: Crystal 6
@@ -437,6 +439,7 @@ Playthrough:
   Turtle Rock - Pokey 1 Key Drop: Small Key (Turtle Rock)
 }
 15: {
+  Palace of Darkness - Big Key Chest: Boss Heart Container
   Palace of Darkness - Boss: Blue Boomerang
   Palace of Darkness - Prize: Blue Pendant
   Pyramid Fairy - Right: Progressive Bow
@@ -444,6 +447,8 @@ Playthrough:
   Turtle Rock - Chain Chomps: Small Key (Turtle Rock)
 }
 16: {
+  Mimic Cave: Boss Heart Container
+  Sahasrahla: Boss Heart Container
   Turtle Rock - Big Chest: Small Key (Turtle Rock)
   Turtle Rock - Big Key Chest: Small Key (Turtle Rock)
   Turtle Rock - Crystaroller Room: Red Boomerang
@@ -464,18 +469,22 @@ Playthrough:
   Ganons Tower - Hope Room - Left: Small Key (Ganons Tower)
 }
 20: {
-  Ganons Tower - Compass Room - Bottom Left: Shovel
-  Ganons Tower - Compass Room - Top Left: Small Key (Ganons Tower)
-  Ganons Tower - Conveyor Star Pits Pot Key: Bottle (Bee)
+  Ganons Tower - Bob's Chest: Boss Heart Container
+  Ganons Tower - Randomizer Room - Bottom Left: Boss Heart Container
   Ganons Tower - Randomizer Room - Bottom Right: Small Key (Ganons Tower)
   Ganons Tower - Randomizer Room - Top Left: Big Key (Ganons Tower)
 }
 21: {
-  Agahnim 2: Beat Agahnim 2
-  Flute Spot: Progressive Sword
-  Ganons Tower - Map Chest: Progressive Shield
+  Ganons Tower - Compass Room - Bottom Left: Shovel
+  Ganons Tower - Compass Room - Top Left: Small Key (Ganons Tower)
+  Ganons Tower - Conveyor Star Pits Pot Key: Bottle (Bee)
   Ganons Tower - Mini Helmasaur Key Drop: Magic Powder
 }
 22: {
+  Agahnim 2: Beat Agahnim 2
+  Flute Spot: Progressive Sword
+  Ganons Tower - Map Chest: Progressive Shield
+}
+23: {
   Ganon: Triforce
 }

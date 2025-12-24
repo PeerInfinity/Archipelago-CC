@@ -27,12 +27,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Ataraxia", player),
-        And(HasGroup('Important Artifacts'), HasGroup('PSI Keys'))
+        And(HasGroup('Important Artifacts', 2), HasGroup('PSI Keys', 2))
     )
 
     world.set_rule(
         multiworld.get_entrance("To Merodach", player),
-        And(HasGroup('Important Artifacts'), HasGroup('PSI Keys'))
+        And(HasGroup('Important Artifacts', 3), HasGroup('PSI Keys', 3))
     )
 
     world.set_rule(
