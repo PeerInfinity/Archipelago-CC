@@ -1,11 +1,40 @@
 """Kirby's Dream Land 3 game-specific export handler."""
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Set, Tuple
 from .generic import GenericGameExportHandler
 import logging
 import importlib
 
 logger = logging.getLogger(__name__)
+
+# Enemy restrictive pairs for can_assemble_rob (indices 1-4 from enemy_abilities.enemy_restrictive)
+# Each tuple is (allowed_abilities, bukisets)
+ENEMY_RESTRICTIVE_ROB: List[Tuple[List[str], List[str]]] = [
+    (["Parasol Ability", "Cutter Ability"], ['Bukiset (Parasol)', 'Bukiset (Cutter)']),
+    (["Spark Ability", "Clean Ability"], ['Bukiset (Spark)', 'Bukiset (Clean)']),
+    (["Ice Ability", "Needle Ability"], ['Bukiset (Ice)', 'Bukiset (Needle)']),
+    (["Stone Ability", "Burning Ability"], ['Bukiset (Stone)', 'Bukiset (Burning)']),
+]
+
+# Enemies required for can_fix_angel_wings
+ANGEL_WINGS_ENEMIES: List[str] = [
+    "Sparky", "Blocky", "Jumper Shoot", "Yuki",
+    "Sir Kibble", "Haboki", "Boboo", "Captain Stitch"
+]
+
+# Mapping of ability names to helper function names
+ABILITY_TO_HELPER: Dict[str, str] = {
+    "Burning Ability": "can_reach_burning",
+    "Stone Ability": "can_reach_stone",
+    "Ice Ability": "can_reach_ice",
+    "Needle Ability": "can_reach_needle",
+    "Clean Ability": "can_reach_clean",
+    "Parasol Ability": "can_reach_parasol",
+    "Spark Ability": "can_reach_spark",
+    "Cutter Ability": "can_reach_cutter",
+    "No Ability": None,  # No ability means always accessible
+}
+
 
 class KDL3GameExportHandler(GenericGameExportHandler):
     """Handle KDL3-specific rule expansions and f-string conversions."""
@@ -15,17 +44,22 @@ class KDL3GameExportHandler(GenericGameExportHandler):
     # Module path for helper functions
     HELPER_MODULES = ['worlds.kdl3.rules']
 
-    # Note: Ability helpers (can_reach_*) are auto-discovered during rule analysis
-    # and no longer need to be whitelisted explicitly.
+    # Whitelist ability and animal reach helpers that are used in the expanded rules
+    # for can_assemble_rob and can_fix_angel_wings. These need to be exported so
+    # the worldgen can properly interpret them.
+    HELPERS_TO_EXPORT_WHITELIST: Set[str] = {
+        'can_reach_coo', 'can_reach_kine', 'can_reach_rick',
+        'can_reach_chuchu', 'can_reach_nago', 'can_reach_pitch',
+        'can_reach_burning', 'can_reach_stone', 'can_reach_ice',
+        'can_reach_needle', 'can_reach_clean', 'can_reach_parasol',
+        'can_reach_spark', 'can_reach_cutter',
+    }
 
-    # Blacklist helpers that have loops or complex logic (don't export as definitions)
-    # These helpers use dynamic function dispatch (ability_map[copy_abilities[enemy]])
-    # which requires runtime resolution of nested dict lookups - handled via JS fallback
-    HELPERS_TO_EXPORT_BLACKLIST = {'can_assemble_rob', 'can_fix_angel_wings'}
-
-    # Preserve these helpers as helper calls (don't inline them - use JavaScript instead)
-    # These helpers have loops/iterators that can't be evaluated by the frontend rule engine
-    HELPERS_TO_PRESERVE = {'can_assemble_rob', 'can_fix_angel_wings'}
+    # Note: can_assemble_rob and can_fix_angel_wings are now expanded inline
+    # at export time rather than being preserved as helper calls.
+    # This ensures the worldgen can properly interpret the rules.
+    HELPERS_TO_EXPORT_BLACKLIST: Set[str] = set()
+    HELPERS_TO_PRESERVE: Set[str] = set()
 
     # Map parameter names used in inlined functions to actual setting names
     # When can_reach_boss is inlined, it uses parameter name 'ow_boss_req' but the
@@ -90,9 +124,23 @@ class KDL3GameExportHandler(GenericGameExportHandler):
         return settings
 
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
-        """Recursively expand and convert KDL3 rules, including f-strings."""
+        """Recursively expand and convert KDL3 rules, including f-strings and complex helpers."""
         if not rule:
             return rule
+
+        # Handle can_assemble_rob and can_fix_angel_wings helper expansion
+        # These helpers have complex loop logic, so we expand them at export time
+        # using the constant copy_abilities argument
+        if rule.get('type') == 'helper' or rule.get('_original_ast_type') == 'helper':
+            helper_name = rule.get('name', '') or rule.get('rule', '')
+            if helper_name == 'can_assemble_rob':
+                expanded = self._expand_can_assemble_rob(rule)
+                if expanded:
+                    return expanded
+            elif helper_name == 'can_fix_angel_wings':
+                expanded = self._expand_can_fix_angel_wings(rule)
+                if expanded:
+                    return expanded
 
         # Handle name remapping and conversion to setting_value type
         if rule.get('type') == 'name':
@@ -215,3 +263,141 @@ class KDL3GameExportHandler(GenericGameExportHandler):
     
     # NOTE: post_process_data removed - f-string resolution now happens during
     # the initial export pass via safe_expand_rule() -> expand_rule() -> _convert_f_string()
+
+    def _extract_copy_abilities(self, rule: Dict[str, Any]) -> Optional[Dict[str, str]]:
+        """Extract copy_abilities dictionary from a helper rule's arguments."""
+        args = rule.get('args', [])
+        if not args:
+            return None
+
+        # The copy_abilities is typically the first argument
+        first_arg = args[0] if args else None
+        if not isinstance(first_arg, dict):
+            return None
+
+        # Handle Rule Builder format: {'rule': 'Constant', 'args': {'value': {...}}}
+        if first_arg.get('rule') == 'Constant':
+            return first_arg.get('args', {}).get('value')
+
+        # Handle AST format: {'type': 'constant', 'value': {...}}
+        if first_arg.get('type') == 'constant':
+            return first_arg.get('value')
+
+        return None
+
+    def _make_helper_call(self, helper_name: str) -> Dict[str, Any]:
+        """Create a helper call rule for a can_reach_* helper."""
+        return {
+            'type': 'helper',
+            'name': helper_name,
+            'args': []
+        }
+
+    def _make_and_rule(self, conditions: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Create an AND rule from a list of conditions."""
+        if len(conditions) == 0:
+            return {'type': 'constant', 'value': True}
+        if len(conditions) == 1:
+            return conditions[0]
+        return {
+            'type': 'and',
+            'conditions': conditions
+        }
+
+    def _make_or_rule(self, conditions: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Create an OR rule from a list of conditions."""
+        if len(conditions) == 0:
+            return {'type': 'constant', 'value': False}
+        if len(conditions) == 1:
+            return conditions[0]
+        return {
+            'type': 'or',
+            'conditions': conditions
+        }
+
+    def _expand_can_assemble_rob(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Expand can_assemble_rob helper to an AND/OR rule structure.
+
+        The logic is:
+        1. Must have Coo AND Kine animals
+        2. For each bukiset pair in ENEMY_RESTRICTIVE_ROB:
+           - Find bukisets that have an ability in the allowed abilities list
+           - Check if we can reach at least one of those abilities
+        3. Must have Parasol AND Stone abilities
+        """
+        copy_abilities = self._extract_copy_abilities(rule)
+        if not copy_abilities:
+            logger.warning("Could not extract copy_abilities for can_assemble_rob")
+            return None
+
+        conditions = []
+
+        # 1. Must have Coo and Kine animals
+        conditions.append(self._make_helper_call('can_reach_coo'))
+        conditions.append(self._make_helper_call('can_reach_kine'))
+
+        # 2. For each bukiset pair, need at least one reachable ability
+        for allowed_abilities, bukisets in ENEMY_RESTRICTIVE_ROB:
+            or_conditions = []
+            for bukiset in bukisets:
+                enemy_ability = copy_abilities.get(bukiset)
+                if enemy_ability and enemy_ability in allowed_abilities:
+                    helper_name = ABILITY_TO_HELPER.get(enemy_ability)
+                    if helper_name:
+                        or_conditions.append(self._make_helper_call(helper_name))
+                    elif enemy_ability == "No Ability":
+                        # No ability means always accessible
+                        or_conditions.append({'type': 'constant', 'value': True})
+
+            if or_conditions:
+                conditions.append(self._make_or_rule(or_conditions))
+            else:
+                # No valid bukisets for this pair - this would make the check fail
+                # but we should still include the constraint
+                logger.warning(f"No valid bukisets found for abilities {allowed_abilities}")
+                conditions.append({'type': 'constant', 'value': False})
+
+        # 3. Must have Parasol and Stone abilities
+        conditions.append(self._make_helper_call('can_reach_parasol'))
+        conditions.append(self._make_helper_call('can_reach_stone'))
+
+        result = self._make_and_rule(conditions)
+        logger.debug(f"Expanded can_assemble_rob to: {result}")
+        return result
+
+    def _expand_can_fix_angel_wings(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Expand can_fix_angel_wings helper to an AND rule structure.
+
+        Must be able to reach ALL abilities from the required enemies:
+        Sparky, Blocky, Jumper Shoot, Yuki, Sir Kibble, Haboki, Boboo, Captain Stitch
+        """
+        copy_abilities = self._extract_copy_abilities(rule)
+        if not copy_abilities:
+            logger.warning("Could not extract copy_abilities for can_fix_angel_wings")
+            return None
+
+        conditions = []
+
+        for enemy in ANGEL_WINGS_ENEMIES:
+            enemy_ability = copy_abilities.get(enemy)
+            if enemy_ability:
+                helper_name = ABILITY_TO_HELPER.get(enemy_ability)
+                if helper_name:
+                    conditions.append(self._make_helper_call(helper_name))
+                elif enemy_ability == "No Ability":
+                    # No ability means always accessible - no constraint needed
+                    pass
+                else:
+                    logger.warning(f"Unknown ability '{enemy_ability}' for enemy '{enemy}'")
+            else:
+                logger.warning(f"Enemy '{enemy}' not found in copy_abilities")
+
+        if not conditions:
+            # If no constraints, it's always accessible
+            return {'type': 'constant', 'value': True}
+
+        result = self._make_and_rule(conditions)
+        logger.debug(f"Expanded can_fix_angel_wings to: {result}")
+        return result

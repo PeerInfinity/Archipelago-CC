@@ -16021,90 +16021,87 @@
             "name": "Sand Canyon 6 - Professor Hector & R.O.B",
             "id": 7799057,
             "access_rule": {
-              "rule": "can_assemble_rob",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": {
-                      "Waddle Dee": "No Ability",
-                      "Bronto Burt": "No Ability",
-                      "Rocky": "Stone Ability",
-                      "Bobo": "Burning Ability",
-                      "Chilly": "Ice Ability",
-                      "Poppy Bros Jr.": "No Ability",
-                      "Sparky": "Spark Ability",
-                      "Polof": "No Ability",
-                      "Broom Hatter": "Clean Ability",
-                      "Cappy": "No Ability",
-                      "Bouncy": "No Ability",
-                      "Nruff": "No Ability",
-                      "Glunk": "No Ability",
-                      "Togezo": "Needle Ability",
-                      "Kabu": "No Ability",
-                      "Mony": "No Ability",
-                      "Blipper": "No Ability",
-                      "Squishy": "No Ability",
-                      "Gabon": "No Ability",
-                      "Oro": "No Ability",
-                      "Galbo": "Burning Ability",
-                      "Sir Kibble": "Cutter Ability",
-                      "Nidoo": "No Ability",
-                      "Kany": "No Ability",
-                      "Sasuke": "Parasol Ability",
-                      "Yaban": "No Ability",
-                      "Boten": "Needle Ability",
-                      "Coconut": "No Ability",
-                      "Doka": "No Ability",
-                      "Icicle": "No Ability",
-                      "Pteran": "No Ability",
-                      "Loud": "No Ability",
-                      "Como": "No Ability",
-                      "Klinko": "Parasol Ability",
-                      "Babut": "No Ability",
-                      "Wappa": "Ice Ability",
-                      "Mariel": "No Ability",
-                      "Tick": "Needle Ability",
-                      "Apolo": "No Ability",
-                      "Popon Ball": "No Ability",
-                      "KeKe": "Clean Ability",
-                      "Magoo": "Burning Ability",
-                      "Raft Waddle Dee": "No Ability",
-                      "Madoo": "No Ability",
-                      "Corori": "No Ability",
-                      "Kapar": "Cutter Ability",
-                      "Batamon": "No Ability",
-                      "Peran": "No Ability",
-                      "Bobin": "Spark Ability",
-                      "Mopoo": "No Ability",
-                      "Gansan": "Stone Ability",
-                      "Bukiset (Burning)": "Burning Ability",
-                      "Bukiset (Stone)": "Stone Ability",
-                      "Bukiset (Ice)": "Ice Ability",
-                      "Bukiset (Needle)": "Needle Ability",
-                      "Bukiset (Clean)": "Clean Ability",
-                      "Bukiset (Parasol)": "Parasol Ability",
-                      "Bukiset (Spark)": "Spark Ability",
-                      "Bukiset (Cutter)": "Cutter Ability",
-                      "Waddle Dee Drawing": "No Ability",
-                      "Bronto Burt Drawing": "No Ability",
-                      "Bouncy Drawing": "No Ability",
-                      "Kabu (Dekabu)": "No Ability",
-                      "Wapod": "No Ability",
-                      "Propeller": "No Ability",
-                      "Dogon": "No Ability",
-                      "Joe": "No Ability",
-                      "Captain Stitch": "Needle Ability",
-                      "Yuki": "Ice Ability",
-                      "Blocky": "Stone Ability",
-                      "Jumper Shoot": "Parasol Ability",
-                      "Boboo": "Burning Ability",
-                      "Haboki": "Clean Ability"
-                    }
-                  },
+                  "rule": "can_reach_coo",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
+                },
+                {
+                  "rule": "can_reach_kine",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
+                },
+                {
+                  "rule": "can_reach_parasol",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
+                },
+                {
+                  "rule": "can_reach_stone",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "can_reach_burning",
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
+                    },
+                    {
+                      "rule": "can_reach_stone",
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "can_reach_clean",
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
+                    },
+                    {
+                      "rule": "can_reach_spark",
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "can_reach_cutter",
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
+                    },
+                    {
+                      "rule": "can_reach_parasol",
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "can_reach_ice",
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
+                    },
+                    {
+                      "rule": "can_reach_needle",
+                      "_original_ast_type": "helper",
+                      "_converted_from_cc": true
+                    }
+                  ]
                 }
               ]
             },
@@ -28852,89 +28849,46 @@
             "name": "Iceberg 6 - Angel",
             "id": 7799069,
             "access_rule": {
-              "rule": "can_fix_angel_wings",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": {
-                      "Waddle Dee": "No Ability",
-                      "Bronto Burt": "No Ability",
-                      "Rocky": "Stone Ability",
-                      "Bobo": "Burning Ability",
-                      "Chilly": "Ice Ability",
-                      "Poppy Bros Jr.": "No Ability",
-                      "Sparky": "Spark Ability",
-                      "Polof": "No Ability",
-                      "Broom Hatter": "Clean Ability",
-                      "Cappy": "No Ability",
-                      "Bouncy": "No Ability",
-                      "Nruff": "No Ability",
-                      "Glunk": "No Ability",
-                      "Togezo": "Needle Ability",
-                      "Kabu": "No Ability",
-                      "Mony": "No Ability",
-                      "Blipper": "No Ability",
-                      "Squishy": "No Ability",
-                      "Gabon": "No Ability",
-                      "Oro": "No Ability",
-                      "Galbo": "Burning Ability",
-                      "Sir Kibble": "Cutter Ability",
-                      "Nidoo": "No Ability",
-                      "Kany": "No Ability",
-                      "Sasuke": "Parasol Ability",
-                      "Yaban": "No Ability",
-                      "Boten": "Needle Ability",
-                      "Coconut": "No Ability",
-                      "Doka": "No Ability",
-                      "Icicle": "No Ability",
-                      "Pteran": "No Ability",
-                      "Loud": "No Ability",
-                      "Como": "No Ability",
-                      "Klinko": "Parasol Ability",
-                      "Babut": "No Ability",
-                      "Wappa": "Ice Ability",
-                      "Mariel": "No Ability",
-                      "Tick": "Needle Ability",
-                      "Apolo": "No Ability",
-                      "Popon Ball": "No Ability",
-                      "KeKe": "Clean Ability",
-                      "Magoo": "Burning Ability",
-                      "Raft Waddle Dee": "No Ability",
-                      "Madoo": "No Ability",
-                      "Corori": "No Ability",
-                      "Kapar": "Cutter Ability",
-                      "Batamon": "No Ability",
-                      "Peran": "No Ability",
-                      "Bobin": "Spark Ability",
-                      "Mopoo": "No Ability",
-                      "Gansan": "Stone Ability",
-                      "Bukiset (Burning)": "Burning Ability",
-                      "Bukiset (Stone)": "Stone Ability",
-                      "Bukiset (Ice)": "Ice Ability",
-                      "Bukiset (Needle)": "Needle Ability",
-                      "Bukiset (Clean)": "Clean Ability",
-                      "Bukiset (Parasol)": "Parasol Ability",
-                      "Bukiset (Spark)": "Spark Ability",
-                      "Bukiset (Cutter)": "Cutter Ability",
-                      "Waddle Dee Drawing": "No Ability",
-                      "Bronto Burt Drawing": "No Ability",
-                      "Bouncy Drawing": "No Ability",
-                      "Kabu (Dekabu)": "No Ability",
-                      "Wapod": "No Ability",
-                      "Propeller": "No Ability",
-                      "Dogon": "No Ability",
-                      "Joe": "No Ability",
-                      "Captain Stitch": "Needle Ability",
-                      "Yuki": "Ice Ability",
-                      "Blocky": "Stone Ability",
-                      "Jumper Shoot": "Parasol Ability",
-                      "Boboo": "Burning Ability",
-                      "Haboki": "Clean Ability"
-                    }
-                  },
+                  "rule": "can_reach_burning",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
+                },
+                {
+                  "rule": "can_reach_clean",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
+                },
+                {
+                  "rule": "can_reach_cutter",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
+                },
+                {
+                  "rule": "can_reach_ice",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
+                },
+                {
+                  "rule": "can_reach_needle",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
+                },
+                {
+                  "rule": "can_reach_parasol",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
+                },
+                {
+                  "rule": "can_reach_spark",
+                  "_original_ast_type": "helper",
+                  "_converted_from_cc": true
+                },
+                {
+                  "rule": "can_reach_stone",
+                  "_original_ast_type": "helper",
                   "_converted_from_cc": true
                 }
               ]
@@ -32395,5 +32349,615 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "can_assemble_rob": {
+        "params": [
+          "copy_abilities"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "not",
+                "condition": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Coo"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Coo Spawn"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Kine"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Kine Spawn"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "type": "for_iter",
+              "iterable": {
+                "type": "constant",
+                "value": [
+                  [
+                    [
+                      "Parasol Ability",
+                      "Cutter Ability"
+                    ],
+                    [
+                      "Bukiset (Parasol)",
+                      "Bukiset (Cutter)"
+                    ]
+                  ],
+                  [
+                    [
+                      "Spark Ability",
+                      "Clean Ability"
+                    ],
+                    [
+                      "Bukiset (Spark)",
+                      "Bukiset (Clean)"
+                    ]
+                  ],
+                  [
+                    [
+                      "Ice Ability",
+                      "Needle Ability"
+                    ],
+                    [
+                      "Bukiset (Ice)",
+                      "Bukiset (Needle)"
+                    ]
+                  ],
+                  [
+                    [
+                      "Stone Ability",
+                      "Burning Ability"
+                    ],
+                    [
+                      "Bukiset (Stone)",
+                      "Bukiset (Burning)"
+                    ]
+                  ]
+                ]
+              },
+              "body": [
+                {
+                  "type": "assign",
+                  "name": "iterator",
+                  "value": {
+                    "type": "helper",
+                    "name": "iter",
+                    "args": [
+                      {
+                        "type": "generator_expression",
+                        "element": {
+                          "type": "name",
+                          "name": "x"
+                        },
+                        "comprehension": {
+                          "type": "comprehension_details",
+                          "target": {
+                            "type": "name",
+                            "name": "x"
+                          },
+                          "iterator": {
+                            "type": "name",
+                            "name": "bukisets"
+                          },
+                          "condition": {
+                            "type": "compare",
+                            "left": {
+                              "type": "subscript",
+                              "value": {
+                                "type": "name",
+                                "name": "copy_abilities"
+                              },
+                              "index": {
+                                "type": "name",
+                                "name": "x"
+                              }
+                            },
+                            "op": "in",
+                            "right": {
+                              "type": "name",
+                              "name": "abilities"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "assign",
+                  "name": "target_bukiset",
+                  "value": {
+                    "type": "helper",
+                    "name": "next",
+                    "args": [
+                      {
+                        "type": "name",
+                        "name": "iterator"
+                      },
+                      {
+                        "type": "constant",
+                        "value": null
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "assign",
+                  "name": "can_reach",
+                  "value": {
+                    "type": "constant",
+                    "value": false
+                  }
+                },
+                {
+                  "type": "while_loop",
+                  "condition": {
+                    "type": "compare",
+                    "left": {
+                      "type": "name",
+                      "name": "target_bukiset"
+                    },
+                    "op": "is not",
+                    "right": {
+                      "type": "constant",
+                      "value": null
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "assign",
+                      "name": "can_reach",
+                      "value": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "name",
+                          "name": "can_reach"
+                        },
+                        "op": "|",
+                        "right": {
+                          "type": "function_call",
+                          "function": {
+                            "type": "subscript",
+                            "value": {
+                              "type": "constant",
+                              "value": {
+                                "No Ability": "<function <lambda>>",
+                                "Burning Ability": "<function can_reach_burning>",
+                                "Stone Ability": "<function can_reach_stone>",
+                                "Ice Ability": "<function can_reach_ice>",
+                                "Needle Ability": "<function can_reach_needle>",
+                                "Clean Ability": "<function can_reach_clean>",
+                                "Parasol Ability": "<function can_reach_parasol>",
+                                "Spark Ability": "<function can_reach_spark>",
+                                "Cutter Ability": "<function can_reach_cutter>"
+                              }
+                            },
+                            "index": {
+                              "type": "subscript",
+                              "value": {
+                                "type": "name",
+                                "name": "copy_abilities"
+                              },
+                              "index": {
+                                "type": "name",
+                                "name": "target_bukiset"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "assign",
+                      "name": "target_bukiset",
+                      "value": {
+                        "type": "helper",
+                        "name": "next",
+                        "args": [
+                          {
+                            "type": "name",
+                            "name": "iterator"
+                          },
+                          {
+                            "type": "constant",
+                            "value": null
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "not",
+                    "condition": {
+                      "type": "name",
+                      "name": "can_reach"
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "return",
+                      "value": {
+                        "type": "constant",
+                        "value": false
+                      }
+                    }
+                  ]
+                }
+              ],
+              "vars": [
+                "abilities",
+                "bukisets"
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Parasol"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Parasol Ability"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Stone"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Stone Ability"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "can_fix_angel_wings": {
+        "params": [
+          "copy_abilities"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "can_reach",
+              "value": {
+                "type": "constant",
+                "value": true
+              }
+            },
+            {
+              "type": "for_iter",
+              "iterable": {
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Blocky"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Boboo"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Captain Stitch"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Haboki"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Jumper Shoot"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Sir Kibble"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Sparky"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Yuki"
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "assign",
+                  "name": "can_reach",
+                  "value": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "name",
+                      "name": "can_reach"
+                    },
+                    "op": "&",
+                    "right": {
+                      "type": "function_call",
+                      "function": {
+                        "type": "subscript",
+                        "value": {
+                          "type": "constant",
+                          "value": {
+                            "No Ability": "<function <lambda>>",
+                            "Burning Ability": "<function can_reach_burning>",
+                            "Stone Ability": "<function can_reach_stone>",
+                            "Ice Ability": "<function can_reach_ice>",
+                            "Needle Ability": "<function can_reach_needle>",
+                            "Clean Ability": "<function can_reach_clean>",
+                            "Parasol Ability": "<function can_reach_parasol>",
+                            "Spark Ability": "<function can_reach_spark>",
+                            "Cutter Ability": "<function can_reach_cutter>"
+                          }
+                        },
+                        "index": {
+                          "type": "subscript",
+                          "value": {
+                            "type": "name",
+                            "name": "copy_abilities"
+                          },
+                          "index": {
+                            "type": "name",
+                            "name": "enemy"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ],
+              "var": "enemy"
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "name",
+                "name": "can_reach"
+              }
+            }
+          ]
+        }
+      },
+      "can_reach_burning": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Burning"
+          },
+          {
+            "type": "item_check",
+            "item": "Burning Ability"
+          }
+        ]
+      },
+      "can_reach_chuchu": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "ChuChu"
+          },
+          {
+            "type": "item_check",
+            "item": "ChuChu Spawn"
+          }
+        ]
+      },
+      "can_reach_clean": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Clean"
+          },
+          {
+            "type": "item_check",
+            "item": "Clean Ability"
+          }
+        ]
+      },
+      "can_reach_coo": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Coo"
+          },
+          {
+            "type": "item_check",
+            "item": "Coo Spawn"
+          }
+        ]
+      },
+      "can_reach_cutter": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Cutter"
+          },
+          {
+            "type": "item_check",
+            "item": "Cutter Ability"
+          }
+        ]
+      },
+      "can_reach_ice": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Ice"
+          },
+          {
+            "type": "item_check",
+            "item": "Ice Ability"
+          }
+        ]
+      },
+      "can_reach_kine": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Kine"
+          },
+          {
+            "type": "item_check",
+            "item": "Kine Spawn"
+          }
+        ]
+      },
+      "can_reach_nago": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Nago"
+          },
+          {
+            "type": "item_check",
+            "item": "Nago Spawn"
+          }
+        ]
+      },
+      "can_reach_needle": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Needle"
+          },
+          {
+            "type": "item_check",
+            "item": "Needle Ability"
+          }
+        ]
+      },
+      "can_reach_parasol": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Parasol"
+          },
+          {
+            "type": "item_check",
+            "item": "Parasol Ability"
+          }
+        ]
+      },
+      "can_reach_pitch": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Pitch"
+          },
+          {
+            "type": "item_check",
+            "item": "Pitch Spawn"
+          }
+        ]
+      },
+      "can_reach_rick": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Rick"
+          },
+          {
+            "type": "item_check",
+            "item": "Rick Spawn"
+          }
+        ]
+      },
+      "can_reach_spark": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Spark"
+          },
+          {
+            "type": "item_check",
+            "item": "Spark Ability"
+          }
+        ]
+      },
+      "can_reach_stone": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Stone"
+          },
+          {
+            "type": "item_check",
+            "item": "Stone Ability"
+          }
+        ]
+      }
+    }
+  }
 }
