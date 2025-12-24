@@ -1970,12 +1970,11 @@ class RuleCodeGenerator:
                     return 'False_()'
                 # For other strings (like 'normal', 'light_and_darkness'), return as string literal
                 return repr(value)
-            # Handle integer values - convert to boolean rules based on truthiness
-            # This is needed because integer settings used in boolean contexts (like Not())
-            # require rule objects, not raw integers
+            # Handle integer values - return as-is for use in count/arithmetic contexts
+            # In cases where they're used in boolean contexts (like Not()), the caller
+            # is responsible for appropriate handling via Compare(value, ">", 0)
             elif isinstance(value, int):
-                self.required_imports.add('True_' if value else 'False_')
-                return 'True_()' if value else 'False_()'
+                return repr(value)
             else:
                 return repr(value)
 
