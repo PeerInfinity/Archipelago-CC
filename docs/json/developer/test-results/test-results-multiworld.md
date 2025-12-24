@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-23 06:36:13
+**Generated:** 2025-12-24 05:09:47
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 61 (83.6%)
-- **Failed:** 12 (16.4%)
+- **Passed:** 66 (90.4%)
+- **Failed:** 7 (9.6%)
 - **Skipped (Prerequisites):** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 - **Second Pass Tested:** 71
-- **Second Pass Passed:** 61
-- **Second Pass Failed:** 10
+- **Second Pass Passed:** 66
+- **Second Pass Failed:** 5
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 21/61 (34.4% of passed)
-- **Passing with Generic Logic:** 54/61 (88.5% of passed)
-- **Passing with Both Generic:** 21/61 (34.4% of passed)
+- **Passing with Generic Exporter:** 24/66 (36.4% of passed)
+- **Passing with Generic Logic:** 59/66 (89.4% of passed)
+- **Passing with Both Generic:** 24/66 (36.4% of passed)
 
 ## Test Results
 
@@ -36,7 +36,7 @@
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Aquaria | ✅ Passed | ✅ Passed | 1 | 1 | 3.4KB | ✅ |
-| Bomb Rush Cyberfunk | ✅ Passed | ❌ Failed | 1 | 1 | 6.8KB | 40.3KB |
+| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | 1 | 1 | 1.5KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 16.4KB | ✅ |
 | Castlevania 64 | ✅ Passed | ❌ Failed | 1 | 1 | ✅ | ✅ |
@@ -46,7 +46,7 @@
 | ChocolateChipCookies | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Civilization VI | ✅ Passed | ✅ Passed | 2 | 2 | 7.9KB | ✅ |
-| DLCQuest | ✅ Passed | ❌ Failed | 2 | 2 | 9.5KB | ✅ |
+| DLCQuest | ✅ Passed | ✅ Passed | 2 | 2 | 9.5KB | ✅ |
 | DOOM 1993 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | DOOM II | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | ❌ Failed | 2 | 2 | 4.6KB | ✅ |
@@ -76,17 +76,17 @@
 | Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 31.2KB | 5.1KB |
 | Paint | ✅ Passed | ✅ Passed | 5 | 5 | 8.4KB | ✅ |
 | Raft | ✅ Passed | ✅ Passed | 5 | 5 | 12.0KB | ✅ |
-| Risk of Rain 2 | ✅ Passed | ❌ Failed | 5 | 5 | ✅ | ✅ |
+| Risk of Rain 2 | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | 5 | 5 | 3.2KB | ✅ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | ❌ Failed | 5 | 5 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Starcraft 2 | ❌ Failed | — | 6 | 6 | 39.9KB | 86.3KB |
+| Starcraft 2 | ❌ Failed | — | 6 | 6 | 53.7KB | 86.3KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 20.6KB | 10.7KB |
 | Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 7.0KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | 14.0KB | ✅ |
-| Super Mario World | ✅ Passed | ❌ Failed | 6 | 6 | ✅ | ✅ |
+| Super Mario World | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Super Metroid | ❌ Failed | — | 6 | 6 | 90.6KB | 114.6KB |
 | TOEM original | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | ❌ Failed | 6 | 6 | ✅ | ✅ |
@@ -96,7 +96,7 @@
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 5.4KB | ✅ |
 | The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 28.4KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 4.6KB | ✅ |
-| Undertale | ✅ Passed | ❌ Failed | 7 | 7 | ✅ | ✅ |
+| Undertale | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | ✅ Passed | 6 | 6 | 5.4KB | ✅ |
 | Wargroove | ✅ Passed | ✅ Passed | 7 | 7 | 9.6KB | ✅ |
 | WebDevJourney | ✅ Passed | ❌ Failed | 7 | 7 | ✅ | ✅ |
@@ -816,7 +816,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | APQuest | 1 | 7 | 1 | ✅ Passed |
 | Adventure | 1 | 7 | 1 | ✅ Passed |
 | Aquaria | 1 | 7 | 1 | ✅ Passed |
-| Bomb Rush Cyberfunk | 1 | 7 | 1 | ❌ Failed |
+| Bomb Rush Cyberfunk | 1 | 7 | 1 | ✅ Passed |
 | Bumper Stickers | 1 | 6 | 1 | ✅ Passed |
 | Castlevania - Circle of the Moon | 1 | 7 | 1 | ✅ Passed |
 | Castlevania 64 | 1 | 7 | 1 | ❌ Failed |
@@ -826,7 +826,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | ChocolateChipCookies | 2 | 7 | 2 | ✅ Passed |
 | Choo-Choo Charles | 2 | 7 | 2 | ✅ Passed |
 | Civilization VI | 2 | 7 | 2 | ✅ Passed |
-| DLCQuest | 2 | 6 | 1 | ❌ Failed |
+| DLCQuest | 2 | 7 | 2 | ✅ Passed |
 | DOOM 1993 | 2 | 6 | 2 | ✅ Passed |
 | DOOM II | 2 | 7 | 2 | ✅ Passed |
 | Dark Souls III | 2 | 6 | 1 | ❌ Failed |
@@ -836,7 +836,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Final Fantasy Mystic Quest | 3 | 7 | 3 | ✅ Passed |
 | Heretic | 3 | 7 | 3 | ✅ Passed |
 | Hylics 2 | 3 | 7 | 3 | ✅ Passed |
-| Inscryption | 3 | 5 | 1 | ✅ Passed |
+| Inscryption | 3 | 7 | 3 | ✅ Passed |
 | Kingdom Hearts | 3 | 7 | 3 | ✅ Passed |
 | Kingdom Hearts 2 | 3 | 6 | 3 | ✅ Passed |
 | Kirby's Dream Land 3 | 3 | 5 | 1 | ✅ Passed |
@@ -846,7 +846,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Lufia II Ancient Cave | 4 | 7 | 4 | ✅ Passed |
 | Mario & Luigi Superstar Saga | 4 | 7 | 4 | ✅ Passed |
 | MathProof2p2e4 | 4 | 7 | 4 | ✅ Passed |
-| Mega Man 2 | 4 | 5 | 2 | ✅ Passed |
+| Mega Man 2 | 4 | 7 | 4 | ✅ Passed |
 | MegaMan Battle Network 3 | 4 | 6 | 4 | ✅ Passed |
 | Meritous | 4 | 7 | 4 | ✅ Passed |
 | Metamath | 4 | 5 | 2 | ✅ Passed |
@@ -856,7 +856,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Overcooked! 2 | 5 | 7 | 5 | ✅ Passed |
 | Paint | 5 | 7 | 5 | ✅ Passed |
 | Raft | 5 | 7 | 5 | ✅ Passed |
-| Risk of Rain 2 | 5 | 5 | 3 | ❌ Failed |
+| Risk of Rain 2 | 5 | 7 | 5 | ✅ Passed |
 | Saving Princess | 5 | 6 | 5 | ✅ Passed |
 | Secret of Evermore | 5 | 7 | 5 | ✅ Passed |
 | Shivers | 5 | 5 | 3 | ❌ Failed |
@@ -865,7 +865,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Subnautica | 6 | 7 | 6 | ✅ Passed |
 | Super Mario 64 | 6 | 7 | 6 | ✅ Passed |
 | Super Mario Land 2 | 6 | 7 | 6 | ✅ Passed |
-| Super Mario World | 6 | 4 | 3 | ❌ Failed |
+| Super Mario World | 6 | 7 | 6 | ✅ Passed |
 | TOEM original | 6 | 7 | 6 | ✅ Passed |
 | TOEM rule builder | 6 | 4 | 3 | ❌ Failed |
 | Terraria | 7 | 8 | 7 | ✅ Passed |
@@ -874,7 +874,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | The Wind Waker | 7 | 7 | 7 | ✅ Passed |
 | The Witness | 7 | 7 | 7 | ✅ Passed |
 | Timespinner | 7 | 7 | 7 | ✅ Passed |
-| Undertale | 7 | 3 | 3 | ❌ Failed |
+| Undertale | 7 | 7 | 7 | ✅ Passed |
 | VVVVVV | 6 | 6 | 6 | ✅ Passed |
 | Wargroove | 7 | 7 | 7 | ✅ Passed |
 | WebDevJourney | 7 | 3 | 3 | ❌ Failed |
@@ -960,7 +960,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario Land 2.yaml |
 | 7 | Timespinner.yaml |
 
-#### Bomb Rush Cyberfunk ❌ (Split 7)
+#### Bomb Rush Cyberfunk ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
@@ -1081,16 +1081,17 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario Land 2.yaml |
 | 7 | Timespinner.yaml |
 
-#### DLCQuest ❌ (Split 7)
+#### DLCQuest ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
-| 1 | DLCQuest.yaml |
-| 2 | Inscryption.yaml |
-| 3 | Mega Man 2.yaml |
-| 4 | Risk of Rain 2.yaml |
-| 5 | Super Mario World.yaml |
-| 6 | Undertale.yaml |
+| 1 | Bomb Rush Cyberfunk.yaml |
+| 2 | DLCQuest.yaml |
+| 3 | Inscryption.yaml |
+| 4 | Mega Man 2.yaml |
+| 5 | Risk of Rain 2.yaml |
+| 6 | Super Mario World.yaml |
+| 7 | Undertale.yaml |
 
 #### DOOM 1993 ✅ (Split 8)
 
@@ -1204,11 +1205,13 @@ Shows which templates were in the multiworld when each game was tested in the se
 
 | Player # | Template |
 |----------|----------|
-| 1 | Inscryption.yaml |
-| 2 | Mega Man 2.yaml |
-| 3 | Risk of Rain 2.yaml |
-| 4 | Super Mario World.yaml |
-| 5 | Undertale.yaml |
+| 1 | Bomb Rush Cyberfunk.yaml |
+| 2 | DLCQuest.yaml |
+| 3 | Inscryption.yaml |
+| 4 | Mega Man 2.yaml |
+| 5 | Risk of Rain 2.yaml |
+| 6 | Super Mario World.yaml |
+| 7 | Undertale.yaml |
 
 #### Kingdom Hearts ✅ (Split 9)
 
@@ -1321,11 +1324,13 @@ Shows which templates were in the multiworld when each game was tested in the se
 
 | Player # | Template |
 |----------|----------|
-| 1 | Inscryption.yaml |
-| 2 | Mega Man 2.yaml |
-| 3 | Risk of Rain 2.yaml |
-| 4 | Super Mario World.yaml |
-| 5 | Undertale.yaml |
+| 1 | Bomb Rush Cyberfunk.yaml |
+| 2 | DLCQuest.yaml |
+| 3 | Inscryption.yaml |
+| 4 | Mega Man 2.yaml |
+| 5 | Risk of Rain 2.yaml |
+| 6 | Super Mario World.yaml |
+| 7 | Undertale.yaml |
 
 #### MegaMan Battle Network 3 ✅ (Split 8)
 
@@ -1434,15 +1439,17 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario Land 2.yaml |
 | 7 | Timespinner.yaml |
 
-#### Risk of Rain 2 ❌ (Split 7)
+#### Risk of Rain 2 ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
-| 1 | Inscryption.yaml |
-| 2 | Mega Man 2.yaml |
-| 3 | Risk of Rain 2.yaml |
-| 4 | Super Mario World.yaml |
-| 5 | Undertale.yaml |
+| 1 | Bomb Rush Cyberfunk.yaml |
+| 2 | DLCQuest.yaml |
+| 3 | Inscryption.yaml |
+| 4 | Mega Man 2.yaml |
+| 5 | Risk of Rain 2.yaml |
+| 6 | Super Mario World.yaml |
+| 7 | Undertale.yaml |
 
 #### Saving Princess ✅ (Split 8)
 
@@ -1539,14 +1546,17 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario Land 2.yaml |
 | 7 | Timespinner.yaml |
 
-#### Super Mario World ❌ (Split 7)
+#### Super Mario World ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
-| 1 | Inscryption.yaml |
-| 2 | Mega Man 2.yaml |
-| 3 | Super Mario World.yaml |
-| 4 | Undertale.yaml |
+| 1 | Bomb Rush Cyberfunk.yaml |
+| 2 | DLCQuest.yaml |
+| 3 | Inscryption.yaml |
+| 4 | Mega Man 2.yaml |
+| 5 | Risk of Rain 2.yaml |
+| 6 | Super Mario World.yaml |
+| 7 | Undertale.yaml |
 
 #### TOEM original ✅ (Split 9)
 
@@ -1643,13 +1653,17 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario Land 2.yaml |
 | 7 | Timespinner.yaml |
 
-#### Undertale ❌ (Split 7)
+#### Undertale ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
-| 1 | Inscryption.yaml |
-| 2 | Mega Man 2.yaml |
-| 3 | Undertale.yaml |
+| 1 | Bomb Rush Cyberfunk.yaml |
+| 2 | DLCQuest.yaml |
+| 3 | Inscryption.yaml |
+| 4 | Mega Man 2.yaml |
+| 5 | Risk of Rain 2.yaml |
+| 6 | Super Mario World.yaml |
+| 7 | Undertale.yaml |
 
 #### VVVVVV ✅ (Split 8)
 
@@ -1724,19 +1738,6 @@ Shows which templates were in the multiworld when each game was tested in the se
 
 When a second pass multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
 
-#### Bomb Rush Cyberfunk (Bomb Rush Cyberfunk.yaml)
-
-**Failing pairs found:** 6
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| DLCQuest.yaml | ❌ | ✅ | ❌ | ✅ |
-| Inscryption.yaml | ❌ | ✅ | ❌ | ✅ |
-| Mega Man 2.yaml | ❌ | ✅ | ❌ | ✅ |
-| Risk of Rain 2.yaml | ❌ | ✅ | ❌ | ✅ |
-| Super Mario World.yaml | ❌ | ✅ | ❌ | ✅ |
-| Undertale.yaml | ❌ | ✅ | ❌ | ✅ |
-
 #### Castlevania 64 (Castlevania 64.yaml)
 
 **Failing pairs found:** 4
@@ -1750,18 +1751,6 @@ When a second pass multiworld test fails, bisection tests each pair of templates
 | TOEM rule builder.yaml | ✅ | ✅ | ✅ | ✅ |
 | WebDevJourney.yaml | ❌ | ✅ | ❌ | ✅ |
 
-#### DLCQuest (DLCQuest.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| Inscryption.yaml | ✅ | ✅ | ✅ | ✅ |
-| Mega Man 2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Risk of Rain 2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Super Mario World.yaml | ✅ | ✅ | ✅ | ✅ |
-| Undertale.yaml | ✅ | ✅ | ✅ | ✅ |
-
 #### Dark Souls III (Dark Souls III.yaml)
 
 **No failing pairs found** (failure may be due to combination of 3+ templates)
@@ -1774,17 +1763,6 @@ When a second pass multiworld test fails, bisection tests each pair of templates
 | TOEM rule builder.yaml | ✅ | ✅ | ✅ | ✅ |
 | WebDevJourney.yaml | ✅ | ✅ | ✅ | ✅ |
 
-#### Risk of Rain 2 (Risk of Rain 2.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| Inscryption.yaml | ✅ | ✅ | ✅ | ✅ |
-| Mega Man 2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Super Mario World.yaml | ✅ | ✅ | ✅ | ✅ |
-| Undertale.yaml | ✅ | ✅ | ✅ | ✅ |
-
 #### Shivers (Shivers.yaml)
 
 **No failing pairs found** (failure may be due to combination of 3+ templates)
@@ -1796,16 +1774,6 @@ When a second pass multiworld test fails, bisection tests each pair of templates
 | TOEM rule builder.yaml | ✅ | ✅ | ✅ | ✅ |
 | WebDevJourney.yaml | ✅ | ✅ | ✅ | ✅ |
 
-#### Super Mario World (Super Mario World.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| Inscryption.yaml | ✅ | ✅ | ✅ | ✅ |
-| Mega Man 2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Undertale.yaml | ✅ | ✅ | ✅ | ✅ |
-
 #### TOEM rule builder (TOEM rule builder.yaml)
 
 **No failing pairs found** (failure may be due to combination of 3+ templates)
@@ -1815,15 +1783,6 @@ When a second pass multiworld test fails, bisection tests each pair of templates
 | Kirby's Dream Land 3.yaml | ✅ | ✅ | ✅ | ✅ |
 | Metamath.yaml | ✅ | ✅ | ✅ | ✅ |
 | WebDevJourney.yaml | ✅ | ✅ | ✅ | ✅ |
-
-#### Undertale (Undertale.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| Inscryption.yaml | ✅ | ✅ | ✅ | ✅ |
-| Mega Man 2.yaml | ✅ | ✅ | ✅ | ✅ |
 
 #### WebDevJourney (WebDevJourney.yaml)
 
