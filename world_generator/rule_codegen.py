@@ -646,6 +646,28 @@ class RuleCodeGenerator:
                     }
                     return self._convert_placement_lookup(placement_rule)
 
+                # Check if this is an AST_placement_search rule (check if item is at any of listed locations)
+                if rb_rule == 'AST_placement_search':
+                    args = rule.get('args', {})
+                    item_name = args.get('item', '')
+                    locations = args.get('locations', [])
+                    # Extract location names from the [location, player] pairs
+                    location_names = []
+                    for loc in locations:
+                        if isinstance(loc, list) and loc:
+                            location_names.append(loc[0])
+                        elif isinstance(loc, str):
+                            location_names.append(loc)
+                    # Check if the item is at any of these locations using known placements
+                    for loc_name in location_names:
+                        if loc_name in self.placements and self.placements[loc_name] == item_name:
+                            # Item is at one of the locations - return True
+                            self.required_imports.add('True_')
+                            return 'True_()'
+                    # Item is not at any of the locations - return False
+                    self.required_imports.add('False_')
+                    return 'False_()'
+
                 # Check if this is an AST_function_call rule (option.to_bool() style calls)
                 if rb_rule == 'AST_function_call':
                     return self._convert_ast_function_call(rule)
@@ -3154,6 +3176,26 @@ class HelperCodeGenerator:
                 helper_name = rule_type
                 func_name = self.get_function_name(helper_name)
                 return f'{func_name}(state, player)'
+
+            # Handle AST_placement_search (check if item is at any of listed locations)
+            if rule_type == 'AST_placement_search':
+                args = expr.get('args', {})
+                item_name = args.get('item', '')
+                locations = args.get('locations', [])
+                # Extract location names from the [location, player] pairs
+                location_names = []
+                for loc in locations:
+                    if isinstance(loc, list) and loc:
+                        location_names.append(loc[0])
+                    elif isinstance(loc, str):
+                        location_names.append(loc)
+                # Check if the item is at any of these locations using known placements
+                for loc_name in location_names:
+                    if loc_name in self.placements and self.placements[loc_name] == item_name:
+                        # Item is at one of the locations
+                        return 'True'
+                # Item is not at any of the locations
+                return 'False'
 
         # Unknown type - return True as placeholder
         # Returning True makes locations more accessible, which is appropriate for worldgen
