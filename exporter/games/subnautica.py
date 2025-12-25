@@ -1,6 +1,6 @@
 """Subnautica game-specific export handler."""
 
-from typing import Dict, Any
+from typing import Dict, Any, List, Set
 from .generic import GenericGameExportHandler
 import logging
 
@@ -8,6 +8,11 @@ logger = logging.getLogger(__name__)
 
 
 class SubnauticaGameExportHandler(GenericGameExportHandler):
+    # Module containing helper functions to export
+    HELPER_MODULES: List[str] = ['worlds.subnautica.rules']
+
+    # Helpers that should always be exported (used in access rules)
+    HELPERS_TO_EXPORT_WHITELIST: Set[str] = {'is_radiated'}
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Get settings data with swim_rule exported as integer.
@@ -115,7 +120,7 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
                         self._expand_swim_rule_attrs(item)
 
     def expand_rule(self, rule, _depth: int = 0):
-        """Handle special location dependency patterns.
+        """Handle special location dependency patterns and expand SwimRule attributes.
 
         The "Repair Aurora Drive" location depends on "Aurora Drive Room - Upgrade Console"
         being reachable. This is implemented in Python as:
@@ -123,9 +128,18 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
             set_rule(location, lambda state: room.can_reach(state))
 
         We convert this to a can_access_location helper call with the location data.
+
+        Also expands swim_rule.base_depth and swim_rule.consider_items in all rules.
         """
         if not rule:
             return rule
+
+        # Deep copy to avoid modifying the original when expanding attributes
+        import copy
+        rule = copy.deepcopy(rule)
+
+        # Expand SwimRule attribute accesses in this rule
+        self._expand_swim_rule_attrs(rule)
 
         # Handle location.can_reach() pattern (e.g., room.can_reach())
         if rule.get('type') == 'function_call':
