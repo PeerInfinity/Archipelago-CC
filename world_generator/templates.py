@@ -737,8 +737,24 @@ class {class_name}(TextChoice):
 '''
             return class_code, f'    {setting_name}: {class_name}', 'TextChoice'
 
+        # Check if all keys are numeric (convertible to int)
+        # Some games use TextChoice with string keys (e.g., "random-2p", "M", "MA")
+        try:
+            sorted_items = sorted(name_lookup.items(), key=lambda x: int(x[0]))
+        except ValueError:
+            # Non-numeric keys indicate a TextChoice or similar complex option
+            # Fall back to TextChoice for these cases
+            class_code = f'''
+class {class_name}(TextChoice):
+    """Option for {display_name}."""
+    display_name = "{display_name}"
+
+    default = {default_repr}
+'''
+            return class_code, f'    {setting_name}: {class_name}', 'TextChoice'
+
         option_lines = []
-        for value_str, name in sorted(name_lookup.items(), key=lambda x: int(x[0])):
+        for value_str, name in sorted_items:
             option_lines.append(f'    option_{name} = {value_str}')
         options_code = '\n'.join(option_lines)
 
