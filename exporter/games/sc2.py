@@ -60,6 +60,7 @@ class SC2GameExportHandler(GenericGameExportHandler):
         'terran_engine_of_destruction_requirement', 'engine_of_destruction_requirement',
         'terran_trouble_in_paradise_requirement', 'terran_media_blitz_requirement',
         'terran_gates_of_hell_requirement', 'terran_all_in_requirement',
+        'terran_supernova_requirement',  # calls power_rating
         # Kerrigan helpers - kerrigan_levels uses get_full_item_list(), two_kerrigan_actives has a bug
         'kerrigan_levels', 'two_kerrigan_actives',
         # basic_kerrigan - testing if it can be exported (iterates over imported list)
@@ -127,17 +128,53 @@ class SC2GameExportHandler(GenericGameExportHandler):
             # If we can't extract the item name, return None to fall back to True_
             return None
 
-        # terran_competent_ground_to_air: Common paths include having Goliath or Cyclone
+        # terran_competent_ground_to_air: Ground units that can attack air effectively
         # Full logic: has(Goliath) OR (has_any(Marine, Dominion Trooper) AND bio_heal AND weapons >= 2)
         #             OR (advanced_tactics AND (has(Cyclone) OR has_all(Thor, Payload)))
-        # We use has_any(Goliath, Cyclone, Thor) to cover multiple progression paths
+        # We include all paths but wrap Cyclone/Thor in advanced_tactics setting check
         if helper_name == 'terran_competent_ground_to_air':
             return {
                 'type': 'or',
                 'conditions': [
+                    # Goliath is always competent ground-to-air
                     {'type': 'item_check', 'item': 'Goliath'},
-                    {'type': 'item_check', 'item': 'Cyclone'},
-                    {'type': 'item_check', 'item': 'Thor'}
+                    # Marine/Dominion Trooper with upgrades and healing
+                    {
+                        'type': 'and',
+                        'conditions': [
+                            {
+                                'type': 'or',
+                                'conditions': [
+                                    {'type': 'item_check', 'item': 'Marine'},
+                                    {'type': 'item_check', 'item': 'Dominion Trooper'}
+                                ]
+                            },
+                            {'type': 'helper', 'name': 'terran_bio_heal'},
+                            {
+                                'type': 'compare',
+                                'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Weapon'},
+                                'op': '>=',
+                                'right': {'type': 'constant', 'value': 2}
+                            }
+                        ]
+                    },
+                    # Cyclone requires advanced_tactics
+                    {
+                        'type': 'and',
+                        'conditions': [
+                            {'type': 'setting_check', 'setting': {'type': 'constant', 'value': 'advanced_tactics'}, 'value': {'type': 'constant', 'value': True}},
+                            {'type': 'item_check', 'item': 'Cyclone'}
+                        ]
+                    },
+                    # Thor with High Impact Payload requires advanced_tactics
+                    {
+                        'type': 'and',
+                        'conditions': [
+                            {'type': 'setting_check', 'setting': {'type': 'constant', 'value': 'advanced_tactics'}, 'value': {'type': 'constant', 'value': True}},
+                            {'type': 'item_check', 'item': 'Thor'},
+                            {'type': 'item_check', 'item': 'Progressive High Impact Payload (Thor)'}
+                        ]
+                    }
                 ]
             }
 
@@ -321,7 +358,7 @@ class SC2GameExportHandler(GenericGameExportHandler):
                     {
                         'type': 'and',
                         'conditions': [
-                            {'type': 'setting', 'name': 'advanced_tactics'},
+                            {'type': 'setting_check', 'setting': {'type': 'constant', 'value': 'advanced_tactics'}, 'value': {'type': 'constant', 'value': True}},
                             {
                                 'type': 'or',
                                 'conditions': [
@@ -352,65 +389,83 @@ class SC2GameExportHandler(GenericGameExportHandler):
         # Original: ((Banshee OR Battlecruiser OR (Liberator+Raid Artillery)) AND competent_anti_air)
         #           OR (competent_comp AND air_anti_air)
         #           AND terran_army_weapon_armor_upgrade_min_level >= 2
-        # The weapon_armor_min requirement checks that ALL weapon AND armor upgrades are >= 2
-        # Simplified: air attack capability AND competent_anti_air AND all upgrade types >= 2
+        # Simplified: Two paths - air-to-ground OR strong mech comp with air_anti_air
         if helper_name == 'terran_beats_protoss_deathball':
             return {
                 'type': 'and',
                 'conditions': [
-                    # Air-to-ground capability (including Liberator+Raid Artillery path)
                     {
                         'type': 'or',
                         'conditions': [
-                            {'type': 'item_check', 'item': 'Banshee'},
-                            {'type': 'item_check', 'item': 'Battlecruiser'},
+                            # Path 1: Air-to-ground capability + competent_anti_air
                             {
                                 'type': 'and',
                                 'conditions': [
-                                    {'type': 'item_check', 'item': 'Liberator'},
-                                    {'type': 'item_check', 'item': 'Raid Artillery (Liberator)'}
+                                    {
+                                        'type': 'or',
+                                        'conditions': [
+                                            {'type': 'item_check', 'item': 'Banshee'},
+                                            {'type': 'item_check', 'item': 'Battlecruiser'},
+                                            {
+                                                'type': 'and',
+                                                'conditions': [
+                                                    {'type': 'item_check', 'item': 'Liberator'},
+                                                    {'type': 'item_check', 'item': 'Raid Artillery (Liberator)'}
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {'type': 'helper', 'name': 'terran_competent_anti_air'}
+                                ]
+                            },
+                            # Path 2: Strong mech comp + air_anti_air (simplified competent_comp)
+                            # competent_comp Strong Mech path: (Thor OR Siege Tank) + light frontline + vehicle upgrades
+                            {
+                                'type': 'and',
+                                'conditions': [
+                                    {'type': 'helper', 'name': 'terran_air_anti_air'},
+                                    # Strong vehicle (Thor or Siege Tank)
+                                    {
+                                        'type': 'or',
+                                        'conditions': [
+                                            {'type': 'item_check', 'item': 'Siege Tank'},
+                                            {'type': 'item_check', 'item': 'Thor'}
+                                        ]
+                                    },
+                                    # Light frontline unit
+                                    {
+                                        'type': 'or',
+                                        'conditions': [
+                                            {'type': 'item_check', 'item': 'Marine'},
+                                            {'type': 'item_check', 'item': 'Dominion Trooper'},
+                                            {'type': 'item_check', 'item': 'Hellion'},
+                                            {'type': 'item_check', 'item': 'Vulture'}
+                                        ]
+                                    },
+                                    # Vehicle weapon >= 1
+                                    {
+                                        'type': 'compare',
+                                        'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Weapon'},
+                                        'op': '>=',
+                                        'right': {'type': 'constant', 'value': 1}
+                                    },
+                                    # Vehicle armor >= 1
+                                    {
+                                        'type': 'compare',
+                                        'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Armor'},
+                                        'op': '>=',
+                                        'right': {'type': 'constant', 'value': 1}
+                                    },
+                                    # Also need competent_anti_air for competent_comp
+                                    {'type': 'helper', 'name': 'terran_competent_anti_air'}
                                 ]
                             }
                         ]
                     },
-                    # Anti-air capability (required to survive against Protoss air support)
-                    {'type': 'helper', 'name': 'terran_competent_anti_air'},
-                    # All weapon AND armor upgrades must be >= 2
-                    # This is a simplified approximation of terran_army_weapon_armor_upgrade_min_level >= 2
-                    # We check all three types to be safe
-                    {
-                        'type': 'compare',
-                        'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Weapon'},
-                        'op': '>=',
-                        'right': {'type': 'constant', 'value': 2}
-                    },
-                    {
-                        'type': 'compare',
-                        'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Armor'},
-                        'op': '>=',
-                        'right': {'type': 'constant', 'value': 2}
-                    },
-                    {
-                        'type': 'compare',
-                        'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Weapon'},
-                        'op': '>=',
-                        'right': {'type': 'constant', 'value': 2}
-                    },
-                    {
-                        'type': 'compare',
-                        'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Armor'},
-                        'op': '>=',
-                        'right': {'type': 'constant', 'value': 2}
-                    },
+                    # All weapon upgrades >= 2 (simplified - we just check ship since that's typical)
                     {
                         'type': 'compare',
                         'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Weapon'},
-                        'op': '>=',
-                        'right': {'type': 'constant', 'value': 2}
-                    },
-                    {
-                        'type': 'compare',
-                        'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Armor'},
                         'op': '>=',
                         'right': {'type': 'constant', 'value': 2}
                     }
@@ -492,7 +547,8 @@ class SC2GameExportHandler(GenericGameExportHandler):
         # Original: terran_very_hard_mission_weapon_armor_level (all >= 3) AND beats_kerrigan AND terran_competent_comp
         # beats_kerrigan options: Marine/Dominion Trooper/Banshee OR Reaper+Resource Efficiency
         #                         OR Valkyrie+Flechette (air map) OR Ghost+EMP (advanced tactics)
-        # Simplified: all upgrades >= 3 AND beats_kerrigan (all options) AND competent_comp
+        # For Air map also requires: competent_anti_air + (Viking/BC/Valkyrie) + (HME/Psi Disrupter/Missile Turret)
+        # Simplified: all upgrades >= 3 AND beats_kerrigan (all options) AND competent_comp AND air map requirements
         if helper_name == 'terran_all_in_requirement':
             return {
                 'type': 'and',
@@ -540,11 +596,11 @@ class SC2GameExportHandler(GenericGameExportHandler):
                     {
                         'type': 'or',
                         'conditions': [
-                            # Primary units
+                            # Primary units (always available)
                             {'type': 'item_check', 'item': 'Marine'},
                             {'type': 'item_check', 'item': 'Dominion Trooper'},
                             {'type': 'item_check', 'item': 'Banshee'},
-                            # Reaper path
+                            # Reaper path (always available)
                             {
                                 'type': 'and',
                                 'conditions': [
@@ -552,20 +608,63 @@ class SC2GameExportHandler(GenericGameExportHandler):
                                     {'type': 'item_check', 'item': 'Resource Efficiency (Reaper)'}
                                 ]
                             },
-                            # Valkyrie path (for air map)
+                            # Valkyrie path (for air map only - all_in_map == 1)
                             {
                                 'type': 'and',
                                 'conditions': [
+                                    {'type': 'setting_check', 'setting': {'type': 'constant', 'value': 'all_in_map'}, 'value': {'type': 'constant', 'value': 1}},
                                     {'type': 'item_check', 'item': 'Valkyrie'},
                                     {'type': 'item_check', 'item': 'Flechette Missiles (Valkyrie)'}
                                 ]
                             },
-                            # Ghost path (for advanced tactics)
+                            # Ghost path (requires advanced_tactics)
                             {
                                 'type': 'and',
                                 'conditions': [
+                                    {'type': 'setting_check', 'setting': {'type': 'constant', 'value': 'advanced_tactics'}, 'value': {'type': 'constant', 'value': True}},
                                     {'type': 'item_check', 'item': 'Ghost'},
                                     {'type': 'item_check', 'item': 'EMP Rounds (Ghost)'}
+                                ]
+                            }
+                        ]
+                    },
+                    # competent_anti_air is required for All-In (both Ground and Air maps)
+                    {'type': 'helper', 'name': 'terran_competent_anti_air'}
+                ]
+            }
+
+        # terran_supernova_requirement: terran_beats_protoss_deathball AND power_rating >= 6
+        # power_rating is complex (sums item ratings), so we approximate with passive item check
+        # Main passive items: Automated Refinery (4), MULE (4), Orbital Depots (2), Tech Reactor (2), etc.
+        # Requiring a 4-point item AND beats_protoss_deathball should approximate power_rating >= 6
+        if helper_name == 'terran_supernova_requirement':
+            return {
+                'type': 'and',
+                'conditions': [
+                    # terran_beats_protoss_deathball (use helper reference since it's also blacklisted)
+                    {'type': 'helper', 'name': 'terran_beats_protoss_deathball'},
+                    # power_rating >= 6 approximation: require a high-value passive item
+                    # Automated Refinery (4) + any 2-pointer = 6, or MULE (4) + any 2-pointer = 6
+                    {
+                        'type': 'or',
+                        'conditions': [
+                            # One 4-point item is enough if they have any other passive
+                            {'type': 'item_check', 'item': 'Automated Refinery (Terran)'},
+                            {'type': 'item_check', 'item': 'MULE (Command Center)'},
+                            # Or three 2-point items = 6 (being more permissive since items common)
+                            {
+                                'type': 'and',
+                                'conditions': [
+                                    {'type': 'item_check', 'item': 'Tech Reactor (Terran)'},
+                                    {
+                                        'type': 'or',
+                                        'conditions': [
+                                            {'type': 'item_check', 'item': 'Orbital Depots (Terran)'},
+                                            {'type': 'item_check', 'item': 'Command Center Reactor (Command Center)'},
+                                            {'type': 'item_check', 'item': 'Extra Supplies (Command Center)'},
+                                            {'type': 'item_check', 'item': 'Micro-Filtering (Terran)'}
+                                        ]
+                                    }
                                 ]
                             }
                         ]
