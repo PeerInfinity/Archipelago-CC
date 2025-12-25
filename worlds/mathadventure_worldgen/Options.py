@@ -16,8 +16,13 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
+class RandomizeItems(Toggle):
+    """Option for Randomize Items."""
+    display_name = "Randomize Items"
+
 
 @dataclass
 class MathProof2p2e4WorldGenOptions(PerGameCommonOptions):
     """Options for MathProof2p2e4 WorldGen."""
+    randomize_items: RandomizeItems
     randomize_items: RandomizeItems

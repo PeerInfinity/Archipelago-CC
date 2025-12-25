@@ -7416,6 +7416,29 @@
         "start_inventory": {},
         "start_location_hints": []
       },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        }
+      },
       "world_directory": "bomb_rush_cyberfunk"
     }
   },
@@ -7748,38 +7771,36 @@
         }
       },
       "brink_terminal_all_challenges": {
-        "type": "helper",
-        "name": "brink_terminal_challenge3"
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 220
+        }
       },
       "brink_terminal_challenge1": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 188
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 188
+        }
       },
       "brink_terminal_challenge2": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 200
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 200
+        }
       },
       "brink_terminal_challenge3": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 220
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 220
+        }
       },
       "brink_terminal_crew_battle": {
         "params": [
@@ -7796,28 +7817,49 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "rep",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 280
-                  }
-                ]
+                "type": "item_check",
+                "item": "rep",
+                "count": {
+                  "type": "constant",
+                  "value": 280
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiL",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitil"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 6
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 103
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitil"
+                }
               }
             ]
           },
@@ -7825,28 +7867,49 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "rep",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 280
-                  }
-                ]
+                "type": "item_check",
+                "item": "rep",
+                "count": {
+                  "type": "constant",
+                  "value": 280
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiL",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitil"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 6
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 62
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitil"
+                }
               }
             ]
           }
@@ -7856,28 +7919,24 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "is_girl"
+            "type": "group_check",
+            "group": "girl"
           },
           {
-            "type": "helper",
-            "name": "rep",
-            "args": [
-              {
-                "type": "constant",
-                "value": 180
-              }
-            ]
+            "type": "item_check",
+            "item": "rep",
+            "count": {
+              "type": "constant",
+              "value": 180
+            }
           },
           {
-            "type": "helper",
-            "name": "current_chapter",
-            "args": [
-              {
-                "type": "constant",
-                "value": 2
-              }
-            ]
+            "type": "item_check",
+            "item": "Chapter Completed",
+            "count": {
+              "type": "constant",
+              "value": 1
+            }
           }
         ]
       },
@@ -7896,32 +7955,78 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "graffitiM",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 114
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiXL",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitixl"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 4
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 45
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitixl"
+                }
               }
             ]
           },
@@ -7929,70 +8034,114 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "graffitiM",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 67
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiXL",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitixl"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 4
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 45
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitixl"
+                }
               }
             ]
           }
         }
       },
       "brink_terminal_oldhead_dock": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 320
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 320
+        }
       },
       "brink_terminal_oldhead_underground": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 250
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 250
+        }
       },
       "brink_terminal_plaza": {
-        "type": "helper",
-        "name": "brink_terminal_all_challenges"
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 220
+        }
       },
       "brink_terminal_tower": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 280
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 280
+        }
       },
       "camera": {
         "type": "item_check",
@@ -8189,22 +8338,119 @@
           "type": "and",
           "conditions": [
             {
-              "type": "helper",
-              "name": "mataan_challenge2",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "limit"
-                },
-                {
-                  "type": "name",
-                  "name": "glitched"
-                }
-              ]
+              "type": "conditional",
+              "test": {
+                "type": "name",
+                "name": "glitched"
+              },
+              "if_true": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "rep",
+                    "count": {
+                      "type": "constant",
+                      "value": 880
+                    }
+                  },
+                  {
+                    "type": "conditional",
+                    "test": {
+                      "type": "name",
+                      "name": "limit"
+                    },
+                    "if_true": {
+                      "type": "compare",
+                      "left": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "state_method",
+                          "method": "count_group_unique",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": "graffitixl"
+                            }
+                          ]
+                        },
+                        "op": "*",
+                        "right": {
+                          "type": "constant",
+                          "value": 4
+                        }
+                      },
+                      "op": ">=",
+                      "right": {
+                        "type": "constant",
+                        "value": 59
+                      }
+                    },
+                    "if_false": {
+                      "type": "group_check",
+                      "group": "graffitixl"
+                    }
+                  }
+                ]
+              },
+              "if_false": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "rep",
+                    "count": {
+                      "type": "constant",
+                      "value": 880
+                    }
+                  },
+                  {
+                    "type": "conditional",
+                    "test": {
+                      "type": "name",
+                      "name": "limit"
+                    },
+                    "if_true": {
+                      "type": "compare",
+                      "left": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "state_method",
+                          "method": "count_group_unique",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": "graffitixl"
+                            }
+                          ]
+                        },
+                        "op": "*",
+                        "right": {
+                          "type": "constant",
+                          "value": 4
+                        }
+                      },
+                      "op": ">=",
+                      "right": {
+                        "type": "constant",
+                        "value": 57
+                      }
+                    },
+                    "if_false": {
+                      "type": "group_check",
+                      "group": "graffitixl"
+                    }
+                  }
+                ]
+              }
             },
             {
-              "type": "helper",
-              "name": "mataan_challenge3"
+              "type": "item_check",
+              "item": "rep",
+              "count": {
+                "type": "constant",
+                "value": 920
+              }
             }
           ]
         }
@@ -8224,38 +8470,57 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "current_chapter",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 5
-                  }
-                ]
+                "type": "item_check",
+                "item": "Chapter Completed",
+                "count": {
+                  "type": "constant",
+                  "value": 4
+                }
               },
               {
-                "type": "helper",
-                "name": "rep",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 864
-                  }
-                ]
+                "type": "item_check",
+                "item": "rep",
+                "count": {
+                  "type": "constant",
+                  "value": 864
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiL",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitil"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 6
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 108
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitil"
+                }
               }
             ]
           },
@@ -8263,38 +8528,57 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "current_chapter",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 5
-                  }
-                ]
+                "type": "item_check",
+                "item": "Chapter Completed",
+                "count": {
+                  "type": "constant",
+                  "value": 4
+                }
               },
               {
-                "type": "helper",
-                "name": "rep",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 864
-                  }
-                ]
+                "type": "item_check",
+                "item": "rep",
+                "count": {
+                  "type": "constant",
+                  "value": 864
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiL",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitil"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 6
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 98
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitil"
+                }
               }
             ]
           }
@@ -8315,28 +8599,49 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "rep",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 880
-                  }
-                ]
+                "type": "item_check",
+                "item": "rep",
+                "count": {
+                  "type": "constant",
+                  "value": 880
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiXL",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitixl"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 4
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 59
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitixl"
+                }
               }
             ]
           },
@@ -8344,42 +8649,61 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "rep",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 880
-                  }
-                ]
+                "type": "item_check",
+                "item": "rep",
+                "count": {
+                  "type": "constant",
+                  "value": 880
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiXL",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitixl"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 4
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 57
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitixl"
+                }
               }
             ]
           }
         }
       },
       "mataan_challenge3": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 920
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 920
+        }
       },
       "mataan_crew_battle": {
         "params": [
@@ -8396,46 +8720,211 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "mataan_smoke_wall2",
-                "args": [
+                "type": "and",
+                "conditions": [
                   {
-                    "type": "name",
-                    "name": "limit"
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "conditional",
+                        "test": {
+                          "type": "name",
+                          "name": "glitched"
+                        },
+                        "if_true": {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "rep",
+                              "count": {
+                                "type": "constant",
+                                "value": 880
+                              }
+                            },
+                            {
+                              "type": "conditional",
+                              "test": {
+                                "type": "name",
+                                "name": "limit"
+                              },
+                              "if_true": {
+                                "type": "compare",
+                                "left": {
+                                  "type": "binary_op",
+                                  "left": {
+                                    "type": "state_method",
+                                    "method": "count_group_unique",
+                                    "args": [
+                                      {
+                                        "type": "constant",
+                                        "value": "graffitixl"
+                                      }
+                                    ]
+                                  },
+                                  "op": "*",
+                                  "right": {
+                                    "type": "constant",
+                                    "value": 4
+                                  }
+                                },
+                                "op": ">=",
+                                "right": {
+                                  "type": "constant",
+                                  "value": 59
+                                }
+                              },
+                              "if_false": {
+                                "type": "group_check",
+                                "group": "graffitixl"
+                              }
+                            }
+                          ]
+                        },
+                        "if_false": {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "rep",
+                              "count": {
+                                "type": "constant",
+                                "value": 880
+                              }
+                            },
+                            {
+                              "type": "conditional",
+                              "test": {
+                                "type": "name",
+                                "name": "limit"
+                              },
+                              "if_true": {
+                                "type": "compare",
+                                "left": {
+                                  "type": "binary_op",
+                                  "left": {
+                                    "type": "state_method",
+                                    "method": "count_group_unique",
+                                    "args": [
+                                      {
+                                        "type": "constant",
+                                        "value": "graffitixl"
+                                      }
+                                    ]
+                                  },
+                                  "op": "*",
+                                  "right": {
+                                    "type": "constant",
+                                    "value": 4
+                                  }
+                                },
+                                "op": ">=",
+                                "right": {
+                                  "type": "constant",
+                                  "value": 57
+                                }
+                              },
+                              "if_false": {
+                                "type": "group_check",
+                                "group": "graffitixl"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "rep",
+                        "count": {
+                          "type": "constant",
+                          "value": 920
+                        }
+                      }
+                    ]
                   },
                   {
-                    "type": "name",
-                    "name": "glitched"
+                    "type": "item_check",
+                    "item": "rep",
+                    "count": {
+                      "type": "constant",
+                      "value": 960
+                    }
                   }
                 ]
               },
               {
-                "type": "helper",
-                "name": "graffitiM",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 122
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiXL",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitixl"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 4
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 59
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitixl"
+                }
               }
             ]
           },
@@ -8443,46 +8932,211 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "mataan_smoke_wall2",
-                "args": [
+                "type": "and",
+                "conditions": [
                   {
-                    "type": "name",
-                    "name": "limit"
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "conditional",
+                        "test": {
+                          "type": "name",
+                          "name": "glitched"
+                        },
+                        "if_true": {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "rep",
+                              "count": {
+                                "type": "constant",
+                                "value": 880
+                              }
+                            },
+                            {
+                              "type": "conditional",
+                              "test": {
+                                "type": "name",
+                                "name": "limit"
+                              },
+                              "if_true": {
+                                "type": "compare",
+                                "left": {
+                                  "type": "binary_op",
+                                  "left": {
+                                    "type": "state_method",
+                                    "method": "count_group_unique",
+                                    "args": [
+                                      {
+                                        "type": "constant",
+                                        "value": "graffitixl"
+                                      }
+                                    ]
+                                  },
+                                  "op": "*",
+                                  "right": {
+                                    "type": "constant",
+                                    "value": 4
+                                  }
+                                },
+                                "op": ">=",
+                                "right": {
+                                  "type": "constant",
+                                  "value": 59
+                                }
+                              },
+                              "if_false": {
+                                "type": "group_check",
+                                "group": "graffitixl"
+                              }
+                            }
+                          ]
+                        },
+                        "if_false": {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "rep",
+                              "count": {
+                                "type": "constant",
+                                "value": 880
+                              }
+                            },
+                            {
+                              "type": "conditional",
+                              "test": {
+                                "type": "name",
+                                "name": "limit"
+                              },
+                              "if_true": {
+                                "type": "compare",
+                                "left": {
+                                  "type": "binary_op",
+                                  "left": {
+                                    "type": "state_method",
+                                    "method": "count_group_unique",
+                                    "args": [
+                                      {
+                                        "type": "constant",
+                                        "value": "graffitixl"
+                                      }
+                                    ]
+                                  },
+                                  "op": "*",
+                                  "right": {
+                                    "type": "constant",
+                                    "value": 4
+                                  }
+                                },
+                                "op": ">=",
+                                "right": {
+                                  "type": "constant",
+                                  "value": 57
+                                }
+                              },
+                              "if_false": {
+                                "type": "group_check",
+                                "group": "graffitixl"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "rep",
+                        "count": {
+                          "type": "constant",
+                          "value": 920
+                        }
+                      }
+                    ]
                   },
                   {
-                    "type": "name",
-                    "name": "glitched"
+                    "type": "item_check",
+                    "item": "rep",
+                    "count": {
+                      "type": "constant",
+                      "value": 960
+                    }
                   }
                 ]
               },
               {
-                "type": "helper",
-                "name": "graffitiM",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 117
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiXL",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitixl"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 4
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 57
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitixl"
+                }
               }
             ]
           }
@@ -8494,18 +9148,127 @@
           "glitched"
         ],
         "body": {
-          "type": "helper",
-          "name": "mataan_challenge1",
-          "args": [
-            {
-              "type": "name",
-              "name": "limit"
-            },
-            {
-              "type": "name",
-              "name": "glitched"
-            }
-          ]
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Chapter Completed",
+                "count": {
+                  "type": "constant",
+                  "value": 4
+                }
+              },
+              {
+                "type": "item_check",
+                "item": "rep",
+                "count": {
+                  "type": "constant",
+                  "value": 864
+                }
+              },
+              {
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitil"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 6
+                    }
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 108
+                  }
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitil"
+                }
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Chapter Completed",
+                "count": {
+                  "type": "constant",
+                  "value": 4
+                }
+              },
+              {
+                "type": "item_check",
+                "item": "rep",
+                "count": {
+                  "type": "constant",
+                  "value": 864
+                }
+              },
+              {
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitil"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 6
+                    }
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 98
+                  }
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitil"
+                }
+              }
+            ]
+          }
         }
       },
       "mataan_deepest": {
@@ -8514,29 +9277,444 @@
           "glitched"
         ],
         "body": {
-          "type": "helper",
-          "name": "mataan_crew_battle",
-          "args": [
-            {
-              "type": "name",
-              "name": "limit"
-            },
-            {
-              "type": "name",
-              "name": "glitched"
-            }
-          ]
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "conditional",
+                        "test": {
+                          "type": "name",
+                          "name": "glitched"
+                        },
+                        "if_true": {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "rep",
+                              "count": {
+                                "type": "constant",
+                                "value": 880
+                              }
+                            },
+                            {
+                              "type": "conditional",
+                              "test": {
+                                "type": "name",
+                                "name": "limit"
+                              },
+                              "if_true": {
+                                "type": "compare",
+                                "left": {
+                                  "type": "binary_op",
+                                  "left": {
+                                    "type": "state_method",
+                                    "method": "count_group_unique",
+                                    "args": [
+                                      {
+                                        "type": "constant",
+                                        "value": "graffitixl"
+                                      }
+                                    ]
+                                  },
+                                  "op": "*",
+                                  "right": {
+                                    "type": "constant",
+                                    "value": 4
+                                  }
+                                },
+                                "op": ">=",
+                                "right": {
+                                  "type": "constant",
+                                  "value": 59
+                                }
+                              },
+                              "if_false": {
+                                "type": "group_check",
+                                "group": "graffitixl"
+                              }
+                            }
+                          ]
+                        },
+                        "if_false": {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "rep",
+                              "count": {
+                                "type": "constant",
+                                "value": 880
+                              }
+                            },
+                            {
+                              "type": "conditional",
+                              "test": {
+                                "type": "name",
+                                "name": "limit"
+                              },
+                              "if_true": {
+                                "type": "compare",
+                                "left": {
+                                  "type": "binary_op",
+                                  "left": {
+                                    "type": "state_method",
+                                    "method": "count_group_unique",
+                                    "args": [
+                                      {
+                                        "type": "constant",
+                                        "value": "graffitixl"
+                                      }
+                                    ]
+                                  },
+                                  "op": "*",
+                                  "right": {
+                                    "type": "constant",
+                                    "value": 4
+                                  }
+                                },
+                                "op": ">=",
+                                "right": {
+                                  "type": "constant",
+                                  "value": 57
+                                }
+                              },
+                              "if_false": {
+                                "type": "group_check",
+                                "group": "graffitixl"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "rep",
+                        "count": {
+                          "type": "constant",
+                          "value": 920
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "rep",
+                    "count": {
+                      "type": "constant",
+                      "value": 960
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 122
+                  }
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
+              },
+              {
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitixl"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 4
+                    }
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 59
+                  }
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitixl"
+                }
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "conditional",
+                        "test": {
+                          "type": "name",
+                          "name": "glitched"
+                        },
+                        "if_true": {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "rep",
+                              "count": {
+                                "type": "constant",
+                                "value": 880
+                              }
+                            },
+                            {
+                              "type": "conditional",
+                              "test": {
+                                "type": "name",
+                                "name": "limit"
+                              },
+                              "if_true": {
+                                "type": "compare",
+                                "left": {
+                                  "type": "binary_op",
+                                  "left": {
+                                    "type": "state_method",
+                                    "method": "count_group_unique",
+                                    "args": [
+                                      {
+                                        "type": "constant",
+                                        "value": "graffitixl"
+                                      }
+                                    ]
+                                  },
+                                  "op": "*",
+                                  "right": {
+                                    "type": "constant",
+                                    "value": 4
+                                  }
+                                },
+                                "op": ">=",
+                                "right": {
+                                  "type": "constant",
+                                  "value": 59
+                                }
+                              },
+                              "if_false": {
+                                "type": "group_check",
+                                "group": "graffitixl"
+                              }
+                            }
+                          ]
+                        },
+                        "if_false": {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "rep",
+                              "count": {
+                                "type": "constant",
+                                "value": 880
+                              }
+                            },
+                            {
+                              "type": "conditional",
+                              "test": {
+                                "type": "name",
+                                "name": "limit"
+                              },
+                              "if_true": {
+                                "type": "compare",
+                                "left": {
+                                  "type": "binary_op",
+                                  "left": {
+                                    "type": "state_method",
+                                    "method": "count_group_unique",
+                                    "args": [
+                                      {
+                                        "type": "constant",
+                                        "value": "graffitixl"
+                                      }
+                                    ]
+                                  },
+                                  "op": "*",
+                                  "right": {
+                                    "type": "constant",
+                                    "value": 4
+                                  }
+                                },
+                                "op": ">=",
+                                "right": {
+                                  "type": "constant",
+                                  "value": 57
+                                }
+                              },
+                              "if_false": {
+                                "type": "group_check",
+                                "group": "graffitixl"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "rep",
+                        "count": {
+                          "type": "constant",
+                          "value": 920
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "rep",
+                    "count": {
+                      "type": "constant",
+                      "value": 960
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 117
+                  }
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
+              },
+              {
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitixl"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 4
+                    }
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 57
+                  }
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitixl"
+                }
+              }
+            ]
+          }
         }
       },
       "mataan_entrance": {
-        "type": "helper",
-        "name": "current_chapter",
-        "args": [
-          {
-            "type": "constant",
-            "value": 2
-          }
-        ]
+        "type": "item_check",
+        "item": "Chapter Completed",
+        "count": {
+          "type": "constant",
+          "value": 1
+        }
       },
       "mataan_faux": {
         "params": [
@@ -8547,68 +9725,502 @@
           "type": "and",
           "conditions": [
             {
-              "type": "helper",
-              "name": "mataan_deepest",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "limit"
-                },
-                {
-                  "type": "name",
-                  "name": "glitched"
-                }
-              ]
+              "type": "conditional",
+              "test": {
+                "type": "name",
+                "name": "glitched"
+              },
+              "if_true": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "conditional",
+                            "test": {
+                              "type": "name",
+                              "name": "glitched"
+                            },
+                            "if_true": {
+                              "type": "and",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "rep",
+                                  "count": {
+                                    "type": "constant",
+                                    "value": 880
+                                  }
+                                },
+                                {
+                                  "type": "conditional",
+                                  "test": {
+                                    "type": "name",
+                                    "name": "limit"
+                                  },
+                                  "if_true": {
+                                    "type": "compare",
+                                    "left": {
+                                      "type": "binary_op",
+                                      "left": {
+                                        "type": "state_method",
+                                        "method": "count_group_unique",
+                                        "args": [
+                                          {
+                                            "type": "constant",
+                                            "value": "graffitixl"
+                                          }
+                                        ]
+                                      },
+                                      "op": "*",
+                                      "right": {
+                                        "type": "constant",
+                                        "value": 4
+                                      }
+                                    },
+                                    "op": ">=",
+                                    "right": {
+                                      "type": "constant",
+                                      "value": 59
+                                    }
+                                  },
+                                  "if_false": {
+                                    "type": "group_check",
+                                    "group": "graffitixl"
+                                  }
+                                }
+                              ]
+                            },
+                            "if_false": {
+                              "type": "and",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "rep",
+                                  "count": {
+                                    "type": "constant",
+                                    "value": 880
+                                  }
+                                },
+                                {
+                                  "type": "conditional",
+                                  "test": {
+                                    "type": "name",
+                                    "name": "limit"
+                                  },
+                                  "if_true": {
+                                    "type": "compare",
+                                    "left": {
+                                      "type": "binary_op",
+                                      "left": {
+                                        "type": "state_method",
+                                        "method": "count_group_unique",
+                                        "args": [
+                                          {
+                                            "type": "constant",
+                                            "value": "graffitixl"
+                                          }
+                                        ]
+                                      },
+                                      "op": "*",
+                                      "right": {
+                                        "type": "constant",
+                                        "value": 4
+                                      }
+                                    },
+                                    "op": ">=",
+                                    "right": {
+                                      "type": "constant",
+                                      "value": 57
+                                    }
+                                  },
+                                  "if_false": {
+                                    "type": "group_check",
+                                    "group": "graffitixl"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "rep",
+                            "count": {
+                              "type": "constant",
+                              "value": 920
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "rep",
+                        "count": {
+                          "type": "constant",
+                          "value": 960
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "conditional",
+                    "test": {
+                      "type": "name",
+                      "name": "limit"
+                    },
+                    "if_true": {
+                      "type": "compare",
+                      "left": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "state_method",
+                          "method": "count_group_unique",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": "graffitim"
+                            }
+                          ]
+                        },
+                        "op": "*",
+                        "right": {
+                          "type": "constant",
+                          "value": 7
+                        }
+                      },
+                      "op": ">=",
+                      "right": {
+                        "type": "constant",
+                        "value": 122
+                      }
+                    },
+                    "if_false": {
+                      "type": "group_check",
+                      "group": "graffitim"
+                    }
+                  },
+                  {
+                    "type": "conditional",
+                    "test": {
+                      "type": "name",
+                      "name": "limit"
+                    },
+                    "if_true": {
+                      "type": "compare",
+                      "left": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "state_method",
+                          "method": "count_group_unique",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": "graffitixl"
+                            }
+                          ]
+                        },
+                        "op": "*",
+                        "right": {
+                          "type": "constant",
+                          "value": 4
+                        }
+                      },
+                      "op": ">=",
+                      "right": {
+                        "type": "constant",
+                        "value": 59
+                      }
+                    },
+                    "if_false": {
+                      "type": "group_check",
+                      "group": "graffitixl"
+                    }
+                  }
+                ]
+              },
+              "if_false": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "conditional",
+                            "test": {
+                              "type": "name",
+                              "name": "glitched"
+                            },
+                            "if_true": {
+                              "type": "and",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "rep",
+                                  "count": {
+                                    "type": "constant",
+                                    "value": 880
+                                  }
+                                },
+                                {
+                                  "type": "conditional",
+                                  "test": {
+                                    "type": "name",
+                                    "name": "limit"
+                                  },
+                                  "if_true": {
+                                    "type": "compare",
+                                    "left": {
+                                      "type": "binary_op",
+                                      "left": {
+                                        "type": "state_method",
+                                        "method": "count_group_unique",
+                                        "args": [
+                                          {
+                                            "type": "constant",
+                                            "value": "graffitixl"
+                                          }
+                                        ]
+                                      },
+                                      "op": "*",
+                                      "right": {
+                                        "type": "constant",
+                                        "value": 4
+                                      }
+                                    },
+                                    "op": ">=",
+                                    "right": {
+                                      "type": "constant",
+                                      "value": 59
+                                    }
+                                  },
+                                  "if_false": {
+                                    "type": "group_check",
+                                    "group": "graffitixl"
+                                  }
+                                }
+                              ]
+                            },
+                            "if_false": {
+                              "type": "and",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "rep",
+                                  "count": {
+                                    "type": "constant",
+                                    "value": 880
+                                  }
+                                },
+                                {
+                                  "type": "conditional",
+                                  "test": {
+                                    "type": "name",
+                                    "name": "limit"
+                                  },
+                                  "if_true": {
+                                    "type": "compare",
+                                    "left": {
+                                      "type": "binary_op",
+                                      "left": {
+                                        "type": "state_method",
+                                        "method": "count_group_unique",
+                                        "args": [
+                                          {
+                                            "type": "constant",
+                                            "value": "graffitixl"
+                                          }
+                                        ]
+                                      },
+                                      "op": "*",
+                                      "right": {
+                                        "type": "constant",
+                                        "value": 4
+                                      }
+                                    },
+                                    "op": ">=",
+                                    "right": {
+                                      "type": "constant",
+                                      "value": 57
+                                    }
+                                  },
+                                  "if_false": {
+                                    "type": "group_check",
+                                    "group": "graffitixl"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "rep",
+                            "count": {
+                              "type": "constant",
+                              "value": 920
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "rep",
+                        "count": {
+                          "type": "constant",
+                          "value": 960
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "conditional",
+                    "test": {
+                      "type": "name",
+                      "name": "limit"
+                    },
+                    "if_true": {
+                      "type": "compare",
+                      "left": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "state_method",
+                          "method": "count_group_unique",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": "graffitim"
+                            }
+                          ]
+                        },
+                        "op": "*",
+                        "right": {
+                          "type": "constant",
+                          "value": 7
+                        }
+                      },
+                      "op": ">=",
+                      "right": {
+                        "type": "constant",
+                        "value": 117
+                      }
+                    },
+                    "if_false": {
+                      "type": "group_check",
+                      "group": "graffitim"
+                    }
+                  },
+                  {
+                    "type": "conditional",
+                    "test": {
+                      "type": "name",
+                      "name": "limit"
+                    },
+                    "if_true": {
+                      "type": "compare",
+                      "left": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "state_method",
+                          "method": "count_group_unique",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": "graffitixl"
+                            }
+                          ]
+                        },
+                        "op": "*",
+                        "right": {
+                          "type": "constant",
+                          "value": 4
+                        }
+                      },
+                      "op": ">=",
+                      "right": {
+                        "type": "constant",
+                        "value": 57
+                      }
+                    },
+                    "if_false": {
+                      "type": "group_check",
+                      "group": "graffitixl"
+                    }
+                  }
+                ]
+              }
             },
             {
-              "type": "helper",
-              "name": "graffitiM",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "limit"
+              "type": "conditional",
+              "test": {
+                "type": "name",
+                "name": "limit"
+              },
+              "if_true": {
+                "type": "compare",
+                "left": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count_group_unique",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "graffitim"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 7
+                  }
                 },
-                {
+                "op": ">=",
+                "right": {
                   "type": "constant",
                   "value": 122
                 }
-              ]
+              },
+              "if_false": {
+                "type": "group_check",
+                "group": "graffitim"
+              }
             }
           ]
         }
       },
       "mataan_oldhead": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 935
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 935
+        }
       },
       "mataan_smoke_wall": {
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "current_chapter",
-            "args": [
-              {
-                "type": "constant",
-                "value": 5
-              }
-            ]
+            "type": "item_check",
+            "item": "Chapter Completed",
+            "count": {
+              "type": "constant",
+              "value": 4
+            }
           },
           {
-            "type": "helper",
-            "name": "rep",
-            "args": [
-              {
-                "type": "constant",
-                "value": 850
-              }
-            ]
+            "type": "item_check",
+            "item": "rep",
+            "count": {
+              "type": "constant",
+              "value": 850
+            }
           }
         ]
       },
@@ -8621,28 +10233,132 @@
           "type": "and",
           "conditions": [
             {
-              "type": "helper",
-              "name": "mataan_all_challenges",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "name",
-                  "name": "limit"
+                  "type": "conditional",
+                  "test": {
+                    "type": "name",
+                    "name": "glitched"
+                  },
+                  "if_true": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "rep",
+                        "count": {
+                          "type": "constant",
+                          "value": 880
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "test": {
+                          "type": "name",
+                          "name": "limit"
+                        },
+                        "if_true": {
+                          "type": "compare",
+                          "left": {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "state_method",
+                              "method": "count_group_unique",
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": "graffitixl"
+                                }
+                              ]
+                            },
+                            "op": "*",
+                            "right": {
+                              "type": "constant",
+                              "value": 4
+                            }
+                          },
+                          "op": ">=",
+                          "right": {
+                            "type": "constant",
+                            "value": 59
+                          }
+                        },
+                        "if_false": {
+                          "type": "group_check",
+                          "group": "graffitixl"
+                        }
+                      }
+                    ]
+                  },
+                  "if_false": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "rep",
+                        "count": {
+                          "type": "constant",
+                          "value": 880
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "test": {
+                          "type": "name",
+                          "name": "limit"
+                        },
+                        "if_true": {
+                          "type": "compare",
+                          "left": {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "state_method",
+                              "method": "count_group_unique",
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": "graffitixl"
+                                }
+                              ]
+                            },
+                            "op": "*",
+                            "right": {
+                              "type": "constant",
+                              "value": 4
+                            }
+                          },
+                          "op": ">=",
+                          "right": {
+                            "type": "constant",
+                            "value": 57
+                          }
+                        },
+                        "if_false": {
+                          "type": "group_check",
+                          "group": "graffitixl"
+                        }
+                      }
+                    ]
+                  }
                 },
                 {
-                  "type": "name",
-                  "name": "glitched"
+                  "type": "item_check",
+                  "item": "rep",
+                  "count": {
+                    "type": "constant",
+                    "value": 920
+                  }
                 }
               ]
             },
             {
-              "type": "helper",
-              "name": "rep",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 960
-                }
-              ]
+              "type": "item_check",
+              "item": "rep",
+              "count": {
+                "type": "constant",
+                "value": 960
+              }
             }
           ]
         }
@@ -8653,59 +10369,144 @@
           "glitched"
         ],
         "body": {
-          "type": "helper",
-          "name": "millennium_mall_switch",
-          "args": [
-            {
-              "type": "name",
-              "name": "limit"
-            },
-            {
-              "type": "name",
-              "name": "glitched"
-            }
-          ]
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 114
+                  }
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
+              },
+              {
+                "type": "item_check",
+                "item": "Chapter Completed",
+                "count": {
+                  "type": "constant",
+                  "value": 2
+                }
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 72
+                  }
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
+              },
+              {
+                "type": "item_check",
+                "item": "Chapter Completed",
+                "count": {
+                  "type": "constant",
+                  "value": 2
+                }
+              }
+            ]
+          }
         }
       },
       "millennium_mall_challenge1": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 434
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 434
+        }
       },
       "millennium_mall_challenge2": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 442
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 442
+        }
       },
       "millennium_mall_challenge3": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 450
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 450
+        }
       },
       "millennium_mall_challenge4": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 458
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 458
+        }
       },
       "millennium_mall_crew_battle": {
         "params": [
@@ -8722,42 +10523,86 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "rep",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 491
-                  }
-                ]
+                "type": "item_check",
+                "item": "rep",
+                "count": {
+                  "type": "constant",
+                  "value": 491
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiM",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 114
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiL",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitil"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 6
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 107
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitil"
+                }
               }
             ]
           },
@@ -8765,42 +10610,86 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "rep",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 491
-                  }
-                ]
+                "type": "item_check",
+                "item": "rep",
+                "count": {
+                  "type": "constant",
+                  "value": 491
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiM",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 78
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiL",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitil"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 6
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 80
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitil"
+                }
               }
             ]
           }
@@ -8810,24 +10699,20 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "rep",
-            "args": [
-              {
-                "type": "constant",
-                "value": 380
-              }
-            ]
+            "type": "item_check",
+            "item": "rep",
+            "count": {
+              "type": "constant",
+              "value": 380
+            }
           },
           {
-            "type": "helper",
-            "name": "current_chapter",
-            "args": [
-              {
-                "type": "constant",
-                "value": 3
-              }
-            ]
+            "type": "item_check",
+            "item": "Chapter Completed",
+            "count": {
+              "type": "constant",
+              "value": 2
+            }
           }
         ]
       },
@@ -8839,22 +10724,60 @@
           "type": "or",
           "conditions": [
             {
-              "type": "helper",
-              "name": "rep",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 580
-                }
-              ]
+              "type": "item_check",
+              "item": "rep",
+              "count": {
+                "type": "constant",
+                "value": 580
+              }
             },
             {
-              "type": "helper",
-              "name": "millennium_mall_theater",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "name",
-                  "name": "limit"
+                  "type": "item_check",
+                  "item": "rep",
+                  "count": {
+                    "type": "constant",
+                    "value": 491
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "test": {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  "if_true": {
+                    "type": "compare",
+                    "left": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "state_method",
+                        "method": "count_group_unique",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "graffitim"
+                          }
+                        ]
+                      },
+                      "op": "*",
+                      "right": {
+                        "type": "constant",
+                        "value": 7
+                      }
+                    },
+                    "op": ">=",
+                    "right": {
+                      "type": "constant",
+                      "value": 78
+                    }
+                  },
+                  "if_false": {
+                    "type": "group_check",
+                    "group": "graffitim"
+                  }
                 }
               ]
             }
@@ -8862,14 +10785,12 @@
         }
       },
       "millennium_mall_oldhead_race": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 530
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 530
+        }
       },
       "millennium_mall_switch": {
         "params": [
@@ -8886,28 +10807,49 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "graffitiM",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 114
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
               },
               {
-                "type": "helper",
-                "name": "current_chapter",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 3
-                  }
-                ]
+                "type": "item_check",
+                "item": "Chapter Completed",
+                "count": {
+                  "type": "constant",
+                  "value": 2
+                }
               }
             ]
           },
@@ -8915,28 +10857,49 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "graffitiM",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 72
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
               },
               {
-                "type": "helper",
-                "name": "current_chapter",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 3
-                  }
-                ]
+                "type": "item_check",
+                "item": "Chapter Completed",
+                "count": {
+                  "type": "constant",
+                  "value": 2
+                }
               }
             ]
           }
@@ -8950,41 +10913,60 @@
           "type": "and",
           "conditions": [
             {
-              "type": "helper",
-              "name": "rep",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 491
-                }
-              ]
+              "type": "item_check",
+              "item": "rep",
+              "count": {
+                "type": "constant",
+                "value": 491
+              }
             },
             {
-              "type": "helper",
-              "name": "graffitiM",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "limit"
+              "type": "conditional",
+              "test": {
+                "type": "name",
+                "name": "limit"
+              },
+              "if_true": {
+                "type": "compare",
+                "left": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count_group_unique",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "graffitim"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 7
+                  }
                 },
-                {
+                "op": ">=",
+                "right": {
                   "type": "constant",
                   "value": 78
                 }
-              ]
+              },
+              "if_false": {
+                "type": "group_check",
+                "group": "graffitim"
+              }
             }
           ]
         }
       },
       "millennium_square_entrance": {
-        "type": "helper",
-        "name": "current_chapter",
-        "args": [
-          {
-            "type": "constant",
-            "value": 2
-          }
-        ]
+        "type": "item_check",
+        "item": "Chapter Completed",
+        "count": {
+          "type": "constant",
+          "value": 1
+        }
       },
       "pyramid_island_all_challenges": {
         "params": [
@@ -9001,28 +10983,49 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "graffitiM",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 114
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
               },
               {
-                "type": "helper",
-                "name": "rep",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 660
-                  }
-                ]
+                "type": "item_check",
+                "item": "rep",
+                "count": {
+                  "type": "constant",
+                  "value": 660
+                }
               }
             ]
           },
@@ -9030,28 +11033,49 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "graffitiM",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 88
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
               },
               {
-                "type": "helper",
-                "name": "rep",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 660
-                  }
-                ]
+                "type": "item_check",
+                "item": "rep",
+                "count": {
+                  "type": "constant",
+                  "value": 660
+                }
               }
             ]
           }
@@ -9061,46 +11085,38 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "rep",
-            "args": [
-              {
-                "type": "constant",
-                "value": 630
-              }
-            ]
+            "type": "item_check",
+            "item": "rep",
+            "count": {
+              "type": "constant",
+              "value": 630
+            }
           },
           {
-            "type": "helper",
-            "name": "current_chapter",
-            "args": [
-              {
-                "type": "constant",
-                "value": 4
-              }
-            ]
+            "type": "item_check",
+            "item": "Chapter Completed",
+            "count": {
+              "type": "constant",
+              "value": 3
+            }
           }
         ]
       },
       "pyramid_island_challenge2": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 650
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 650
+        }
       },
       "pyramid_island_challenge3": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 660
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 660
+        }
       },
       "pyramid_island_crew_battle": {
         "params": [
@@ -9117,28 +11133,49 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "rep",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 730
-                  }
-                ]
+                "type": "item_check",
+                "item": "rep",
+                "count": {
+                  "type": "constant",
+                  "value": 730
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiL",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitil"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 6
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 108
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitil"
+                }
               }
             ]
           },
@@ -9146,72 +11183,85 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "rep",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 730
-                  }
-                ]
+                "type": "item_check",
+                "item": "rep",
+                "count": {
+                  "type": "constant",
+                  "value": 730
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiL",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitil"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 6
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 97
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitil"
+                }
               }
             ]
           }
         }
       },
       "pyramid_island_entrance": {
-        "type": "helper",
-        "name": "current_chapter",
-        "args": [
-          {
-            "type": "constant",
-            "value": 4
-          }
-        ]
+        "type": "item_check",
+        "item": "Chapter Completed",
+        "count": {
+          "type": "constant",
+          "value": 3
+        }
       },
       "pyramid_island_gate": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 620
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 620
+        }
       },
       "pyramid_island_oldhead": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 780
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 780
+        }
       },
       "pyramid_island_top": {
-        "type": "helper",
-        "name": "current_chapter",
-        "args": [
-          {
-            "type": "constant",
-            "value": 5
-          }
-        ]
+        "type": "item_check",
+        "item": "Chapter Completed",
+        "count": {
+          "type": "constant",
+          "value": 4
+        }
       },
       "pyramid_island_upper_half": {
         "params": [
@@ -9219,18 +11269,111 @@
           "glitched"
         ],
         "body": {
-          "type": "helper",
-          "name": "pyramid_island_all_challenges",
-          "args": [
-            {
-              "type": "name",
-              "name": "limit"
-            },
-            {
-              "type": "name",
-              "name": "glitched"
-            }
-          ]
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 114
+                  }
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
+              },
+              {
+                "type": "item_check",
+                "item": "rep",
+                "count": {
+                  "type": "constant",
+                  "value": 660
+                }
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 88
+                  }
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
+              },
+              {
+                "type": "item_check",
+                "item": "rep",
+                "count": {
+                  "type": "constant",
+                  "value": 660
+                }
+              }
+            ]
+          }
         }
       },
       "rep": {
@@ -9275,67 +11418,86 @@
         }
       },
       "versum_hill_all_challenges": {
-        "type": "helper",
-        "name": "versum_hill_challenge3"
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 65
+        }
       },
       "versum_hill_basketball_court": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 90
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 90
+        }
       },
       "versum_hill_ch1_roadblock": {
         "params": [
           "limit"
         ],
         "body": {
-          "type": "helper",
-          "name": "graffitiL",
-          "args": [
-            {
-              "type": "name",
-              "name": "limit"
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "limit"
+          },
+          "if_true": {
+            "type": "compare",
+            "left": {
+              "type": "binary_op",
+              "left": {
+                "type": "state_method",
+                "method": "count_group_unique",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "graffitil"
+                  }
+                ]
+              },
+              "op": "*",
+              "right": {
+                "type": "constant",
+                "value": 6
+              }
             },
-            {
+            "op": ">=",
+            "right": {
               "type": "constant",
               "value": 10
             }
-          ]
+          },
+          "if_false": {
+            "type": "group_check",
+            "group": "graffitil"
+          }
         }
       },
       "versum_hill_challenge1": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 50
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 50
+        }
       },
       "versum_hill_challenge2": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 58
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 58
+        }
       },
       "versum_hill_challenge3": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 65
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 65
+        }
       },
       "versum_hill_crew_battle": {
         "params": [
@@ -9352,28 +11514,49 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "rep",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 90
-                  }
-                ]
+                "type": "item_check",
+                "item": "rep",
+                "count": {
+                  "type": "constant",
+                  "value": 90
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiM",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 98
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
               }
             ]
           },
@@ -9381,52 +11564,69 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "rep",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 90
-                  }
-                ]
+                "type": "item_check",
+                "item": "rep",
+                "count": {
+                  "type": "constant",
+                  "value": 90
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiM",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 27
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
               }
             ]
           }
         }
       },
       "versum_hill_entrance": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 20
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 20
+        }
       },
       "versum_hill_oldhead": {
-        "type": "helper",
-        "name": "rep",
-        "args": [
-          {
-            "type": "constant",
-            "value": 120
-          }
-        ]
+        "type": "item_check",
+        "item": "rep",
+        "count": {
+          "type": "constant",
+          "value": 120
+        }
       },
       "versum_hill_rave": {
         "params": [
@@ -9442,90 +11642,178 @@
           "if_true": {
             "type": "conditional",
             "test": {
-              "type": "helper",
-              "name": "current_chapter",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 4
-                }
-              ]
+              "type": "item_check",
+              "item": "Chapter Completed",
+              "count": {
+                "type": "constant",
+                "value": 3
+              }
             },
             "if_true": {
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "graffitiL",
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "limit"
+                  "type": "conditional",
+                  "test": {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  "if_true": {
+                    "type": "compare",
+                    "left": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "state_method",
+                        "method": "count_group_unique",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "graffitil"
+                          }
+                        ]
+                      },
+                      "op": "*",
+                      "right": {
+                        "type": "constant",
+                        "value": 6
+                      }
                     },
-                    {
+                    "op": ">=",
+                    "right": {
                       "type": "constant",
                       "value": 90
                     }
-                  ]
+                  },
+                  "if_false": {
+                    "type": "group_check",
+                    "group": "graffitil"
+                  }
                 },
                 {
-                  "type": "helper",
-                  "name": "graffitiXL",
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "limit"
+                  "type": "conditional",
+                  "test": {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  "if_true": {
+                    "type": "compare",
+                    "left": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "state_method",
+                        "method": "count_group_unique",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "graffitixl"
+                          }
+                        ]
+                      },
+                      "op": "*",
+                      "right": {
+                        "type": "constant",
+                        "value": 4
+                      }
                     },
-                    {
+                    "op": ">=",
+                    "right": {
                       "type": "constant",
                       "value": 51
                     }
-                  ]
+                  },
+                  "if_false": {
+                    "type": "group_check",
+                    "group": "graffitixl"
+                  }
                 }
               ]
             },
             "if_false": {
               "type": "conditional",
               "test": {
-                "type": "helper",
-                "name": "current_chapter",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 3
-                  }
-                ]
+                "type": "item_check",
+                "item": "Chapter Completed",
+                "count": {
+                  "type": "constant",
+                  "value": 2
+                }
               },
               "if_true": {
                 "type": "and",
                 "conditions": [
                   {
-                    "type": "helper",
-                    "name": "graffitiL",
-                    "args": [
-                      {
-                        "type": "name",
-                        "name": "limit"
+                    "type": "conditional",
+                    "test": {
+                      "type": "name",
+                      "name": "limit"
+                    },
+                    "if_true": {
+                      "type": "compare",
+                      "left": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "state_method",
+                          "method": "count_group_unique",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": "graffitil"
+                            }
+                          ]
+                        },
+                        "op": "*",
+                        "right": {
+                          "type": "constant",
+                          "value": 6
+                        }
                       },
-                      {
+                      "op": ">=",
+                      "right": {
                         "type": "constant",
                         "value": 89
                       }
-                    ]
+                    },
+                    "if_false": {
+                      "type": "group_check",
+                      "group": "graffitil"
+                    }
                   },
                   {
-                    "type": "helper",
-                    "name": "graffitiXL",
-                    "args": [
-                      {
-                        "type": "name",
-                        "name": "limit"
+                    "type": "conditional",
+                    "test": {
+                      "type": "name",
+                      "name": "limit"
+                    },
+                    "if_true": {
+                      "type": "compare",
+                      "left": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "state_method",
+                          "method": "count_group_unique",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": "graffitixl"
+                            }
+                          ]
+                        },
+                        "op": "*",
+                        "right": {
+                          "type": "constant",
+                          "value": 4
+                        }
                       },
-                      {
+                      "op": ">=",
+                      "right": {
                         "type": "constant",
                         "value": 51
                       }
-                    ]
+                    },
+                    "if_false": {
+                      "type": "group_check",
+                      "group": "graffitixl"
+                    }
                   }
                 ]
               },
@@ -9533,32 +11821,78 @@
                 "type": "and",
                 "conditions": [
                   {
-                    "type": "helper",
-                    "name": "graffitiL",
-                    "args": [
-                      {
-                        "type": "name",
-                        "name": "limit"
+                    "type": "conditional",
+                    "test": {
+                      "type": "name",
+                      "name": "limit"
+                    },
+                    "if_true": {
+                      "type": "compare",
+                      "left": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "state_method",
+                          "method": "count_group_unique",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": "graffitil"
+                            }
+                          ]
+                        },
+                        "op": "*",
+                        "right": {
+                          "type": "constant",
+                          "value": 6
+                        }
                       },
-                      {
+                      "op": ">=",
+                      "right": {
                         "type": "constant",
                         "value": 85
                       }
-                    ]
+                    },
+                    "if_false": {
+                      "type": "group_check",
+                      "group": "graffitil"
+                    }
                   },
                   {
-                    "type": "helper",
-                    "name": "graffitiXL",
-                    "args": [
-                      {
-                        "type": "name",
-                        "name": "limit"
+                    "type": "conditional",
+                    "test": {
+                      "type": "name",
+                      "name": "limit"
+                    },
+                    "if_true": {
+                      "type": "compare",
+                      "left": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "state_method",
+                          "method": "count_group_unique",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": "graffitixl"
+                            }
+                          ]
+                        },
+                        "op": "*",
+                        "right": {
+                          "type": "constant",
+                          "value": 4
+                        }
                       },
-                      {
+                      "op": ">=",
+                      "right": {
                         "type": "constant",
                         "value": 48
                       }
-                    ]
+                    },
+                    "if_false": {
+                      "type": "group_check",
+                      "group": "graffitixl"
+                    }
                   }
                 ]
               }
@@ -9568,32 +11902,78 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "graffitiL",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitil"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 6
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 26
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitil"
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiXL",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitixl"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 4
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 10
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitixl"
+                }
               }
             ]
           }
@@ -9614,28 +11994,49 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "current_chapter",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 2
-                  }
-                ]
+                "type": "item_check",
+                "item": "Chapter Completed",
+                "count": {
+                  "type": "constant",
+                  "value": 1
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiM",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 114
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
               }
             ]
           },
@@ -9643,28 +12044,49 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "current_chapter",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": 2
-                  }
-                ]
+                "type": "item_check",
+                "item": "Chapter Completed",
+                "count": {
+                  "type": "constant",
+                  "value": 1
+                }
               },
               {
-                "type": "helper",
-                "name": "graffitiM",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "limit"
+                "type": "conditional",
+                "test": {
+                  "type": "name",
+                  "name": "limit"
+                },
+                "if_true": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count_group_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "graffitim"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 7
+                    }
                   },
-                  {
+                  "op": ">=",
+                  "right": {
                     "type": "constant",
                     "value": 67
                   }
-                ]
+                },
+                "if_false": {
+                  "type": "group_check",
+                  "group": "graffitim"
+                }
               }
             ]
           }

@@ -926,6 +926,139 @@
         "yorgle_min_speed": 1,
         "yorgle_speed": 2
       },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "bat_logic": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "cannot_break",
+            "1": "can_break",
+            "2": "use_logic"
+          },
+          "default": 1,
+          "display_name": "Bat Logic"
+        },
+        "connector_multi_slot": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Connector Multi-Slot"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "difficulty_switch_a": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "locked_hard",
+            "2": "hard_with_unlock_item"
+          },
+          "default": 2,
+          "display_name": "Left Difficulty Switch"
+        },
+        "difficulty_switch_b": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "locked_hard",
+            "2": "hard_with_unlock_item"
+          },
+          "default": 2,
+          "display_name": "Right Difficulty Switch"
+        },
+        "dragon_rando_type": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "shuffle",
+            "2": "overworldplus",
+            "3": "randomized"
+          },
+          "default": 1,
+          "display_name": "Dragon Randomization"
+        },
+        "dragon_slay_check": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Slay Dragon Checks"
+        },
+        "freeincarnate_max": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 17,
+          "default": 17,
+          "display_name": "Freeincarnate Maximum"
+        },
+        "grundle_min_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 1,
+          "display_name": "Grundle Min Speed"
+        },
+        "grundle_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 2,
+          "display_name": "Grundle MaxSpeed"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "rhindle_min_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 2,
+          "display_name": "Rhindle Min Speed"
+        },
+        "rhindle_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 3,
+          "display_name": "Rhindle MaxSpeed"
+        },
+        "start_castle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "yellow",
+            "1": "black",
+            "2": "white"
+          },
+          "default": 0,
+          "display_name": "Start Castle"
+        },
+        "yorgle_min_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 1,
+          "display_name": "Yorgle Min Speed"
+        },
+        "yorgle_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 2,
+          "display_name": "Yorgle MaxSpeed"
+        }
+      },
       "world_directory": "adventure"
     }
   },

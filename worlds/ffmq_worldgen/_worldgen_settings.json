@@ -46,5 +46,332 @@
     "starting_weapon": "bomb",
     "tweak_frustrating_dungeons": "false"
   },
+  "option_definitions": {
+    "accessibility": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "full",
+        "2": "minimal",
+        "1": "items"
+      },
+      "default": 1,
+      "display_name": "Accessibility"
+    },
+    "available_companions": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 4,
+      "default": 4,
+      "display_name": "Available Companions"
+    },
+    "battlefields_battles_quantities": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "ten",
+        "1": "seven",
+        "2": "five",
+        "3": "three",
+        "4": "one",
+        "5": "random_one_through_five",
+        "6": "random_one_through_ten"
+      },
+      "default": 0,
+      "display_name": "Battlefields Battles Quantity"
+    },
+    "bosses_scaling_lower": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "quarter",
+        "1": "half",
+        "2": "three_quarter",
+        "3": "normal",
+        "4": "one_and_quarter",
+        "5": "one_and_half",
+        "6": "double",
+        "7": "double_and_half",
+        "8": "triple"
+      },
+      "default": 0,
+      "display_name": "Bosses Scaling Lower"
+    },
+    "bosses_scaling_upper": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "quarter",
+        "1": "half",
+        "2": "three_quarter",
+        "3": "normal",
+        "4": "one_and_quarter",
+        "5": "one_and_half",
+        "6": "double",
+        "7": "double_and_half",
+        "8": "triple"
+      },
+      "default": 4,
+      "display_name": "Bosses Scaling Upper"
+    },
+    "brown_boxes": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "exclude",
+        "1": "include",
+        "2": "shuffle"
+      },
+      "default": 1,
+      "display_name": "Brown Boxes"
+    },
+    "companion_leveling_type": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "quests",
+        "1": "quests_extended",
+        "2": "save_crystals_individual",
+        "3": "save_crystals_all",
+        "4": "benjamin_level",
+        "5": "benjamin_level_plus_5",
+        "6": "benjamin_level_plus_10"
+      },
+      "default": 0,
+      "display_name": "Companion Leveling Type"
+    },
+    "companion_spellbook_type": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "standard",
+        "1": "extended",
+        "2": "random_balanced",
+        "3": "random_chaos"
+      },
+      "default": 0,
+      "display_name": "Companion Spellbook Type"
+    },
+    "companions_locations": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "standard",
+        "1": "shuffled",
+        "2": "shuffled_extended"
+      },
+      "default": 0,
+      "display_name": "Companions' Locations"
+    },
+    "crest_shuffle": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Crest Shuffle"
+    },
+    "doom_castle_mode": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "standard",
+        "1": "boss_rush",
+        "2": "dark_king_only"
+      },
+      "default": 0,
+      "display_name": "Doom Castle"
+    },
+    "doom_castle_shortcut": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Doom Castle Shortcut"
+    },
+    "enemies_density": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "all",
+        "1": "three_quarter",
+        "2": "half",
+        "3": "quarter",
+        "4": "none"
+      },
+      "default": 0,
+      "display_name": "Enemies Density"
+    },
+    "enemies_scaling_lower": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "quarter",
+        "1": "half",
+        "2": "three_quarter",
+        "3": "normal",
+        "4": "one_and_quarter",
+        "5": "one_and_half",
+        "6": "double",
+        "7": "double_and_half",
+        "8": "triple"
+      },
+      "default": 0,
+      "display_name": "Enemies Scaling Lower"
+    },
+    "enemies_scaling_upper": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "quarter",
+        "1": "half",
+        "2": "three_quarter",
+        "3": "normal",
+        "4": "one_and_quarter",
+        "5": "one_and_half",
+        "6": "double",
+        "7": "double_and_half",
+        "8": "triple"
+      },
+      "default": 4,
+      "display_name": "Enemies Scaling Upper"
+    },
+    "enemizer_attacks": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "normal",
+        "1": "safe",
+        "2": "chaos",
+        "3": "self_destruct",
+        "4": "simple_shuffle"
+      },
+      "default": 0,
+      "display_name": "Enemizer Attacks"
+    },
+    "enemizer_groups": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "mobs_only",
+        "1": "mobs_and_bosses",
+        "2": "mobs_bosses_and_dark_king"
+      },
+      "default": 1,
+      "display_name": "Enemizer Groups"
+    },
+    "kaelis_mom_fight_minotaur": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Kaeli's Mom Fights Minotaur"
+    },
+    "leveling_curve": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "half",
+        "1": "normal",
+        "2": "one_and_half",
+        "3": "double",
+        "4": "double_and_half",
+        "5": "triple",
+        "6": "quadruple"
+      },
+      "default": 4,
+      "display_name": "Leveling Curve"
+    },
+    "logic": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "friendly",
+        "1": "standard",
+        "2": "expert"
+      },
+      "default": 1,
+      "display_name": "Logic"
+    },
+    "map_shuffle": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "overworld",
+        "2": "dungeons",
+        "3": "overworld_and_dungeons",
+        "4": "everything"
+      },
+      "default": 0,
+      "display_name": "Map Shuffle"
+    },
+    "progression_balancing": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 99,
+      "default": 50,
+      "display_name": "Progression Balancing"
+    },
+    "progressive_formations": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "disabled",
+        "1": "regions_strict",
+        "2": "regions_keep_type"
+      },
+      "default": 0,
+      "display_name": "Progressive Formations"
+    },
+    "progressive_gear": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Progressive Gear"
+    },
+    "shattered_sky_coin_quantity": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "low_16",
+        "1": "mid_24",
+        "2": "high_32",
+        "3": "random_narrow",
+        "4": "random_wide"
+      },
+      "default": 1,
+      "display_name": "Shattered Sky Coin"
+    },
+    "shuffle_battlefield_rewards": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Shuffle Battlefield Rewards"
+    },
+    "shuffle_enemies_position": {
+      "type": "toggle",
+      "default": 1,
+      "display_name": "Shuffle Enemies' Positions"
+    },
+    "shuffle_res_weak_types": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Shuffle Resistance/Weakness Types"
+    },
+    "sky_coin_mode": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "standard",
+        "1": "start_with",
+        "2": "save_the_crystals",
+        "3": "shattered_sky_coin"
+      },
+      "default": 0,
+      "display_name": "Sky Coin Mode"
+    },
+    "starting_companion": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "kaeli",
+        "2": "tristam",
+        "3": "phoebe",
+        "4": "reuben",
+        "5": "random_companion",
+        "6": "random_plus_none"
+      },
+      "default": 0,
+      "display_name": "Starting Companion"
+    },
+    "starting_weapon": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "steel_sword",
+        "1": "axe",
+        "2": "cat_claw",
+        "3": "bomb"
+      },
+      "default": "random",
+      "display_name": "Starting Weapon"
+    },
+    "tweak_frustrating_dungeons": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Tweak Frustrating Dungeons"
+    }
+  },
   "world_directory": "ffmq"
 }

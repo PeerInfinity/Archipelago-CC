@@ -17,6 +17,12 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Death Link:                      No
+Extra Items in Logic:            Yes
+Shuffle Gestures:                Anywhere
+Shuffle Red Medallions:          No
+Shuffle Party Members:           No
+Start Location:                  Waynehouse
 
 
 Locations:

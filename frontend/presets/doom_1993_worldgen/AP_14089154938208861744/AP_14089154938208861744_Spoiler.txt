@@ -17,6 +17,31 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Added Ammo - Bullets:            200
+Added Ammo - Energy Cells:       300
+Added Ammo - Rockets:            50
+Added Ammo - Shells:             50
+Allow Death Logic:               No
+Backpack Count:                  1
+Death Link:                      No
+Difficulty:                      Medium
+Episode 1:                       Yes
+Episode 2:                       Yes
+Episode 3:                       Yes
+Episode 4:                       No
+Flip Levels:                     Vanilla
+Goal:                            Complete All Levels
+Max Ammo - Bullets:              200
+Max Ammo - Energy Cells:         300
+Max Ammo - Rockets:              50
+Max Ammo - Shells:               50
+Pro Doom:                        No
+Random Monsters:                 Shuffle
+Random Music:                    Vanilla
+Random Pickups:                  Shuffle
+Reset Level on Death:            Yes
+Split Backpack:                  No
+Start With Computer Area Maps:   No
 
 
 Starting Items:

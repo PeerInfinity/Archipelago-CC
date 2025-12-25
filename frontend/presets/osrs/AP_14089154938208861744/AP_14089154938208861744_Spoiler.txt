@@ -303,9 +303,11 @@ Kill a Hill Giant
    =>   Hill Giant
 Kill a Zombie
         Menu -> Start->Lumbridge
-   =>   Lumbridge -> Lumbridge->Lumbridge Farms West
-   =>   Lumbridge Farms West -> Lumbridge Farms West->Draynor Village
-   =>   Draynor Village -> Draynor Village->Zombie
+   =>   Lumbridge -> Lumbridge->South of Varrock
+   =>   South of Varrock -> South of Varrock->Central Varrock
+   =>   Central Varrock -> Central Varrock->West Varrock
+   =>   West Varrock -> West Varrock->Wilderness
+   =>   Wilderness -> Wilderness->Zombie
    =>   Zombie
 Mine Silver
         Menu -> Start->Lumbridge

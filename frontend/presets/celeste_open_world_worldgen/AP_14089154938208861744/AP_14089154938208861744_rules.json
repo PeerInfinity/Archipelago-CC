@@ -40070,17 +40070,490 @@
       "use_resolved_items": false,
       "options": {
         "accessibility": "full",
+        "bald_trap_weight": "medium",
+        "binosanity": "false",
+        "carsanity": "false",
+        "checkpointsanity": "false",
+        "death_link": "false",
+        "death_link_amnesty": 10,
         "exclude_locations": [],
+        "fast_trap_weight": "medium",
+        "gemsanity": "false",
+        "goal_area": "the_summit_a",
+        "goal_area_checkpointsanity": "false",
+        "hiccup_trap_weight": "medium",
+        "ice_trap_weight": "medium",
+        "include_b_sides": "false",
+        "include_c_sides": "false",
+        "include_core": "false",
+        "include_farewell": "none",
+        "include_goldens": "false",
+        "invisible_trap_weight": "medium",
         "item_links": [],
+        "junk_fill_percentage": 50,
+        "keysanity": "false",
+        "laughter_trap_weight": "medium",
+        "literature_trap_weight": "medium",
         "local_items": [],
+        "lock_goal_area": "true",
+        "madeline_feather_hair_color": "golden",
+        "madeline_hair_length": "default",
+        "madeline_no_dash_hair_color": "empty",
+        "madeline_one_dash_hair_color": "strawberry",
+        "madeline_two_dash_hair_color": "double",
+        "music_shuffle": "none",
         "non_local_items": [],
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
         "randomize_items": "false",
+        "require_cassettes": "false",
+        "reverse_trap_weight": "medium",
+        "roomsanity": "false",
+        "screen_flip_trap_weight": "medium",
+        "slow_trap_weight": "medium",
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "strawberries_required_percentage": 80,
+        "stun_trap_weight": "medium",
+        "total_strawberries": 50,
+        "trap_expiration_action": "deaths",
+        "trap_expiration_amount": 5,
+        "trap_fill_percentage": 0,
+        "trap_link": "false",
+        "zoom_trap_weight": "medium"
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "bald_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Bald Trap Weight"
+        },
+        "binosanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Binosanity"
+        },
+        "carsanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Carsanity"
+        },
+        "checkpointsanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Checkpointsanity"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "death_link_amnesty": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 30,
+          "default": 10,
+          "display_name": "Death Link Amnesty"
+        },
+        "fast_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Fast Trap Weight"
+        },
+        "gemsanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Gemsanity"
+        },
+        "goal_area": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "the_summit_a",
+            "1": "the_summit_b",
+            "2": "the_summit_c",
+            "3": "core_a",
+            "4": "core_b",
+            "5": "core_c",
+            "6": "empty_space",
+            "7": "farewell",
+            "8": "farewell_golden"
+          },
+          "default": 0,
+          "display_name": "Goal Area"
+        },
+        "goal_area_checkpointsanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Goal Area Checkpointsanity"
+        },
+        "hiccup_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Hiccup Trap Weight"
+        },
+        "ice_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Ice Trap Weight"
+        },
+        "include_b_sides": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Include B-Sides"
+        },
+        "include_c_sides": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Include C-Sides"
+        },
+        "include_core": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Include Core"
+        },
+        "include_farewell": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "empty_space",
+            "2": "farewell"
+          },
+          "default": 0,
+          "display_name": "Include Farewell"
+        },
+        "include_goldens": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Include Goldens"
+        },
+        "invisible_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Invisible Trap Weight"
+        },
+        "junk_fill_percentage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 50,
+          "display_name": "Junk Fill Percentage"
+        },
+        "keysanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Keysanity"
+        },
+        "laughter_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Laughter Trap Weight"
+        },
+        "literature_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Literature Trap Weight"
+        },
+        "lock_goal_area": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Lock Goal Area"
+        },
+        "madeline_feather_hair_color": {
+          "type": "choice",
+          "name_lookup": {
+            "-1": "any_color",
+            "0": "black",
+            "14015": "royal_blue",
+            "896773": "bright_green",
+            "1255448": "forest_green",
+            "4503551": "empty",
+            "8388608": "maroon",
+            "8421504": "grey",
+            "9304352": "lime_green",
+            "10174389": "baddy",
+            "11285042": "strawberry",
+            "12027686": "brown",
+            "14183946": "orange",
+            "16711680": "fire_red",
+            "16726629": "salmon",
+            "16739823": "double",
+            "16766556": "golden",
+            "16777215": "white"
+          },
+          "default": 16766556,
+          "display_name": "Madeline Feather Hair Color"
+        },
+        "madeline_hair_length": {
+          "type": "choice",
+          "name_lookup": {
+            "1": "very_short",
+            "2": "short",
+            "4": "default",
+            "7": "long",
+            "10": "very_long",
+            "20": "absurd"
+          },
+          "default": 4,
+          "display_name": "Madeline Hair Length"
+        },
+        "madeline_no_dash_hair_color": {
+          "type": "choice",
+          "name_lookup": {
+            "-1": "any_color",
+            "0": "black",
+            "14015": "royal_blue",
+            "896773": "bright_green",
+            "1255448": "forest_green",
+            "4503551": "empty",
+            "8388608": "maroon",
+            "8421504": "grey",
+            "9304352": "lime_green",
+            "10174389": "baddy",
+            "11285042": "strawberry",
+            "12027686": "brown",
+            "14183946": "orange",
+            "16711680": "fire_red",
+            "16726629": "salmon",
+            "16739823": "double",
+            "16766556": "golden",
+            "16777215": "white"
+          },
+          "default": 4503551,
+          "display_name": "Madeline No Dash Hair Color"
+        },
+        "madeline_one_dash_hair_color": {
+          "type": "choice",
+          "name_lookup": {
+            "-1": "any_color",
+            "0": "black",
+            "14015": "royal_blue",
+            "896773": "bright_green",
+            "1255448": "forest_green",
+            "4503551": "empty",
+            "8388608": "maroon",
+            "8421504": "grey",
+            "9304352": "lime_green",
+            "10174389": "baddy",
+            "11285042": "strawberry",
+            "12027686": "brown",
+            "14183946": "orange",
+            "16711680": "fire_red",
+            "16726629": "salmon",
+            "16739823": "double",
+            "16766556": "golden",
+            "16777215": "white"
+          },
+          "default": 11285042,
+          "display_name": "Madeline One Dash Hair Color"
+        },
+        "madeline_two_dash_hair_color": {
+          "type": "choice",
+          "name_lookup": {
+            "-1": "any_color",
+            "0": "black",
+            "14015": "royal_blue",
+            "896773": "bright_green",
+            "1255448": "forest_green",
+            "4503551": "empty",
+            "8388608": "maroon",
+            "8421504": "grey",
+            "9304352": "lime_green",
+            "10174389": "baddy",
+            "11285042": "strawberry",
+            "12027686": "brown",
+            "14183946": "orange",
+            "16711680": "fire_red",
+            "16726629": "salmon",
+            "16739823": "double",
+            "16766556": "golden",
+            "16777215": "white"
+          },
+          "default": 16739823,
+          "display_name": "Madeline Two Dash Hair Color"
+        },
+        "music_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "consistent",
+            "2": "singularity"
+          },
+          "default": 0,
+          "display_name": "Music Shuffle"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "require_cassettes": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Require Cassettes"
+        },
+        "reverse_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Reverse Trap Weight"
+        },
+        "roomsanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Roomsanity"
+        },
+        "screen_flip_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Screen Flip Trap Weight"
+        },
+        "slow_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Slow Trap Weight"
+        },
+        "strawberries_required_percentage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 80,
+          "display_name": "Strawberries Required Percentage"
+        },
+        "stun_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Stun Trap Weight"
+        },
+        "total_strawberries": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 202,
+          "default": 50,
+          "display_name": "Total Strawberries"
+        },
+        "trap_expiration_action": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "return_to_menu",
+            "1": "deaths",
+            "2": "new_screens"
+          },
+          "default": 1,
+          "display_name": "Trap Expiration Action"
+        },
+        "trap_expiration_amount": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 10,
+          "default": 5,
+          "display_name": "Trap Expiration Amount"
+        },
+        "trap_fill_percentage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 0,
+          "display_name": "Trap Fill Percentage"
+        },
+        "trap_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Trap Link"
+        },
+        "zoom_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Zoom Trap Weight"
+        }
       },
       "world_directory": "celeste_open_world"
     }

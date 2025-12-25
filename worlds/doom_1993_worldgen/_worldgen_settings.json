@@ -51,5 +51,198 @@
     "start_location_hints": [],
     "start_with_computer_area_maps": "false"
   },
+  "option_definitions": {
+    "accessibility": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "full",
+        "2": "minimal"
+      },
+      "default": 0,
+      "display_name": "Accessibility"
+    },
+    "added_ammo_bullets": {
+      "type": "range",
+      "range_start": 20,
+      "range_end": 999,
+      "default": 200,
+      "display_name": "Added Ammo - Bullets"
+    },
+    "added_ammo_energy_cells": {
+      "type": "range",
+      "range_start": 30,
+      "range_end": 999,
+      "default": 300,
+      "display_name": "Added Ammo - Energy Cells"
+    },
+    "added_ammo_rockets": {
+      "type": "range",
+      "range_start": 5,
+      "range_end": 999,
+      "default": 50,
+      "display_name": "Added Ammo - Rockets"
+    },
+    "added_ammo_shells": {
+      "type": "range",
+      "range_start": 5,
+      "range_end": 999,
+      "default": 50,
+      "display_name": "Added Ammo - Shells"
+    },
+    "allow_death_logic": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Allow Death Logic"
+    },
+    "backpack_count": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 10,
+      "default": 1,
+      "display_name": "Backpack Count"
+    },
+    "death_link": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Death Link"
+    },
+    "difficulty": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "baby",
+        "1": "easy",
+        "2": "medium",
+        "3": "hard",
+        "4": "nightmare"
+      },
+      "default": 2,
+      "display_name": "Difficulty"
+    },
+    "episode1": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Episode 1"
+    },
+    "episode2": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Episode 2"
+    },
+    "episode3": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Episode 3"
+    },
+    "episode4": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Episode 4"
+    },
+    "flip_levels": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "flipped",
+        "2": "randomly_flipped"
+      },
+      "default": 0,
+      "display_name": "Flip Levels"
+    },
+    "goal": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "complete_all_levels",
+        "1": "complete_boss_levels"
+      },
+      "default": 0,
+      "display_name": "Goal"
+    },
+    "max_ammo_bullets": {
+      "type": "range",
+      "range_start": 200,
+      "range_end": 999,
+      "default": 200,
+      "display_name": "Max Ammo - Bullets"
+    },
+    "max_ammo_energy_cells": {
+      "type": "range",
+      "range_start": 300,
+      "range_end": 999,
+      "default": 300,
+      "display_name": "Max Ammo - Energy Cells"
+    },
+    "max_ammo_rockets": {
+      "type": "range",
+      "range_start": 50,
+      "range_end": 999,
+      "default": 50,
+      "display_name": "Max Ammo - Rockets"
+    },
+    "max_ammo_shells": {
+      "type": "range",
+      "range_start": 50,
+      "range_end": 999,
+      "default": 50,
+      "display_name": "Max Ammo - Shells"
+    },
+    "pro": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Pro Doom"
+    },
+    "progression_balancing": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 99,
+      "default": 50,
+      "display_name": "Progression Balancing"
+    },
+    "random_monsters": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "shuffle",
+        "2": "random_balanced",
+        "3": "random_chaotic"
+      },
+      "default": 1,
+      "display_name": "Random Monsters"
+    },
+    "random_music": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "shuffle_selected",
+        "2": "shuffle_game"
+      },
+      "default": 0,
+      "display_name": "Random Music"
+    },
+    "random_pickups": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "shuffle",
+        "2": "random_balanced"
+      },
+      "default": 1,
+      "display_name": "Random Pickups"
+    },
+    "reset_level_on_death": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Reset Level on Death"
+    },
+    "split_backpack": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Split Backpack"
+    },
+    "start_with_computer_area_maps": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Start With Computer Area Maps"
+    }
+  },
   "world_directory": "doom_1993"
 }

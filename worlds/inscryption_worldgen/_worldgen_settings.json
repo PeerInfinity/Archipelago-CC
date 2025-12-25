@@ -27,5 +27,113 @@
     "start_inventory_from_pool": {},
     "start_location_hints": []
   },
+  "option_definitions": {
+    "accessibility": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "full",
+        "2": "minimal"
+      },
+      "default": 0,
+      "display_name": "Accessibility"
+    },
+    "act1_death_link_behaviour": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "sacrificed",
+        "1": "candle_extinguished"
+      },
+      "default": 0,
+      "display_name": "Act 1 Death Link Behaviour"
+    },
+    "death_link": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Death Link"
+    },
+    "epitaph_pieces_randomization": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "all_pieces",
+        "1": "in_groups",
+        "2": "as_one_item"
+      },
+      "default": 0,
+      "display_name": "Epitaph Pieces Randomization"
+    },
+    "goal": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "full_story_in_order",
+        "1": "full_story_any_order",
+        "2": "first_act"
+      },
+      "default": 0,
+      "display_name": "Goal"
+    },
+    "optional_death_card": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "disable",
+        "1": "always_on",
+        "2": "deathlink_only"
+      },
+      "default": 2,
+      "display_name": "Optional Death Card"
+    },
+    "painting_checks_balancing": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "balanced",
+        "2": "force_filler"
+      },
+      "default": 1,
+      "display_name": "Painting Checks Balancing"
+    },
+    "progression_balancing": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 99,
+      "default": 50,
+      "display_name": "Progression Balancing"
+    },
+    "randomize_codes": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Randomize Codes"
+    },
+    "randomize_deck": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "disable",
+        "1": "every_encounter_within_same_type",
+        "2": "every_encounter_any_type",
+        "3": "starting_only"
+      },
+      "default": 0,
+      "display_name": "Randomize Deck"
+    },
+    "randomize_sigils": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "disable",
+        "1": "randomize_addons",
+        "2": "randomize_all"
+      },
+      "default": 0,
+      "display_name": "Randomize Abilities"
+    },
+    "skip_epilogue": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Skip Epilogue"
+    },
+    "skip_tutorial": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Skip Tutorial"
+    }
+  },
   "world_directory": "inscryption"
 }

@@ -21090,32 +21090,754 @@
     "2": {
       "game": "A Link to the Past",
       "assume_bidirectional_exits": true,
-      "dark_room_logic": "lamp",
-      "retro_bow": false,
-      "swordless": false,
-      "enemy_shuffle": false,
-      "enemy_health": "default",
-      "enemy_damage": "default",
-      "bombless_start": false,
-      "glitches_required": "no_glitches",
-      "pot_shuffle": "off",
-      "dungeon_counters": "on",
-      "glitch_boots": "on",
-      "accessibility": "locations",
-      "mode": "open",
-      "crystals_needed_for_gt": 7,
-      "crystals_needed_for_ganon": 7,
-      "item_functionality": "hard",
-      "shuffle_capacity_upgrades": "off",
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": "items",
+        "allow_collect": "true",
+        "beemizer_total_chance": 0,
+        "beemizer_trap_chance": 60,
+        "big_key_shuffle": "original_dungeon",
+        "bigkey_shuffle": "",
+        "blue_clock_time": 2,
+        "bombless_start": "false",
+        "boss_shuffle": "none",
+        "bush_shuffle": "false",
+        "compass_shuffle": "original_dungeon",
+        "countdown_start_time": 10,
+        "crystals_needed_for_ganon": 7,
+        "crystals_needed_for_gt": 7,
+        "dark_room_logic": "lamp",
+        "death_link": "false",
+        "dungeon_counters": "pickup",
+        "enemy_damage": "default",
+        "enemy_health": "default",
+        "enemy_shuffle": "false",
+        "entrance_shuffle": "vanilla",
+        "entrance_shuffle_seed": "random",
+        "exclude_locations": [],
+        "glitch_boots": "true",
+        "glitches_required": "no_glitches",
+        "goal": "ganon",
+        "goals": "",
+        "green_clock_time": 4,
+        "heartbeep": "normal",
+        "heartcolor": "red",
+        "hints": "on",
+        "hud_palettes": "default",
+        "include_witch_hut": "false",
+        "item_functionality": "normal",
+        "item_links": [],
+        "item_pool": "normal",
+        "key_drop_shuffle": "true",
+        "killable_thieves": "false",
+        "local_items": [],
+        "map_shuffle": "original_dungeon",
+        "menuspeed": "normal",
+        "misery_mire_medallion": "bombos",
+        "mode": "open",
+        "music": "true",
+        "non_local_items": [],
+        "open_pyramid": "goal",
+        "ow_palettes": "default",
+        "plando_connections": [],
+        "plando_items": [],
+        "plando_texts": [],
+        "pot_shuffle": "false",
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "progressive": "on",
+        "quickswap": "true",
+        "randomize_cost_types": "false",
+        "randomize_shop_inventories": "default",
+        "randomize_shop_prices": "false",
+        "red_clock_time": -2,
+        "reduceflashing": "true",
+        "restrict_dungeon_item_on_boss": "false",
+        "retro_bow": "false",
+        "retro_caves": "false",
+        "scams": "off",
+        "shield_palettes": "default",
+        "shop_item_slots": 0,
+        "shop_price_modifier": 100,
+        "shuffle_capacity_upgrades": "off",
+        "shuffle_prizes": "general",
+        "shuffle_shop_inventories": "false",
+        "small_key_shuffle": "original_dungeon",
+        "smallkey_shuffle": "",
+        "start_hints": [],
+        "start_inventory": {},
+        "start_inventory_from_pool": {},
+        "start_location_hints": [],
+        "sword_palettes": "default",
+        "swordless": "false",
+        "tile_shuffle": "false",
+        "timer": "none",
+        "triforce_pieces_available": 30,
+        "triforce_pieces_extra": 10,
+        "triforce_pieces_mode": "available",
+        "triforce_pieces_percentage": 150,
+        "triforce_pieces_required": 20,
+        "triforcehud": "normal",
+        "turtle_rock_medallion": "quake",
+        "uw_palettes": "default"
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal",
+            "1": "items"
+          },
+          "default": 1,
+          "display_name": "Accessibility"
+        },
+        "allow_collect": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Allow Collection of checks for other players"
+        },
+        "beemizer_total_chance": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 0,
+          "display_name": "Beemizer Total Chance"
+        },
+        "beemizer_trap_chance": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 60,
+          "display_name": "Beemizer Trap Chance"
+        },
+        "big_key_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "original_dungeon",
+            "1": "own_dungeons",
+            "2": "own_world",
+            "3": "any_world",
+            "4": "different_world",
+            "6": "start_with"
+          },
+          "default": 0,
+          "display_name": "Big Key Shuffle"
+        },
+        "blue_clock_time": {
+          "type": "range",
+          "range_start": -60,
+          "range_end": 60,
+          "default": 2,
+          "display_name": "Blue Clock Time"
+        },
+        "bombless_start": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Bombless Start"
+        },
+        "boss_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "basic",
+            "2": "full",
+            "3": "chaos",
+            "4": "singularity"
+          },
+          "default": 0,
+          "display_name": "Boss Shuffle"
+        },
+        "bush_shuffle": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Bush Shuffle"
+        },
+        "compass_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "original_dungeon",
+            "1": "own_dungeons",
+            "2": "own_world",
+            "3": "any_world",
+            "4": "different_world",
+            "6": "start_with"
+          },
+          "default": 0,
+          "display_name": "Compass Shuffle"
+        },
+        "countdown_start_time": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 480,
+          "default": 10,
+          "display_name": "Countdown Start Time"
+        },
+        "crystals_needed_for_ganon": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 7,
+          "default": 7,
+          "display_name": "Crystals for Ganon"
+        },
+        "crystals_needed_for_gt": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 7,
+          "default": 7,
+          "display_name": "Crystals for GT"
+        },
+        "dark_room_logic": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "lamp",
+            "1": "torches",
+            "2": "none"
+          },
+          "default": 0,
+          "display_name": "Dark Room Logic"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "dungeon_counters": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "on",
+            "1": "pickup",
+            "2": "default",
+            "4": "off"
+          },
+          "default": 1,
+          "display_name": "Dungeon Counters"
+        },
+        "enemy_damage": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "2": "shuffled",
+            "3": "chaos"
+          },
+          "default": 0,
+          "display_name": "Enemy Damage"
+        },
+        "enemy_health": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "easy",
+            "1": "default",
+            "2": "hard",
+            "3": "expert"
+          },
+          "default": 1,
+          "display_name": "Enemy Health"
+        },
+        "enemy_shuffle": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Enemy Shuffle"
+        },
+        "entrance_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "dungeons_simple",
+            "2": "dungeons_full",
+            "3": "dungeons_crossed",
+            "4": "simple",
+            "5": "restricted",
+            "6": "full",
+            "7": "crossed",
+            "8": "insanity"
+          },
+          "default": 0,
+          "display_name": "Entrance Shuffle"
+        },
+        "glitch_boots": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Glitched Starting Boots"
+        },
+        "glitches_required": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "no_glitches",
+            "1": "minor_glitches",
+            "2": "overworld_glitches",
+            "3": "hybrid_major_glitches",
+            "4": "no_logic"
+          },
+          "default": 0,
+          "display_name": "Glitches Required"
+        },
+        "goal": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "ganon",
+            "1": "crystals",
+            "2": "bosses",
+            "3": "pedestal",
+            "4": "ganon_pedestal",
+            "5": "triforce_hunt",
+            "6": "local_triforce_hunt",
+            "7": "ganon_triforce_hunt",
+            "8": "local_ganon_triforce_hunt"
+          },
+          "default": 0,
+          "display_name": "Goal"
+        },
+        "green_clock_time": {
+          "type": "range",
+          "range_start": -60,
+          "range_end": 60,
+          "default": 4,
+          "display_name": "Green Clock Time"
+        },
+        "heartbeep": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "double",
+            "2": "half",
+            "3": "quarter",
+            "4": "off"
+          },
+          "default": 0,
+          "display_name": "Heart Beep Rate"
+        },
+        "heartcolor": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "red",
+            "1": "blue",
+            "2": "green",
+            "3": "yellow"
+          },
+          "default": 0,
+          "display_name": "Heart Color"
+        },
+        "hints": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "2": "on",
+            "3": "full"
+          },
+          "default": 2,
+          "display_name": "Hints"
+        },
+        "hud_palettes": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "1": "good",
+            "2": "blackout",
+            "3": "puke",
+            "4": "classic",
+            "5": "grayscale",
+            "6": "negative",
+            "7": "dizzy",
+            "8": "sick"
+          },
+          "default": 0,
+          "display_name": "Menu Palette"
+        },
+        "include_witch_hut": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Include Witch's Hut"
+        },
+        "item_functionality": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "easy",
+            "1": "normal",
+            "2": "hard",
+            "3": "expert"
+          },
+          "default": 1,
+          "display_name": "Item Functionality"
+        },
+        "item_pool": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "easy",
+            "1": "normal",
+            "2": "hard",
+            "3": "expert"
+          },
+          "default": 1,
+          "display_name": "Item Pool"
+        },
+        "key_drop_shuffle": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Key Drop Shuffle"
+        },
+        "killable_thieves": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Killable Thieves"
+        },
+        "map_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "original_dungeon",
+            "1": "own_dungeons",
+            "2": "own_world",
+            "3": "any_world",
+            "4": "different_world",
+            "6": "start_with"
+          },
+          "default": 0,
+          "display_name": "Map Shuffle"
+        },
+        "menuspeed": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "(1,)": "instant",
+            "2": "double",
+            "3": "triple",
+            "4": "quadruple",
+            "5": "half"
+          },
+          "default": 0,
+          "display_name": "Menu Speed"
+        },
+        "misery_mire_medallion": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "ether",
+            "1": "bombos",
+            "2": "quake"
+          },
+          "default": "random",
+          "display_name": "Misery Mire Medallion"
+        },
+        "mode": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "standard",
+            "1": "open",
+            "2": "inverted"
+          },
+          "default": 1,
+          "display_name": "Mode"
+        },
+        "music": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Play music"
+        },
+        "open_pyramid": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "closed",
+            "1": "open",
+            "2": "goal",
+            "3": "auto"
+          },
+          "default": 2,
+          "display_name": "Open Pyramid Hole"
+        },
+        "ow_palettes": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "1": "good",
+            "2": "blackout",
+            "3": "puke",
+            "4": "classic",
+            "5": "grayscale",
+            "6": "negative",
+            "7": "dizzy",
+            "8": "sick"
+          },
+          "default": 0,
+          "display_name": "Overworld Palette"
+        },
+        "pot_shuffle": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Pot Shuffle"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "progressive": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "grouped_random",
+            "2": "on"
+          },
+          "default": 2,
+          "display_name": "Progressive Items"
+        },
+        "quickswap": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "L/R Quickswapping"
+        },
+        "randomize_cost_types": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Cost Types"
+        },
+        "randomize_shop_inventories": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "1": "randomize_by_shop_type",
+            "2": "randomize_each"
+          },
+          "default": 0,
+          "display_name": "Randomize Shop Inventories"
+        },
+        "randomize_shop_prices": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Shop Prices"
+        },
+        "red_clock_time": {
+          "type": "range",
+          "range_start": -60,
+          "range_end": 60,
+          "default": -2,
+          "display_name": "Red Clock Time"
+        },
+        "reduceflashing": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Reduce Screen Flashes"
+        },
+        "restrict_dungeon_item_on_boss": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Prevent Dungeon Item on Boss"
+        },
+        "retro_bow": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Retro Bow"
+        },
+        "retro_caves": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Retro Caves"
+        },
+        "scams": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "king_zora",
+            "2": "bottle_merchant",
+            "3": "all"
+          },
+          "default": 0,
+          "display_name": "Scams"
+        },
+        "shield_palettes": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "1": "good",
+            "2": "blackout",
+            "3": "puke",
+            "4": "classic",
+            "5": "grayscale",
+            "6": "negative",
+            "7": "dizzy",
+            "8": "sick"
+          },
+          "default": 0,
+          "display_name": "Shield Palette"
+        },
+        "shop_item_slots": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 30,
+          "default": 0,
+          "display_name": "Available Shop Slots"
+        },
+        "shop_price_modifier": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 400,
+          "default": 100,
+          "display_name": "Shop Price Modifier"
+        },
+        "shuffle_capacity_upgrades": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "on",
+            "2": "on_combined"
+          },
+          "default": 0,
+          "display_name": "Shuffle Capacity Upgrades"
+        },
+        "shuffle_prizes": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "general",
+            "2": "bonk",
+            "3": "both"
+          },
+          "default": 1,
+          "display_name": "Shuffle Prizes"
+        },
+        "shuffle_shop_inventories": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Shop Inventories"
+        },
+        "small_key_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "original_dungeon",
+            "1": "own_dungeons",
+            "2": "own_world",
+            "3": "any_world",
+            "4": "different_world",
+            "6": "start_with",
+            "5": "universal"
+          },
+          "default": 0,
+          "display_name": "Small Key Shuffle"
+        },
+        "sword_palettes": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "1": "good",
+            "2": "blackout",
+            "3": "puke",
+            "4": "classic",
+            "5": "grayscale",
+            "6": "negative",
+            "7": "dizzy",
+            "8": "sick"
+          },
+          "default": 0,
+          "display_name": "Sword Palette"
+        },
+        "swordless": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Swordless"
+        },
+        "tile_shuffle": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Tile Shuffle"
+        },
+        "timer": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "timed",
+            "2": "timed_ohko",
+            "3": "ohko",
+            "4": "timed_countdown",
+            "5": "display"
+          },
+          "default": 0,
+          "display_name": "Timer"
+        },
+        "triforce_pieces_available": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 90,
+          "default": 30,
+          "display_name": "Triforce Pieces Available"
+        },
+        "triforce_pieces_extra": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 89,
+          "default": 10,
+          "display_name": "Triforce Pieces Extra"
+        },
+        "triforce_pieces_mode": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "extra",
+            "1": "percentage",
+            "2": "available"
+          },
+          "default": 2,
+          "display_name": "Triforce Pieces Mode"
+        },
+        "triforce_pieces_percentage": {
+          "type": "range",
+          "range_start": 100,
+          "range_end": 1000,
+          "default": 150,
+          "display_name": "Triforce Pieces Percentage"
+        },
+        "triforce_pieces_required": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 90,
+          "default": 20,
+          "display_name": "Triforce Pieces Required"
+        },
+        "triforcehud": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "hide_goal",
+            "2": "hide_required",
+            "3": "hide_both"
+          },
+          "default": 0,
+          "display_name": "Display Method for Triforce Hunt"
+        },
+        "turtle_rock_medallion": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "ether",
+            "1": "bombos",
+            "2": "quake"
+          },
+          "default": "random",
+          "display_name": "Turtle Rock Medallion"
+        },
+        "uw_palettes": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "1": "good",
+            "2": "blackout",
+            "3": "puke",
+            "4": "classic",
+            "5": "grayscale",
+            "6": "negative",
+            "7": "dizzy",
+            "8": "sick"
+          },
+          "default": 0,
+          "display_name": "Underworld Palette"
+        }
+      },
       "treasure_hunt_required": 0,
       "can_take_damage": true,
+      "logical_heart_pieces": 24,
+      "logical_heart_containers": 10,
       "difficulty_requirements": {
         "progressive_bottle_limit": 4,
         "boss_heart_container_limit": 10,
         "heart_piece_limit": 24
       },
-      "logical_heart_pieces": 24,
-      "logical_heart_containers": 10,
       "required_medallions": [
         "Bombos",
         "Quake"

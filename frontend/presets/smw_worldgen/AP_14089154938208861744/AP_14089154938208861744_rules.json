@@ -6344,17 +6344,368 @@
       "use_resolved_items": false,
       "options": {
         "accessibility": "full",
+        "autosave": "true",
+        "blocksanity": "false",
+        "bonus_block_checks": "false",
+        "boss_shuffle": "none",
+        "bosses_required": 7,
+        "bowser_castle_doors": "vanilla",
+        "bowser_castle_rooms": "random_two_room",
+        "death_link": "false",
+        "display_received_item_popups": "progression_minus_yoshi_eggs",
+        "dragon_coin_checks": "false",
+        "early_climb": "false",
         "exclude_locations": [],
+        "exclude_special_zone": "false",
+        "goal": "bowser",
+        "hidden_1up_checks": "false",
+        "ice_trap_weight": "medium",
         "item_links": [],
+        "junk_fill_percentage": 0,
+        "level_palette_shuffle": "off",
+        "level_shuffle": "false",
+        "literature_trap_weight": "medium",
         "local_items": [],
+        "mario_palette": "mario",
+        "max_yoshi_egg_cap": 50,
+        "moon_checks": "false",
+        "music_shuffle": "none",
         "non_local_items": [],
+        "overworld_palette_shuffle": "off",
+        "overworld_speed": "vanilla",
+        "percentage_of_yoshi_eggs": 100,
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
         "randomize_items": "false",
+        "reverse_trap_weight": "medium",
+        "ring_link": "false",
+        "sfx_shuffle": "none",
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "starting_life_count": 5,
+        "stun_trap_weight": "medium",
+        "swap_donut_gh_exits": "false",
+        "thwimp_trap_weight": "medium",
+        "timer_trap_weight": "medium",
+        "trap_fill_percentage": 0,
+        "trap_link": "false"
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "autosave": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Autosave"
+        },
+        "blocksanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Blocksanity"
+        },
+        "bonus_block_checks": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Bonus Block Checks"
+        },
+        "boss_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "simple",
+            "2": "full",
+            "3": "singularity"
+          },
+          "default": 0,
+          "display_name": "Boss Shuffle"
+        },
+        "bosses_required": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 11,
+          "default": 7,
+          "display_name": "Bosses Required"
+        },
+        "bowser_castle_doors": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "fast",
+            "2": "slow"
+          },
+          "default": 0,
+          "display_name": "Bowser Castle Doors"
+        },
+        "bowser_castle_rooms": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "random_two_room",
+            "2": "random_five_room",
+            "3": "gauntlet",
+            "4": "labyrinth"
+          },
+          "default": 1,
+          "display_name": "Bowser Castle Rooms"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "display_received_item_popups": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "all",
+            "2": "progression",
+            "3": "progression_minus_yoshi_eggs"
+          },
+          "default": 3,
+          "display_name": "Display Received Item Popups"
+        },
+        "dragon_coin_checks": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Dragon Coin Checks"
+        },
+        "early_climb": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Early Climb"
+        },
+        "exclude_special_zone": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Exclude Special Zone"
+        },
+        "goal": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "bowser",
+            "1": "yoshi_egg_hunt"
+          },
+          "default": 0,
+          "display_name": "Goal"
+        },
+        "hidden_1up_checks": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Hidden 1-Up Checks"
+        },
+        "ice_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Ice Trap Weight"
+        },
+        "junk_fill_percentage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 0,
+          "display_name": "Junk Fill Percentage"
+        },
+        "level_palette_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "on_legacy",
+            "2": "on_curated"
+          },
+          "default": 0,
+          "display_name": "Level Palette Shuffle"
+        },
+        "level_shuffle": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Level Shuffle"
+        },
+        "literature_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Literature Trap Weight"
+        },
+        "mario_palette": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "mario",
+            "1": "luigi",
+            "2": "wario",
+            "3": "waluigi",
+            "4": "geno",
+            "5": "princess",
+            "6": "dark",
+            "7": "sponge"
+          },
+          "default": 0,
+          "display_name": "Mario Palette"
+        },
+        "max_yoshi_egg_cap": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 255,
+          "default": 50,
+          "display_name": "Max Number of Yoshi Eggs"
+        },
+        "moon_checks": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "3up Moon Checks"
+        },
+        "music_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "consistent",
+            "2": "full",
+            "3": "singularity"
+          },
+          "default": 0,
+          "display_name": "Music Shuffle"
+        },
+        "overworld_palette_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "on_legacy",
+            "2": "on_curated"
+          },
+          "default": 0,
+          "display_name": "Overworld Palette Shuffle"
+        },
+        "overworld_speed": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "slow",
+            "1": "vanilla",
+            "2": "fast"
+          },
+          "default": 1,
+          "display_name": "Overworld Speed"
+        },
+        "percentage_of_yoshi_eggs": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 100,
+          "default": 100,
+          "display_name": "Required Percentage of Yoshi Eggs"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "reverse_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Reverse Trap Weight"
+        },
+        "ring_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Ring Link"
+        },
+        "sfx_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "full",
+            "2": "singularity"
+          },
+          "default": 0,
+          "display_name": "Sound Effect Shuffle"
+        },
+        "starting_life_count": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 99,
+          "default": 5,
+          "display_name": "Starting Life Count"
+        },
+        "stun_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Stun Trap Weight"
+        },
+        "swap_donut_gh_exits": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Swap Donut GH Exits"
+        },
+        "thwimp_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Thwimp Trap Weight"
+        },
+        "timer_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Timer Trap Weight"
+        },
+        "trap_fill_percentage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 0,
+          "display_name": "Trap Fill Percentage"
+        },
+        "trap_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Trap Link"
+        }
       },
       "world_directory": "smw"
     }

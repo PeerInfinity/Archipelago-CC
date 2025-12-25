@@ -20,5 +20,58 @@
     "start_inventory": {},
     "start_location_hints": []
   },
+  "option_definitions": {
+    "accessibility": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "full",
+        "2": "minimal"
+      },
+      "default": 0,
+      "display_name": "Accessibility"
+    },
+    "death_link": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Death Link"
+    },
+    "goal": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "return_the_cursed_seal",
+        "1": "any_ending",
+        "2": "true_ending"
+      },
+      "default": 0,
+      "display_name": "Goal"
+    },
+    "include_evolution_traps": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Include Evolution Traps"
+    },
+    "include_psi_keys": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Include PSI Keys"
+    },
+    "item_cache_cost": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "reduced",
+        "2": "heavily_reduced"
+      },
+      "default": 0,
+      "display_name": "Item cache cost scaling"
+    },
+    "progression_balancing": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 99,
+      "default": 50,
+      "display_name": "Progression Balancing"
+    }
+  },
   "world_directory": "meritous"
 }

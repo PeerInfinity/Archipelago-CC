@@ -34446,6 +34446,453 @@
         "start_inventory_from_pool": {},
         "start_location_hints": []
       },
+      "option_definitions": {
+        "ActRandomizer": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "false",
+            "1": "light",
+            "2": "insanity"
+          },
+          "default": 1,
+          "display_name": "Shuffle Acts"
+        },
+        "BabyTrapWeight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 40,
+          "display_name": "Baby Trap Weight"
+        },
+        "BadgeSellerMaxItems": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 8,
+          "display_name": "Badge Seller Maximum Items"
+        },
+        "BadgeSellerMinItems": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 4,
+          "display_name": "Badge Seller Minimum Items"
+        },
+        "BaseballBat": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Baseball Bat"
+        },
+        "CTRLogic": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "time_stop_only",
+            "1": "scooter",
+            "2": "sprint",
+            "3": "nothing"
+          },
+          "default": 0,
+          "display_name": "Cheating the Race Logic"
+        },
+        "ChapterCostIncrement": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 8,
+          "default": 4,
+          "display_name": "Chapter Cost Increment"
+        },
+        "ChapterCostMinDifference": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 8,
+          "default": 4,
+          "display_name": "Minimum Chapter Cost Difference"
+        },
+        "CompassBadgeMode": {
+          "type": "choice",
+          "name_lookup": {
+            "1": "closest",
+            "2": "important_only",
+            "3": "important_first"
+          },
+          "default": 1,
+          "display_name": "Compass Badge Mode"
+        },
+        "DWAutoCompleteBonuses": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Auto Complete Bonus Stamps"
+        },
+        "DWEnableBonus": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Death Wish Full Completions"
+        },
+        "DWExcludeAnnoyingBonuses": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Exclude Annoying Death Wish Full Completions"
+        },
+        "DWExcludeAnnoyingContracts": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Exclude Annoying Death Wish Contracts"
+        },
+        "DWExcludeCandles": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Exclude Candle Death Wishes"
+        },
+        "DWShuffle": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Wish Shuffle"
+        },
+        "DWShuffleCountMax": {
+          "type": "range",
+          "range_start": 5,
+          "range_end": 38,
+          "default": 25,
+          "display_name": "Death Wish Shuffle Maximum Count"
+        },
+        "DWShuffleCountMin": {
+          "type": "range",
+          "range_start": 5,
+          "range_end": 38,
+          "default": 18,
+          "display_name": "Death Wish Shuffle Minimum Count"
+        },
+        "DWTimePieceRequirement": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 35,
+          "default": 15,
+          "display_name": "Death Wish Time Piece Requirement"
+        },
+        "DeathWishOnly": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Wish Only"
+        },
+        "EnableDLC1": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Chapter 6"
+        },
+        "EnableDLC2": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Chapter 7"
+        },
+        "EnableDeathWish": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Enable Death Wish"
+        },
+        "EndGoal": {
+          "type": "choice",
+          "name_lookup": {
+            "1": "finale",
+            "2": "rush_hour",
+            "3": "seal_the_deal"
+          },
+          "default": 1,
+          "display_name": "End Goal"
+        },
+        "ExcludeTour": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Exclude Tour Time Rift"
+        },
+        "FinalChapterMaxCost": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 50,
+          "default": 35,
+          "display_name": "Final Chapter Maximum Time Piece Cost"
+        },
+        "FinalChapterMinCost": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 50,
+          "default": 30,
+          "display_name": "Final Chapter Minimum Time Piece Cost"
+        },
+        "FinaleShuffle": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Finale Shuffle"
+        },
+        "HatItems": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Hat Items"
+        },
+        "HighestChapterCost": {
+          "type": "range",
+          "range_start": 15,
+          "range_end": 45,
+          "default": 25,
+          "display_name": "Highest Possible Chapter Cost"
+        },
+        "LaserTrapWeight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 40,
+          "display_name": "Laser Trap Weight"
+        },
+        "LogicDifficulty": {
+          "type": "choice",
+          "name_lookup": {
+            "-1": "normal",
+            "0": "moderate",
+            "1": "hard",
+            "2": "expert"
+          },
+          "default": -1,
+          "display_name": "Logic Difficulty"
+        },
+        "LowestChapterCost": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 5,
+          "display_name": "Lowest Possible Chapter Cost"
+        },
+        "MaxExtraTimePieces": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 16,
+          "default": 16,
+          "display_name": "Max Extra Time Pieces"
+        },
+        "MaxPonCost": {
+          "type": "range",
+          "range_start": 10,
+          "range_end": 800,
+          "default": 300,
+          "display_name": "Maximum Shop Pon Cost"
+        },
+        "MetroMaxPonCost": {
+          "type": "range",
+          "range_start": 10,
+          "range_end": 800,
+          "default": 200,
+          "display_name": "Metro Shops Maximum Pon Cost"
+        },
+        "MetroMinPonCost": {
+          "type": "range",
+          "range_start": 10,
+          "range_end": 800,
+          "default": 50,
+          "display_name": "Metro Shops Minimum Pon Cost"
+        },
+        "MinExtraYarn": {
+          "type": "range",
+          "range_start": 5,
+          "range_end": 15,
+          "default": 10,
+          "display_name": "Min Extra Yarn"
+        },
+        "MinPonCost": {
+          "type": "range",
+          "range_start": 10,
+          "range_end": 800,
+          "default": 75,
+          "display_name": "Minimum Shop Pon Cost"
+        },
+        "NoPaintingSkips": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "No Subcon Fire Wall Skips"
+        },
+        "NoTicketSkips": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "false",
+            "1": "true",
+            "2": "rush_hour"
+          },
+          "default": 0,
+          "display_name": "No Ticket Skips"
+        },
+        "NyakuzaThugMaxShopItems": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 5,
+          "default": 4,
+          "display_name": "Nyakuza Thug Maximum Shop Items"
+        },
+        "NyakuzaThugMinShopItems": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 5,
+          "default": 2,
+          "display_name": "Nyakuza Thug Minimum Shop Items"
+        },
+        "ParadeTrapWeight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 20,
+          "display_name": "Parade Trap Weight"
+        },
+        "RandomizeHatOrder": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "false",
+            "1": "true",
+            "2": "time_stop_last"
+          },
+          "default": 1,
+          "display_name": "Randomize Hat Order"
+        },
+        "ShipShapeCustomTaskGoal": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 90,
+          "default": 0,
+          "display_name": "Ship Shape Custom Task Goal"
+        },
+        "ShuffleActContracts": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Shuffle Contracts"
+        },
+        "ShuffleAlpineZiplines": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Alpine Ziplines"
+        },
+        "ShuffleStorybookPages": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Shuffle Storybook Pages"
+        },
+        "ShuffleSubconPaintings": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Subcon Paintings"
+        },
+        "StartWithCompassBadge": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Start with Compass Badge"
+        },
+        "StartingChapter": {
+          "type": "choice",
+          "name_lookup": {
+            "1": "1",
+            "2": "2",
+            "3": "3",
+            "4": "4"
+          },
+          "default": 1,
+          "display_name": "Starting Chapter"
+        },
+        "Tasksanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Tasksanity"
+        },
+        "TasksanityCheckCount": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 30,
+          "default": 18,
+          "display_name": "Tasksanity Check Count"
+        },
+        "TasksanityTaskStep": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 3,
+          "default": 1,
+          "display_name": "Tasksanity Task Step"
+        },
+        "TimePieceBalancePercent": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 35,
+          "display_name": "Time Piece Balance Percentage"
+        },
+        "TrapChance": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 0,
+          "display_name": "Trap Chance"
+        },
+        "UmbrellaLogic": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Umbrella Logic"
+        },
+        "YarnAvailable": {
+          "type": "range",
+          "range_start": 30,
+          "range_end": 80,
+          "default": 50,
+          "display_name": "Yarn Available"
+        },
+        "YarnBalancePercent": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 20,
+          "display_name": "Yarn Balance Percentage"
+        },
+        "YarnCostMax": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 12,
+          "default": 8,
+          "display_name": "Maximum Yarn Cost"
+        },
+        "YarnCostMin": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 12,
+          "default": 4,
+          "display_name": "Minimum Yarn Cost"
+        },
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "death_link_amnesty": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 0,
+          "display_name": "Death Link Amnesty"
+        },
+        "dw_death_link_amnesty": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 30,
+          "default": 5,
+          "display_name": "Death Wish Amnesty"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        }
+      },
       "use_paren_number_accumulator": true,
       "HatItems": false,
       "UmbrellaLogic": false,
@@ -34458,32 +34905,754 @@
     "2": {
       "game": "A Link to the Past",
       "assume_bidirectional_exits": true,
-      "dark_room_logic": "lamp",
-      "retro_bow": false,
-      "swordless": false,
-      "enemy_shuffle": false,
-      "enemy_health": "default",
-      "enemy_damage": "default",
-      "bombless_start": false,
-      "glitches_required": "no_glitches",
-      "pot_shuffle": "off",
-      "dungeon_counters": "on",
-      "glitch_boots": "on",
-      "accessibility": "locations",
-      "mode": "open",
-      "crystals_needed_for_gt": 7,
-      "crystals_needed_for_ganon": 7,
-      "item_functionality": "hard",
-      "shuffle_capacity_upgrades": "off",
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": "items",
+        "allow_collect": "true",
+        "beemizer_total_chance": 0,
+        "beemizer_trap_chance": 60,
+        "big_key_shuffle": "original_dungeon",
+        "bigkey_shuffle": "",
+        "blue_clock_time": 2,
+        "bombless_start": "false",
+        "boss_shuffle": "none",
+        "bush_shuffle": "false",
+        "compass_shuffle": "original_dungeon",
+        "countdown_start_time": 10,
+        "crystals_needed_for_ganon": 7,
+        "crystals_needed_for_gt": 7,
+        "dark_room_logic": "lamp",
+        "death_link": "false",
+        "dungeon_counters": "pickup",
+        "enemy_damage": "default",
+        "enemy_health": "default",
+        "enemy_shuffle": "false",
+        "entrance_shuffle": "vanilla",
+        "entrance_shuffle_seed": "random",
+        "exclude_locations": [],
+        "glitch_boots": "true",
+        "glitches_required": "no_glitches",
+        "goal": "ganon",
+        "goals": "",
+        "green_clock_time": 4,
+        "heartbeep": "normal",
+        "heartcolor": "red",
+        "hints": "on",
+        "hud_palettes": "default",
+        "include_witch_hut": "false",
+        "item_functionality": "normal",
+        "item_links": [],
+        "item_pool": "normal",
+        "key_drop_shuffle": "true",
+        "killable_thieves": "false",
+        "local_items": [],
+        "map_shuffle": "original_dungeon",
+        "menuspeed": "normal",
+        "misery_mire_medallion": "quake",
+        "mode": "open",
+        "music": "true",
+        "non_local_items": [],
+        "open_pyramid": "goal",
+        "ow_palettes": "default",
+        "plando_connections": [],
+        "plando_items": [],
+        "plando_texts": [],
+        "pot_shuffle": "false",
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "progressive": "on",
+        "quickswap": "true",
+        "randomize_cost_types": "false",
+        "randomize_shop_inventories": "default",
+        "randomize_shop_prices": "false",
+        "red_clock_time": -2,
+        "reduceflashing": "true",
+        "restrict_dungeon_item_on_boss": "false",
+        "retro_bow": "false",
+        "retro_caves": "false",
+        "scams": "off",
+        "shield_palettes": "default",
+        "shop_item_slots": 0,
+        "shop_price_modifier": 100,
+        "shuffle_capacity_upgrades": "off",
+        "shuffle_prizes": "general",
+        "shuffle_shop_inventories": "false",
+        "small_key_shuffle": "original_dungeon",
+        "smallkey_shuffle": "",
+        "start_hints": [],
+        "start_inventory": {},
+        "start_inventory_from_pool": {},
+        "start_location_hints": [],
+        "sword_palettes": "default",
+        "swordless": "false",
+        "tile_shuffle": "false",
+        "timer": "none",
+        "triforce_pieces_available": 30,
+        "triforce_pieces_extra": 10,
+        "triforce_pieces_mode": "available",
+        "triforce_pieces_percentage": 150,
+        "triforce_pieces_required": 20,
+        "triforcehud": "normal",
+        "turtle_rock_medallion": "ether",
+        "uw_palettes": "default"
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal",
+            "1": "items"
+          },
+          "default": 1,
+          "display_name": "Accessibility"
+        },
+        "allow_collect": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Allow Collection of checks for other players"
+        },
+        "beemizer_total_chance": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 0,
+          "display_name": "Beemizer Total Chance"
+        },
+        "beemizer_trap_chance": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 60,
+          "display_name": "Beemizer Trap Chance"
+        },
+        "big_key_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "original_dungeon",
+            "1": "own_dungeons",
+            "2": "own_world",
+            "3": "any_world",
+            "4": "different_world",
+            "6": "start_with"
+          },
+          "default": 0,
+          "display_name": "Big Key Shuffle"
+        },
+        "blue_clock_time": {
+          "type": "range",
+          "range_start": -60,
+          "range_end": 60,
+          "default": 2,
+          "display_name": "Blue Clock Time"
+        },
+        "bombless_start": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Bombless Start"
+        },
+        "boss_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "basic",
+            "2": "full",
+            "3": "chaos",
+            "4": "singularity"
+          },
+          "default": 0,
+          "display_name": "Boss Shuffle"
+        },
+        "bush_shuffle": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Bush Shuffle"
+        },
+        "compass_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "original_dungeon",
+            "1": "own_dungeons",
+            "2": "own_world",
+            "3": "any_world",
+            "4": "different_world",
+            "6": "start_with"
+          },
+          "default": 0,
+          "display_name": "Compass Shuffle"
+        },
+        "countdown_start_time": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 480,
+          "default": 10,
+          "display_name": "Countdown Start Time"
+        },
+        "crystals_needed_for_ganon": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 7,
+          "default": 7,
+          "display_name": "Crystals for Ganon"
+        },
+        "crystals_needed_for_gt": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 7,
+          "default": 7,
+          "display_name": "Crystals for GT"
+        },
+        "dark_room_logic": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "lamp",
+            "1": "torches",
+            "2": "none"
+          },
+          "default": 0,
+          "display_name": "Dark Room Logic"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "dungeon_counters": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "on",
+            "1": "pickup",
+            "2": "default",
+            "4": "off"
+          },
+          "default": 1,
+          "display_name": "Dungeon Counters"
+        },
+        "enemy_damage": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "2": "shuffled",
+            "3": "chaos"
+          },
+          "default": 0,
+          "display_name": "Enemy Damage"
+        },
+        "enemy_health": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "easy",
+            "1": "default",
+            "2": "hard",
+            "3": "expert"
+          },
+          "default": 1,
+          "display_name": "Enemy Health"
+        },
+        "enemy_shuffle": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Enemy Shuffle"
+        },
+        "entrance_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "dungeons_simple",
+            "2": "dungeons_full",
+            "3": "dungeons_crossed",
+            "4": "simple",
+            "5": "restricted",
+            "6": "full",
+            "7": "crossed",
+            "8": "insanity"
+          },
+          "default": 0,
+          "display_name": "Entrance Shuffle"
+        },
+        "glitch_boots": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Glitched Starting Boots"
+        },
+        "glitches_required": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "no_glitches",
+            "1": "minor_glitches",
+            "2": "overworld_glitches",
+            "3": "hybrid_major_glitches",
+            "4": "no_logic"
+          },
+          "default": 0,
+          "display_name": "Glitches Required"
+        },
+        "goal": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "ganon",
+            "1": "crystals",
+            "2": "bosses",
+            "3": "pedestal",
+            "4": "ganon_pedestal",
+            "5": "triforce_hunt",
+            "6": "local_triforce_hunt",
+            "7": "ganon_triforce_hunt",
+            "8": "local_ganon_triforce_hunt"
+          },
+          "default": 0,
+          "display_name": "Goal"
+        },
+        "green_clock_time": {
+          "type": "range",
+          "range_start": -60,
+          "range_end": 60,
+          "default": 4,
+          "display_name": "Green Clock Time"
+        },
+        "heartbeep": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "double",
+            "2": "half",
+            "3": "quarter",
+            "4": "off"
+          },
+          "default": 0,
+          "display_name": "Heart Beep Rate"
+        },
+        "heartcolor": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "red",
+            "1": "blue",
+            "2": "green",
+            "3": "yellow"
+          },
+          "default": 0,
+          "display_name": "Heart Color"
+        },
+        "hints": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "2": "on",
+            "3": "full"
+          },
+          "default": 2,
+          "display_name": "Hints"
+        },
+        "hud_palettes": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "1": "good",
+            "2": "blackout",
+            "3": "puke",
+            "4": "classic",
+            "5": "grayscale",
+            "6": "negative",
+            "7": "dizzy",
+            "8": "sick"
+          },
+          "default": 0,
+          "display_name": "Menu Palette"
+        },
+        "include_witch_hut": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Include Witch's Hut"
+        },
+        "item_functionality": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "easy",
+            "1": "normal",
+            "2": "hard",
+            "3": "expert"
+          },
+          "default": 1,
+          "display_name": "Item Functionality"
+        },
+        "item_pool": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "easy",
+            "1": "normal",
+            "2": "hard",
+            "3": "expert"
+          },
+          "default": 1,
+          "display_name": "Item Pool"
+        },
+        "key_drop_shuffle": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Key Drop Shuffle"
+        },
+        "killable_thieves": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Killable Thieves"
+        },
+        "map_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "original_dungeon",
+            "1": "own_dungeons",
+            "2": "own_world",
+            "3": "any_world",
+            "4": "different_world",
+            "6": "start_with"
+          },
+          "default": 0,
+          "display_name": "Map Shuffle"
+        },
+        "menuspeed": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "(1,)": "instant",
+            "2": "double",
+            "3": "triple",
+            "4": "quadruple",
+            "5": "half"
+          },
+          "default": 0,
+          "display_name": "Menu Speed"
+        },
+        "misery_mire_medallion": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "ether",
+            "1": "bombos",
+            "2": "quake"
+          },
+          "default": "random",
+          "display_name": "Misery Mire Medallion"
+        },
+        "mode": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "standard",
+            "1": "open",
+            "2": "inverted"
+          },
+          "default": 1,
+          "display_name": "Mode"
+        },
+        "music": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Play music"
+        },
+        "open_pyramid": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "closed",
+            "1": "open",
+            "2": "goal",
+            "3": "auto"
+          },
+          "default": 2,
+          "display_name": "Open Pyramid Hole"
+        },
+        "ow_palettes": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "1": "good",
+            "2": "blackout",
+            "3": "puke",
+            "4": "classic",
+            "5": "grayscale",
+            "6": "negative",
+            "7": "dizzy",
+            "8": "sick"
+          },
+          "default": 0,
+          "display_name": "Overworld Palette"
+        },
+        "pot_shuffle": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Pot Shuffle"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "progressive": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "grouped_random",
+            "2": "on"
+          },
+          "default": 2,
+          "display_name": "Progressive Items"
+        },
+        "quickswap": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "L/R Quickswapping"
+        },
+        "randomize_cost_types": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Cost Types"
+        },
+        "randomize_shop_inventories": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "1": "randomize_by_shop_type",
+            "2": "randomize_each"
+          },
+          "default": 0,
+          "display_name": "Randomize Shop Inventories"
+        },
+        "randomize_shop_prices": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Shop Prices"
+        },
+        "red_clock_time": {
+          "type": "range",
+          "range_start": -60,
+          "range_end": 60,
+          "default": -2,
+          "display_name": "Red Clock Time"
+        },
+        "reduceflashing": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Reduce Screen Flashes"
+        },
+        "restrict_dungeon_item_on_boss": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Prevent Dungeon Item on Boss"
+        },
+        "retro_bow": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Retro Bow"
+        },
+        "retro_caves": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Retro Caves"
+        },
+        "scams": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "king_zora",
+            "2": "bottle_merchant",
+            "3": "all"
+          },
+          "default": 0,
+          "display_name": "Scams"
+        },
+        "shield_palettes": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "1": "good",
+            "2": "blackout",
+            "3": "puke",
+            "4": "classic",
+            "5": "grayscale",
+            "6": "negative",
+            "7": "dizzy",
+            "8": "sick"
+          },
+          "default": 0,
+          "display_name": "Shield Palette"
+        },
+        "shop_item_slots": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 30,
+          "default": 0,
+          "display_name": "Available Shop Slots"
+        },
+        "shop_price_modifier": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 400,
+          "default": 100,
+          "display_name": "Shop Price Modifier"
+        },
+        "shuffle_capacity_upgrades": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "on",
+            "2": "on_combined"
+          },
+          "default": 0,
+          "display_name": "Shuffle Capacity Upgrades"
+        },
+        "shuffle_prizes": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "general",
+            "2": "bonk",
+            "3": "both"
+          },
+          "default": 1,
+          "display_name": "Shuffle Prizes"
+        },
+        "shuffle_shop_inventories": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Shop Inventories"
+        },
+        "small_key_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "original_dungeon",
+            "1": "own_dungeons",
+            "2": "own_world",
+            "3": "any_world",
+            "4": "different_world",
+            "6": "start_with",
+            "5": "universal"
+          },
+          "default": 0,
+          "display_name": "Small Key Shuffle"
+        },
+        "sword_palettes": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "1": "good",
+            "2": "blackout",
+            "3": "puke",
+            "4": "classic",
+            "5": "grayscale",
+            "6": "negative",
+            "7": "dizzy",
+            "8": "sick"
+          },
+          "default": 0,
+          "display_name": "Sword Palette"
+        },
+        "swordless": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Swordless"
+        },
+        "tile_shuffle": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Tile Shuffle"
+        },
+        "timer": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "timed",
+            "2": "timed_ohko",
+            "3": "ohko",
+            "4": "timed_countdown",
+            "5": "display"
+          },
+          "default": 0,
+          "display_name": "Timer"
+        },
+        "triforce_pieces_available": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 90,
+          "default": 30,
+          "display_name": "Triforce Pieces Available"
+        },
+        "triforce_pieces_extra": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 89,
+          "default": 10,
+          "display_name": "Triforce Pieces Extra"
+        },
+        "triforce_pieces_mode": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "extra",
+            "1": "percentage",
+            "2": "available"
+          },
+          "default": 2,
+          "display_name": "Triforce Pieces Mode"
+        },
+        "triforce_pieces_percentage": {
+          "type": "range",
+          "range_start": 100,
+          "range_end": 1000,
+          "default": 150,
+          "display_name": "Triforce Pieces Percentage"
+        },
+        "triforce_pieces_required": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 90,
+          "default": 20,
+          "display_name": "Triforce Pieces Required"
+        },
+        "triforcehud": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "hide_goal",
+            "2": "hide_required",
+            "3": "hide_both"
+          },
+          "default": 0,
+          "display_name": "Display Method for Triforce Hunt"
+        },
+        "turtle_rock_medallion": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "ether",
+            "1": "bombos",
+            "2": "quake"
+          },
+          "default": "random",
+          "display_name": "Turtle Rock Medallion"
+        },
+        "uw_palettes": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "1": "good",
+            "2": "blackout",
+            "3": "puke",
+            "4": "classic",
+            "5": "grayscale",
+            "6": "negative",
+            "7": "dizzy",
+            "8": "sick"
+          },
+          "default": 0,
+          "display_name": "Underworld Palette"
+        }
+      },
       "treasure_hunt_required": 0,
       "can_take_damage": true,
+      "logical_heart_pieces": 24,
+      "logical_heart_containers": 10,
       "difficulty_requirements": {
         "progressive_bottle_limit": 4,
         "boss_heart_container_limit": 10,
         "heart_piece_limit": 24
       },
-      "logical_heart_pieces": 24,
-      "logical_heart_containers": 10,
       "required_medallions": [
         "Quake",
         "Ether"
@@ -34652,6 +35821,143 @@
         "sticks": 8,
         "toy_shovels": 5
       },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "buckets": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 2,
+          "default": 2,
+          "display_name": "Buckets"
+        },
+        "coins_in_shops": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Coins in Purchaseable Locations"
+        },
+        "cost_multiplier": {
+          "type": "range",
+          "range_start": 25,
+          "range_end": 200,
+          "default": 100,
+          "display_name": "Shop Cost Multiplier"
+        },
+        "easier_races": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Easier Races"
+        },
+        "filler_coin_amount": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "7_coins",
+            "1": "13_coins",
+            "2": "15_coins",
+            "3": "18_coins",
+            "4": "21_coins",
+            "5": "25_coins",
+            "6": "27_coins",
+            "7": "32_coins",
+            "8": "33_coins",
+            "9": "50_coins"
+          },
+          "default": 1,
+          "display_name": "Coins per Filler Item"
+        },
+        "goal": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "nap",
+            "1": "photo",
+            "2": "races",
+            "3": "help_everyone",
+            "4": "fishmonger"
+          },
+          "default": 3,
+          "display_name": "Goal"
+        },
+        "golden_feather_progression": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "easy",
+            "1": "normal",
+            "2": "hard"
+          },
+          "default": 1,
+          "display_name": "Golden Feather Progression"
+        },
+        "golden_feathers": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 20,
+          "display_name": "Golden Feathers"
+        },
+        "min_shop_check_logic": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "40_coins",
+            "1": "100_coins",
+            "2": "400_coins"
+          },
+          "default": 1,
+          "display_name": "Minimum Shop Check Logic Application"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "random_walkie_talkie": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Randomize Walkie Talkie"
+        },
+        "shop_check_logic": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "nothing",
+            "1": "fishing_rod",
+            "2": "shovel",
+            "3": "fishing_rod_and_shovel",
+            "4": "golden_fishing_rod",
+            "5": "golden_fishing_rod_and_shovel"
+          },
+          "default": 1,
+          "display_name": "Shop Check Logic"
+        },
+        "silver_feathers": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 2,
+          "display_name": "Silver Feathers"
+        },
+        "sticks": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 8,
+          "default": 8,
+          "display_name": "Sticks"
+        },
+        "toy_shovels": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 5,
+          "default": 5,
+          "display_name": "Toy Shovels"
+        }
+      },
       "world_directory": "shorthike"
     },
     "4": {
@@ -34685,6 +35991,139 @@
         "start_location_hints": [],
         "yorgle_min_speed": 1,
         "yorgle_speed": 2
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "bat_logic": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "cannot_break",
+            "1": "can_break",
+            "2": "use_logic"
+          },
+          "default": 1,
+          "display_name": "Bat Logic"
+        },
+        "connector_multi_slot": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Connector Multi-Slot"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "difficulty_switch_a": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "locked_hard",
+            "2": "hard_with_unlock_item"
+          },
+          "default": 2,
+          "display_name": "Left Difficulty Switch"
+        },
+        "difficulty_switch_b": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "locked_hard",
+            "2": "hard_with_unlock_item"
+          },
+          "default": 2,
+          "display_name": "Right Difficulty Switch"
+        },
+        "dragon_rando_type": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "shuffle",
+            "2": "overworldplus",
+            "3": "randomized"
+          },
+          "default": 1,
+          "display_name": "Dragon Randomization"
+        },
+        "dragon_slay_check": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Slay Dragon Checks"
+        },
+        "freeincarnate_max": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 17,
+          "default": 17,
+          "display_name": "Freeincarnate Maximum"
+        },
+        "grundle_min_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 1,
+          "display_name": "Grundle Min Speed"
+        },
+        "grundle_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 2,
+          "display_name": "Grundle MaxSpeed"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "rhindle_min_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 2,
+          "display_name": "Rhindle Min Speed"
+        },
+        "rhindle_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 3,
+          "display_name": "Rhindle MaxSpeed"
+        },
+        "start_castle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "yellow",
+            "1": "black",
+            "2": "white"
+          },
+          "default": 0,
+          "display_name": "Start Castle"
+        },
+        "yorgle_min_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 1,
+          "display_name": "Yorgle Min Speed"
+        },
+        "yorgle_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 2,
+          "display_name": "Yorgle MaxSpeed"
+        }
       },
       "world_directory": "adventure"
     }

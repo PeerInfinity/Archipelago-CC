@@ -30,5 +30,142 @@
     "sticks": 8,
     "toy_shovels": 5
   },
+  "option_definitions": {
+    "accessibility": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "full",
+        "2": "minimal"
+      },
+      "default": 0,
+      "display_name": "Accessibility"
+    },
+    "buckets": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 2,
+      "default": 2,
+      "display_name": "Buckets"
+    },
+    "coins_in_shops": {
+      "type": "toggle",
+      "default": false,
+      "display_name": "Coins in Purchaseable Locations"
+    },
+    "cost_multiplier": {
+      "type": "range",
+      "range_start": 25,
+      "range_end": 200,
+      "default": 100,
+      "display_name": "Shop Cost Multiplier"
+    },
+    "easier_races": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Easier Races"
+    },
+    "filler_coin_amount": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "7_coins",
+        "1": "13_coins",
+        "2": "15_coins",
+        "3": "18_coins",
+        "4": "21_coins",
+        "5": "25_coins",
+        "6": "27_coins",
+        "7": "32_coins",
+        "8": "33_coins",
+        "9": "50_coins"
+      },
+      "default": 1,
+      "display_name": "Coins per Filler Item"
+    },
+    "goal": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "nap",
+        "1": "photo",
+        "2": "races",
+        "3": "help_everyone",
+        "4": "fishmonger"
+      },
+      "default": 3,
+      "display_name": "Goal"
+    },
+    "golden_feather_progression": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "easy",
+        "1": "normal",
+        "2": "hard"
+      },
+      "default": 1,
+      "display_name": "Golden Feather Progression"
+    },
+    "golden_feathers": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 20,
+      "default": 20,
+      "display_name": "Golden Feathers"
+    },
+    "min_shop_check_logic": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "40_coins",
+        "1": "100_coins",
+        "2": "400_coins"
+      },
+      "default": 1,
+      "display_name": "Minimum Shop Check Logic Application"
+    },
+    "progression_balancing": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 99,
+      "default": 50,
+      "display_name": "Progression Balancing"
+    },
+    "random_walkie_talkie": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Randomize Walkie Talkie"
+    },
+    "shop_check_logic": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "nothing",
+        "1": "fishing_rod",
+        "2": "shovel",
+        "3": "fishing_rod_and_shovel",
+        "4": "golden_fishing_rod",
+        "5": "golden_fishing_rod_and_shovel"
+      },
+      "default": 1,
+      "display_name": "Shop Check Logic"
+    },
+    "silver_feathers": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 20,
+      "default": 2,
+      "display_name": "Silver Feathers"
+    },
+    "sticks": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 8,
+      "default": 8,
+      "display_name": "Sticks"
+    },
+    "toy_shovels": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 5,
+      "default": 5,
+      "display_name": "Toy Shovels"
+    }
+  },
   "world_directory": "shorthike"
 }

@@ -17,6 +17,17 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Act 1 Death Link Behaviour:      Sacrificed
+Death Link:                      No
+Epitaph Pieces Randomization:    All Pieces
+Goal:                            Full Story In Order
+Optional Death Card:             Deathlink Only
+Painting Checks Balancing:       Balanced
+Randomize Codes:                 No
+Randomize Deck:                  Disable
+Randomize Abilities:             Disable
+Skip Epilogue:                   No
+Skip Tutorial:                   Yes
 
 
 Locations:

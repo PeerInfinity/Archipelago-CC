@@ -17,6 +17,11 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Death Link:                      No
+Goal:                            Return The Cursed Seal
+Include Evolution Traps:         No
+Include PSI Keys:                Yes
+Item cache cost scaling:         Vanilla
 
 
 Locations:

@@ -17,6 +17,9 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Expanded Item Pool:              Yes
+Starting Position:               Safe
+Triforce Locations:              Vanilla
 
 
 Locations:

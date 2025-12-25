@@ -13775,17 +13775,273 @@
       "use_resolved_items": false,
       "options": {
         "accessibility": "full",
+        "added_ammo_arrows": 50,
+        "added_ammo_claw_orbs": 200,
+        "added_ammo_crystals": 100,
+        "added_ammo_flame_orbs": 20,
+        "added_ammo_runes": 200,
+        "added_ammo_spheres": 150,
+        "allow_death_logic": "false",
+        "bag_of_holding_count": 1,
+        "check_sanity": "false",
+        "death_link": "false",
+        "difficulty": "medium",
+        "episode1": "true",
+        "episode2": "true",
+        "episode3": "true",
+        "episode4": "false",
+        "episode5": "false",
         "exclude_locations": [],
+        "goal": "complete_all_levels",
         "item_links": [],
         "local_items": [],
+        "max_ammo_arrows": 50,
+        "max_ammo_claw_orbs": 200,
+        "max_ammo_crystals": 100,
+        "max_ammo_flame_orbs": 20,
+        "max_ammo_runes": 200,
+        "max_ammo_spheres": 150,
         "non_local_items": [],
         "plando_items": [],
         "priority_locations": [],
+        "pro": "false",
         "progression_balancing": 50,
+        "random_monsters": "shuffle",
+        "random_music": "vanilla",
+        "random_pickups": "shuffle",
         "randomize_items": "false",
+        "reset_level_on_death": "true",
+        "split_bag_of_holding": "false",
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "start_with_map_scrolls": "false"
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "added_ammo_arrows": {
+          "type": "range",
+          "range_start": 5,
+          "range_end": 999,
+          "default": 50,
+          "display_name": "Added Ammo - Arrows"
+        },
+        "added_ammo_claw_orbs": {
+          "type": "range",
+          "range_start": 20,
+          "range_end": 999,
+          "default": 200,
+          "display_name": "Added Ammo - Claw Orbs"
+        },
+        "added_ammo_crystals": {
+          "type": "range",
+          "range_start": 10,
+          "range_end": 999,
+          "default": 100,
+          "display_name": "Added Ammo - Crystals"
+        },
+        "added_ammo_flame_orbs": {
+          "type": "range",
+          "range_start": 2,
+          "range_end": 999,
+          "default": 20,
+          "display_name": "Added Ammo - Flame Orbs"
+        },
+        "added_ammo_runes": {
+          "type": "range",
+          "range_start": 20,
+          "range_end": 999,
+          "default": 200,
+          "display_name": "Added Ammo - Runes"
+        },
+        "added_ammo_spheres": {
+          "type": "range",
+          "range_start": 15,
+          "range_end": 999,
+          "default": 150,
+          "display_name": "Added Ammo - Spheres"
+        },
+        "allow_death_logic": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Allow Death Logic"
+        },
+        "bag_of_holding_count": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 1,
+          "display_name": "Bag of Holding Count"
+        },
+        "check_sanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Check Sanity"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "difficulty": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "wet_nurse",
+            "1": "easy",
+            "2": "medium",
+            "3": "hard",
+            "4": "black_plague"
+          },
+          "default": 2,
+          "display_name": "Difficulty"
+        },
+        "episode1": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Episode 1"
+        },
+        "episode2": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Episode 2"
+        },
+        "episode3": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Episode 3"
+        },
+        "episode4": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Episode 4"
+        },
+        "episode5": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Episode 5"
+        },
+        "goal": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "complete_all_levels",
+            "1": "complete_boss_levels"
+          },
+          "default": 0,
+          "display_name": "Goal"
+        },
+        "max_ammo_arrows": {
+          "type": "range",
+          "range_start": 50,
+          "range_end": 999,
+          "default": 50,
+          "display_name": "Max Ammo - Arrows"
+        },
+        "max_ammo_claw_orbs": {
+          "type": "range",
+          "range_start": 200,
+          "range_end": 999,
+          "default": 200,
+          "display_name": "Max Ammo - Claw Orbs"
+        },
+        "max_ammo_crystals": {
+          "type": "range",
+          "range_start": 100,
+          "range_end": 999,
+          "default": 100,
+          "display_name": "Max Ammo - Crystals"
+        },
+        "max_ammo_flame_orbs": {
+          "type": "range",
+          "range_start": 20,
+          "range_end": 999,
+          "default": 20,
+          "display_name": "Max Ammo - Flame Orbs"
+        },
+        "max_ammo_runes": {
+          "type": "range",
+          "range_start": 200,
+          "range_end": 999,
+          "default": 200,
+          "display_name": "Max Ammo - Runes"
+        },
+        "max_ammo_spheres": {
+          "type": "range",
+          "range_start": 150,
+          "range_end": 999,
+          "default": 150,
+          "display_name": "Max Ammo - Spheres"
+        },
+        "pro": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Pro Heretic"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "random_monsters": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "shuffle",
+            "2": "random_balanced",
+            "3": "random_chaotic"
+          },
+          "default": 1,
+          "display_name": "Random Monsters"
+        },
+        "random_music": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "shuffle_selected",
+            "2": "shuffle_game"
+          },
+          "default": 0,
+          "display_name": "Random Music"
+        },
+        "random_pickups": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "shuffle",
+            "2": "random_balanced"
+          },
+          "default": 1,
+          "display_name": "Random Pickups"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "reset_level_on_death": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Reset Level on Death"
+        },
+        "split_bag_of_holding": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Split Bag of Holding"
+        },
+        "start_with_map_scrolls": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Start With Map Scrolls"
+        }
       },
       "world_directory": "heretic"
     }

@@ -74,6 +74,280 @@
     "trap_percentage": 50,
     "virtual_console": "flash_reduction"
   },
+  "option_definitions": {
+    "ability_trap_weight": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 100,
+      "default": 50,
+      "display_name": "Ability Trap Percentage"
+    },
+    "accessibility": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "full",
+        "2": "minimal"
+      },
+      "default": 0,
+      "display_name": "Accessibility"
+    },
+    "allow_bb": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "disabled",
+        "1": "enabled",
+        "2": "enforced"
+      },
+      "default": 0,
+      "display_name": "Allow Boss Butch Bosses"
+    },
+    "animal_randomization": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "disabled",
+        "1": "shuffled",
+        "2": "full"
+      },
+      "default": 0,
+      "display_name": "Animal Randomization"
+    },
+    "boss_requirement_random": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Randomize Purification Requirement"
+    },
+    "boss_shuffle": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "shuffled",
+        "2": "full",
+        "3": "singularity"
+      },
+      "default": 0,
+      "display_name": "Boss Shuffle"
+    },
+    "consumables": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Consumable-sanity"
+    },
+    "copy_ability_randomization": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "disabled",
+        "1": "enabled",
+        "2": "enabled_plus_minus"
+      },
+      "default": 0,
+      "display_name": "Copy Ability Randomization"
+    },
+    "death_link": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Death Link"
+    },
+    "filler_percentage": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 100,
+      "default": 50,
+      "display_name": "Filler Percentage"
+    },
+    "game_language": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "japanese",
+        "1": "english"
+      },
+      "default": 1,
+      "display_name": "Game Language"
+    },
+    "gifting": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Gifting"
+    },
+    "goal": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "zero",
+        "1": "boss_butch",
+        "2": "mg5",
+        "3": "jumping"
+      },
+      "default": 0,
+      "display_name": "Goal"
+    },
+    "goal_speed": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "normal",
+        "1": "fast"
+      },
+      "default": 0,
+      "display_name": "Goal Speed"
+    },
+    "gooey_flavor_preset": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "default",
+        "1": "bubblegum",
+        "2": "cherry",
+        "3": "blueberry",
+        "4": "lemon",
+        "5": "kiwi",
+        "6": "grape",
+        "7": "chocolate",
+        "8": "marshmallow",
+        "9": "licorice",
+        "10": "watermelon",
+        "11": "orange",
+        "12": "lime",
+        "13": "lavender",
+        "-1": "custom"
+      },
+      "default": 0,
+      "display_name": "Gooey Flavor"
+    },
+    "gooey_trap_weight": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 100,
+      "default": 50,
+      "display_name": "Gooey Trap Percentage"
+    },
+    "heart_stars_required": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 100,
+      "default": 50,
+      "display_name": "Required Heart Stars"
+    },
+    "jumping_target": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 25,
+      "default": 10,
+      "display_name": "Jumping Target Score"
+    },
+    "kirby_flavor_preset": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "default",
+        "1": "bubblegum",
+        "2": "cherry",
+        "3": "blueberry",
+        "4": "lemon",
+        "5": "kiwi",
+        "6": "grape",
+        "7": "chocolate",
+        "8": "marshmallow",
+        "9": "licorice",
+        "10": "watermelon",
+        "11": "orange",
+        "12": "lime",
+        "13": "lavender",
+        "14": "miku",
+        "-1": "custom"
+      },
+      "default": 0,
+      "display_name": "Kirby Flavor"
+    },
+    "max_heart_stars": {
+      "type": "range",
+      "range_start": 5,
+      "range_end": 99,
+      "default": 30,
+      "display_name": "Max Heart Stars"
+    },
+    "music_shuffle": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "shuffled",
+        "2": "full"
+      },
+      "default": 0,
+      "display_name": "Music Randomization"
+    },
+    "open_world": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Open World"
+    },
+    "ow_boss_requirement": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 6,
+      "default": 3,
+      "display_name": "Open World Boss Requirement"
+    },
+    "progression_balancing": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 99,
+      "default": 50,
+      "display_name": "Progression Balancing"
+    },
+    "remote_items": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Remote Items"
+    },
+    "slow_trap_weight": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 100,
+      "default": 50,
+      "display_name": "Slowness Trap Percentage"
+    },
+    "stage_shuffle": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "same_world",
+        "2": "pattern",
+        "3": "shuffled"
+      },
+      "default": 0,
+      "display_name": "Stage Shuffle"
+    },
+    "starsanity": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Starsanity"
+    },
+    "strict_bosses": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Strict Bosses"
+    },
+    "total_heart_stars": {
+      "type": "range",
+      "range_start": 5,
+      "range_end": 99,
+      "default": -1
+    },
+    "trap_percentage": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 100,
+      "default": 50,
+      "display_name": "Trap Percentage"
+    },
+    "virtual_console": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "flash_reduction",
+        "2": "color_changes",
+        "3": "both"
+      },
+      "default": 1,
+      "display_name": "Virtual Console Changes"
+    }
+  },
   "copy_abilities": {
     "Waddle Dee": "No Ability",
     "Bronto Burt": "No Ability",

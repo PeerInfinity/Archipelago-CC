@@ -17,6 +17,48 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Bald Trap Weight:                Medium
+Binosanity:                      No
+Carsanity:                       No
+Checkpointsanity:                No
+Death Link:                      No
+Death Link Amnesty:              10
+Fast Trap Weight:                Medium
+Gemsanity:                       No
+Goal Area:                       The Summit A
+Goal Area Checkpointsanity:      No
+Hiccup Trap Weight:              Medium
+Ice Trap Weight:                 Medium
+Include B-Sides:                 No
+Include C-Sides:                 No
+Include Core:                    No
+Include Farewell:                None
+Include Goldens:                 No
+Invisible Trap Weight:           Medium
+Junk Fill Percentage:            50
+Keysanity:                       No
+Laughter Trap Weight:            Medium
+Literature Trap Weight:          Medium
+Lock Goal Area:                  Yes
+Madeline Feather Hair Color:     Golden
+Madeline Hair Length:            Default
+Madeline No Dash Hair Color:     Empty
+Madeline One Dash Hair Color:    Strawberry
+Madeline Two Dash Hair Color:    Double
+Music Shuffle:                   None
+Require Cassettes:               No
+Reverse Trap Weight:             Medium
+Roomsanity:                      No
+Screen Flip Trap Weight:         Medium
+Slow Trap Weight:                Medium
+Strawberries Required Percentage:80
+Stun Trap Weight:                Medium
+Total Strawberries:              50
+Trap Expiration Action:          Deaths
+Trap Expiration Amount:          5
+Trap Fill Percentage:            0
+Trap Link:                       No
+Zoom Trap Weight:                Medium
 
 
 Locations:

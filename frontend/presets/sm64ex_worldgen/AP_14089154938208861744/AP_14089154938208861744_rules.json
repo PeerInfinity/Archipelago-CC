@@ -3600,17 +3600,177 @@
       "use_resolved_items": false,
       "options": {
         "accessibility": "full",
+        "amount_of_stars": 120,
+        "area_rando": "off",
+        "basement_star_door_cost": 25,
+        "buddy_checks": "false",
+        "completion_type": "last_bowser_stage",
+        "death_link": "false",
+        "enable_coin_stars": "off",
+        "enable_move_rando": "false",
+        "exclamation_boxes": "false",
         "exclude_locations": [],
+        "first_bowser_star_door_cost": 7,
         "item_links": [],
         "local_items": [],
+        "mips1_cost": 12,
+        "mips2_cost": 42,
         "non_local_items": [],
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
+        "progressive_keys": "true",
         "randomize_items": "false",
+        "second_floor_star_door_cost": 42,
+        "stars_to_finish": 58,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "strict_cannon_requirements": "true",
+        "strict_cap_requirements": "true",
+        "strict_move_requirements": "true"
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "amount_of_stars": {
+          "type": "range",
+          "range_start": 35,
+          "range_end": 120,
+          "default": 120,
+          "display_name": "Total Power Stars"
+        },
+        "area_rando": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "courses_only",
+            "2": "courses_and_secrets_separate",
+            "3": "courses_and_secrets"
+          },
+          "default": 0,
+          "display_name": "Entrance Randomizer"
+        },
+        "basement_star_door_cost": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 50,
+          "default": 25,
+          "display_name": "Basement Star Door %"
+        },
+        "buddy_checks": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Bob-omb Buddy Checks"
+        },
+        "completion_type": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "last_bowser_stage",
+            "1": "all_bowser_stages"
+          },
+          "default": 0,
+          "display_name": "Completion Goal"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "enable_coin_stars": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "on",
+            "2": "vanilla"
+          },
+          "default": 0,
+          "display_name": "Enable 100 Coin Stars"
+        },
+        "enable_move_rando": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Enable Move Randomizer"
+        },
+        "exclamation_boxes": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize 1Up !-Blocks"
+        },
+        "first_bowser_star_door_cost": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 40,
+          "default": 7,
+          "display_name": "First Star Door Cost %"
+        },
+        "mips1_cost": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 35,
+          "default": 12,
+          "display_name": "MIPS 1 Star %"
+        },
+        "mips2_cost": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 70,
+          "default": 42,
+          "display_name": "MIPS 2 Star %"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "progressive_keys": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Progressive Keys"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "second_floor_star_door_cost": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 70,
+          "default": 42,
+          "display_name": "Second Floor Star Door %"
+        },
+        "stars_to_finish": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 90,
+          "default": 58,
+          "display_name": "Endless Stairs Star %"
+        },
+        "strict_cannon_requirements": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Strict Cannon Requirements"
+        },
+        "strict_cap_requirements": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Strict Cap Requirements"
+        },
+        "strict_move_requirements": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Strict Move Requirements"
+        }
       },
       "enable_move_rando": false,
       "strict_cap_requirements": true,

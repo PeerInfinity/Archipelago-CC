@@ -17,6 +17,120 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Animalsanity:                    No
+Bee Trap Weight:                 Medium
+Beetlesanity:                    Yes
+Big Fishing Difficulty:          Medium
+Bigsanity:                       No
+Black Market Price Multiplier:   1
+Black Market Slots:              0
+Black Market Unlock Costs:       Medium
+Boss Rush Shuffle:               Vanilla
+Breakout Trap Weight:            Medium
+Cannon's Core Mission 2:         Yes
+Cannon's Core Mission 3:         Yes
+Cannon's Core Mission 4:         Yes
+Cannon's Core Mission 5:         Yes
+Cannon's Core Mission Count:     2
+Chao Animal Parts:               No
+Chao Entrance Randomization:     No
+Chao Karate Difficulty:          None
+Chao Kindergarten Checks:        None
+Chao Race Difficulty:            None
+Chao Stadium Checks:             All
+Chao Stats:                      0
+Chao Stats Frequency:            5
+Chao Stats - Luck and Intelligence:No
+Chao Stats - Stamina:            No
+Confusion Trap Weight:           Medium
+Controller Drift Trap Weight:    Medium
+Cutscene Trap Weight:            Medium
+Death Link:                      No
+Eggman Mission 2:                Yes
+Eggman Mission 3:                Yes
+Eggman Mission 4:                Yes
+Eggman Mission 5:                Yes
+Eggman Mission Count:            2
+Emblem Percentage for Cannon's Core:50
+Exposition Trap Weight:          Medium
+Fishing Trap Weight:             Medium
+Boss Shuffle:                    Plando
+Goal:                            Biolizard
+Gravity Trap Weight:             Medium
+Ice Trap Weight:                 Medium
+Input Sequence Trap Weight:      Medium
+Itemboxsanity:                   None
+Junk Fill Percentage:            50
+Kart Mission 2:                  Yes
+Kart Mission 3:                  Yes
+Kart Mission 4:                  Yes
+Kart Mission 5:                  Yes
+Kart Mission Count:              2
+Kart Race Checks:                None
+Keysanity:                       Yes
+Knuckles Mission 2:              Yes
+Knuckles Mission 3:              Yes
+Knuckles Mission 4:              Yes
+Knuckles Mission 5:              Yes
+Knuckles Mission Count:          2
+Level Gate Costs:                Low
+Level Gate Distribution:         Even
+Light Up Path Trap Weight:       Medium
+Literature Trap Weight:          Medium
+Logic Difficulty:                Standard
+Math Quiz Trap Weight:           Medium
+Max Emblem Cap:                  180
+Minigame Madness Trap Minimum:   5
+Minigame Madness Trap Requirement:3
+Minigame Trap Difficulty:        Medium
+Mission Shuffle:                 No
+Music Shuffle Type:              None
+Narrator:                        Default
+Number of Level Gates:           3
+Number Sequence Trap Weight:     Medium
+OmoTrap Weight:                  Medium
+Omosanity:                       No
+Pinball Trap Weight:             Medium
+Poison Trap Weight:              Medium
+Pokemon Count Trap Weight:       Medium
+Pokemon Trivia Trap Weight:      Medium
+Pong Trap Weight:                Medium
+Required Cannon's Core Missions: First
+Required Rank:                   E
+Reverse Trap Weight:             Medium
+Ring Link:                       No
+Ring Loss:                       Classic
+Rouge Mission 2:                 Yes
+Rouge Mission 3:                 Yes
+Rouge Mission 4:                 Yes
+Rouge Mission 5:                 Yes
+Rouge Mission Count:             2
+SADX Music:                      Sa2B
+Shadow Mission 2:                Yes
+Shadow Mission 3:                Yes
+Shadow Mission 4:                Yes
+Shadow Mission 5:                Yes
+Shadow Mission Count:            2
+Shuffle Starting Chao Eggs:      Yes
+Slow Trap Weight:                Medium
+Snake Trap Weight:               Medium
+Sonic Mission 2:                 Yes
+Sonic Mission 3:                 Yes
+Sonic Mission 4:                 Yes
+Sonic Mission 5:                 Yes
+Sonic Mission Count:             2
+Tails Mission 2:                 Yes
+Tails Mission 3:                 Yes
+Tails Mission 4:                 Yes
+Tails Mission 5:                 Yes
+Tails Mission Count:             2
+Chaos Control Trap Weight:       Medium
+Tiny Trap Weight:                Medium
+Trap Fill Percentage:            0
+Trap Link:                       No
+Trivia Trap Weight:              Medium
+Voice Shuffle Type:              None
+Whistlesanity:                   None
 
 
 Locations:

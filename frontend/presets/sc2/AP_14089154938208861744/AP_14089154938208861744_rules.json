@@ -44454,6 +44454,785 @@
         "void_trade_workers": "false",
         "war_council_nerfs": "false"
       },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "all_in_map": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "ground",
+            "1": "air"
+          },
+          "default": "random",
+          "display_name": "All In Map"
+        },
+        "basebust_locations": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "enabled",
+            "3": "half_chance",
+            "1": "filler",
+            "2": "disabled"
+          },
+          "default": 0,
+          "display_name": "Base-Bust Locations"
+        },
+        "challenge_locations": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "enabled",
+            "3": "half_chance",
+            "1": "filler",
+            "2": "disabled"
+          },
+          "default": 0,
+          "display_name": "Challenge Locations"
+        },
+        "difficulty_curve": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "standard",
+            "1": "uneven"
+          },
+          "default": 0,
+          "display_name": "Difficulty Curve"
+        },
+        "difficulty_damage_modifier": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Difficulty Damage Modifier"
+        },
+        "disable_forced_camera": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Disable Forced Camera Movement"
+        },
+        "enable_morphling": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Enable Morphling"
+        },
+        "enable_race_swap": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "disabled",
+            "1": "pick_one",
+            "2": "pick_one_non_vanilla",
+            "3": "shuffle_all",
+            "4": "shuffle_all_non_vanilla"
+          },
+          "default": 0,
+          "display_name": "Enable Race-Swapped Mission Variants"
+        },
+        "enable_void_trade": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Enable Void Trade"
+        },
+        "ensure_generic_items": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 25,
+          "display_name": "Ensure Generic Items"
+        },
+        "exclude_overpowered_items": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Exclude Overpowered Items"
+        },
+        "exclude_very_hard_missions": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "1": "true",
+            "2": "false"
+          },
+          "default": 0,
+          "display_name": "Exclude Very Hard Missions"
+        },
+        "extra_locations": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "enabled",
+            "3": "half_chance",
+            "1": "filler",
+            "2": "disabled"
+          },
+          "default": 0,
+          "display_name": "Extra Locations"
+        },
+        "filler_percentage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 70,
+          "default": 0,
+          "display_name": "Filler Percentage"
+        },
+        "game_difficulty": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "casual",
+            "1": "normal",
+            "2": "hard",
+            "3": "brutal"
+          },
+          "default": 1,
+          "display_name": "Game Difficulty"
+        },
+        "game_speed": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "1": "slower",
+            "2": "slow",
+            "3": "normal",
+            "4": "fast",
+            "5": "faster"
+          },
+          "default": 0,
+          "display_name": "Game Speed"
+        },
+        "generic_upgrade_items": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "individual_items",
+            "1": "bundle_weapon_and_armor",
+            "2": "bundle_unit_class",
+            "3": "bundle_all"
+          },
+          "default": 0,
+          "display_name": "Generic Upgrade Items"
+        },
+        "generic_upgrade_missions": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 0,
+          "display_name": "Generic Upgrade Missions"
+        },
+        "generic_upgrade_research": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "auto_in_no_build",
+            "2": "auto_in_build",
+            "3": "always_auto"
+          },
+          "default": 0,
+          "display_name": "Generic Upgrade Research"
+        },
+        "generic_upgrade_research_speedup": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Generic Upgrade Research Speedup"
+        },
+        "grant_story_levels": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "disabled",
+            "1": "additive",
+            "2": "minimum"
+          },
+          "default": 2,
+          "display_name": "Grant Story Levels"
+        },
+        "grant_story_tech": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "no_grant",
+            "1": "grant",
+            "2": "allow_substitutes"
+          },
+          "default": 0,
+          "display_name": "Grant Story Tech"
+        },
+        "kerrigan_level_item_distribution": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "smooth",
+            "2": "size_70",
+            "3": "size_35",
+            "4": "size_14",
+            "5": "size_10",
+            "6": "size_7",
+            "7": "size_5",
+            "8": "size_2",
+            "9": "size_1"
+          },
+          "default": 1,
+          "display_name": "Kerrigan Level Item Distribution"
+        },
+        "kerrigan_level_item_sum": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 140,
+          "default": 70,
+          "display_name": "Kerrigan Level Item Sum"
+        },
+        "kerrigan_levels_per_mission_completed": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 0,
+          "display_name": "Levels Per Mission Beaten"
+        },
+        "kerrigan_levels_per_mission_completed_cap": {
+          "type": "range",
+          "range_start": -1,
+          "range_end": 140,
+          "default": -1,
+          "display_name": "Levels Per Mission Beaten Cap"
+        },
+        "kerrigan_max_active_abilities": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 12,
+          "default": 12,
+          "display_name": "Kerrigan Maximum Active Abilities"
+        },
+        "kerrigan_max_passive_abilities": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 5,
+          "default": 5,
+          "display_name": "Kerrigan Maximum Passive Abilities"
+        },
+        "kerrigan_presence": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "not_present"
+          },
+          "default": 0,
+          "display_name": "Kerrigan Presence"
+        },
+        "kerrigan_primal_status": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "always_zerg",
+            "2": "always_human",
+            "3": "level_35",
+            "4": "half_completion",
+            "5": "item"
+          },
+          "default": 0,
+          "display_name": "Kerrigan Primal Status"
+        },
+        "kerrigan_total_level_cap": {
+          "type": "range",
+          "range_start": -1,
+          "range_end": 140,
+          "default": -1,
+          "display_name": "Total Level Cap"
+        },
+        "key_mode": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "disabled",
+            "1": "questlines",
+            "2": "missions",
+            "3": "progressive_questlines",
+            "4": "progressive_missions",
+            "5": "progressive_per_questline"
+          },
+          "default": 0,
+          "display_name": "Key Mode"
+        },
+        "lowest_maximum_supply": {
+          "type": "range",
+          "range_start": 100,
+          "range_end": 200,
+          "default": 180,
+          "display_name": "Lowest Maximum Supply"
+        },
+        "mastery_locations": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "enabled",
+            "3": "half_chance",
+            "1": "filler",
+            "2": "disabled"
+          },
+          "default": 0,
+          "display_name": "Mastery Locations"
+        },
+        "max_number_of_upgrades": {
+          "type": "range",
+          "range_start": -1,
+          "range_end": 13,
+          "default": -1,
+          "display_name": "Maximum number of upgrades per unit/structure"
+        },
+        "max_upgrade_level": {
+          "type": "range",
+          "range_start": 3,
+          "range_end": 5,
+          "default": 3,
+          "display_name": "Maximum Upgrade Level"
+        },
+        "maximum_campaign_size": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 195,
+          "default": 83,
+          "display_name": "Maximum Campaign Size"
+        },
+        "maximum_supply_per_item": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 1,
+          "display_name": "Maximum Supply Per Item"
+        },
+        "maximum_supply_reduction_per_item": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 10,
+          "default": 1,
+          "display_name": "Maximum Supply Reduction Per Item"
+        },
+        "mercenary_highlanders": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Mercenary Highlanders"
+        },
+        "min_number_of_upgrades": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 13,
+          "default": 2,
+          "display_name": "Minimum number of upgrades per unit/structure"
+        },
+        "minerals_per_item": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 200,
+          "default": 25,
+          "display_name": "Minerals Per Item"
+        },
+        "mission_order": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "vanilla_shuffled",
+            "2": "mini_campaign",
+            "5": "blitz",
+            "6": "gauntlet",
+            "9": "grid",
+            "10": "golden_path",
+            "11": "hopscotch",
+            "99": "custom"
+          },
+          "default": 10,
+          "display_name": "Mission Order"
+        },
+        "mission_order_scouting": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "completed",
+            "2": "available",
+            "3": "layout",
+            "4": "campaign",
+            "5": "all"
+          },
+          "default": 0,
+          "display_name": "Mission Order Scouting"
+        },
+        "mission_race_balancing": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "disabled",
+            "1": "semi_balanced",
+            "2": "fully_balanced"
+          },
+          "default": 1,
+          "display_name": "Enable Mission Race Balancing"
+        },
+        "nova_ghost_of_a_chance_variant": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "wol",
+            "1": "nco",
+            "2": "auto"
+          },
+          "default": 0,
+          "display_name": "Nova Ghost of Chance Variant"
+        },
+        "nova_max_gadgets": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 5,
+          "default": 5,
+          "display_name": "Nova Maximum Gadgets"
+        },
+        "nova_max_weapons": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 5,
+          "default": 5,
+          "display_name": "Nova Maximum Weapons"
+        },
+        "player_color_nova": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "white",
+            "1": "red",
+            "2": "blue",
+            "3": "teal",
+            "4": "purple",
+            "5": "yellow",
+            "6": "orange",
+            "7": "green",
+            "8": "light_pink",
+            "9": "violet",
+            "10": "light_grey",
+            "11": "dark_green",
+            "12": "brown",
+            "13": "light_green",
+            "14": "dark_grey",
+            "15": "pink",
+            "16": "rainbow",
+            "17": "mengsk",
+            "18": "bright_lime",
+            "19": "arcane",
+            "20": "ember",
+            "21": "hot_pink",
+            "22": "default"
+          },
+          "default": 22,
+          "display_name": "Terran Player Color (Nova)"
+        },
+        "player_color_protoss": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "white",
+            "1": "red",
+            "2": "blue",
+            "3": "teal",
+            "4": "purple",
+            "5": "yellow",
+            "6": "orange",
+            "7": "green",
+            "8": "light_pink",
+            "9": "violet",
+            "10": "light_grey",
+            "11": "dark_green",
+            "12": "brown",
+            "13": "light_green",
+            "14": "dark_grey",
+            "15": "pink",
+            "16": "rainbow",
+            "17": "mengsk",
+            "18": "bright_lime",
+            "19": "arcane",
+            "20": "ember",
+            "21": "hot_pink",
+            "22": "default"
+          },
+          "default": 22,
+          "display_name": "Protoss Player Color"
+        },
+        "player_color_terran_raynor": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "white",
+            "1": "red",
+            "2": "blue",
+            "3": "teal",
+            "4": "purple",
+            "5": "yellow",
+            "6": "orange",
+            "7": "green",
+            "8": "light_pink",
+            "9": "violet",
+            "10": "light_grey",
+            "11": "dark_green",
+            "12": "brown",
+            "13": "light_green",
+            "14": "dark_grey",
+            "15": "pink",
+            "16": "rainbow",
+            "17": "mengsk",
+            "18": "bright_lime",
+            "19": "arcane",
+            "20": "ember",
+            "21": "hot_pink",
+            "22": "default"
+          },
+          "default": 22,
+          "display_name": "Terran Player Color (Raynor)"
+        },
+        "player_color_zerg": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "white",
+            "1": "red",
+            "2": "blue",
+            "3": "teal",
+            "4": "purple",
+            "5": "yellow",
+            "6": "orange",
+            "7": "green",
+            "8": "light_pink",
+            "9": "violet",
+            "10": "light_grey",
+            "11": "dark_green",
+            "12": "brown",
+            "13": "light_green",
+            "14": "dark_grey",
+            "15": "pink",
+            "16": "rainbow",
+            "17": "mengsk",
+            "18": "bright_lime",
+            "19": "arcane",
+            "20": "ember",
+            "21": "hot_pink",
+            "22": "default"
+          },
+          "default": 22,
+          "display_name": "Zerg Player Color"
+        },
+        "player_color_zerg_primal": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "white",
+            "1": "red",
+            "2": "blue",
+            "3": "teal",
+            "4": "purple",
+            "5": "yellow",
+            "6": "orange",
+            "7": "green",
+            "8": "light_pink",
+            "9": "violet",
+            "10": "light_grey",
+            "11": "dark_green",
+            "12": "brown",
+            "13": "light_green",
+            "14": "dark_grey",
+            "15": "pink",
+            "16": "rainbow",
+            "17": "mengsk",
+            "18": "bright_lime",
+            "19": "arcane",
+            "20": "ember",
+            "21": "hot_pink",
+            "22": "default"
+          },
+          "default": 22,
+          "display_name": "Zerg Player Color (Primal)"
+        },
+        "preventative_locations": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "enabled",
+            "3": "half_chance",
+            "1": "filler",
+            "2": "disabled"
+          },
+          "default": 0,
+          "display_name": "Preventative Locations"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "required_tactics": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "standard",
+            "1": "advanced",
+            "2": "any_units",
+            "3": "no_logic"
+          },
+          "default": 0,
+          "display_name": "Required Tactics"
+        },
+        "research_cost_reduction_per_item": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 2,
+          "display_name": "Upgrade Cost Discount Per Item"
+        },
+        "shuffle_campaigns": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Shuffle Campaigns"
+        },
+        "shuffle_no_build": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Shuffle No-Build Missions"
+        },
+        "skip_cutscenes": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Skip Cutscenes"
+        },
+        "spear_of_adun_max_active_abilities": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 13,
+          "default": 13,
+          "display_name": "Spear of Adun Maximum Active Abilities"
+        },
+        "spear_of_adun_max_passive_abilities": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 3,
+          "default": 3,
+          "display_name": "Spear of Adun Maximum Passive Abilities"
+        },
+        "spear_of_adun_passive_ability_presence": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "not_present",
+            "1": "any_race_lotv",
+            "2": "protoss",
+            "3": "everywhere",
+            "4": "vanilla"
+          },
+          "default": 4,
+          "display_name": "Spear of Adun Passive Ability Presence"
+        },
+        "spear_of_adun_passive_present_in_no_build": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Spear of Adun Passive Abilities Present in No-Build"
+        },
+        "spear_of_adun_presence": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "not_present",
+            "4": "vanilla",
+            "2": "protoss",
+            "3": "everywhere",
+            "1": "any_race_lotv"
+          },
+          "default": 4,
+          "display_name": "Spear of Adun Presence"
+        },
+        "spear_of_adun_present_in_no_build": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Spear of Adun Present in No-Build"
+        },
+        "speedrun_locations": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "enabled",
+            "3": "half_chance",
+            "1": "filler",
+            "2": "disabled"
+          },
+          "default": 0,
+          "display_name": "Speedrun Locations"
+        },
+        "start_primary_abilities": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 4,
+          "default": 0,
+          "display_name": "Starting Primary Abilities"
+        },
+        "starter_unit": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "balanced",
+            "2": "any_starter_unit"
+          },
+          "default": 0,
+          "display_name": "Starter Unit"
+        },
+        "starting_supply_per_item": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 16,
+          "default": 2,
+          "display_name": "Starting Supply Per Item"
+        },
+        "take_over_ai_allies": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Take Over AI Allies"
+        },
+        "two_start_positions": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Two start missions"
+        },
+        "vanilla_items_only": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Vanilla Items Only"
+        },
+        "vanilla_locations": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "enabled",
+            "3": "half_chance",
+            "1": "filler",
+            "2": "disabled"
+          },
+          "default": 0,
+          "display_name": "Vanilla Locations"
+        },
+        "vespene_per_item": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 200,
+          "default": 25,
+          "display_name": "Vespene Per Item"
+        },
+        "victory_cache": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 0,
+          "display_name": "Victory Cache"
+        },
+        "void_trade_age_limit": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "disabled",
+            "1": "1_week",
+            "2": "1_day",
+            "3": "4_hours",
+            "4": "2_hours",
+            "5": "1_hour",
+            "6": "30_minutes",
+            "7": "5_minutes"
+          },
+          "default": 6,
+          "display_name": "Void Trade Age Limit"
+        },
+        "void_trade_workers": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Allow Workers in Void Trade"
+        },
+        "war_council_nerfs": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Allow Unit Nerfs"
+        }
+      },
       "accessibility": "items",
       "all_in_map": 1,
       "basebust_locations": 0,

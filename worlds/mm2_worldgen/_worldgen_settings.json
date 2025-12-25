@@ -30,5 +30,134 @@
     "wily_5_requirement": 8,
     "yoku_jumps": "false"
   },
+  "option_definitions": {
+    "accessibility": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "full",
+        "2": "minimal"
+      },
+      "default": 0,
+      "display_name": "Accessibility"
+    },
+    "consumables": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "1up_etank",
+        "2": "weapon_health",
+        "3": "all"
+      },
+      "default": 1,
+      "display_name": "Consumables"
+    },
+    "death_link": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Death Link"
+    },
+    "enable_lasers": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Enable Lasers"
+    },
+    "enemy_weakness": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Random Enemy Weaknesses"
+    },
+    "energy_link": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "EnergyLink"
+    },
+    "palette_shuffle": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "shuffled",
+        "2": "randomized",
+        "3": "singularity"
+      },
+      "default": 0,
+      "display_name": "Palette Shuffle"
+    },
+    "progression_balancing": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 99,
+      "default": 50,
+      "display_name": "Progression Balancing"
+    },
+    "quickswap": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Quickswap"
+    },
+    "random_music": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "shuffled",
+        "2": "randomized",
+        "3": "none"
+      },
+      "default": 0,
+      "display_name": "Random Music"
+    },
+    "random_weakness": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "shuffled",
+        "2": "randomized"
+      },
+      "default": 0,
+      "display_name": "Random Boss Weaknesses"
+    },
+    "reduce_flashing": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "virtual_console",
+        "2": "minor",
+        "3": "full"
+      },
+      "default": 1,
+      "display_name": "Reduce Flashing"
+    },
+    "starting_robot_master": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "heat_man",
+        "1": "air_man",
+        "2": "wood_man",
+        "3": "bubble_man",
+        "4": "quick_man",
+        "5": "flash_man",
+        "6": "metal_man",
+        "7": "crash_man"
+      },
+      "default": "random",
+      "display_name": "Starting Robot Master"
+    },
+    "strict_weakness": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Strict Boss Weaknesses"
+    },
+    "wily_5_requirement": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 8,
+      "default": 8,
+      "display_name": "Wily 5 Requirement"
+    },
+    "yoku_jumps": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Yoku Block Jumps"
+    }
+  },
   "world_directory": "mm2"
 }

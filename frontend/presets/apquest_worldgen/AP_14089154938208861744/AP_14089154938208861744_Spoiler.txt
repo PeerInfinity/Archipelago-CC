@@ -17,6 +17,13 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Confetti Explosiveness:          3
+Extra Starting Chest:            No
+Hammer:                          No
+Hard Mode:                       No
+Player Sprite:                   Human
+Start With One Confetti Cannon:  No
+Trap Chance:                     0
 
 
 Locations:

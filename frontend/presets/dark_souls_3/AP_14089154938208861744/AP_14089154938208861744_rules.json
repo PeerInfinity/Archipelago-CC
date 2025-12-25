@@ -37039,6 +37039,237 @@
         "start_inventory": {},
         "start_location_hints": []
       },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "all_chests_are_mimics": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "All Chests Are Mimics"
+        },
+        "auto_equip": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Auto-Equip"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "early_banner": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "early_global",
+            "2": "early_local"
+          },
+          "default": 0,
+          "display_name": "Early Small Lothric Banner"
+        },
+        "enable_dlc": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Enable DLC"
+        },
+        "enable_ngp": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Enable NG+"
+        },
+        "excluded_location_behavior": {
+          "type": "choice",
+          "name_lookup": {
+            "1": "allow_useful",
+            "2": "forbid_useful",
+            "3": "do_not_randomize"
+          },
+          "default": 2,
+          "display_name": "Excluded Locations Behavior"
+        },
+        "impatient_mimics": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Impatient Mimics"
+        },
+        "late_basin_of_vows": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "after_small_lothric_banner",
+            "2": "after_small_doll"
+          },
+          "default": 0,
+          "display_name": "Late Basin of Vows"
+        },
+        "late_dlc": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "after_small_doll",
+            "2": "after_basin"
+          },
+          "default": 0,
+          "display_name": "Late DLC"
+        },
+        "lock_equip": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Lock Equipment Slots"
+        },
+        "max_levels_in_10": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 10,
+          "display_name": "Maximum Level of +10 Weapons"
+        },
+        "max_levels_in_5": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 5,
+          "default": 5,
+          "display_name": "Maximum Level of +5 Weapons"
+        },
+        "min_levels_in_10": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 1,
+          "display_name": "Minimum Level of +10 Weapons"
+        },
+        "min_levels_in_5": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 5,
+          "default": 1,
+          "display_name": "Minimum Level of +5 Weapons"
+        },
+        "missable_location_behavior": {
+          "type": "choice",
+          "name_lookup": {
+            "1": "allow_useful",
+            "2": "forbid_useful",
+            "3": "do_not_randomize"
+          },
+          "default": 2,
+          "display_name": "Missable Locations Behavior"
+        },
+        "no_equip_load": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "No Equip Load"
+        },
+        "no_spell_requirements": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "No Spell Requirements"
+        },
+        "no_weapon_requirements": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "No Weapon Requirements"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "random_starting_loadout": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Randomize Starting Loadout"
+        },
+        "randomize_enemies": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Randomize Enemies"
+        },
+        "randomize_infusion": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Infusion"
+        },
+        "randomize_infusion_percentage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 33,
+          "display_name": "Percentage of Infused Weapons"
+        },
+        "randomize_mimics_with_enemies": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Mimics With Enemies"
+        },
+        "randomize_small_crystal_lizards_with_enemies": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Small Crystal Lizards With Enemies"
+        },
+        "randomize_weapon_level": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "all",
+            "2": "basic",
+            "3": "epic"
+          },
+          "default": 0,
+          "display_name": "Randomize Weapon Level"
+        },
+        "randomize_weapon_level_percentage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 33,
+          "display_name": "Percentage of Randomized Weapons"
+        },
+        "reduce_harmless_enemies": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Reduce Harmless Enemies"
+        },
+        "require_one_handed_starting_weapons": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Require One-Handed Starting Weapons"
+        },
+        "scale_enemies": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Scale Enemies"
+        },
+        "simple_early_bosses": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Simple Early Bosses"
+        },
+        "smooth_soul_items": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Smooth Soul Items"
+        },
+        "smooth_upgrade_items": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Smooth Upgrade Items"
+        },
+        "smooth_upgraded_weapons": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Smooth Upgraded Weapons"
+        }
+      },
       "world_directory": "dark_souls_3"
     }
   },

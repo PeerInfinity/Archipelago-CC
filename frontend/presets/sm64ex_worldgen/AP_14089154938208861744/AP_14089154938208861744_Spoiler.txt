@@ -17,6 +17,24 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Total Power Stars:               120
+Entrance Randomizer:             Off
+Basement Star Door %:            25
+Bob-omb Buddy Checks:            No
+Completion Goal:                 Last Bowser Stage
+Death Link:                      No
+Enable 100 Coin Stars:           Off
+Enable Move Randomizer:          No
+Randomize 1Up !-Blocks:          No
+First Star Door Cost %:          7
+MIPS 1 Star %:                   12
+MIPS 2 Star %:                   42
+Progressive Keys:                Yes
+Second Floor Star Door %:        42
+Endless Stairs Star %:           58
+Strict Cannon Requirements:      Yes
+Strict Cap Requirements:         Yes
+Strict Move Requirements:        Yes
 
 
 Locations:

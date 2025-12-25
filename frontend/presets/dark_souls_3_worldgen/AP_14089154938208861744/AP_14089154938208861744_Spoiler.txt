@@ -17,6 +17,40 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+All Chests Are Mimics:           No
+Auto-Equip:                      No
+Death Link:                      No
+Early Small Lothric Banner:      Off
+Enable DLC:                      No
+Enable NG+:                      No
+Excluded Locations Behavior:     Forbid Useful
+Impatient Mimics:                No
+Late Basin of Vows:              Off
+Late DLC:                        Off
+Lock Equipment Slots:            No
+Maximum Level of +10 Weapons:    10
+Maximum Level of +5 Weapons:     5
+Minimum Level of +10 Weapons:    1
+Minimum Level of +5 Weapons:     1
+Missable Locations Behavior:     Forbid Useful
+No Equip Load:                   No
+No Spell Requirements:           No
+No Weapon Requirements:          No
+Randomize Starting Loadout:      Yes
+Randomize Enemies:               Yes
+Randomize Infusion:              No
+Percentage of Infused Weapons:   33
+Randomize Mimics With Enemies:   No
+Randomize Small Crystal Lizards With Enemies:No
+Randomize Weapon Level:          None
+Percentage of Randomized Weapons:33
+Reduce Harmless Enemies:         No
+Require One-Handed Starting Weapons:Yes
+Scale Enemies:                   Yes
+Simple Early Bosses:             Yes
+Smooth Soul Items:               Yes
+Smooth Upgrade Items:            Yes
+Smooth Upgraded Weapons:         Yes
 
 
 Locations:

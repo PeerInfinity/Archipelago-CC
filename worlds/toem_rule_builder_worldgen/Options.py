@@ -16,8 +16,28 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
+class IncludeAchievements(Toggle):
+    """Option for Include Achievements."""
+    display_name = "Include Achievements"
+
+class IncludeBasto(Toggle):
+    """Option for Include Basto."""
+    display_name = "Include Basto"
+
+class IncludeCasettes(Toggle):
+    """Option for Include Casettes."""
+    display_name = "Include Casettes"
+
+class IncludeItems(Toggle):
+    """Option for Include Items."""
+    display_name = "Include Items"
+
 
 @dataclass
 class TOEMrulebuilderWorldGenOptions(PerGameCommonOptions):
     """Options for TOEM rule builder WorldGen."""
     randomize_items: RandomizeItems
+    include_achievements: IncludeAchievements
+    include_basto: IncludeBasto
+    include_casettes: IncludeCasettes
+    include_items: IncludeItems

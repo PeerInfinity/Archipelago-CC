@@ -17,6 +17,13 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Killer Trap weight:              0
+Paint Cans:                      3
+Rainbow Trap weight:             50
+Spinner Trap weight:             50
+Task Advances:                   4
+Trap Count:                      5
+Turners:                         3
 
 
 Locations:

@@ -27259,6 +27259,264 @@
         "start_inventory": {},
         "start_location_hints": []
       },
+      "option_definitions": {
+        "AntiForm": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Anti Form"
+        },
+        "AtlanticaToggle": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Atlantica Toggle"
+        },
+        "AutoFormLogic": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Auto Form Logic"
+        },
+        "BountyAmount": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 26,
+          "default": 10,
+          "display_name": "Bounties Available"
+        },
+        "BountyRequired": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 26,
+          "default": 7,
+          "display_name": "Bounties Required"
+        },
+        "BountyStartingHintToggle": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Start with Bounties Hinted"
+        },
+        "CorSkipToggle": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "CoR Skip Toggle"
+        },
+        "Cups": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "no_cups",
+            "1": "cups",
+            "2": "cups_and_hades_paradox"
+          },
+          "default": 0,
+          "display_name": "Olympus Cups"
+        },
+        "DonaldGoofyStatsanity": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Donald & Goofy Statsanity"
+        },
+        "FightLogic": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "easy",
+            "1": "normal",
+            "2": "hard"
+          },
+          "default": 1,
+          "display_name": "Fight Logic"
+        },
+        "FillerItemsLocal": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Local Filler Items"
+        },
+        "FinalFormLogic": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "no_light_and_darkness",
+            "1": "light_and_darkness",
+            "2": "just_a_form"
+          },
+          "default": 1,
+          "display_name": "Final Form Logic"
+        },
+        "FinalXemnas": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Final Xemnas"
+        },
+        "Final_Form_EXP": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 10,
+          "default": 3,
+          "display_name": "Final Form EXP"
+        },
+        "Goal": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "three_proofs",
+            "1": "lucky_emblem_hunt",
+            "2": "hitlist",
+            "3": "hitlist_and_lucky_emblem"
+          },
+          "default": 1,
+          "display_name": "Goal"
+        },
+        "Keyblade_Maximum": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 7,
+          "display_name": "Keyblade Max Stats"
+        },
+        "Keyblade_Minimum": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 3,
+          "display_name": "Keyblade Minimum Stats"
+        },
+        "LevelDepth": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "level_50",
+            "1": "level_99",
+            "2": "level_50_sanity",
+            "3": "level_99_sanity",
+            "4": "level_1"
+          },
+          "default": 0,
+          "display_name": "Level Depth"
+        },
+        "Limit_Form_EXP": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 10,
+          "default": 3,
+          "display_name": "Limit Form EXP"
+        },
+        "LuckyEmblemsAmount": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 60,
+          "default": 40,
+          "display_name": "Lucky Emblems Available"
+        },
+        "LuckyEmblemsRequired": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 60,
+          "default": 35,
+          "display_name": "Lucky Emblems Required"
+        },
+        "Master_Form_EXP": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 10,
+          "default": 3,
+          "display_name": "Master Form EXP"
+        },
+        "Promise_Charm": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Promise Charm"
+        },
+        "RandomGrowth": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 0,
+          "display_name": "Random Starting Growth"
+        },
+        "RandomVisitLockingItem": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 25,
+          "default": 0,
+          "display_name": "Random Visit Locking Item"
+        },
+        "Schmovement": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "level_0",
+            "1": "level_1",
+            "2": "level_2",
+            "3": "level_3",
+            "4": "level_4"
+          },
+          "default": 1,
+          "display_name": "Schmovement"
+        },
+        "Sora_Level_EXP": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 10,
+          "default": 5,
+          "display_name": "Sora Level EXP"
+        },
+        "SummonLevelLocationToggle": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Summon Level Locations"
+        },
+        "Summon_EXP": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 10,
+          "default": 5,
+          "display_name": "Summon level EXP"
+        },
+        "SuperBosses": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Super Bosses"
+        },
+        "Valor_Form_EXP": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 10,
+          "default": 3,
+          "display_name": "Valor Form EXP"
+        },
+        "Visitlocking": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "no_visit_locking",
+            "1": "second_visit_locking",
+            "2": "first_and_second_visit_locking"
+          },
+          "default": 2,
+          "display_name": "Visit locking"
+        },
+        "WeaponSlotStartHint": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Start with Weapon Slots Hinted"
+        },
+        "Wisdom_Form_EXP": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 10,
+          "default": 3,
+          "display_name": "Wisdom Form EXP"
+        },
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        }
+      },
       "FightLogic": "normal",
       "AutoFormLogic": "false",
       "FinalFormLogic": "light_and_darkness",
@@ -27497,62 +27755,6 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(TT3) Underground Concourse Mythril Gem"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            }
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Roxas Event Location"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            }
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
                     "value": "(BC2) Xaldin Bonus: Sora Slot 1"
                   }
                 ]
@@ -27581,7 +27783,63 @@
                 "args": [
                   {
                     "type": "constant",
+                    "value": "(TT3) Underground Concourse Mythril Gem"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            }
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
                     "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            }
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Roxas Event Location"
                   }
                 ]
               },
