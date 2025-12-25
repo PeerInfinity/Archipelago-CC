@@ -709,8 +709,18 @@ def _generate_option_class_from_definition(setting_name: str, option_def: Dict[s
     if option_type == 'choice':
         # Generate Choice option with option_<name> = <value> for each choice
         name_lookup = option_def.get('name_lookup', {})
+
+        # Check if all keys are numeric (convertible to int)
+        # Some games use TextChoice with string keys (e.g., "random-2p", "M", "MA")
+        try:
+            sorted_items = sorted(name_lookup.items(), key=lambda x: int(x[0]))
+        except ValueError:
+            # Non-numeric keys indicate a TextChoice or similar complex option
+            # Skip generating this option as it can't be represented as a standard Choice
+            return None, None, None
+
         option_lines = []
-        for value_str, name in sorted(name_lookup.items(), key=lambda x: int(x[0])):
+        for value_str, name in sorted_items:
             option_lines.append(f'    option_{name} = {value_str}')
         options_code = '\n'.join(option_lines)
 
