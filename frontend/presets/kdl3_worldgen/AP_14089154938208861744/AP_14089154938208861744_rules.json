@@ -16896,93 +16896,328 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
+        "ability_trap_weight": 50,
         "accessibility": "full",
+        "allow_bb": "disabled",
+        "animal_randomization": "disabled",
+        "boss_requirement_random": "false",
+        "boss_shuffle": "none",
+        "consumables": "false",
+        "copy_ability_randomization": "disabled",
+        "death_link": "false",
         "exclude_locations": [],
+        "filler_percentage": 50,
+        "game_language": "english",
+        "gifting": "false",
+        "goal": "zero",
+        "goal_speed": "normal",
+        "gooey_flavor_preset": "default",
+        "gooey_trap_weight": 50,
+        "heart_stars_required": 50,
         "item_links": [],
+        "jumping_target": 10,
+        "kirby_flavor_preset": "default",
         "local_items": [],
+        "max_heart_stars": 30,
+        "music_shuffle": "none",
         "non_local_items": [],
+        "open_world": "true",
+        "ow_boss_requirement": 3,
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
         "randomize_items": "false",
+        "remote_items": "true",
+        "slow_trap_weight": 50,
+        "stage_shuffle": "none",
+        "starsanity": "false",
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "strict_bosses": "true",
+        "total_heart_stars": -1,
+        "trap_percentage": 50,
+        "virtual_console": "flash_reduction"
       },
-      "copy_abilities": {
-        "Waddle Dee": "No Ability",
-        "Bronto Burt": "No Ability",
-        "Rocky": "Stone Ability",
-        "Bobo": "Burning Ability",
-        "Chilly": "Ice Ability",
-        "Poppy Bros Jr.": "No Ability",
-        "Sparky": "Spark Ability",
-        "Polof": "No Ability",
-        "Broom Hatter": "Clean Ability",
-        "Cappy": "No Ability",
-        "Bouncy": "No Ability",
-        "Nruff": "No Ability",
-        "Glunk": "No Ability",
-        "Togezo": "Needle Ability",
-        "Kabu": "No Ability",
-        "Mony": "No Ability",
-        "Blipper": "No Ability",
-        "Squishy": "No Ability",
-        "Gabon": "No Ability",
-        "Oro": "No Ability",
-        "Galbo": "Burning Ability",
-        "Sir Kibble": "Cutter Ability",
-        "Nidoo": "No Ability",
-        "Kany": "No Ability",
-        "Sasuke": "Parasol Ability",
-        "Yaban": "No Ability",
-        "Boten": "Needle Ability",
-        "Coconut": "No Ability",
-        "Doka": "No Ability",
-        "Icicle": "No Ability",
-        "Pteran": "No Ability",
-        "Loud": "No Ability",
-        "Como": "No Ability",
-        "Klinko": "Parasol Ability",
-        "Babut": "No Ability",
-        "Wappa": "Ice Ability",
-        "Mariel": "No Ability",
-        "Tick": "Needle Ability",
-        "Apolo": "No Ability",
-        "Popon Ball": "No Ability",
-        "KeKe": "Clean Ability",
-        "Magoo": "Burning Ability",
-        "Raft Waddle Dee": "No Ability",
-        "Madoo": "No Ability",
-        "Corori": "No Ability",
-        "Kapar": "Cutter Ability",
-        "Batamon": "No Ability",
-        "Peran": "No Ability",
-        "Bobin": "Spark Ability",
-        "Mopoo": "No Ability",
-        "Gansan": "Stone Ability",
-        "Bukiset (Burning)": "Burning Ability",
-        "Bukiset (Stone)": "Stone Ability",
-        "Bukiset (Ice)": "Ice Ability",
-        "Bukiset (Needle)": "Needle Ability",
-        "Bukiset (Clean)": "Clean Ability",
-        "Bukiset (Parasol)": "Parasol Ability",
-        "Bukiset (Spark)": "Spark Ability",
-        "Bukiset (Cutter)": "Cutter Ability",
-        "Waddle Dee Drawing": "No Ability",
-        "Bronto Burt Drawing": "No Ability",
-        "Bouncy Drawing": "No Ability",
-        "Kabu (Dekabu)": "No Ability",
-        "Wapod": "No Ability",
-        "Propeller": "No Ability",
-        "Dogon": "No Ability",
-        "Joe": "No Ability",
-        "Captain Stitch": "Needle Ability",
-        "Yuki": "Ice Ability",
-        "Blocky": "Stone Ability",
-        "Jumper Shoot": "Parasol Ability",
-        "Boboo": "Burning Ability",
-        "Haboki": "Clean Ability"
+      "option_definitions": {
+        "ability_trap_weight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 50,
+          "display_name": "Ability Trap Percentage"
+        },
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "allow_bb": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "disabled",
+            "1": "enabled",
+            "2": "enforced"
+          },
+          "default": 0,
+          "display_name": "Allow Boss Butch Bosses"
+        },
+        "animal_randomization": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "disabled",
+            "1": "shuffled",
+            "2": "full"
+          },
+          "default": 0,
+          "display_name": "Animal Randomization"
+        },
+        "boss_requirement_random": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Purification Requirement"
+        },
+        "boss_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "shuffled",
+            "2": "full",
+            "3": "singularity"
+          },
+          "default": 0,
+          "display_name": "Boss Shuffle"
+        },
+        "consumables": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Consumable-sanity"
+        },
+        "copy_ability_randomization": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "disabled",
+            "1": "enabled",
+            "2": "enabled_plus_minus"
+          },
+          "default": 0,
+          "display_name": "Copy Ability Randomization"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "filler_percentage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 50,
+          "display_name": "Filler Percentage"
+        },
+        "game_language": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "japanese",
+            "1": "english"
+          },
+          "default": 1,
+          "display_name": "Game Language"
+        },
+        "gifting": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Gifting"
+        },
+        "goal": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "zero",
+            "1": "boss_butch",
+            "2": "mg5",
+            "3": "jumping"
+          },
+          "default": 0,
+          "display_name": "Goal"
+        },
+        "goal_speed": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "fast"
+          },
+          "default": 0,
+          "display_name": "Goal Speed"
+        },
+        "gooey_flavor_preset": {
+          "type": "choice",
+          "name_lookup": {
+            "-1": "custom",
+            "0": "default",
+            "1": "bubblegum",
+            "2": "cherry",
+            "3": "blueberry",
+            "4": "lemon",
+            "5": "kiwi",
+            "6": "grape",
+            "7": "chocolate",
+            "8": "marshmallow",
+            "9": "licorice",
+            "10": "watermelon",
+            "11": "orange",
+            "12": "lime",
+            "13": "lavender"
+          },
+          "default": 0,
+          "display_name": "Gooey Flavor"
+        },
+        "gooey_trap_weight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 50,
+          "display_name": "Gooey Trap Percentage"
+        },
+        "heart_stars_required": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 100,
+          "default": 50,
+          "display_name": "Required Heart Stars"
+        },
+        "jumping_target": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 25,
+          "default": 10,
+          "display_name": "Jumping Target Score"
+        },
+        "kirby_flavor_preset": {
+          "type": "choice",
+          "name_lookup": {
+            "-1": "custom",
+            "0": "default",
+            "1": "bubblegum",
+            "2": "cherry",
+            "3": "blueberry",
+            "4": "lemon",
+            "5": "kiwi",
+            "6": "grape",
+            "7": "chocolate",
+            "8": "marshmallow",
+            "9": "licorice",
+            "10": "watermelon",
+            "11": "orange",
+            "12": "lime",
+            "13": "lavender",
+            "14": "miku"
+          },
+          "default": 0,
+          "display_name": "Kirby Flavor"
+        },
+        "max_heart_stars": {
+          "type": "range",
+          "range_start": 5,
+          "range_end": 99,
+          "default": 30,
+          "display_name": "Max Heart Stars"
+        },
+        "music_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "shuffled",
+            "2": "full"
+          },
+          "default": 0,
+          "display_name": "Music Randomization"
+        },
+        "open_world": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Open World"
+        },
+        "ow_boss_requirement": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 6,
+          "default": 3,
+          "display_name": "Open World Boss Requirement"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "remote_items": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Remote Items"
+        },
+        "slow_trap_weight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 50,
+          "display_name": "Slowness Trap Percentage"
+        },
+        "stage_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "same_world",
+            "2": "pattern",
+            "3": "shuffled"
+          },
+          "default": 0,
+          "display_name": "Stage Shuffle"
+        },
+        "starsanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Starsanity"
+        },
+        "strict_bosses": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Strict Bosses"
+        },
+        "total_heart_stars": {
+          "type": "range",
+          "range_start": 5,
+          "range_end": 99,
+          "default": -1,
+          "display_name": "Total Heart Stars"
+        },
+        "trap_percentage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 50,
+          "display_name": "Trap Percentage"
+        },
+        "virtual_console": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "flash_reduction",
+            "2": "color_changes",
+            "3": "both"
+          },
+          "default": 1,
+          "display_name": "Virtual Console Changes"
+        }
       },
       "ability_map": {
         "No Ability": "<lambda>",
@@ -16995,7 +17230,12 @@
         "Spark Ability": "can_reach_spark",
         "Cutter Ability": "can_reach_cutter"
       },
-      "world_directory": "kdl3"
+      "world_directory": "kdl3_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "copy_abilities": "Waddle Dee='No Ability', Bronto Burt='No Ability', Rocky='Stone Ability', Bobo='Burning Ability', Chilly='Ice Ability', Poppy Bros Jr.='No Ability', Sparky='Spark Ability', Polof='No Ability', Broom Hatter='Clean Ability', Cappy='No Ability', Bouncy='No Ability', Nruff='No Ability', Glunk='No Ability', Togezo='Needle Ability', Kabu='No Ability', Mony='No Ability', Blipper='No Ability', Squishy='No Ability', Gabon='No Ability', Oro='No Ability', Galbo='Burning Ability', Sir Kibble='Cutter Ability', Nidoo='No Ability', Kany='No Ability', Sasuke='Parasol Ability', Yaban='No Ability', Boten='Needle Ability', Coconut='No Ability', Doka='No Ability', Icicle='No Ability', Pteran='No Ability', Loud='No Ability', Como='No Ability', Klinko='Parasol Ability', Babut='No Ability', Wappa='Ice Ability', Mariel='No Ability', Tick='Needle Ability', Apolo='No Ability', Popon Ball='No Ability', KeKe='Clean Ability', Magoo='Burning Ability', Raft Waddle Dee='No Ability', Madoo='No Ability', Corori='No Ability', Kapar='Cutter Ability', Batamon='No Ability', Peran='No Ability', Bobin='Spark Ability', Mopoo='No Ability', Gansan='Stone Ability', Bukiset (Burning"
     }
   },
   "game_info": {
