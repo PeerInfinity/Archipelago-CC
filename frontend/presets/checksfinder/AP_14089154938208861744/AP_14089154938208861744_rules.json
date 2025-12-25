@@ -648,6 +648,7 @@
       "world_directory": "checksfinder"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "ChecksFinder",

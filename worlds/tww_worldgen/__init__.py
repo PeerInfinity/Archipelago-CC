@@ -291,6 +291,20 @@ class TheWindWakerWorldGenWorld(RuleWorldMixin, World):
         "Northern Fairy Island - Great Fairy": "Triforce Shard 5",
     }
 
+    def __init__(self, multiworld: "MultiWorld", player: int):
+        super().__init__(multiworld, player)
+        # Game-specific world attributes
+        self.logic_in_swordless_mode = False
+        self.logic_in_required_bosses_mode = False
+        self.logic_obscure_1 = False
+        self.logic_obscure_2 = False
+        self.logic_obscure_3 = False
+        self.logic_precise_1 = False
+        self.logic_precise_2 = False
+        self.logic_precise_3 = False
+        self.logic_rematch_bosses_skipped = True
+        self.logic_tuner_logic_enabled = False
+
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
         self._push_starting_items()

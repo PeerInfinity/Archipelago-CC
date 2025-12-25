@@ -77,6 +77,11 @@
       "enabled": true,
       "requires": ["stateManager", "commonUI"]
     },
+    "helpers": {
+      "path": "./modules/helpers/index.js",
+      "enabled": true,
+      "requires": ["stateManager", "commonUI"]
+    },
     "dungeons": {
       "path": "./modules/dungeons/index.js",
       "enabled": true,
@@ -206,6 +211,7 @@
     "pathAnalyzer",
     "pathAnalyzerPanel",
     "regions",
+    "helpers",
     "dungeons",
     "regionGraph",
     "discovery",

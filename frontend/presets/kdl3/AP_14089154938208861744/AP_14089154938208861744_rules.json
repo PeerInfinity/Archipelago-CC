@@ -30,7 +30,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -48,7 +48,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -118,7 +118,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -188,7 +188,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -243,7 +243,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -283,7 +283,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -357,7 +357,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -442,7 +442,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -497,7 +497,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -515,7 +515,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -585,7 +585,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -609,7 +609,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -679,7 +679,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -767,7 +767,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -785,7 +785,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -855,7 +855,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -879,7 +879,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -903,7 +903,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -927,7 +927,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -982,7 +982,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1006,7 +1006,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1095,7 +1095,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1165,7 +1165,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -1183,7 +1183,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1223,7 +1223,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1247,7 +1247,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1302,7 +1302,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1326,7 +1326,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -1379,7 +1379,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1403,7 +1403,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1443,7 +1443,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1496,7 +1496,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1586,7 +1586,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1656,7 +1656,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -1674,7 +1674,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -1692,7 +1692,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1732,7 +1732,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1802,7 +1802,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1857,7 +1857,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1912,7 +1912,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2000,7 +2000,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2040,7 +2040,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -2058,7 +2058,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2143,7 +2143,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2198,7 +2198,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -2216,7 +2216,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2271,7 +2271,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2326,7 +2326,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2366,7 +2366,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2405,7 +2405,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2460,7 +2460,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2551,7 +2551,7 @@
                         "setting": "open_world",
                         "_original_ast_type": "setting_value"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Has",
@@ -2563,7 +2563,7 @@
                             "setting": "ow_boss_requirement",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       }
                     },
@@ -3522,7 +3522,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -3580,7 +3580,7 @@
                         "setting": "open_world",
                         "_original_ast_type": "setting_value"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Has",
@@ -3592,7 +3592,7 @@
                             "setting": "ow_boss_requirement",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       }
                     },
@@ -4551,7 +4551,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4591,7 +4591,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4676,7 +4676,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -4694,7 +4694,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -4712,7 +4712,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -4730,7 +4730,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4800,7 +4800,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4855,7 +4855,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4895,7 +4895,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4970,7 +4970,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4994,7 +4994,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5018,7 +5018,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5077,7 +5077,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5198,7 +5198,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5253,7 +5253,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -5271,7 +5271,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -5289,7 +5289,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5329,7 +5329,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5369,7 +5369,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5393,7 +5393,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5448,7 +5448,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5558,7 +5558,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5628,7 +5628,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5734,7 +5734,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5774,7 +5774,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5829,7 +5829,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5868,7 +5868,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5927,7 +5927,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -5945,7 +5945,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5969,7 +5969,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6105,7 +6105,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6145,7 +6145,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6185,7 +6185,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6273,7 +6273,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -6291,7 +6291,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6361,7 +6361,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -6379,7 +6379,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6506,7 +6506,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -6524,7 +6524,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6548,7 +6548,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -6566,7 +6566,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -6584,7 +6584,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6639,7 +6639,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6679,7 +6679,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6703,7 +6703,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6773,7 +6773,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -6791,7 +6791,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6831,7 +6831,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6855,7 +6855,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6879,7 +6879,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6903,7 +6903,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7043,7 +7043,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7185,7 +7185,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7225,7 +7225,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -7262,7 +7262,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7332,7 +7332,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -7350,7 +7350,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7420,7 +7420,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7460,7 +7460,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7569,7 +7569,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7658,7 +7658,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7698,7 +7698,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7768,7 +7768,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -7786,7 +7786,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -7804,7 +7804,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7828,7 +7828,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7852,7 +7852,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7876,7 +7876,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -7894,7 +7894,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7918,7 +7918,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7942,7 +7942,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -8027,7 +8027,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -8045,7 +8045,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -8130,7 +8130,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -8170,7 +8170,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -8245,7 +8245,7 @@
                         "setting": "open_world",
                         "_original_ast_type": "setting_value"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Has",
@@ -8257,7 +8257,7 @@
                             "setting": "ow_boss_requirement",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       }
                     },
@@ -9216,7 +9216,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -9274,7 +9274,7 @@
                         "setting": "open_world",
                         "_original_ast_type": "setting_value"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Has",
@@ -9286,7 +9286,7 @@
                             "setting": "ow_boss_requirement",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       }
                     },
@@ -10245,7 +10245,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -10285,7 +10285,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -10340,7 +10340,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -10395,7 +10395,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -10435,7 +10435,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -10520,7 +10520,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -10605,7 +10605,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -10623,7 +10623,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -10663,7 +10663,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -10687,7 +10687,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -10761,7 +10761,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -10779,7 +10779,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -10849,7 +10849,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -10904,7 +10904,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -10944,7 +10944,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -10962,7 +10962,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -11047,7 +11047,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -11071,7 +11071,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -11089,7 +11089,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -11107,7 +11107,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -11125,7 +11125,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -11240,7 +11240,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -11280,7 +11280,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -11304,7 +11304,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -11344,7 +11344,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -11429,7 +11429,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -11517,7 +11517,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -11535,7 +11535,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -11620,7 +11620,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -11690,7 +11690,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -11730,7 +11730,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -11770,7 +11770,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -11825,7 +11825,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -11864,7 +11864,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -11984,7 +11984,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -12008,7 +12008,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -12026,7 +12026,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -12096,7 +12096,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -12166,7 +12166,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -12236,7 +12236,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -12254,7 +12254,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -12483,7 +12483,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -12507,7 +12507,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -12547,7 +12547,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -12571,7 +12571,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -12641,7 +12641,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -12715,7 +12715,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -12733,7 +12733,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -12803,7 +12803,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -12903,7 +12903,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -12943,7 +12943,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -12998,7 +12998,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13016,7 +13016,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -13086,7 +13086,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -13126,7 +13126,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -13166,7 +13166,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -13303,7 +13303,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -13373,7 +13373,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -13458,7 +13458,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -13528,7 +13528,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -13552,7 +13552,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13570,7 +13570,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13588,7 +13588,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13606,7 +13606,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13624,7 +13624,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13642,7 +13642,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13660,7 +13660,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13678,7 +13678,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -13702,7 +13702,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13720,7 +13720,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13738,7 +13738,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13756,7 +13756,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13774,7 +13774,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13792,7 +13792,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13810,7 +13810,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13828,7 +13828,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -13852,7 +13852,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13870,7 +13870,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13888,7 +13888,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13906,7 +13906,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13924,7 +13924,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13942,7 +13942,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13960,7 +13960,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -13978,7 +13978,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -14002,7 +14002,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14020,7 +14020,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14038,7 +14038,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14056,7 +14056,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14074,7 +14074,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14092,7 +14092,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14110,7 +14110,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14128,7 +14128,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -14152,7 +14152,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14170,7 +14170,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14188,7 +14188,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14206,7 +14206,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14224,7 +14224,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14242,7 +14242,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14260,7 +14260,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14278,7 +14278,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -14302,7 +14302,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14320,7 +14320,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14338,7 +14338,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14356,7 +14356,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14374,7 +14374,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14392,7 +14392,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14410,7 +14410,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14428,7 +14428,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -14452,7 +14452,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14470,7 +14470,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14488,7 +14488,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14506,7 +14506,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14524,7 +14524,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14542,7 +14542,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14560,7 +14560,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14578,7 +14578,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -14602,7 +14602,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14620,7 +14620,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14638,7 +14638,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14656,7 +14656,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14674,7 +14674,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14692,7 +14692,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14710,7 +14710,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14728,7 +14728,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -14752,7 +14752,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -14776,7 +14776,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14794,7 +14794,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -14818,7 +14818,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -14842,7 +14842,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14860,7 +14860,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -14884,7 +14884,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -14908,7 +14908,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14926,7 +14926,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -14950,7 +14950,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -14968,7 +14968,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -14992,7 +14992,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15016,7 +15016,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -15034,7 +15034,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15058,7 +15058,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15082,7 +15082,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15152,7 +15152,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -15170,7 +15170,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -15188,7 +15188,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15212,7 +15212,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15236,7 +15236,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -15254,7 +15254,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15278,7 +15278,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -15296,7 +15296,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15320,7 +15320,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -15338,7 +15338,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15362,7 +15362,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -15380,7 +15380,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15404,7 +15404,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15428,7 +15428,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15452,7 +15452,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15476,7 +15476,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -15494,7 +15494,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15518,7 +15518,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -15536,7 +15536,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15591,7 +15591,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -15609,7 +15609,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15664,7 +15664,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -15682,7 +15682,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15737,7 +15737,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -15755,7 +15755,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15810,7 +15810,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15834,7 +15834,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15858,7 +15858,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -15876,7 +15876,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15900,7 +15900,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15924,7 +15924,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15948,7 +15948,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -15972,7 +15972,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -16012,7 +16012,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -16023,7 +16023,7 @@
             "access_rule": {
               "rule": "can_assemble_rob",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -16104,7 +16104,7 @@
                       "Haboki": "Clean Ability"
                     }
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -16172,7 +16172,7 @@
                         "setting": "open_world",
                         "_original_ast_type": "setting_value"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Has",
@@ -16184,7 +16184,7 @@
                             "setting": "ow_boss_requirement",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       }
                     },
@@ -17143,7 +17143,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -17201,7 +17201,7 @@
                         "setting": "open_world",
                         "_original_ast_type": "setting_value"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Has",
@@ -17213,7 +17213,7 @@
                             "setting": "ow_boss_requirement",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       }
                     },
@@ -18172,7 +18172,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -18212,7 +18212,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -18282,7 +18282,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -18322,7 +18322,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -18377,7 +18377,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -18417,7 +18417,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -18457,7 +18457,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -18512,7 +18512,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -18567,7 +18567,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -18607,7 +18607,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -18647,7 +18647,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -18687,7 +18687,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -18742,7 +18742,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -18797,7 +18797,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -18907,7 +18907,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -18962,7 +18962,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -19032,7 +19032,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -19087,7 +19087,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -19142,7 +19142,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -19227,7 +19227,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -19282,7 +19282,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -19352,7 +19352,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -19376,7 +19376,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -19464,7 +19464,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -19534,7 +19534,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -19574,7 +19574,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -19592,7 +19592,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -19677,7 +19677,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -19747,7 +19747,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -19817,7 +19817,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -19841,7 +19841,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -19915,7 +19915,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -19939,7 +19939,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -19994,7 +19994,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -20079,7 +20079,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -20134,7 +20134,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -20204,7 +20204,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -20259,7 +20259,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -20314,7 +20314,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -20354,7 +20354,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -20378,7 +20378,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -20466,7 +20466,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -20551,7 +20551,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -20621,7 +20621,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -20676,7 +20676,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -20731,7 +20731,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -20771,7 +20771,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -20795,7 +20795,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -20835,7 +20835,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -20923,7 +20923,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -20947,7 +20947,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -20971,7 +20971,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -20989,7 +20989,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -21029,7 +21029,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -21053,7 +21053,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -21071,7 +21071,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -21126,7 +21126,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -21196,7 +21196,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -21236,7 +21236,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -21254,7 +21254,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -21272,7 +21272,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -21312,7 +21312,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -21412,7 +21412,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -21436,7 +21436,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -21454,7 +21454,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -21524,7 +21524,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -21548,7 +21548,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -21566,7 +21566,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -21590,7 +21590,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -21614,7 +21614,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -21638,7 +21638,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -21713,7 +21713,7 @@
                         "setting": "open_world",
                         "_original_ast_type": "setting_value"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Has",
@@ -21725,7 +21725,7 @@
                             "setting": "ow_boss_requirement",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       }
                     },
@@ -22684,7 +22684,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -22742,7 +22742,7 @@
                         "setting": "open_world",
                         "_original_ast_type": "setting_value"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Has",
@@ -22754,7 +22754,7 @@
                             "setting": "ow_boss_requirement",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       }
                     },
@@ -23713,7 +23713,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -23753,7 +23753,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -23823,7 +23823,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -23893,7 +23893,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -23911,7 +23911,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -23951,7 +23951,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -24006,7 +24006,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -24076,7 +24076,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -24146,7 +24146,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -24234,7 +24234,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -24289,7 +24289,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -24359,7 +24359,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -24377,7 +24377,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -24395,7 +24395,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -24413,7 +24413,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -24431,7 +24431,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -24516,7 +24516,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -24540,7 +24540,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -24564,7 +24564,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -24588,7 +24588,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -24658,7 +24658,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -24713,7 +24713,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -24766,7 +24766,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -24856,7 +24856,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -24874,7 +24874,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -24959,7 +24959,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -25029,7 +25029,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -25099,7 +25099,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -25117,7 +25117,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -25157,7 +25157,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -25212,7 +25212,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -25236,7 +25236,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -25291,7 +25291,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -25365,7 +25365,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -25450,7 +25450,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -25518,7 +25518,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -25555,7 +25555,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -25579,7 +25579,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -25619,7 +25619,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -25659,7 +25659,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -25683,7 +25683,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -25720,7 +25720,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -25744,7 +25744,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -25784,7 +25784,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -25808,7 +25808,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -25848,7 +25848,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -25888,7 +25888,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -25906,7 +25906,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -25924,7 +25924,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26083,7 +26083,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -26101,7 +26101,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26156,7 +26156,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -26174,7 +26174,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26198,7 +26198,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26238,7 +26238,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26278,7 +26278,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26318,7 +26318,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26459,7 +26459,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26604,7 +26604,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26628,7 +26628,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26668,7 +26668,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26708,7 +26708,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26748,7 +26748,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26788,7 +26788,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26812,7 +26812,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26836,7 +26836,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26860,7 +26860,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26884,7 +26884,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26908,7 +26908,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26948,7 +26948,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -26988,7 +26988,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27028,7 +27028,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27052,7 +27052,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27092,7 +27092,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27116,7 +27116,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27140,7 +27140,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27180,7 +27180,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27220,7 +27220,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27260,7 +27260,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27330,7 +27330,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27370,7 +27370,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27410,7 +27410,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27450,7 +27450,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27490,7 +27490,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27530,7 +27530,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27585,7 +27585,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27625,7 +27625,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27649,7 +27649,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27704,7 +27704,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27759,7 +27759,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27814,7 +27814,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27869,7 +27869,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27909,7 +27909,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -27933,7 +27933,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28021,7 +28021,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28061,7 +28061,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28131,7 +28131,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28155,7 +28155,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28225,7 +28225,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28249,7 +28249,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28273,7 +28273,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28313,7 +28313,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28353,7 +28353,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -28371,7 +28371,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28395,7 +28395,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28435,7 +28435,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28459,7 +28459,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28499,7 +28499,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28523,7 +28523,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28563,7 +28563,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28587,7 +28587,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28627,7 +28627,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28651,7 +28651,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28691,7 +28691,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28715,7 +28715,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28755,7 +28755,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28779,7 +28779,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28819,7 +28819,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28843,7 +28843,7 @@
                 ],
                 "_original_ast_type": "state_method"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -28854,7 +28854,7 @@
             "access_rule": {
               "rule": "can_fix_angel_wings",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -28935,7 +28935,7 @@
                       "Haboki": "Clean Ability"
                     }
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -29003,7 +29003,7 @@
                         "setting": "open_world",
                         "_original_ast_type": "setting_value"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Has",
@@ -29015,7 +29015,7 @@
                             "setting": "ow_boss_requirement",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       }
                     },
@@ -29974,7 +29974,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -30032,7 +30032,7 @@
                         "setting": "open_world",
                         "_original_ast_type": "setting_value"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Has",
@@ -30044,7 +30044,7 @@
                             "setting": "ow_boss_requirement",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       }
                     },
@@ -31003,7 +31003,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -32509,6 +32509,22 @@
           "display_name": "Virtual Console Changes"
         }
       },
+      "ability_map": {
+        "No Ability": "<lambda>",
+        "Burning Ability": "can_reach_burning",
+        "Stone Ability": "can_reach_stone",
+        "Ice Ability": "can_reach_ice",
+        "Needle Ability": "can_reach_needle",
+        "Clean Ability": "can_reach_clean",
+        "Parasol Ability": "can_reach_parasol",
+        "Spark Ability": "can_reach_spark",
+        "Cutter Ability": "can_reach_cutter"
+      },
+      "world_directory": "kdl3"
+    }
+  },
+  "world_attributes": {
+    "1": {
       "copy_abilities": {
         "Waddle Dee": "No Ability",
         "Bronto Burt": "No Ability",
@@ -32583,19 +32599,7 @@
         "Jumper Shoot": "Parasol Ability",
         "Boboo": "Burning Ability",
         "Haboki": "Clean Ability"
-      },
-      "ability_map": {
-        "No Ability": "<lambda>",
-        "Burning Ability": "can_reach_burning",
-        "Stone Ability": "can_reach_stone",
-        "Ice Ability": "can_reach_ice",
-        "Needle Ability": "can_reach_needle",
-        "Clean Ability": "can_reach_clean",
-        "Parasol Ability": "can_reach_parasol",
-        "Spark Ability": "can_reach_spark",
-        "Cutter Ability": "can_reach_cutter"
-      },
-      "world_directory": "kdl3"
+      }
     }
   },
   "game_info": {

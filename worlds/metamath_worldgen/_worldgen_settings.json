@@ -1,24 +1,26 @@
 {
-  "game": "Metamath",
-  "assume_bidirectional_exits": false,
-  "use_resolved_items": false,
-  "options": {
-    "accessibility": "full",
-    "auto_download_database": "true",
-    "complexity": "moderate",
-    "exclude_locations": [],
-    "item_links": [],
-    "local_items": [],
-    "non_local_items": [],
-    "plando_items": [],
-    "priority_locations": [],
-    "progression_balancing": 50,
-    "randomize_items": "false",
-    "start_hints": [],
-    "start_inventory": {},
-    "start_location_hints": [],
-    "starting_statements": 0,
-    "theorem": "2p2e4"
-  },
-  "world_directory": "metamath"
+  "settings": {
+    "game": "Metamath",
+    "assume_bidirectional_exits": false,
+    "use_resolved_items": false,
+    "options": {
+      "accessibility": "full",
+      "auto_download_database": "true",
+      "complexity": "moderate",
+      "exclude_locations": [],
+      "item_links": [],
+      "local_items": [],
+      "non_local_items": [],
+      "plando_items": [],
+      "priority_locations": [],
+      "progression_balancing": 50,
+      "randomize_items": "false",
+      "start_hints": [],
+      "start_inventory": {},
+      "start_location_hints": [],
+      "starting_statements": 0,
+      "theorem": "2p2e4"
+    },
+    "world_directory": "metamath"
+  }
 }

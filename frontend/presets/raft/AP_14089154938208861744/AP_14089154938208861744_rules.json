@@ -94,12 +94,12 @@
                 {
                   "rule": "raft_can_access_balboa_island",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -117,7 +117,7 @@
             "access_rule": {
               "rule": "raft_can_smelt_items",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Fuel tank",
@@ -147,7 +147,7 @@
             "access_rule": {
               "rule": "raft_can_smelt_items",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-anchor",
@@ -166,12 +166,12 @@
                 {
                   "rule": "raft_can_smelt_items",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -189,7 +189,7 @@
             "access_rule": {
               "rule": "raft_can_smelt_items",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-biofuel",
@@ -205,7 +205,7 @@
             "access_rule": {
               "rule": "raft_can_smelt_items",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-crop-plot",
@@ -224,12 +224,12 @@
                 {
                   "rule": "raft_can_craft_hinge",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -250,12 +250,12 @@
                 {
                   "rule": "raft_can_craft_bolt",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -273,7 +273,7 @@
             "access_rule": {
               "rule": "raft_can_smelt_items",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hinge",
@@ -306,12 +306,12 @@
                 {
                   "rule": "raft_big_islands_available",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -332,17 +332,17 @@
                 {
                   "rule": "raft_can_craft_bolt",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_craft_plasticBottle",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -360,7 +360,7 @@
             "access_rule": {
               "rule": "raft_can_craft_bolt",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 5 Sand",
@@ -379,12 +379,12 @@
                 {
                   "rule": "raft_can_craft_plasticBottle",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -405,12 +405,12 @@
                 {
                   "rule": "raft_can_craft_bolt",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_craft_circuitBoard",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -428,7 +428,7 @@
             "access_rule": {
               "rule": "raft_can_smelt_items",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-spear",
@@ -447,17 +447,17 @@
                 {
                   "rule": "raft_can_craft_bolt",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -478,17 +478,17 @@
                 {
                   "rule": "raft_can_craft_bolt",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_craft_circuitBoard",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -509,12 +509,12 @@
                 {
                   "rule": "raft_can_craft_hinge",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -532,7 +532,7 @@
             "access_rule": {
               "rule": "raft_can_smelt_items",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Antenna",
@@ -551,12 +551,12 @@
                 {
                   "rule": "raft_can_craft_bolt",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -574,7 +574,7 @@
             "access_rule": {
               "rule": "raft_can_craft_hinge",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 1 SeaVine",
@@ -621,12 +621,12 @@
                 {
                   "rule": "raft_big_islands_available",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_craft_birdNest",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -644,7 +644,7 @@
             "access_rule": {
               "rule": "raft_can_craft_bolt",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 1 CopperOre",
@@ -660,7 +660,7 @@
             "access_rule": {
               "rule": "raft_can_craft_bolt",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 4 CopperOre",
@@ -676,7 +676,7 @@
             "access_rule": {
               "rule": "raft_can_craft_bolt",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 2 TitaniumOre",
@@ -695,12 +695,12 @@
                 {
                   "rule": "raft_can_craft_bolt",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -721,12 +721,12 @@
                 {
                   "rule": "raft_can_craft_bolt",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -761,7 +761,7 @@
                 {
                   "rule": "raft_can_smelt_items",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -769,12 +769,12 @@
                     {
                       "rule": "raft_big_islands_available",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "raft_can_craft_birdNest",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -797,12 +797,12 @@
                 {
                   "rule": "raft_can_craft_bolt",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -823,12 +823,12 @@
                 {
                   "rule": "raft_can_find_titanium",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_smelt_items",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -877,12 +877,12 @@
                 {
                   "rule": "raft_big_islands_available",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_craft_birdNest",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -900,7 +900,7 @@
             "access_rule": {
               "rule": "raft_can_smelt_items",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beehive",
@@ -916,7 +916,7 @@
             "access_rule": {
               "rule": "raft_can_get_dirt",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Net canister",
@@ -1022,19 +1022,19 @@
                     {
                       "rule": "raft_can_capture_animals",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "raft_can_craft_shears",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "raft_big_islands_available",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1058,19 +1058,19 @@
                     {
                       "rule": "raft_can_capture_animals",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "raft_can_craft_shears",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "raft_big_islands_available",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1094,19 +1094,19 @@
                     {
                       "rule": "raft_can_capture_animals",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "raft_can_craft_shears",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "raft_big_islands_available",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1130,19 +1130,19 @@
                     {
                       "rule": "raft_can_capture_animals",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "raft_can_craft_shears",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "raft_big_islands_available",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1166,19 +1166,19 @@
                     {
                       "rule": "raft_can_access_balboa_island",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "raft_can_smelt_items",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "raft_can_craft_hinge",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1199,12 +1199,12 @@
                 {
                   "rule": "raft_can_access_balboa_island",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_capture_animals",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1222,7 +1222,7 @@
             "access_rule": {
               "rule": "raft_can_capture_animals",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 1 Plank",
@@ -1244,7 +1244,7 @@
             "access_rule": {
               "rule": "raft_can_access_radio_tower",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-anchor",
@@ -1260,7 +1260,7 @@
             "access_rule": {
               "rule": "raft_can_access_radio_tower",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-metals",
@@ -1276,7 +1276,7 @@
             "access_rule": {
               "rule": "raft_can_access_radio_tower",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Metal fishing rod",
@@ -1292,7 +1292,7 @@
             "access_rule": {
               "rule": "raft_can_access_radio_tower",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Sprinkler",
@@ -1308,7 +1308,7 @@
             "access_rule": {
               "rule": "raft_can_access_radio_tower",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Vasagatan Frequency",
@@ -1324,7 +1324,7 @@
             "access_rule": {
               "rule": "raft_can_access_radio_tower",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 2 Sand",
@@ -1340,7 +1340,7 @@
             "access_rule": {
               "rule": "raft_can_access_radio_tower",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 2 Plank",
@@ -1356,7 +1356,7 @@
             "access_rule": {
               "rule": "raft_can_access_radio_tower",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hammock",
@@ -1378,7 +1378,7 @@
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Net launcher",
@@ -1394,7 +1394,7 @@
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 1 MetalOre",
@@ -1410,7 +1410,7 @@
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 2 Thatch",
@@ -1426,7 +1426,7 @@
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-bow",
@@ -1442,7 +1442,7 @@
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-storage",
@@ -1458,7 +1458,7 @@
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-hook",
@@ -1474,7 +1474,7 @@
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 2 MetalOre",
@@ -1490,7 +1490,7 @@
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-crop-plot",
@@ -1506,7 +1506,7 @@
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Juicer",
@@ -1522,7 +1522,7 @@
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-salve",
@@ -1538,7 +1538,7 @@
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Balboa Island Frequency",
@@ -1554,7 +1554,7 @@
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 2 SeaVine",
@@ -1570,7 +1570,7 @@
             "access_rule": {
               "rule": "raft_can_access_vasagatan",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-crop-plot",
@@ -1592,7 +1592,7 @@
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 5 MetalOre",
@@ -1608,7 +1608,7 @@
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 5 Scrap",
@@ -1624,7 +1624,7 @@
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Water tank",
@@ -1640,7 +1640,7 @@
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 1 Plank",
@@ -1659,12 +1659,12 @@
                 {
                   "rule": "raft_can_access_balboa_island",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_craft_machete",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1685,12 +1685,12 @@
                 {
                   "rule": "raft_can_access_balboa_island",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_craft_machete",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1711,12 +1711,12 @@
                 {
                   "rule": "raft_can_access_balboa_island",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_craft_machete",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1734,7 +1734,7 @@
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 2 Stone",
@@ -1750,7 +1750,7 @@
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Flippers",
@@ -1766,7 +1766,7 @@
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 4 Thatch",
@@ -1782,7 +1782,7 @@
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Shovel",
@@ -1801,12 +1801,12 @@
                 {
                   "rule": "raft_can_access_balboa_island",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_craft_machete",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1824,7 +1824,7 @@
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Leather greaves",
@@ -1840,7 +1840,7 @@
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 3 Scrap",
@@ -1856,7 +1856,7 @@
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 2 MetalOre",
@@ -1872,7 +1872,7 @@
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-battery",
@@ -1888,7 +1888,7 @@
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cookingpot",
@@ -1904,7 +1904,7 @@
             "access_rule": {
               "rule": "raft_can_access_balboa_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Tangaroa Frequency",
@@ -1926,7 +1926,7 @@
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 5 ExplosiveGoo",
@@ -1942,7 +1942,7 @@
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-hook",
@@ -1958,7 +1958,7 @@
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 5 Stone",
@@ -1974,7 +1974,7 @@
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-zipline",
@@ -1990,7 +1990,7 @@
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 2 CopperOre",
@@ -2006,7 +2006,7 @@
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Leather body armor",
@@ -2022,7 +2022,7 @@
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Fuel pipe",
@@ -2038,7 +2038,7 @@
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 5 SeaVine",
@@ -2054,7 +2054,7 @@
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 3 Scrap",
@@ -2070,7 +2070,7 @@
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 2 TitaniumOre",
@@ -2086,7 +2086,7 @@
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-bow",
@@ -2108,19 +2108,19 @@
                     {
                       "rule": "raft_big_islands_available",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "raft_can_smelt_items",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "raft_can_access_caravan_island",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2141,12 +2141,12 @@
                 {
                   "rule": "raft_can_access_caravan_island",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_craft_ziplineTool",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2167,12 +2167,12 @@
                 {
                   "rule": "raft_can_access_caravan_island",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_craft_ziplineTool",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2190,7 +2190,7 @@
             "access_rule": {
               "rule": "raft_can_access_caravan_island",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-backpack",
@@ -2212,7 +2212,7 @@
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Birds nest",
@@ -2228,7 +2228,7 @@
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 3 MetalOre",
@@ -2244,7 +2244,7 @@
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-bow",
@@ -2260,7 +2260,7 @@
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 4 Raw_Beet",
@@ -2276,7 +2276,7 @@
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Oxygen bottle",
@@ -2292,7 +2292,7 @@
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 1 Stone",
@@ -2308,7 +2308,7 @@
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 2 Clay",
@@ -2324,7 +2324,7 @@
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-purifier",
@@ -2340,7 +2340,7 @@
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-grill",
@@ -2356,7 +2356,7 @@
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Caravan Island Frequency",
@@ -2372,7 +2372,7 @@
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-net",
@@ -2388,7 +2388,7 @@
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 1 Plank",
@@ -2404,7 +2404,7 @@
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 2 Plastic",
@@ -2420,7 +2420,7 @@
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 2 Thatch",
@@ -2436,7 +2436,7 @@
             "access_rule": {
               "rule": "raft_can_access_tangaroa",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 4 Stone",
@@ -2458,7 +2458,7 @@
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 1 Plastic",
@@ -2474,7 +2474,7 @@
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 4 Thatch",
@@ -2490,7 +2490,7 @@
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 1 TitaniumOre",
@@ -2506,7 +2506,7 @@
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-containers",
@@ -2522,7 +2522,7 @@
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-zipline",
@@ -2538,7 +2538,7 @@
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-headlight",
@@ -2554,7 +2554,7 @@
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Temperance Frequency",
@@ -2570,7 +2570,7 @@
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 1 Clay",
@@ -2586,7 +2586,7 @@
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-axe",
@@ -2602,7 +2602,7 @@
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Leather helmet",
@@ -2618,7 +2618,7 @@
             "access_rule": {
               "rule": "raft_can_access_varuna_point",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 3 Clay",
@@ -2640,7 +2640,7 @@
             "access_rule": {
               "rule": "raft_can_access_temperance",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 1 SeaVine",
@@ -2656,7 +2656,7 @@
             "access_rule": {
               "rule": "raft_can_access_temperance",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-axe",
@@ -2672,7 +2672,7 @@
             "access_rule": {
               "rule": "raft_can_access_temperance",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 4 Clay",
@@ -2688,7 +2688,7 @@
             "access_rule": {
               "rule": "raft_can_access_temperance",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 2 CopperOre",
@@ -2704,7 +2704,7 @@
             "access_rule": {
               "rule": "raft_can_access_temperance",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-spear",
@@ -2720,7 +2720,7 @@
             "access_rule": {
               "rule": "raft_can_access_temperance",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-crop-plot",
@@ -2736,7 +2736,7 @@
             "access_rule": {
               "rule": "raft_can_access_temperance",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-purifier",
@@ -2752,7 +2752,7 @@
             "access_rule": {
               "rule": "raft_can_access_temperance",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Utopia Frequency",
@@ -2768,7 +2768,7 @@
             "access_rule": {
               "rule": "raft_can_access_temperance",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-containers",
@@ -2784,7 +2784,7 @@
             "access_rule": {
               "rule": "raft_can_access_temperance",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Shear",
@@ -2800,7 +2800,7 @@
             "access_rule": {
               "rule": "raft_can_access_temperance",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 5 TitaniumOre",
@@ -2816,7 +2816,7 @@
             "access_rule": {
               "rule": "raft_can_access_temperance",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 2 Plank",
@@ -2832,7 +2832,7 @@
             "access_rule": {
               "rule": "raft_can_access_temperance",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-net",
@@ -2848,7 +2848,7 @@
             "access_rule": {
               "rule": "raft_can_access_temperance",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 2 Scrap",
@@ -2864,7 +2864,7 @@
             "access_rule": {
               "rule": "raft_can_access_temperance",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resource Pack: 3 Plastic",
@@ -2880,7 +2880,7 @@
             "access_rule": {
               "rule": "raft_can_access_temperance",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "progressive-scarecrow",
@@ -2905,12 +2905,12 @@
                 {
                   "rule": "raft_can_access_utopia",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_complete_temperance",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2931,12 +2931,12 @@
                 {
                   "rule": "raft_can_access_utopia",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_complete_temperance",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2957,12 +2957,12 @@
                 {
                   "rule": "raft_can_access_utopia",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_complete_temperance",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2983,12 +2983,12 @@
                 {
                   "rule": "raft_can_access_utopia",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_complete_temperance",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3009,12 +3009,12 @@
                 {
                   "rule": "raft_can_access_utopia",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_complete_temperance",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3035,12 +3035,12 @@
                 {
                   "rule": "raft_can_access_utopia",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "raft_can_complete_temperance",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -7301,6 +7301,7 @@
       "world_directory": "raft"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Raft",

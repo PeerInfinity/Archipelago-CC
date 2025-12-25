@@ -153,6 +153,11 @@
             },
             {
               "type": "component",
+              "componentType": "helpersPanel",
+              "title": "Helpers"
+            },
+            {
+              "type": "component",
               "componentType": "dungeonsPanel",
               "title": "Dungeons"
             },

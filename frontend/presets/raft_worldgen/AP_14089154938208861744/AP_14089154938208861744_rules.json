@@ -7149,6 +7149,7 @@
       "world_directory": "raft_worldgen"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Raft WorldGen",

@@ -2347,8 +2347,12 @@
           "display_name": "Total Strawberries"
         }
       },
-      "strawberries_required": 16,
       "world_directory": "celeste64"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "strawberries_required": 16
     }
   },
   "game_info": {

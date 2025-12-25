@@ -14043,7 +14043,64 @@
           "display_name": "Start With Map Scrolls"
         }
       },
-      "world_directory": "heretic"
+      "world_directory": "heretic_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "settings": {
+        "game": "Heretic",
+        "assume_bidirectional_exits": false,
+        "use_resolved_items": false,
+        "options": {
+          "accessibility": "full",
+          "added_ammo_arrows": 50,
+          "added_ammo_claw_orbs": 200,
+          "added_ammo_crystals": 100,
+          "added_ammo_flame_orbs": 20,
+          "added_ammo_runes": 200,
+          "added_ammo_spheres": 150,
+          "allow_death_logic": "false",
+          "bag_of_holding_count": 1,
+          "check_sanity": "false",
+          "death_link": "false",
+          "difficulty": "medium",
+          "episode1": "true",
+          "episode2": "true",
+          "episode3": "true",
+          "episode4": "false",
+          "episode5": "false",
+          "exclude_locations": [
+            "Ramparts of Perdition (E4M7) - Ethereal Crossbow 2",
+            "Ramparts of Perdition (E4M7) - Ring of Invincibility"
+          ],
+          "goal": "complete_all_levels",
+          "item_links": [],
+          "local_items": [],
+          "max_ammo_arrows": 50,
+          "max_ammo_claw_orbs": 200,
+          "max_ammo_crystals": 100,
+          "max_ammo_flame_orbs": 20,
+          "max_ammo_runes": 200,
+          "max_ammo_spheres": 150,
+          "non_local_items": [],
+          "plando_items": [],
+          "priority_locations": [],
+          "pro": "false",
+          "progression_balancing": 50,
+          "random_monsters": "shuffle",
+          "random_music": "vanilla",
+          "random_pickups": "shuffle",
+          "reset_level_on_death": "true",
+          "split_bag_of_holding": "false",
+          "start_hints": [],
+          "start_inventory": {},
+          "start_inventory_from_pool": {},
+          "start_location_hints": [],
+          "start_with_map_scrolls": "false"
+        },
+        "world_directory": "heretic"
+      }
     }
   },
   "game_info": {

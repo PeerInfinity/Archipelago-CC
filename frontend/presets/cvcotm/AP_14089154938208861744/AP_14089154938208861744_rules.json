@@ -24,12 +24,12 @@
                 {
                   "rule": "has_jump_level_1",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_kick",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -102,19 +102,19 @@
                     {
                       "rule": "has_ice_or_stone",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "has_jump_level_1",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "has_jump_level_4",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -180,12 +180,12 @@
                 {
                   "rule": "has_jump_level_3",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_kick",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -262,12 +262,12 @@
                 {
                   "rule": "has_jump_level_1",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_kick",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -427,12 +427,12 @@
                 {
                   "rule": "has_jump_level_2",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_kick",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -449,24 +449,24 @@
                     {
                       "rule": "has_ice_or_stone",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "has_jump_level_2",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "has_jump_level_3",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_kick",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -480,12 +480,12 @@
                 {
                   "rule": "broke_iron_maidens",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_push",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -729,12 +729,12 @@
                 {
                   "rule": "has_jump_level_2",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_kick",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -769,12 +769,12 @@
                 {
                   "rule": "has_jump_level_2",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_kick",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -823,12 +823,12 @@
                 {
                   "rule": "has_jump_level_5",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_tackle",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -849,12 +849,12 @@
                 {
                   "rule": "has_push",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_tackle",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -878,19 +878,19 @@
                     {
                       "rule": "has_ice_or_stone",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "has_jump_level_3",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "has_jump_level_4",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -914,19 +914,19 @@
                     {
                       "rule": "has_ice_or_stone",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "has_jump_level_3",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "has_jump_level_4",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -964,12 +964,12 @@
                 {
                   "rule": "has_ice_or_stone",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_jump_level_5",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1021,19 +1021,19 @@
                     {
                       "rule": "has_ice_or_stone",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "has_kick",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "has_jump_level_2",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1096,12 +1096,12 @@
                 {
                   "rule": "has_jump_level_2",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_kick",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1136,12 +1136,12 @@
                 {
                   "rule": "has_jump_level_2",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_kick",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1292,12 +1292,12 @@
                 {
                   "rule": "has_jump_level_2",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_kick",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1349,12 +1349,12 @@
                 {
                   "rule": "has_jump_level_3",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_kick",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1398,12 +1398,12 @@
                 {
                   "rule": "has_ice_or_stone",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_jump_level_2",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1514,12 +1514,12 @@
                 {
                   "rule": "has_ice_or_stone",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_jump_level_2",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1559,12 +1559,12 @@
                 {
                   "rule": "has_jump_level_2",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_push",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1656,19 +1656,19 @@
                     {
                       "rule": "has_ice_or_stone",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "has_jump_level_3",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "has_jump_level_4",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1692,19 +1692,19 @@
                     {
                       "rule": "has_ice_or_stone",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "has_jump_level_3",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "has_jump_level_4",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1797,12 +1797,12 @@
                 {
                   "rule": "has_ice_or_stone",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_jump_level_2",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1823,12 +1823,12 @@
                 {
                   "rule": "has_ice_or_stone",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_jump_level_4",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2021,19 +2021,19 @@
                     {
                       "rule": "has_ice_or_stone",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "has_jump_level_4",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "has_jump_level_5",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2068,12 +2068,12 @@
                 {
                   "rule": "has_ice_or_stone",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_jump_level_2",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2111,19 +2111,19 @@
                     {
                       "rule": "has_ice_or_stone",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "has_jump_level_2",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "has_jump_level_3",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2207,7 +2207,7 @@
                   "args": {
                     "value": 0
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -2299,12 +2299,12 @@
                 {
                   "rule": "has_ice_or_stone",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_jump_level_3",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2406,7 +2406,7 @@
                   "args": {
                     "value": 0
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -2452,7 +2452,7 @@
                   "args": {
                     "value": 0
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -2648,12 +2648,12 @@
                 {
                   "rule": "has_jump_level_2",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_kick",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3459,6 +3459,7 @@
       "world_directory": "cvcotm"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Castlevania - Circle of the Moon",

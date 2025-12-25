@@ -4712,6 +4712,11 @@
           "display_name": "Shuffle Goody Hut Rewards"
         }
       },
+      "world_directory": "civ_6_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
       "era_non_progressive_items": {
         "ERA_ANCIENT": [
           "Mining",
@@ -4853,8 +4858,7 @@
           "Progressive Aerodrome": 2,
           "Progressive Space Port": 4
         }
-      },
-      "world_directory": "civ_6"
+      }
     }
   },
   "game_info": {

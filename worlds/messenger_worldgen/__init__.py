@@ -275,6 +275,11 @@ class TheMessengerWorldGenWorld(RuleWorldMixin, World):
         "Sunken Shrine - Moon Crest": "Time Shard (300)",
     }
 
+    def __init__(self, multiworld: "MultiWorld", player: int):
+        super().__init__(multiworld, player)
+        # Game-specific world attributes
+        self.use_paren_number_accumulator = True
+
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
         self._push_starting_items()

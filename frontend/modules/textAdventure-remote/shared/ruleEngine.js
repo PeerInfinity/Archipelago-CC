@@ -3217,7 +3217,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         if (!Array.isArray(iterable)) {
-          log('warn', '[evaluateRule] any_of iterator is not an array', { rule, iterable });
+          log('debug', '[evaluateRule] any_of iterator is not an array (treating as empty)', { rule, iterable });
           result = false;
           break;
         }
@@ -3516,7 +3516,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         } else if (regionExpr?.__regionRef) {
           regionName = regionExpr.regionName;
         } else {
-          log('warn', '[evaluateRule] region_attribute: cannot determine region name', { regionExpr, rule });
+          log('debug', '[evaluateRule] region_attribute: cannot determine region name (returning undefined)', { regionExpr, rule });
           result = undefined;
           break;
         }

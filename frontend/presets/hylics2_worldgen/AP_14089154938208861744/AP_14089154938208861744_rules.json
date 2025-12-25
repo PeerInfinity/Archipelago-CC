@@ -3982,7 +3982,37 @@
           "display_name": "Start Location"
         }
       },
-      "world_directory": "hylics2"
+      "world_directory": "hylics2_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "settings": {
+        "game": "Hylics 2",
+        "assume_bidirectional_exits": false,
+        "use_resolved_items": false,
+        "options": {
+          "accessibility": "full",
+          "death_link": "false",
+          "exclude_locations": [],
+          "extra_items_in_logic": "true",
+          "gesture_shuffle": "anywhere",
+          "item_links": [],
+          "local_items": [],
+          "medallion_shuffle": "false",
+          "non_local_items": [],
+          "party_shuffle": "false",
+          "plando_items": [],
+          "priority_locations": [],
+          "progression_balancing": 50,
+          "random_start": "",
+          "start_hints": [],
+          "start_inventory": {},
+          "start_location": "waynehouse",
+          "start_location_hints": []
+        },
+        "world_directory": "hylics2"
+      }
     }
   },
   "game_info": {

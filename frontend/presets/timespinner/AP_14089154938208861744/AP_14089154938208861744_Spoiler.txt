@@ -396,7 +396,8 @@ Caves of Banishment (Maw): Last chance before Maw
    =>   Tutorial -> Start Game
    =>   Lake desolation -> Lake desolation -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
-   =>   Left Side forest Caves -> Left Side forest Caves -> Lower Lake Serene
+   =>   Left Side forest Caves -> Left Side forest Caves -> Upper Lake Serene
+   =>   Upper Lake Serene -> Upper Lake Serene -> Lower Lake Serene
    =>   Lower Lake Serene -> Lower Lake Serene -> Caves of Banishment (upper)
    =>   Caves of Banishment (upper) -> Caves of Banishment (upper) -> Caves of Banishment (Maw)
    =>   Caves of Banishment (Maw)
@@ -448,7 +449,8 @@ Killed Maw
    =>   Tutorial -> Start Game
    =>   Lake desolation -> Lake desolation -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
-   =>   Left Side forest Caves -> Left Side forest Caves -> Lower Lake Serene
+   =>   Left Side forest Caves -> Left Side forest Caves -> Upper Lake Serene
+   =>   Upper Lake Serene -> Upper Lake Serene -> Lower Lake Serene
    =>   Lower Lake Serene -> Lower Lake Serene -> Caves of Banishment (upper)
    =>   Caves of Banishment (upper) -> Caves of Banishment (upper) -> Caves of Banishment (Maw)
    =>   Caves of Banishment (Maw)
@@ -557,7 +559,8 @@ Sealed Caves (Sirens): Water hook
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
    =>   Library -> Library -> Varndagroth tower left
-   =>   Varndagroth tower left -> Varndagroth tower left -> Sealed Caves (Sirens)
+   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (lower)
+   =>   Varndagroth tower right (lower) -> Varndagroth tower right (lower) -> Sealed Caves (Sirens)
    =>   Sealed Caves (Sirens)
 Sealed Caves (Xarion): Jacksquat room
         Menu -> Tutorial
@@ -590,8 +593,8 @@ Varndagroth Towers (Right): Spider Hell
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
    =>   Library -> Library -> Varndagroth tower left
-   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (upper)
-   =>   Varndagroth tower right (upper) -> Varndagroth tower right (upper) -> Varndagroth tower right (elevator)
+   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (lower)
+   =>   Varndagroth tower right (lower) -> Varndagroth tower right (lower) -> Varndagroth tower right (elevator)
    =>   Varndagroth tower right (elevator)
 Varndagroth Towers: Bridge
         Menu -> Tutorial

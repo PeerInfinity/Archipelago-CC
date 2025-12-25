@@ -3550,7 +3550,7 @@
                 },
                 "_original_ast_type": "any_of"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -10174,6 +10174,7 @@
       "world_directory": "witness"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "The Witness",

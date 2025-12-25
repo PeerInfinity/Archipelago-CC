@@ -1050,7 +1050,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Engine Fragment",
@@ -2094,7 +2094,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Spotlight",
@@ -3138,7 +3138,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Large Room",
@@ -4182,7 +4182,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Fire Suppression System",
@@ -5226,7 +5226,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Laser Cutter Fragment",
@@ -6270,7 +6270,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Shield Generator",
@@ -7314,7 +7314,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Crystalline Sulfur",
@@ -8358,7 +8358,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beacon Fragment",
@@ -9402,7 +9402,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Creature Decoy",
@@ -10446,7 +10446,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Bridge Fragment",
@@ -11490,7 +11490,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Engine Fragment",
@@ -12534,7 +12534,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Bioreactor Fragment",
@@ -13578,7 +13578,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Hull Fragment",
@@ -14622,7 +14622,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Cell Charger Fragment",
@@ -15666,7 +15666,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Thermal Reactor Module",
@@ -16710,7 +16710,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Seaglide Fragment",
@@ -17754,7 +17754,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Seamoth Fragment",
@@ -18798,7 +18798,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Alien Containment",
@@ -19842,7 +19842,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Thermal Plant Fragment",
@@ -20886,7 +20886,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Grav Trap Fragment",
@@ -21930,7 +21930,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Hull Fragment",
@@ -22974,7 +22974,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Modification Station Fragment",
@@ -24018,7 +24018,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resources Bundle",
@@ -25062,7 +25062,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Seaglide Fragment",
@@ -26106,7 +26106,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Decoy Tube Upgrade",
@@ -27150,7 +27150,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Prawn Suit Fragment",
@@ -28194,7 +28194,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Exterior Growbed",
@@ -29238,7 +29238,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Lightweight High Capacity Tank",
@@ -30282,7 +30282,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mobile Vehicle Bay Fragment",
@@ -31326,7 +31326,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Moonpool Fragment",
@@ -32370,7 +32370,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Bridge Fragment",
@@ -33414,7 +33414,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Seaglide Fragment",
@@ -34458,7 +34458,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Seamoth Fragment",
@@ -35502,7 +35502,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Propulsion Cannon Fragment",
@@ -36546,7 +36546,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mobile Vehicle Bay Fragment",
@@ -37590,7 +37590,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Moonpool Fragment",
@@ -38634,7 +38634,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Nuclear Reactor Fragment",
@@ -39678,7 +39678,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Hull Fragment",
@@ -40722,7 +40722,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Bridge Fragment",
@@ -41766,7 +41766,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Stasis Rifle Fragment",
@@ -42810,7 +42810,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Exterior Growbed",
@@ -43854,7 +43854,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ultra High Capacity Tank",
@@ -44898,7 +44898,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Scanner Room Fragment",
@@ -45942,7 +45942,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Moonpool Fragment",
@@ -46986,7 +46986,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Propulsion Cannon Fragment",
@@ -48030,7 +48030,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Depth Module MK1",
@@ -49074,7 +49074,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Swim Charge Fins",
@@ -50118,7 +50118,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Prawn Suit Propulsion Cannon Fragment",
@@ -51162,7 +51162,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Modification Station Fragment",
@@ -52206,7 +52206,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Scanner Room Fragment",
@@ -53250,7 +53250,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Laser Cutter Fragment",
@@ -54294,7 +54294,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Transmitter Fragment",
@@ -55338,7 +55338,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Battery Charger fragment",
@@ -56385,7 +56385,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Cell Charger Fragment",
@@ -57432,7 +57432,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ultra Glide Fins",
@@ -58476,7 +58476,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Prawn Suit Propulsion Cannon Fragment",
@@ -59520,7 +59520,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Scanner Room Fragment",
@@ -60564,7 +60564,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Neptune Cockpit",
@@ -61608,7 +61608,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Laser Cutter Fragment",
@@ -62652,7 +62652,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Modification Station Fragment",
@@ -63696,7 +63696,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Engine Fragment",
@@ -64740,7 +64740,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mobile Vehicle Bay Fragment",
@@ -65784,7 +65784,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Modification Station Fragment",
@@ -66828,7 +66828,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beacon Fragment",
@@ -67872,7 +67872,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ion Power Cell",
@@ -68916,7 +68916,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Prawn Suit Torpedo Arm Fragment",
@@ -69960,7 +69960,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Prawn Suit Torpedo Arm Fragment",
@@ -71004,7 +71004,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Prawn Suit Grappling Arm Fragment",
@@ -72048,7 +72048,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Crystalline Sulfur",
@@ -73092,7 +73092,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mobile Vehicle Bay Fragment",
@@ -74136,7 +74136,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mobile Vehicle Bay Fragment",
@@ -75180,7 +75180,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Gold",
@@ -76224,7 +76224,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Seamoth Fragment",
@@ -77268,7 +77268,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Silver Ore",
@@ -78312,7 +78312,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Neptune Gantry",
@@ -79356,7 +79356,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Observatory",
@@ -80400,7 +80400,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Engine Fragment",
@@ -81444,7 +81444,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Bioreactor Fragment",
@@ -82488,7 +82488,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Seamoth Fragment",
@@ -83532,7 +83532,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Prawn Suit Drill Arm Fragment",
@@ -84576,7 +84576,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Repulsion Cannon",
@@ -85620,7 +85620,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Neptune Fuel Reserve",
@@ -86664,7 +86664,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Furniture",
@@ -87708,7 +87708,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Nuclear Reactor Fragment",
@@ -88752,7 +88752,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Multipurpose Room",
@@ -89796,7 +89796,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Resources Bundle",
@@ -90840,7 +90840,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Salt Deposit",
@@ -91884,7 +91884,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Seamoth Fragment",
@@ -92928,7 +92928,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Kyanite",
@@ -93972,7 +93972,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Prawn Suit Fragment",
@@ -95016,7 +95016,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Seamoth Fragment",
@@ -96060,7 +96060,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Compass",
@@ -97104,7 +97104,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Prawn Suit Fragment",
@@ -98151,7 +98151,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Prawn Suit Fragment",
@@ -99198,7 +99198,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Titanium",
@@ -100245,7 +100245,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Nuclear Reactor Fragment",
@@ -101289,7 +101289,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Water Filtration Machine",
@@ -102333,7 +102333,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Bulkhead",
@@ -103380,7 +103380,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Docking Bay Repair Module",
@@ -104427,7 +104427,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Bridge Fragment",
@@ -105474,7 +105474,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Seaglide Fragment",
@@ -106521,7 +106521,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Bridge Fragment",
@@ -107568,7 +107568,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Grav Trap Fragment",
@@ -108615,7 +108615,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Furniture",
@@ -109662,7 +109662,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Hull Fragment",
@@ -110709,7 +110709,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Thermal Plant Fragment",
@@ -111756,7 +111756,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Water Filtration Suit",
@@ -112803,7 +112803,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Prawn Suit Fragment",
@@ -113850,7 +113850,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Laser Cutter Fragment",
@@ -114894,7 +114894,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Lithium",
@@ -115941,7 +115941,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Neptune Launch Platform",
@@ -116988,7 +116988,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ion Battery",
@@ -118035,7 +118035,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Battery Charger fragment",
@@ -119079,7 +119079,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Engine Fragment",
@@ -120123,7 +120123,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Vehicle Upgrade Console",
@@ -121167,7 +121167,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Silver Ore",
@@ -122211,7 +122211,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Hull Fragment",
@@ -123255,7 +123255,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Stasis Rifle Fragment",
@@ -124299,7 +124299,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Neptune Boosters",
@@ -125343,7 +125343,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Prawn Suit Fragment",
@@ -126387,7 +126387,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Radiation Suit",
@@ -127431,7 +127431,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Cyclops Sonar Upgrade",
@@ -128475,7 +128475,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Prawn Suit Fragment",
@@ -129519,7 +129519,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Floodlight",
@@ -130563,7 +130563,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Prawn Suit Grappling Arm Fragment",
@@ -131607,7 +131607,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Farming",
@@ -132651,7 +132651,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Diamond",
@@ -133695,7 +133695,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Farming",
@@ -134739,7 +134739,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mobile Vehicle Bay Fragment",
@@ -135783,7 +135783,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Reinforced Dive Suit",
@@ -136827,7 +136827,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Prawn Suit Drill Arm Fragment",
@@ -137179,7 +137179,7 @@
                             ],
                             "_original_ast_type": "block"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "op": "+",
                         "right": {
@@ -137545,7 +137545,7 @@
                             ],
                             "_original_ast_type": "max"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       }
                     },
@@ -137555,11 +137555,11 @@
                       "args": {
                         "value": 1444
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "compare"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -137915,7 +137915,7 @@
                         ],
                         "_original_ast_type": "block"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "op": "+",
                     "right": {
@@ -138281,7 +138281,7 @@
                         ],
                         "_original_ast_type": "max"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   }
                 },
@@ -138291,11 +138291,11 @@
                   "args": {
                     "value": 1444
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Disable Quarantine",
@@ -138600,7 +138600,7 @@
                         ],
                         "_original_ast_type": "block"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "op": "+",
                     "right": {
@@ -138966,7 +138966,7 @@
                         ],
                         "_original_ast_type": "max"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   }
                 },
@@ -138976,11 +138976,11 @@
                   "args": {
                     "value": 900
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Full Infection",
@@ -140429,6 +140429,7 @@
       "world_directory": "subnautica"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Subnautica",

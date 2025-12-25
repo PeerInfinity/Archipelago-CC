@@ -21,7 +21,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -41,7 +41,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -55,14 +55,14 @@
             "access_rule": {
               "rule": "traverse",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "LandingSiteRight"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -73,17 +73,17 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canPassTerminatorBombWall",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canPassCrateriaGreenPirates",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -163,7 +163,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -177,7 +177,7 @@
             "access_rule": {
               "rule": "canUsePowerBombs",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -241,26 +241,26 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Morph"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canPassCrateriaGreenPirates",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -298,7 +298,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -312,12 +312,12 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canPassTerminatorBombWall",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "False_"
@@ -327,7 +327,7 @@
                 {
                   "rule": "canPassCrateriaGreenPirates",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -345,7 +345,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -365,7 +365,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -379,7 +379,7 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "False_"
@@ -387,14 +387,14 @@
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "GreenPiratesShaftBottomRight"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -413,7 +413,7 @@
             "access_rule": {
               "rule": "canPassMoatReverse",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -422,7 +422,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -442,7 +442,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -456,7 +456,7 @@
             "access_rule": {
               "rule": "canPassMoatFromMoat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -478,7 +478,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -492,14 +492,14 @@
             "access_rule": {
               "rule": "traverse",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "KihunterRight"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -510,26 +510,26 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "KihunterRight"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canPassMoat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -540,7 +540,7 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "False_"
@@ -548,14 +548,14 @@
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "KihunterBottom"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -574,7 +574,7 @@
             "access_rule": {
               "rule": "canUsePowerBombs",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -590,7 +590,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -610,24 +610,24 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canPassDachoraRoom",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "MainShaftBottomRight"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -640,7 +640,7 @@
             "access_rule": {
               "rule": "canAccessEtecoons",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -684,7 +684,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -704,7 +704,7 @@
             "access_rule": {
               "rule": "canPassDachoraRoom",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -713,33 +713,33 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Morph"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "BigPinkBottomRight"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -814,14 +814,14 @@
             "access_rule": {
               "rule": "haveItem",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Morph"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -832,7 +832,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -853,7 +853,7 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "False_"
@@ -861,14 +861,14 @@
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "GreenHillZoneTopRight"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -887,31 +887,31 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Wave"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "wor",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "canBlueGateGlitch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "False_"
@@ -927,7 +927,7 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "False_"
@@ -935,14 +935,14 @@
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "NoobBridgeRight"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -961,7 +961,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -988,7 +988,7 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "False_"
@@ -996,14 +996,14 @@
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "EtecoonEnergyTankLeft"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -1016,7 +1016,7 @@
             "access_rule": {
               "rule": "canUsePowerBombs",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -1045,14 +1045,14 @@
             "access_rule": {
               "rule": "traverse",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "WestOceanRight"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1070,7 +1070,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -1090,17 +1090,17 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canMorphJump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canPassBowling",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1111,26 +1111,26 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "WreckedShipMainShaftBottom"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canPassBombPassages",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1141,7 +1141,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -1155,55 +1155,55 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "wand",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "bossDead",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "Phantoon"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
                     {
                       "rule": "canPassSpongeBath",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "wand",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "wnot",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "bossDead",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": "Phantoon"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -1292,7 +1292,7 @@
             "access_rule": {
               "rule": "canPassForgottenHighway",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -1306,7 +1306,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -1333,7 +1333,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -1353,7 +1353,7 @@
             "access_rule": {
               "rule": "canPassForgottenHighway",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "False_"
@@ -1367,7 +1367,7 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "False_"
@@ -1375,14 +1375,14 @@
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "LeCoudeBottom"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -1401,7 +1401,7 @@
             "access_rule": {
               "rule": "canPassBombPassages",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -1410,7 +1410,7 @@
             "access_rule": {
               "rule": "canOpenEyeDoors",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1432,7 +1432,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -1452,7 +1452,7 @@
             "access_rule": {
               "rule": "canPassLavaPit",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -1461,7 +1461,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -1481,45 +1481,45 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "LowerNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 8
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canPassWorstRoom",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canUsePowerBombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1530,7 +1530,7 @@
             "access_rule": {
               "rule": "canPassLowerNorfairChozo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -1539,7 +1539,7 @@
             "access_rule": {
               "rule": "canPassLavaPitReverse",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -1548,50 +1548,50 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canUsePowerBombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "LowerNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 8
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canGreenGateGlitch",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canDestroyBombWalls",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1615,40 +1615,40 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "LowerNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 8
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canPassBombPassages",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1659,40 +1659,40 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "LowerNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 8
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "enoughStuffGT",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1716,59 +1716,59 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "LowerNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 8
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canExitScrewAttackArea",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Super"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canUsePowerBombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1806,38 +1806,38 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canPassBombPassages",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "LowerNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 8
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -1850,50 +1850,50 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "LowerNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 8
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canPassAmphitheaterReverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canPassWorstRoomPirates",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canUsePowerBombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1904,83 +1904,83 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "LowerNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 8
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "WastelandLeft"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "RedKihunterShaftBottom"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canGetBackFromRidleyZone",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canPassRedKiHunters",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canPassWastelandDessgeegas",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canPassNinjaPirates",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1991,50 +1991,50 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "LowerNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 8
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canPassAmphitheaterReverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canDestroyBombWalls",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canGreenGateGlitch",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2045,54 +2045,54 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "LowerNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 8
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Morph"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canPassRedKiHunters",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2130,12 +2130,12 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "wnot",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "False_"
@@ -2145,7 +2145,7 @@
                 {
                   "rule": "heatProof",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2169,50 +2169,50 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "LowerNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 8
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canGetBackFromRidleyZone",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canPassWastelandDessgeegas",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canPassRedKiHunters",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2223,28 +2223,28 @@
             "access_rule": {
               "rule": "canHellRun",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "LowerNorfair"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1.0
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 8
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2255,45 +2255,45 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "LowerNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 8
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canGetBackFromRidleyZone",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canPassWastelandDessgeegas",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2310,64 +2310,64 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "LowerNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 8
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "WastelandLeft"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canGetBackFromRidleyZone",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canPassWastelandDessgeegas",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canPassNinjaPirates",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2391,54 +2391,54 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "LowerNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 8
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Morph"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canPassThreeMuskateers",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2449,7 +2449,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -2469,28 +2469,28 @@
             "access_rule": {
               "rule": "canHellRun",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "LowerNorfair"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1.0
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 8
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2501,40 +2501,40 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "LowerNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 8
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canOpenEyeDoors",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2565,7 +2565,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -2585,7 +2585,7 @@
             "access_rule": {
               "rule": "canPassBombPassages",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -2608,7 +2608,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -2628,7 +2628,7 @@
             "access_rule": {
               "rule": "canPassBombPassages",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -2637,7 +2637,7 @@
             "access_rule": {
               "rule": "canOpenEyeDoors",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2666,7 +2666,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -2686,7 +2686,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -2700,7 +2700,7 @@
             "access_rule": {
               "rule": "canAccessKraidsLair",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -2709,7 +2709,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -2729,14 +2729,14 @@
             "access_rule": {
               "rule": "haveItem",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Super"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2747,7 +2747,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -2767,26 +2767,26 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "CathedralRight"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canEnterCathedral",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "AST_subscript",
@@ -2819,7 +2819,7 @@
                         },
                         "_original_ast_type": "subscript"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -2832,14 +2832,14 @@
             "access_rule": {
               "rule": "haveItem",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "SpeedBooster"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2850,7 +2850,7 @@
             "access_rule": {
               "rule": "canEnterCathedral",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "AST_subscript",
@@ -2883,7 +2883,7 @@
                     },
                     "_original_ast_type": "subscript"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2894,76 +2894,76 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "wand",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "haveItem",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "SpeedBooster"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
                     {
                       "rule": "canHellRun",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "MainUpperNorfair"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 2.0
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 1
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
                     {
                       "rule": "wor",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "canBlueGateGlitch",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "haveItem",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": "Wave"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -2974,66 +2974,66 @@
                 {
                   "rule": "wand",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "traverse",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "BusinessCenterTopLeft"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
                     {
                       "rule": "haveItem",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "SpeedBooster"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
                     {
                       "rule": "canUsePowerBombs",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "canHellRun",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "MainUpperNorfair"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 2.0
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 1
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -3048,7 +3048,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -3103,52 +3103,52 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canDestroyBombWalls",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Morph"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "MainUpperNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 0.357
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 2
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -3161,7 +3161,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -3181,47 +3181,47 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "CathedralRight"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "MainUpperNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 0.66
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 2
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -3234,7 +3234,7 @@
             "access_rule": {
               "rule": "canExitCathedral",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "AST_subscript",
@@ -3260,7 +3260,7 @@
                     },
                     "_original_ast_type": "subscript"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3284,28 +3284,28 @@
             "access_rule": {
               "rule": "canHellRun",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "MainUpperNorfair"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1.25
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3316,47 +3316,47 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Morph"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "MainUpperNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 0.5
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 2
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -3369,59 +3369,59 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "MainUpperNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 2
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "wor",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "haveItem",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "Wave"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
                     {
                       "rule": "canBlueGateGlitch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -3434,7 +3434,7 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "False_"
@@ -3442,14 +3442,14 @@
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "KronicBoostBottomLeft"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -3468,28 +3468,28 @@
             "access_rule": {
               "rule": "canHellRun",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "MainUpperNorfair"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2.0
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3500,38 +3500,38 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canPassFrogSpeedwayRightToLeft",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "MainUpperNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 2.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -3544,7 +3544,7 @@
             "access_rule": {
               "rule": "canGrappleEscape",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -3553,47 +3553,47 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "MainUpperNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 2
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Morph"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -3613,7 +3613,7 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "False_"
@@ -3621,14 +3621,14 @@
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "CrocomireSpeedwayBottom"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -3647,14 +3647,14 @@
             "access_rule": {
               "rule": "haveItem",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Super"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3665,7 +3665,7 @@
             "access_rule": {
               "rule": "canHellRunBackFromGrappleEscape",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -3687,7 +3687,7 @@
             "access_rule": {
               "rule": "canPassBombPassages",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -3696,7 +3696,7 @@
             "access_rule": {
               "rule": "canClimbBubbleMountain",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -3705,7 +3705,7 @@
             "access_rule": {
               "rule": "canExitCathedral",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "AST_subscript",
@@ -3731,7 +3731,7 @@
                     },
                     "_original_ast_type": "subscript"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3742,28 +3742,28 @@
             "access_rule": {
               "rule": "canHellRun",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "MainUpperNorfair"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 0.66
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3808,7 +3808,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -3822,47 +3822,47 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Morph"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "MainUpperNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 0.357
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 2
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -3875,47 +3875,47 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Morph"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "MainUpperNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 0.5
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 2
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -3928,52 +3928,52 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "MainUpperNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 0.357
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 2
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canDestroyBombWalls",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Morph"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -4044,7 +4044,7 @@
             "access_rule": {
               "rule": "canPassBombPassages",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -4053,47 +4053,47 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Morph"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "MainUpperNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 0.357
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 2
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -4106,7 +4106,7 @@
             "access_rule": {
               "rule": "canPassFrogSpeedwayRightToLeft",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -4115,57 +4115,57 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canHellRun",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "MainUpperNorfair"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 2.0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 2
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "wor",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "canBlueGateGlitch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "haveItem",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "Wave"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -4180,28 +4180,28 @@
             "access_rule": {
               "rule": "canHellRun",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "MainUpperNorfair"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1.25
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4260,7 +4260,7 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "False_"
@@ -4268,7 +4268,7 @@
                 {
                   "rule": "enoughStuffCroc",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4285,26 +4285,26 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Morph"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canTraverseCrabTunnelLeftToRight",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4315,7 +4315,7 @@
             "access_rule": {
               "rule": "canPassMtEverest",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -4324,12 +4324,12 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "wnot",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "False_"
@@ -4339,33 +4339,33 @@
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "MainStreetBottomRight"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "wor",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "haveItem",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "Super"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -4377,7 +4377,7 @@
                 {
                   "rule": "canTraverseWestSandHallLeftToRight",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4388,7 +4388,7 @@
             "access_rule": {
               "rule": "canGoUpMtEverest",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -4425,7 +4425,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -4445,7 +4445,7 @@
             "access_rule": {
               "rule": "canJumpUnderwater",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -4474,22 +4474,22 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canExitCrabHole",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "wor",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "canGreenGateGlitch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "False_"
@@ -4505,12 +4505,12 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "wnot",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "False_"
@@ -4520,12 +4520,12 @@
                 {
                   "rule": "canExitCrabHole",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canTraverseWestSandHallLeftToRight",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4536,7 +4536,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -4556,14 +4556,14 @@
             "access_rule": {
               "rule": "haveItem",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Morph"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4574,7 +4574,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -4594,7 +4594,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -4608,26 +4608,26 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Morph"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canJumpUnderwater",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4644,7 +4644,7 @@
             "access_rule": {
               "rule": "canDoOuterMaridia",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -4653,7 +4653,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -4667,7 +4667,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -4687,14 +4687,14 @@
             "access_rule": {
               "rule": "haveItem",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Morph"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4705,7 +4705,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -4725,7 +4725,7 @@
             "access_rule": {
               "rule": "canJumpUnderwater",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -4754,7 +4754,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -4768,29 +4768,29 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "wor",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "canPassBombPassages",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "canUseSpringBall",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canDoOuterMaridia",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4814,7 +4814,7 @@
             "access_rule": {
               "rule": "canJumpUnderwater",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -4823,7 +4823,7 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "False_"
@@ -4831,14 +4831,14 @@
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "CrabShaftRight"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -4857,12 +4857,12 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "wand",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "False_"
@@ -4870,14 +4870,14 @@
                     {
                       "rule": "canDestroyBombWallsUnderwater",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canUsePowerBombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4888,7 +4888,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -4908,48 +4908,48 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "wor",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "haveItem",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "SpeedBooster"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
                     {
                       "rule": "wand",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "knowsSnailClip",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "haveItem",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": "Morph"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -4960,14 +4960,14 @@
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Gravity"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -4980,17 +4980,17 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canDestroyBombWallsUnderwater",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canJumpUnderwater",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5001,7 +5001,7 @@
             "access_rule": {
               "rule": "canAccessSandPits",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -5010,29 +5010,29 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canJumpUnderwater",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canPassBotwoonHallway",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Botwoon"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -5045,7 +5045,7 @@
             "access_rule": {
               "rule": "canAccessSandPits",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -5067,7 +5067,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -5101,29 +5101,29 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "wand",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "canJumpUnderwater",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "haveItem",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "Morph"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -5132,33 +5132,33 @@
                 {
                   "rule": "wand",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "haveItem",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "Gravity"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
                     {
                       "rule": "haveItem",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "SpeedBooster"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -5173,7 +5173,7 @@
             "access_rule": {
               "rule": "canBotwoonExitToColosseum",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -5182,17 +5182,17 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canReachCacatacAlleyFromBotowoon",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canPassCacatacAlley",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5223,12 +5223,12 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "wnot",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "False_"
@@ -5238,14 +5238,14 @@
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Morph"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -5258,12 +5258,12 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "wnot",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "False_"
@@ -5273,12 +5273,12 @@
                 {
                   "rule": "wor",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "canGreenGateGlitch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "False_"
@@ -5294,14 +5294,14 @@
             "access_rule": {
               "rule": "haveItem",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Gravity"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5318,7 +5318,7 @@
             "access_rule": {
               "rule": "canAccessSandPits",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -5327,7 +5327,7 @@
             "access_rule": {
               "rule": "canAccessSandPits",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -5356,26 +5356,26 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "OasisTop"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canDestroyBombWallsUnderwater",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5386,7 +5386,7 @@
             "access_rule": {
               "rule": "canAccessSandPits",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -5408,7 +5408,7 @@
             "access_rule": {
               "rule": "canAccessSandPits",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -5437,7 +5437,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -5451,7 +5451,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -5471,47 +5471,47 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "bossDead",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Draygon"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Gravity"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Morph"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -5524,7 +5524,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -5538,26 +5538,26 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "PlasmaSparkBottom"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canDestroyBombWallsUnderwater",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5581,7 +5581,7 @@
             "access_rule": {
               "rule": "canColosseumToBotwoonExit",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -5590,14 +5590,14 @@
             "access_rule": {
               "rule": "traverse",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "ColosseumBottomRight"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5614,7 +5614,7 @@
             "access_rule": {
               "rule": "canClimbColosseum",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -5623,7 +5623,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -5650,7 +5650,7 @@
             "access_rule": {
               "rule": "canExitPreciousRoom",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -5659,7 +5659,7 @@
             "access_rule": {
               "rule": "canOpenEyeDoors",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5674,36 +5674,36 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "bossDead",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Draygon"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "wand",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "canFightDraygon",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "enoughStuffsDraygon",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -5716,7 +5716,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -5736,26 +5736,26 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "bossDead",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Draygon"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canExitDraygon",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5786,17 +5786,17 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canPassRedTowerToMaridiaNode",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canClimbRedTower",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5807,7 +5807,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -5821,7 +5821,7 @@
             "access_rule": {
               "rule": "canClimbRedTower",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -5837,7 +5837,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -5857,7 +5857,7 @@
             "access_rule": {
               "rule": "canPassMaridiaToRedTowerNode",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -5866,7 +5866,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -5886,7 +5886,7 @@
             "access_rule": {
               "rule": "canPassRedTowerToMaridiaNode",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -5895,7 +5895,7 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "False_"
@@ -5903,14 +5903,14 @@
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "RedTowerElevatorLeft"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -5944,7 +5944,7 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "False_"
@@ -5952,14 +5952,14 @@
                 {
                   "rule": "traverse",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "RedBrinstarElevatorTop"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -5978,7 +5978,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -5992,43 +5992,43 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "canUsePowerBombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "wor",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "haveItem",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "Gravity"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
                     {
                       "rule": "haveItem",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "HiJump"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -6043,7 +6043,7 @@
             "access_rule": {
               "rule": "canClimbBottomRedTower",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -6059,7 +6059,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -6079,7 +6079,7 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "False_"
@@ -6087,14 +6087,14 @@
                 {
                   "rule": "haveItem",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Super"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -6120,7 +6120,7 @@
             "access_rule": {
               "rule": "wor",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "False_"
@@ -6128,7 +6128,7 @@
                 {
                   "rule": "canUsePowerBombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -6139,38 +6139,38 @@
             "access_rule": {
               "rule": "wand",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "wor",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "haveItem",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "Gravity"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
                     {
                       "rule": "haveItem",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "HiJump"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -6179,7 +6179,7 @@
                 {
                   "rule": "wor",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "False_"
@@ -6187,7 +6187,7 @@
                     {
                       "rule": "canUsePowerBombs",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -6213,7 +6213,7 @@
             "access_rule": {
               "rule": "SMBool",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "True_"
@@ -9483,7 +9483,465 @@
       },
       "knows": {},
       "hellRuns": {},
-      "world_directory": "sm"
+      "world_directory": "sm_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "count_non_advancement_items": true,
+      "hardRooms": {
+        "X-Ray": [
+          [
+            8,
+            10
+          ],
+          [
+            10,
+            5
+          ],
+          [
+            14,
+            1
+          ]
+        ],
+        "Gauntlet": [
+          [
+            1,
+            25
+          ],
+          [
+            2,
+            10
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            10,
+            1
+          ]
+        ]
+      },
+      "romPatches": {
+        "NoGravityEnvProtection": true,
+        "ProgressiveSuits": false,
+        "AreaRandoBlueDoors": false,
+        "LNChozoSJCheckDisabled": false
+      },
+      "knows": {
+        "WallJump": [
+          false,
+          0
+        ],
+        "ShineSpark": [
+          false,
+          0
+        ],
+        "MidAirMorph": [
+          false,
+          0
+        ],
+        "CrouchJump": [
+          false,
+          0
+        ],
+        "UnequipItem": [
+          true,
+          1
+        ],
+        "Mockball": [
+          true,
+          1
+        ],
+        "SimpleShortCharge": [
+          true,
+          1
+        ],
+        "InfiniteBombJump": [
+          true,
+          5
+        ],
+        "GreenGateGlitch": [
+          true,
+          5
+        ],
+        "ShortCharge": [
+          false,
+          0
+        ],
+        "GravityJump": [
+          true,
+          10
+        ],
+        "SpringBallJump": [
+          true,
+          10
+        ],
+        "SpringBallJumpFromWall": [
+          false,
+          0
+        ],
+        "GetAroundWallJump": [
+          true,
+          10
+        ],
+        "DraygonGrappleKill": [
+          true,
+          5
+        ],
+        "DraygonSparkKill": [
+          false,
+          0
+        ],
+        "MicrowaveDraygon": [
+          true,
+          1
+        ],
+        "MicrowavePhantoon": [
+          true,
+          5
+        ],
+        "LowAmmoCroc": [
+          false,
+          0
+        ],
+        "LowStuffBotwoon": [
+          false,
+          0
+        ],
+        "LowStuffGT": [
+          false,
+          0
+        ],
+        "IceZebSkip": [
+          false,
+          0
+        ],
+        "SpeedZebSkip": [
+          false,
+          0
+        ],
+        "HiJumpMamaTurtle": [
+          false,
+          0
+        ],
+        "MaridiaWallJumps": [
+          true,
+          5
+        ],
+        "MtEverestGravJump": [
+          false,
+          0
+        ],
+        "GravLessLevel1": [
+          true,
+          50
+        ],
+        "GravLessLevel2": [
+          false,
+          0
+        ],
+        "GravLessLevel3": [
+          false,
+          0
+        ],
+        "CeilingDBoost": [
+          true,
+          1
+        ],
+        "BillyMays": [
+          true,
+          1
+        ],
+        "AlcatrazEscape": [
+          true,
+          25
+        ],
+        "ReverseGateGlitch": [
+          true,
+          5
+        ],
+        "ReverseGateGlitchHiJumpLess": [
+          false,
+          0
+        ],
+        "EarlyKraid": [
+          true,
+          1
+        ],
+        "XrayDboost": [
+          false,
+          0
+        ],
+        "XrayIce": [
+          true,
+          10
+        ],
+        "RedTowerClimb": [
+          true,
+          25
+        ],
+        "RonPopeilScrew": [
+          false,
+          0
+        ],
+        "OldMBWithSpeed": [
+          false,
+          0
+        ],
+        "Moondance": [
+          false,
+          0
+        ],
+        "HiJumpLessGauntletAccess": [
+          true,
+          50
+        ],
+        "HiJumpGauntletAccess": [
+          true,
+          25
+        ],
+        "LowGauntlet": [
+          false,
+          0
+        ],
+        "IceEscape": [
+          false,
+          0
+        ],
+        "WallJumpCathedralExit": [
+          true,
+          5
+        ],
+        "BubbleMountainWallJump": [
+          true,
+          5
+        ],
+        "DoubleChamberWallJump": [
+          true,
+          1
+        ],
+        "NovaBoost": [
+          false,
+          0
+        ],
+        "NorfairReserveDBoost": [
+          false,
+          0
+        ],
+        "CrocPBsDBoost": [
+          false,
+          0
+        ],
+        "CrocPBsIce": [
+          false,
+          0
+        ],
+        "IceMissileFromCroc": [
+          false,
+          0
+        ],
+        "FrogSpeedwayWithoutSpeed": [
+          false,
+          0
+        ],
+        "LavaDive": [
+          true,
+          50
+        ],
+        "LavaDiveNoHiJump": [
+          false,
+          0
+        ],
+        "WorstRoomIceCharge": [
+          false,
+          0
+        ],
+        "WorstRoomWallJump": [
+          false,
+          0
+        ],
+        "ScrewAttackExit": [
+          false,
+          0
+        ],
+        "ScrewAttackExitWithoutScrew": [
+          false,
+          0
+        ],
+        "FirefleasWalljump": [
+          true,
+          25
+        ],
+        "DodgeLowerNorfairEnemies": [
+          false,
+          0
+        ],
+        "ContinuousWallJump": [
+          false,
+          0
+        ],
+        "DiagonalBombJump": [
+          false,
+          0
+        ],
+        "MockballWs": [
+          false,
+          0
+        ],
+        "SpongeBathBombJump": [
+          false,
+          0
+        ],
+        "SpongeBathHiJump": [
+          true,
+          1
+        ],
+        "SpongeBathSpeed": [
+          true,
+          5
+        ],
+        "TediousMountEverest": [
+          false,
+          0
+        ],
+        "DoubleSpringBallJump": [
+          false,
+          0
+        ],
+        "BotwoonToDraygonWithIce": [
+          false,
+          0
+        ],
+        "WestSandHoleSuitlessWallJumps": [
+          false,
+          0
+        ],
+        "DraygonRoomGrappleExit": [
+          false,
+          0
+        ],
+        "DraygonRoomCrystalFlash": [
+          false,
+          0
+        ],
+        "PreciousRoomXRayExit": [
+          false,
+          0
+        ],
+        "PreciousRoomGravJumpExit": [
+          false,
+          0
+        ],
+        "MochtroidClip": [
+          true,
+          5
+        ],
+        "PuyoClip": [
+          false,
+          0
+        ],
+        "PuyoClipXRay": [
+          false,
+          0
+        ],
+        "SnailClip": [
+          false,
+          0
+        ],
+        "SuitlessPuyoClip": [
+          false,
+          0
+        ],
+        "CrystalFlashClip": [
+          false,
+          0
+        ],
+        "SuitlessCrystalFlashClip": [
+          false,
+          0
+        ],
+        "KillPlasmaPiratesWithSpark": [
+          false,
+          0
+        ],
+        "KillPlasmaPiratesWithCharge": [
+          true,
+          5
+        ],
+        "AccessSpringBallWithHiJump": [
+          true,
+          1
+        ],
+        "AccessSpringBallWithSpringBallBombJumps": [
+          true,
+          10
+        ],
+        "AccessSpringBallWithBombJumps": [
+          false,
+          0
+        ],
+        "AccessSpringBallWithSpringBallJump": [
+          false,
+          0
+        ],
+        "AccessSpringBallWithXRayClimb": [
+          false,
+          0
+        ],
+        "AccessSpringBallWithGravJump": [
+          false,
+          0
+        ],
+        "AccessSpringBallWithFlatley": [
+          false,
+          0
+        ]
+      },
+      "hellRuns": {
+        "Ice": [
+          [
+            4,
+            50
+          ],
+          [
+            5,
+            25
+          ],
+          [
+            6,
+            10
+          ],
+          [
+            10,
+            5
+          ]
+        ],
+        "MainUpperNorfair": [
+          [
+            5,
+            100
+          ],
+          [
+            6,
+            50
+          ],
+          [
+            8,
+            25
+          ],
+          [
+            10,
+            10
+          ],
+          [
+            14,
+            5
+          ]
+        ],
+        "LowerNorfair": null
+      }
     }
   },
   "game_info": {

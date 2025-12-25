@@ -58,7 +58,7 @@
             "access_rule": {
               "rule": "has_n_from_list",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -102,14 +102,14 @@
                       "Santa Claus"
                     ]
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -153,7 +153,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -304,7 +304,7 @@
                     "name": "calamity",
                     "_original_ast_type": "name"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -340,7 +340,7 @@
             "access_rule": {
               "rule": "has_n_from_list",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -384,14 +384,14 @@
                       "Santa Claus"
                     ]
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -637,7 +637,7 @@
             "access_rule": {
               "rule": "has_n_from_list",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -681,14 +681,14 @@
                       "Santa Claus"
                     ]
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 8
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1300,7 +1300,7 @@
             "access_rule": {
               "rule": "has_n_from_list",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -1344,14 +1344,14 @@
                       "Santa Claus"
                     ]
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 14
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1734,11 +1734,11 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "not"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1901,11 +1901,11 @@
                             "name": "getfixedboi",
                             "_original_ast_type": "name"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -2068,7 +2068,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -2118,7 +2118,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -2568,7 +2568,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -2672,7 +2672,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -3160,7 +3160,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -3264,7 +3264,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -3301,7 +3301,7 @@
                                 "name": "getfixedboi",
                                 "_original_ast_type": "name"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -3491,7 +3491,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Name",
@@ -3499,7 +3499,7 @@
                         "name": "getfixedboi",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -3641,7 +3641,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -3716,7 +3716,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -3834,11 +3834,11 @@
                             "name": "calamity",
                             "_original_ast_type": "name"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -3931,7 +3931,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -3995,7 +3995,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4133,7 +4133,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4213,7 +4213,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4263,7 +4263,7 @@
                     "name": "calamity",
                     "_original_ast_type": "name"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4330,7 +4330,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4383,7 +4383,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4436,7 +4436,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4537,7 +4537,7 @@
                     "name": "getfixedboi",
                     "_original_ast_type": "name"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4719,7 +4719,7 @@
                                 "name": "calamity",
                                 "_original_ast_type": "name"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "Has",
@@ -4741,11 +4741,11 @@
                                     "name": "calamity",
                                     "_original_ast_type": "name"
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "_original_ast_type": "not"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "Has",
@@ -4961,7 +4961,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -5022,7 +5022,7 @@
                     "name": "calamity",
                     "_original_ast_type": "name"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -5095,7 +5095,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -5182,7 +5182,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -5349,7 +5349,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -5363,7 +5363,7 @@
                                 "name": "getfixedboi",
                                 "_original_ast_type": "name"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "Or",
@@ -5394,7 +5394,7 @@
                                         "name": "calamity",
                                         "_original_ast_type": "name"
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     },
                                     {
                                       "rule": "Name",
@@ -5402,7 +5402,7 @@
                                         "name": "getfixedboi",
                                         "_original_ast_type": "name"
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     },
                                     {
                                       "rule": "Has",
@@ -5525,7 +5525,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -5594,7 +5594,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -5608,7 +5608,7 @@
                                 "name": "getfixedboi",
                                 "_original_ast_type": "name"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "Or",
@@ -5639,7 +5639,7 @@
                                         "name": "calamity",
                                         "_original_ast_type": "name"
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     },
                                     {
                                       "rule": "Name",
@@ -5647,7 +5647,7 @@
                                         "name": "getfixedboi",
                                         "_original_ast_type": "name"
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     },
                                     {
                                       "rule": "Has",
@@ -5708,7 +5708,7 @@
                                     "name": "calamity",
                                     "_original_ast_type": "name"
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 {
                                   "rule": "Name",
@@ -5716,7 +5716,7 @@
                                     "name": "getfixedboi",
                                     "_original_ast_type": "name"
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 }
                               ]
                             },
@@ -5986,7 +5986,7 @@
                                 {
                                   "rule": "has_n_from_list",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
+                                  "_converted_from_ast": true,
                                   "args": [
                                     {
                                       "rule": "Constant",
@@ -5997,14 +5997,14 @@
                                           "Post-Skeletron Prime"
                                         ]
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     },
                                     {
                                       "rule": "Constant",
                                       "args": {
                                         "value": 1
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     }
                                   ]
                                 },
@@ -6043,7 +6043,7 @@
                                             "name": "calamity",
                                             "_original_ast_type": "name"
                                           },
-                                          "_converted_from_cc": true
+                                          "_converted_from_ast": true
                                         },
                                         {
                                           "rule": "Has",
@@ -6147,7 +6147,7 @@
                     "name": "grindy_achievements",
                     "_original_ast_type": "name"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -6196,7 +6196,7 @@
                             "name": "calamity",
                             "_original_ast_type": "name"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Name",
@@ -6204,7 +6204,7 @@
                             "name": "getfixedboi",
                             "_original_ast_type": "name"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -6220,7 +6220,7 @@
                                 "name": "calamity",
                                 "_original_ast_type": "name"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "Has",
@@ -6275,7 +6275,7 @@
                             "name": "calamity",
                             "_original_ast_type": "name"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Name",
@@ -6283,7 +6283,7 @@
                             "name": "getfixedboi",
                             "_original_ast_type": "name"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -6508,7 +6508,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Name",
@@ -6516,7 +6516,7 @@
                         "name": "getfixedboi",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -6586,7 +6586,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Name",
@@ -6594,7 +6594,7 @@
                         "name": "getfixedboi",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -6713,7 +6713,7 @@
                             {
                               "rule": "has_n_from_list",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
+                              "_converted_from_ast": true,
                               "args": [
                                 {
                                   "rule": "Constant",
@@ -6724,14 +6724,14 @@
                                       "Post-Skeletron Prime"
                                     ]
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 {
                                   "rule": "Constant",
                                   "args": {
                                     "value": 1
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 }
                               ]
                             },
@@ -6741,7 +6741,7 @@
                                 "name": "calamity",
                                 "_original_ast_type": "name"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -6757,11 +6757,11 @@
                                     "name": "calamity",
                                     "_original_ast_type": "name"
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "_original_ast_type": "not"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "Has",
@@ -6925,7 +6925,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -7017,7 +7017,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -7039,11 +7039,11 @@
                             "name": "calamity",
                             "_original_ast_type": "name"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -7065,7 +7065,7 @@
                             {
                               "rule": "has_n_from_list",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
+                              "_converted_from_ast": true,
                               "args": [
                                 {
                                   "rule": "Constant",
@@ -7076,14 +7076,14 @@
                                       "Post-Skeletron Prime"
                                     ]
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 {
                                   "rule": "Constant",
                                   "args": {
                                     "value": 2
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 }
                               ]
                             },
@@ -7093,7 +7093,7 @@
                                 "name": "calamity",
                                 "_original_ast_type": "name"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -7109,11 +7109,11 @@
                                     "name": "calamity",
                                     "_original_ast_type": "name"
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "_original_ast_type": "not"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "Has",
@@ -7400,7 +7400,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -7441,7 +7441,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -7482,7 +7482,7 @@
                         "name": "calamity",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -7535,7 +7535,7 @@
                         "name": "getfixedboi",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -7557,11 +7557,11 @@
                             "name": "getfixedboi",
                             "_original_ast_type": "name"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -7596,7 +7596,7 @@
                         "name": "getfixedboi",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -7618,11 +7618,11 @@
                             "name": "getfixedboi",
                             "_original_ast_type": "name"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -7657,7 +7657,7 @@
                         "name": "getfixedboi",
                         "_original_ast_type": "name"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -7679,11 +7679,11 @@
                             "name": "getfixedboi",
                             "_original_ast_type": "name"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -12164,9 +12164,6 @@
           "display_name": "Progression Balancing"
         }
       },
-      "calamity": false,
-      "grindy_achievements": false,
-      "getfixedboi": false,
       "armor_minions": {
         "Wulfrum Armor": 1,
         "Flinx Fur Coat": 1,
@@ -12209,6 +12206,13 @@
         "Angelic Alliance": 2
       },
       "world_directory": "terraria"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "calamity": false,
+      "grindy_achievements": false,
+      "getfixedboi": false
     }
   },
   "game_info": {

@@ -2057,9 +2057,10 @@
           "display_name": "Randomize Items"
         }
       },
-      "world_directory": "yachtdice"
+      "world_directory": "yachtdice_worldgen"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Yacht Dice WorldGen",

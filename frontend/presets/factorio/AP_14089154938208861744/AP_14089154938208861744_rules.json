@@ -6327,7 +6327,7 @@
                 },
                 "_original_ast_type": "all_of"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Automated automation-science-pack",
@@ -7041,7 +7041,7 @@
                 },
                 "_original_ast_type": "all_of"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Automated chemical-science-pack",
@@ -7755,7 +7755,7 @@
                 },
                 "_original_ast_type": "all_of"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Automated logistic-science-pack",
@@ -8469,7 +8469,7 @@
                 },
                 "_original_ast_type": "all_of"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Automated military-science-pack",
@@ -9183,7 +9183,7 @@
                 },
                 "_original_ast_type": "all_of"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Automated production-science-pack",
@@ -9897,7 +9897,7 @@
                 },
                 "_original_ast_type": "all_of"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Automated utility-science-pack",
@@ -14212,6 +14212,7 @@
       "world_directory": "factorio"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Factorio",

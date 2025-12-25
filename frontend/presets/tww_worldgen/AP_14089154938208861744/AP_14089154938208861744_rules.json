@@ -5510,9 +5510,23 @@
       "logic_precise_1": false,
       "logic_precise_2": false,
       "logic_precise_3": false,
-      "logic_rematch_bosses_skipped": false,
+      "logic_rematch_bosses_skipped": true,
       "logic_tuner_logic_enabled": false,
-      "world_directory": "tww"
+      "world_directory": "tww_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "logic_in_swordless_mode": false,
+      "logic_in_required_bosses_mode": false,
+      "logic_obscure_1": false,
+      "logic_obscure_2": false,
+      "logic_obscure_3": false,
+      "logic_precise_1": false,
+      "logic_precise_2": false,
+      "logic_precise_3": false,
+      "logic_rematch_bosses_skipped": true,
+      "logic_tuner_logic_enabled": false
     }
   },
   "game_info": {

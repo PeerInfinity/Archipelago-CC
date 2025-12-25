@@ -252,6 +252,15 @@ class CastlevaniaCircleoftheMoonWorldGenWorld(RuleWorldMixin, World):
         "Dracula": "The Count Downed",
     }
 
+    def __init__(self, multiworld: "MultiWorld", player: int):
+        super().__init__(multiworld, player)
+        # Game-specific world attributes
+        self.nerf_roc_wing = 0
+        self.ignore_cleansing = 0
+        self.iron_maiden_behavior = 0
+        self.required_last_keys = 1
+        self.completion_goal = 0
+
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
         self._push_starting_items()

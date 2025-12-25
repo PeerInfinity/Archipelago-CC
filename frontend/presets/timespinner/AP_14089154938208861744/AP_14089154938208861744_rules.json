@@ -82,7 +82,7 @@
                 {
                   "rule": "has_timestop",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -102,7 +102,7 @@
                 {
                   "rule": "has_fire",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "CanReachRegion",
@@ -125,7 +125,7 @@
                 {
                   "rule": "has_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -215,7 +215,7 @@
                 {
                   "rule": "has_fire",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "CanReachRegion",
@@ -504,7 +504,7 @@
                 {
                   "rule": "has_fire",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "CanReachRegion",
@@ -552,7 +552,7 @@
                 {
                   "rule": "has_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -980,7 +980,7 @@
                 {
                   "rule": "has_keycard_B",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1141,7 +1141,7 @@
                 {
                   "rule": "has_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1168,7 +1168,7 @@
                 {
                   "rule": "has_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1195,7 +1195,7 @@
                 {
                   "rule": "has_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1250,7 +1250,7 @@
                 {
                   "rule": "has_keycard_B",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1391,7 +1391,7 @@
                 {
                   "rule": "has_keycard_B",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1561,7 +1561,7 @@
                 {
                   "rule": "can_kill_all_3_bosses",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1597,7 +1597,7 @@
                 {
                   "rule": "has_doublejump_of_npc",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1647,7 +1647,7 @@
             "access_rule": {
               "rule": "has_doublejump",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1703,12 +1703,12 @@
                 {
                   "rule": "has_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_keycard_B",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1729,12 +1729,12 @@
                 {
                   "rule": "has_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_keycard_B",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1755,12 +1755,12 @@
                 {
                   "rule": "has_doublejump_of_npc",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_forwarddash_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1783,7 +1783,7 @@
             "access_rule": {
               "rule": "has_keycard_B",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -1812,7 +1812,7 @@
             "access_rule": {
               "rule": "has_doublejump_of_npc",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -1824,7 +1824,7 @@
                 {
                   "rule": "has_forwarddash_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -1837,11 +1837,11 @@
                           "args": {
                             "value": 0
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -1897,7 +1897,7 @@
             "access_rule": {
               "rule": "has_upwarddash",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Shiny Rock",
@@ -1937,7 +1937,7 @@
                 {
                   "rule": "has_doublejump_of_npc",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Not",
@@ -1947,11 +1947,11 @@
                       "args": {
                         "value": 0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "not"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1977,11 +1977,11 @@
                       "args": {
                         "value": 0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "not"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -2011,21 +2011,21 @@
                     {
                       "rule": "can_teleport_to",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "Time"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Constant",
                           "args": {
                             "value": "GateDadsTower"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -2037,11 +2037,11 @@
                           "args": {
                             "value": 0
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -2119,7 +2119,7 @@
                     {
                       "rule": "has_upwarddash",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -2137,11 +2137,11 @@
                       "args": {
                         "value": 0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "not"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2159,7 +2159,7 @@
             "access_rule": {
               "rule": "has_keycard_A",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Goddess Brooch",
@@ -2219,7 +2219,7 @@
                   "args": {
                     "value": 0
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -2242,7 +2242,7 @@
                     {
                       "rule": "has_doublejump",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -2255,7 +2255,7 @@
                 {
                   "rule": "has_upwarddash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2402,12 +2402,12 @@
                 {
                   "rule": "can_break_walls",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_upwarddash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2425,7 +2425,7 @@
             "access_rule": {
               "rule": "has_upwarddash",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Empire Crown",
@@ -2475,7 +2475,7 @@
                     {
                       "rule": "has_doublejump",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -2488,7 +2488,7 @@
                 {
                   "rule": "has_upwarddash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2692,7 +2692,7 @@
                     {
                       "rule": "has_doublejump",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -2705,7 +2705,7 @@
                 {
                   "rule": "has_upwarddash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2828,7 +2828,7 @@
                   "args": {
                     "value": 0
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -2838,14 +2838,14 @@
                       "args": {
                         "value": 0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -2961,7 +2961,7 @@
                 {
                   "rule": "has_timestop",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -2988,7 +2988,7 @@
                 {
                   "rule": "has_upwarddash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Not",
@@ -2998,11 +2998,11 @@
                       "args": {
                         "value": 0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "not"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -3038,17 +3038,17 @@
                 {
                   "rule": "has_doublejump_of_npc",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_fastjump_on_npc",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_forwarddash_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3456,7 +3456,7 @@
                 {
                   "rule": "has_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3517,7 +3517,7 @@
                 {
                   "rule": "has_doublejump_of_npc",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3541,7 +3541,7 @@
                 {
                   "rule": "has_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3626,7 +3626,7 @@
                 {
                   "rule": "has_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3647,7 +3647,7 @@
                 {
                   "rule": "can_break_walls",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -3724,7 +3724,7 @@
                 {
                   "rule": "has_forwarddash_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3748,7 +3748,7 @@
                 {
                   "rule": "has_forwarddash_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3772,7 +3772,7 @@
                 {
                   "rule": "has_forwarddash_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3796,7 +3796,7 @@
                 {
                   "rule": "has_forwarddash_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3844,7 +3844,7 @@
             "access_rule": {
               "rule": "has_doublejump",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -3910,7 +3910,7 @@
                 {
                   "rule": "has_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4142,7 +4142,7 @@
                 {
                   "rule": "has_upwarddash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4169,7 +4169,7 @@
                 {
                   "rule": "has_timestop",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4268,7 +4268,7 @@
                 {
                   "rule": "has_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -4276,7 +4276,7 @@
                     {
                       "rule": "has_pink",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Not",
@@ -4286,11 +4286,11 @@
                           "args": {
                             "value": 0
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -4406,12 +4406,12 @@
                 {
                   "rule": "has_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_fastjump_on_npc",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4520,7 +4520,7 @@
                 {
                   "rule": "has_forwarddash_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4581,12 +4581,12 @@
                 {
                   "rule": "can_break_walls",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4677,7 +4677,7 @@
                 {
                   "rule": "has_doublejump_of_npc",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4701,7 +4701,7 @@
                     {
                       "rule": "has_doublejump",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4714,7 +4714,7 @@
                 {
                   "rule": "has_upwarddash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4766,7 +4766,7 @@
                     {
                       "rule": "has_doublejump",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4779,7 +4779,7 @@
                 {
                   "rule": "has_upwarddash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4999,7 +4999,7 @@
                 {
                   "rule": "has_upwarddash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5047,7 +5047,7 @@
                 {
                   "rule": "can_break_walls",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -5082,12 +5082,12 @@
                 {
                   "rule": "can_break_walls",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_doublejump",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5116,7 +5116,7 @@
                 {
                   "rule": "has_upwarddash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5226,21 +5226,21 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Present"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "GateLakeDesolation"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5251,21 +5251,21 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Present"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "GateKittyBoss"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5276,21 +5276,21 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Present"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "GateLeftLibrary"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5301,21 +5301,21 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Present"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "GateMilitaryGate"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5326,21 +5326,21 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Present"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "GateSealedCaves"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5351,21 +5351,21 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Present"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "GateSealedSirensCave"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5376,21 +5376,21 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Present"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "GateXarion"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5401,21 +5401,21 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Past"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "GateLakeSereneLeft"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5426,21 +5426,21 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Past"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "GateLakeSereneRight"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5451,21 +5451,21 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Past"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "GateAccessToPast"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5476,21 +5476,21 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Past"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "GateCastleRamparts"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5501,21 +5501,21 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Past"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "GateCastleKeep"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5526,21 +5526,21 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Past"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "GateRoyalTowers"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5551,21 +5551,21 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Past"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "GateMaw"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5576,21 +5576,21 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Past"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "GateCavesOfBanishment"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5601,21 +5601,21 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Present"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "GateLabEntrance"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5626,21 +5626,21 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Present"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "GateDadsTower"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5659,7 +5659,7 @@
                       "args": {
                         "value": 0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Not",
@@ -5669,53 +5669,53 @@
                           "args": {
                             "value": 0
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "can_teleport_to",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Time"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "GateGyre"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "can_teleport_to",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Time"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "GateLeftPyramid"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -5728,21 +5728,21 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Time"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "GateRightPyramid"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -9338,6 +9338,7 @@
       "world_directory": "timespinner"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Timespinner",
