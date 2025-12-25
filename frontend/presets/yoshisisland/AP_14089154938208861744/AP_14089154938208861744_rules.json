@@ -6688,6 +6688,275 @@
     "1": {
       "game": "Yoshi's Island",
       "assume_bidirectional_exits": false,
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": "full",
+        "add_secretlens": "false",
+        "baby_mario_sound": "normal",
+        "boss_shuffle": "false",
+        "bowser_door_mode": "manual",
+        "castle_clear_condition": 0,
+        "castle_open_condition": 5,
+        "death_link": "false",
+        "disable_autoscroll": "false",
+        "exclude_locations": [],
+        "extras_enabled": "false",
+        "goal": "bowser",
+        "hidden_object_visibility": "coins_only",
+        "item_links": [],
+        "item_logic": "false",
+        "level_shuffle": "disabled",
+        "local_items": [],
+        "luigi_pieces_in_pool": 50,
+        "luigi_pieces_required": 25,
+        "minigame_checks": "none",
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "shuffle_midrings": "false",
+        "softlock_prevention": "true",
+        "split_bonus": "false",
+        "split_extras": "false",
+        "stage_logic": "strict",
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "starting_lives": 3,
+        "starting_world": "world_1",
+        "trap_percent": 10,
+        "traps_enabled": "false",
+        "yoshi_colors": "normal",
+        "yoshi_singularity_color": "green"
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "add_secretlens": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Add Secret Lens"
+        },
+        "baby_mario_sound": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "disabled",
+            "2": "random_sound_effect"
+          },
+          "default": 0,
+          "display_name": "Mario Sound Effect"
+        },
+        "boss_shuffle": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Boss Shuffle"
+        },
+        "bowser_door_mode": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "manual",
+            "1": "door_1",
+            "2": "door_2",
+            "3": "door_3",
+            "4": "door_4",
+            "5": "gauntlet"
+          },
+          "default": 0,
+          "display_name": "Bowser's Castle Doors"
+        },
+        "castle_clear_condition": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 11,
+          "default": 0,
+          "display_name": "Bosses Required for 6-8 Clear"
+        },
+        "castle_open_condition": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 11,
+          "default": 5,
+          "display_name": "Bosses Required for 6-8 Unlock"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "disable_autoscroll": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Disable Autoscrolling"
+        },
+        "extras_enabled": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Include Extra Stages"
+        },
+        "goal": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "bowser",
+            "1": "luigi_hunt"
+          },
+          "default": 0,
+          "display_name": "Goal"
+        },
+        "hidden_object_visibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "coins_only",
+            "2": "clouds_only",
+            "3": "full"
+          },
+          "default": 1,
+          "display_name": "Hidden Object Visibility"
+        },
+        "item_logic": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Consumable Logic"
+        },
+        "level_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "disabled",
+            "1": "bosses_guaranteed",
+            "2": "full"
+          },
+          "default": 0,
+          "display_name": "Level Shuffle"
+        },
+        "luigi_pieces_in_pool": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 100,
+          "default": 50,
+          "display_name": "Amount of Luigi Pieces"
+        },
+        "luigi_pieces_required": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 100,
+          "default": 25,
+          "display_name": "Luigi Pieces Required"
+        },
+        "minigame_checks": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "bandit_games",
+            "2": "bonus_games",
+            "3": "both"
+          },
+          "default": 0,
+          "display_name": "Minigame Reward Checks"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "shuffle_midrings": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Middle Rings"
+        },
+        "softlock_prevention": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Softlock Prevention Code"
+        },
+        "split_bonus": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Split Bonus Games"
+        },
+        "split_extras": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Split Extra Stages"
+        },
+        "stage_logic": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "strict",
+            "1": "loose",
+            "2": "expert"
+          },
+          "default": 0,
+          "display_name": "Stage Logic"
+        },
+        "starting_lives": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 999,
+          "default": 3,
+          "display_name": "Starting Life Count"
+        },
+        "starting_world": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "world_1",
+            "1": "world_2",
+            "2": "world_3",
+            "3": "world_4",
+            "4": "world_5",
+            "5": "world_6"
+          },
+          "default": 0,
+          "display_name": "Starting World"
+        },
+        "trap_percent": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 10,
+          "display_name": "Trap Chance"
+        },
+        "traps_enabled": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Traps Enabled"
+        },
+        "yoshi_colors": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "random_order",
+            "2": "random_color",
+            "3": "singularity"
+          },
+          "default": 0,
+          "display_name": "Yoshi Colors"
+        },
+        "yoshi_singularity_color": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "green",
+            "1": "pink",
+            "3": "cyan",
+            "2": "yellow",
+            "4": "purple",
+            "5": "brown",
+            "6": "red",
+            "7": "blue"
+          },
+          "default": 0,
+          "display_name": "Singularity Yoshi Color"
+        }
+      },
       "StageLogic": 0,
       "HiddenObjectVisibility": 1,
       "ShuffleMiddleRings": 0,

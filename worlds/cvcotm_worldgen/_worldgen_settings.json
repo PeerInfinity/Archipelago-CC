@@ -40,6 +40,204 @@
     "start_location_hints": [],
     "sub_weapon_shuffle": "false"
   },
+  "option_definitions": {
+    "accessibility": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "full",
+        "2": "minimal"
+      },
+      "default": 0,
+      "display_name": "Accessibility"
+    },
+    "always_allow_speed_dash": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Always Allow Speed Dash"
+    },
+    "auto_run": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Auto Run"
+    },
+    "available_last_keys": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 9,
+      "default": 1,
+      "display_name": "Available Last Keys"
+    },
+    "battle_arena_music": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "nothing",
+        "1": "requiem",
+        "2": "a_vision_of_dark_secrets",
+        "3": "inversion",
+        "4": "awake",
+        "5": "the_sinking_old_sanctuary",
+        "6": "clockwork",
+        "7": "shudder",
+        "8": "fate_to_despair",
+        "9": "aquarius",
+        "10": "clockwork_mansion",
+        "11": "big_battle",
+        "12": "nightmare",
+        "13": "vampire_killer",
+        "14": "illusionary_dance",
+        "15": "proof_of_blood",
+        "16": "repose_of_souls",
+        "17": "circle_of_the_moon"
+      },
+      "default": 0,
+      "display_name": "Battle Arena Music"
+    },
+    "buff_ranged_familiars": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Buff Ranged Familiars"
+    },
+    "buff_shooter_strength": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Buff Shooter Strength"
+    },
+    "buff_sub_weapons": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Buff Sub-weapons"
+    },
+    "completion_goal": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "dracula",
+        "1": "battle_arena",
+        "2": "battle_arena_and_dracula"
+      },
+      "default": 0,
+      "display_name": "Completion Goal"
+    },
+    "countdown": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "majors",
+        "2": "all_locations"
+      },
+      "default": 0,
+      "display_name": "Countdown"
+    },
+    "death_link": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "off",
+        "1": "on",
+        "2": "arena_on"
+      },
+      "default": 0,
+      "display_name": "Death Link"
+    },
+    "disable_battle_arena_mp_drain": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Disable Battle Arena MP Drain"
+    },
+    "dss_patch": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "DSS Patch"
+    },
+    "early_escape_item": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "double",
+        "2": "roc_wing",
+        "3": "double_or_roc_wing"
+      },
+      "default": 1,
+      "display_name": "Early Escape Item"
+    },
+    "halve_dss_cards_placed": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Halve DSS Cards Placed"
+    },
+    "ignore_cleansing": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Ignore Cleansing"
+    },
+    "iron_maiden_behavior": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "start_broken",
+        "2": "detonator_in_pool"
+      },
+      "default": 0,
+      "display_name": "Iron Maiden Behavior"
+    },
+    "item_drop_randomization": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "disabled",
+        "1": "normal",
+        "2": "tiered"
+      },
+      "default": 1,
+      "display_name": "Item Drop Randomization"
+    },
+    "nerf_roc_wing": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Nerf Roc Wing"
+    },
+    "pluto_griffin_air_speed": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "DSS Pluto and Griffin Run Speed in Air"
+    },
+    "progression_balancing": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 99,
+      "default": 50,
+      "display_name": "Progression Balancing"
+    },
+    "required_last_keys": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 9,
+      "default": 1,
+      "display_name": "Required Last Keys"
+    },
+    "required_skirmishes": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "all_bosses",
+        "2": "all_bosses_and_arena"
+      },
+      "default": 0,
+      "display_name": "Required Skirmishes"
+    },
+    "skip_dialogues": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Skip Cutscene Dialogue"
+    },
+    "skip_tutorials": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Skip Magic Item Tutorials"
+    },
+    "sub_weapon_shuffle": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Sub-weapon Shuffle"
+    }
+  },
   "nerf_roc_wing": 0,
   "ignore_cleansing": 0,
   "iron_maiden_behavior": 0,

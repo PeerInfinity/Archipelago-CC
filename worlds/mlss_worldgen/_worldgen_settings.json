@@ -41,5 +41,236 @@
     "tattle_hp": "false",
     "xp_multiplier": 1
   },
+  "option_definitions": {
+    "accessibility": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "full",
+        "2": "minimal"
+      },
+      "default": 0,
+      "display_name": "Accessibility"
+    },
+    "block_visibility": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "disabled",
+        "1": "hidden_visible",
+        "2": "blocks_invisible"
+      },
+      "default": 0,
+      "display_name": "Item Block Visibility"
+    },
+    "castle_skip": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Skip Bowser's Castle"
+    },
+    "chuckle_beans": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "only_visible",
+        "2": "all"
+      },
+      "default": 2,
+      "display_name": "Chuckle Beans"
+    },
+    "coins": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Coin Blocks"
+    },
+    "difficult_logic": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Difficult Logic"
+    },
+    "disable_harhalls_pants": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Remove Harhall's Pants"
+    },
+    "disable_surf": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Disable Surf Minigame"
+    },
+    "emblems_amount": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 150,
+      "default": 75,
+      "display_name": "Emblems Available"
+    },
+    "emblems_required": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 100,
+      "default": 50,
+      "display_name": "Emblems Required"
+    },
+    "extra_pipes": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Start With Extra Pipes"
+    },
+    "goal": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "emblem_hunt"
+      },
+      "default": 0,
+      "display_name": "Goal"
+    },
+    "luigi_color": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "red",
+        "1": "green",
+        "2": "blue",
+        "3": "cyan",
+        "4": "yellow",
+        "5": "orange",
+        "6": "purple",
+        "7": "pink",
+        "8": "black",
+        "9": "white",
+        "10": "silhouette",
+        "11": "chaos",
+        "12": "true_chaos"
+      },
+      "default": 1,
+      "display_name": "Luigi's Color"
+    },
+    "luigi_pants": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "red",
+        "2": "green",
+        "3": "blue",
+        "4": "cyan",
+        "5": "yellow",
+        "6": "orange",
+        "7": "purple",
+        "8": "pink",
+        "9": "black",
+        "10": "white",
+        "11": "chaos"
+      },
+      "default": 0,
+      "display_name": "Luigi's Pants Color"
+    },
+    "mario_color": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "red",
+        "1": "green",
+        "2": "blue",
+        "3": "cyan",
+        "4": "yellow",
+        "5": "orange",
+        "6": "purple",
+        "7": "pink",
+        "8": "black",
+        "9": "white",
+        "10": "silhouette",
+        "11": "chaos",
+        "12": "true_chaos"
+      },
+      "default": 0,
+      "display_name": "Mario's Color"
+    },
+    "mario_pants": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "red",
+        "2": "green",
+        "3": "blue",
+        "4": "cyan",
+        "5": "yellow",
+        "6": "orange",
+        "7": "purple",
+        "8": "pink",
+        "9": "black",
+        "10": "white",
+        "11": "chaos"
+      },
+      "default": 0,
+      "display_name": "Mario's Pants Color"
+    },
+    "music_options": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "default",
+        "1": "randomize",
+        "2": "disable"
+      },
+      "default": 0,
+      "display_name": "Music Options"
+    },
+    "progression_balancing": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 99,
+      "default": 50,
+      "display_name": "Progression Balancing"
+    },
+    "randomize_backgrounds": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Randomize Battle Backgrounds"
+    },
+    "randomize_bosses": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "disabled",
+        "1": "boss_only",
+        "2": "boss_normal"
+      },
+      "default": 0,
+      "display_name": "Randomize Bosses"
+    },
+    "randomize_enemies": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "disabled",
+        "1": "vanilla_groups",
+        "2": "custom_groups"
+      },
+      "default": 0,
+      "display_name": "Randomize Enemies"
+    },
+    "randomize_sounds": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Randomize Sounds"
+    },
+    "scale_stats": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Scale Enemy Stats"
+    },
+    "skip_minecart": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Skip Minecart Minigame"
+    },
+    "tattle_hp": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Tattle HP"
+    },
+    "xp_multiplier": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 4,
+      "default": 1,
+      "display_name": "XP Multiplier"
+    }
+  },
   "world_directory": "mlss"
 }

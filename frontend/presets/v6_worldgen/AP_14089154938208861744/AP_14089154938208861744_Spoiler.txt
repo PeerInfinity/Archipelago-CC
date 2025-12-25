@@ -17,6 +17,12 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Area Cost Randomizer:            No
+Area Randomizer:                 No
+Death Link:                      No
+Death Link Amnesty:              15
+Door Cost:                       3
+Music Randomizer:                No
 
 
 Locations:

@@ -17,6 +17,36 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Artillery Traps:                 0
+Atomic Cliff Remover Traps:      0
+Atomic Rocket Traps:             0
+Attack Traps:                    0
+Cluster Grenade Traps:           0
+Death Link:                      No
+Energy Link:                     No
+Evolution Trap % Effect:         10
+Evolution Traps:                 0
+Free Samples:                    Stack
+Free Samples Quality:            Normal
+Goal:                            Rocket
+Grenade Traps:                   0
+Blueprints:                      Yes
+Inventory Spill Traps:           0
+Maximum Required Science Pack:   Space Science Pack
+Maximum Science Pack Cost:       500
+Minimum Science Pack Cost:       5
+Progressive Technologies:        On
+Ramping Tech Costs:              No
+Random Recipe Ingredients Level: Rocket
+Randomized Recipe Ingredients Offset:0
+Recipe Time:                     Vanilla
+Satellite:                       Vanilla
+Rocket Silo:                     Vanilla
+Tech Cost Distribution:          Even
+Science Pack Cost Mix:           70
+Technology Tree Information:     Full
+Technology Tree Layout:          Single
+Teleport Traps:                  0
 
 
 Locations:

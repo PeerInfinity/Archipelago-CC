@@ -17,6 +17,42 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Autosave:                        Yes
+Blocksanity:                     No
+Bonus Block Checks:              No
+Boss Shuffle:                    None
+Bosses Required:                 7
+Bowser Castle Doors:             Vanilla
+Bowser Castle Rooms:             Random Two Room
+Death Link:                      No
+Display Received Item Popups:    Progression Minus Yoshi Eggs
+Dragon Coin Checks:              No
+Early Climb:                     No
+Exclude Special Zone:            No
+Goal:                            Bowser
+Hidden 1-Up Checks:              No
+Ice Trap Weight:                 Medium
+Junk Fill Percentage:            0
+Level Palette Shuffle:           Off
+Level Shuffle:                   No
+Literature Trap Weight:          Medium
+Mario Palette:                   Mario
+Max Number of Yoshi Eggs:        50
+3up Moon Checks:                 No
+Music Shuffle:                   None
+Overworld Palette Shuffle:       Off
+Overworld Speed:                 Vanilla
+Required Percentage of Yoshi Eggs:100
+Reverse Trap Weight:             Medium
+Ring Link:                       No
+Sound Effect Shuffle:            None
+Starting Life Count:             5
+Stun Trap Weight:                Medium
+Swap Donut GH Exits:             No
+Thwimp Trap Weight:              Medium
+Timer Trap Weight:               Medium
+Trap Fill Percentage:            0
+Trap Link:                       No
 
 
 Locations:

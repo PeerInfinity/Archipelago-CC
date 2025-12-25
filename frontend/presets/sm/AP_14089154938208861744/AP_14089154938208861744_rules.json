@@ -17553,6 +17553,314 @@
         "varia_custom_preset": [],
         "varia_tweaks": "false"
       },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "allow_grey_doors": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Allow Grey Doors"
+        },
+        "animals": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Animals"
+        },
+        "area_layout": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Area Layout"
+        },
+        "area_randomization": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "light",
+            "2": "full"
+          },
+          "default": 0,
+          "display_name": "Area Randomization"
+        },
+        "boss_randomization": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Boss Randomization"
+        },
+        "custom_objective": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Custom objectives"
+        },
+        "custom_objective_count": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 5,
+          "default": 4,
+          "display_name": "Custom objective count"
+        },
+        "death_link": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "disable",
+            "1": "enable",
+            "3": "enable_survive"
+          },
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "doors_colors_rando": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Doors Colors Rando"
+        },
+        "elevators_speed": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Elevators speed"
+        },
+        "energy_qty": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "ultra_sparse",
+            "1": "sparse",
+            "2": "medium",
+            "3": "vanilla"
+          },
+          "default": 3,
+          "display_name": "Energy Quantity"
+        },
+        "escape_rando": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize the escape sequence"
+        },
+        "fast_doors": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Doors speed"
+        },
+        "fun_combat": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Fun Combat"
+        },
+        "fun_movement": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Fun Movement"
+        },
+        "fun_suits": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Fun Suits"
+        },
+        "gravity_behaviour": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "balanced",
+            "2": "progressive"
+          },
+          "default": 1,
+          "display_name": "Gravity Behaviour"
+        },
+        "hide_items": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Hide half the items"
+        },
+        "hud": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Hud"
+        },
+        "infinite_space_jump": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Infinite Space Jump"
+        },
+        "layout_patches": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Layout Patches"
+        },
+        "max_difficulty": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "easy",
+            "1": "medium",
+            "2": "hard",
+            "3": "harder",
+            "4": "hardcore",
+            "5": "mania",
+            "6": "infinity"
+          },
+          "default": 4,
+          "display_name": "Maximum Difficulty"
+        },
+        "minor_qty": {
+          "type": "range",
+          "range_start": 7,
+          "range_end": 100,
+          "default": 100,
+          "display_name": "Minor Quantity"
+        },
+        "missile_qty": {
+          "type": "range",
+          "range_start": 10,
+          "range_end": 90,
+          "default": 30,
+          "display_name": "Missile Quantity"
+        },
+        "morph_placement": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "early",
+            "1": "normal"
+          },
+          "default": 0,
+          "display_name": "Morph Placement"
+        },
+        "nerfed_charge": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Nerfed Charge"
+        },
+        "no_music": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "No Music"
+        },
+        "power_bomb_qty": {
+          "type": "range",
+          "range_start": 10,
+          "range_end": 90,
+          "default": 10,
+          "display_name": "Power Bomb Quantity"
+        },
+        "preset": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "newbie",
+            "1": "casual",
+            "2": "regular",
+            "3": "veteran",
+            "4": "expert",
+            "5": "master",
+            "6": "samus",
+            "7": "season_races",
+            "8": "smrat2021",
+            "9": "solution",
+            "10": "custom",
+            "11": "varia_custom"
+          },
+          "default": 2,
+          "display_name": "Preset"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "rando_speed": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Momentum conservation (a.k.a. Speedkeep)"
+        },
+        "random_music": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Random Music"
+        },
+        "refill_before_save": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Refill Before Save"
+        },
+        "relaxed_round_robin_cf": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Relaxed round robin Crystal Flash"
+        },
+        "remote_items": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Remote Items"
+        },
+        "remove_escape_enemies": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Remove enemies during escape"
+        },
+        "spin_jump_restart": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Spin Jump Restart"
+        },
+        "start_inventory_removes_from_pool": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "StartItems Removes From Item Pool"
+        },
+        "start_location": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "ceres",
+            "1": "landing_site",
+            "2": "gauntlet_top",
+            "3": "green_brinstar_elevator",
+            "4": "big_pink",
+            "5": "etecoons_supers",
+            "6": "wrecked_ship_main",
+            "7": "firefleas_top",
+            "8": "business_center",
+            "9": "bubble_mountain",
+            "10": "mama_turtle",
+            "11": "watering_hole",
+            "12": "aqueduct",
+            "13": "red_brinstar_elevator",
+            "14": "golden_four"
+          },
+          "default": 1,
+          "display_name": "Start Location"
+        },
+        "strict_minors": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Strict Minors"
+        },
+        "super_qty": {
+          "type": "range",
+          "range_start": 10,
+          "range_end": 90,
+          "default": 20,
+          "display_name": "Super Quantity"
+        },
+        "tourian": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "fast",
+            "2": "disabled"
+          },
+          "default": 0,
+          "display_name": "Endgame behavior with Tourian"
+        },
+        "varia_tweaks": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Varia Tweaks"
+        }
+      },
       "count_non_advancement_items": true,
       "hardRooms": {
         "X-Ray": [

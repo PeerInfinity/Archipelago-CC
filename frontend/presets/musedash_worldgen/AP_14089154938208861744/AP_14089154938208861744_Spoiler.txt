@@ -17,6 +17,17 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Additional Song Count:           40
+Death Link:                      No
+Grade Needed:                    Any
+Music Sheet Percentage:          20
+Music Sheets Needed to Win:      80
+Manual Difficulty Max:           8
+Manual Difficulty Min:           4
+Song Difficulty:                 Any
+Starting Song Count:             5
+Streamer Mode Only Songs:        No
+Trap Percentage:                 15
 
 
 Starting Items:

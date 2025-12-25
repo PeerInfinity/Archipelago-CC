@@ -61,9 +61,14 @@
             "name": "Eolis Key Jack",
             "id": 400101,
             "access_rule": {
-              "rule": "can_buy_in_eolis",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Deluge",
+                  "Progressive Sword",
+                  "Ring of Elf"
+                ]
+              }
             },
             "item": {
               "name": "Elixir",
@@ -77,9 +82,14 @@
             "name": "Eolis Hand Dagger",
             "id": 400102,
             "access_rule": {
-              "rule": "can_buy_in_eolis",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Deluge",
+                  "Progressive Sword",
+                  "Ring of Elf"
+                ]
+              }
             },
             "item": {
               "name": "Key King",
@@ -93,9 +103,14 @@
             "name": "Eolis Red Potion",
             "id": 400103,
             "access_rule": {
-              "rule": "can_buy_in_eolis",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Deluge",
+                  "Progressive Sword",
+                  "Ring of Elf"
+                ]
+              }
             },
             "item": {
               "name": "Key Jack",
@@ -109,9 +124,14 @@
             "name": "Eolis Elixir",
             "id": 400104,
             "access_rule": {
-              "rule": "can_buy_in_eolis",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Deluge",
+                  "Progressive Sword",
+                  "Ring of Elf"
+                ]
+              }
             },
             "item": {
               "name": "Black Onyx",
@@ -125,9 +145,14 @@
             "name": "Eolis Deluge",
             "id": 400105,
             "access_rule": {
-              "rule": "can_buy_in_eolis",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Deluge",
+                  "Progressive Sword",
+                  "Ring of Elf"
+                ]
+              }
             },
             "item": {
               "name": "Wingboots",
@@ -1041,9 +1066,16 @@
             "name": "Misty Doctor Office",
             "id": 400148,
             "access_rule": {
-              "rule": "has_any_magic",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Death",
+                  "Deluge",
+                  "Fire",
+                  "Thunder",
+                  "Tilte"
+                ]
+              }
             },
             "item": {
               "name": "Red Potion",
@@ -1887,9 +1919,16 @@
             "name": "Dartmoor Castle Hidden Red Potion",
             "id": 400192,
             "access_rule": {
-              "rule": "has_any_magic",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Death",
+                  "Deluge",
+                  "Fire",
+                  "Thunder",
+                  "Tilte"
+                ]
+              }
             },
             "item": {
               "name": "Ring of Elf",
@@ -1971,9 +2010,16 @@
             "name": "Fraternal Castle Shop Hidden Ointment",
             "id": 400197,
             "access_rule": {
-              "rule": "has_any_magic",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Death",
+                  "Deluge",
+                  "Fire",
+                  "Thunder",
+                  "Tilte"
+                ]
+              }
             },
             "item": {
               "name": "Red Potion",
@@ -2644,6 +2690,77 @@
         "start_inventory_from_pool": {},
         "start_location_hints": []
       },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "include_pendant": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Include Pendant"
+        },
+        "include_poisons": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Include Poisons"
+        },
+        "keep_shop_red_potions": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Keep Shop Red Potions"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "random_monsters": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "level_shuffle",
+            "2": "level_random",
+            "3": "world_shuffle",
+            "4": "world_random",
+            "5": "chaotic"
+          },
+          "default": 0,
+          "display_name": "Random Monsters"
+        },
+        "random_musics": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Random Musics"
+        },
+        "random_npcs": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Random NPCs"
+        },
+        "random_rewards": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Random Rewards"
+        },
+        "random_sounds": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Random Sounds"
+        },
+        "require_dragon_slayer": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Require Dragon Slayer"
+        }
+      },
       "world_directory": "faxanadu"
     }
   },
@@ -2678,38 +2795,5 @@
       }
     }
   },
-  "helpers": {
-    "1": {
-      "can_buy_in_eolis": {
-        "type": "state_method",
-        "method": "has_any",
-        "args": [
-          {
-            "type": "constant",
-            "value": [
-              "Deluge",
-              "Progressive Sword",
-              "Ring of Elf"
-            ]
-          }
-        ]
-      },
-      "has_any_magic": {
-        "type": "state_method",
-        "method": "has_any",
-        "args": [
-          {
-            "type": "constant",
-            "value": [
-              "Death",
-              "Deluge",
-              "Fire",
-              "Thunder",
-              "Tilte"
-            ]
-          }
-        ]
-      }
-    }
-  }
+  "helpers": {}
 }

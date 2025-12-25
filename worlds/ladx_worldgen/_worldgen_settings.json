@@ -53,5 +53,343 @@
     "warp_improvements": "",
     "warps": "vanilla"
   },
+  "option_definitions": {
+    "accessibility": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "full",
+        "2": "minimal"
+      },
+      "default": 0,
+      "display_name": "Accessibility"
+    },
+    "ap_title_screen": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "AP Title Screen"
+    },
+    "boots_controls": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "bracelet",
+        "2": "press_a",
+        "3": "press_b"
+      },
+      "default": 0,
+      "display_name": "Boots Controls"
+    },
+    "experimental_dungeon_shuffle": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Dungeon Shuffle"
+    },
+    "experimental_entrance_shuffle": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "simple"
+      },
+      "default": 0,
+      "display_name": "Entrance Shuffle"
+    },
+    "foreign_item_icons": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "guess_by_name",
+        "1": "indicate_progression"
+      },
+      "default": 0,
+      "display_name": "Foreign Item Icons"
+    },
+    "gfxmod": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "GFX Modification"
+    },
+    "goal": {
+      "type": "choice",
+      "name_lookup": {
+        "1": "instruments",
+        "2": "seashells",
+        "3": "open"
+      },
+      "default": 1,
+      "display_name": "Goal"
+    },
+    "hard_mode": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "oracle",
+        "2": "hero",
+        "3": "ohko"
+      },
+      "default": 0,
+      "display_name": "Hard Mode"
+    },
+    "in_game_hints": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "In-game Hints"
+    },
+    "instrument_count": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 8,
+      "default": 8,
+      "display_name": "Instrument Count"
+    },
+    "link_palette": {
+      "type": "choice",
+      "name_lookup": {
+        "-1": "normal",
+        "0": "green",
+        "1": "yellow",
+        "2": "red",
+        "3": "blue",
+        "4": "invert_a",
+        "5": "invert_b",
+        "6": "invert_c",
+        "7": "invert_d"
+      },
+      "default": -1,
+      "display_name": "Link's Palette"
+    },
+    "logic": {
+      "type": "choice",
+      "name_lookup": {
+        "1": "normal",
+        "2": "hard",
+        "3": "glitched",
+        "4": "hell"
+      },
+      "default": 1,
+      "display_name": "Logic"
+    },
+    "low_hp_beep": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "default",
+        "1": "slow",
+        "2": "none"
+      },
+      "default": 0,
+      "display_name": "Low HP Beep"
+    },
+    "music": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "shuffled",
+        "2": "off"
+      },
+      "default": 0,
+      "display_name": "Music"
+    },
+    "music_change_condition": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "sword",
+        "1": "always"
+      },
+      "default": 1,
+      "display_name": "Music Change Condition"
+    },
+    "nag_messages": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Nag Messages"
+    },
+    "no_flash": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "No Flash"
+    },
+    "overworld": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "normal",
+        "1": "open_mabe"
+      },
+      "default": 0,
+      "display_name": "Overworld"
+    },
+    "palette": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "normal",
+        "1": "1bit",
+        "2": "2bit",
+        "3": "greyscale",
+        "4": "pink",
+        "5": "inverted"
+      },
+      "default": 0,
+      "display_name": "Palette"
+    },
+    "progression_balancing": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 99,
+      "default": 50,
+      "display_name": "Progression Balancing"
+    },
+    "quickswap": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "a",
+        "2": "b"
+      },
+      "default": 0,
+      "display_name": "Quickswap"
+    },
+    "rooster": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Rooster"
+    },
+    "shuffle_compasses": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "original_dungeon",
+        "1": "own_dungeons",
+        "2": "own_world",
+        "3": "any_world",
+        "4": "different_world"
+      },
+      "default": 0,
+      "display_name": "Shuffle Compasses"
+    },
+    "shuffle_instruments": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "original_dungeon",
+        "1": "own_dungeons",
+        "2": "own_world",
+        "3": "any_world",
+        "4": "different_world",
+        "100": "vanilla"
+      },
+      "default": 100,
+      "display_name": "Shuffle Instruments"
+    },
+    "shuffle_maps": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "original_dungeon",
+        "1": "own_dungeons",
+        "2": "own_world",
+        "3": "any_world",
+        "4": "different_world"
+      },
+      "default": 0,
+      "display_name": "Shuffle Maps"
+    },
+    "shuffle_nightmare_keys": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "original_dungeon",
+        "1": "own_dungeons",
+        "2": "own_world",
+        "3": "any_world",
+        "4": "different_world"
+      },
+      "default": 0,
+      "display_name": "Shuffle Nightmare Keys"
+    },
+    "shuffle_small_keys": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "original_dungeon",
+        "1": "own_dungeons",
+        "2": "own_world",
+        "3": "any_world",
+        "4": "different_world"
+      },
+      "default": 0,
+      "display_name": "Shuffle Small Keys"
+    },
+    "shuffle_stone_beaks": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "original_dungeon",
+        "1": "own_dungeons",
+        "2": "own_world",
+        "3": "any_world",
+        "4": "different_world"
+      },
+      "default": 0,
+      "display_name": "Shuffle Stone Beaks"
+    },
+    "stabilize_item_pool": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Stabilize Item Pool"
+    },
+    "stealing": {
+      "type": "choice",
+      "name_lookup": {
+        "1": "in_logic",
+        "2": "out_of_logic",
+        "3": "disabled"
+      },
+      "default": 2,
+      "display_name": "Stealing"
+    },
+    "tarins_gift": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "local_progression",
+        "1": "bush_breaker",
+        "2": "any_item"
+      },
+      "default": 0,
+      "display_name": "Tarin's Gift"
+    },
+    "text_mode": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "normal",
+        "1": "fast"
+      },
+      "default": 1,
+      "display_name": "Text Mode"
+    },
+    "text_shuffle": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Text Shuffle"
+    },
+    "tradequest": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Trade Quest"
+    },
+    "trendy_game": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "easy",
+        "1": "normal",
+        "2": "hard",
+        "3": "harder",
+        "4": "hardest",
+        "5": "impossible"
+      },
+      "default": 1,
+      "display_name": "Trendy Game"
+    },
+    "warps": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "improved",
+        "2": "improved_additional"
+      },
+      "default": 0,
+      "display_name": "Warps"
+    }
+  },
   "world_directory": "ladx"
 }

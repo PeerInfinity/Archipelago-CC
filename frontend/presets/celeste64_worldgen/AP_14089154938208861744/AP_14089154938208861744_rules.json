@@ -1626,19 +1626,242 @@
       "use_resolved_items": false,
       "options": {
         "accessibility": "full",
+        "badeline_chaser_frequency": 0,
+        "badeline_chaser_source": "locations",
+        "badeline_chaser_speed": 3,
+        "carsanity": "false",
+        "checkpointsanity": "false",
+        "death_link": "false",
+        "death_link_amnesty": 10,
         "exclude_locations": [],
+        "friendsanity": "false",
         "item_links": [],
         "local_items": [],
+        "logic_difficulty": "standard",
+        "madeline_feather_hair_color": "golden",
+        "madeline_no_dash_hair_color": "empty",
+        "madeline_one_dash_hair_color": "strawberry",
+        "madeline_two_dash_hair_color": "double",
+        "move_shuffle": "false",
         "non_local_items": [],
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
         "randomize_items": "false",
+        "signsanity": "false",
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "strawberries_required_percentage": 80,
+        "total_strawberries": 20
       },
-      "strawberries_required": 16,
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "badeline_chaser_frequency": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 0,
+          "display_name": "Badeline Chaser Frequency"
+        },
+        "badeline_chaser_source": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "locations",
+            "1": "strawberries"
+          },
+          "default": 0,
+          "display_name": "Badeline Chaser Source"
+        },
+        "badeline_chaser_speed": {
+          "type": "range",
+          "range_start": 2,
+          "range_end": 10,
+          "default": 3,
+          "display_name": "Badeline Chaser Speed"
+        },
+        "carsanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Carsanity"
+        },
+        "checkpointsanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Checkpointsanity"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "death_link_amnesty": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 30,
+          "default": 10,
+          "display_name": "Death Link Amnesty"
+        },
+        "friendsanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Friendsanity"
+        },
+        "logic_difficulty": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "standard",
+            "1": "hard"
+          },
+          "default": 0,
+          "display_name": "Logic Difficulty"
+        },
+        "madeline_feather_hair_color": {
+          "type": "choice",
+          "name_lookup": {
+            "-1": "any_color",
+            "0": "black",
+            "14015": "royal_blue",
+            "896773": "bright_green",
+            "1255448": "forest_green",
+            "7258367": "empty",
+            "8388608": "maroon",
+            "8421504": "grey",
+            "9304352": "lime_green",
+            "10174389": "baddy",
+            "12027686": "brown",
+            "14183946": "orange",
+            "14363648": "strawberry",
+            "15914064": "golden",
+            "16421375": "double",
+            "16711680": "fire_red",
+            "16726629": "salmon",
+            "16777215": "white"
+          },
+          "default": 15914064,
+          "display_name": "Madeline Feather Hair Color"
+        },
+        "madeline_no_dash_hair_color": {
+          "type": "choice",
+          "name_lookup": {
+            "-1": "any_color",
+            "0": "black",
+            "14015": "royal_blue",
+            "896773": "bright_green",
+            "1255448": "forest_green",
+            "7258367": "empty",
+            "8388608": "maroon",
+            "8421504": "grey",
+            "9304352": "lime_green",
+            "10174389": "baddy",
+            "12027686": "brown",
+            "14183946": "orange",
+            "14363648": "strawberry",
+            "15914064": "golden",
+            "16421375": "double",
+            "16711680": "fire_red",
+            "16726629": "salmon",
+            "16777215": "white"
+          },
+          "default": 7258367,
+          "display_name": "Madeline No Dash Hair Color"
+        },
+        "madeline_one_dash_hair_color": {
+          "type": "choice",
+          "name_lookup": {
+            "-1": "any_color",
+            "0": "black",
+            "14015": "royal_blue",
+            "896773": "bright_green",
+            "1255448": "forest_green",
+            "7258367": "empty",
+            "8388608": "maroon",
+            "8421504": "grey",
+            "9304352": "lime_green",
+            "10174389": "baddy",
+            "12027686": "brown",
+            "14183946": "orange",
+            "14363648": "strawberry",
+            "15914064": "golden",
+            "16421375": "double",
+            "16711680": "fire_red",
+            "16726629": "salmon",
+            "16777215": "white"
+          },
+          "default": 14363648,
+          "display_name": "Madeline One Dash Hair Color"
+        },
+        "madeline_two_dash_hair_color": {
+          "type": "choice",
+          "name_lookup": {
+            "-1": "any_color",
+            "0": "black",
+            "14015": "royal_blue",
+            "896773": "bright_green",
+            "1255448": "forest_green",
+            "7258367": "empty",
+            "8388608": "maroon",
+            "8421504": "grey",
+            "9304352": "lime_green",
+            "10174389": "baddy",
+            "12027686": "brown",
+            "14183946": "orange",
+            "14363648": "strawberry",
+            "15914064": "golden",
+            "16421375": "double",
+            "16711680": "fire_red",
+            "16726629": "salmon",
+            "16777215": "white"
+          },
+          "default": 16421375,
+          "display_name": "Madeline Two Dash Hair Color"
+        },
+        "move_shuffle": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Move Shuffle"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "signsanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Signsanity"
+        },
+        "strawberries_required_percentage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 80,
+          "display_name": "Strawberries Required Percentage"
+        },
+        "total_strawberries": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 55,
+          "default": 20,
+          "display_name": "Total Strawberries"
+        }
+      },
+      "strawberries_required": 0,
       "world_directory": "celeste64"
     }
   },

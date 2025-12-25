@@ -24,5 +24,80 @@
     "start_inventory_from_pool": {},
     "start_location_hints": []
   },
+  "option_definitions": {
+    "accessibility": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "full",
+        "2": "minimal"
+      },
+      "default": 0,
+      "display_name": "Accessibility"
+    },
+    "ai_sacrifice_limit": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 5,
+      "default": 0,
+      "display_name": "AI Sacrifice Limit"
+    },
+    "ai_summon_limit": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 5,
+      "default": 0,
+      "display_name": "AI Summon Limit"
+    },
+    "commander_choice": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "locked_random",
+        "1": "unlockable_factions",
+        "2": "random_starting_faction"
+      },
+      "default": 0,
+      "display_name": "Commander Choice"
+    },
+    "commander_defense_boost": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 8,
+      "default": 2,
+      "display_name": "Commander Defense Boost"
+    },
+    "death_link": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Death Link"
+    },
+    "income_boost": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 100,
+      "default": 25,
+      "display_name": "Income Boost"
+    },
+    "player_sacrifice_limit": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 5,
+      "default": 0,
+      "display_name": "Player Sacrifice Limit"
+    },
+    "player_summon_limit": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 5,
+      "default": 0,
+      "display_name": "Player Summon Limit"
+    },
+    "progression_balancing": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 99,
+      "default": 50,
+      "display_name": "Progression Balancing"
+    }
+  },
   "world_directory": "wargroove"
 }

@@ -18,5 +18,49 @@
     "start_inventory": {},
     "start_location_hints": []
   },
+  "option_definitions": {
+    "ExpandedPool": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Expanded Item Pool"
+    },
+    "StartingPosition": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "safe",
+        "1": "unsafe",
+        "2": "dangerous",
+        "3": "very_dangerous"
+      },
+      "default": 0,
+      "display_name": "Starting Position"
+    },
+    "TriforceLocations": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "dungeons",
+        "2": "anywhere"
+      },
+      "default": 0,
+      "display_name": "Triforce Locations"
+    },
+    "accessibility": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "full",
+        "2": "minimal"
+      },
+      "default": 0,
+      "display_name": "Accessibility"
+    },
+    "progression_balancing": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 99,
+      "default": 50,
+      "display_name": "Progression Balancing"
+    }
+  },
   "world_directory": "tloz"
 }

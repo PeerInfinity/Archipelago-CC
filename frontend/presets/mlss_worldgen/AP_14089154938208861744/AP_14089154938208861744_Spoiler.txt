@@ -17,7 +17,30 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
-Goal:                            0
+Item Block Visibility:           Disabled
+Skip Bowser's Castle:            No
+Chuckle Beans:                   All
+Coin Blocks:                     No
+Difficult Logic:                 No
+Remove Harhall's Pants:          No
+Disable Surf Minigame:           No
+Emblems Available:               75
+Emblems Required:                50
+Start With Extra Pipes:          No
+Goal:                            Vanilla
+Luigi's Color:                   Green
+Luigi's Pants Color:             Vanilla
+Mario's Color:                   Red
+Mario's Pants Color:             Vanilla
+Music Options:                   Default
+Randomize Battle Backgrounds:    No
+Randomize Bosses:                Disabled
+Randomize Enemies:               Disabled
+Randomize Sounds:                No
+Scale Enemy Stats:               No
+Skip Minecart Minigame:          No
+Tattle HP:                       No
+XP Multiplier:                   1
 
 
 Locations:

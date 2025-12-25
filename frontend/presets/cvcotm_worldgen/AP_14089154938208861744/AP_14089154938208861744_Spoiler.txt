@@ -17,6 +17,30 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Always Allow Speed Dash:         No
+Auto Run:                        No
+Available Last Keys:             1
+Battle Arena Music:              Nothing
+Buff Ranged Familiars:           No
+Buff Shooter Strength:           No
+Buff Sub-weapons:                No
+Completion Goal:                 Dracula
+Countdown:                       None
+Death Link:                      Off
+Disable Battle Arena MP Drain:   No
+DSS Patch:                       No
+Early Escape Item:               Double
+Halve DSS Cards Placed:          No
+Ignore Cleansing:                No
+Iron Maiden Behavior:            Vanilla
+Item Drop Randomization:         Normal
+Nerf Roc Wing:                   No
+DSS Pluto and Griffin Run Speed in Air:No
+Required Last Keys:              1
+Required Skirmishes:             None
+Skip Cutscene Dialogue:          No
+Skip Magic Item Tutorials:       No
+Sub-weapon Shuffle:              No
 
 
 Locations:

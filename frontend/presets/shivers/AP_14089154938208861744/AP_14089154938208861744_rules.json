@@ -754,9 +754,29 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "oil_capturable",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Oil Pot Bottom",
+                          "Oil Pot Bottom DUPE",
+                          "Oil Pot Top",
+                          "Oil Pot Top DUPE"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Oil Pot Complete",
+                          "Oil Pot Complete DUPE"
+                        ]
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "CanReachRegion",
@@ -831,79 +851,527 @@
                                                   "rule": "Arithmetic",
                                                   "args": {
                                                     "left": {
-                                                      "rule": "water_capturable",
-                                                      "_original_ast_type": "helper",
-                                                      "_converted_from_cc": true
+                                                      "rule": "Or",
+                                                      "children": [
+                                                        {
+                                                          "rule": "HasAll",
+                                                          "args": {
+                                                            "items": [
+                                                              "Water Pot Bottom",
+                                                              "Water Pot Bottom DUPE",
+                                                              "Water Pot Top",
+                                                              "Water Pot Top DUPE"
+                                                            ]
+                                                          }
+                                                        },
+                                                        {
+                                                          "rule": "HasAll",
+                                                          "args": {
+                                                            "items": [
+                                                              "Water Pot Complete",
+                                                              "Water Pot Complete DUPE"
+                                                            ]
+                                                          }
+                                                        }
+                                                      ]
                                                     },
                                                     "op": "+",
                                                     "right": {
-                                                      "rule": "wax_capturable",
-                                                      "_original_ast_type": "helper",
-                                                      "_converted_from_cc": true
+                                                      "rule": "Or",
+                                                      "children": [
+                                                        {
+                                                          "rule": "HasAll",
+                                                          "args": {
+                                                            "items": [
+                                                              "Wax Pot Bottom",
+                                                              "Wax Pot Bottom DUPE",
+                                                              "Wax Pot Top",
+                                                              "Wax Pot Top DUPE"
+                                                            ]
+                                                          }
+                                                        },
+                                                        {
+                                                          "rule": "HasAll",
+                                                          "args": {
+                                                            "items": [
+                                                              "Wax Pot Complete",
+                                                              "Wax Pot Complete DUPE"
+                                                            ]
+                                                          }
+                                                        }
+                                                      ]
                                                     }
                                                   }
                                                 },
                                                 "op": "+",
                                                 "right": {
-                                                  "rule": "ash_capturable",
-                                                  "_original_ast_type": "helper",
-                                                  "_converted_from_cc": true
+                                                  "rule": "Or",
+                                                  "children": [
+                                                    {
+                                                      "rule": "HasAll",
+                                                      "args": {
+                                                        "items": [
+                                                          "Ash Pot Bottom",
+                                                          "Ash Pot Bottom DUPE",
+                                                          "Ash Pot Top",
+                                                          "Ash Pot Top DUPE"
+                                                        ]
+                                                      }
+                                                    },
+                                                    {
+                                                      "rule": "HasAll",
+                                                      "args": {
+                                                        "items": [
+                                                          "Ash Pot Complete",
+                                                          "Ash Pot Complete DUPE"
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
                                                 }
                                               }
                                             },
                                             "op": "+",
                                             "right": {
-                                              "rule": "oil_capturable",
-                                              "_original_ast_type": "helper",
-                                              "_converted_from_cc": true
+                                              "rule": "Or",
+                                              "children": [
+                                                {
+                                                  "rule": "HasAll",
+                                                  "args": {
+                                                    "items": [
+                                                      "Oil Pot Bottom",
+                                                      "Oil Pot Bottom DUPE",
+                                                      "Oil Pot Top",
+                                                      "Oil Pot Top DUPE"
+                                                    ]
+                                                  }
+                                                },
+                                                {
+                                                  "rule": "HasAll",
+                                                  "args": {
+                                                    "items": [
+                                                      "Oil Pot Complete",
+                                                      "Oil Pot Complete DUPE"
+                                                    ]
+                                                  }
+                                                }
+                                              ]
                                             }
                                           }
                                         },
                                         "op": "+",
                                         "right": {
-                                          "rule": "cloth_capturable",
-                                          "_original_ast_type": "helper",
-                                          "_converted_from_cc": true
+                                          "rule": "Or",
+                                          "children": [
+                                            {
+                                              "rule": "HasAll",
+                                              "args": {
+                                                "items": [
+                                                  "Cloth Pot Bottom",
+                                                  "Cloth Pot Bottom DUPE",
+                                                  "Cloth Pot Top",
+                                                  "Cloth Pot Top DUPE"
+                                                ]
+                                              }
+                                            },
+                                            {
+                                              "rule": "HasAll",
+                                              "args": {
+                                                "items": [
+                                                  "Cloth Pot Complete",
+                                                  "Cloth Pot Complete DUPE"
+                                                ]
+                                              }
+                                            }
+                                          ]
                                         }
                                       }
                                     },
                                     "op": "+",
                                     "right": {
-                                      "rule": "wood_capturable",
-                                      "_original_ast_type": "helper",
-                                      "_converted_from_cc": true
+                                      "rule": "Or",
+                                      "children": [
+                                        {
+                                          "rule": "HasAll",
+                                          "args": {
+                                            "items": [
+                                              "Wood Pot Bottom",
+                                              "Wood Pot Bottom DUPE",
+                                              "Wood Pot Top",
+                                              "Wood Pot Top DUPE"
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          "rule": "HasAll",
+                                          "args": {
+                                            "items": [
+                                              "Wood Pot Complete",
+                                              "Wood Pot Complete DUPE"
+                                            ]
+                                          }
+                                        }
+                                      ]
                                     }
                                   }
                                 },
                                 "op": "+",
                                 "right": {
-                                  "rule": "crystal_capturable",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_cc": true
+                                  "rule": "Or",
+                                  "children": [
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Crystal Pot Bottom",
+                                          "Crystal Pot Bottom DUPE",
+                                          "Crystal Pot Top",
+                                          "Crystal Pot Top DUPE"
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Crystal Pot Complete",
+                                          "Crystal Pot Complete DUPE"
+                                        ]
+                                      }
+                                    }
+                                  ]
                                 }
                               }
                             },
                             "op": "+",
                             "right": {
-                              "rule": "sand_capturable",
-                              "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "rule": "Or",
+                              "children": [
+                                {
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Sand Pot Bottom",
+                                      "Sand Pot Bottom DUPE",
+                                      "Sand Pot Top",
+                                      "Sand Pot Top DUPE"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Sand Pot Complete",
+                                      "Sand Pot Complete DUPE"
+                                    ]
+                                  }
+                                }
+                              ]
                             }
                           }
                         },
                         "op": "+",
                         "right": {
-                          "rule": "metal_capturable",
-                          "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "rule": "Or",
+                          "children": [
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Metal Pot Bottom",
+                                  "Metal Pot Bottom DUPE",
+                                  "Metal Pot Top",
+                                  "Metal Pot Top DUPE"
+                                ]
+                              }
+                            },
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Metal Pot Complete",
+                                  "Metal Pot Complete DUPE"
+                                ]
+                              }
+                            }
+                          ]
                         }
                       }
                     },
                     "op": "+",
                     "right": {
-                      "rule": "lightning_capturable",
-                      "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Or",
+                          "children": [
+                            {
+                              "rule": "And",
+                              "children": [
+                                {
+                                  "rule": "Or",
+                                  "children": [
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Ash Pot Bottom",
+                                          "Ash Pot Bottom DUPE",
+                                          "Ash Pot Top",
+                                          "Ash Pot Top DUPE"
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Ash Pot Complete",
+                                          "Ash Pot Complete DUPE"
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "rule": "Or",
+                                  "children": [
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Cloth Pot Bottom",
+                                          "Cloth Pot Bottom DUPE",
+                                          "Cloth Pot Top",
+                                          "Cloth Pot Top DUPE"
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Cloth Pot Complete",
+                                          "Cloth Pot Complete DUPE"
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "rule": "Or",
+                                  "children": [
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Crystal Pot Bottom",
+                                          "Crystal Pot Bottom DUPE",
+                                          "Crystal Pot Top",
+                                          "Crystal Pot Top DUPE"
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Crystal Pot Complete",
+                                          "Crystal Pot Complete DUPE"
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "rule": "Or",
+                                  "children": [
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Metal Pot Bottom",
+                                          "Metal Pot Bottom DUPE",
+                                          "Metal Pot Top",
+                                          "Metal Pot Top DUPE"
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Metal Pot Complete",
+                                          "Metal Pot Complete DUPE"
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "rule": "Or",
+                                  "children": [
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Oil Pot Bottom",
+                                          "Oil Pot Bottom DUPE",
+                                          "Oil Pot Top",
+                                          "Oil Pot Top DUPE"
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Oil Pot Complete",
+                                          "Oil Pot Complete DUPE"
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "rule": "Or",
+                                  "children": [
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Sand Pot Bottom",
+                                          "Sand Pot Bottom DUPE",
+                                          "Sand Pot Top",
+                                          "Sand Pot Top DUPE"
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Sand Pot Complete",
+                                          "Sand Pot Complete DUPE"
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "rule": "Or",
+                                  "children": [
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Water Pot Bottom",
+                                          "Water Pot Bottom DUPE",
+                                          "Water Pot Top",
+                                          "Water Pot Top DUPE"
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Water Pot Complete",
+                                          "Water Pot Complete DUPE"
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "rule": "Or",
+                                  "children": [
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Wax Pot Bottom",
+                                          "Wax Pot Bottom DUPE",
+                                          "Wax Pot Top",
+                                          "Wax Pot Top DUPE"
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Wax Pot Complete",
+                                          "Wax Pot Complete DUPE"
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "rule": "Or",
+                                  "children": [
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Wood Pot Bottom",
+                                          "Wood Pot Bottom DUPE",
+                                          "Wood Pot Top",
+                                          "Wood Pot Top DUPE"
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Wood Pot Complete",
+                                          "Wood Pot Complete DUPE"
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "rule": "AST_setting_value",
+                              "args": {
+                                "setting": "early_lightning",
+                                "_original_ast_type": "setting_value"
+                              },
+                              "_converted_from_cc": true
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Or",
+                          "children": [
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Lightning Pot Bottom",
+                                  "Lightning Pot Bottom DUPE",
+                                  "Lightning Pot Top",
+                                  "Lightning Pot Top DUPE"
+                                ]
+                              }
+                            },
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Lightning Pot Complete",
+                                  "Lightning Pot Complete DUPE"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      ]
                     }
                   }
                 },
@@ -1223,9 +1691,247 @@
                   "_converted_from_cc": true
                 },
                 {
-                  "rule": "beths_body_available",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Or",
+                          "children": [
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Ash Pot Bottom",
+                                  "Ash Pot Bottom DUPE",
+                                  "Ash Pot Top",
+                                  "Ash Pot Top DUPE"
+                                ]
+                              }
+                            },
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Ash Pot Complete",
+                                  "Ash Pot Complete DUPE"
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Or",
+                          "children": [
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Cloth Pot Bottom",
+                                  "Cloth Pot Bottom DUPE",
+                                  "Cloth Pot Top",
+                                  "Cloth Pot Top DUPE"
+                                ]
+                              }
+                            },
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Cloth Pot Complete",
+                                  "Cloth Pot Complete DUPE"
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Or",
+                          "children": [
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Crystal Pot Bottom",
+                                  "Crystal Pot Bottom DUPE",
+                                  "Crystal Pot Top",
+                                  "Crystal Pot Top DUPE"
+                                ]
+                              }
+                            },
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Crystal Pot Complete",
+                                  "Crystal Pot Complete DUPE"
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Or",
+                          "children": [
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Metal Pot Bottom",
+                                  "Metal Pot Bottom DUPE",
+                                  "Metal Pot Top",
+                                  "Metal Pot Top DUPE"
+                                ]
+                              }
+                            },
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Metal Pot Complete",
+                                  "Metal Pot Complete DUPE"
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Or",
+                          "children": [
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Oil Pot Bottom",
+                                  "Oil Pot Bottom DUPE",
+                                  "Oil Pot Top",
+                                  "Oil Pot Top DUPE"
+                                ]
+                              }
+                            },
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Oil Pot Complete",
+                                  "Oil Pot Complete DUPE"
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Or",
+                          "children": [
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Sand Pot Bottom",
+                                  "Sand Pot Bottom DUPE",
+                                  "Sand Pot Top",
+                                  "Sand Pot Top DUPE"
+                                ]
+                              }
+                            },
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Sand Pot Complete",
+                                  "Sand Pot Complete DUPE"
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Or",
+                          "children": [
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Water Pot Bottom",
+                                  "Water Pot Bottom DUPE",
+                                  "Water Pot Top",
+                                  "Water Pot Top DUPE"
+                                ]
+                              }
+                            },
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Water Pot Complete",
+                                  "Water Pot Complete DUPE"
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Or",
+                          "children": [
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Wax Pot Bottom",
+                                  "Wax Pot Bottom DUPE",
+                                  "Wax Pot Top",
+                                  "Wax Pot Top DUPE"
+                                ]
+                              }
+                            },
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Wax Pot Complete",
+                                  "Wax Pot Complete DUPE"
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "Or",
+                          "children": [
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Wood Pot Bottom",
+                                  "Wood Pot Bottom DUPE",
+                                  "Wood Pot Top",
+                                  "Wood Pot Top DUPE"
+                                ]
+                              }
+                            },
+                            {
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Wood Pot Complete",
+                                  "Wood Pot Complete DUPE"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "early_beth",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_cc": true
+                    }
+                  ]
                 }
               ]
             }
@@ -1936,9 +2642,29 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "oil_capturable",
-                  "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Oil Pot Bottom",
+                          "Oil Pot Bottom DUPE",
+                          "Oil Pot Top",
+                          "Oil Pot Top DUPE"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Oil Pot Complete",
+                          "Oil Pot Complete DUPE"
+                        ]
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -1962,9 +2688,29 @@
             "name": "Storage: Tar River",
             "id": null,
             "access_rule": {
-              "rule": "oil_capturable",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Oil Pot Bottom",
+                      "Oil Pot Bottom DUPE",
+                      "Oil Pot Top",
+                      "Oil Pot Top DUPE"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Oil Pot Complete",
+                      "Oil Pot Complete DUPE"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Wax Pot Bottom DUPE",
@@ -2613,9 +3359,29 @@
             "name": "To Water Capture From Janitor Closet",
             "connected_region": "Water Capture",
             "access_rule": {
-              "rule": "cloth_capturable",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Cloth Pot Bottom",
+                      "Cloth Pot Bottom DUPE",
+                      "Cloth Pot Top",
+                      "Cloth Pot Top DUPE"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Cloth Pot Complete",
+                      "Cloth Pot Complete DUPE"
+                    ]
+                  }
+                }
+              ]
             }
           },
           {
@@ -2631,9 +3397,29 @@
             "name": "Storage: Janitor Closet",
             "id": null,
             "access_rule": {
-              "rule": "cloth_capturable",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Cloth Pot Bottom",
+                      "Cloth Pot Bottom DUPE",
+                      "Cloth Pot Top",
+                      "Cloth Pot Top DUPE"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Cloth Pot Complete",
+                      "Cloth Pot Complete DUPE"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Lightning Pot Bottom DUPE",
@@ -3232,9 +4018,17 @@
             "name": "To Slide Room",
             "connected_region": "Slide Room",
             "access_rule": {
-              "rule": "all_skull_dials_set",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Set Skull Dial: Burial",
+                  "Set Skull Dial: Egypt",
+                  "Set Skull Dial: Gods Room",
+                  "Set Skull Dial: Prehistoric",
+                  "Set Skull Dial: Tar River",
+                  "Set Skull Dial: Werewolf"
+                ]
+              }
             }
           }
         ],
@@ -3257,9 +4051,17 @@
             "name": "Puzzle Solved Skull Dial Door",
             "id": 27023,
             "access_rule": {
-              "rule": "all_skull_dials_set",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Set Skull Dial: Burial",
+                  "Set Skull Dial: Egypt",
+                  "Set Skull Dial: Gods Room",
+                  "Set Skull Dial: Prehistoric",
+                  "Set Skull Dial: Tar River",
+                  "Set Skull Dial: Werewolf"
+                ]
+              }
             },
             "item": {
               "name": "Wax Pot Bottom",
@@ -3302,9 +4104,29 @@
             "name": "Ixupi Captured Water",
             "id": 27040,
             "access_rule": {
-              "rule": "water_capturable",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Water Pot Bottom",
+                      "Water Pot Bottom DUPE",
+                      "Water Pot Top",
+                      "Water Pot Top DUPE"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Water Pot Complete",
+                      "Water Pot Complete DUPE"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Metal Pot Top",
@@ -3325,9 +4147,29 @@
             "name": "Ixupi Captured Wax",
             "id": 27041,
             "access_rule": {
-              "rule": "wax_capturable",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Wax Pot Bottom",
+                      "Wax Pot Bottom DUPE",
+                      "Wax Pot Top",
+                      "Wax Pot Top DUPE"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Wax Pot Complete",
+                      "Wax Pot Complete DUPE"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Key for Library",
@@ -3348,9 +4190,29 @@
             "name": "Ixupi Captured Ash",
             "id": 27042,
             "access_rule": {
-              "rule": "ash_capturable",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Ash Pot Bottom",
+                      "Ash Pot Bottom DUPE",
+                      "Ash Pot Top",
+                      "Ash Pot Top DUPE"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Ash Pot Complete",
+                      "Ash Pot Complete DUPE"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Crystal Pot Bottom",
@@ -3371,9 +4233,29 @@
             "name": "Ixupi Captured Oil",
             "id": 27043,
             "access_rule": {
-              "rule": "oil_capturable",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Oil Pot Bottom",
+                      "Oil Pot Bottom DUPE",
+                      "Oil Pot Top",
+                      "Oil Pot Top DUPE"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Oil Pot Complete",
+                      "Oil Pot Complete DUPE"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Lightning Pot Top",
@@ -3394,9 +4276,29 @@
             "name": "Ixupi Captured Cloth",
             "id": 27044,
             "access_rule": {
-              "rule": "cloth_capturable",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Cloth Pot Bottom",
+                      "Cloth Pot Bottom DUPE",
+                      "Cloth Pot Top",
+                      "Cloth Pot Top DUPE"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Cloth Pot Complete",
+                      "Cloth Pot Complete DUPE"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Water Pot Top",
@@ -3417,9 +4319,29 @@
             "name": "Ixupi Captured Wood",
             "id": 27045,
             "access_rule": {
-              "rule": "wood_capturable",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Wood Pot Bottom",
+                      "Wood Pot Bottom DUPE",
+                      "Wood Pot Top",
+                      "Wood Pot Top DUPE"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Wood Pot Complete",
+                      "Wood Pot Complete DUPE"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Key for Greenhouse",
@@ -3440,9 +4362,29 @@
             "name": "Ixupi Captured Crystal",
             "id": 27046,
             "access_rule": {
-              "rule": "crystal_capturable",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Crystal Pot Bottom",
+                      "Crystal Pot Bottom DUPE",
+                      "Crystal Pot Top",
+                      "Crystal Pot Top DUPE"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Crystal Pot Complete",
+                      "Crystal Pot Complete DUPE"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Wood Pot Bottom",
@@ -3463,9 +4405,29 @@
             "name": "Ixupi Captured Sand",
             "id": 27047,
             "access_rule": {
-              "rule": "sand_capturable",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Sand Pot Bottom",
+                      "Sand Pot Bottom DUPE",
+                      "Sand Pot Top",
+                      "Sand Pot Top DUPE"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Sand Pot Complete",
+                      "Sand Pot Complete DUPE"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Oil Pot Bottom",
@@ -3486,9 +4448,29 @@
             "name": "Ixupi Captured Metal",
             "id": 27048,
             "access_rule": {
-              "rule": "metal_capturable",
-              "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Metal Pot Bottom",
+                      "Metal Pot Bottom DUPE",
+                      "Metal Pot Top",
+                      "Metal Pot Top DUPE"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Metal Pot Complete",
+                      "Metal Pot Complete DUPE"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Lightning Pot Bottom",
@@ -4925,6 +5907,106 @@
         "start_inventory": {},
         "start_location_hints": []
       },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "early_beth": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Early Beth"
+        },
+        "early_lightning": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Early Lightning"
+        },
+        "elevators_stay_solved": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Elevators Stay Solved"
+        },
+        "front_door_usable": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Front Door Usable"
+        },
+        "full_pots": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "pieces",
+            "1": "complete",
+            "2": "mixed"
+          },
+          "default": 0,
+          "display_name": "Full Pots"
+        },
+        "include_information_plaques": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Include Information Plaques"
+        },
+        "ixupi_captures_needed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 10,
+          "default": 10,
+          "display_name": "Number of Ixupi Captures Needed"
+        },
+        "ixupi_captures_priority": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Ixupi Captures are Priority"
+        },
+        "lobby_access": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "early",
+            "2": "local"
+          },
+          "default": 1,
+          "display_name": "Lobby Access"
+        },
+        "location_pot_pieces": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "own_world",
+            "1": "different_world",
+            "2": "any_world"
+          },
+          "default": 2,
+          "display_name": "Location of Pot Pieces"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "puzzle_collect_behavior": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "solve_none",
+            "1": "prevent_out_of_logic_access",
+            "2": "solve_all"
+          },
+          "default": 1,
+          "display_name": "Puzzle Collect Behavior"
+        },
+        "puzzle_hints_required": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Puzzle Hints Required"
+        }
+      },
       "world_directory": "shivers"
     }
   },
@@ -4985,607 +6067,5 @@
       }
     }
   },
-  "helpers": {
-    "1": {
-      "all_skull_dials_set": {
-        "type": "state_method",
-        "method": "has_all",
-        "args": [
-          {
-            "type": "constant",
-            "value": [
-              "Set Skull Dial: Burial",
-              "Set Skull Dial: Egypt",
-              "Set Skull Dial: Gods Room",
-              "Set Skull Dial: Prehistoric",
-              "Set Skull Dial: Tar River",
-              "Set Skull Dial: Werewolf"
-            ]
-          }
-        ]
-      },
-      "ash_capturable": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Ash Pot Bottom"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Ash Pot Bottom DUPE"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Ash Pot Top"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Ash Pot Top DUPE"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Ash Pot Complete"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Ash Pot Complete DUPE"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "beths_body_available": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "first_nine_ixupi_capturable"
-          },
-          {
-            "type": "setting_value",
-            "setting": "early_beth"
-          }
-        ]
-      },
-      "cloth_capturable": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Cloth Pot Bottom"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Cloth Pot Bottom DUPE"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Cloth Pot Top"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Cloth Pot Top DUPE"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Cloth Pot Complete"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Cloth Pot Complete DUPE"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "crystal_capturable": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Crystal Pot Bottom"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Crystal Pot Bottom DUPE"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Crystal Pot Top"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Crystal Pot Top DUPE"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Crystal Pot Complete"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Crystal Pot Complete DUPE"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "first_nine_ixupi_capturable": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "water_capturable"
-          },
-          {
-            "type": "helper",
-            "name": "wax_capturable"
-          },
-          {
-            "type": "helper",
-            "name": "ash_capturable"
-          },
-          {
-            "type": "helper",
-            "name": "oil_capturable"
-          },
-          {
-            "type": "helper",
-            "name": "cloth_capturable"
-          },
-          {
-            "type": "helper",
-            "name": "wood_capturable"
-          },
-          {
-            "type": "helper",
-            "name": "crystal_capturable"
-          },
-          {
-            "type": "helper",
-            "name": "sand_capturable"
-          },
-          {
-            "type": "helper",
-            "name": "metal_capturable"
-          }
-        ]
-      },
-      "lightning_capturable": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "helper",
-                "name": "first_nine_ixupi_capturable"
-              },
-              {
-                "type": "setting_value",
-                "setting": "early_lightning"
-              }
-            ]
-          },
-          {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "state_method",
-                "method": "has_all",
-                "args": [
-                  {
-                    "type": "set",
-                    "elements": [
-                      {
-                        "type": "constant",
-                        "value": "Lightning Pot Bottom"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Lightning Pot Bottom DUPE"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Lightning Pot Top"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Lightning Pot Top DUPE"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "state_method",
-                "method": "has_all",
-                "args": [
-                  {
-                    "type": "set",
-                    "elements": [
-                      {
-                        "type": "constant",
-                        "value": "Lightning Pot Complete"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Lightning Pot Complete DUPE"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "metal_capturable": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Metal Pot Bottom"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Metal Pot Bottom DUPE"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Metal Pot Top"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Metal Pot Top DUPE"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Metal Pot Complete"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Metal Pot Complete DUPE"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "oil_capturable": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Oil Pot Bottom"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Oil Pot Bottom DUPE"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Oil Pot Top"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Oil Pot Top DUPE"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Oil Pot Complete"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Oil Pot Complete DUPE"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "sand_capturable": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Sand Pot Bottom"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Sand Pot Bottom DUPE"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Sand Pot Top"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Sand Pot Top DUPE"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Sand Pot Complete"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Sand Pot Complete DUPE"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "water_capturable": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Water Pot Bottom"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Water Pot Bottom DUPE"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Water Pot Top"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Water Pot Top DUPE"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Water Pot Complete"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Water Pot Complete DUPE"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "wax_capturable": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Wax Pot Bottom"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Wax Pot Bottom DUPE"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Wax Pot Top"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Wax Pot Top DUPE"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Wax Pot Complete"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Wax Pot Complete DUPE"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "wood_capturable": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Wood Pot Bottom"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Wood Pot Bottom DUPE"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Wood Pot Top"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Wood Pot Top DUPE"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "set",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Wood Pot Complete"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Wood Pot Complete DUPE"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    }
-  }
+  "helpers": {}
 }

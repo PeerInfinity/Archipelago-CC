@@ -17,6 +17,33 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Add Secret Lens:                 No
+Mario Sound Effect:              Normal
+Boss Shuffle:                    No
+Bowser's Castle Doors:           Manual
+Bosses Required for 6-8 Clear:   0
+Bosses Required for 6-8 Unlock:  5
+Death Link:                      No
+Disable Autoscrolling:           No
+Include Extra Stages:            No
+Goal:                            Bowser
+Hidden Object Visibility:        Coins Only
+Consumable Logic:                No
+Level Shuffle:                   Disabled
+Amount of Luigi Pieces:          50
+Luigi Pieces Required:           25
+Minigame Reward Checks:          None
+Shuffle Middle Rings:            No
+Softlock Prevention Code:        Yes
+Split Bonus Games:               No
+Split Extra Stages:              No
+Stage Logic:                     Strict
+Starting Life Count:             3
+Starting World:                  World 1
+Trap Chance:                     10
+Traps Enabled:                   No
+Yoshi Colors:                    Normal
+Singularity Yoshi Color:         Green
 
 
 Locations:

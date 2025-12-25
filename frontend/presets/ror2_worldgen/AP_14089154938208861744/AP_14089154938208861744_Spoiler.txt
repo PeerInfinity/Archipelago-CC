@@ -17,6 +17,45 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Newts Per Environment:           1
+Boss Items:                      4
+Chests per Environment:          10
+Combat Trap:                     20
+Common Items:                    64
+Death Link:                      No
+Enable DLC - SOTV:               No
+Enable Lunar Item Shuffling:     Yes
+Enable Trap Items:               No
+Equipment:                       32
+1000 Exp:                        40
+Final Stage Death is Win:        No
+Game Mode:                       Explore
+Green Scraps:                    16
+Item Pickup Step:                1
+Use Item Weight Presets:         No
+Item Weights:                    Default
+Legendary Items:                 8
+Lunar Coins:                     20
+Lunar Items:                     16
+Money:                           64
+Mountain Trap:                   5
+Progressive Stages:              Yes
+Red Scraps:                      4
+Require Stages:                  Yes
+Radio Scanners per Environment:  1
+Scavenger per Environment:       0
+Shrine use Step:                 0
+Shrines per Environment:         5
+Start with a Revive:             Yes
+Teleport Trap:                   20
+Time Warp Trap:                  20
+Total Locations:                 40
+Total Revives as percentage:     4
+Uncommon Items:                  32
+Victory Condition:               Any
+Void Items:                      16
+White Scraps:                    32
+Yellow Scraps:                   1
 
 
 Starting Items:

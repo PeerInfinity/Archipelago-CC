@@ -5420,6 +5420,295 @@
         "white_scrap": 32,
         "yellow_scrap": 1
       },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "altars_per_stage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 2,
+          "default": 1,
+          "display_name": "Newts Per Environment"
+        },
+        "boss_item": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 4,
+          "display_name": "Boss Items"
+        },
+        "chests_per_stage": {
+          "type": "range",
+          "range_start": 2,
+          "range_end": 20,
+          "default": 10,
+          "display_name": "Chests per Environment"
+        },
+        "combat_trap": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 20,
+          "display_name": "Combat Trap"
+        },
+        "common_item": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 64,
+          "display_name": "Common Items"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "dlc_sotv": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Enable DLC - SOTV"
+        },
+        "enable_lunar": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Enable Lunar Item Shuffling"
+        },
+        "enable_trap": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Enable Trap Items"
+        },
+        "equipment": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 32,
+          "display_name": "Equipment"
+        },
+        "experience": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 40,
+          "display_name": "1000 Exp"
+        },
+        "final_stage_death": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Final Stage Death is Win"
+        },
+        "goal": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "classic",
+            "1": "explore"
+          },
+          "default": 1,
+          "display_name": "Game Mode"
+        },
+        "green_scrap": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 16,
+          "display_name": "Green Scraps"
+        },
+        "item_pickup_step": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 5,
+          "default": 1,
+          "display_name": "Item Pickup Step"
+        },
+        "item_pool_presets": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Use Item Weight Presets"
+        },
+        "item_weights": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "1": "new",
+            "2": "uncommon",
+            "3": "legendary",
+            "4": "chaos",
+            "5": "no_scraps",
+            "6": "even",
+            "7": "scraps_only",
+            "8": "lunartic",
+            "9": "void"
+          },
+          "default": 0,
+          "display_name": "Item Weights"
+        },
+        "legendary_item": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 8,
+          "display_name": "Legendary Items"
+        },
+        "lunar_coin": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 20,
+          "display_name": "Lunar Coins"
+        },
+        "lunar_item": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 16,
+          "display_name": "Lunar Items"
+        },
+        "money": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 64,
+          "display_name": "Money"
+        },
+        "mountain_trap": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 5,
+          "display_name": "Mountain Trap"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "progressive_stages": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Progressive Stages"
+        },
+        "red_scrap": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 4,
+          "display_name": "Red Scraps"
+        },
+        "require_stages": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Require Stages"
+        },
+        "scanner_per_stage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 1,
+          "default": 1,
+          "display_name": "Radio Scanners per Environment"
+        },
+        "scavengers_per_stage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 1,
+          "default": 0,
+          "display_name": "Scavenger per Environment"
+        },
+        "shrine_use_step": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 3,
+          "default": 0,
+          "display_name": "Shrine use Step"
+        },
+        "shrines_per_stage": {
+          "type": "range",
+          "range_start": 2,
+          "range_end": 20,
+          "default": 5,
+          "display_name": "Shrines per Environment"
+        },
+        "start_with_revive": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Start with a Revive"
+        },
+        "teleport_trap": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 20,
+          "display_name": "Teleport Trap"
+        },
+        "time_warp_trap": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 20,
+          "display_name": "Time Warp Trap"
+        },
+        "total_locations": {
+          "type": "range",
+          "range_start": 40,
+          "range_end": 250,
+          "default": 40,
+          "display_name": "Total Locations"
+        },
+        "total_revivals": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 4,
+          "display_name": "Total Revives as percentage"
+        },
+        "uncommon_item": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 32,
+          "display_name": "Uncommon Items"
+        },
+        "victory": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "any",
+            "1": "mithrix",
+            "2": "voidling",
+            "3": "limbo"
+          },
+          "default": 0,
+          "display_name": "Victory Condition"
+        },
+        "void_item": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 16,
+          "display_name": "Void Items"
+        },
+        "white_scrap": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 32,
+          "display_name": "White Scraps"
+        },
+        "yellow_scrap": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 1,
+          "display_name": "Yellow Scraps"
+        }
+      },
       "world_directory": "ror2"
     }
   },

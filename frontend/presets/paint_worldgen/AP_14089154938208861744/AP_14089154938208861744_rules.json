@@ -3374,8 +3374,12 @@
       "use_resolved_items": false,
       "options": {
         "accessibility": "full",
-        "canvas_size_increment": 100,
+        "canvas_size_increment": "100",
+        "death_link": "false",
         "exclude_locations": [],
+        "goal_image": 1,
+        "goal_percent": 80,
+        "half_percent_checks": 50,
         "item_links": [],
         "local_items": [],
         "logic_percent": 80,
@@ -3383,10 +3387,108 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
+        "quarter_percent_checks": 70,
         "randomize_items": "false",
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "starting_tool": "brush",
+        "trap_count": 0
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "canvas_size_increment": {
+          "type": "choice",
+          "name_lookup": {
+            "25": "25",
+            "50": "50",
+            "100": "100"
+          },
+          "default": 100,
+          "display_name": "Canvas Size Increment"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "goal_image": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 1,
+          "default": 1,
+          "display_name": "Goal Image"
+        },
+        "goal_percent": {
+          "type": "range",
+          "range_start": 50,
+          "range_end": 95,
+          "default": 80,
+          "display_name": "Goal Percent"
+        },
+        "half_percent_checks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 95,
+          "default": 50,
+          "display_name": "Half Percent Checks"
+        },
+        "logic_percent": {
+          "type": "range",
+          "range_start": 50,
+          "range_end": 95,
+          "default": 80,
+          "display_name": "Logic Percent"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "quarter_percent_checks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 95,
+          "default": 70,
+          "display_name": "Quarter Percent Checks"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "starting_tool": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "brush",
+            "1": "pencil",
+            "2": "eraser",
+            "3": "airbrush",
+            "4": "line",
+            "5": "rectangle",
+            "6": "ellipse",
+            "7": "rounded_rectangle"
+          },
+          "default": 0,
+          "display_name": "Starting Tool"
+        },
+        "trap_count": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 0,
+          "display_name": "Trap Fill Percent"
+        }
       },
       "canvas_size_increment": 100,
       "logic_percent": 80,

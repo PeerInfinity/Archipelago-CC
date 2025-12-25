@@ -17,6 +17,16 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Ace Weapon Upgrade:              Always Upgraded
+Cliff Weapon Upgrade:            Always Upgraded
+Death Link:                      No
+Expanded Item Pool:              Yes
+IFrame Duration %:               100
+Instant Saving:                  Yes
+Music Shuffle:                   No
+Screen Shake Intensity %:        50
+Sprint Availability:             Available With Jacket
+Trap Chance:                     50
 
 
 Locations:

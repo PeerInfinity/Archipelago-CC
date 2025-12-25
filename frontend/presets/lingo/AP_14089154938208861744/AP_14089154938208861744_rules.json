@@ -20912,6 +20912,169 @@
         },
         "victory_condition": "the_end"
       },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "early_color_hallways": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Early Color Hallways"
+        },
+        "enable_pilgrimage": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Enable Pilgrimage"
+        },
+        "group_doors": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Group Doors"
+        },
+        "level_2_requirement": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 800,
+          "default": 223,
+          "display_name": "Level 2 Requirement"
+        },
+        "location_checks": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "reduced",
+            "2": "insanity"
+          },
+          "default": 0,
+          "display_name": "Location Checks"
+        },
+        "mastery_achievements": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 24,
+          "default": 21,
+          "display_name": "Mastery Achievements"
+        },
+        "pilgrimage_allows_paintings": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Allow Paintings for Pilgrimage"
+        },
+        "pilgrimage_allows_roof_access": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Allow Roof Access for Pilgrimage"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "progressive_colorful": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Progressive Colorful"
+        },
+        "progressive_orange_tower": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Progressive Orange Tower"
+        },
+        "puzzle_skip_percentage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 20,
+          "display_name": "Puzzle Skip Percentage"
+        },
+        "shuffle_colors": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Shuffle Colors"
+        },
+        "shuffle_doors": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "panels",
+            "2": "doors"
+          },
+          "default": 0,
+          "display_name": "Shuffle Doors"
+        },
+        "shuffle_paintings": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Paintings"
+        },
+        "shuffle_panels": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "rearrange"
+          },
+          "default": 0,
+          "display_name": "Shuffle Panels"
+        },
+        "shuffle_postgame": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Postgame"
+        },
+        "shuffle_sunwarps": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Sunwarps"
+        },
+        "speed_boost_mode": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Speed Boost Mode"
+        },
+        "sunwarp_access": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "disabled",
+            "2": "unlock",
+            "3": "individual",
+            "4": "progressive"
+          },
+          "default": 0,
+          "display_name": "Sunwarp Access"
+        },
+        "trap_percentage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 20,
+          "display_name": "Trap Percentage"
+        },
+        "victory_condition": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "the_end",
+            "1": "the_master",
+            "2": "level_2",
+            "3": "pilgrimage"
+          },
+          "default": 0,
+          "display_name": "Victory Condition"
+        }
+      },
       "shuffle_colors": 1,
       "shuffle_doors": 0,
       "shuffle_panels": 0,

@@ -38,5 +38,105 @@
     "start_inventory": {},
     "start_location_hints": []
   },
+  "option_definitions": {
+    "accessibility": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "full",
+        "2": "minimal"
+      },
+      "default": 0,
+      "display_name": "Accessibility"
+    },
+    "early_beth": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Early Beth"
+    },
+    "early_lightning": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Early Lightning"
+    },
+    "elevators_stay_solved": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Elevators Stay Solved"
+    },
+    "front_door_usable": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Front Door Usable"
+    },
+    "full_pots": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "pieces",
+        "1": "complete",
+        "2": "mixed"
+      },
+      "default": 0,
+      "display_name": "Full Pots"
+    },
+    "include_information_plaques": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Include Information Plaques"
+    },
+    "ixupi_captures_needed": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 10,
+      "default": 10,
+      "display_name": "Number of Ixupi Captures Needed"
+    },
+    "ixupi_captures_priority": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Ixupi Captures are Priority"
+    },
+    "lobby_access": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "normal",
+        "1": "early",
+        "2": "local"
+      },
+      "default": 1,
+      "display_name": "Lobby Access"
+    },
+    "location_pot_pieces": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "own_world",
+        "1": "different_world",
+        "2": "any_world"
+      },
+      "default": 2,
+      "display_name": "Location of Pot Pieces"
+    },
+    "progression_balancing": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 99,
+      "default": 50,
+      "display_name": "Progression Balancing"
+    },
+    "puzzle_collect_behavior": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "solve_none",
+        "1": "prevent_out_of_logic_access",
+        "2": "solve_all"
+      },
+      "default": 1,
+      "display_name": "Puzzle Collect Behavior"
+    },
+    "puzzle_hints_required": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Puzzle Hints Required"
+    }
+  },
   "world_directory": "shivers"
 }

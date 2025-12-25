@@ -56,6 +56,10 @@
       "reason": "Temporarily excluded. There is a recursion issue in the exporter that makes it never stop writing to the output file."
     },
     {
+      "name": "Yacht Dice.yaml",
+      "reason": "Temporarily excluded. It currently times out the multiworld test."
+    },
+    {
       "name": "Yu-Gi-Oh! 2006.yaml",
       "reason": "Temporarily excluded. It takes too long to process. 161 seconds for the spoiler test."
     }

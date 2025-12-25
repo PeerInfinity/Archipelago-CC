@@ -7123,6 +7123,29 @@
         "start_inventory": {},
         "start_location_hints": []
       },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        }
+      },
       "world_directory": "raft_worldgen"
     }
   },
@@ -7170,8 +7193,92 @@
             ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_access_radio_tower"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              }
+            ]
           }
         ]
       },
@@ -7179,12 +7286,177 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_navigate"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_drive"
+            "type": "or",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "bool",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 0
+                  }
+                ]
+              }
+            ]
           },
           {
             "type": "constant",
@@ -7196,12 +7468,177 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_navigate"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_drive"
+            "type": "or",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "bool",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 0
+                  }
+                ]
+              }
+            ]
           },
           {
             "type": "constant",
@@ -7210,19 +7647,268 @@
         ]
       },
       "raft_can_access_radio_tower": {
-        "type": "helper",
-        "name": "raft_can_navigate"
+        "type": "and",
+        "conditions": [
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
+          }
+        ]
       },
       "raft_can_access_tangaroa": {
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_navigate"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_drive"
+            "type": "or",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "bool",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 0
+                  }
+                ]
+              }
+            ]
           },
           {
             "type": "constant",
@@ -7234,12 +7920,177 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_navigate"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_drive"
+            "type": "or",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "bool",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 0
+                  }
+                ]
+              }
+            ]
           },
           {
             "type": "constant",
@@ -7251,48 +8102,1302 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_navigate"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_drive"
+            "type": "or",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "bool",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 0
+                  }
+                ]
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_access_radio_tower"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_access_vasagatan"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_access_balboa_island"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "helper",
+                    "name": "bool",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": 0
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_access_caravan_island"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "helper",
+                    "name": "bool",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": 0
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_access_tangaroa"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "helper",
+                    "name": "bool",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": 0
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_access_varuna_point"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "helper",
+                    "name": "bool",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": 0
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_access_temperance"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "helper",
+                    "name": "bool",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": 0
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
             "type": "constant",
             "value": true
           },
           {
-            "type": "helper",
-            "name": "raft_can_craft_shovel"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              }
+            ]
           }
         ]
       },
@@ -7300,12 +9405,177 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_navigate"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_drive"
+            "type": "or",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "bool",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 0
+                  }
+                ]
+              }
+            ]
           },
           {
             "type": "constant",
@@ -7317,8 +9587,92 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_navigate"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              }
+            ]
           },
           {
             "type": "constant",
@@ -7330,33 +9684,399 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_craft_netLauncher"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_craft_netCanister"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_craft_grassPlot"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "helper",
+                        "name": "bool",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": 0
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "and",
+                                "conditions": [
+                                  {
+                                    "type": "constant",
+                                    "value": true
+                                  },
+                                  {
+                                    "type": "constant",
+                                    "value": true
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "and",
+                                "conditions": [
+                                  {
+                                    "type": "constant",
+                                    "value": true
+                                  },
+                                  {
+                                    "type": "constant",
+                                    "value": true
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "and",
+                                "conditions": [
+                                  {
+                                    "type": "constant",
+                                    "value": true
+                                  },
+                                  {
+                                    "type": "constant",
+                                    "value": true
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "and",
+                                "conditions": [
+                                  {
+                                    "type": "constant",
+                                    "value": true
+                                  },
+                                  {
+                                    "type": "constant",
+                                    "value": true
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           }
         ]
       },
       "raft_can_complete_temperance": {
-        "type": "helper",
-        "name": "raft_can_access_temperance"
+        "type": "and",
+        "conditions": [
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "bool",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "constant",
+            "value": true
+          }
+        ]
       },
       "raft_can_craft_antenna": {
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_craft_circuitBoard"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_craft_bolt"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
             "type": "constant",
@@ -7368,8 +10088,8 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
+            "type": "constant",
+            "value": true
           },
           {
             "type": "constant",
@@ -7385,8 +10105,8 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
+            "type": "constant",
+            "value": true
           },
           {
             "type": "constant",
@@ -7398,8 +10118,8 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
+            "type": "constant",
+            "value": true
           },
           {
             "type": "constant",
@@ -7411,12 +10131,21 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
+            "type": "constant",
+            "value": true
           },
           {
-            "type": "helper",
-            "name": "raft_can_craft_circuitBoard"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
             "type": "constant",
@@ -7428,8 +10157,138 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_get_dirt"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "helper",
+                    "name": "bool",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "constant",
+                                "value": true
+                              }
+                            ]
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           },
           {
             "type": "constant",
@@ -7441,8 +10300,8 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
+            "type": "constant",
+            "value": true
           },
           {
             "type": "constant",
@@ -7454,12 +10313,21 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
+            "type": "constant",
+            "value": true
           },
           {
-            "type": "helper",
-            "name": "raft_can_craft_bolt"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
             "type": "constant",
@@ -7471,8 +10339,8 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
+            "type": "constant",
+            "value": true
           },
           {
             "type": "constant",
@@ -7484,12 +10352,21 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
+            "type": "constant",
+            "value": true
           },
           {
-            "type": "helper",
-            "name": "raft_can_craft_bolt"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
             "type": "constant",
@@ -7501,8 +10378,8 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
+            "type": "constant",
+            "value": true
           },
           {
             "type": "constant",
@@ -7514,12 +10391,30 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_craft_circuitBoard"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_craft_hinge"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
             "type": "constant",
@@ -7531,12 +10426,21 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
+            "type": "constant",
+            "value": true
           },
           {
-            "type": "helper",
-            "name": "raft_can_craft_hinge"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
             "type": "constant",
@@ -7548,16 +10452,25 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
+            "type": "constant",
+            "value": true
           },
           {
             "type": "constant",
             "value": true
           },
           {
-            "type": "helper",
-            "name": "raft_can_craft_bolt"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           }
         ]
       },
@@ -7565,16 +10478,34 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
+            "type": "constant",
+            "value": true
           },
           {
-            "type": "helper",
-            "name": "raft_can_craft_bolt"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_craft_hinge"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
             "type": "constant",
@@ -7586,12 +10517,30 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_craft_hinge"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_craft_bolt"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
             "type": "constant",
@@ -7606,18 +10555,81 @@
             "type": "and",
             "conditions": [
               {
-                "type": "helper",
-                "name": "raft_can_craft_engine"
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
               },
               {
-                "type": "helper",
-                "name": "raft_can_craft_steeringWheel"
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
               }
             ]
           },
           {
             "type": "helper",
-            "name": "raft_paddleboard_mode_enabled"
+            "name": "bool",
+            "args": [
+              {
+                "type": "constant",
+                "value": 0
+              }
+            ]
           }
         ]
       },
@@ -7629,12 +10641,43 @@
             "value": true
           },
           {
-            "type": "helper",
-            "name": "raft_can_craft_battery"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_craft_shovel"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              }
+            ]
           }
         ]
       },
@@ -7642,12 +10685,133 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_craft_shovel"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_big_islands_available"
+            "type": "or",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "bool",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 0
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "constant",
+                        "value": true
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "constant",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           }
         ]
       },
@@ -7655,16 +10819,87 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "raft_can_craft_battery"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "constant",
+                "value": true
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_craft_reciever"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           },
           {
-            "type": "helper",
-            "name": "raft_can_craft_antenna"
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": true
+                  },
+                  {
+                    "type": "constant",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "type": "constant",
+                "value": true
+              }
+            ]
           }
         ]
       },

@@ -31885,6 +31885,549 @@
         "unskippable": "true",
         "warp_anywhere": "false"
       },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "accessory_slot_increase": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 6,
+          "default": 1,
+          "display_name": "Accessory Slot Increases"
+        },
+        "ap_increase": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 18,
+          "display_name": "AP Increases"
+        },
+        "atlantica": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Atlantica"
+        },
+        "auto_attack": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Auto Attack"
+        },
+        "auto_save": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "AutoSave"
+        },
+        "bad_starting_weapons": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Bad Starting Weapons"
+        },
+        "beep_hack": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Beep Hack"
+        },
+        "consistent_finishers": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Consistent Finishers"
+        },
+        "cups": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "cups",
+            "2": "hades_cup"
+          },
+          "default": 0,
+          "display_name": "Cups"
+        },
+        "day_2_materials": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 4,
+          "display_name": "Day 2 Materials"
+        },
+        "death_link": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "toggle",
+            "2": "on"
+          },
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "defense_increase": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 24,
+          "display_name": "DEF Increases"
+        },
+        "destiny_islands": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Destiny Islands"
+        },
+        "donald_death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Donald Death Link"
+        },
+        "early_skip": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Early Skip"
+        },
+        "end_of_the_world_unlock": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "item",
+            "1": "lucky_emblems"
+          },
+          "default": 1,
+          "display_name": "End of the World Unlock"
+        },
+        "exp_multiplier": {
+          "type": "range",
+          "range_start": 4,
+          "range_end": 128,
+          "default": 64,
+          "display_name": "EXP Multiplier"
+        },
+        "exp_zero_in_pool": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "EXP Zero in Pool"
+        },
+        "extra_shared_abilities": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Extra Shared Abilities"
+        },
+        "fast_camera": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Fast Camera"
+        },
+        "faster_animations": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Faster Animations"
+        },
+        "final_rest_door_key": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "sephiroth",
+            "1": "unknown",
+            "2": "postcards",
+            "3": "lucky_emblems",
+            "4": "puppies",
+            "5": "final_rest"
+          },
+          "default": 3,
+          "display_name": "Final Rest Door Key"
+        },
+        "force_stats_on_levels": {
+          "type": "range",
+          "range_start": 2,
+          "range_end": 101,
+          "default": 2,
+          "display_name": "Force Stats on Level Starting From"
+        },
+        "four_by_three": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "4 by 3"
+        },
+        "goofy_death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Goofy Death Link"
+        },
+        "halloween_town_key_item_bundle": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Halloween Town Key Item Bundle"
+        },
+        "homecoming_materials": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 10,
+          "display_name": "Homecoming Materials"
+        },
+        "hp_increase": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 23,
+          "display_name": "HP Increases"
+        },
+        "hundred_acre_wood": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "100 Acre Wood"
+        },
+        "interact_in_battle": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Interact in Battle"
+        },
+        "item_slot_increase": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 5,
+          "default": 3,
+          "display_name": "Item Slot Increases"
+        },
+        "jungle_slider": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Jungle Slider"
+        },
+        "keyblade_max_crit_rate": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 200,
+          "default": 200,
+          "display_name": "Keyblade Maximum Crit Rate Bonus"
+        },
+        "keyblade_max_crit_str": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 16,
+          "default": 16,
+          "display_name": "Keyblade Maximum Crit Rate Bonus"
+        },
+        "keyblade_max_mp": {
+          "type": "range",
+          "range_start": -2,
+          "range_end": 5,
+          "default": 3,
+          "display_name": "Keyblade Maximum MP Bonus"
+        },
+        "keyblade_max_recoil": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 90,
+          "default": 90,
+          "display_name": "Keyblade Maximum Recoil"
+        },
+        "keyblade_max_str": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 14,
+          "display_name": "Keyblade Maximum STR Bonus"
+        },
+        "keyblade_min_crit_rate": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 200,
+          "default": 0,
+          "display_name": "Keyblade Minimum Crit Rate Bonus"
+        },
+        "keyblade_min_crit_str": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 16,
+          "default": 0,
+          "display_name": "Keyblade Minimum Crit Rate Bonus"
+        },
+        "keyblade_min_mp": {
+          "type": "range",
+          "range_start": -2,
+          "range_end": 5,
+          "default": -2,
+          "display_name": "Keyblade Minimum MP Bonus"
+        },
+        "keyblade_min_recoil": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 90,
+          "default": 1,
+          "display_name": "Keyblade Minimum Recoil"
+        },
+        "keyblade_min_str": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 3,
+          "display_name": "Keyblade Minimum STR Bonus"
+        },
+        "keyblade_stats": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "randomize",
+            "1": "shuffle",
+            "2": "vanilla"
+          },
+          "default": 0,
+          "display_name": "Keyblade Stats"
+        },
+        "keyblades_unlock_chests": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Keyblades Unlock Chests"
+        },
+        "level_checks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 99,
+          "display_name": "Level Checks"
+        },
+        "logic_difficulty": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "beginner",
+            "5": "normal",
+            "10": "proud",
+            "15": "minimal"
+          },
+          "default": 5,
+          "display_name": "Logic Difficulty"
+        },
+        "lucky_emblems_in_pool": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 13,
+          "display_name": "Lucky Emblems in Pool"
+        },
+        "materials_in_pool": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 16,
+          "display_name": "Materials in Pool"
+        },
+        "max_ap_cost": {
+          "type": "range",
+          "range_start": 4,
+          "range_end": 9,
+          "default": 5,
+          "display_name": "Max AP Cost"
+        },
+        "max_level_for_slot_2_level_checks": {
+          "type": "range",
+          "range_start": 2,
+          "range_end": 100,
+          "default": 50,
+          "display_name": "Max Level for Slot 2 Level Checks"
+        },
+        "min_ap_cost": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 2,
+          "default": 0,
+          "display_name": "Min AP Cost"
+        },
+        "mp_increase": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 7,
+          "display_name": "MP Increases"
+        },
+        "mythril_in_pool": {
+          "type": "range",
+          "range_start": 16,
+          "range_end": 30,
+          "default": 20,
+          "display_name": "Mythril In Pool"
+        },
+        "mythril_price": {
+          "type": "range",
+          "range_start": 100,
+          "range_end": 5000,
+          "default": 500,
+          "display_name": "Mythril Price"
+        },
+        "one_hp": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "One HP"
+        },
+        "orichalcum_in_pool": {
+          "type": "range",
+          "range_start": 17,
+          "range_end": 30,
+          "default": 20,
+          "display_name": "Orichalcum In Pool"
+        },
+        "orichalcum_price": {
+          "type": "range",
+          "range_start": 100,
+          "range_end": 5000,
+          "default": 500,
+          "display_name": "Orichalcum Price"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "puppy_value": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 99,
+          "default": 3,
+          "display_name": "Puppy Value"
+        },
+        "randomize_ap_costs": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "shuffle",
+            "2": "randomize",
+            "3": "distribute"
+          },
+          "default": 0,
+          "display_name": "Randomize AP Costs"
+        },
+        "randomize_emblem_pieces": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Emblem Pieces"
+        },
+        "randomize_party_member_starting_accessories": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Randomize Party Member Starting Accessories"
+        },
+        "randomize_postcards": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "all",
+            "1": "chests",
+            "2": "vanilla"
+          },
+          "default": 0,
+          "display_name": "Randomize Postcards"
+        },
+        "randomize_puppies": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Randomize Puppies"
+        },
+        "remote_items": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "allow",
+            "2": "full"
+          },
+          "default": 0,
+          "display_name": "Remote Items"
+        },
+        "required_lucky_emblems_door": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 10,
+          "display_name": "Lucky Emblems to Open Final Rest Door"
+        },
+        "required_lucky_emblems_eotw": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 7,
+          "display_name": "Lucky Emblems to Open End of the World"
+        },
+        "required_postcards": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 10,
+          "default": 8,
+          "display_name": "Required Postcards"
+        },
+        "required_puppies": {
+          "type": "choice",
+          "name_lookup": {
+            "10": "10",
+            "20": "20",
+            "30": "30",
+            "40": "40",
+            "50": "50",
+            "60": "60",
+            "70": "70",
+            "80": "80",
+            "90": "90",
+            "99": "99"
+          },
+          "default": 80,
+          "display_name": "Required Puppies"
+        },
+        "shorten_go_mode": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Shorten Go Mode"
+        },
+        "slot_2_level_checks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 33,
+          "default": 0,
+          "display_name": "Slot 2 Level Checks"
+        },
+        "stacking_world_items": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Stacking World Items"
+        },
+        "starting_tools": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Starting Tools"
+        },
+        "starting_worlds": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 4,
+          "display_name": "Starting Worlds"
+        },
+        "strength_increase": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 24,
+          "display_name": "STR Increases"
+        },
+        "super_bosses": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Super Bosses"
+        },
+        "unlock_0_volume": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Unlock 0 Volume"
+        },
+        "unskippable": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Unskippable"
+        },
+        "warp_anywhere": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "WarpAnywhere"
+        }
+      },
       "end_of_the_world_unlock": 1,
       "super_bosses": 0,
       "atlantica": 0,
