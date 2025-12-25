@@ -407,6 +407,17 @@ export function createStateSnapshotInterface(
             }
           };
 
+          // Merge in world_attributes (computed runtime values like difficulty_requirements, required_medallions)
+          // These are accessed via world.difficulty_requirements, world.required_medallions, etc.
+          if (staticData?.world_attributes) {
+            let worldAttrs = staticData.world_attributes;
+            // Check if world_attributes is keyed by player ID
+            if (worldAttrs[playerId] && typeof worldAttrs[playerId] === 'object') {
+              worldAttrs = worldAttrs[playerId];
+            }
+            Object.assign(worldObj, worldAttrs);
+          }
+
           // Merge in game-specific properties from game_info
           // For AHIT: hat_yarn_costs, hat_craft_order come from hat_info
           if (gameInfo.hat_info) {

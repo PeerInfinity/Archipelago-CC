@@ -481,6 +481,17 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
           item_name_groups: itemNameGroups
         };
 
+        // Merge in world_attributes (computed runtime values like difficulty_requirements, required_medallions)
+        // These are accessed via world.difficulty_requirements, world.required_medallions, etc.
+        if (sm.rules?.world_attributes) {
+          let worldAttrs = sm.rules.world_attributes;
+          // Check if world_attributes is keyed by player ID
+          if (worldAttrs[playerIdKey] && typeof worldAttrs[playerIdKey] === 'object') {
+            worldAttrs = worldAttrs[playerIdKey];
+          }
+          Object.assign(worldObj, worldAttrs);
+        }
+
         // Merge in game-specific properties from game_info
         // For AHIT: hat_yarn_costs, hat_craft_order come from hat_info
         if (gameInfo.hat_info) {
