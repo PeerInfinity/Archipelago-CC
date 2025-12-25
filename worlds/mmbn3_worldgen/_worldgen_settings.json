@@ -19,50 +19,5 @@
     "start_location_hints": [],
     "trade_quest_hinting": "full"
   },
-  "option_definitions": {
-    "accessibility": {
-      "type": "choice",
-      "name_lookup": {
-        "0": "full",
-        "2": "minimal"
-      },
-      "default": 0,
-      "display_name": "Accessibility"
-    },
-    "extra_ranks": {
-      "type": "range",
-      "range_start": 0,
-      "range_end": 16,
-      "default": 0,
-      "display_name": "Extra Undernet Ranks"
-    },
-    "include_jobs": {
-      "type": "default_on_toggle",
-      "default": 1,
-      "display_name": "Include Jobs"
-    },
-    "include_secret": {
-      "type": "toggle",
-      "default": 0,
-      "display_name": "Include Secret Area"
-    },
-    "progression_balancing": {
-      "type": "range",
-      "range_start": 0,
-      "range_end": 99,
-      "default": 50,
-      "display_name": "Progression Balancing"
-    },
-    "trade_quest_hinting": {
-      "type": "choice",
-      "name_lookup": {
-        "0": "none",
-        "1": "partial",
-        "2": "full"
-      },
-      "default": 2,
-      "display_name": "Trade Quest Hinting"
-    }
-  },
   "world_directory": "mmbn3"
 }

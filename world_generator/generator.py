@@ -150,6 +150,9 @@ class WorldGenerator:
             source_json = json.load(f)
         source_settings = source_json.get('settings', {}).get('1', {})
         if source_settings:
+            # Remove option_definitions - it's redundant since the exporter extracts
+            # option definitions from the worldgen world's Options.py at export time
+            source_settings = {k: v for k, v in source_settings.items() if k != 'option_definitions'}
             settings_path = output_dir / '_worldgen_settings.json'
             if not dry_run:
                 settings_path.write_text(json.dumps(source_settings, indent=2))

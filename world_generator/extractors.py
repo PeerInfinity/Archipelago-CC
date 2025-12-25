@@ -852,6 +852,10 @@ def extract_world_attributes(json_data: Dict[str, Any]) -> Dict[str, Any]:
     as instance attributes. For example, A Hat in Time has hat_info containing
     hat_yarn_costs and hat_craft_order.
 
+    Also extracts game-specific computed settings from the settings block that
+    need to be available as world attributes at runtime (e.g., difficulty_requirements,
+    shop_items for ALTTP).
+
     Returns:
         Dict of attribute_name -> attribute_value
     """
@@ -871,6 +875,39 @@ def extract_world_attributes(json_data: Dict[str, Any]) -> Dict[str, Any]:
         # hat_craft_order is already a list of integers
         hat_craft_order = hat_info.get('hat_craft_order', [])
         world_attributes['hat_craft_order'] = hat_craft_order
+
+    # Extract game-specific computed settings that need to be world attributes
+    # These are settings that are accessed by helpers as world.X
+    # (e.g., world.difficulty_requirements, world.shop_items)
+    settings = json_data.get('settings', {}).get('1', {})
+
+    # Settings to skip (internal/structural settings, not world attributes)
+    skip_settings = {
+        'game',
+        'options',
+        'option_definitions',
+        'world_directory',
+        'assume_bidirectional_exits',
+        'use_resolved_items',
+        'use_auto_indirect_conditions',
+    }
+
+    for key, value in settings.items():
+        if key in skip_settings:
+            continue
+        # Only include complex types (dicts, lists) or specific primitives
+        # that are likely game-specific computed attributes
+        if isinstance(value, (dict, list)):
+            world_attributes[key] = value
+        elif isinstance(value, bool) and key not in {'death_link'}:
+            # Include booleans that aren't common options
+            world_attributes[key] = value
+        elif isinstance(value, (int, float)) and not isinstance(value, bool):
+            # Include numeric values (these are often computed limits/requirements)
+            world_attributes[key] = value
+        elif isinstance(value, str) and key not in {'game'}:
+            # Include string values (like medallion names)
+            world_attributes[key] = value
 
     return world_attributes
 
