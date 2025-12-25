@@ -17,6 +17,15 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Calamity Mod Integration:        No
+Death Link:                      No
+Early Pre-Hardmode Achievements: Yes
+Fill Extra Checks With:          Useful Items
+Fishing Quest Achievements:      No
+"getfixedboi" Seed:              No
+Goal:                            Mechanical Bosses
+Grindy Achievements:             No
+Normal Achievements:             Yes
 
 
 Locations:
