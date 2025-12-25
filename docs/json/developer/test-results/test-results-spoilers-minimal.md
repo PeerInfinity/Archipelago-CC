@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-25 03:31:47
+**Generated:** 2025-12-25 06:30:35
 
-**Source Data Created:** 2025-12-25T00:07:54.404908
+**Source Data Created:** 2025-12-25T05:46:38.770756
 
-**Source Data Last Updated:** 2025-12-25T00:07:54.404913
+**Source Data Last Updated:** 2025-12-25T05:46:38.770761
 
 ## Summary
 
-- **Total Games:** 73
-- **Passed:** 71 (97.3%)
-- **Failed:** 2 (2.7%)
-- **Games with Intermittent Failures:** 0
-- **Total Intermittent Failures:** 0
+- **Total Games:** 72
+- **Passed:** 72 (100.0%)
+- **Failed:** 0 (0.0%)
+- **Games with Intermittent Failures:** 2
+- **Total Intermittent Failures:** 2
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/71 (40.8% of passed)
-- **Passing with Generic Logic:** 62/71 (87.3% of passed)
-- **Passing with Both Generic:** 29/71 (40.8% of passed)
+- **Passing with Generic Exporter:** 29/72 (40.3% of passed)
+- **Passing with Generic Logic:** 64/72 (88.9% of passed)
+- **Passing with Both Generic:** 29/72 (40.3% of passed)
 
 ## Test Results
 
@@ -36,7 +36,7 @@
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Aquaria | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 3.3KB | ✅ |
-| Bomb Rush Cyberfunk | ❌ Failed | 0 | 0 | 10.9 | 🔴 0.0% | 1.5KB | 40.3KB |
+| Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.9 | 10.9 | 🟢 Complete | 2.0KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | 0 | 4.4 | 4.4 | 🟢 Complete | 16.3KB | ✅ |
 | Castlevania 64 | ✅ Passed | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ✅ |
@@ -83,7 +83,7 @@
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 53.3KB | 86.3KB |
 | Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 20.9KB | 10.7KB |
-| Subnautica | ❌ Failed | 0 | 0 | 6.1 | 🔴 0.0% | 6.9KB | ✅ |
+| Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 7.5KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 13.9KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
@@ -100,9 +100,18 @@
 | VVVVVV | ✅ Passed | 0 | 2.4 | 2.4 | 🟢 Complete | 5.4KB | ✅ |
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 9.3KB | ✅ |
 | WebDevJourney | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
-| Yacht Dice | ✅ Passed | 0 | 21.1 | 21.1 | 🟢 Complete | 0.9KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 11.7KB | ✅ |
 | shapez | ✅ Passed | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
+
+## Intermittent Failures
+
+These seeds were previously failing but passed during a retest run:
+
+| Template | Seed | Timestamp | Notes |
+|----------|------|-----------|-------|
+| MathProof2p2e4 | 1 | 2025-12-25 05:43 | Previously failed, now passing |
+| Overcooked! 2 | 1 | 2025-12-25 05:45 | Previously failed, now passing |
+
 
 ## Notes
 
