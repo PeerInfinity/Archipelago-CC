@@ -733,10 +733,7 @@
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "CountItem",
-                      "args": {
-                        "item_name": "Villa: Storeroom statue"
-                      }
+                      "rule": "False_"
                     },
                     "op": "==",
                     "right": [
@@ -749,10 +746,7 @@
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "CountItem",
-                      "args": {
-                        "item_name": "Villa: Storeroom - Right"
-                      }
+                      "rule": "False_"
                     },
                     "op": "==",
                     "right": [
@@ -765,10 +759,7 @@
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "CountItem",
-                      "args": {
-                        "item_name": "Villa: Storeroom - Left"
-                      }
+                      "rule": "False_"
                     },
                     "op": "==",
                     "right": [
@@ -797,10 +788,7 @@
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "CountItem",
-                      "args": {
-                        "item_name": "Villa: Archives rear corner"
-                      }
+                      "rule": "False_"
                     },
                     "op": "==",
                     "right": [
@@ -813,10 +801,7 @@
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "CountItem",
-                      "args": {
-                        "item_name": "Villa: Archives table"
-                      }
+                      "rule": "False_"
                     },
                     "op": "==",
                     "right": [
@@ -2189,10 +2174,7 @@
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "CountItem",
-                      "args": {
-                        "item_name": "Castle Center: Torture chamber rafters"
-                      }
+                      "rule": "False_"
                     },
                     "op": "==",
                     "right": [
@@ -2205,10 +2187,7 @@
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "CountItem",
-                      "args": {
-                        "item_name": "Castle Center: Torture chamber instrument rack"
-                      }
+                      "rule": "False_"
                     },
                     "op": "==",
                     "right": [
@@ -2221,10 +2200,7 @@
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "CountItem",
-                      "args": {
-                        "item_name": "Castle Center: Mandragora shelf - Right"
-                      }
+                      "rule": "False_"
                     },
                     "op": "==",
                     "right": [
@@ -2237,10 +2213,7 @@
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "CountItem",
-                      "args": {
-                        "item_name": "Castle Center: Mandragora shelf - Left"
-                      }
+                      "rule": "False_"
                     },
                     "op": "==",
                     "right": [
@@ -3320,10 +3293,7 @@
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "CountItem",
-                      "args": {
-                        "item_name": "Tower of Science: Pick-a-door hallway locked middle room"
-                      }
+                      "rule": "False_"
                     },
                     "op": "==",
                     "right": [
@@ -3443,10 +3413,7 @@
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "CountItem",
-                      "args": {
-                        "item_name": "Tower of Science: Locked Key3 room - Left"
-                      }
+                      "rule": "False_"
                     },
                     "op": "==",
                     "right": [
@@ -3459,10 +3426,7 @@
                   "rule": "Compare",
                   "args": {
                     "left": {
-                      "rule": "CountItem",
-                      "args": {
-                        "item_name": "Tower of Science: Locked Key3 room - Right"
-                      }
+                      "rule": "False_"
                     },
                     "op": "==",
                     "right": [
@@ -4704,17 +4668,477 @@
       "use_resolved_items": false,
       "options": {
         "accessibility": "full",
+        "background_music": "normal",
+        "bad_ending_condition": "kill_vincent",
+        "big_toss": "false",
+        "bosses_required": 12,
+        "carrie_logic": "false",
+        "character_stages": "both",
+        "cinematic_experience": "false",
+        "countdown": "none",
+        "death_link": "off",
+        "disable_time_restrictions": "false",
+        "draculas_condition": "crystal",
+        "drop_previous_sub_weapon": "false",
+        "empty_breakables": "false",
         "exclude_locations": [],
+        "fall_guard": "false",
+        "hard_item_pool": "false",
+        "hard_logic": "false",
+        "ice_trap_appearance": "major_only",
+        "ice_trap_percentage": 0,
+        "increase_item_limit": "true",
+        "increase_shimmy_speed": "false",
+        "invisible_items": "vanilla",
         "item_links": [],
+        "lizard_locker_items": "false",
+        "loading_zone_heals": "true",
         "local_items": [],
+        "map_lighting": "normal",
+        "maximum_gold_price": 30,
+        "minimum_gold_price": 2,
+        "multi_hit_breakables": "false",
+        "nerf_healing_items": "false",
         "non_local_items": [],
+        "panther_dash": "off",
+        "percent_special2s_required": 80,
+        "permanent_powerups": "false",
         "plando_items": [],
+        "post_behemoth_boss": "vanilla",
         "priority_locations": [],
         "progression_balancing": 50,
         "randomize_items": "false",
+        "renon_fight_condition": "spend_30k",
+        "room_of_clocks_boss": "vanilla",
+        "shop_prices": "vanilla",
+        "shopsanity": "false",
+        "skip_gondolas": "false",
+        "skip_waterway_blocks": "false",
+        "spare_keys": "off",
+        "special1s_per_warp": 1,
+        "stage_shuffle": "false",
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "starting_stage": "room_of_clocks",
+        "sub_weapon_shuffle": "off",
+        "total_special1s": 7,
+        "total_special2s": 25,
+        "vincent_fight_condition": "wait_16_days",
+        "warp_order": "seed_stage_order",
+        "window_color_a": 8,
+        "window_color_b": 15,
+        "window_color_g": 5,
+        "window_color_r": 1
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "background_music": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "disabled",
+            "2": "randomized"
+          },
+          "default": 0,
+          "display_name": "Background Music"
+        },
+        "bad_ending_condition": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "never",
+            "1": "kill_vincent",
+            "2": "always"
+          },
+          "default": 1,
+          "display_name": "Bad Ending Condition"
+        },
+        "big_toss": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Big Toss"
+        },
+        "bosses_required": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 16,
+          "default": 12,
+          "display_name": "Bosses Required"
+        },
+        "carrie_logic": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Carrie Logic"
+        },
+        "character_stages": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "both",
+            "1": "branchless_both",
+            "2": "reinhardt_only",
+            "3": "carrie_only"
+          },
+          "default": 0,
+          "display_name": "Character Stages"
+        },
+        "cinematic_experience": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Cinematic Experience"
+        },
+        "countdown": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "majors",
+            "2": "all_locations"
+          },
+          "default": 0,
+          "display_name": "Countdown"
+        },
+        "death_link": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "on",
+            "2": "explosive"
+          },
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "disable_time_restrictions": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Disable Time Requirements"
+        },
+        "draculas_condition": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "crystal",
+            "2": "bosses",
+            "3": "specials"
+          },
+          "default": 1,
+          "display_name": "Dracula's Condition"
+        },
+        "drop_previous_sub_weapon": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Drop Previous Sub-weapon"
+        },
+        "empty_breakables": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Empty Breakables"
+        },
+        "fall_guard": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Fall Guard"
+        },
+        "hard_item_pool": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Hard Item Pool"
+        },
+        "hard_logic": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Hard Logic"
+        },
+        "ice_trap_appearance": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "major_only",
+            "1": "junk_only",
+            "2": "anything"
+          },
+          "default": 0,
+          "display_name": "Ice Trap Appearance"
+        },
+        "ice_trap_percentage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 0,
+          "display_name": "Ice Trap Percentage"
+        },
+        "increase_item_limit": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Increase Item Limit"
+        },
+        "increase_shimmy_speed": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Increase Shimmy Speed"
+        },
+        "invisible_items": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "reveal_all",
+            "2": "hide_all",
+            "3": "chance"
+          },
+          "default": 0,
+          "display_name": "Invisible Items"
+        },
+        "lizard_locker_items": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Lizard Locker Items"
+        },
+        "loading_zone_heals": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Loading Zone Heals"
+        },
+        "map_lighting": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "randomized"
+          },
+          "default": 0,
+          "display_name": "Map Lighting"
+        },
+        "maximum_gold_price": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 50,
+          "default": 30,
+          "display_name": "Maximum Gold Price"
+        },
+        "minimum_gold_price": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 50,
+          "default": 2,
+          "display_name": "Minimum Gold Price"
+        },
+        "multi_hit_breakables": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Multi-hit Breakables"
+        },
+        "nerf_healing_items": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Nerf Healing Items"
+        },
+        "panther_dash": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "on",
+            "2": "jumpless"
+          },
+          "default": 0,
+          "display_name": "Panther Dash"
+        },
+        "percent_special2s_required": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 100,
+          "default": 80,
+          "display_name": "Percent Special2s Required"
+        },
+        "permanent_powerups": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Permanent PowerUps"
+        },
+        "post_behemoth_boss": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "inverted",
+            "2": "always_rosa",
+            "3": "always_camilla"
+          },
+          "default": 0,
+          "display_name": "Post-Behemoth Boss"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "renon_fight_condition": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "never",
+            "1": "spend_30k",
+            "2": "always"
+          },
+          "default": 1,
+          "display_name": "Renon Fight Condition"
+        },
+        "room_of_clocks_boss": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "inverted",
+            "2": "always_death",
+            "3": "always_actrise"
+          },
+          "default": 0,
+          "display_name": "Room of Clocks Boss"
+        },
+        "shop_prices": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "randomized"
+          },
+          "default": 0,
+          "display_name": "Shop Prices"
+        },
+        "shopsanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shopsanity"
+        },
+        "skip_gondolas": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Skip Gondolas"
+        },
+        "skip_waterway_blocks": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Skip Waterway Blocks"
+        },
+        "spare_keys": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "on",
+            "2": "chance"
+          },
+          "default": 0,
+          "display_name": "Spare Keys"
+        },
+        "special1s_per_warp": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 10,
+          "default": 1,
+          "display_name": "Special1s Per Warp"
+        },
+        "stage_shuffle": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Stage Shuffle"
+        },
+        "starting_stage": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "forest_of_silence",
+            "1": "castle_wall",
+            "2": "villa",
+            "3": "tunnel",
+            "4": "underground_waterway",
+            "5": "castle_center",
+            "6": "duel_tower",
+            "7": "tower_of_execution",
+            "8": "tower_of_science",
+            "9": "tower_of_sorcery",
+            "10": "room_of_clocks",
+            "11": "clock_tower"
+          },
+          "default": "random",
+          "display_name": "Starting Stage"
+        },
+        "sub_weapon_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "own_pool",
+            "2": "anywhere"
+          },
+          "default": 0,
+          "display_name": "Sub-weapon Shuffle"
+        },
+        "total_special1s": {
+          "type": "range",
+          "range_start": 7,
+          "range_end": 70,
+          "default": 7,
+          "display_name": "Total Special1s"
+        },
+        "total_special2s": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 70,
+          "default": 25,
+          "display_name": "Total Special2s"
+        },
+        "vincent_fight_condition": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "never",
+            "1": "wait_16_days",
+            "2": "always"
+          },
+          "default": 1,
+          "display_name": "Vincent Fight Condition"
+        },
+        "warp_order": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "seed_stage_order",
+            "1": "vanilla_stage_order",
+            "2": "randomized_order"
+          },
+          "default": 0,
+          "display_name": "Warp Order"
+        },
+        "window_color_a": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 15,
+          "default": 8,
+          "display_name": "Window Color A"
+        },
+        "window_color_b": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 15,
+          "default": 15,
+          "display_name": "Window Color B"
+        },
+        "window_color_g": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 15,
+          "default": 5,
+          "display_name": "Window Color G"
+        },
+        "window_color_r": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 15,
+          "default": 1,
+          "display_name": "Window Color R"
+        }
       },
       "world_directory": "cv64"
     }
@@ -4752,103 +5176,5 @@
       "world_description": "Castlevania for the Nintendo 64 is the first 3D game in the Castlevania franchise. As either whip-wielding Belmont\ndescendant Reinhardt Schneider or powerful sorceress Carrie Fernandez, brave many terrifying traps and foes as you\nmake your way to Dracula's chamber and stop his rule of terror!"
     }
   },
-  "helpers": {
-    "1": {
-      "location_item_name": {
-        "params": [
-          "location"
-        ],
-        "body": {
-          "type": "block",
-          "statements": [
-            {
-              "type": "assign",
-              "name": "location",
-              "value": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "location"
-                  }
-                ]
-              }
-            },
-            {
-              "type": "if_statement",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "location"
-                  },
-                  "attr": "item"
-                },
-                "op": "is",
-                "right": {
-                  "type": "constant",
-                  "value": null
-                }
-              },
-              "body": [
-                {
-                  "type": "return",
-                  "value": {
-                    "type": "constant",
-                    "value": null
-                  }
-                }
-              ]
-            },
-            {
-              "type": "return",
-              "value": {
-                "type": "list",
-                "value": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "item"
-                    },
-                    "attr": "name"
-                  },
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "item"
-                    },
-                    "attr": "player"
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      }
-    }
-  }
+  "helpers": {}
 }

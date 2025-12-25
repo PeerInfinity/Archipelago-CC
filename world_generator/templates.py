@@ -714,12 +714,15 @@ def _generate_option_class_from_definition(setting_name: str, option_def: Dict[s
             option_lines.append(f'    option_{name} = {value_str}')
         options_code = '\n'.join(option_lines)
 
+        # String defaults (like "random") need to be quoted in the output
+        default_repr = repr(default) if isinstance(default, str) else default
+
         class_code = f'''
 class {class_name}(Choice):
     """Option for {display_name}."""
     display_name = "{display_name}"
 {options_code}
-    default = {default}
+    default = {default_repr}
 '''
         return class_code, f'    {setting_name}: {class_name}', 'Choice'
 

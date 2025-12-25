@@ -276,7 +276,7 @@ class StartingStage(Choice):
     option_tower_of_sorcery = 9
     option_room_of_clocks = 10
     option_clock_tower = 11
-    default = random
+    default = 'random'
 
 class SubWeaponShuffle(Choice):
     """Option for Sub-weapon Shuffle."""
