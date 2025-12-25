@@ -68,6 +68,7 @@ from .rules import (
     MinValue,
     Conditional,
     HelperCall,
+    WeightedSum,
 )
 
 from .ast_format import (
@@ -115,6 +116,7 @@ __all__ = [
     'MinValue',
     'Conditional',
     'HelperCall',
+    'WeightedSum',
     # AST format support functions
     'is_ast_format',
     'parse_ast_rule',

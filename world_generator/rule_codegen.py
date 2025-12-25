@@ -588,6 +588,10 @@ class RuleCodeGenerator:
                 if rule_type:
                     return self._convert_rule_builder_format(rule, rb_rule, rule_type)
 
+                # Check if this is a weighted_sum helper (used by Overcooked 2 and similar games)
+                if rb_rule == 'weighted_sum' and rule.get('_original_ast_type') == 'helper':
+                    return self._convert_weighted_sum(rule)
+
                 # Check if this is a helper call from AST exporter format
                 # AST exporter outputs helpers with rule=helper_name and _original_ast_type="helper"
                 # Also check known_helpers for helpers without the _original_ast_type marker
@@ -2522,6 +2526,60 @@ class RuleCodeGenerator:
         # under default/normal game settings
         self.required_imports.add('True_')
         return 'True_()'
+
+    def _convert_weighted_sum(self, rule: Dict[str, Any]) -> str:
+        """Convert weighted_sum helper to WeightedSum rule.
+
+        weighted_sum checks if the sum of (item_count * weight) for a list of items
+        meets or exceeds a threshold. Used by Overcooked 2 for star-based progression.
+
+        Format expected:
+        {
+            "rule": "weighted_sum",
+            "_original_ast_type": "helper",
+            "args": [
+                {"rule": "Constant", "args": {"value": 1.0}},  # threshold
+                {"rule": "Constant", "args": {"value": [["Item1", 0.4], ["Item2", 0.3], ...]}}  # items
+            ]
+        }
+        """
+        args = rule.get('args', [])
+
+        # Extract threshold (first arg)
+        threshold = 1.0
+        if len(args) >= 1:
+            arg0 = args[0]
+            if isinstance(arg0, dict):
+                if arg0.get('rule') == 'Constant':
+                    threshold = arg0.get('args', {}).get('value', 1.0)
+                elif arg0.get('type') == 'constant':
+                    threshold = arg0.get('value', 1.0)
+
+        # Extract items with weights (second arg)
+        items = []
+        if len(args) >= 2:
+            arg1 = args[1]
+            if isinstance(arg1, dict):
+                if arg1.get('rule') == 'Constant':
+                    raw_items = arg1.get('args', {}).get('value', [])
+                elif arg1.get('type') == 'constant':
+                    raw_items = arg1.get('value', [])
+                else:
+                    raw_items = []
+
+                # Convert raw items to list of tuples
+                if isinstance(raw_items, list):
+                    for item in raw_items:
+                        if isinstance(item, (list, tuple)) and len(item) >= 2:
+                            items.append((item[0], item[1]))
+
+        # Generate WeightedSum rule
+        self.required_imports.add('WeightedSum')
+
+        # Build the items list as Python code
+        items_str = ', '.join(f'({repr(name)}, {weight})' for name, weight in items)
+
+        return f'WeightedSum(threshold={threshold}, items=[{items_str}])'
 
     def _convert_rule_builder_helper(self, rule: Dict[str, Any], helper_name: str) -> str:
         """Convert Rule Builder format helper rule to HelperCall().
