@@ -115,56 +115,9 @@ class LufiaIIAncientCaveWorldGenWorld(RuleWorldMixin, World):
         "Event": frozenset(["Progressive chest access", "Final Floor access"]),
     }
 
-    # Canonical item placements - where items belong in the "vanilla" game
-    # Used by exporter to distinguish canonical placements from always-locked items
-    canonical_placements: ClassVar[Dict[str, str]] = {
-        "Blue chest 1": "Cryst shield",
-        "Blue chest 2": "Sizzle sword",
-        "Blue chest 3": "Thundo jewel",
-        "Blue chest 4": "Snow sword",
-        "Blue chest 5": "Silver eye",
-        "Blue chest 6": "Boom turban",
-        "Blue chest 7": "Snow sword",
-        "Blue chest 8": "Agony helm",
-        "Blue chest 9": "Aqua helm",
-        "Blue chest 10": "Dragon spear",
-        "Blue chest 11": "Dark mirror",
-        "Blue chest 12": "Flame shield",
-        "Blue chest 13": "Dragon spear",
-        "Blue chest 14": "Boom turban",
-        "Blue chest 15": "Dark mirror",
-        "Blue chest 16": "Air whip",
-        "Blue chest 17": "Agony helm",
-        "Blue chest 18": "Sizzle sword",
-        "Blue chest 19": "Gades blade",
-        "Blue chest 20": "Dia ring",
-        "Blue chest 21": "Catfish jwl.",
-        "Blue chest 22": "Dragon spear",
-        "Blue chest 23": "Agony helm",
-        "Blue chest 24": "Sky sword",
-        "Blue chest 25": "Earth jewel",
-        "Chest access 6-10": "Progressive chest access",
-        "Chest access 11-15": "Progressive chest access",
-        "Chest access 16-20": "Progressive chest access",
-        "Chest access 21-25": "Progressive chest access",
-        "Iris treasure 4": "Iris armor",
-        "Iris treasure 3": "Iris helmet",
-        "Iris treasure 6": "Iris jewel",
-        "Iris treasure 8": "Iris pot",
-        "Iris treasure 5": "Iris ring",
-        "Iris treasure 2": "Iris shield",
-        "Iris treasure 7": "Iris staff",
-        "Iris treasure 1": "Iris sword",
-        "Iris treasure 9": "Iris tiara",
-        "Final Floor reached": "Final Floor access",
-        "Boss": "Ancient key",
-    }
-
     def generate_early(self) -> None:
-        """Push starting items and disable randomization for seed 1."""
+        """Push starting items as precollected."""
         self._push_starting_items()
-        if self.multiworld.seed == 1:
-            self.options.randomize_items.value = False
 
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
@@ -220,29 +173,6 @@ class LufiaIIAncientCaveWorldGenWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
-
-    def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
-            self._place_original_items()
-
-    def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
-            location = self.multiworld.get_location(location_name, self.player)
-
-            # Skip if already filled (e.g., by _place_locked_items or generate_basic)
-            if location.item is not None:
-                continue
-
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
-
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
-                if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

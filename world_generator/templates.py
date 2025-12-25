@@ -21,6 +21,20 @@ def sanitize_class_name(name: str) -> str:
     return re.sub(r'[^a-zA-Z0-9]', '', name)
 
 
+def sanitize_option_name(name: str) -> str:
+    """Sanitize an option name to be a valid Python identifier.
+
+    Replaces non-alphanumeric characters (except underscores) with underscores.
+    Collapses multiple consecutive underscores into one.
+    """
+    # Replace any non-alphanumeric character (except underscore) with underscore
+    sanitized = re.sub(r'[^a-zA-Z0-9_]', '_', name)
+    # Collapse multiple underscores into one
+    sanitized = re.sub(r'_+', '_', sanitized)
+    # Remove leading/trailing underscores
+    return sanitized.strip('_')
+
+
 def is_valid_identifier(name: str) -> bool:
     """Check if a string is a valid Python identifier.
 
@@ -755,7 +769,9 @@ class {class_name}(TextChoice):
 
         option_lines = []
         for value_str, name in sorted_items:
-            option_lines.append(f'    option_{name} = {value_str}')
+            # Sanitize the option name to be a valid Python identifier
+            safe_name = sanitize_option_name(name)
+            option_lines.append(f'    option_{safe_name} = {value_str}')
         options_code = '\n'.join(option_lines)
 
         class_code = f'''
