@@ -709,16 +709,28 @@ def _generate_option_class_from_definition(setting_name: str, option_def: Dict[s
     if option_type == 'choice':
         # Generate Choice option with option_<name> = <value> for each choice
         name_lookup = option_def.get('name_lookup', {})
-        option_lines = []
-        for value_str, name in sorted(name_lookup.items(), key=lambda x: int(x[0])):
-            option_lines.append(f'    option_{name} = {value_str}')
-        options_code = '\n'.join(option_lines)
 
         # Properly quote string default values
         if isinstance(default, str):
             default_repr = f'"{default}"'
         else:
             default_repr = default
+
+        # If name_lookup is empty, this is a TextChoice (accepts arbitrary text)
+        if not name_lookup:
+            class_code = f'''
+class {class_name}(TextChoice):
+    """Option for {display_name}."""
+    display_name = "{display_name}"
+
+    default = {default_repr}
+'''
+            return class_code, f'    {setting_name}: {class_name}', 'TextChoice'
+
+        option_lines = []
+        for value_str, name in sorted(name_lookup.items(), key=lambda x: int(x[0])):
+            option_lines.append(f'    option_{name} = {value_str}')
+        options_code = '\n'.join(option_lines)
 
         class_code = f'''
 class {class_name}(Choice):
