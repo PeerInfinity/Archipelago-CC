@@ -4010,13 +4010,33 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
-        // Use parent scope directly for Python-like scoping semantics
-        // In Python, blocks don't create a new scope - variables assigned
-        // in a block are visible in the enclosing function scope.
-        // This is needed for worldgen rules where blocks assign variables
-        // that are referenced later in the same function.
+        // Determine if this block should have its own scope:
+        // 1. Top-level blocks (localScope === null) always get a new scope
+        // 2. Blocks that contain a return statement are treated as function bodies
+        //    and get their own scope to avoid variable shadowing issues
+        // 3. Regular nested blocks (if/for bodies) share the parent scope
         const isTopLevelBlock = localScope === null;
-        const blockScope = isTopLevelBlock ? {} : localScope;
+        const hasReturnStatement = rule.statements.some(
+          stmt => stmt.type === 'return' ||
+                 (stmt.type === 'if_statement' &&
+                  (stmt.body?.some(s => s.type === 'return') ||
+                   stmt.orelse?.some(s => s.type === 'return')))
+        );
+
+        // Create scope based on block type:
+        // - Top-level: new empty scope
+        // - Function-like (has return): new scope copying parent values (read-only inheritance)
+        // - Statement block: share parent scope
+        let blockScope;
+        if (isTopLevelBlock) {
+          blockScope = {};
+        } else if (hasReturnStatement) {
+          // Create a new scope that inherits parent values but is isolated
+          // This prevents function-like blocks from mutating parent variables
+          blockScope = Object.assign({}, localScope);
+        } else {
+          blockScope = localScope;
+        }
 
         for (let i = 0; i < rule.statements.length; i++) {
           const stmt = rule.statements[i];
@@ -4030,9 +4050,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           result = stmtResult;
         }
 
-        // If this is a top-level block, unwrap the return value
-        // Nested blocks keep the marker so outer blocks can propagate
-        if (isTopLevelBlock && result && typeof result === 'object' && result.__isReturn) {
+        // If this is a top-level block or function-like block, unwrap the return value
+        if ((isTopLevelBlock || hasReturnStatement) && result && typeof result === 'object' && result.__isReturn) {
           result = result.value;
         }
         break;
@@ -4938,6 +4957,15 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
         return result === 'reachable' || result === true;
       }
       return undefined;
+    }
+
+    // AST_block (from rule analyzer) - execute a sequence of statements
+    // This is the Rule Builder format for code blocks with statements, variable assignments,
+    // and control flow (if/else, return). Converts to AST 'block' type for evaluation.
+    case 'AST_block': {
+      const statements = args.statements || [];
+      // Delegate to the AST format 'block' handler
+      return evaluateRule({ type: 'block', statements }, context, depth + 1, localScope);
     }
 
     // AST_count_true (from Stardew Valley) - count how many conditions are true

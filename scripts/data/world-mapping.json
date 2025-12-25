@@ -845,7 +845,7 @@
     "has_custom_game_logic": true,
     "world_directory": "overcooked2"
   },
-  "Overcooked! 2 WorldGen": {
+  "Overcooked\\! 2 WorldGen": {
     "exporter_path": null,
     "exporter_size": 0,
     "game_logic_path": null,
@@ -1072,7 +1072,7 @@
   },
   "Subnautica": {
     "exporter_path": "exporter/games/subnautica.py",
-    "exporter_size": 7071,
+    "exporter_size": 7675,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
