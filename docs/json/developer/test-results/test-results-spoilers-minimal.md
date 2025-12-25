@@ -6,32 +6,32 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-25 06:30:35
+**Generated:** 2025-12-25 20:23:04
 
-**Source Data Created:** 2025-12-25T05:46:38.770756
+**Source Data Created:** 2025-12-25T19:32:40.331826
 
-**Source Data Last Updated:** 2025-12-25T05:46:38.770761
+**Source Data Last Updated:** 2025-12-25T19:32:40.331830
 
 ## Summary
 
 - **Total Games:** 72
-- **Passed:** 72 (100.0%)
-- **Failed:** 0 (0.0%)
-- **Games with Intermittent Failures:** 2
-- **Total Intermittent Failures:** 2
+- **Passed:** 70 (97.2%)
+- **Failed:** 2 (2.8%)
+- **Games with Intermittent Failures:** 0
+- **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/72 (40.3% of passed)
-- **Passing with Generic Logic:** 64/72 (88.9% of passed)
-- **Passing with Both Generic:** 29/72 (40.3% of passed)
+- **Passing with Generic Exporter:** 29/70 (41.4% of passed)
+- **Passing with Generic Logic:** 62/70 (88.6% of passed)
+- **Passing with Both Generic:** 29/70 (41.4% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ✅ Passed | 0 | 5.11 | 5.11 | 🟢 Complete | 11.2KB | ✅ |
-| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 36.2KB | ✅ |
+| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 36.5KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
@@ -81,16 +81,16 @@
 | Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 13.5KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 53.3KB | 86.3KB |
+| Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 63.3KB | 86.3KB |
 | Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 20.9KB | 10.7KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 7.5KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 14.6KB | ✅ |
-| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 13.9KB | ✅ |
+| Super Mario Land 2 | ❌ Failed | 0 | 0 | 10.1 | 🔴 0.0% | 13.9KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
 | Super Metroid | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | 71.9KB | 114.6KB |
 | TOEM original | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
-| Terraria | ✅ Passed | 0 | 9.5 | 9.5 | 🟢 Complete | 19.3KB | ✅ |
+| Terraria | ❌ Failed | 0 | 0 | 9.5 | 🔴 0.0% | 19.3KB | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 5.8KB | ✅ |
 | The Messenger | ✅ Passed | 0 | 6.3 | 6.3 | 🟢 Complete | 11.6KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | 5.4KB | ✅ |
@@ -102,16 +102,6 @@
 | WebDevJourney | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 11.7KB | ✅ |
 | shapez | ✅ Passed | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
-
-## Intermittent Failures
-
-These seeds were previously failing but passed during a retest run:
-
-| Template | Seed | Timestamp | Notes |
-|----------|------|-----------|-------|
-| MathProof2p2e4 | 1 | 2025-12-25 05:43 | Previously failed, now passing |
-| Overcooked! 2 | 1 | 2025-12-25 05:45 | Previously failed, now passing |
-
 
 ## Notes
 

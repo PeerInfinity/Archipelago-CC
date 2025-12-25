@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2025-12-25 06:30:35
+**Generated:** 2025-12-25 20:23:04
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -44,16 +44,16 @@ Of the 62 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 354.1KB
+- **Total Exporter Code:** 364.5KB
 - **Total Game Logic Code:** 95.3KB
-- **Combined Total:** 449.4KB
+- **Combined Total:** 459.8KB
 
 ## Test Results
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 11.2KB | ✅ | 238.7KB |
-| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 36.2KB | ✅ | 465.6KB |
+| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 36.5KB | ✅ | 483.9KB |
 | A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 78.0KB |
 | APQuest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 11.8KB |
 | Adventure WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 26.8KB |
@@ -97,7 +97,7 @@ Of the 62 templates passing all 4 tests:
 | Saving Princess WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.2KB | ✅ | 37.1KB |
 | Shivers WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 169.2KB |
 | Sonic Adventure 2 Battle WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 266.1KB |
-| Starcraft 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 53.3KB | 86.3KB | 1119.3KB |
+| Starcraft 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 63.3KB | 86.3KB | 1119.3KB |
 | Subnautica WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.5KB | ✅ | 180.2KB |
 | Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.6KB | ✅ | 100.6KB |
 | Super Mario Land 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.9KB | ✅ | 871.3KB |
@@ -126,7 +126,7 @@ Of the 62 templates passing all 4 tests:
 | 4 | Super Mario Land 2 WorldGen | 871.3KB |
 | 5 | Links Awakening DX WorldGen | 543.8KB |
 | 6 | The Legend of Zelda WorldGen | 512.4KB |
-| 7 | A Link to the Past WorldGen | 465.6KB |
+| 7 | A Link to the Past WorldGen | 483.9KB |
 | 8 | Kirby's Dream Land 3 WorldGen | 457.9KB |
 | 9 | Mario & Luigi Superstar Saga WorldGen | 406.7KB |
 | 10 | Heretic WorldGen | 403.6KB |
