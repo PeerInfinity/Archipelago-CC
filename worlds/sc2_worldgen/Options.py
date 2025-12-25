@@ -21,7 +21,7 @@ class AllInMap(Choice):
     display_name = "All In Map"
     option_ground = 0
     option_air = 1
-    default = random
+    default = 0
 
 class BasebustLocations(Choice):
     """Option for Base-Bust Locations."""

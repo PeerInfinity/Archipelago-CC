@@ -714,6 +714,12 @@ def _generate_option_class_from_definition(setting_name: str, option_def: Dict[s
             option_lines.append(f'    option_{name} = {value_str}')
         options_code = '\n'.join(option_lines)
 
+        # Handle "random" default by using the first valid option value (0)
+        # In the original game, "random" means pick a random value at generation time
+        # For worldgen worlds, we just need a valid default
+        if default == "random":
+            default = 0
+
         class_code = f'''
 class {class_name}(Choice):
     """Option for {display_name}."""

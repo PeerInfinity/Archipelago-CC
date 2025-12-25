@@ -91,7 +91,7 @@ class StartingRobotMaster(Choice):
     option_flash_man = 5
     option_metal_man = 6
     option_crash_man = 7
-    default = random
+    default = 0
 
 class StrictWeakness(Toggle):
     """Option for Strict Boss Weaknesses."""

@@ -41,7 +41,7 @@ class FishingAchievements(Toggle):
 
 class Getfixedboi(Toggle):
     """Option for "getfixedboi" Seed."""
-    display_name = ""getfixedboi" Seed"
+    display_name = '"getfixedboi" Seed'
 
 class Goal(Choice):
     """Option for Goal."""
