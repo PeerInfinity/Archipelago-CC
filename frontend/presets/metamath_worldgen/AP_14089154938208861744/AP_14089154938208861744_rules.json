@@ -1749,6 +1749,8 @@
       "use_resolved_items": false,
       "options": {
         "accessibility": "full",
+        "auto_download_database": "false",
+        "complexity": "moderate",
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -1759,9 +1761,90 @@
         "randomize_items": "false",
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "starting_statements": 0,
+        "theorem": "2p2e4"
       },
-      "world_directory": "metamath"
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "auto_download_database": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Auto-Download Database"
+        },
+        "complexity": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "simple",
+            "1": "moderate",
+            "2": "complex"
+          },
+          "default": 1,
+          "display_name": "Proof Complexity"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Items"
+        },
+        "starting_statements": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 50,
+          "default": 0,
+          "display_name": "Starting Statements %"
+        },
+        "theorem": {
+          "type": "choice",
+          "name_lookup": {},
+          "default": "2p2e4",
+          "display_name": "Theorem to Prove"
+        }
+      },
+      "world_directory": "metamath_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "settings": {
+        "game": "Metamath",
+        "assume_bidirectional_exits": false,
+        "use_resolved_items": false,
+        "options": {
+          "accessibility": "full",
+          "auto_download_database": "true",
+          "complexity": "moderate",
+          "exclude_locations": [],
+          "item_links": [],
+          "local_items": [],
+          "non_local_items": [],
+          "plando_items": [],
+          "priority_locations": [],
+          "progression_balancing": 50,
+          "randomize_items": "false",
+          "start_hints": [],
+          "start_inventory": {},
+          "start_location_hints": [],
+          "starting_statements": 0,
+          "theorem": "2p2e4"
+        },
+        "world_directory": "metamath"
+      }
     }
   },
   "game_info": {
