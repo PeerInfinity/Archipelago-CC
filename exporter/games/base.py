@@ -1157,14 +1157,12 @@ class BaseGameExportHandler:
 
         def transform_rule(rule: Any) -> Any:
             if isinstance(rule, dict):
-                # Check if this is a helper reference
-                if rule.get('type') == 'helper' and 'name' in rule:
-                    rule = dict(rule)  # Make a copy
-                    rule['name'] = strip_prefix(rule['name'])
-                    return rule
-
-                # Recursively process all values
-                return {k: transform_rule(v) for k, v in rule.items()}
+                # Make a copy and recursively process all values
+                result = {k: transform_rule(v) for k, v in rule.items()}
+                # If this is a helper reference, strip the worldgen prefix from the name
+                if result.get('type') == 'helper' and 'name' in result:
+                    result['name'] = strip_prefix(result['name'])
+                return result
             elif isinstance(rule, list):
                 return [transform_rule(item) for item in rule]
             return rule

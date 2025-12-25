@@ -548,36 +548,39 @@ class ALttPGameExportHandler(BaseGameExportHandler):
 
         # Shop item data - maps items to regions where shops sell them
         # Enables can_buy and can_buy_unlimited helper implementation
-        shop_items = {}
-        if hasattr(world, 'shops'):
-            for shop in world.shops:
-                region_name = shop.region.name if hasattr(shop, 'region') and shop.region else None
-                if not region_name:
-                    continue
-                for inv in getattr(shop, 'inventory', []):
-                    if inv is None:
+        # For worldgen worlds, shop_items is already loaded from _worldgen_settings.json
+        # Only build from world.shops if not already present
+        if 'shop_items' not in world_attributes or not world_attributes['shop_items']:
+            shop_items = {}
+            if hasattr(world, 'shops'):
+                for shop in world.shops:
+                    region_name = shop.region.name if hasattr(shop, 'region') and shop.region else None
+                    if not region_name:
                         continue
-                    item_name = inv.get('item')
-                    if not item_name:
-                        continue
-                    if item_name not in shop_items:
-                        shop_items[item_name] = {'unlimited': [], 'limited': []}
+                    for inv in getattr(shop, 'inventory', []):
+                        if inv is None:
+                            continue
+                        item_name = inv.get('item')
+                        if not item_name:
+                            continue
+                        if item_name not in shop_items:
+                            shop_items[item_name] = {'unlimited': [], 'limited': []}
 
-                    if inv.get('max'):
-                        replacement = inv.get('replacement')
-                        if replacement:
-                            if replacement not in shop_items:
-                                shop_items[replacement] = {'unlimited': [], 'limited': []}
-                            if region_name not in shop_items[replacement]['unlimited']:
-                                shop_items[replacement]['unlimited'].append(region_name)
-                        if region_name not in shop_items[item_name]['limited']:
-                            shop_items[item_name]['limited'].append(region_name)
-                    else:
-                        if region_name not in shop_items[item_name]['unlimited']:
-                            shop_items[item_name]['unlimited'].append(region_name)
-                        if region_name not in shop_items[item_name]['limited']:
-                            shop_items[item_name]['limited'].append(region_name)
-        world_attributes['shop_items'] = shop_items
+                        if inv.get('max'):
+                            replacement = inv.get('replacement')
+                            if replacement:
+                                if replacement not in shop_items:
+                                    shop_items[replacement] = {'unlimited': [], 'limited': []}
+                                if region_name not in shop_items[replacement]['unlimited']:
+                                    shop_items[replacement]['unlimited'].append(region_name)
+                            if region_name not in shop_items[item_name]['limited']:
+                                shop_items[item_name]['limited'].append(region_name)
+                        else:
+                            if region_name not in shop_items[item_name]['unlimited']:
+                                shop_items[item_name]['unlimited'].append(region_name)
+                            if region_name not in shop_items[item_name]['limited']:
+                                shop_items[item_name]['limited'].append(region_name)
+            world_attributes['shop_items'] = shop_items
 
         return world_attributes
 
