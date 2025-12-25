@@ -710,16 +710,38 @@ def _generate_option_class_from_definition(setting_name: str, option_def: Dict[s
         # Generate Choice option with option_<name> = <value> for each choice
         name_lookup = option_def.get('name_lookup', {})
         option_lines = []
-        for value_str, name in sorted(name_lookup.items(), key=lambda x: int(x[0])):
-            option_lines.append(f'    option_{name} = {value_str}')
+
+        def parse_key(key_str: str) -> int:
+            """Parse a name_lookup key, handling tuple-like strings from buggy option definitions.
+
+            Some Archipelago option classes have typos like `option_instant = 1,` where the trailing
+            comma creates a tuple. When serialized, these become '(1,)' strings.
+            """
+            key_str = key_str.strip()
+            # Handle tuple-like strings like '(1,)' or '(42,)'
+            if key_str.startswith('(') and key_str.endswith(',)'):
+                inner = key_str[1:-2]  # Extract the number between '(' and ',)'
+                return int(inner)
+            return int(key_str)
+
+        for value_str, name in sorted(name_lookup.items(), key=lambda x: parse_key(x[0])):
+            # Also fix the value in generated code
+            actual_value = parse_key(value_str)
+            option_lines.append(f'    option_{name} = {actual_value}')
         options_code = '\n'.join(option_lines)
+
+        # Handle string defaults like "random" by quoting them
+        if isinstance(default, str):
+            default_repr = f'"{default}"'
+        else:
+            default_repr = str(default)
 
         class_code = f'''
 class {class_name}(Choice):
     """Option for {display_name}."""
     display_name = "{display_name}"
 {options_code}
-    default = {default}
+    default = {default_repr}
 '''
         return class_code, f'    {setting_name}: {class_name}', 'Choice'
 
