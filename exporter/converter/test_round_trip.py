@@ -391,7 +391,7 @@ class TestASTToRuleBuilder(unittest.TestCase):
         """Test helper rules are preserved as custom rules."""
         rule = {"type": "helper", "name": "canSwim", "args": []}
         result = self.converter.convert(rule)
-        self.assertTrue(result.rule.get("_converted_from_cc"))
+        self.assertTrue(result.rule.get("_converted_from_ast"))
         self.assertEqual(len(result.warnings), 1)
 
     def test_conditional_with_option_filter(self):

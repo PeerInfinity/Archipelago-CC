@@ -1579,7 +1579,8 @@ class CommonUI {
       case 'HelperCall': {
         const helperName = args.helper_name;
         const helperArgs = args.args || [];
-        root.appendChild(document.createTextNode(` helper: ${helperName}`));
+        // Update the label to show as helper instead of Rule: HelperCall
+        label.textContent = `helper: ${helperName}`;
 
         if (helperArgs.length > 0) {
           const argsText = helperArgs.map(arg => {
@@ -1799,13 +1800,235 @@ class CommonUI {
         break;
       }
 
+      // AST_region_check: region reachability check
+      case 'AST_region_check': {
+        const regionName = args.region;
+        root.appendChild(document.createTextNode(` region: ${regionName}`));
+        break;
+      }
+
+      // AST_location_rule_ref: location rule reference
+      case 'AST_location_rule_ref': {
+        const locationName = args.location;
+        root.appendChild(document.createTextNode(` location: ${locationName}`));
+        break;
+      }
+
+      // AST_setting_value: setting value lookup
+      case 'AST_setting_value': {
+        const settingName = args.setting || args.name;
+        root.appendChild(document.createTextNode(` setting: ${settingName}`));
+        break;
+      }
+
+      // AST_prog_item_count: progressive item count
+      case 'AST_prog_item_count': {
+        const itemName = args.item;
+        root.appendChild(document.createTextNode(` count of: ${itemName}`));
+        break;
+      }
+
+      // AST_count_item: count item
+      case 'AST_count_item': {
+        const itemName = args.item;
+        root.appendChild(document.createTextNode(` count of: ${itemName}`));
+        break;
+      }
+
+      // AST_function_call: complex function call
+      case 'AST_function_call': {
+        root.appendChild(document.createTextNode(' (function call)'));
+        // Show the function and args if present
+        const funcDetails = document.createElement('div');
+        funcDetails.style.marginLeft = '10px';
+        if (args.function) {
+          const funcLabel = document.createElement('div');
+          funcLabel.textContent = 'Function:';
+          funcDetails.appendChild(funcLabel);
+          funcDetails.appendChild(
+            this.renderLogicTree(args.function, useColorblind, stateSnapshotInterface)
+          );
+        }
+        if (args.args && args.args.length > 0) {
+          const argsLabel = document.createElement('div');
+          argsLabel.textContent = 'Arguments:';
+          funcDetails.appendChild(argsLabel);
+          args.args.forEach((arg, index) => {
+            const argContainer = document.createElement('div');
+            argContainer.style.marginLeft = '10px';
+            argContainer.appendChild(
+              this.renderLogicTree(arg, useColorblind, stateSnapshotInterface)
+            );
+            funcDetails.appendChild(argContainer);
+          });
+        }
+        root.appendChild(funcDetails);
+        break;
+      }
+
+      // AST_comparison: comparison operation
+      case 'AST_comparison': {
+        const op = args.op || '==';
+        root.appendChild(document.createTextNode(` (${op})`));
+        const compDetails = document.createElement('div');
+        compDetails.style.marginLeft = '10px';
+        if (args.left) {
+          const leftLabel = document.createElement('div');
+          leftLabel.textContent = 'Left:';
+          compDetails.appendChild(leftLabel);
+          compDetails.appendChild(
+            this.renderLogicTree(args.left, useColorblind, stateSnapshotInterface)
+          );
+        }
+        if (args.right) {
+          const rightLabel = document.createElement('div');
+          rightLabel.textContent = 'Right:';
+          compDetails.appendChild(rightLabel);
+          compDetails.appendChild(
+            this.renderLogicTree(args.right, useColorblind, stateSnapshotInterface)
+          );
+        }
+        root.appendChild(compDetails);
+        break;
+      }
+
+      // AST_block: code block
+      case 'AST_block': {
+        root.appendChild(document.createTextNode(' (block)'));
+        if (args.body && args.body.length > 0) {
+          const blockDetails = document.createElement('div');
+          blockDetails.style.marginLeft = '10px';
+          args.body.forEach((stmt, index) => {
+            blockDetails.appendChild(
+              this.renderLogicTree(stmt, useColorblind, stateSnapshotInterface)
+            );
+          });
+          root.appendChild(blockDetails);
+        }
+        break;
+      }
+
+      // AST_placement_search: placement search
+      case 'AST_placement_search': {
+        root.appendChild(document.createTextNode(' (placement search)'));
+        break;
+      }
+
+      // AST_placement_lookup: placement lookup
+      case 'AST_placement_lookup': {
+        root.appendChild(document.createTextNode(' (placement lookup)'));
+        break;
+      }
+
+      // List: list/array value
+      case 'List': {
+        const values = args.value || [];
+        if (values.length <= 3) {
+          // Show inline for short lists
+          const valuesText = values.map(v => {
+            if (v && v.rule === 'Constant') {
+              return v.args?.value;
+            }
+            return '...';
+          }).join(', ');
+          root.appendChild(document.createTextNode(` [${valuesText}]`));
+        } else {
+          root.appendChild(document.createTextNode(` [${values.length} items]`));
+        }
+        break;
+      }
+
+      // Name: variable/name reference
+      case 'Name': {
+        const name = args.name;
+        root.appendChild(document.createTextNode(` ${name}`));
+        break;
+      }
+
+      // Attribute: attribute access
+      case 'Attribute': {
+        const attr = args.attr;
+        root.appendChild(document.createTextNode(` .${attr}`));
+        if (args.object) {
+          const objContainer = document.createElement('div');
+          objContainer.style.marginLeft = '10px';
+          objContainer.appendChild(
+            this.renderLogicTree(args.object, useColorblind, stateSnapshotInterface)
+          );
+          root.appendChild(objContainer);
+        }
+        break;
+      }
+
+      // StateMethod: state method call
+      case 'StateMethod': {
+        const method = args.method;
+        root.appendChild(document.createTextNode(` .${method}()`));
+        if (args.args && args.args.length > 0) {
+          const argsContainer = document.createElement('div');
+          argsContainer.style.marginLeft = '10px';
+          args.args.forEach(arg => {
+            argsContainer.appendChild(
+              this.renderLogicTree(arg, useColorblind, stateSnapshotInterface)
+            );
+          });
+          root.appendChild(argsContainer);
+        }
+        break;
+      }
+
+      // Tuple: tuple value
+      case 'Tuple': {
+        const values = args.value || [];
+        root.appendChild(document.createTextNode(` (${values.length} elements)`));
+        break;
+      }
+
+      // CountGroup: count items in group
+      case 'CountGroup': {
+        const groupName = args.group;
+        root.appendChild(document.createTextNode(` count group: ${groupName}`));
+        break;
+      }
+
+      // CountGroupUnique: count unique items in group
+      case 'CountGroupUnique': {
+        const groupName = args.group;
+        root.appendChild(document.createTextNode(` count unique in group: ${groupName}`));
+        break;
+      }
+
+      // SettingValue: get setting value
+      case 'SettingValue': {
+        const settingName = args.setting;
+        root.appendChild(document.createTextNode(` setting: ${settingName}`));
+        break;
+      }
+
+      // ItemCheck: item check (fallback from converter)
+      case 'ItemCheck': {
+        const item = args.item;
+        const count = args.count ?? 1;
+        root.appendChild(document.createTextNode(` item: ${typeof item === 'string' ? item : '(complex)'}`));
+        if (count > 1) {
+          root.appendChild(document.createTextNode(` (need ${count})`));
+        }
+        break;
+      }
+
       // Unknown Rule Builder type - likely a converted helper call
       default: {
         // Check if this is a converted helper rule
-        if (args._original_ast_type === 'helper' || args._converted_from_cc) {
+        // _original_ast_type can be in args or at rule level depending on export format
+        // _converted_from_ast is always at rule level
+        if (args._original_ast_type === 'helper' || rule._original_ast_type === 'helper' || rule._converted_from_ast) {
           // This is a helper call converted from AST format
-          // Display as: helper: <name>(args)
-          const helperArgs = args.args || [];
+          // Update the label to show as helper instead of Rule: helper_name
+          label.textContent = `helper: ${ruleName}`;
+          // Display args if present
+          // New simplified format: rule.args is an array directly
+          // Old nested format: rule.args.args is the array
+          const helperArgs = Array.isArray(rule.args) ? rule.args : (args.args || []);
           if (helperArgs.length > 0) {
             const argsText = helperArgs.map(arg => {
               if (typeof arg === 'string' || typeof arg === 'number') {
@@ -1816,13 +2039,15 @@ class CommonUI {
                 return arg.args?.value;
               } else if (arg && arg.rule) {
                 return `(${arg.rule})`;
+              } else if (Array.isArray(arg)) {
+                return `[${arg.length} items]`;
               } else {
                 return '(complex)';
               }
             }).join(', ');
-            root.appendChild(document.createTextNode(` (${argsText})`));
+            root.appendChild(document.createTextNode(`(${argsText})`));
           } else {
-            root.appendChild(document.createTextNode(' ()'));
+            root.appendChild(document.createTextNode('()'));
           }
         } else {
           root.appendChild(document.createTextNode(' [unhandled Rule Builder type]'));
@@ -1857,7 +2082,7 @@ class CommonUI {
           );
           root.appendChild(childContainer);
         }
-        if (!args._original_ast_type && !args._converted_from_cc) {
+        if (!args._original_ast_type && !rule._original_ast_type && !rule._converted_from_ast) {
           log('debug', `[commonUI] Unhandled Rule Builder type: ${ruleName}`, rule);
         }
       }

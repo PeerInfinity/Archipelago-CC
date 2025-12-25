@@ -233,7 +233,7 @@ class ASTToRuleBuilder:
     def _make_custom_rule(self, rule_name: str, args: Dict[str, Any]) -> Dict[str, Any]:
         """Create a custom rule that preserves AST format data for round-trip."""
         result = self._make_rule(rule_name, args)
-        result['_converted_from_cc'] = True
+        result['_converted_from_ast'] = True
         return result
 
     def _extract_constant_value(self, value: Any) -> Tuple[Any, bool]:
@@ -747,7 +747,7 @@ class ASTToRuleBuilder:
                 "rule": "helper_name",
                 "args": [arg1, arg2, ...],  # Flattened list, not nested; omitted if empty
                 "_original_ast_type": "helper",
-                "_converted_from_cc": true
+                "_converted_from_ast": true
             }
         """
         helper_name = rule.get('name', 'Unknown')
@@ -768,7 +768,7 @@ class ASTToRuleBuilder:
         result: Dict[str, Any] = {
             'rule': helper_name,
             '_original_ast_type': 'helper',
-            '_converted_from_cc': True
+            '_converted_from_ast': True
         }
         if converted_args:
             result['args'] = converted_args
@@ -1011,7 +1011,7 @@ class ASTToRuleBuilder:
                 'locations': flattened_locations,
                 '_original_ast_type': 'placement_search'
             },
-            '_converted_from_cc': True
+            '_converted_from_ast': True
         }
 
     def _convert_placement_lookup(self, rule: Dict[str, Any]) -> Dict[str, Any]:
@@ -1033,7 +1033,7 @@ class ASTToRuleBuilder:
                 'location': location,
                 '_original_ast_type': 'placement_lookup'
             },
-            '_converted_from_cc': True
+            '_converted_from_ast': True
         }
 
     # -------------------------------------------------------------------------
