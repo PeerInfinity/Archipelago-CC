@@ -24,6 +24,22 @@ class BombRushCyberfunkGameExportHandler(GenericGameExportHandler):
         'spots_xl_glitched',
     }
 
+    # Preserve these helpers as helper calls (don't inline their bodies)
+    # These are complex helpers with loops/globals that need JavaScript implementations
+    # The JS implementations are in frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/
+    HELPERS_TO_PRESERVE: Set[str] = {
+        'graffiti_spots',
+        'build_access_cache',
+        'spots_s_glitchless',
+        'spots_s_glitched',
+        'spots_m_glitchless',
+        'spots_m_glitched',
+        'spots_l_glitchless',
+        'spots_l_glitched',
+        'spots_xl_glitchless',
+        'spots_xl_glitched',
+    }
+
     def get_progression_mapping(self, world) -> Dict[str, Any]:
         """Return progression mapping for REP items.
 
