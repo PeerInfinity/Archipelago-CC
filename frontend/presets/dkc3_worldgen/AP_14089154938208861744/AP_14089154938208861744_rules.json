@@ -4205,7 +4205,44 @@
           "display_name": "Starting Life Count"
         }
       },
-      "world_directory": "dkc3"
+      "world_directory": "dkc3_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "settings": {
+        "game": "Donkey Kong Country 3",
+        "assume_bidirectional_exits": false,
+        "use_resolved_items": false,
+        "options": {
+          "accessibility": "full",
+          "autosave": "true",
+          "difficulty": "norml",
+          "dk_coins_for_gyrocopter": 30,
+          "exclude_locations": [],
+          "goal": "knautilus",
+          "item_links": [],
+          "kong_palette_swap": "default",
+          "kongsanity": "false",
+          "krematoa_bonus_coin_cost": 15,
+          "level_shuffle": "false",
+          "local_items": [],
+          "merry": "false",
+          "music_shuffle": "false",
+          "non_local_items": [],
+          "number_of_banana_birds": 15,
+          "percentage_of_banana_birds": 100,
+          "percentage_of_extra_bonus_coins": 100,
+          "plando_items": [],
+          "priority_locations": [],
+          "progression_balancing": 50,
+          "start_hints": [],
+          "start_inventory": {},
+          "start_location_hints": [],
+          "starting_life_count": 5
+        },
+        "world_directory": "dkc3"
+      }
     }
   },
   "game_info": {

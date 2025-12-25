@@ -17,6 +17,20 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Consumables:                     1Up Etank
+Death Link:                      No
+Enable Lasers:                   No
+Random Enemy Weaknesses:         No
+EnergyLink:                      No
+Palette Shuffle:                 None
+Quickswap:                       Yes
+Random Music:                    Vanilla
+Random Boss Weaknesses:          None
+Reduce Flashing:                 Virtual Console
+Starting Robot Master:           Air Man
+Strict Boss Weaknesses:          No
+Wily 5 Requirement:              8
+Yoku Block Jumps:                No
 
 
 Starting Items:

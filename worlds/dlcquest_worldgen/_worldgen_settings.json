@@ -1,29 +1,31 @@
 {
-  "game": "DLCQuest",
-  "assume_bidirectional_exits": false,
-  "use_resolved_items": true,
-  "add_sphere_items_upfront": true,
-  "options": {
-    "accessibility": "full",
-    "campaign": "basic",
-    "coinbundlequantity": 20,
-    "coinsanity": "none",
-    "death_link": "false",
-    "double_jump_glitch": "none",
-    "ending_choice": "true",
-    "exclude_locations": [],
-    "item_links": [],
-    "item_shuffle": "disabled",
-    "local_items": [],
-    "non_local_items": [],
-    "permanent_coins": "false",
-    "plando_items": [],
-    "priority_locations": [],
-    "progression_balancing": 50,
-    "start_hints": [],
-    "start_inventory": {},
-    "start_location_hints": [],
-    "time_is_money": "required"
-  },
-  "world_directory": "dlcquest"
+  "settings": {
+    "game": "DLCQuest",
+    "assume_bidirectional_exits": false,
+    "use_resolved_items": true,
+    "add_sphere_items_upfront": true,
+    "options": {
+      "accessibility": "full",
+      "campaign": "basic",
+      "coinbundlequantity": 20,
+      "coinsanity": "none",
+      "death_link": "false",
+      "double_jump_glitch": "none",
+      "ending_choice": "true",
+      "exclude_locations": [],
+      "item_links": [],
+      "item_shuffle": "disabled",
+      "local_items": [],
+      "non_local_items": [],
+      "permanent_coins": "false",
+      "plando_items": [],
+      "priority_locations": [],
+      "progression_balancing": 50,
+      "start_hints": [],
+      "start_inventory": {},
+      "start_location_hints": [],
+      "time_is_money": "required"
+    },
+    "world_directory": "dlcquest"
+  }
 }

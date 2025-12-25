@@ -2958,7 +2958,45 @@
           "display_name": "Toy Shovels"
         }
       },
-      "world_directory": "shorthike"
+      "world_directory": "shorthike_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "settings": {
+        "game": "A Short Hike",
+        "assume_bidirectional_exits": false,
+        "use_resolved_items": false,
+        "options": {
+          "accessibility": "full",
+          "buckets": 2,
+          "coins_in_shops": "false",
+          "cost_multiplier": 100,
+          "easier_races": "false",
+          "exclude_locations": [],
+          "filler_coin_amount": "13_coins",
+          "goal": "help_everyone",
+          "golden_feather_progression": "normal",
+          "golden_feathers": 20,
+          "item_links": [],
+          "local_items": [],
+          "min_shop_check_logic": "100_coins",
+          "non_local_items": [],
+          "plando_items": [],
+          "priority_locations": [],
+          "progression_balancing": 50,
+          "random_walkie_talkie": "true",
+          "shop_check_logic": "fishing_rod",
+          "silver_feathers": 2,
+          "start_hints": [],
+          "start_inventory": {},
+          "start_inventory_from_pool": {},
+          "start_location_hints": [],
+          "sticks": 8,
+          "toy_shovels": 5
+        },
+        "world_directory": "shorthike"
+      }
     }
   },
   "game_info": {

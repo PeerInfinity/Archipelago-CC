@@ -10218,7 +10218,48 @@
           "display_name": "Trap Percentage"
         }
       },
-      "world_directory": "musedash"
+      "world_directory": "musedash_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "settings": {
+        "game": "Muse Dash",
+        "assume_bidirectional_exits": false,
+        "use_resolved_items": false,
+        "options": {
+          "accessibility": "full",
+          "additional_song_count": 40,
+          "allow_just_as_planned_dlc_songs": "",
+          "available_trap_types": "",
+          "chosen_traps": [],
+          "death_link": "false",
+          "dlc_packs": [],
+          "exclude_locations": [],
+          "exclude_songs": [],
+          "goal_song": [],
+          "grade_needed": "any",
+          "include_songs": [],
+          "item_links": [],
+          "local_items": [],
+          "music_sheet_count_percentage": 20,
+          "music_sheet_win_count_percentage": 80,
+          "non_local_items": [],
+          "plando_items": [],
+          "priority_locations": [],
+          "progression_balancing": 50,
+          "song_difficulty_max": 8,
+          "song_difficulty_min": 4,
+          "song_difficulty_mode": "any",
+          "start_hints": [],
+          "start_inventory": {},
+          "start_location_hints": [],
+          "starting_song_count": 5,
+          "streamer_mode_enabled": "false",
+          "trap_count_percentage": 15
+        },
+        "world_directory": "musedash"
+      }
     }
   },
   "game_info": {

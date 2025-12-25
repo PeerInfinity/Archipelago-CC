@@ -2352,6 +2352,7 @@
       "world_directory": "codingadventure"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "WebDevJourney",

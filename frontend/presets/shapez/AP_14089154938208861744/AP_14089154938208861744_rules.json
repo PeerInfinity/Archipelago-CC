@@ -647,7 +647,7 @@
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -685,11 +685,11 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "conditional"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -749,7 +749,7 @@
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -764,7 +764,7 @@
                 },
                 "_original_ast_type": "conditional"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -1590,7 +1590,7 @@
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -1608,7 +1608,7 @@
                 },
                 "_original_ast_type": "conditional"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1731,7 +1731,7 @@
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -1777,7 +1777,7 @@
                 },
                 "_original_ast_type": "conditional"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1900,7 +1900,7 @@
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -1915,7 +1915,7 @@
                 },
                 "_original_ast_type": "conditional"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2038,7 +2038,7 @@
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -2053,7 +2053,7 @@
                 },
                 "_original_ast_type": "conditional"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2322,7 +2322,7 @@
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -2360,11 +2360,11 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "conditional"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2487,7 +2487,7 @@
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -2505,7 +2505,7 @@
                 },
                 "_original_ast_type": "conditional"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2628,7 +2628,7 @@
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -2674,7 +2674,7 @@
                 },
                 "_original_ast_type": "conditional"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2811,7 +2811,7 @@
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -2826,7 +2826,7 @@
                 },
                 "_original_ast_type": "conditional"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3365,7 +3365,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4932,6 +4932,12 @@
         ],
         "locations": []
       },
+      "Shapesanity Colorful Half Mixed": {
+        "name": "Shapesanity Colorful Half Mixed",
+        "exits": [],
+        "locations": [],
+        "placeholder": true
+      },
       "Achievements needing a MAM": {
         "name": "Achievements needing a MAM",
         "exits": [],
@@ -4940,12 +4946,6 @@
       },
       "Shapesanity Colorful East Windmill Mixed": {
         "name": "Shapesanity Colorful East Windmill Mixed",
-        "exits": [],
-        "locations": [],
-        "placeholder": true
-      },
-      "Shapesanity Colorful Half Mixed": {
-        "name": "Shapesanity Colorful Half Mixed",
         "exits": [],
         "locations": [],
         "placeholder": true
@@ -6113,6 +6113,7 @@
       "world_directory": "shapez"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "shapez",

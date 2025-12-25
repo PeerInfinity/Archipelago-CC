@@ -7175,7 +7175,12 @@
         }
       },
       "use_paren_number_accumulator": true,
-      "world_directory": "messenger"
+      "world_directory": "messenger_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "use_paren_number_accumulator": true
     }
   },
   "game_info": {

@@ -17,6 +17,57 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Background Music:                Normal
+Bad Ending Condition:            Kill Vincent
+Big Toss:                        No
+Bosses Required:                 12
+Carrie Logic:                    No
+Character Stages:                Both
+Cinematic Experience:            No
+Countdown:                       None
+Death Link:                      Off
+Disable Time Requirements:       No
+Dracula's Condition:             Crystal
+Drop Previous Sub-weapon:        No
+Empty Breakables:                No
+Fall Guard:                      No
+Hard Item Pool:                  No
+Hard Logic:                      No
+Ice Trap Appearance:             Major Only
+Ice Trap Percentage:             0
+Increase Item Limit:             Yes
+Increase Shimmy Speed:           No
+Invisible Items:                 Vanilla
+Lizard Locker Items:             No
+Loading Zone Heals:              Yes
+Map Lighting:                    Normal
+Maximum Gold Price:              30
+Minimum Gold Price:              2
+Multi-hit Breakables:            No
+Nerf Healing Items:              No
+Panther Dash:                    Off
+Percent Special2s Required:      80
+Permanent PowerUps:              No
+Post-Behemoth Boss:              Vanilla
+Renon Fight Condition:           Spend 30K
+Room of Clocks Boss:             Vanilla
+Shop Prices:                     Vanilla
+Shopsanity:                      No
+Skip Gondolas:                   No
+Skip Waterway Blocks:            No
+Spare Keys:                      Off
+Special1s Per Warp:              1
+Stage Shuffle:                   No
+Starting Stage:                  Room Of Clocks
+Sub-weapon Shuffle:              Off
+Total Special1s:                 7
+Total Special2s:                 25
+Vincent Fight Condition:         Wait 16 Days
+Warp Order:                      Seed Stage Order
+Window Color A:                  8
+Window Color B:                  15
+Window Color G:                  5
+Window Color R:                  1
 
 
 Locations:

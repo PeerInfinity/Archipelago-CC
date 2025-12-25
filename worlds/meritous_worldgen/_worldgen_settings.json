@@ -1,24 +1,26 @@
 {
-  "game": "Meritous",
-  "assume_bidirectional_exits": false,
-  "use_resolved_items": false,
-  "options": {
-    "accessibility": "full",
-    "death_link": "false",
-    "exclude_locations": [],
-    "goal": "return_the_cursed_seal",
-    "include_evolution_traps": "false",
-    "include_psi_keys": "true",
-    "item_cache_cost": "vanilla",
-    "item_links": [],
-    "local_items": [],
-    "non_local_items": [],
-    "plando_items": [],
-    "priority_locations": [],
-    "progression_balancing": 50,
-    "start_hints": [],
-    "start_inventory": {},
-    "start_location_hints": []
-  },
-  "world_directory": "meritous"
+  "settings": {
+    "game": "Meritous",
+    "assume_bidirectional_exits": false,
+    "use_resolved_items": false,
+    "options": {
+      "accessibility": "full",
+      "death_link": "false",
+      "exclude_locations": [],
+      "goal": "return_the_cursed_seal",
+      "include_evolution_traps": "false",
+      "include_psi_keys": "true",
+      "item_cache_cost": "vanilla",
+      "item_links": [],
+      "local_items": [],
+      "non_local_items": [],
+      "plando_items": [],
+      "priority_locations": [],
+      "progression_balancing": 50,
+      "start_hints": [],
+      "start_inventory": {},
+      "start_location_hints": []
+    },
+    "world_directory": "meritous"
+  }
 }

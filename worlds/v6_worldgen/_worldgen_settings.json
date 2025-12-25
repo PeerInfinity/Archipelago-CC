@@ -1,33 +1,37 @@
 {
-  "game": "VVVVVV",
-  "assume_bidirectional_exits": false,
-  "use_resolved_items": false,
-  "options": {
-    "accessibility": "full",
-    "area_cost": "false",
-    "area_rando": "false",
-    "death_link": "false",
-    "death_link_amnesty": 15,
+  "settings": {
+    "game": "VVVVVV",
+    "assume_bidirectional_exits": false,
+    "use_resolved_items": false,
+    "options": {
+      "accessibility": "full",
+      "area_cost": "false",
+      "area_rando": "false",
+      "death_link": "false",
+      "death_link_amnesty": 15,
+      "door_cost": 3,
+      "exclude_locations": [],
+      "item_links": [],
+      "local_items": [],
+      "music_rando": "false",
+      "non_local_items": [],
+      "plando_items": [],
+      "priority_locations": [],
+      "progression_balancing": 50,
+      "start_hints": [],
+      "start_inventory": {},
+      "start_location_hints": []
+    },
+    "world_directory": "v6"
+  },
+  "world_attributes": {
     "door_cost": 3,
-    "exclude_locations": [],
-    "item_links": [],
-    "local_items": [],
-    "music_rando": "false",
-    "non_local_items": [],
-    "plando_items": [],
-    "priority_locations": [],
-    "progression_balancing": 50,
-    "start_hints": [],
-    "start_inventory": {},
-    "start_location_hints": []
-  },
-  "door_cost": 3,
-  "area_cost_map": {
-    "1": 1,
-    "2": 2,
-    "3": 3,
-    "4": 4,
-    "0": 0
-  },
-  "world_directory": "v6"
+    "area_cost_map": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4,
+      "0": 0
+    }
+  }
 }

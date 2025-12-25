@@ -52,7 +52,7 @@
                     "key": " coins",
                     "_original_ast_type": "prog_item_count"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">=",
                 "right": {
@@ -60,11 +60,11 @@
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Movement Pack",
@@ -86,7 +86,7 @@
                     "key": " coins",
                     "_original_ast_type": "prog_item_count"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">=",
                 "right": {
@@ -94,11 +94,11 @@
                   "args": {
                     "value": 5
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Psychological Warfare Pack",
@@ -120,7 +120,7 @@
                     "key": " coins",
                     "_original_ast_type": "prog_item_count"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">=",
                 "right": {
@@ -128,11 +128,11 @@
                   "args": {
                     "value": 5
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Name Change Pack",
@@ -154,7 +154,7 @@
                     "key": " coins",
                     "_original_ast_type": "prog_item_count"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">=",
                 "right": {
@@ -162,11 +162,11 @@
                   "args": {
                     "value": 5
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Time is Money Pack",
@@ -229,7 +229,7 @@
                     "key": " coins",
                     "_original_ast_type": "prog_item_count"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">=",
                 "right": {
@@ -237,11 +237,11 @@
                   "args": {
                     "value": 20
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Zombie Sheep",
@@ -263,7 +263,7 @@
                     "key": " coins",
                     "_original_ast_type": "prog_item_count"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">=",
                 "right": {
@@ -271,11 +271,11 @@
                   "args": {
                     "value": 50
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Animation Pack",
@@ -297,7 +297,7 @@
                     "key": " coins",
                     "_original_ast_type": "prog_item_count"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">=",
                 "right": {
@@ -305,11 +305,11 @@
                   "args": {
                     "value": 250
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Loading Screen",
@@ -389,7 +389,7 @@
                     "key": " coins",
                     "_original_ast_type": "prog_item_count"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">=",
                 "right": {
@@ -397,11 +397,11 @@
                   "args": {
                     "value": 100
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Loading Screen",
@@ -423,7 +423,7 @@
                     "key": " coins",
                     "_original_ast_type": "prog_item_count"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">=",
                 "right": {
@@ -431,11 +431,11 @@
                   "args": {
                     "value": 140
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Armor for your Horse Pack",
@@ -574,7 +574,7 @@
                     "key": " coins",
                     "_original_ast_type": "prog_item_count"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">=",
                 "right": {
@@ -582,11 +582,11 @@
                   "args": {
                     "value": 5
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Map Pack",
@@ -608,7 +608,7 @@
                     "key": " coins",
                     "_original_ast_type": "prog_item_count"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">=",
                 "right": {
@@ -616,11 +616,11 @@
                   "args": {
                     "value": 5
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Loading Screen",
@@ -758,7 +758,7 @@
                     "key": " coins",
                     "_original_ast_type": "prog_item_count"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">=",
                 "right": {
@@ -766,11 +766,11 @@
                   "args": {
                     "value": 5
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Name Change Pack",
@@ -909,7 +909,7 @@
                     "key": " coins",
                     "_original_ast_type": "prog_item_count"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">=",
                 "right": {
@@ -917,11 +917,11 @@
                   "args": {
                     "value": 75
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Temporary Spike",
@@ -943,7 +943,7 @@
                     "key": " coins",
                     "_original_ast_type": "prog_item_count"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">=",
                 "right": {
@@ -951,11 +951,11 @@
                   "args": {
                     "value": 75
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Loading Screen",
@@ -1008,7 +1008,7 @@
                     "key": " coins",
                     "_original_ast_type": "prog_item_count"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">=",
                 "right": {
@@ -1016,11 +1016,11 @@
                   "args": {
                     "value": 5
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Top Hat Pack",
@@ -1110,7 +1110,7 @@
                     "key": " coins",
                     "_original_ast_type": "prog_item_count"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">=",
                 "right": {
@@ -1118,11 +1118,11 @@
                   "args": {
                     "value": 5
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Finish the Fight Pack",
@@ -2107,6 +2107,7 @@
       "world_directory": "dlcquest"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "DLCQuest",

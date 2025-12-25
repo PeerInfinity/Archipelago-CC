@@ -565,6 +565,7 @@
       "world_directory": "mathadventure"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "MathProof2p2e4",

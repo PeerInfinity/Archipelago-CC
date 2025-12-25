@@ -2866,7 +2866,7 @@
                     },
                     "_original_ast_type": "function_call"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -7646,6 +7646,7 @@
       "world_directory": "messenger"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "The Messenger",

@@ -42,8 +42,8 @@ class StartingStatements(Range):
 class Theorem(Choice):
     """Option for Theorem to Prove."""
     display_name = "Theorem to Prove"
-    option_2p2e4 = 0
-    default = 0
+
+    default = "2p2e4"
 
 
 @dataclass

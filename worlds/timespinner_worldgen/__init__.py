@@ -234,9 +234,213 @@ class TimespinnerWorldGenWorld(RuleWorldMixin, World):
         "Event": frozenset(["Killed Emperor", "Killed Maw", "Killed Twins", "Killed Aelana", "Killed Nightmare"]),
     }
 
+    # Canonical item placements - where items belong in the "vanilla" game
+    # Used by exporter to distinguish canonical placements from always-locked items
+    canonical_placements: ClassVar[Dict[str, str]] = {
+        "Tutorial: Yo Momma 1": "Ice Orb",
+        "Tutorial: Yo Momma 2": "Infernal Flames",
+        "Lake Desolation: Starter chest 2": "Max Aura",
+        "Lake Desolation: Starter chest 3": "Demon",
+        "Lake Desolation: Starter chest 1": "Celestial Sash",
+        "Lake Desolation (Lower): Timespinner Wheel room": "Bleak Ring",
+        "Lake Desolation: Forget me not chest": "Potion",
+        "Lake Desolation (Lower): Chicken chest": "Captain's Cap",
+        "Lake Desolation (Upper): Oxygen recovery room": "Iron Orb",
+        "Lake Desolation (Upper): Secret room": "Water Mask",
+        "Lake Desolation (Upper): Double jump cave platform": "Plasma Geyser",
+        "Lake Desolation (Upper): Double jump cave floor": "Berry Pick-Mi-Up",
+        "Lake Desolation (Upper): Sparrow chest": "Max Sand",
+        "Lake Desolation (Upper): Crash site pedestal": "Sunglasses",
+        "Lake Desolation (Upper): Crash site chest 1": "Library Keycard V",
+        "Lake Desolation (Upper): Crash site chest 2": "Max Aura",
+        "Lake Desolation (Lower): Not so secret room": "Umbra Orb",
+        "Lake Desolation (Upper): Tank chest": "Max Sand",
+        "Lake Desolation: Kitty Boss": "Forbidden Tome",
+        "Library: Basement": "Wind Orb",
+        "Library: Warp gate": "Wyrm Brooch",
+        "Library: Librarian": "Herb",
+        "Library: Reading nook chest": "Blue Orb",
+        "Library: Storage room chest 1": "Potion",
+        "Library: Storage room chest 2": "Scythe Ring",
+        "Library: Storage room chest 3": "Jerky",
+        "Library: Terminal 2 (Lachiem)": "Ancient Coin",
+        "Library: Terminal 1 (Windaria)": "Galaxy Earrings",
+        "Library: Terminal 3 (Emperor Nuvius)": "Chaos Rose",
+        "Library: V terminal 1 (War of the Sisters)": "Frozen Spires",
+        "Library: V terminal 2 (Lake Desolation Map)": "Security Keycard B",
+        "Library: V terminal 3 (Vilete)": "Jewelry Box",
+        "Library: Backer room chest 5": "Metal Wristband",
+        "Library: Backer room chest 4": "Security Keycard A",
+        "Library: Backer room chest 3": "Max Sand",
+        "Library: Backer room chest 2": "Nether Orb",
+        "Library: Backer room chest 1": "Merchant Crow",
+        "Library: Backer room terminal (Vandagray Metropolis Map)": "Max Sand",
+        "Varndagroth Towers (Left): Elevator Key not required": "Plasma IV Bag",
+        "Varndagroth Towers (Left): Ye olde Timespinner": "Soul Scanner",
+        "Varndagroth Towers (Left): Bottom floor": "Eternal Coat",
+        "Varndagroth Towers (Left): Air vents secret": "Alchemy Tools",
+        "Varndagroth Towers (Left): Elevator chest": "Oculus Ring",
+        "Varndagroth Towers: Bridge": "Pyro Ring",
+        "Varndagroth Towers (Right): Elevator card chest": "Max HP",
+        "Varndagroth Towers (Right): Air vents right chest": "Max Sand",
+        "Varndagroth Towers (Right): Air vents left chest": "Plasma Orb",
+        "Varndagroth Towers (Right): Bottom floor": "Hi-Ether",
+        "Varndagroth Towers (Right): Elevator chest": "Colossal Hammer",
+        "Varndagroth Towers (Right): Varndagroth": "Sanguine Ring",
+        "Varndagroth Towers (Right): Spider Hell": "Twin Pyramid Key",
+        "Varndagroth Towers (Right): Medbay terminal (Bleakness Research)": "Max Sand",
+        "Sealed Caves (Sirens): Water hook": "Timespinner Gear 2",
+        "Sealed Caves (Sirens): Siren room underwater right": "Shattered Orb",
+        "Sealed Caves (Sirens): Siren room underwater left": "Gilded Egg",
+        "Sealed Caves (Sirens): Cave after sirens chest 1": "Chaos Rose",
+        "Sealed Caves (Sirens): Cave after sirens chest 2": "Kobo",
+        "Military Fortress: Bomber chest": "Empire Orb",
+        "Military Fortress: Close combat room": "Bird Statue",
+        "Military Fortress: Soldiers bridge": "Max Aura",
+        "Military Fortress: Giantess room": "Chaos Rose",
+        "Military Fortress: Giantess bridge": "Ether",
+        "Military Fortress: B door chest 2": "Icicle Ring",
+        "Military Fortress: B door chest 1": "Bombardment",
+        "Military Fortress: Pedestal": "Dark Flames",
+        "Lab: Coffee break": "Aura Serpent",
+        "Lab: Lower trash right": "Old Coat",
+        "Lab: Lower trash left": "Shiny Rock",
+        "Lab: Below lab entrance": "Sand Vial",
+        "Lab: Trash jump room": "Max Sand",
+        "Lab: Experiment #13": "Trendy Jacket",
+        "Lab: Sentry platform terminal (Origins)": "Silence Ring",
+        "Lab: Experiment 13 terminal (W.R.E.C Farewell)": "Star of Lachiem",
+        "Lab: Left terminal (Biotechnology)": "Royal Ring",
+        "Lab: Dynamo Works": "Meyef",
+        "Lab: Spider Hell": "Goddess Brooch",
+        "Lab: Middle terminal (Amadeus Laboratory Map)": "Hi-Ether",
+        "Lab: Right terminal (Experiment #11)": "Max Sand",
+        "Lab: Genza (Blob Mom)": "Chaos Trap",
+        "Lab: Download and chest room chest": "Max HP",
+        "Lab: Lab secret": "Viletian Crown",
+        "Lab: Download and chest room terminal (Experiment #13)": "Max HP",
+        "Emperor's Tower: Courtyard bottom chest": "Librarian Hat",
+        "Emperor's Tower: Courtyard floor secret": "Colossal Blade",
+        "Emperor's Tower: Courtyard upper chest": "Empire Crown",
+        "Emperor's Tower: Galactic sage room": "Librarian Robe",
+        "Emperor's Tower: Bottom right tower": "Max Sand",
+        "Emperor's Tower: Wayyyy up there": "Filigree Clasp",
+        "Emperor's Tower: Left tower balcony": "Sand Bottle",
+        "Emperor's Tower: Emperor's Chambers chest": "Glass Pumpkin",
+        "Emperor's Tower: Emperor's Chambers pedestal": "Sand Bottle",
+        "Killed Emperor": "Killed Emperor",
+        "Sealed Caves (Xarion): Skeleton": "Max Aura",
+        "Sealed Caves (Xarion): Shroom jump room": "Ether",
+        "Sealed Caves (Xarion): Double shroom room": "Plasma Crystal",
+        "Sealed Caves (Xarion): Jacksquat room": "Elevator Keycard",
+        "Sealed Caves (Xarion): Below Jacksquat room": "Radiant Orb",
+        "Sealed Caves (Xarion): Secret room": "Gun Orb",
+        "Sealed Caves (Xarion): Bottom left room": "Warp Shard",
+        "Sealed Caves (Xarion): Last chance before Xarion": "Max HP",
+        "Sealed Caves (Xarion): Xarion": "Lightwall",
+        "Refugee Camp: Neliste's Bra": "Eye Orb",
+        "Refugee Camp: Storage chest 3": "Max HP",
+        "Refugee Camp: Storage chest 2": "Pointy Hat",
+        "Refugee Camp: Storage chest 1": "Max Sand",
+        "Forest: Refugee camp roof": "Max Aura",
+        "Forest: Bat jump ledge": "Buckle Hat",
+        "Forest: Green platform secret": "Tailwind Ring",
+        "Forest: Rats guarded chest": "Max HP",
+        "Forest: Waterfall chest 1": "Timespinner Gear 3",
+        "Forest: Waterfall chest 2": "Sprite",
+        "Forest: Batcave": "Max Aura",
+        "Castle Ramparts: In the moat": "Blood Orb",
+        "Forest: Before Serene single bat cave": "Shield Ring",
+        "Lake Serene (Lower): Under the eels": "Storm Eye",
+        "Lake Serene (Lower): Past the eels": "Hi-Potion",
+        "Lake Serene (Upper): Rat nest": "Crimson Vortex",
+        "Lake Serene (Upper): Double jump cave platform": "Berry Pick-Mi-Up+",
+        "Lake Serene (Upper): Double jump cave floor": "Shadow Seal",
+        "Lake Serene (Upper): Cave secret": "Traveler's Cloak",
+        "Lake Serene: Before Big Bird": "Max Aura",
+        "Lake Serene: Behind the vines": "Talaria Attachment",
+        "Lake Serene: Pyramid keys room": "Captain's Uniform",
+        "Lake Serene (Upper): Chicken ledge": "Sun Ring",
+        "Lake Serene (Lower): Deep dive": "Ether",
+        "Lake Serene (Lower): Water spikes room": "Blade Orb",
+        "Lake Serene (Lower): Underwater secret": "Corruption",
+        "Lake Serene (Lower): T chest": "Max Sand",
+        "Lake Serene (Lower): Underwater pedestal": "Aura Blast",
+        "Caves of Banishment (Maw): Shroom jump room": "Max Aura",
+        "Caves of Banishment (Maw): Secret room": "Ether",
+        "Caves of Banishment (Maw): Bottom left room": "Spaghetti",
+        "Caves of Banishment (Maw): Single shroom room": "Griffin",
+        "Caves of Banishment (Maw): Jackpot room chest 1": "Hi-Potion",
+        "Caves of Banishment (Maw): Jackpot room chest 2": "Galaxy Stone",
+        "Caves of Banishment (Maw): Jackpot room chest 3": "Max HP",
+        "Caves of Banishment (Maw): Jackpot room chest 4": "Pendulum",
+        "Caves of Banishment (Maw): Pedestal": "Chaos Blades",
+        "Caves of Banishment (Maw): Last chance before Maw": "Timespinner Gear 1",
+        "Caves of Banishment (Maw): Plasma Crystal": "Max Aura",
+        "Killed Maw": "Killed Maw",
+        "Caves of Banishment (Maw): Mineshaft": "Princess Dress",
+        "Caves of Banishment (Sirens): Wyvern room": "Hope Ring",
+        "Caves of Banishment (Sirens): Siren room above water chest": "Arm Cannon",
+        "Caves of Banishment (Sirens): Siren room underwater left chest": "Tablet",
+        "Caves of Banishment (Sirens): Siren room underwater right chest": "Lab Glasses",
+        "Caves of Banishment (Sirens): Siren room underwater right ground": "Max Sand",
+        "Caves of Banishment (Sirens): Water hook": "Mind Refresh",
+        "Castle Ramparts: Bomber chest": "Berry Pick-Mi-Up+",
+        "Castle Ramparts: Freeze the engineer": "Empress Robe",
+        "Castle Ramparts: Giantess guarded room": "Timespinner Spindle",
+        "Castle Ramparts: Knight and archer guarded room": "Timespinner Wheel",
+        "Castle Ramparts: Pedestal": "Gas Mask",
+        "Castle Keep: Under the twins": "Max Sand",
+        "Killed Twins": "Killed Twins",
+        "Castle Keep: Advisor jump": "Lab Coat",
+        "Castle Keep: Twins": "Dusk Ring",
+        "Castle Keep: Royal guard tiny room": "Max Sand",
+        "Castle Basement: Secret pedestal": "Economizer Ring",
+        "Castle Basement: Clean the castle basement": "Filigree Tea",
+        "Castle Basement: Giantess guarded chest": "Security Keycard C",
+        "Castle Basement: Omelette chest": "Hi-Potion",
+        "Castle Basement: Just an egg": "Greed Brooch",
+        "Castle Keep: Yas queen room": "Max HP",
+        "Royal Towers: Floor secret": "Meteor Sparrow Trap",
+        "Royal Towers: Pre-climb gap": "Max Aura",
+        "Royal Towers: Long balcony": "Max HP",
+        "Royal Towers: Past bottom struggle juggle": "Eternal Brooch",
+        "Royal Towers: Bottom struggle juggle": "Max Aura",
+        "Royal Towers: Right tower freebie": "Max Aura",
+        "Royal Towers: Top struggle juggle": "Max Aura",
+        "Royal Towers: No struggle required": "Eternal Crown",
+        "Royal Towers: Left tower small balcony": "Max HP",
+        "Royal Towers: Left tower royal guard": "Midnight Cloak",
+        "Royal Towers: Before Aelana": "Succubus Hairpin",
+        "Killed Aelana": "Killed Aelana",
+        "Royal Towers: Aelana's attic": "Max HP",
+        "Royal Towers: Aelana's chest": "Selen's Bangle",
+        "Royal Towers: Aelana's pedestal": "Max HP",
+        "Ancient Pyramid: Why not it's right there": "Djinn Inferno",
+        "Ancient Pyramid: Conviction guarded room": "Food Synthesizer",
+        "Ancient Pyramid: Pit secret room": "Sand Bottle",
+        "Ancient Pyramid: Regret chest": "Security Keycard D",
+        "Ancient Pyramid: Nightmare Door chest": "Fire Orb",
+        "Killed Nightmare": "Killed Nightmare",
+    }
+
+    def __init__(self, multiworld: "MultiWorld", player: int):
+        super().__init__(multiworld, player)
+        # Game-specific world attributes
+        self.flag_specific_keycards = False
+        self.flag_eye_spy = False
+        self.flag_unchained_keys = False
+        self.flag_prism_break = False
+        self.pyramid_keys_unlock = 'GateLakeSereneRight'
+        self.present_keys_unlock = 'GateSealedSirensCave'
+        self.past_keys_unlock = 'GateLakeSereneRight'
+        self.time_keys_unlock = 'GateRightPyramid'
+
     def generate_early(self) -> None:
-        """Push starting items as precollected."""
+        """Push starting items and disable randomization for seed 1."""
         self._push_starting_items()
+        if self.multiworld.seed == 1:
+            self.options.randomize_items.value = False
 
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
@@ -292,6 +496,29 @@ class TimespinnerWorldGenWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def pre_fill(self) -> None:
+        """Pre-fill items if not randomizing."""
+        if not self.options.randomize_items.value:
+            self._place_original_items()
+
+    def _place_original_items(self) -> None:
+        """Place items in their canonical locations when not randomized."""
+        for location_name, item_name in self.canonical_placements.items():
+            location = self.multiworld.get_location(location_name, self.player)
+
+            # Skip if already filled (e.g., by _place_locked_items or generate_basic)
+            if location.item is not None:
+                continue
+
+            item = self.create_item(item_name)
+            location.place_locked_item(item)
+
+            # Remove the item from the pool if it exists
+            for pool_item in self.multiworld.itempool[:]:
+                if pool_item.name == item_name and pool_item.player == self.player:
+                    self.multiworld.itempool.remove(pool_item)
+                    break
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

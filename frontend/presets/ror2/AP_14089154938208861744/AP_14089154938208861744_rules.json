@@ -4113,11 +4113,11 @@
                           "args": {
                             "value": 1
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4167,11 +4167,11 @@
                           "args": {
                             "value": 1
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4214,11 +4214,11 @@
                           "args": {
                             "value": 1
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4267,11 +4267,11 @@
                           "args": {
                             "value": 2
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4314,11 +4314,11 @@
                           "args": {
                             "value": 2
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4367,11 +4367,11 @@
                           "args": {
                             "value": 3
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4414,11 +4414,11 @@
                           "args": {
                             "value": 3
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4461,11 +4461,11 @@
                           "args": {
                             "value": 3
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4514,11 +4514,11 @@
                           "args": {
                             "value": 4
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -5712,6 +5712,7 @@
       "world_directory": "ror2"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Risk of Rain 2",

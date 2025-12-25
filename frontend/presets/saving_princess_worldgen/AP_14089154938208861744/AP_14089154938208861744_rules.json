@@ -1398,7 +1398,41 @@
           "display_name": "Trap Chance"
         }
       },
-      "world_directory": "saving_princess"
+      "world_directory": "saving_princess_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "settings": {
+        "game": "Saving Princess",
+        "assume_bidirectional_exits": false,
+        "use_resolved_items": false,
+        "options": {
+          "accessibility": "full",
+          "ace_weapon_upgrade": "always_upgraded",
+          "cliff_weapon_upgrade": "always_upgraded",
+          "death_link": "false",
+          "exclude_locations": [],
+          "expanded_pool": "true",
+          "iframes_duration": 100,
+          "instant_saving": "true",
+          "item_links": [],
+          "local_items": [],
+          "music_shuffle": "false",
+          "non_local_items": [],
+          "plando_items": [],
+          "priority_locations": [],
+          "progression_balancing": 50,
+          "shake_intensity": 50,
+          "sprint_availability": "available_with_jacket",
+          "start_hints": [],
+          "start_inventory": {},
+          "start_inventory_from_pool": {},
+          "start_location_hints": [],
+          "trap_chance": 50
+        },
+        "world_directory": "saving_princess"
+      }
     }
   },
   "game_info": {

@@ -81,28 +81,28 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 3
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -125,14 +125,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 3
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -155,14 +155,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -234,14 +234,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -346,14 +346,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Burger"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -376,7 +376,7 @@
                     "location": "Act Completion (The Subcon Well)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -399,7 +399,7 @@
                     "location": "Act Completion (The Big Parade)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -466,14 +466,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Burger"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -496,7 +496,7 @@
                     "location": "Act Completion (The Subcon Well)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -519,7 +519,7 @@
                     "location": "Act Completion (The Big Parade)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -572,14 +572,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Burger"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -602,7 +602,7 @@
                     "location": "Act Completion (The Subcon Well)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -625,7 +625,7 @@
                     "location": "Act Completion (The Big Parade)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -678,14 +678,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Burger"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -708,7 +708,7 @@
                     "location": "Act Completion (The Subcon Well)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -731,7 +731,7 @@
                     "location": "Act Completion (The Big Parade)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -758,14 +758,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -797,14 +797,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -874,7 +874,7 @@
                     "location": "Act Completion (The Subcon Well)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -897,7 +897,7 @@
                     "location": "Act Completion (The Big Parade)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -953,14 +953,14 @@
                         {
                           "rule": "can_use_hat",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": 4
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -1029,14 +1029,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Burger"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1059,7 +1059,7 @@
                     "location": "Act Completion (The Subcon Well)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1082,7 +1082,7 @@
                     "location": "Act Completion (The Big Parade)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1138,14 +1138,14 @@
                         {
                           "rule": "can_use_hat",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": 4
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -1173,14 +1173,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1210,14 +1210,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Burger"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1240,7 +1240,7 @@
                     "location": "Act Completion (The Subcon Well)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1263,7 +1263,7 @@
                     "location": "Act Completion (The Big Parade)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1371,14 +1371,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Train"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1401,14 +1401,14 @@
                         {
                           "rule": "can_use_hat",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": 1
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -1442,14 +1442,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -1495,7 +1495,7 @@
                         "location": "Act Completion (Barrel Battle)",
                         "_original_ast_type": "location_rule_ref"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -1514,7 +1514,7 @@
                         "location": "Act Completion (Down with the Mafia!)",
                         "_original_ast_type": "location_rule_ref"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -1572,14 +1572,14 @@
                         {
                           "rule": "can_use_hat",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": 4
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -1649,14 +1649,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1743,7 +1743,7 @@
                         "location": "Act Completion (Dead Bird Studio)",
                         "_original_ast_type": "location_rule_ref"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -1762,7 +1762,7 @@
                         "location": "Act Completion (Train Rush)",
                         "_original_ast_type": "location_rule_ref"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -1843,14 +1843,14 @@
                         {
                           "rule": "can_use_hat",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": 1
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -1918,7 +1918,7 @@
                         "location": "Act Completion (Dead Bird Studio)",
                         "_original_ast_type": "location_rule_ref"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -1937,7 +1937,7 @@
                         "location": "Act Completion (Train Rush)",
                         "_original_ast_type": "location_rule_ref"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -2020,14 +2020,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Train"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2487,14 +2487,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -2537,14 +2537,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -2573,14 +2573,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -2690,7 +2690,7 @@
                     "location": "Act Completion (Murder on the Owl Express)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2701,14 +2701,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "UFO"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2731,7 +2731,7 @@
                     "location": "Act Completion (Cheating the Race)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2836,7 +2836,7 @@
                     "location": "Act Completion (Murder on the Owl Express)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2847,14 +2847,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "UFO"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2877,7 +2877,7 @@
                     "location": "Act Completion (Cheating the Race)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3016,7 +3016,7 @@
                     "location": "Act Completion (Murder on the Owl Express)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3027,14 +3027,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "UFO"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3057,7 +3057,7 @@
                     "location": "Act Completion (Cheating the Race)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3079,11 +3079,11 @@
                         "condition": {
                           "rule": "painting_logic",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "True_"
@@ -3106,11 +3106,11 @@
                                     "setting": "NoPaintingSkips",
                                     "_original_ast_type": "setting_value"
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "_original_ast_type": "not"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -3123,7 +3123,7 @@
                                 "left": {
                                   "rule": "get_difficulty",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -3131,11 +3131,11 @@
                                   "args": {
                                     "value": 0
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "_original_ast_type": "compare"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_true": {
                               "rule": "True_"
@@ -3143,7 +3143,7 @@
                             "if_false": null,
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "Has",
@@ -3153,11 +3153,11 @@
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -3171,11 +3171,11 @@
                             "setting": "UmbrellaLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "True_"
@@ -3192,14 +3192,14 @@
                             {
                               "rule": "can_use_hat",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
+                              "_converted_from_ast": true,
                               "args": [
                                 {
                                   "rule": "Constant",
                                   "args": {
                                     "value": 1
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 }
                               ]
                             }
@@ -3215,7 +3215,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -3278,7 +3278,7 @@
                     "location": "Act Completion (Murder on the Owl Express)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3289,14 +3289,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "UFO"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3319,7 +3319,7 @@
                     "location": "Act Completion (Cheating the Race)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3452,7 +3452,7 @@
                     "location": "Act Completion (Murder on the Owl Express)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3463,14 +3463,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "UFO"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3493,7 +3493,7 @@
                     "location": "Act Completion (Cheating the Race)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3506,14 +3506,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 0
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3595,14 +3595,14 @@
                         {
                           "rule": "can_use_hat",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": 4
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -3715,11 +3715,11 @@
                                 "setting": "UmbrellaLogic",
                                 "_original_ast_type": "setting_value"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "not"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "True_"
@@ -3736,14 +3736,14 @@
                                 {
                                   "rule": "can_use_hat",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
+                                  "_converted_from_ast": true,
                                   "args": [
                                     {
                                       "rule": "Constant",
                                       "args": {
                                         "value": 1
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     }
                                   ]
                                 }
@@ -3759,7 +3759,7 @@
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -3772,14 +3772,14 @@
                 {
                   "rule": "has_relic_combo",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Crayon"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -3847,14 +3847,14 @@
                         {
                           "rule": "can_use_hat",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": 4
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -3912,14 +3912,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -3961,14 +3961,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 3
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -4020,28 +4020,28 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 4
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -4075,14 +4075,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4157,11 +4157,11 @@
                                 "setting": "UmbrellaLogic",
                                 "_original_ast_type": "setting_value"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "not"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "True_"
@@ -4178,14 +4178,14 @@
                                 {
                                   "rule": "can_use_hat",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
+                                  "_converted_from_ast": true,
                                   "args": [
                                     {
                                       "rule": "Constant",
                                       "args": {
                                         "value": 1
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     }
                                   ]
                                 }
@@ -4201,7 +4201,7 @@
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4259,14 +4259,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -4363,14 +4363,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4730,14 +4730,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Crayon"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4878,14 +4878,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4909,14 +4909,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5089,14 +5089,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5198,14 +5198,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5429,14 +5429,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5454,14 +5454,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5524,14 +5524,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -5908,11 +5908,11 @@
                     "condition": {
                       "rule": "painting_logic",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "not"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "if_true": {
                   "rule": "True_"
@@ -5935,11 +5935,11 @@
                                 "setting": "NoPaintingSkips",
                                 "_original_ast_type": "setting_value"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "not"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -5952,7 +5952,7 @@
                             "left": {
                               "rule": "get_difficulty",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "op": ">=",
                             "right": {
@@ -5960,11 +5960,11 @@
                               "args": {
                                 "value": 0
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "compare"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "True_"
@@ -5972,7 +5972,7 @@
                         "if_false": null,
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "Has",
@@ -5982,11 +5982,11 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "conditional"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -6102,14 +6102,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6326,14 +6326,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6365,14 +6365,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6390,14 +6390,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6415,14 +6415,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6440,14 +6440,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6479,14 +6479,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6546,14 +6546,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6890,28 +6890,28 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 3
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -7091,14 +7091,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 3
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -7127,14 +7127,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 3
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -8523,6 +8523,7 @@
       "world_directory": "ahit"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "A Hat in Time",

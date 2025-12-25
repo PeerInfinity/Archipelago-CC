@@ -431,6 +431,7 @@
       "world_directory": "apquest"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "APQuest",

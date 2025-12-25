@@ -361,6 +361,27 @@ class YoshisIslandWorldGenWorld(RuleWorldMixin, World):
         "King Bowser's Castle: Level Clear": "Saved Baby Luigi",
     }
 
+    def __init__(self, multiworld: "MultiWorld", player: int):
+        super().__init__(multiworld, player)
+        # Game-specific world attributes
+        self.StageLogic = 0
+        self.HiddenObjectVisibility = 1
+        self.ShuffleMiddleRings = 0
+        self.ItemLogic = 0
+        self.BowserDoorMode = 0
+        self.LuigiPiecesRequired = 25
+        self.CastleClearCondition = 0
+        self.CastleOpenCondition = 5
+        self.game_logic = 'Easy'
+        self.midring_start = True
+        self.clouds_always_visible = False
+        self.consumable_logic = True
+        self.bowser_door = 0
+        self.luigi_pieces = 25
+        self.boss_order = ["Burt The Bashful's Boss Room", "Salvo The Slime's Boss Room", "Bigger Boo's Boss Room", "Roger The Ghost's Boss Room", "Prince Froggy's Boss Room", "Naval Piranha's Boss Room", "Marching Milde's Boss Room", "Hookbill The Koopa's Boss Room", "Sluggy The Unshaven's Boss Room", "Raphael The Raven's Boss Room", "Tap-Tap The Red Nose's Boss Room"]
+        self.castle_unlock = 5
+        self.boss_unlock = 0
+
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
         self._push_starting_items()

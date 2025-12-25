@@ -570,6 +570,13 @@ class TerrariaWorldGenWorld(RuleWorldMixin, World):
         "Skeletron Prime": "Post-Skeletron Prime",
     }
 
+    def __init__(self, multiworld: "MultiWorld", player: int):
+        super().__init__(multiworld, player)
+        # Game-specific world attributes
+        self.calamity = False
+        self.grindy_achievements = False
+        self.getfixedboi = False
+
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
         self._push_starting_items()

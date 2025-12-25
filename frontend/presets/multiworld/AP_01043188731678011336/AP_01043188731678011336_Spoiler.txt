@@ -2193,9 +2193,8 @@ King Zora (Player2)
    =>   Zoras River
 Lake Hylia Island (Player2)
         Links House -> Links House Exit
-   =>   Light World -> East Hyrule Teleporter
-   =>   East Dark World -> Northeast Dark World Broken Bridge Pass
-   =>   Northeast Dark World -> Dark Lake Hylia Teleporter
+   =>   Light World -> South Hyrule Teleporter
+   =>   South Dark World -> Dark Lake Hylia Drop (South)
    =>   Dark Lake Hylia -> Lake Hylia Island Mirror Spot
    =>   Lake Hylia Island
 Lava Cake Cleared (Player1)

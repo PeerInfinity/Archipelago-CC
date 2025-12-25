@@ -1861,8 +1861,12 @@
           "display_name": "Total Strawberries"
         }
       },
-      "strawberries_required": 0,
-      "world_directory": "celeste64"
+      "world_directory": "celeste64_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "strawberries_required": 16
     }
   },
   "game_info": {

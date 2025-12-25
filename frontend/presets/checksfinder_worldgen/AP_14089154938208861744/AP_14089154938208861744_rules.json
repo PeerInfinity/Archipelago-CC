@@ -677,7 +677,30 @@
           "display_name": "Randomize Items"
         }
       },
-      "world_directory": "checksfinder"
+      "world_directory": "checksfinder_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "settings": {
+        "game": "ChecksFinder",
+        "assume_bidirectional_exits": false,
+        "use_resolved_items": false,
+        "options": {
+          "accessibility": "full",
+          "exclude_locations": [],
+          "item_links": [],
+          "local_items": [],
+          "non_local_items": [],
+          "plando_items": [],
+          "priority_locations": [],
+          "progression_balancing": 50,
+          "start_hints": [],
+          "start_inventory": {},
+          "start_location_hints": []
+        },
+        "world_directory": "checksfinder"
+      }
     }
   },
   "game_info": {

@@ -176,6 +176,11 @@ class DLCQuestWorldGenWorld(RuleWorldMixin, World):
         "Winning Basic": "Victory Basic",
     }
 
+    def __init__(self, multiworld: "MultiWorld", player: int):
+        super().__init__(multiworld, player)
+        # Game-specific world attributes
+        self.add_sphere_items_upfront = True
+
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
         self._push_starting_items()
