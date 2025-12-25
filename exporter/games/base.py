@@ -715,7 +715,12 @@ class BaseGameExportHandler:
                     elif isinstance(option, Choice):
                         option_def['type'] = 'choice'
                         # Export name_lookup which maps value -> name
-                        option_def['name_lookup'] = {str(k): v for k, v in option_class.name_lookup.items()}
+                        # Handle buggy option definitions where values are tuples like (1,) instead of 1
+                        def normalize_key(k):
+                            if isinstance(k, tuple) and len(k) == 1:
+                                return str(k[0])
+                            return str(k)
+                        option_def['name_lookup'] = {normalize_key(k): v for k, v in option_class.name_lookup.items()}
                         option_def['default'] = option_class.default
                     else:
                         # Unknown option type, skip
