@@ -727,6 +727,8 @@ def _generate_option_class_from_definition(setting_name: str, option_def: Dict[s
     """
     class_name = ''.join(word.capitalize() for word in setting_name.split('_'))
     display_name = option_def.get('display_name', ' '.join(word.capitalize() for word in setting_name.split('_')))
+    # Escape double quotes in display names to generate valid Python code
+    display_name_escaped = display_name.replace('"', '\\"')
     option_type = option_def.get('type')
     default = option_def.get('default', 0)
 
@@ -745,7 +747,7 @@ def _generate_option_class_from_definition(setting_name: str, option_def: Dict[s
             class_code = f'''
 class {class_name}(TextChoice):
     """Option for {display_name}."""
-    display_name = "{display_name}"
+    display_name = "{display_name_escaped}"
 
     default = {default_repr}
 '''
@@ -761,7 +763,7 @@ class {class_name}(TextChoice):
             class_code = f'''
 class {class_name}(TextChoice):
     """Option for {display_name}."""
-    display_name = "{display_name}"
+    display_name = "{display_name_escaped}"
 
     default = {default_repr}
 '''
@@ -777,7 +779,7 @@ class {class_name}(TextChoice):
         class_code = f'''
 class {class_name}(Choice):
     """Option for {display_name}."""
-    display_name = "{display_name}"
+    display_name = "{display_name_escaped}"
 {options_code}
     default = {default_repr}
 '''
@@ -804,7 +806,7 @@ class {class_name}(Choice):
             class_code = f'''
 class {class_name}(NamedRange):
     """Option for {display_name}."""
-    display_name = "{display_name}"
+    display_name = "{display_name_escaped}"
     range_start = {range_start}
     range_end = {range_end}
     default = {default_repr}
@@ -815,7 +817,7 @@ class {class_name}(NamedRange):
             class_code = f'''
 class {class_name}(Range):
     """Option for {display_name}."""
-    display_name = "{display_name}"
+    display_name = "{display_name_escaped}"
     range_start = {range_start}
     range_end = {range_end}
     default = {default_repr}
@@ -826,7 +828,7 @@ class {class_name}(Range):
         class_code = f'''
 class {class_name}(DefaultOnToggle):
     """Option for {display_name}."""
-    display_name = "{display_name}"
+    display_name = "{display_name_escaped}"
 '''
         return class_code, f'    {setting_name}: {class_name}', 'DefaultOnToggle'
 
@@ -834,7 +836,7 @@ class {class_name}(DefaultOnToggle):
         class_code = f'''
 class {class_name}(Toggle):
     """Option for {display_name}."""
-    display_name = "{display_name}"
+    display_name = "{display_name_escaped}"
 '''
         return class_code, f'    {setting_name}: {class_name}', 'Toggle'
 
