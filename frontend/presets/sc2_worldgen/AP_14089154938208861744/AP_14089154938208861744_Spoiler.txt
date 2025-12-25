@@ -17,6 +17,84 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+All In Map:                      Ground
+Base-Bust Locations:             Enabled
+Challenge Locations:             Enabled
+Difficulty Curve:                Standard
+Difficulty Damage Modifier:      Yes
+Disable Forced Camera Movement:  Yes
+Enable Morphling:                No
+Enable Race-Swapped Mission Variants:Disabled
+Enable Void Trade:               No
+Ensure Generic Items:            25
+Exclude Overpowered Items:       No
+Exclude Very Hard Missions:      Default
+Extra Locations:                 Enabled
+Filler Percentage:               0
+Game Difficulty:                 Normal
+Game Speed:                      Default
+Generic Upgrade Items:           Individual Items
+Generic Upgrade Missions:        0
+Generic Upgrade Research:        Vanilla
+Generic Upgrade Research Speedup:No
+Grant Story Levels:              Minimum
+Grant Story Tech:                No Grant
+Kerrigan Level Item Distribution:Smooth
+Kerrigan Level Item Sum:         70
+Levels Per Mission Beaten:       0
+Levels Per Mission Beaten Cap:   -1
+Kerrigan Maximum Active Abilities:12
+Kerrigan Maximum Passive Abilities:5
+Kerrigan Presence:               Vanilla
+Kerrigan Primal Status:          Vanilla
+Total Level Cap:                 -1
+Key Mode:                        Disabled
+Lowest Maximum Supply:           180
+Mastery Locations:               Enabled
+Maximum number of upgrades per unit/structure:-1
+Maximum Upgrade Level:           3
+Maximum Campaign Size:           83
+Maximum Supply Per Item:         1
+Maximum Supply Reduction Per Item:1
+Mercenary Highlanders:           Yes
+Minimum number of upgrades per unit/structure:2
+Minerals Per Item:               25
+Mission Order:                   Golden Path
+Mission Order Scouting:          None
+Enable Mission Race Balancing:   Semi Balanced
+Nova Ghost of Chance Variant:    Wol
+Nova Maximum Gadgets:            5
+Nova Maximum Weapons:            5
+Terran Player Color (Nova):      Default
+Protoss Player Color:            Default
+Terran Player Color (Raynor):    Default
+Zerg Player Color:               Default
+Zerg Player Color (Primal):      Default
+Preventative Locations:          Enabled
+Required Tactics:                Standard
+Upgrade Cost Discount Per Item:  2
+Shuffle Campaigns:               Yes
+Shuffle No-Build Missions:       Yes
+Skip Cutscenes:                  No
+Spear of Adun Maximum Active Abilities:13
+Spear of Adun Maximum Passive Abilities:3
+Spear of Adun Passive Ability Presence:Vanilla
+Spear of Adun Passive Abilities Present in No-Build:No
+Spear of Adun Presence:          Vanilla
+Spear of Adun Present in No-Build:No
+Speedrun Locations:              Enabled
+Starting Primary Abilities:      0
+Starter Unit:                    Off
+Starting Supply Per Item:        2
+Take Over AI Allies:             No
+Two start missions:              No
+Vanilla Items Only:              No
+Vanilla Locations:               Enabled
+Vespene Per Item:                25
+Victory Cache:                   0
+Void Trade Age Limit:            30 Minutes
+Allow Workers in Void Trade:     No
+Allow Unit Nerfs:                No
 
 
 Locations:

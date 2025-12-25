@@ -827,7 +827,7 @@
     "has_custom_game_logic": true,
     "world_directory": "overcooked2"
   },
-  "Overcooked\\! 2 WorldGen": {
+  "Overcooked! 2 WorldGen": {
     "exporter_path": null,
     "exporter_size": 0,
     "game_logic_path": null,
@@ -1018,7 +1018,7 @@
   },
   "Starcraft 2": {
     "exporter_path": "exporter/games/sc2.py",
-    "exporter_size": 64865,
+    "exporter_size": 74682,
     "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
     "game_logic_size": 88384,
     "has_custom_exporter": true,
@@ -1189,7 +1189,7 @@
   },
   "Terraria": {
     "exporter_path": "exporter/games/terraria.py",
-    "exporter_size": 19736,
+    "exporter_size": 19791,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
