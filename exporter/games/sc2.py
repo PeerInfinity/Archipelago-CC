@@ -210,15 +210,17 @@ class SC2GameExportHandler(GenericGameExportHandler):
                 ]
             }
 
-        # terran_beats_protoss_deathball: Requires air attack capability + weapon/armor >= 2
-        # Original: ((Banshee OR Battlecruiser OR (Liberator+Raid Artillery)) AND anti_air)
+        # terran_beats_protoss_deathball: Requires air attack capability + anti-air + weapon/armor min >= 2
+        # Original: ((Banshee OR Battlecruiser OR (Liberator+Raid Artillery)) AND competent_anti_air)
         #           OR (competent_comp AND air_anti_air)
-        #           AND weapon_armor_min >= 2
-        # Simplified: (Banshee OR Battlecruiser) AND ship_weapon >= 2
+        #           AND terran_army_weapon_armor_upgrade_min_level >= 2
+        # The weapon_armor_min requirement checks that ALL weapon AND armor upgrades are >= 2
+        # Simplified: (Banshee OR Battlecruiser) AND competent_anti_air AND all upgrade types >= 2
         if helper_name == 'terran_beats_protoss_deathball':
             return {
                 'type': 'and',
                 'conditions': [
+                    # Air-to-ground capability
                     {
                         'type': 'or',
                         'conditions': [
@@ -226,28 +228,95 @@ class SC2GameExportHandler(GenericGameExportHandler):
                             {'type': 'item_check', 'item': 'Battlecruiser'}
                         ]
                     },
+                    # Anti-air capability (required to survive against Protoss air support)
+                    {'type': 'helper', 'name': 'terran_competent_anti_air'},
+                    # All weapon AND armor upgrades must be >= 2
+                    # This is a simplified approximation of terran_army_weapon_armor_upgrade_min_level >= 2
+                    # We check all three types to be safe
+                    {
+                        'type': 'compare',
+                        'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Weapon'},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': 2}
+                    },
+                    {
+                        'type': 'compare',
+                        'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Armor'},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': 2}
+                    },
+                    {
+                        'type': 'compare',
+                        'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Weapon'},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': 2}
+                    },
+                    {
+                        'type': 'compare',
+                        'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Armor'},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': 2}
+                    },
                     {
                         'type': 'compare',
                         'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Weapon'},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': 2}
+                    },
+                    {
+                        'type': 'compare',
+                        'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Armor'},
                         'op': '>=',
                         'right': {'type': 'constant', 'value': 2}
                     }
                 ]
             }
 
-        # terran_base_trasher: Requires competent_comp + very_hard weapon/armor + base destruction
-        # Original: terran_competent_comp AND very_hard_weapon_armor >= 3 (without advanced_tactics)
+        # terran_base_trasher: Requires competent_comp + very_hard weapon/armor (>= 3) + base destruction
+        # Original: terran_competent_comp AND terran_very_hard_mission_weapon_armor_level (all upgrades >= 3)
         #           AND ((Siege Tank + Jump Jets) OR (Battlecruiser + ATX) OR (Liberator + Raid Artillery))
-        # Simplified: Ship Weapon >= 3 AND ((Siege Tank + Jump Jets) OR (Battlecruiser + ATX))
+        # Simplified: competent_anti_air + all upgrades >= 3 + base destruction units
+        # Note: We use competent_anti_air instead of competent_comp to avoid blacklisted helper reference
         if helper_name == 'terran_base_trasher':
             return {
                 'type': 'and',
                 'conditions': [
-                    # very_hard_weapon_armor_level requires all >= 3 without advanced_tactics
-                    # Ship weapon is usually the bottleneck
+                    # Requires competent_anti_air (core requirement of competent_comp)
+                    {'type': 'helper', 'name': 'terran_competent_anti_air'},
+                    # very_hard_weapon_armor_level requires all upgrades >= 3 without advanced_tactics
+                    {
+                        'type': 'compare',
+                        'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Weapon'},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': 3}
+                    },
+                    {
+                        'type': 'compare',
+                        'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Armor'},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': 3}
+                    },
+                    {
+                        'type': 'compare',
+                        'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Weapon'},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': 3}
+                    },
+                    {
+                        'type': 'compare',
+                        'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Armor'},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': 3}
+                    },
                     {
                         'type': 'compare',
                         'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Weapon'},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': 3}
+                    },
+                    {
+                        'type': 'compare',
+                        'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Armor'},
                         'op': '>=',
                         'right': {'type': 'constant', 'value': 3}
                     },
@@ -275,36 +344,98 @@ class SC2GameExportHandler(GenericGameExportHandler):
             }
 
         # terran_all_in_requirement: Requires very_hard weapon/armor + beats_kerrigan + competent_comp
-        # Original: very_hard_weapon_armor >= 3 AND (Marine OR Dominion Trooper OR Banshee)
-        #           AND terran_competent_comp
-        # Simplified: Ship Weapon >= 3 AND (Marine OR Banshee)
+        # Original: terran_very_hard_mission_weapon_armor_level (all >= 3) AND beats_kerrigan AND terran_competent_comp
+        # beats_kerrigan options: Marine/Dominion Trooper/Banshee OR Reaper+Resource Efficiency
+        #                         OR Valkyrie+Flechette (air map) OR Ghost+EMP (advanced tactics)
+        # Simplified: all upgrades >= 3 AND beats_kerrigan (all options) AND anti_air
         if helper_name == 'terran_all_in_requirement':
             return {
                 'type': 'and',
                 'conditions': [
-                    # very_hard_weapon_armor_level requires all >= 3
+                    # terran_competent_anti_air (inlined from competent_comp) - this helper exists
+                    {'type': 'helper', 'name': 'terran_competent_anti_air'},
+                    # very_hard_weapon_armor_level requires all upgrades >= 3
+                    {
+                        'type': 'compare',
+                        'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Weapon'},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': 3}
+                    },
+                    {
+                        'type': 'compare',
+                        'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Armor'},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': 3}
+                    },
+                    {
+                        'type': 'compare',
+                        'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Weapon'},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': 3}
+                    },
+                    {
+                        'type': 'compare',
+                        'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Armor'},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': 3}
+                    },
                     {
                         'type': 'compare',
                         'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Weapon'},
                         'op': '>=',
                         'right': {'type': 'constant', 'value': 3}
                     },
-                    # beats_kerrigan requirement
+                    {
+                        'type': 'compare',
+                        'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Armor'},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': 3}
+                    },
+                    # beats_kerrigan requirement - all possible paths
                     {
                         'type': 'or',
                         'conditions': [
+                            # Primary units
                             {'type': 'item_check', 'item': 'Marine'},
-                            {'type': 'item_check', 'item': 'Banshee'}
+                            {'type': 'item_check', 'item': 'Dominion Trooper'},
+                            {'type': 'item_check', 'item': 'Banshee'},
+                            # Reaper path
+                            {
+                                'type': 'and',
+                                'conditions': [
+                                    {'type': 'item_check', 'item': 'Reaper'},
+                                    {'type': 'item_check', 'item': 'Resource Efficiency (Reaper)'}
+                                ]
+                            },
+                            # Valkyrie path (for air map)
+                            {
+                                'type': 'and',
+                                'conditions': [
+                                    {'type': 'item_check', 'item': 'Valkyrie'},
+                                    {'type': 'item_check', 'item': 'Flechette Missiles (Valkyrie)'}
+                                ]
+                            },
+                            # Ghost path (for advanced tactics)
+                            {
+                                'type': 'and',
+                                'conditions': [
+                                    {'type': 'item_check', 'item': 'Ghost'},
+                                    {'type': 'item_check', 'item': 'EMP Rounds (Ghost)'}
+                                ]
+                            }
                         ]
                     }
                 ]
             }
 
-        # terran_competent_comp: Requires terran_competent_anti_air and one of the main
-        # combat-capable units/combos PLUS progressive upgrades. The full version requires:
-        # - upgrade_level=1: weapons >= 2 (infantry) or >= 1 (air/mech)
-        # - upgrade_level=2: weapons >= 3 (infantry) or >= 2 (air/mech)
-        # We check the args to determine upgrade_level and set appropriate requirements.
+        # terran_competent_comp: Requires terran_competent_anti_air AND one of four complete
+        # combat-capable compositions. Each path has specific requirements beyond just having units.
+        #
+        # The four paths are:
+        # 1. Infantry with Healing: infantry + weapons >= upgrade_level+1 + armor >= upgrade_level + bio_heal
+        # 2. Mass Air-To-Ground: air unit + ship_weapons >= upgrade_level + ship_armor >= upgrade_level + mineral_dump
+        # 3. Strong Mech: Thor/Siege Tank + vehicle_weapons >= upgrade_level + vehicle_armor >= upgrade_level + light_frontline
+        # 4. Mech with Healing: Goliath/Warhound + vehicle_weapons >= upgrade_level + vehicle_armor >= upgrade_level + sustainable_mech_heal
         if helper_name == 'terran_competent_comp':
             # Determine upgrade level from args (default is 1)
             upgrade_level = 1
@@ -317,96 +448,158 @@ class SC2GameExportHandler(GenericGameExportHandler):
                                 upgrade_level = val
                                 break
 
-            conditions = [
-                {'type': 'helper', 'name': 'terran_competent_anti_air'},
+            infantry_weapon_req = upgrade_level + 1  # Infantry needs weapons >= upgrade_level + 1
+            mech_weapon_req = upgrade_level  # Mech/Ship need weapons >= upgrade_level
+            armor_req = upgrade_level  # All paths need armor >= upgrade_level
+
+            # Build the four composition paths
+            composition_paths = [
+                # Path 1: Infantry with Healing
+                # Requires: infantry unit + weapons >= 2 + armor >= 1 + bio_heal
                 {
-                    'type': 'or',
+                    'type': 'and',
                     'conditions': [
-                        {'type': 'item_check', 'item': 'Thor'},
-                        {'type': 'item_check', 'item': 'Siege Tank'},
-                        {'type': 'item_check', 'item': 'Battlecruiser'},
-                        {'type': 'item_check', 'item': 'Banshee'},
-                        {'type': 'item_check', 'item': 'Goliath'}
+                        # Infantry unit
+                        {
+                            'type': 'or',
+                            'conditions': [
+                                {'type': 'item_check', 'item': 'Marine'},
+                                {'type': 'item_check', 'item': 'Dominion Trooper'},
+                                {'type': 'item_check', 'item': 'Marauder'}
+                            ]
+                        },
+                        # Infantry weapons >= upgrade_level + 1
+                        {
+                            'type': 'compare',
+                            'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Weapon'},
+                            'op': '>=',
+                            'right': {'type': 'constant', 'value': infantry_weapon_req}
+                        },
+                        # Infantry armor >= upgrade_level
+                        {
+                            'type': 'compare',
+                            'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Armor'},
+                            'op': '>=',
+                            'right': {'type': 'constant', 'value': armor_req}
+                        },
+                        # Bio heal capability
+                        {'type': 'helper', 'name': 'terran_bio_heal'}
                     ]
                 },
+                # Path 2: Mass Air-To-Ground
+                # Requires: air unit + ship_weapons >= 1 + ship_armor >= 1 + mineral_dump
                 {
-                    'type': 'or',
+                    'type': 'and',
                     'conditions': [
-                        {'type': 'item_check', 'item': 'Progressive Terran Infantry Weapon'},
-                        {'type': 'item_check', 'item': 'Progressive Terran Vehicle Weapon'},
-                        {'type': 'item_check', 'item': 'Progressive Terran Ship Weapon'}
+                        # Air-to-ground unit
+                        {
+                            'type': 'or',
+                            'conditions': [
+                                {'type': 'item_check', 'item': 'Banshee'},
+                                {'type': 'item_check', 'item': 'Battlecruiser'}
+                            ]
+                        },
+                        # Ship weapons >= upgrade_level
+                        {
+                            'type': 'compare',
+                            'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Weapon'},
+                            'op': '>=',
+                            'right': {'type': 'constant', 'value': mech_weapon_req}
+                        },
+                        # Ship armor >= upgrade_level
+                        {
+                            'type': 'compare',
+                            'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Armor'},
+                            'op': '>=',
+                            'right': {'type': 'constant', 'value': armor_req}
+                        },
+                        # Mineral dump capability
+                        {'type': 'helper', 'name': 'terran_mineral_dump'}
+                    ]
+                },
+                # Path 3: Strong Mech
+                # Requires: Thor/Siege Tank + vehicle_weapons >= 1 + vehicle_armor >= 1 + light_frontline
+                {
+                    'type': 'and',
+                    'conditions': [
+                        # Strong vehicle unit
+                        {
+                            'type': 'or',
+                            'conditions': [
+                                {'type': 'item_check', 'item': 'Thor'},
+                                {'type': 'item_check', 'item': 'Siege Tank'}
+                            ]
+                        },
+                        # Vehicle weapons >= upgrade_level
+                        {
+                            'type': 'compare',
+                            'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Weapon'},
+                            'op': '>=',
+                            'right': {'type': 'constant', 'value': mech_weapon_req}
+                        },
+                        # Vehicle armor >= upgrade_level
+                        {
+                            'type': 'compare',
+                            'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Armor'},
+                            'op': '>=',
+                            'right': {'type': 'constant', 'value': armor_req}
+                        },
+                        # Light frontline unit
+                        {
+                            'type': 'or',
+                            'conditions': [
+                                {'type': 'item_check', 'item': 'Marine'},
+                                {'type': 'item_check', 'item': 'Dominion Trooper'},
+                                {'type': 'item_check', 'item': 'Hellion'},
+                                {'type': 'item_check', 'item': 'Vulture'}
+                            ]
+                        }
+                    ]
+                },
+                # Path 4: Mech with Healing
+                # Requires: Goliath/Warhound + vehicle_weapons >= 1 + vehicle_armor >= 1 + sustainable_mech_heal
+                {
+                    'type': 'and',
+                    'conditions': [
+                        # Mech unit that benefits from healing
+                        {
+                            'type': 'or',
+                            'conditions': [
+                                {'type': 'item_check', 'item': 'Goliath'},
+                                {'type': 'item_check', 'item': 'Warhound'}
+                            ]
+                        },
+                        # Vehicle weapons >= upgrade_level
+                        {
+                            'type': 'compare',
+                            'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Weapon'},
+                            'op': '>=',
+                            'right': {'type': 'constant', 'value': mech_weapon_req}
+                        },
+                        # Vehicle armor >= upgrade_level
+                        {
+                            'type': 'compare',
+                            'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Armor'},
+                            'op': '>=',
+                            'right': {'type': 'constant', 'value': armor_req}
+                        },
+                        # Sustainable mech heal capability
+                        {'type': 'helper', 'name': 'terran_sustainable_mech_heal'}
                     ]
                 }
             ]
 
-            # For upgrade_level >= 2, require specific weapon AND armor counts per path:
-            # - Infantry: weapons >= 3 AND armor >= 2 (upgrade_level + 1 for weapons)
-            # - Vehicle: weapons >= 2 AND armor >= 2
-            # - Ship: weapons >= 2 AND armor >= 2
-            if upgrade_level >= 2:
-                conditions.append({
-                    'type': 'or',
-                    'conditions': [
-                        # Infantry path: weapons >= 3 AND armor >= 2
-                        {
-                            'type': 'and',
-                            'conditions': [
-                                {
-                                    'type': 'compare',
-                                    'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Weapon'},
-                                    'op': '>=',
-                                    'right': {'type': 'constant', 'value': 3}
-                                },
-                                {
-                                    'type': 'compare',
-                                    'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Armor'},
-                                    'op': '>=',
-                                    'right': {'type': 'constant', 'value': 2}
-                                }
-                            ]
-                        },
-                        # Vehicle path: weapons >= 2 AND armor >= 2
-                        {
-                            'type': 'and',
-                            'conditions': [
-                                {
-                                    'type': 'compare',
-                                    'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Weapon'},
-                                    'op': '>=',
-                                    'right': {'type': 'constant', 'value': 2}
-                                },
-                                {
-                                    'type': 'compare',
-                                    'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Armor'},
-                                    'op': '>=',
-                                    'right': {'type': 'constant', 'value': 2}
-                                }
-                            ]
-                        },
-                        # Ship path: weapons >= 2 AND armor >= 2
-                        {
-                            'type': 'and',
-                            'conditions': [
-                                {
-                                    'type': 'compare',
-                                    'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Weapon'},
-                                    'op': '>=',
-                                    'right': {'type': 'constant', 'value': 2}
-                                },
-                                {
-                                    'type': 'compare',
-                                    'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Armor'},
-                                    'op': '>=',
-                                    'right': {'type': 'constant', 'value': 2}
-                                }
-                            ]
-                        }
-                    ]
-                })
-
             return {
                 'type': 'and',
-                'conditions': conditions
+                'conditions': [
+                    # All paths require competent anti-air
+                    {'type': 'helper', 'name': 'terran_competent_anti_air'},
+                    # Must have at least one complete composition path
+                    {
+                        'type': 'or',
+                        'conditions': composition_paths
+                    }
+                ]
             }
 
         # protoss_competent_comp: Requires anti-air (Stalker/Dragoon) and strong units
@@ -780,7 +973,7 @@ class SC2GameExportHandler(GenericGameExportHandler):
                     'terran_mobile_detector', 'terran_beats_protoss_deathball', 'terran_base_trasher',
                     'terran_can_rescue', 'terran_cliffjumper', 'terran_able_to_snipe_defiler',
                     'terran_respond_to_colony_infestations', 'terran_survives_rip_field',
-                    'terran_sustainable_mech_heal',
+                    'terran_sustainable_mech_heal', 'terran_mineral_dump',
                     'protoss_common_unit', 'protoss_basic_anti_air', 'protoss_competent_anti_air',
                     'protoss_basic_splash', 'protoss_anti_armor_anti_air', 'protoss_anti_light_anti_air',
                     'protoss_can_attack_behind_chasm', 'protoss_has_blink', 'protoss_heal',

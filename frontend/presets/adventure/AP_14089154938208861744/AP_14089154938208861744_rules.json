@@ -1062,6 +1062,7 @@
       "world_directory": "adventure"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Adventure",

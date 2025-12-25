@@ -499,27 +499,33 @@ class ALttPGameExportHandler(BaseGameExportHandler):
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract ALTTP settings.
 
-        Uses base class to export all options with their definitions,
-        then adds ALTTP-specific computed world attributes.
+        Uses base class to export all options with their definitions.
+        Note: World attributes (difficulty_requirements, medallions, shop_items)
+        are now in get_world_attributes() instead.
         """
         # Get all options and option_definitions from base class
         # Note: assume_bidirectional_exits is set via ASSUME_BIDIRECTIONAL_EXITS class attribute
-        settings_dict = super().get_settings_data(world, multiworld, player)
+        return super().get_settings_data(world, multiworld, player)
 
-        # === ALTTP-specific computed world attributes ===
-        # Note: Simple attributes (treasure_hunt_required, can_take_damage,
-        # logical_heart_pieces, logical_heart_containers) are now handled
-        # via COMPUTED_SETTINGS class attribute in the base class.
+    def get_world_attributes(self, world, multiworld, player) -> Dict[str, Any]:
+        """Extract ALTTP world attributes (computed runtime values).
+
+        These are values computed at runtime on the world instance, not
+        user-configurable options.
+        """
+        # Get base world attributes (from COMPUTED_SETTINGS: treasure_hunt_required,
+        # can_take_damage, logical_heart_pieces, logical_heart_containers)
+        world_attributes = super().get_world_attributes(world, multiworld, player)
 
         # Difficulty requirements
         if hasattr(world, 'difficulty_requirements'):
-            settings_dict['difficulty_requirements'] = {
+            world_attributes['difficulty_requirements'] = {
                 'progressive_bottle_limit': getattr(world.difficulty_requirements, 'progressive_bottle_limit', None),
                 'boss_heart_container_limit': getattr(world.difficulty_requirements, 'boss_heart_container_limit', None),
                 'heart_piece_limit': getattr(world.difficulty_requirements, 'heart_piece_limit', None),
             }
         else:
-            settings_dict['difficulty_requirements'] = {}
+            world_attributes['difficulty_requirements'] = {}
 
         # Medallions
         if hasattr(world, 'required_medallions'):
@@ -530,15 +536,15 @@ class ALttPGameExportHandler(BaseGameExportHandler):
                     med_name = getattr(med, 'value', str(med))
                 medallion_names.append(med_name)
 
-            settings_dict['required_medallions'] = medallion_names
+            world_attributes['required_medallions'] = medallion_names
             mire_med = getattr(world, 'misery_mire_medallion', medallion_names[0] if medallion_names else None)
             tr_med = getattr(world, 'turtle_rock_medallion', medallion_names[1] if len(medallion_names) > 1 else None)
-            settings_dict['misery_mire_medallion'] = getattr(mire_med, 'value', str(mire_med))
-            settings_dict['turtle_rock_medallion'] = getattr(tr_med, 'value', str(tr_med))
+            world_attributes['misery_mire_medallion'] = getattr(mire_med, 'value', str(mire_med))
+            world_attributes['turtle_rock_medallion'] = getattr(tr_med, 'value', str(tr_med))
         else:
-            settings_dict['required_medallions'] = []
-            settings_dict['misery_mire_medallion'] = None
-            settings_dict['turtle_rock_medallion'] = None
+            world_attributes['required_medallions'] = []
+            world_attributes['misery_mire_medallion'] = None
+            world_attributes['turtle_rock_medallion'] = None
 
         # Shop item data - maps items to regions where shops sell them
         # Enables can_buy and can_buy_unlimited helper implementation
@@ -571,9 +577,9 @@ class ALttPGameExportHandler(BaseGameExportHandler):
                             shop_items[item_name]['unlimited'].append(region_name)
                         if region_name not in shop_items[item_name]['limited']:
                             shop_items[item_name]['limited'].append(region_name)
-        settings_dict['shop_items'] = shop_items
+        world_attributes['shop_items'] = shop_items
 
-        return settings_dict
+        return world_attributes
 
     def get_game_info(self, world) -> Dict[str, Any]:
          """ Gets ALTTP game info. """

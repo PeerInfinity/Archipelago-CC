@@ -699,7 +699,7 @@ def write_field_by_field(export_data, filepath):
     fields_written = []
     
     # Try each field separately
-    for field in ["regions", "helpers", "items", "item_groups", "progression_mapping", "settings", "start_regions", "game_info", "itempool_counts"]:
+    for field in ["regions", "helpers", "items", "item_groups", "progression_mapping", "settings", "world_attributes", "start_regions", "game_info", "itempool_counts"]:
         if field in export_data:
             try:
                 serializable_field = make_serializable(export_data[field])
@@ -712,7 +712,7 @@ def write_field_by_field(export_data, filepath):
                 logger.error(error_msg)
                 
                 # For complex fields, try to process each player separately
-                if field in ["settings", "game_info"] and isinstance(export_data.get(field, {}), dict):
+                if field in ["settings", "world_attributes", "game_info"] and isinstance(export_data.get(field, {}), dict):
                     # Initialize with empty dict
                     serializable_data[field] = {}
                     
@@ -755,7 +755,8 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         'items': {},    # Item data by player
         'item_groups': {},  # Item groups by player
         'progression_mapping': {},  # Progressive item info
-        'settings': {}, # Game settings by player
+        'settings': {}, # Game settings by player (options, option_definitions, internal flags)
+        'world_attributes': {},  # World attributes by player (computed runtime values like difficulty_requirements)
         'start_regions': {},  # Start regions by player
         'itempool_counts': {},  # Complete itempool counts by player
         'game_info': {},  # Game-specific information for frontend
@@ -858,6 +859,16 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
                 'error': error_msg,
                 'details': "Failed to read game settings. Check logs for more information."
             }
+
+        # Get world attributes using handler
+        try:
+            world_attributes_data = game_handler.get_world_attributes(world, multiworld, player)
+            if world_attributes_data:
+                export_data['world_attributes'][player_str] = world_attributes_data
+        except Exception as e:
+            error_msg = f"Error exporting world attributes for player {player}: {str(e)}"
+            logger.error(error_msg)
+            # Don't add error to export_data - world_attributes is optional
 
         # Get helper definitions using handler
         try:
@@ -2086,6 +2097,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'progression_mapping',
         'starting_items',
         'settings',
+        'world_attributes',
         'game_info',
         'metamath_data'
     ]
@@ -2093,8 +2105,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     # Player-specific keys contain data nested under player IDs
     player_specific_keys = [
         'regions', 'dungeons', 'items', 'item_groups', 'progression_mapping',
-        'settings', 'start_regions', 'itempool_counts', 'canonical_placements',
-        'game_info', 'starting_items', 'metamath_data'
+        'settings', 'world_attributes', 'start_regions', 'itempool_counts',
+        'canonical_placements', 'game_info', 'starting_items', 'metamath_data'
     ]
 
     # Prepare the combined export data for all players using the helper

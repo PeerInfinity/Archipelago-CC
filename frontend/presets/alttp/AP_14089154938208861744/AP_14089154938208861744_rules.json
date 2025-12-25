@@ -21203,7 +21203,7 @@
           "type": "choice",
           "name_lookup": {
             "0": "normal",
-            "(1,)": "instant",
+            "1": "instant",
             "2": "double",
             "3": "triple",
             "4": "quadruple",
@@ -21534,6 +21534,11 @@
           "display_name": "Underworld Palette"
         }
       },
+      "world_directory": "alttp"
+    }
+  },
+  "world_attributes": {
+    "1": {
       "treasure_hunt_required": 0,
       "can_take_damage": true,
       "logical_heart_pieces": 24,
@@ -21676,8 +21681,7 @@
             "Capacity Upgrade"
           ]
         }
-      },
-      "world_directory": "alttp"
+      }
     }
   },
   "game_info": {
@@ -21891,8 +21895,16 @@
         "type": "min",
         "args": [
           {
-            "type": "setting_value",
-            "setting": "difficulty_requirements.progressive_bottle_limit"
+            "type": "attribute",
+            "object": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
+              },
+              "attr": "difficulty_requirements"
+            },
+            "attr": "progressive_bottle_limit"
           },
           {
             "type": "group_count",
@@ -23196,16 +23208,24 @@
             "type": "assign",
             "name": "max_heart_pieces",
             "value": {
-              "type": "setting_value",
-              "setting": "logical_heart_pieces"
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
+              },
+              "attr": "logical_heart_pieces"
             }
           },
           {
             "type": "assign",
             "name": "max_heart_containers",
             "value": {
-              "type": "setting_value",
-              "setting": "logical_heart_containers"
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
+              },
+              "attr": "logical_heart_containers"
             }
           },
           {

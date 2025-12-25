@@ -407,6 +407,17 @@ export function createStateSnapshotInterface(
             }
           };
 
+          // Merge in world_attributes (computed runtime values like difficulty_requirements, required_medallions)
+          // These are accessed via world.difficulty_requirements, world.required_medallions, etc.
+          if (staticData?.world_attributes) {
+            let worldAttrs = staticData.world_attributes;
+            // Check if world_attributes is keyed by player ID
+            if (worldAttrs[playerId] && typeof worldAttrs[playerId] === 'object') {
+              worldAttrs = worldAttrs[playerId];
+            }
+            Object.assign(worldObj, worldAttrs);
+          }
+
           // Merge in game-specific properties from game_info
           // For AHIT: hat_yarn_costs, hat_craft_order come from hat_info
           if (gameInfo.hat_info) {
@@ -652,21 +663,32 @@ export function createStateSnapshotInterface(
       // Settings may be in snapshot OR staticData, keyed by player ID (multiworld) or directly
       // Try snapshot first, then staticData
       let settingsToUse = snapshot?.settings || staticData?.settings;
+      const rawPlayerId = snapshot?.player?.id || snapshot?.player?.slot ||
+                       staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
+      const playerIdKey = String(rawPlayerId);
       if (settingsToUse) {
-        const rawPlayerId = snapshot?.player?.id || snapshot?.player?.slot ||
-                         staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
-        const playerIdKey = String(rawPlayerId);
         // Check if settings is keyed by player ID
         if (settingsToUse[playerIdKey] && typeof settingsToUse[playerIdKey] === 'object') {
           settingsToUse = settingsToUse[playerIdKey];
         }
       }
-      // First check direct lookup at top level
+      // First check direct lookup at top level of settings
       let rawValue = settingsToUse?.[settingName];
       // If not found at top level, check inside 'options' object
       // Many settings like LuckyEmblemsRequired are nested in options
       if (rawValue === undefined && settingsToUse?.options) {
         rawValue = settingsToUse.options[settingName];
+      }
+      // If still not found, check world_attributes (for computed runtime values like difficulty_requirements)
+      if (rawValue === undefined) {
+        let worldAttrsToUse = snapshot?.world_attributes || staticData?.world_attributes;
+        if (worldAttrsToUse) {
+          // Check if world_attributes is keyed by player ID
+          if (worldAttrsToUse[playerIdKey] && typeof worldAttrsToUse[playerIdKey] === 'object') {
+            worldAttrsToUse = worldAttrsToUse[playerIdKey];
+          }
+          rawValue = worldAttrsToUse?.[settingName];
+        }
       }
       // Normalize "off"/"none" type strings to falsy values
       // Choice options in Python use 0 for "off"/"none" which get exported as strings

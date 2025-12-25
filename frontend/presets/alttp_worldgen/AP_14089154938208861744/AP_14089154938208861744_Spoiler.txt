@@ -17,12 +17,76 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Allow Collection of checks for other players:Yes
+Beemizer Total Chance:           0
+Beemizer Trap Chance:            60
+Big Key Shuffle:                 Original Dungeon
+Blue Clock Time:                 2
 Bombless Start:                  No
+Boss Shuffle:                    None
+Bush Shuffle:                    No
+Compass Shuffle:                 Original Dungeon
+Countdown Start Time:            10
+Crystals for Ganon:              7
+Crystals for GT:                 7
+Dark Room Logic:                 Lamp
+Death Link:                      No
+Dungeon Counters:                Pickup
+Enemy Damage:                    Default
+Enemy Health:                    Default
 Enemy Shuffle:                   No
-Logical Heart Containers:        10
-Logical Heart Pieces:            24
+Entrance Shuffle:                Vanilla
+Glitched Starting Boots:         Yes
+Glitches Required:               No Glitches
+Goal:                            Ganon
+Green Clock Time:                4
+Heart Beep Rate:                 Normal
+Heart Color:                     Red
+Hints:                           On
+Menu Palette:                    Default
+Include Witch's Hut:             No
+Item Functionality:              Normal
+Item Pool:                       Normal
+Key Drop Shuffle:                Yes
+Killable Thieves:                No
+Map Shuffle:                     Original Dungeon
+Menu Speed:                      Normal
+Misery Mire Medallion:           Bombos
+Mode:                            Open
+Play music:                      Yes
+Open Pyramid Hole:               Goal
+Overworld Palette:               Default
+Pot Shuffle:                     No
+Progressive Items:               On
+L/R Quickswapping:               Yes
+Randomize Cost Types:            No
+Randomize Shop Inventories:      Default
+Randomize Shop Prices:           No
+Red Clock Time:                  -2
+Reduce Screen Flashes:           Yes
+Prevent Dungeon Item on Boss:    No
 Retro Bow:                       No
+Retro Caves:                     No
+Scams:                           Off
+Shield Palette:                  Default
+Available Shop Slots:            0
+Shop Price Modifier:             100
+Shuffle Capacity Upgrades:       Off
+Shuffle Prizes:                  General
+Shuffle Shop Inventories:        No
+Small Key Shuffle:               Original Dungeon
+Sword Palette:                   Default
 Swordless:                       No
+Tile Shuffle:                    No
+Timer:                           None
+Triforce Pieces Available:       30
+Triforce Pieces Extra:           10
+Triforce Pieces Mode:            Available
+Triforce Pieces Percentage:      150
+Triforce Pieces Required:        20
+Display Method for Triforce Hunt:Normal
+Turtle Rock Medallion:           Bombos
+Underworld Palette:              Default
 
 
 Locations:

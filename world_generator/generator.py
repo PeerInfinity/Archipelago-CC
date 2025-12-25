@@ -144,15 +144,48 @@ class WorldGenerator:
             '__init__.py': generate_init_py(self.data, canonical_seed1=self.canonical_seed1),
         }
 
-        # Export settings for game-specific export handlers
+        # Export settings and world_attributes for game-specific export handlers
         # This allows worldgen exports to reproduce the same settings as the source
         with open(self.json_path, 'r') as f:
             source_json = json.load(f)
+
+        # Build the worldgen settings file with separate sections
+        worldgen_data = {}
+
+        # Extract settings (options and internal flags only)
         source_settings = source_json.get('settings', {}).get('1', {})
         if source_settings:
+            # Keep only actual settings, not world attributes
+            # Remove option_definitions - it's redundant since the exporter extracts
+            # option definitions from the worldgen world's Options.py at export time
+            settings_keys = {
+                'game', 'options', 'world_directory',
+                'assume_bidirectional_exits', 'use_resolved_items',
+                'use_auto_indirect_conditions', 'add_sphere_items_upfront',
+            }
+            filtered_settings = {k: v for k, v in source_settings.items() if k in settings_keys}
+            if filtered_settings:
+                worldgen_data['settings'] = filtered_settings
+
+        # Extract world_attributes (new format) or from legacy settings
+        source_world_attrs = source_json.get('world_attributes', {}).get('1', {})
+        if source_world_attrs:
+            worldgen_data['world_attributes'] = source_world_attrs
+        elif source_settings:
+            # Legacy format: extract world attributes from settings
+            skip_keys = {
+                'game', 'options', 'option_definitions', 'world_directory',
+                'assume_bidirectional_exits', 'use_resolved_items',
+                'use_auto_indirect_conditions', 'add_sphere_items_upfront',
+            }
+            legacy_world_attrs = {k: v for k, v in source_settings.items() if k not in skip_keys}
+            if legacy_world_attrs:
+                worldgen_data['world_attributes'] = legacy_world_attrs
+
+        if worldgen_data:
             settings_path = output_dir / '_worldgen_settings.json'
             if not dry_run:
-                settings_path.write_text(json.dumps(source_settings, indent=2))
+                settings_path.write_text(json.dumps(worldgen_data, indent=2))
                 logger.info(f"Wrote settings to {settings_path}")
 
         for filename, content in files.items():

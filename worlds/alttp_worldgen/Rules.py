@@ -32,7 +32,7 @@ def _alinktothepastworldgen_basement_key_rule(state: "CollectionState", player: 
 
 
 def _alinktothepastworldgen_bottle_count(state: "CollectionState", player: int) -> bool:
-    return min(False, state.count_group('Bottles', player))
+    return min(state.multiworld.worlds[player].difficulty_requirements.progressive_bottle_limit, state.count_group('Bottles', player))
 
 
 def _alinktothepastworldgen_can_activate_crystal_switch(state: "CollectionState", player: int) -> bool:
@@ -54,7 +54,7 @@ def _alinktothepastworldgen_can_buy_unlimited(state: "CollectionState", player: 
 def _alinktothepastworldgen_can_extend_magic(state: "CollectionState", player: int, smallmagic = 16, fullrefill: bool = False) -> bool:
     basemagic = 8
     basemagic = (32 if state.has('Magic Upgrade (1/4)', player) else (16 if state.has('Magic Upgrade (1/2)', player) else basemagic))
-    basemagic = (((basemagic + int(((basemagic * 0.5) * _alinktothepastworldgen_bottle_count(state, player)))) if (('hard' == 'hard')) and (not (fullrefill)) else ((basemagic + int(((basemagic * 0.25) * _alinktothepastworldgen_bottle_count(state, player)))) if (('hard' == 'expert')) and (not (fullrefill)) else (basemagic + (basemagic * _alinktothepastworldgen_bottle_count(state, player))))) if (_alinktothepastworldgen_can_buy_unlimited(state, player, 'Green Potion')) or (_alinktothepastworldgen_can_buy_unlimited(state, player, 'Blue Potion')) else basemagic)
+    basemagic = (((basemagic + int(((basemagic * 0.5) * _alinktothepastworldgen_bottle_count(state, player)))) if (('normal' == 'hard')) and (not (fullrefill)) else ((basemagic + int(((basemagic * 0.25) * _alinktothepastworldgen_bottle_count(state, player)))) if (('normal' == 'expert')) and (not (fullrefill)) else (basemagic + (basemagic * _alinktothepastworldgen_bottle_count(state, player))))) if (_alinktothepastworldgen_can_buy_unlimited(state, player, 'Green Potion')) or (_alinktothepastworldgen_can_buy_unlimited(state, player, 'Blue Potion')) else basemagic)
     return (basemagic >= smallmagic)
 
 
@@ -147,8 +147,8 @@ def _alinktothepastworldgen_has_turtle_rock_medallion(state: "CollectionState", 
 
 
 def _alinktothepastworldgen_heart_count(state: "CollectionState", player: int) -> bool:
-    max_heart_pieces = 24
-    max_heart_containers = 10
+    max_heart_pieces = state.multiworld.worlds[player].logical_heart_pieces
+    max_heart_containers = state.multiworld.worlds[player].logical_heart_containers
     return (((min(state.count('Boss Heart Container', player), max_heart_containers) + state.count('Sanctuary Heart Container', player)) + (min(state.count('Piece of Heart', player), max_heart_pieces) // 4)) + 3)
 
 
@@ -353,7 +353,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Sewers Door", player),
-        Or(And(Compare('open', "==", 'standard'), Compare(False_(), "==", 'universal')), Has('Small Key (Hyrule Castle)', 4))
+        Or(And(Compare('open', "==", 'standard'), Compare('original_dungeon', "==", 'universal')), Has('Small Key (Hyrule Castle)', 4))
     )
 
     world.set_rule(
@@ -488,7 +488,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Hole", player),
-        Or(True_(), Has('Beat Agahnim 2'))
+        Or(False_(), Has('Beat Agahnim 2'))
     )
 
     world.set_rule(
