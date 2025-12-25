@@ -381,7 +381,17 @@ class CommonUI {
     // Evaluate the rule using the provided interface
     let evaluationResult; // Can be true, false, or undefined
 
-    if (stateSnapshotInterface) {
+    // Statement-type rules that only make sense inside a block context
+    // These should not be evaluated in isolation as they require local scope
+    const statementOnlyTypes = new Set([
+      'assign', 'return', 'break', 'continue',
+      'for_range', 'for_iter', 'while_loop', 'if_statement'
+    ]);
+
+    if (statementOnlyTypes.has(rule.type)) {
+      // Don't try to evaluate statement-only rules - they need block context
+      evaluationResult = undefined;
+    } else if (stateSnapshotInterface) {
       try {
         evaluationResult = evaluateRule(rule, stateSnapshotInterface);
       } catch (e) {
@@ -658,108 +668,17 @@ class CommonUI {
       }
 
       case 'helper': {
-        // Display helper name with expand/collapse button
+        // Display helper name
         root.appendChild(document.createTextNode(` helper: ${rule.name}`));
 
-        // Add expand/collapse button for helper code
-        const expandBtn = document.createElement('button');
-        expandBtn.textContent = '[+]';
-        expandBtn.style.marginLeft = '8px';
-        expandBtn.style.fontSize = '12px';
-        expandBtn.style.padding = '0 4px';
-        expandBtn.style.cursor = 'pointer';
-        expandBtn.style.border = '1px solid #666';
-        expandBtn.style.backgroundColor = '#333';
-        expandBtn.style.color = '#ccc';
-        expandBtn.title = 'Show helper function code';
-
-        // Container for the helper code (initially hidden)
-        const codeContainer = document.createElement('div');
-        codeContainer.style.display = 'none';
-        codeContainer.style.marginTop = '8px';
-        codeContainer.style.marginLeft = '20px';
-        codeContainer.style.padding = '8px';
-        codeContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
-        codeContainer.style.border = '1px solid #444';
-        codeContainer.style.borderRadius = '4px';
-        codeContainer.style.fontFamily = 'monospace';
-        codeContainer.style.fontSize = '12px';
-        codeContainer.style.whiteSpace = 'pre-wrap';
-        codeContainer.style.overflowX = 'auto';
-
-        let isExpanded = false;
-        let codeLoaded = false;
-
-        expandBtn.addEventListener('click', async (e) => {
-          e.stopPropagation();
-          isExpanded = !isExpanded;
-
-          if (isExpanded) {
-            expandBtn.textContent = '[-]';
-            expandBtn.title = 'Hide helper function code';
-            codeContainer.style.display = 'block';
-
-            // Load code if not already loaded
-            if (!codeLoaded) {
-              codeContainer.textContent = 'Loading...';
-
-              try {
-                // Get static data to determine game directory
-                const staticData = stateManager.getStaticData();
-                const gameDir = staticData?.game_directory;
-
-                if (!gameDir) {
-                  throw new Error('Game directory not found in static data');
-                }
-
-                // Construct the path to the helper file
-                const helperPath = `/frontend/modules/shared/gameLogic/${gameDir}/${gameDir}Logic.js`;
-
-                // Fetch the helper file
-                const response = await fetch(helperPath);
-                if (!response.ok) {
-                  throw new Error(`Failed to load helper file: ${response.status}`);
-                }
-
-                const helperCode = await response.text();
-
-                // Extract the specific helper function
-                const helperFunctionCode = this._extractHelperFunction(helperCode, rule.name);
-
-                if (helperFunctionCode) {
-                  // Create a container for the formatted code
-                  codeContainer.innerHTML = '';
-
-                  // Always format the code to highlight item names
-                  const formattedCode = await this._formatHelperCode(helperFunctionCode, stateSnapshotInterface);
-                  codeContainer.appendChild(formattedCode);
-
-                  codeLoaded = true;
-                } else {
-                  codeContainer.textContent = `Helper function '${rule.name}' not found in ${helperPath}`;
-                }
-              } catch (error) {
-                log('error', `Failed to load helper function: ${error.message}`);
-                codeContainer.textContent = `Error loading helper: ${error.message}`;
-              }
-            }
-          } else {
-            expandBtn.textContent = '[+]';
-            expandBtn.title = 'Show helper function code';
-            codeContainer.style.display = 'none';
-          }
-        });
-
-        root.appendChild(expandBtn);
-
-        // Process arguments for display
+        // Process arguments for display first (before expand button)
         if (rule.args && rule.args.length > 0) {
-          root.appendChild(document.createTextNode(', args: ['));
-          const argsContainer = document.createElement('span'); // Container for args text
-          argsContainer.style.backgroundColor = 'transparent'; // Explicitly remove background
-          argsContainer.style.color = 'inherit'; // Inherit text color from parent
-          argsContainer.style.padding = '0'; // Reset padding
-          argsContainer.style.margin = '0'; // Reset margin
+          root.appendChild(document.createTextNode('('));
+          const argsContainer = document.createElement('span');
+          argsContainer.style.backgroundColor = 'transparent';
+          argsContainer.style.color = 'inherit';
+          argsContainer.style.padding = '0';
+          argsContainer.style.margin = '0';
 
           let isFirstArg = true;
           rule.args.forEach((arg) => {
@@ -768,17 +687,81 @@ class CommonUI {
             }
             let argText = '(complex)';
             if (typeof arg === 'string' || typeof arg === 'number') {
-              argText = arg;
+              argText = String(arg);
             } else if (arg && arg.type === 'constant') {
-              argText = arg.value;
+              argText = String(arg.value);
             }
             argsContainer.appendChild(document.createTextNode(argText));
             isFirstArg = false;
           });
           root.appendChild(argsContainer);
-          root.appendChild(document.createTextNode(']'));
+          root.appendChild(document.createTextNode(')'));
         } else {
-          root.appendChild(document.createTextNode(', args: []'));
+          root.appendChild(document.createTextNode('()'));
+        }
+
+        // Try to look up helper definition from static data (rules.json) first
+        let helperDef = null;
+        if (stateSnapshotInterface && typeof stateSnapshotInterface.getStaticData === 'function') {
+          const staticData = stateSnapshotInterface.getStaticData();
+          if (staticData?.helpers) {
+            // helpers is keyed by player ID, try common player IDs
+            const playerIds = ['1', '0', 1, 0];
+            for (const pid of playerIds) {
+              if (staticData.helpers[pid]?.[rule.name]) {
+                helperDef = staticData.helpers[pid][rule.name];
+                break;
+              }
+            }
+          }
+        }
+
+        // Only add expand/collapse button if we have a helper definition
+        if (helperDef) {
+          const bodyContainer = document.createElement('div');
+          bodyContainer.style.marginLeft = '10px';
+          bodyContainer.style.marginTop = '4px';
+
+          const expandBtn = document.createElement('button');
+          expandBtn.textContent = '[+] Show helper body';
+          expandBtn.style.fontSize = '12px';
+          expandBtn.style.padding = '0 4px';
+          expandBtn.style.cursor = 'pointer';
+          expandBtn.style.border = '1px solid #666';
+          expandBtn.style.backgroundColor = '#333';
+          expandBtn.style.color = '#ccc';
+
+          let isExpanded = false;
+          const bodyTreeContainer = document.createElement('div');
+          bodyTreeContainer.style.display = 'none';
+          bodyTreeContainer.style.marginTop = '4px';
+
+          expandBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            isExpanded = !isExpanded;
+            if (isExpanded) {
+              expandBtn.textContent = '[-] Hide helper body';
+              bodyTreeContainer.style.display = 'block';
+              // Render body on first expand
+              if (bodyTreeContainer.children.length === 0) {
+                // Helper definition can be in different formats:
+                // 1. { body: {...}, params: [...] } - parameterized helper
+                // 2. { type: 'or', conditions: [...] } - direct rule
+                // 3. { statements: [...], type: 'block' } - block
+                const bodyRule = helperDef.body || helperDef;
+                bodyTreeContainer.appendChild(
+                  this.renderLogicTree(bodyRule, useColorblind, stateSnapshotInterface)
+                );
+              }
+            } else {
+              expandBtn.textContent = '[+] Show helper body';
+              bodyTreeContainer.style.display = 'none';
+            }
+          });
+
+          bodyContainer.appendChild(expandBtn);
+          bodyContainer.appendChild(bodyTreeContainer);
+          root.appendChild(bodyContainer);
         }
 
         // Keep the logic for rendering complex arguments below if they exist
@@ -819,8 +802,6 @@ class CommonUI {
           root.appendChild(argsContainer);
         }
 
-        // Add the code container to the root
-        root.appendChild(codeContainer);
         break;
       }
 
