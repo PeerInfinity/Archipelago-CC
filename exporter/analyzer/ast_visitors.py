@@ -1675,16 +1675,19 @@ class ASTVisitorMixin:
 
         # Check if we've reached the world player subscript (state.multiworld.worlds[player])
         if self._is_world_player_subscript(current):
-            # Handle different patterns:
-            # - ['options', 'setting_name'] -> 'setting_name'
-            # - ['attr_name'] -> 'attr_name'
-            # - ['difficulty_requirements', 'progressive_bottle_limit'] -> 'difficulty_requirements.progressive_bottle_limit'
+            # Handle .options.<setting> pattern:
+            # - ['options', 'setting_name'] -> 'setting_name' (converted to setting_value)
+            #
+            # Direct world attributes like hat_yarn_costs, hat_craft_order should NOT be
+            # converted to setting_value. These are exported in game_info and should be
+            # accessed as world.attr_name, which the frontend resolves from game_info.
             if attrs[0] == 'options' and len(attrs) >= 2:
                 # Remove 'options' prefix for .options.<setting> pattern
                 return '.'.join(attrs[1:])
             else:
-                # Direct attribute or nested attribute
-                return '.'.join(attrs)
+                # Direct world attributes - do NOT convert to setting_value
+                # Let normal attribute handling create {type: 'attribute', object: world, attr: ...}
+                return None
 
         # Check for self.world.options.<setting> pattern
         # This handles class-based helpers like KH2's level_locking_unlock
@@ -2023,7 +2026,16 @@ class ASTVisitorMixin:
                         pass
 
             logging.debug(f"visit_Attribute: Visiting object {type(node.value).__name__}")
-            obj_result = self.visit(node.value) # Get returned result
+
+            # Special handling: if accessing an attribute on state.multiworld.worlds[player],
+            # convert the object to just 'world' so the frontend can resolve it from game_info.
+            # This handles patterns like state.multiworld.worlds[player].hat_yarn_costs
+            # which the frontend expects as world.hat_yarn_costs
+            if self._is_world_player_subscript(node.value):
+                logging.debug(f"visit_Attribute: Detected state.multiworld.worlds[player].{attr_name}, converting to world.{attr_name}")
+                obj_result = {'type': 'name', 'name': 'world'}
+            else:
+                obj_result = self.visit(node.value) # Get returned result
 
             if obj_result:
                  # Try to resolve the attribute access to a constant value

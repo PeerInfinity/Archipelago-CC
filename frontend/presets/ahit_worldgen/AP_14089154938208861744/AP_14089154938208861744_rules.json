@@ -8287,8 +8287,16 @@
               "value": {
                 "type": "function_call",
                 "function": {
-                  "type": "setting_value",
-                  "setting": "multiworld.get_entrance"
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "world"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_entrance"
                 },
                 "args": [
                   {
@@ -8406,8 +8414,16 @@
                   "object": {
                     "type": "function_call",
                     "function": {
-                      "type": "setting_value",
-                      "setting": "multiworld.get_location"
+                      "type": "attribute",
+                      "object": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "world"
+                        },
+                        "attr": "multiworld"
+                      },
+                      "attr": "get_location"
                     },
                     "args": [
                       {
@@ -8434,8 +8450,12 @@
             "left": {
               "type": "subscript",
               "value": {
-                "type": "setting_value",
-                "setting": "hat_yarn_costs"
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "world"
+                },
+                "attr": "hat_yarn_costs"
               },
               "index": {
                 "type": "name",
@@ -8490,8 +8510,12 @@
             {
               "type": "for_iter",
               "iterable": {
-                "type": "setting_value",
-                "setting": "hat_craft_order"
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "world"
+                },
+                "attr": "hat_craft_order"
               },
               "body": [
                 {
@@ -8501,8 +8525,12 @@
                   "value": {
                     "type": "subscript",
                     "value": {
-                      "type": "setting_value",
-                      "setting": "hat_yarn_costs"
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "world"
+                      },
+                      "attr": "hat_yarn_costs"
                     },
                     "index": {
                       "type": "name",
@@ -8560,8 +8588,12 @@
               {
                 "type": "subscript",
                 "value": {
-                  "type": "setting_value",
-                  "setting": "item_name_groups"
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "world"
+                  },
+                  "attr": "item_name_groups"
                 },
                 "index": {
                   "type": "name",
