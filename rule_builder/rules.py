@@ -3148,17 +3148,17 @@ class WeightedSum(Rule[TWorld], game="Archipelago"):
             return {
                 "rule": "weighted_sum",
                 "_original_ast_type": "helper",
-                "_converted_from_cc": True,
+                "_converted_from_ast": True,
                 "args": [
                     {
                         "rule": "Constant",
                         "args": {"value": self.threshold},
-                        "_converted_from_cc": True,
+                        "_converted_from_ast": True,
                     },
                     {
                         "rule": "Constant",
                         "args": {"value": list(self.items)},
-                        "_converted_from_cc": True,
+                        "_converted_from_ast": True,
                     }
                 ]
             }
