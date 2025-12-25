@@ -9895,6 +9895,282 @@
         "vague_hints": "off",
         "victory_condition": "elevator"
       },
+      "option_definitions": {
+        "EP_difficulty": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "tedious",
+            "2": "eclipse"
+          },
+          "default": 0,
+          "display_name": "Environmental Puzzles Difficulty"
+        },
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "area_hint_percentage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 33,
+          "display_name": "Area Hint Percentage"
+        },
+        "challenge_lasers": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 11,
+          "default": 11,
+          "display_name": "Required Lasers for Challenge"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "death_link_amnesty": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 5,
+          "default": 1,
+          "display_name": "Death Link Amnesty"
+        },
+        "disable_non_randomized_puzzles": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Disable non randomized puzzles"
+        },
+        "door_groupings": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "regional"
+          },
+          "default": 0,
+          "display_name": "Door Groupings"
+        },
+        "early_caves": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "add_to_pool",
+            "2": "starting_inventory"
+          },
+          "default": 0,
+          "display_name": "Early Caves"
+        },
+        "early_symbol_item": {
+          "type": "default_on_toggle",
+          "default": 1
+        },
+        "easter_egg_hunt": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "easy",
+            "2": "normal",
+            "3": "hard",
+            "4": "very_hard",
+            "5": "extreme"
+          },
+          "default": 0,
+          "display_name": "Easter Egg Hunt"
+        },
+        "hint_amount": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 49,
+          "default": 12,
+          "display_name": "Hints on Audio Logs"
+        },
+        "laser_hints": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Laser Hints"
+        },
+        "mountain_lasers": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 11,
+          "default": 7,
+          "display_name": "Required Lasers for Mountain Entry"
+        },
+        "obelisk_keys": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Obelisk Keys"
+        },
+        "panel_hunt_discourage_same_area_factor": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 40,
+          "display_name": "Panel Hunt Discourage Same Area Factor"
+        },
+        "panel_hunt_postgame": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "everything_is_eligible",
+            "1": "disable_mountain_lasers_locations",
+            "2": "disable_challenge_lasers_locations",
+            "3": "disable_anything_locked_by_lasers"
+          },
+          "default": 3,
+          "display_name": "Force postgame in Panel Hunt"
+        },
+        "panel_hunt_required_percentage": {
+          "type": "range",
+          "range_start": 20,
+          "range_end": 100,
+          "default": 63,
+          "display_name": "Percentage of required Panel Hunt panels"
+        },
+        "panel_hunt_total": {
+          "type": "range",
+          "range_start": 5,
+          "range_end": 100,
+          "default": 40,
+          "display_name": "Total Panel Hunt panels"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "puzzle_randomization": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "sigma_normal",
+            "1": "sigma_expert",
+            "3": "umbra_variety",
+            "2": "none"
+          },
+          "default": 0,
+          "display_name": "Puzzle Randomization"
+        },
+        "puzzle_randomization_seed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9999999,
+          "default": "random",
+          "display_name": "Puzzle Randomization Seed"
+        },
+        "puzzle_skip_amount": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 30,
+          "default": 10,
+          "display_name": "Puzzle Skips"
+        },
+        "shuffle_EPs": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "individual",
+            "2": "obelisk_sides"
+          },
+          "default": 0,
+          "display_name": "Shuffle Environmental Puzzles"
+        },
+        "shuffle_boat": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Shuffle Boat"
+        },
+        "shuffle_discarded_panels": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Discarded Panels"
+        },
+        "shuffle_dog": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "puzzle_skip",
+            "2": "random_item"
+          },
+          "default": 1,
+          "display_name": "Pet the Dog"
+        },
+        "shuffle_doors": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "panels",
+            "2": "doors",
+            "3": "mixed"
+          },
+          "default": 0,
+          "display_name": "Shuffle Doors"
+        },
+        "shuffle_lasers": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "local",
+            "2": "anywhere"
+          },
+          "default": 0,
+          "display_name": "Shuffle Lasers"
+        },
+        "shuffle_postgame": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Postgame"
+        },
+        "shuffle_symbols": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Shuffle Symbols"
+        },
+        "shuffle_vault_boxes": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Vault Boxes"
+        },
+        "trap_percentage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 20,
+          "display_name": "Trap Percentage"
+        },
+        "unlockable_warps": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Unlockable Fast Travel Points"
+        },
+        "vague_hints": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "stable",
+            "2": "experimental"
+          },
+          "default": 0,
+          "display_name": "Vague Hints"
+        },
+        "victory_condition": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "elevator",
+            "1": "challenge",
+            "2": "mountain_box_short",
+            "3": "mountain_box_long",
+            "4": "panel_hunt"
+          },
+          "default": 0,
+          "display_name": "Victory Condition"
+        }
+      },
       "world_directory": "witness"
     }
   },

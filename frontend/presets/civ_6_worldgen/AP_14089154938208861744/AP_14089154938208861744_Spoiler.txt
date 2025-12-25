@@ -17,6 +17,14 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Advisor Indicates Progression Items:Yes
+Boostsanity:                     No
+Death Link:                      No
+Death Link Effect Percent:       20
+Hide Item Names:                 No
+Progression Style:               Districts Only
+Tech/Civic Cost Multiplier:      100
+Shuffle Goody Hut Rewards:       Yes
 
 
 Locations:

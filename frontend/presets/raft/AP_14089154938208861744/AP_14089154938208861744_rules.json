@@ -7196,6 +7196,108 @@
         "start_inventory": {},
         "start_location_hints": []
       },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "big_island_early_crafting": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Early recipes behind big islands"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "duplicate_items": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "progression",
+            "1": "non_progression",
+            "2": "any"
+          },
+          "default": 2,
+          "display_name": "Duplicate items"
+        },
+        "expensive_research": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Expensive research"
+        },
+        "filler_item_types": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "resource_packs",
+            "1": "duplicates",
+            "2": "both"
+          },
+          "default": 0,
+          "display_name": "Filler items"
+        },
+        "island_frequency_locations": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "random_on_island",
+            "2": "random_island_order",
+            "3": "random_on_island_random_order",
+            "4": "progressive",
+            "5": "anywhere"
+          },
+          "default": 2,
+          "display_name": "Frequency locations"
+        },
+        "island_generation_distance": {
+          "type": "choice",
+          "name_lookup": {
+            "2": "quarter",
+            "4": "half",
+            "8": "vanilla",
+            "16": "double",
+            "32": "quadrouple"
+          },
+          "default": 8,
+          "display_name": "Island distance"
+        },
+        "maximum_resource_pack_amount": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 15,
+          "default": 5,
+          "display_name": "Maximum resource pack amount"
+        },
+        "minimum_resource_pack_amount": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 15,
+          "default": 1,
+          "display_name": "Minimum resource pack amount"
+        },
+        "paddleboard_mode": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Paddleboard Mode"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "progressive_items": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Progressive items"
+        }
+      },
       "world_directory": "raft"
     }
   },

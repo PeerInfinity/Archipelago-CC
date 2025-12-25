@@ -17,6 +17,83 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Heal After Bosses:               Yes
+Boss Randomization:              Off
+Cantoran:                        No
+Dad Percent:                     No
+Damage Rando:                    Off
+Death Link:                      No
+Downloadable items:              Yes
+Drop Rate Category:              Tiered
+Enemy Randomization:             Off
+Enter Sandman:                   No
+Extra Earrings XP:               0
+Eye Spy:                         No
+Fixed Drop Rate:                 5
+Gyre Archives:                   No
+HP Cap:                          999
+Inverted:                        No
+Level Cap:                       99
+Loot Pool:                       Vanilla
+Loot Tier Distrubution:          Default Weight
+Lore Checks:                     No
+Back to the future:              No
+Quick seed:                      No
+Rising Tides:                    No
+Shop Inventory:                  Default
+Shop Price Multiplier:           1
+Always Sell Warp Shards:         Yes
+Show Bestiary Entries:           No
+Show Bestiary Item Drops:        No
+Specific Keycards:               No
+Start with Jewelry Box:          No
+Start with Meyef:                No
+Trap Chance:                     10
+Unchained Keys:                  No
+Aura Cap:                        999
+Back to the future:              No
+Heal After Bosses:               Yes
+Boss Randomization:              Off
+Boss Randomization Type:         Shuffle
+Cantoran:                        No
+Dad Percent:                     No
+Damage Rando:                    Off
+Death Link:                      No
+Downloadable items:              Yes
+Drop Rate Category:              Tiered
+Enemy Randomization:             Off
+Enter Sandman:                   No
+Extra Earrings XP:               0
+Eye Spy:                         No
+Find the Flame:                  No
+Fixed Drop Rate:                 5
+Gate Keep:                       No
+Gyre Archives:                   No
+Has Replaced Options:            No
+HP Cap:                          999
+Inverted:                        No
+Level Cap:                       99
+Lock Key Amadeus:                No
+Loot Pool:                       Vanilla
+Loot Tier Distrubution:          Default Weight
+Lore Checks:                     No
+Prism Break:                     No
+Pure Torcher:                    No
+Pyramid Start:                   No
+Quick seed:                      No
+Rising Tides:                    No
+Risky Warps:                     No
+Royal Roadblock:                 No
+Shop Inventory:                  Default
+Shop Price Multiplier:           1
+Always Sell Warp Shards:         Yes
+Show Bestiary Entries:           No
+Show Bestiary Item Drops:        No
+Specific Keycards:               No
+Start with Jewelry Box:          No
+Start with Meyef:                No
+Trap Chance:                     10
+Unchained Keys:                  No
 
 
 Locations:

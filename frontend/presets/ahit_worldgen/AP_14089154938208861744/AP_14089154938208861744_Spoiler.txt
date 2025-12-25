@@ -17,9 +17,70 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
-Hatitems:                        No
-Logicdifficulty:                 -1
-Shufflesubconpaintings:          No
+Shuffle Acts:                    Light
+Baby Trap Weight:                40
+Badge Seller Maximum Items:      8
+Badge Seller Minimum Items:      4
+Baseball Bat:                    No
+Cheating the Race Logic:         Time Stop Only
+Chapter Cost Increment:          4
+Minimum Chapter Cost Difference: 4
+Compass Badge Mode:              Closest
+Auto Complete Bonus Stamps:      Yes
+Shuffle Death Wish Full Completions:No
+Exclude Annoying Death Wish Full Completions:Yes
+Exclude Annoying Death Wish Contracts:Yes
+Exclude Candle Death Wishes:     Yes
+Death Wish Shuffle:              No
+Death Wish Shuffle Maximum Count:25
+Death Wish Shuffle Minimum Count:18
+Death Wish Time Piece Requirement:15
+Death Wish Only:                 No
+Shuffle Chapter 6:               No
+Shuffle Chapter 7:               No
+Enable Death Wish:               No
+End Goal:                        Finale
+Exclude Tour Time Rift:          No
+Final Chapter Maximum Time Piece Cost:35
+Final Chapter Minimum Time Piece Cost:30
+Finale Shuffle:                  No
+Hat Items:                       No
+Highest Possible Chapter Cost:   25
+Laser Trap Weight:               40
+Logic Difficulty:                Normal
+Lowest Possible Chapter Cost:    5
+Max Extra Time Pieces:           16
+Maximum Shop Pon Cost:           300
+Metro Shops Maximum Pon Cost:    200
+Metro Shops Minimum Pon Cost:    50
+Min Extra Yarn:                  10
+Minimum Shop Pon Cost:           75
+No Subcon Fire Wall Skips:       No
+No Ticket Skips:                 False
+Nyakuza Thug Maximum Shop Items: 4
+Nyakuza Thug Minimum Shop Items: 2
+Parade Trap Weight:              20
+Randomize Hat Order:             True
+Ship Shape Custom Task Goal:     0
+Shuffle Contracts:               Yes
+Shuffle Alpine Ziplines:         No
+Shuffle Storybook Pages:         Yes
+Shuffle Subcon Paintings:        No
+Start with Compass Badge:        Yes
+Starting Chapter:                1
+Tasksanity:                      No
+Tasksanity Check Count:          18
+Tasksanity Task Step:            1
+Time Piece Balance Percentage:   35
+Trap Chance:                     0
+Umbrella Logic:                  No
+Yarn Available:                  50
+Yarn Balance Percentage:         20
+Maximum Yarn Cost:               8
+Minimum Yarn Cost:               4
+Death Link:                      No
+Death Link Amnesty:              0
+Death Wish Amnesty:              5
 
 
 Starting Items:

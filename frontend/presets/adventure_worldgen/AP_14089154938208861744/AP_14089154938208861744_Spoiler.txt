@@ -17,6 +17,21 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Bat Logic:                       Can Break
+Connector Multi-Slot:            No
+Death Link:                      No
+Left Difficulty Switch:          Hard With Unlock Item
+Right Difficulty Switch:         Hard With Unlock Item
+Dragon Randomization:            Shuffle
+Slay Dragon Checks:              Yes
+Freeincarnate Maximum:           17
+Grundle Min Speed:               1
+Grundle MaxSpeed:                2
+Rhindle Min Speed:               2
+Rhindle MaxSpeed:                3
+Start Castle:                    Yellow
+Yorgle Min Speed:                1
+Yorgle MaxSpeed:                 2
 
 
 Locations:

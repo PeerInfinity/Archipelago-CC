@@ -17,6 +17,15 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Campaign:                        Basic
+Coin Bundle Quantity:            20
+CoinSanity:                      None
+Death Link:                      No
+Double Jump glitch:              None
+Ending Choice:                   True
+Item Shuffle:                    Disabled
+Permanent Coins:                 False
+Time Is Money:                   Required
 
 
 Starting Items:

@@ -17,6 +17,20 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Buckets:                         2
+Coins in Purchaseable Locations: No
+Shop Cost Multiplier:            100
+Easier Races:                    No
+Coins per Filler Item:           13 Coins
+Goal:                            Help Everyone
+Golden Feather Progression:      Normal
+Golden Feathers:                 20
+Minimum Shop Check Logic Application:100 Coins
+Randomize Walkie Talkie:         Yes
+Shop Check Logic:                Fishing Rod
+Silver Feathers:                 2
+Sticks:                          8
+Toy Shovels:                     5
 
 
 Locations:

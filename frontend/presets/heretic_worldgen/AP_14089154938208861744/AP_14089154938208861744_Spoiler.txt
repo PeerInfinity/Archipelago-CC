@@ -17,6 +17,36 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Added Ammo - Arrows:             50
+Added Ammo - Claw Orbs:          200
+Added Ammo - Crystals:           100
+Added Ammo - Flame Orbs:         20
+Added Ammo - Runes:              200
+Added Ammo - Spheres:            150
+Allow Death Logic:               No
+Bag of Holding Count:            1
+Check Sanity:                    No
+Death Link:                      No
+Difficulty:                      Medium
+Episode 1:                       Yes
+Episode 2:                       Yes
+Episode 3:                       Yes
+Episode 4:                       No
+Episode 5:                       No
+Goal:                            Complete All Levels
+Max Ammo - Arrows:               50
+Max Ammo - Claw Orbs:            200
+Max Ammo - Crystals:             100
+Max Ammo - Flame Orbs:           20
+Max Ammo - Runes:                200
+Max Ammo - Spheres:              150
+Pro Heretic:                     No
+Random Monsters:                 Shuffle
+Random Music:                    Vanilla
+Random Pickups:                  Shuffle
+Reset Level on Death:            Yes
+Split Bag of Holding:            No
+Start With Map Scrolls:          No
 
 
 Starting Items:

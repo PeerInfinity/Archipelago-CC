@@ -17,6 +17,21 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Translate Aquarian:              No
+Big bosses to beat:              0
+Bind song needed to get sing bulbs under rocks:Yes
+Hide the goal's requirements:    No
+Dish Randomizer:                 No
+Early Bind song:                 Early
+Early Energy form:               Early
+Randomize Ingredients:           Off
+Light needed to get to dark places:Yes
+Minibosses to beat:              0
+No progression in hard or hidden locations:No
+Objective:                       Kill The Creator
+Skip Naija's first vision:       No
+Turtle Randomizer:               All Except Final
+Unconfine Home Waters Area:      Off
 
 
 Locations:

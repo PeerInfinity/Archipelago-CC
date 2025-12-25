@@ -9830,6 +9830,313 @@
         "starting_area": "lumbridge",
         "woodcutting_task_weight": 50
       },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "brutal_grinds": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Allow Brutal Grinds"
+        },
+        "combat_task_weight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Combat Task Weight"
+        },
+        "cooking_task_weight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Cooking Task Weight"
+        },
+        "crafting_task_weight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Crafting Task Weight"
+        },
+        "dud_count": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 30,
+          "default": 10,
+          "display_name": "Dud Item Count"
+        },
+        "enable_carepacks": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Enable Care Packs"
+        },
+        "enable_duds": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Enable Duds"
+        },
+        "firemaking_task_weight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Firemaking Task Weight"
+        },
+        "fishing_task_weight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Fishing Task Weight"
+        },
+        "general_task_weight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "General Task Weight"
+        },
+        "magic_task_weight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Magic Task Weight"
+        },
+        "max_combat_level": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 1520,
+          "default": 50,
+          "display_name": "Max Required Enemy Combat Level"
+        },
+        "max_combat_tasks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 17,
+          "default": 17,
+          "display_name": "Max Combat Task Count"
+        },
+        "max_cooking_level": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Max Required Cooking Level"
+        },
+        "max_cooking_tasks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 6,
+          "default": 6,
+          "display_name": "Max Cooking Task Count"
+        },
+        "max_crafting_level": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Max Required Crafting Level"
+        },
+        "max_crafting_tasks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 11,
+          "default": 11,
+          "display_name": "Max Crafting Task Count"
+        },
+        "max_firemaking_level": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Max Required Firemaking Level"
+        },
+        "max_firemaking_tasks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 3,
+          "default": 3,
+          "display_name": "Max Firemaking Task Count"
+        },
+        "max_fishing_level": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Max Required Fishing Level"
+        },
+        "max_fishing_tasks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 6,
+          "default": 6,
+          "display_name": "Max Fishing Task Count"
+        },
+        "max_magic_level": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Max Required Magic Level"
+        },
+        "max_magic_tasks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 7,
+          "default": 7,
+          "display_name": "Max Magic Task Count"
+        },
+        "max_mining_level": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Max Required Mining Level"
+        },
+        "max_mining_tasks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 6,
+          "default": 6,
+          "display_name": "Max Mining Task Count"
+        },
+        "max_prayer_level": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Max Required Prayer Level"
+        },
+        "max_prayer_tasks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 5,
+          "default": 5,
+          "display_name": "Max Prayer Task Count"
+        },
+        "max_runecraft_level": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Max Required Runecraft Level"
+        },
+        "max_runecraft_tasks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 8,
+          "default": 8,
+          "display_name": "Max Runecraft Task Count"
+        },
+        "max_smithing_level": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Max Required Smithing Level"
+        },
+        "max_smithing_tasks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 5,
+          "default": 5,
+          "display_name": "Max Smithing Task Count"
+        },
+        "max_woodcutting_level": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Max Required Woodcutting Level"
+        },
+        "max_woodcutting_tasks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 3,
+          "default": 3,
+          "display_name": "Max Woodcutting Task Count"
+        },
+        "minimum_general_tasks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 49,
+          "default": 10,
+          "display_name": "Minimum General Task Count"
+        },
+        "mining_task_weight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Mining Task Weight"
+        },
+        "prayer_task_weight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Prayer Task Weight"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "progressive_tasks": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Progressive Tasks"
+        },
+        "runecraft_task_weight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Runecraft Task Weight"
+        },
+        "smithing_task_weight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Smithing Task Weight"
+        },
+        "starting_area": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "lumbridge",
+            "1": "al_kharid",
+            "2": "varrock_east",
+            "3": "varrock_west",
+            "4": "edgeville",
+            "5": "falador",
+            "6": "draynor",
+            "7": "wilderness",
+            "8": "any_bank",
+            "9": "chunksanity"
+          },
+          "default": 0,
+          "display_name": "Starting Region"
+        },
+        "woodcutting_task_weight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Woodcutting Task Weight"
+        }
+      },
       "qp_items": {
         "1 QP (Cook's Assistant)": 1,
         "3 QP (Demon Slayer)": 3,

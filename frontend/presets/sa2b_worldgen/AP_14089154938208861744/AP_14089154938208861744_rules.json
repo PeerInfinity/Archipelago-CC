@@ -6658,17 +6658,1055 @@
       "use_resolved_items": false,
       "options": {
         "accessibility": "full",
+        "animalsanity": "false",
+        "bee_trap_weight": "medium",
+        "beetlesanity": "true",
+        "big_fishing_difficulty": "medium",
+        "bigsanity": "false",
+        "black_market_price_multiplier": 1,
+        "black_market_slots": 0,
+        "black_market_unlock_costs": "medium",
+        "boss_rush_shuffle": "vanilla",
+        "breakout_trap_weight": "medium",
+        "cannons_core_mission_2": "true",
+        "cannons_core_mission_3": "true",
+        "cannons_core_mission_4": "true",
+        "cannons_core_mission_5": "true",
+        "cannons_core_mission_count": 2,
+        "chao_animal_parts": "false",
+        "chao_entrance_randomization": "false",
+        "chao_karate_difficulty": "none",
+        "chao_kindergarten": "none",
+        "chao_race_difficulty": "none",
+        "chao_stadium_checks": "all",
+        "chao_stats": 0,
+        "chao_stats_frequency": 5,
+        "chao_stats_hidden": "false",
+        "chao_stats_stamina": "false",
+        "confusion_trap_weight": "medium",
+        "controller_drift_trap_weight": "medium",
+        "cutscene_trap_weight": "medium",
+        "death_link": "false",
+        "eggman_mission_2": "true",
+        "eggman_mission_3": "true",
+        "eggman_mission_4": "true",
+        "eggman_mission_5": "true",
+        "eggman_mission_count": 2,
+        "emblem_percentage_for_cannons_core": 50,
         "exclude_locations": [],
+        "exposition_trap_weight": "medium",
+        "fishing_trap_weight": "medium",
+        "gate_boss_plando": "plando",
+        "goal": "biolizard",
+        "gravity_trap_weight": "medium",
+        "ice_trap_weight": "medium",
+        "input_sequence_trap_weight": "medium",
         "item_links": [],
+        "itemboxsanity": "none",
+        "junk_fill_percentage": 50,
+        "kart_mission_2": "true",
+        "kart_mission_3": "true",
+        "kart_mission_4": "true",
+        "kart_mission_5": "true",
+        "kart_mission_count": 2,
+        "kart_race_checks": "none",
+        "keysanity": "true",
+        "knuckles_mission_2": "true",
+        "knuckles_mission_3": "true",
+        "knuckles_mission_4": "true",
+        "knuckles_mission_5": "true",
+        "knuckles_mission_count": 2,
+        "level_gate_costs": "low",
+        "level_gate_distribution": "even",
+        "light_up_path_trap_weight": "medium",
+        "literature_trap_weight": "medium",
         "local_items": [],
+        "logic_difficulty": "standard",
+        "math_quiz_trap_weight": "medium",
+        "max_emblem_cap": 180,
+        "minigame_madness_minimum": 5,
+        "minigame_madness_requirement": 3,
+        "minigame_trap_difficulty": "medium",
+        "mission_shuffle": "false",
+        "music_shuffle": "none",
+        "narrator": "default",
         "non_local_items": [],
+        "number_of_level_gates": 3,
+        "number_sequence_trap_weight": "medium",
+        "omochao_trap_weight": "medium",
+        "omosanity": "false",
+        "pinball_trap_weight": "medium",
         "plando_items": [],
+        "poison_trap_weight": "medium",
+        "pokemon_count_trap_weight": "medium",
+        "pokemon_trivia_trap_weight": "medium",
+        "pong_trap_weight": "medium",
         "priority_locations": [],
         "progression_balancing": 50,
         "randomize_items": "false",
+        "required_cannons_core_missions": "first",
+        "required_rank": "e",
+        "reverse_trap_weight": "medium",
+        "ring_link": "false",
+        "ring_loss": "classic",
+        "rouge_mission_2": "true",
+        "rouge_mission_3": "true",
+        "rouge_mission_4": "true",
+        "rouge_mission_5": "true",
+        "rouge_mission_count": 2,
+        "sadx_music": "sa2b",
+        "shadow_mission_2": "true",
+        "shadow_mission_3": "true",
+        "shadow_mission_4": "true",
+        "shadow_mission_5": "true",
+        "shadow_mission_count": 2,
+        "shuffle_starting_chao_eggs": "true",
+        "slow_trap_weight": "medium",
+        "snake_trap_weight": "medium",
+        "sonic_mission_2": "true",
+        "sonic_mission_3": "true",
+        "sonic_mission_4": "true",
+        "sonic_mission_5": "true",
+        "sonic_mission_count": 2,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "tails_mission_2": "true",
+        "tails_mission_3": "true",
+        "tails_mission_4": "true",
+        "tails_mission_5": "true",
+        "tails_mission_count": 2,
+        "timestop_trap_weight": "medium",
+        "tiny_trap_weight": "medium",
+        "trap_fill_percentage": 0,
+        "trap_link": "false",
+        "trivia_trap_weight": "medium",
+        "voice_shuffle": "none",
+        "whistlesanity": "none"
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "animalsanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Animalsanity"
+        },
+        "bee_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Bee Trap Weight"
+        },
+        "beetlesanity": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Beetlesanity"
+        },
+        "big_fishing_difficulty": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "easy",
+            "1": "medium",
+            "2": "hard",
+            "3": "chaos"
+          },
+          "default": 1,
+          "display_name": "Big Fishing Difficulty"
+        },
+        "bigsanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Bigsanity"
+        },
+        "black_market_price_multiplier": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 40,
+          "default": 1,
+          "display_name": "Black Market Price Multiplier"
+        },
+        "black_market_slots": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 64,
+          "default": 0,
+          "display_name": "Black Market Slots"
+        },
+        "black_market_unlock_costs": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "low",
+            "1": "medium",
+            "2": "high"
+          },
+          "default": 1,
+          "display_name": "Black Market Unlock Costs"
+        },
+        "boss_rush_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "shuffled",
+            "2": "chaos",
+            "3": "singularity"
+          },
+          "default": 0,
+          "display_name": "Boss Rush Shuffle"
+        },
+        "breakout_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Breakout Trap Weight"
+        },
+        "cannons_core_mission_2": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Cannon's Core Mission 2"
+        },
+        "cannons_core_mission_3": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Cannon's Core Mission 3"
+        },
+        "cannons_core_mission_4": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Cannon's Core Mission 4"
+        },
+        "cannons_core_mission_5": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Cannon's Core Mission 5"
+        },
+        "cannons_core_mission_count": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 5,
+          "default": 2,
+          "display_name": "Cannon's Core Mission Count"
+        },
+        "chao_animal_parts": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Chao Animal Parts"
+        },
+        "chao_entrance_randomization": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Chao Entrance Randomization"
+        },
+        "chao_karate_difficulty": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "beginner",
+            "2": "standard",
+            "3": "expert",
+            "4": "super"
+          },
+          "default": 0,
+          "display_name": "Chao Karate Difficulty"
+        },
+        "chao_kindergarten": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "basics",
+            "2": "full"
+          },
+          "default": 0,
+          "display_name": "Chao Kindergarten Checks"
+        },
+        "chao_race_difficulty": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "beginner",
+            "2": "intermediate",
+            "3": "expert"
+          },
+          "default": 0,
+          "display_name": "Chao Race Difficulty"
+        },
+        "chao_stadium_checks": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "all",
+            "1": "prize"
+          },
+          "default": 0,
+          "display_name": "Chao Stadium Checks"
+        },
+        "chao_stats": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 0,
+          "display_name": "Chao Stats"
+        },
+        "chao_stats_frequency": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 20,
+          "default": 5,
+          "display_name": "Chao Stats Frequency"
+        },
+        "chao_stats_hidden": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Chao Stats - Luck and Intelligence"
+        },
+        "chao_stats_stamina": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Chao Stats - Stamina"
+        },
+        "confusion_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Confusion Trap Weight"
+        },
+        "controller_drift_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Controller Drift Trap Weight"
+        },
+        "cutscene_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Cutscene Trap Weight"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "eggman_mission_2": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Eggman Mission 2"
+        },
+        "eggman_mission_3": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Eggman Mission 3"
+        },
+        "eggman_mission_4": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Eggman Mission 4"
+        },
+        "eggman_mission_5": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Eggman Mission 5"
+        },
+        "eggman_mission_count": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 5,
+          "default": 2,
+          "display_name": "Eggman Mission Count"
+        },
+        "emblem_percentage_for_cannons_core": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 75,
+          "default": 50,
+          "display_name": "Emblem Percentage for Cannon's Core"
+        },
+        "exposition_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Exposition Trap Weight"
+        },
+        "fishing_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Fishing Trap Weight"
+        },
+        "gate_boss_plando": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "plando"
+          },
+          "default": 0,
+          "display_name": "Boss Shuffle"
+        },
+        "goal": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "biolizard",
+            "1": "chaos_emerald_hunt",
+            "2": "finalhazard_chaos_emerald_hunt",
+            "3": "grand_prix",
+            "4": "boss_rush",
+            "5": "cannons_core_boss_rush",
+            "6": "boss_rush_chaos_emerald_hunt",
+            "7": "chaos_chao",
+            "8": "minigame_madness"
+          },
+          "default": 0,
+          "display_name": "Goal"
+        },
+        "gravity_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Gravity Trap Weight"
+        },
+        "ice_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Ice Trap Weight"
+        },
+        "input_sequence_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Input Sequence Trap Weight"
+        },
+        "itemboxsanity": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "extra_lives",
+            "2": "all"
+          },
+          "default": 0,
+          "display_name": "Itemboxsanity"
+        },
+        "junk_fill_percentage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 50,
+          "display_name": "Junk Fill Percentage"
+        },
+        "kart_mission_2": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Kart Mission 2"
+        },
+        "kart_mission_3": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Kart Mission 3"
+        },
+        "kart_mission_4": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Kart Mission 4"
+        },
+        "kart_mission_5": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Kart Mission 5"
+        },
+        "kart_mission_count": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 5,
+          "default": 2,
+          "display_name": "Kart Mission Count"
+        },
+        "kart_race_checks": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "mini",
+            "2": "full"
+          },
+          "default": 0,
+          "display_name": "Kart Race Checks"
+        },
+        "keysanity": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Keysanity"
+        },
+        "knuckles_mission_2": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Knuckles Mission 2"
+        },
+        "knuckles_mission_3": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Knuckles Mission 3"
+        },
+        "knuckles_mission_4": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Knuckles Mission 4"
+        },
+        "knuckles_mission_5": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Knuckles Mission 5"
+        },
+        "knuckles_mission_count": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 5,
+          "default": 2,
+          "display_name": "Knuckles Mission Count"
+        },
+        "level_gate_costs": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "low",
+            "1": "medium",
+            "2": "high"
+          },
+          "default": 0,
+          "display_name": "Level Gate Costs"
+        },
+        "level_gate_distribution": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "early",
+            "1": "even",
+            "2": "late"
+          },
+          "default": 1,
+          "display_name": "Level Gate Distribution"
+        },
+        "light_up_path_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Light Up Path Trap Weight"
+        },
+        "literature_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Literature Trap Weight"
+        },
+        "logic_difficulty": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "standard",
+            "1": "hard",
+            "2": "expert"
+          },
+          "default": 0,
+          "display_name": "Logic Difficulty"
+        },
+        "math_quiz_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Math Quiz Trap Weight"
+        },
+        "max_emblem_cap": {
+          "type": "range",
+          "range_start": 50,
+          "range_end": 1000,
+          "default": 180,
+          "display_name": "Max Emblem Cap"
+        },
+        "minigame_madness_minimum": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 10,
+          "default": 5,
+          "display_name": "Minigame Madness Trap Minimum"
+        },
+        "minigame_madness_requirement": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 10,
+          "default": 3,
+          "display_name": "Minigame Madness Trap Requirement"
+        },
+        "minigame_trap_difficulty": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "easy",
+            "1": "medium",
+            "2": "hard",
+            "3": "chaos"
+          },
+          "default": 1,
+          "display_name": "Minigame Trap Difficulty"
+        },
+        "mission_shuffle": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Mission Shuffle"
+        },
+        "music_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "levels",
+            "2": "full",
+            "3": "singularity"
+          },
+          "default": 0,
+          "display_name": "Music Shuffle Type"
+        },
+        "narrator": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "1": "shadow",
+            "2": "rouge",
+            "3": "eggman",
+            "4": "maria",
+            "5": "secretary",
+            "6": "omochao",
+            "7": "amy",
+            "8": "tails",
+            "9": "knuckles",
+            "10": "sonic"
+          },
+          "default": 0,
+          "display_name": "Narrator"
+        },
+        "number_of_level_gates": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 5,
+          "default": 3,
+          "display_name": "Number of Level Gates"
+        },
+        "number_sequence_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Number Sequence Trap Weight"
+        },
+        "omochao_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "OmoTrap Weight"
+        },
+        "omosanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Omosanity"
+        },
+        "pinball_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Pinball Trap Weight"
+        },
+        "poison_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Poison Trap Weight"
+        },
+        "pokemon_count_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Pokemon Count Trap Weight"
+        },
+        "pokemon_trivia_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Pokemon Trivia Trap Weight"
+        },
+        "pong_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Pong Trap Weight"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "required_cannons_core_missions": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "first",
+            "1": "all_active"
+          },
+          "default": 0,
+          "display_name": "Required Cannon's Core Missions"
+        },
+        "required_rank": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "e",
+            "1": "d",
+            "2": "c",
+            "3": "b",
+            "4": "a"
+          },
+          "default": 0,
+          "display_name": "Required Rank"
+        },
+        "reverse_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Reverse Trap Weight"
+        },
+        "ring_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Ring Link"
+        },
+        "ring_loss": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "classic",
+            "1": "modern",
+            "2": "ohko"
+          },
+          "default": 0,
+          "display_name": "Ring Loss"
+        },
+        "rouge_mission_2": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Rouge Mission 2"
+        },
+        "rouge_mission_3": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Rouge Mission 3"
+        },
+        "rouge_mission_4": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Rouge Mission 4"
+        },
+        "rouge_mission_5": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Rouge Mission 5"
+        },
+        "rouge_mission_count": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 5,
+          "default": 2,
+          "display_name": "Rouge Mission Count"
+        },
+        "sadx_music": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "sa2b",
+            "1": "sadx",
+            "2": "both"
+          },
+          "default": 0,
+          "display_name": "SADX Music"
+        },
+        "shadow_mission_2": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Shadow Mission 2"
+        },
+        "shadow_mission_3": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Shadow Mission 3"
+        },
+        "shadow_mission_4": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Shadow Mission 4"
+        },
+        "shadow_mission_5": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Shadow Mission 5"
+        },
+        "shadow_mission_count": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 5,
+          "default": 2,
+          "display_name": "Shadow Mission Count"
+        },
+        "shuffle_starting_chao_eggs": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Shuffle Starting Chao Eggs"
+        },
+        "slow_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Slow Trap Weight"
+        },
+        "snake_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Snake Trap Weight"
+        },
+        "sonic_mission_2": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Sonic Mission 2"
+        },
+        "sonic_mission_3": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Sonic Mission 3"
+        },
+        "sonic_mission_4": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Sonic Mission 4"
+        },
+        "sonic_mission_5": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Sonic Mission 5"
+        },
+        "sonic_mission_count": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 5,
+          "default": 2,
+          "display_name": "Sonic Mission Count"
+        },
+        "tails_mission_2": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Tails Mission 2"
+        },
+        "tails_mission_3": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Tails Mission 3"
+        },
+        "tails_mission_4": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Tails Mission 4"
+        },
+        "tails_mission_5": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Tails Mission 5"
+        },
+        "tails_mission_count": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 5,
+          "default": 2,
+          "display_name": "Tails Mission Count"
+        },
+        "timestop_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Chaos Control Trap Weight"
+        },
+        "tiny_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Tiny Trap Weight"
+        },
+        "trap_fill_percentage": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 0,
+          "display_name": "Trap Fill Percentage"
+        },
+        "trap_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Trap Link"
+        },
+        "trivia_trap_weight": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "low",
+            "2": "medium",
+            "4": "high"
+          },
+          "default": 2,
+          "display_name": "Trivia Trap Weight"
+        },
+        "voice_shuffle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "shuffled",
+            "2": "rude",
+            "3": "chao",
+            "4": "singularity"
+          },
+          "default": 0,
+          "display_name": "Voice Shuffle Type"
+        },
+        "whistlesanity": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "pipes",
+            "2": "hidden",
+            "3": "both"
+          },
+          "default": 0,
+          "display_name": "Whistlesanity"
+        }
       },
       "world_directory": "sa2b"
     }

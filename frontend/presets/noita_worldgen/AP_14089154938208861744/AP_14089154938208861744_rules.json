@@ -2924,17 +2924,134 @@
       "use_resolved_items": false,
       "options": {
         "accessibility": "full",
+        "bad_effects": "true",
+        "bosses_as_checks": "no_bosses",
+        "death_link": "false",
         "exclude_locations": [],
+        "extra_orbs": 0,
+        "hidden_chests": 3,
         "item_links": [],
         "local_items": [],
         "non_local_items": [],
+        "orbs_as_checks": "no_orbs",
+        "path_option": "main_path",
+        "pedestal_checks": 6,
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
         "randomize_items": "false",
+        "shop_price": "full_price",
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "victory_condition": "greed_ending"
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "bad_effects": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Traps"
+        },
+        "bosses_as_checks": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "no_bosses",
+            "1": "main_path",
+            "2": "side_path",
+            "3": "all_bosses"
+          },
+          "default": 0,
+          "display_name": "Bosses as Location Checks"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "extra_orbs": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 0,
+          "display_name": "Extra Orbs"
+        },
+        "hidden_chests": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 3,
+          "display_name": "Hidden Chests per Biome"
+        },
+        "orbs_as_checks": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "no_orbs",
+            "1": "main_path",
+            "2": "side_path",
+            "3": "main_world"
+          },
+          "default": 0,
+          "display_name": "Orbs as Location Checks"
+        },
+        "path_option": {
+          "type": "choice",
+          "name_lookup": {
+            "1": "main_path",
+            "2": "side_path",
+            "3": "main_world"
+          },
+          "default": 1,
+          "display_name": "Path Option"
+        },
+        "pedestal_checks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 6,
+          "display_name": "Pedestal Checks per Biome"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "shop_price": {
+          "type": "choice",
+          "name_lookup": {
+            "25": "75_percent_off",
+            "50": "50_percent_off",
+            "75": "25_percent_off",
+            "100": "full_price"
+          },
+          "default": 100,
+          "display_name": "Shop Price Reduction"
+        },
+        "victory_condition": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "greed_ending",
+            "1": "pure_ending",
+            "2": "peaceful_ending"
+          },
+          "default": 0,
+          "display_name": "Victory Condition"
+        }
       },
       "world_directory": "noita"
     }

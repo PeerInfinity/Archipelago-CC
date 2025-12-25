@@ -15898,6 +15898,29 @@
         "start_inventory": {},
         "start_location_hints": []
       },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        }
+      },
       "world_directory": "soe"
     }
   },

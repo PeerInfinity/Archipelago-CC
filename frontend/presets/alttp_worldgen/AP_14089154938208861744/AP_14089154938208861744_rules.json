@@ -15610,33 +15610,111 @@
     "1": {
       "game": "A Link to the Past WorldGen",
       "assume_bidirectional_exits": true,
-      "dark_room_logic": null,
-      "retro_bow": 0,
-      "swordless": 0,
-      "enemy_shuffle": 0,
-      "enemy_health": null,
-      "enemy_damage": null,
-      "bombless_start": 0,
-      "glitches_required": null,
-      "pot_shuffle": null,
-      "dungeon_counters": null,
-      "glitch_boots": null,
-      "accessibility": "items",
-      "mode": null,
-      "crystals_needed_for_gt": null,
-      "crystals_needed_for_ganon": null,
-      "item_functionality": null,
-      "shuffle_capacity_upgrades": null,
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": "full",
+        "bombless_start": "false",
+        "enemy_shuffle": "false",
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "logical_heart_containers": 10,
+        "logical_heart_pieces": 24,
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": "false",
+        "retro_bow": "false",
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "swordless": "false"
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "bombless_start": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Bombless Start"
+        },
+        "enemy_shuffle": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Enemy Shuffle"
+        },
+        "logical_heart_containers": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 10,
+          "display_name": "Logical Heart Containers"
+        },
+        "logical_heart_pieces": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 24,
+          "display_name": "Logical Heart Pieces"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "retro_bow": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Retro Bow"
+        },
+        "swordless": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Swordless"
+        }
+      },
       "treasure_hunt_required": 0,
       "can_take_damage": true,
-      "difficulty_requirements": {},
       "logical_heart_pieces": 24,
       "logical_heart_containers": 10,
+      "dark_room_logic": "lamp",
+      "retro_bow": false,
+      "swordless": false,
+      "enemy_shuffle": false,
+      "enemy_health": "default",
+      "enemy_damage": "default",
+      "bombless_start": false,
+      "glitches_required": "no_glitches",
+      "pot_shuffle": "off",
+      "dungeon_counters": "on",
+      "glitch_boots": "on",
+      "accessibility": "locations",
+      "mode": "open",
+      "crystals_needed_for_gt": 7,
+      "crystals_needed_for_ganon": 7,
+      "item_functionality": "hard",
+      "shuffle_capacity_upgrades": "off",
+      "difficulty_requirements": {},
       "required_medallions": [],
       "misery_mire_medallion": null,
       "turtle_rock_medallion": null,
       "shop_items": {},
-      "world_directory": "alttp_worldgen"
+      "world_directory": "alttp"
     }
   },
   "game_info": {

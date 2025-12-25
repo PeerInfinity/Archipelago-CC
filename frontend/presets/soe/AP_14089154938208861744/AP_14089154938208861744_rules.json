@@ -15602,6 +15602,230 @@
         "trap_count": 0,
         "turdo_mode": "false"
       },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "available_fragments": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 99,
+          "default": 11,
+          "display_name": "Available Fragments"
+        },
+        "callbeadamizer": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "on",
+            "2": "full"
+          },
+          "default": 1,
+          "display_name": "Callbeadamizer"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "difficulty": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "easy",
+            "1": "normal",
+            "2": "hard",
+            "3": "mystery"
+          },
+          "default": 1,
+          "display_name": "Difficulty"
+        },
+        "doggomizer": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "on",
+            "2": "full",
+            "3": "pupdunk"
+          },
+          "default": 0,
+          "display_name": "Doggomizer"
+        },
+        "energy_core": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "shuffle",
+            "2": "fragments"
+          },
+          "default": 1,
+          "display_name": "Energy Core"
+        },
+        "exp_modifier": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 2500,
+          "default": 200,
+          "display_name": "Exp Modifier"
+        },
+        "fix_atlas_glitch": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Fix Atlas Glitch"
+        },
+        "fix_cheats": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Fix Cheats"
+        },
+        "fix_infinite_ammo": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Fix Infinite Ammo"
+        },
+        "fix_wings_glitch": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Fix Wings Glitch"
+        },
+        "ingredienizer": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "on",
+            "2": "full"
+          },
+          "default": 1,
+          "display_name": "Ingredienizer"
+        },
+        "money_modifier": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 2500,
+          "default": 200,
+          "display_name": "Money Modifier"
+        },
+        "musicmizer": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Musicmizer"
+        },
+        "out_of_bounds": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "on",
+            "2": "logic"
+          },
+          "default": 0,
+          "display_name": "Out Of Bounds"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 30,
+          "display_name": "Progression Balancing"
+        },
+        "required_fragments": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 99,
+          "default": 10,
+          "display_name": "Required Fragments"
+        },
+        "sequence_breaks": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "on",
+            "2": "logic"
+          },
+          "default": 0,
+          "display_name": "Sequence Breaks"
+        },
+        "short_boss_rush": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Short Boss Rush"
+        },
+        "shorter_dialogs": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Shorter Dialogs"
+        },
+        "sniff_ingredients": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla_ingredients",
+            "1": "random_ingredients"
+          },
+          "default": 0,
+          "display_name": "Sniff Ingredients"
+        },
+        "sniffamizer": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "shuffle",
+            "2": "everywhere"
+          },
+          "default": 1,
+          "display_name": "Sniffamizer"
+        },
+        "trap_chance_confound": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 20,
+          "display_name": "Confound Trap Chance"
+        },
+        "trap_chance_hud": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 20,
+          "display_name": "HUD Trap Chance"
+        },
+        "trap_chance_ohko": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 20,
+          "display_name": "OHKO Trap Chance"
+        },
+        "trap_chance_poison": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 20,
+          "display_name": "Poison Trap Chance"
+        },
+        "trap_chance_quake": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 20,
+          "display_name": "Quake Trap Chance"
+        },
+        "trap_count": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 0,
+          "display_name": "Trap Count"
+        },
+        "turdo_mode": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Turdo Mode"
+        }
+      },
       "world_directory": "soe"
     }
   },

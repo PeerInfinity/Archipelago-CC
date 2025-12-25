@@ -17,6 +17,47 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Allow Brutal Grinds:             No
+Combat Task Weight:              50
+Cooking Task Weight:             50
+Crafting Task Weight:            50
+Dud Item Count:                  10
+Enable Care Packs:               No
+Enable Duds:                     No
+Firemaking Task Weight:          50
+Fishing Task Weight:             50
+General Task Weight:             50
+Magic Task Weight:               50
+Max Required Enemy Combat Level: 50
+Max Combat Task Count:           17
+Max Required Cooking Level:      50
+Max Cooking Task Count:          6
+Max Required Crafting Level:     50
+Max Crafting Task Count:         11
+Max Required Firemaking Level:   50
+Max Firemaking Task Count:       3
+Max Required Fishing Level:      50
+Max Fishing Task Count:          6
+Max Required Magic Level:        50
+Max Magic Task Count:            7
+Max Required Mining Level:       50
+Max Mining Task Count:           6
+Max Required Prayer Level:       50
+Max Prayer Task Count:           5
+Max Required Runecraft Level:    50
+Max Runecraft Task Count:        8
+Max Required Smithing Level:     50
+Max Smithing Task Count:         5
+Max Required Woodcutting Level:  50
+Max Woodcutting Task Count:      3
+Minimum General Task Count:      10
+Mining Task Weight:              50
+Prayer Task Weight:              50
+Progressive Tasks:               No
+Runecraft Task Weight:           50
+Smithing Task Weight:            50
+Starting Region:                 Lumbridge
+Woodcutting Task Weight:         50
 
 
 Starting Items:

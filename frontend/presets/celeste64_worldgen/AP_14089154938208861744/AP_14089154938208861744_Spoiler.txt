@@ -17,6 +17,23 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Badeline Chaser Frequency:       0
+Badeline Chaser Source:          Locations
+Badeline Chaser Speed:           3
+Carsanity:                       No
+Checkpointsanity:                No
+Death Link:                      No
+Death Link Amnesty:              10
+Friendsanity:                    No
+Logic Difficulty:                Standard
+Madeline Feather Hair Color:     Golden
+Madeline No Dash Hair Color:     Empty
+Madeline One Dash Hair Color:    Strawberry
+Madeline Two Dash Hair Color:    Double
+Move Shuffle:                    No
+Signsanity:                      No
+Strawberries Required Percentage:80
+Total Strawberries:              20
 
 
 Starting Items:

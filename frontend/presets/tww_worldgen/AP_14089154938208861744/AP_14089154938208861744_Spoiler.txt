@@ -17,15 +17,57 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
-Logic In Required Bosses Mode:   No
-Logic In Swordless Mode:         No
-Logic Obscure 1:                 No
-Logic Obscure 2:                 No
-Logic Obscure 3:                 No
-Logic Precise 1:                 No
-Logic Precise 2:                 No
-Logic Precise 3:                 No
-Logic Rematch Bosses Skipped:    Yes
+Add Shortcut Warps Between Dungeons:No
+Chest Type Matches Contents:     No
+Death Link:                      No
+Enable Tuner Logic:              No
+Hero Mode:                       No
+Instant Text Boxes:              Yes
+Obscure Tricks Required:         None
+Precise Tricks Required:         None
+Mix Entrances:                   Separate Pools
+Number of Required Bosses:       4
+Battlesquid Minigame:            No
+Big Octos and Gunboats:          No
+Combat Secret Caves:             No
+Dungeon Secrets:                 No
+Dungeons:                        Yes
+Expensive Purchases:             Yes
+Eye Reef Chests:                 No
+Free Gifts:                      Yes
+Great Fairies:                   Yes
+Island Puzzles:                  No
+Long Sidequests:                 No
+Mail:                            No
+Minigames:                       No
+Miscellaneous:                   No
+Lookout Platforms and Rafts:     No
+Puzzle Secret Caves:             Yes
+Savage Labyrinth:                No
+Short Sidequests:                No
+Spoils Trading:                  No
+Submarines:                      No
+Tingle Chests:                   No
+Sunken Treasure (From Treasure Charts):No
+Sunken Treasure (From Triforce Charts):No
+Randomize Big Keys:              Dungeon
+Randomize Nested Bosses:         No
+Randomize Charts:                No
+Randomize Dungeons:              No
+Randomize Enemies:               No
+Randomize Fairy Fountains:       No
+Randomize Maps & Compasses:      Dungeon
+Randomize Nested Minibosses:     No
+Randomize Secret Caves:          No
+Randomize Inner Secret Caves:    No
+Randomize Small Keys:            Dungeon
+Randomize Starting Island:       No
+Remove Music:                    No
+Required Bosses Mode:            No
+Reveal Full Sea Chart:           Yes
+Skip Boss Rematches:             Yes
+Swift Sail:                      Yes
+Sword Mode:                      Start With Sword
 
 
 Starting Items:

@@ -4620,17 +4620,97 @@
       "use_resolved_items": false,
       "options": {
         "accessibility": "full",
+        "advisor_show_progression_items": "true",
+        "boostsanity": "false",
+        "death_link": "false",
+        "death_link_effect_percent": 20,
         "exclude_locations": [],
+        "hide_item_names": "false",
         "item_links": [],
         "local_items": [],
         "non_local_items": [],
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
+        "progression_style": "districts_only",
         "randomize_items": "false",
+        "research_cost_multiplier": 100,
+        "shuffle_goody_hut_rewards": "true",
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "advisor_show_progression_items": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Advisor Indicates Progression Items"
+        },
+        "boostsanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Boostsanity"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "death_link_effect_percent": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 100,
+          "default": 20,
+          "display_name": "Death Link Effect Percent"
+        },
+        "hide_item_names": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Hide Item Names"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "progression_style": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "districts_only",
+            "1": "eras_and_districts",
+            "2": "none"
+          },
+          "default": 0,
+          "display_name": "Progression Style"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "research_cost_multiplier": {
+          "type": "range",
+          "range_start": 50,
+          "range_end": 150,
+          "default": 100,
+          "display_name": "Tech/Civic Cost Multiplier"
+        },
+        "shuffle_goody_hut_rewards": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Shuffle Goody Hut Rewards"
+        }
       },
       "era_non_progressive_items": {
         "ERA_ANCIENT": [

@@ -17,6 +17,25 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Allow Using Einstein Whistle Behind Trees:Yes
+Combat Difficulty:               Normal
+Death Link:                      No
+Ensure EkeEke in Shops:          Yes
+Goal:                            Beat Gola
+Damage Boosting in Logic:        No
+Enemy Jumping in Logic:          No
+Tree-cutting Glitch in Logic:    No
+Hint Count:                      12
+Jewel Count:                     5
+Progressive Armors:              Yes
+Remove Boulder After Gumi:       No
+Revive Using EkeEke:             Yes
+Shop Prices Factor (%):          100
+Shuffle Teleportation Trees:     No
+Starting Region:                 Massan
+Teleportation Trees Requirements:Clear Tibor And Visit Trees
+Use Record Book:                 Yes
+Use Spell Book:                  Yes
 
 
 Locations:

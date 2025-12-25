@@ -8568,6 +8568,453 @@
         "start_inventory_from_pool": {},
         "start_location_hints": []
       },
+      "option_definitions": {
+        "ActRandomizer": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "false",
+            "1": "light",
+            "2": "insanity"
+          },
+          "default": 1,
+          "display_name": "Shuffle Acts"
+        },
+        "BabyTrapWeight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 40,
+          "display_name": "Baby Trap Weight"
+        },
+        "BadgeSellerMaxItems": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 8,
+          "display_name": "Badge Seller Maximum Items"
+        },
+        "BadgeSellerMinItems": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 4,
+          "display_name": "Badge Seller Minimum Items"
+        },
+        "BaseballBat": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Baseball Bat"
+        },
+        "CTRLogic": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "time_stop_only",
+            "1": "scooter",
+            "2": "sprint",
+            "3": "nothing"
+          },
+          "default": 0,
+          "display_name": "Cheating the Race Logic"
+        },
+        "ChapterCostIncrement": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 8,
+          "default": 4,
+          "display_name": "Chapter Cost Increment"
+        },
+        "ChapterCostMinDifference": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 8,
+          "default": 4,
+          "display_name": "Minimum Chapter Cost Difference"
+        },
+        "CompassBadgeMode": {
+          "type": "choice",
+          "name_lookup": {
+            "1": "closest",
+            "2": "important_only",
+            "3": "important_first"
+          },
+          "default": 1,
+          "display_name": "Compass Badge Mode"
+        },
+        "DWAutoCompleteBonuses": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Auto Complete Bonus Stamps"
+        },
+        "DWEnableBonus": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Death Wish Full Completions"
+        },
+        "DWExcludeAnnoyingBonuses": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Exclude Annoying Death Wish Full Completions"
+        },
+        "DWExcludeAnnoyingContracts": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Exclude Annoying Death Wish Contracts"
+        },
+        "DWExcludeCandles": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Exclude Candle Death Wishes"
+        },
+        "DWShuffle": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Wish Shuffle"
+        },
+        "DWShuffleCountMax": {
+          "type": "range",
+          "range_start": 5,
+          "range_end": 38,
+          "default": 25,
+          "display_name": "Death Wish Shuffle Maximum Count"
+        },
+        "DWShuffleCountMin": {
+          "type": "range",
+          "range_start": 5,
+          "range_end": 38,
+          "default": 18,
+          "display_name": "Death Wish Shuffle Minimum Count"
+        },
+        "DWTimePieceRequirement": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 35,
+          "default": 15,
+          "display_name": "Death Wish Time Piece Requirement"
+        },
+        "DeathWishOnly": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Wish Only"
+        },
+        "EnableDLC1": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Chapter 6"
+        },
+        "EnableDLC2": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Chapter 7"
+        },
+        "EnableDeathWish": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Enable Death Wish"
+        },
+        "EndGoal": {
+          "type": "choice",
+          "name_lookup": {
+            "1": "finale",
+            "2": "rush_hour",
+            "3": "seal_the_deal"
+          },
+          "default": 1,
+          "display_name": "End Goal"
+        },
+        "ExcludeTour": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Exclude Tour Time Rift"
+        },
+        "FinalChapterMaxCost": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 50,
+          "default": 35,
+          "display_name": "Final Chapter Maximum Time Piece Cost"
+        },
+        "FinalChapterMinCost": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 50,
+          "default": 30,
+          "display_name": "Final Chapter Minimum Time Piece Cost"
+        },
+        "FinaleShuffle": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Finale Shuffle"
+        },
+        "HatItems": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Hat Items"
+        },
+        "HighestChapterCost": {
+          "type": "range",
+          "range_start": 15,
+          "range_end": 45,
+          "default": 25,
+          "display_name": "Highest Possible Chapter Cost"
+        },
+        "LaserTrapWeight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 40,
+          "display_name": "Laser Trap Weight"
+        },
+        "LogicDifficulty": {
+          "type": "choice",
+          "name_lookup": {
+            "-1": "normal",
+            "0": "moderate",
+            "1": "hard",
+            "2": "expert"
+          },
+          "default": -1,
+          "display_name": "Logic Difficulty"
+        },
+        "LowestChapterCost": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 5,
+          "display_name": "Lowest Possible Chapter Cost"
+        },
+        "MaxExtraTimePieces": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 16,
+          "default": 16,
+          "display_name": "Max Extra Time Pieces"
+        },
+        "MaxPonCost": {
+          "type": "range",
+          "range_start": 10,
+          "range_end": 800,
+          "default": 300,
+          "display_name": "Maximum Shop Pon Cost"
+        },
+        "MetroMaxPonCost": {
+          "type": "range",
+          "range_start": 10,
+          "range_end": 800,
+          "default": 200,
+          "display_name": "Metro Shops Maximum Pon Cost"
+        },
+        "MetroMinPonCost": {
+          "type": "range",
+          "range_start": 10,
+          "range_end": 800,
+          "default": 50,
+          "display_name": "Metro Shops Minimum Pon Cost"
+        },
+        "MinExtraYarn": {
+          "type": "range",
+          "range_start": 5,
+          "range_end": 15,
+          "default": 10,
+          "display_name": "Min Extra Yarn"
+        },
+        "MinPonCost": {
+          "type": "range",
+          "range_start": 10,
+          "range_end": 800,
+          "default": 75,
+          "display_name": "Minimum Shop Pon Cost"
+        },
+        "NoPaintingSkips": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "No Subcon Fire Wall Skips"
+        },
+        "NoTicketSkips": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "false",
+            "1": "true",
+            "2": "rush_hour"
+          },
+          "default": 0,
+          "display_name": "No Ticket Skips"
+        },
+        "NyakuzaThugMaxShopItems": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 5,
+          "default": 4,
+          "display_name": "Nyakuza Thug Maximum Shop Items"
+        },
+        "NyakuzaThugMinShopItems": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 5,
+          "default": 2,
+          "display_name": "Nyakuza Thug Minimum Shop Items"
+        },
+        "ParadeTrapWeight": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 20,
+          "display_name": "Parade Trap Weight"
+        },
+        "RandomizeHatOrder": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "false",
+            "1": "true",
+            "2": "time_stop_last"
+          },
+          "default": 1,
+          "display_name": "Randomize Hat Order"
+        },
+        "ShipShapeCustomTaskGoal": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 90,
+          "default": 0,
+          "display_name": "Ship Shape Custom Task Goal"
+        },
+        "ShuffleActContracts": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Shuffle Contracts"
+        },
+        "ShuffleAlpineZiplines": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Alpine Ziplines"
+        },
+        "ShuffleStorybookPages": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Shuffle Storybook Pages"
+        },
+        "ShuffleSubconPaintings": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Subcon Paintings"
+        },
+        "StartWithCompassBadge": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Start with Compass Badge"
+        },
+        "StartingChapter": {
+          "type": "choice",
+          "name_lookup": {
+            "1": "1",
+            "2": "2",
+            "3": "3",
+            "4": "4"
+          },
+          "default": 1,
+          "display_name": "Starting Chapter"
+        },
+        "Tasksanity": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Tasksanity"
+        },
+        "TasksanityCheckCount": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 30,
+          "default": 18,
+          "display_name": "Tasksanity Check Count"
+        },
+        "TasksanityTaskStep": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 3,
+          "default": 1,
+          "display_name": "Tasksanity Task Step"
+        },
+        "TimePieceBalancePercent": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 35,
+          "display_name": "Time Piece Balance Percentage"
+        },
+        "TrapChance": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 0,
+          "display_name": "Trap Chance"
+        },
+        "UmbrellaLogic": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Umbrella Logic"
+        },
+        "YarnAvailable": {
+          "type": "range",
+          "range_start": 30,
+          "range_end": 80,
+          "default": 50,
+          "display_name": "Yarn Available"
+        },
+        "YarnBalancePercent": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 20,
+          "display_name": "Yarn Balance Percentage"
+        },
+        "YarnCostMax": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 12,
+          "default": 8,
+          "display_name": "Maximum Yarn Cost"
+        },
+        "YarnCostMin": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 12,
+          "default": 4,
+          "display_name": "Minimum Yarn Cost"
+        },
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "death_link_amnesty": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 20,
+          "default": 0,
+          "display_name": "Death Link Amnesty"
+        },
+        "dw_death_link_amnesty": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 30,
+          "default": 5,
+          "display_name": "Death Wish Amnesty"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        }
+      },
       "use_paren_number_accumulator": true,
       "HatItems": false,
       "UmbrellaLogic": false,

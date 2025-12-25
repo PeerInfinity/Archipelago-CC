@@ -17,6 +17,14 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+AI Sacrifice Limit:              0
+AI Summon Limit:                 0
+Commander Choice:                Locked Random
+Commander Defense Boost:         2
+Death Link:                      No
+Income Boost:                    25
+Player Sacrifice Limit:          0
+Player Summon Limit:             0
 
 
 Locations:

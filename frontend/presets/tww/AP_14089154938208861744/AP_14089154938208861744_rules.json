@@ -5429,6 +5429,327 @@
         "swift_sail": "true",
         "sword_mode": "start_with_sword"
       },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "add_shortcut_warps_between_dungeons": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Add Shortcut Warps Between Dungeons"
+        },
+        "chest_type_matches_contents": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Chest Type Matches Contents"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "enable_tuner_logic": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Enable Tuner Logic"
+        },
+        "hero_mode": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Hero Mode"
+        },
+        "instant_text_boxes": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Instant Text Boxes"
+        },
+        "logic_obscurity": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "normal",
+            "2": "hard",
+            "3": "very_hard"
+          },
+          "default": 0,
+          "display_name": "Obscure Tricks Required"
+        },
+        "logic_precision": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "none",
+            "1": "normal",
+            "2": "hard",
+            "3": "very_hard"
+          },
+          "default": 0,
+          "display_name": "Precise Tricks Required"
+        },
+        "mix_entrances": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "separate_pools",
+            "1": "mix_pools"
+          },
+          "default": 0,
+          "display_name": "Mix Entrances"
+        },
+        "num_required_bosses": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 6,
+          "default": 4,
+          "display_name": "Number of Required Bosses"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "progression_battlesquid": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Battlesquid Minigame"
+        },
+        "progression_big_octos_gunboats": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Big Octos and Gunboats"
+        },
+        "progression_combat_secret_caves": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Combat Secret Caves"
+        },
+        "progression_dungeon_secrets": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Dungeon Secrets"
+        },
+        "progression_dungeons": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Dungeons"
+        },
+        "progression_expensive_purchases": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Expensive Purchases"
+        },
+        "progression_eye_reef_chests": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Eye Reef Chests"
+        },
+        "progression_free_gifts": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Free Gifts"
+        },
+        "progression_great_fairies": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Great Fairies"
+        },
+        "progression_island_puzzles": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Island Puzzles"
+        },
+        "progression_long_sidequests": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Long Sidequests"
+        },
+        "progression_mail": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Mail"
+        },
+        "progression_minigames": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Minigames"
+        },
+        "progression_misc": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Miscellaneous"
+        },
+        "progression_platforms_rafts": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Lookout Platforms and Rafts"
+        },
+        "progression_puzzle_secret_caves": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Puzzle Secret Caves"
+        },
+        "progression_savage_labyrinth": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Savage Labyrinth"
+        },
+        "progression_short_sidequests": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Short Sidequests"
+        },
+        "progression_spoils_trading": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Spoils Trading"
+        },
+        "progression_submarines": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Submarines"
+        },
+        "progression_tingle_chests": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Tingle Chests"
+        },
+        "progression_treasure_charts": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Sunken Treasure (From Treasure Charts)"
+        },
+        "progression_triforce_charts": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Sunken Treasure (From Triforce Charts)"
+        },
+        "randomize_bigkeys": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "startwith",
+            "1": "vanilla",
+            "2": "dungeon",
+            "3": "any_dungeon",
+            "4": "local",
+            "5": "keylunacy"
+          },
+          "default": 2,
+          "display_name": "Randomize Big Keys"
+        },
+        "randomize_boss_entrances": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Nested Bosses"
+        },
+        "randomize_charts": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Charts"
+        },
+        "randomize_dungeon_entrances": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Dungeons"
+        },
+        "randomize_enemies": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Enemies"
+        },
+        "randomize_fairy_fountain_entrances": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Fairy Fountains"
+        },
+        "randomize_mapcompass": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "startwith",
+            "1": "vanilla",
+            "2": "dungeon",
+            "3": "any_dungeon",
+            "4": "local",
+            "5": "keylunacy"
+          },
+          "default": 2,
+          "display_name": "Randomize Maps & Compasses"
+        },
+        "randomize_miniboss_entrances": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Nested Minibosses"
+        },
+        "randomize_secret_cave_entrances": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Secret Caves"
+        },
+        "randomize_secret_cave_inner_entrances": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Inner Secret Caves"
+        },
+        "randomize_smallkeys": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "startwith",
+            "1": "vanilla",
+            "2": "dungeon",
+            "3": "any_dungeon",
+            "4": "local",
+            "5": "keylunacy"
+          },
+          "default": 2,
+          "display_name": "Randomize Small Keys"
+        },
+        "randomize_starting_island": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Starting Island"
+        },
+        "remove_music": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Remove Music"
+        },
+        "required_bosses": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Required Bosses Mode"
+        },
+        "reveal_full_sea_chart": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Reveal Full Sea Chart"
+        },
+        "skip_rematch_bosses": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Skip Boss Rematches"
+        },
+        "swift_sail": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Swift Sail"
+        },
+        "sword_mode": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "start_with_sword",
+            "1": "no_starting_sword",
+            "2": "swords_optional",
+            "3": "swordless"
+          },
+          "default": 0,
+          "display_name": "Sword Mode"
+        }
+      },
       "logic_in_swordless_mode": false,
       "logic_in_required_bosses_mode": false,
       "logic_obscure_1": false,

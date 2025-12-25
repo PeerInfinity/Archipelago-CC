@@ -31,5 +31,132 @@
     "turtle_randomizer": "all_except_final",
     "unconfine_home_water": "off"
   },
+  "option_definitions": {
+    "accessibility": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "full",
+        "2": "minimal"
+      },
+      "default": 0,
+      "display_name": "Accessibility"
+    },
+    "aquarian_translation": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Translate Aquarian"
+    },
+    "big_bosses_to_beat": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 5,
+      "default": 0,
+      "display_name": "Big bosses to beat"
+    },
+    "bind_song_needed_to_get_under_rock_bulb": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Bind song needed to get sing bulbs under rocks"
+    },
+    "blind_goal": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Hide the goal's requirements"
+    },
+    "dish_randomizer": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Dish Randomizer"
+    },
+    "early_bind_song": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "off",
+        "1": "early",
+        "2": "early_and_local"
+      },
+      "default": 1,
+      "display_name": "Early Bind song"
+    },
+    "early_energy_form": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "off",
+        "1": "early",
+        "2": "early_and_local"
+      },
+      "default": 1,
+      "display_name": "Early Energy form"
+    },
+    "ingredient_randomizer": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "off",
+        "1": "common_ingredients",
+        "2": "all_ingredients"
+      },
+      "default": 0,
+      "display_name": "Randomize Ingredients"
+    },
+    "light_needed_to_get_to_dark_places": {
+      "type": "default_on_toggle",
+      "default": 1,
+      "display_name": "Light needed to get to dark places"
+    },
+    "mini_bosses_to_beat": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 8,
+      "default": 0,
+      "display_name": "Minibosses to beat"
+    },
+    "no_progression_hard_or_hidden_locations": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "No progression in hard or hidden locations"
+    },
+    "objective": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "kill_the_creator",
+        "1": "obtain_secrets_and_kill_the_creator"
+      },
+      "default": 0,
+      "display_name": "Objective"
+    },
+    "progression_balancing": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 99,
+      "default": 50,
+      "display_name": "Progression Balancing"
+    },
+    "skip_first_vision": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Skip Naija's first vision"
+    },
+    "turtle_randomizer": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "all",
+        "2": "all_except_final"
+      },
+      "default": 2,
+      "display_name": "Turtle Randomizer"
+    },
+    "unconfine_home_water": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "off",
+        "1": "via_energy_door",
+        "2": "via_transturtle",
+        "3": "via_both"
+      },
+      "default": 0,
+      "display_name": "Unconfine Home Waters Area"
+    }
+  },
   "world_directory": "aquaria"
 }

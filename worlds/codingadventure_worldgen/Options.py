@@ -16,8 +16,13 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
+class RandomizeItems(Toggle):
+    """Option for Randomize Items."""
+    display_name = "Randomize Items"
+
 
 @dataclass
 class WebDevJourneyWorldGenOptions(PerGameCommonOptions):
     """Options for WebDevJourney WorldGen."""
+    randomize_items: RandomizeItems
     randomize_items: RandomizeItems

@@ -17,6 +17,20 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Autosave:                        Yes
+Difficulty:                      Norml
+DK Coins for Gyrocopter:         30
+Goal:                            Knautilus
+Kong Palette Swap:               Default
+KONGsanity:                      No
+Krematoa Bonus Coins Cost:       15
+Level Shuffle:                   No
+MERRY:                           No
+Music Shuffle:                   No
+Number of Banana Birds:          15
+Percentage of Banana Birds:      100
+Percentage of Extra Bonus Coins: 100
+Starting Life Count:             5
 
 
 Locations:

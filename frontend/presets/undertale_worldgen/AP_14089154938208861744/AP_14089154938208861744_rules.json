@@ -980,16 +980,11 @@
             "name": "Core Exit",
             "connected_region": "New Home",
             "access_rule": {
-              "rule": "_undertale_has_plot",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Mettaton Plush"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Mettaton Plush",
+                "count": 1
+              }
             }
           }
         ],
@@ -2272,15 +2267,125 @@
         "accessibility": "full",
         "exclude_locations": [],
         "item_links": [],
+        "key_hunt": "false",
+        "key_pieces": 5,
         "local_items": [],
+        "no_equips": "false",
         "non_local_items": [],
+        "only_flakes": "false",
         "plando_items": [],
         "priority_locations": [],
+        "prog_armor": "false",
+        "prog_weapons": "false",
         "progression_balancing": 50,
+        "rando_item_button": "false",
+        "rando_love": "false",
+        "rando_stats": "false",
         "randomize_items": "false",
+        "route_required": "neutral",
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "starting_area": "ruins",
+        "temy_include": "false"
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "key_hunt": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Key Piece Hunt"
+        },
+        "key_pieces": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 10,
+          "default": 5,
+          "display_name": "Key Piece Amount"
+        },
+        "no_equips": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "No Equippables"
+        },
+        "only_flakes": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Only Temmie Flakes"
+        },
+        "prog_armor": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Progressive Armor"
+        },
+        "prog_weapons": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Progressive Weapons"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "rando_item_button": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Item Button"
+        },
+        "rando_love": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize LOVE"
+        },
+        "rando_stats": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Randomize Stats"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "route_required": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "neutral",
+            "1": "pacifist",
+            "2": "genocide",
+            "3": "all_routes"
+          },
+          "default": 0,
+          "display_name": "Required Route"
+        },
+        "starting_area": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "ruins",
+            "1": "snowdin",
+            "2": "waterfall",
+            "3": "hotland",
+            "4": "core"
+          },
+          "default": 0,
+          "display_name": "Starting Area"
+        },
+        "temy_include": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Include Temy Armor"
+        }
       },
       "world_directory": "undertale"
     }
@@ -2333,93 +2438,5 @@
       }
     }
   },
-  "helpers": {
-    "1": {
-      "_undertale_has_plot": {
-        "params": [
-          "item"
-        ],
-        "body": {
-          "type": "conditional",
-          "test": {
-            "type": "compare",
-            "left": {
-              "type": "name",
-              "name": "item"
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": "Complete Skeleton"
-            }
-          },
-          "if_true": {
-            "type": "item_check",
-            "item": "Complete Skeleton"
-          },
-          "if_false": {
-            "type": "conditional",
-            "test": {
-              "type": "compare",
-              "left": {
-                "type": "name",
-                "name": "item"
-              },
-              "op": "==",
-              "right": {
-                "type": "constant",
-                "value": "Fish"
-              }
-            },
-            "if_true": {
-              "type": "item_check",
-              "item": "Fish"
-            },
-            "if_false": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "name",
-                  "name": "item"
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": "Mettaton Plush"
-                }
-              },
-              "if_true": {
-                "type": "item_check",
-                "item": "Mettaton Plush"
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "compare",
-                  "left": {
-                    "type": "name",
-                    "name": "item"
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": "DT Extractor"
-                  }
-                },
-                "if_true": {
-                  "type": "item_check",
-                  "item": "DT Extractor"
-                },
-                "if_false": {
-                  "type": "constant",
-                  "value": null
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+  "helpers": {}
 }

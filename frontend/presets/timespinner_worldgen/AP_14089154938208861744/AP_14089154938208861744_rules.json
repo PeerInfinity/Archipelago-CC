@@ -7981,18 +7981,621 @@
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
+        "BossHealing": "true",
+        "BossRando": "off",
+        "Cantoran": "false",
+        "DadPercent": "false",
+        "DamageRando": "off",
+        "DeathLink": "false",
+        "DownloadableItems": "true",
+        "DropRateCategory": "tiered",
+        "EnemyRando": "off",
+        "EnterSandman": "false",
+        "ExtraEarringsXP": 0,
+        "EyeSpy": "false",
+        "FixedDropRate": 5,
+        "GyreArchives": "false",
+        "HpCap": 999,
+        "Inverted": "false",
+        "LevelCap": 99,
+        "LootPool": "vanilla",
+        "LootTierDistro": "default_weight",
+        "LoreChecks": "false",
+        "PresentAccessWithWheelAndSpindle": "false",
+        "QuickSeed": "false",
+        "RisingTides": "false",
+        "ShopFill": "default",
+        "ShopMultiplier": 1,
+        "ShopWarpShards": "true",
+        "ShowBestiary": "false",
+        "ShowDrops": "false",
+        "SpecificKeycards": "false",
+        "StartWithJewelryBox": "false",
+        "StartWithMeyef": "false",
+        "TrapChance": 10,
+        "UnchainedKeys": "false",
         "accessibility": "full",
+        "aura_cap": 999,
+        "back_to_the_future": "false",
+        "boss_healing": "true",
+        "boss_rando": "off",
+        "boss_rando_type": "shuffle",
+        "cantoran": "false",
+        "dad_percent": "false",
+        "damage_rando": "off",
+        "death_link": "false",
+        "downloadable_items": "true",
+        "drop_rate_category": "tiered",
+        "enemy_rando": "off",
+        "enter_sandman": "false",
         "exclude_locations": [],
+        "extra_earrings_xp": 0,
+        "eye_spy": "false",
+        "find_the_flame": "false",
+        "fixed_drop_rate": 5,
+        "gate_keep": "false",
+        "gyre_archives": "false",
+        "has_replaced_options": "false",
+        "hp_cap": 999,
+        "inverted": "false",
         "item_links": [],
+        "level_cap": 99,
         "local_items": [],
+        "lock_key_amadeus": "false",
+        "loot_pool": "vanilla",
+        "loot_tier_distro": "default_weight",
+        "lore_checks": "false",
         "non_local_items": [],
         "plando_items": [],
         "priority_locations": [],
+        "prism_break": "false",
         "progression_balancing": 50,
+        "pure_torcher": "false",
+        "pyramid_start": "false",
+        "quick_seed": "false",
         "randomize_items": "false",
+        "rising_tides": "false",
+        "risky_warps": "false",
+        "royal_roadblock": "false",
+        "shop_fill": "default",
+        "shop_multiplier": 1,
+        "shop_warp_shards": "true",
+        "show_bestiary": "false",
+        "show_drops": "false",
+        "specific_keycards": "false",
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "start_with_jewelry_box": "false",
+        "start_with_meyef": "false",
+        "trap_chance": 10,
+        "unchained_keys": "false"
+      },
+      "option_definitions": {
+        "BossHealing": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Heal After Bosses"
+        },
+        "BossRando": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "scaled",
+            "2": "unscaled"
+          },
+          "default": 0,
+          "display_name": "Boss Randomization"
+        },
+        "Cantoran": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Cantoran"
+        },
+        "DadPercent": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Dad Percent"
+        },
+        "DamageRando": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "allnerfs",
+            "2": "mostlynerfs",
+            "3": "balanced",
+            "4": "mostlybuffs",
+            "5": "allbuffs",
+            "6": "manual"
+          },
+          "default": 0,
+          "display_name": "Damage Rando"
+        },
+        "DeathLink": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "DownloadableItems": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Downloadable items"
+        },
+        "DropRateCategory": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "tiered",
+            "1": "vanilla",
+            "2": "randomized",
+            "3": "fixed"
+          },
+          "default": 0,
+          "display_name": "Drop Rate Category"
+        },
+        "EnemyRando": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "scaled",
+            "2": "unscaled",
+            "3": "ryshia",
+            "4": "no_hell_spiders"
+          },
+          "default": 0,
+          "display_name": "Enemy Randomization"
+        },
+        "EnterSandman": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Enter Sandman"
+        },
+        "ExtraEarringsXP": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 24,
+          "default": 0,
+          "display_name": "Extra Earrings XP"
+        },
+        "EyeSpy": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Eye Spy"
+        },
+        "FixedDropRate": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 5,
+          "display_name": "Fixed Drop Rate"
+        },
+        "GyreArchives": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Gyre Archives"
+        },
+        "HpCap": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 999,
+          "default": 999,
+          "display_name": "HP Cap"
+        },
+        "Inverted": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Inverted"
+        },
+        "LevelCap": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 99,
+          "default": 99,
+          "display_name": "Level Cap"
+        },
+        "LootPool": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "randomized",
+            "2": "empty"
+          },
+          "default": 0,
+          "display_name": "Loot Pool"
+        },
+        "LootTierDistro": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default_weight",
+            "1": "full_random",
+            "2": "inverted_weight"
+          },
+          "default": 0,
+          "display_name": "Loot Tier Distrubution"
+        },
+        "LoreChecks": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Lore Checks"
+        },
+        "PresentAccessWithWheelAndSpindle": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Back to the future"
+        },
+        "QuickSeed": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Quick seed"
+        },
+        "RisingTides": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Rising Tides"
+        },
+        "ShopFill": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "1": "randomized",
+            "2": "vanilla",
+            "3": "empty"
+          },
+          "default": 0,
+          "display_name": "Shop Inventory"
+        },
+        "ShopMultiplier": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 1,
+          "display_name": "Shop Price Multiplier"
+        },
+        "ShopWarpShards": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Always Sell Warp Shards"
+        },
+        "ShowBestiary": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Show Bestiary Entries"
+        },
+        "ShowDrops": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Show Bestiary Item Drops"
+        },
+        "SpecificKeycards": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Specific Keycards"
+        },
+        "StartWithJewelryBox": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Start with Jewelry Box"
+        },
+        "StartWithMeyef": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Start with Meyef"
+        },
+        "TrapChance": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 10,
+          "display_name": "Trap Chance"
+        },
+        "UnchainedKeys": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Unchained Keys"
+        },
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "aura_cap": {
+          "type": "range",
+          "range_start": 45,
+          "range_end": 999,
+          "default": 999,
+          "display_name": "Aura Cap"
+        },
+        "back_to_the_future": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Back to the future"
+        },
+        "boss_healing": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Heal After Bosses"
+        },
+        "boss_rando": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "scaled",
+            "2": "unscaled"
+          },
+          "default": 0,
+          "display_name": "Boss Randomization"
+        },
+        "boss_rando_type": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "shuffle",
+            "1": "chaos",
+            "2": "singularity",
+            "3": "manual"
+          },
+          "default": 0,
+          "display_name": "Boss Randomization Type"
+        },
+        "cantoran": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Cantoran"
+        },
+        "dad_percent": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Dad Percent"
+        },
+        "damage_rando": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "allnerfs",
+            "2": "mostlynerfs",
+            "3": "balanced",
+            "4": "mostlybuffs",
+            "5": "allbuffs",
+            "6": "manual"
+          },
+          "default": 0,
+          "display_name": "Damage Rando"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "downloadable_items": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Downloadable items"
+        },
+        "drop_rate_category": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "tiered",
+            "1": "vanilla",
+            "2": "randomized",
+            "3": "fixed"
+          },
+          "default": 0,
+          "display_name": "Drop Rate Category"
+        },
+        "enemy_rando": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "scaled",
+            "2": "unscaled",
+            "3": "ryshia",
+            "4": "no_hell_spiders"
+          },
+          "default": 0,
+          "display_name": "Enemy Randomization"
+        },
+        "enter_sandman": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Enter Sandman"
+        },
+        "extra_earrings_xp": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 24,
+          "default": 0,
+          "display_name": "Extra Earrings XP"
+        },
+        "eye_spy": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Eye Spy"
+        },
+        "find_the_flame": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Find the Flame"
+        },
+        "fixed_drop_rate": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 5,
+          "display_name": "Fixed Drop Rate"
+        },
+        "gate_keep": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Gate Keep"
+        },
+        "gyre_archives": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Gyre Archives"
+        },
+        "has_replaced_options": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Has Replaced Options"
+        },
+        "hp_cap": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 999,
+          "default": 999,
+          "display_name": "HP Cap"
+        },
+        "inverted": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Inverted"
+        },
+        "level_cap": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 99,
+          "default": 99,
+          "display_name": "Level Cap"
+        },
+        "lock_key_amadeus": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Lock Key Amadeus"
+        },
+        "loot_pool": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "randomized",
+            "2": "empty"
+          },
+          "default": 0,
+          "display_name": "Loot Pool"
+        },
+        "loot_tier_distro": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default_weight",
+            "1": "full_random",
+            "2": "inverted_weight"
+          },
+          "default": 0,
+          "display_name": "Loot Tier Distrubution"
+        },
+        "lore_checks": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Lore Checks"
+        },
+        "prism_break": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Prism Break"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "pure_torcher": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Pure Torcher"
+        },
+        "pyramid_start": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Pyramid Start"
+        },
+        "quick_seed": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Quick seed"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "rising_tides": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Rising Tides"
+        },
+        "risky_warps": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Risky Warps"
+        },
+        "royal_roadblock": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Royal Roadblock"
+        },
+        "shop_fill": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "default",
+            "1": "randomized",
+            "2": "vanilla",
+            "3": "empty"
+          },
+          "default": 0,
+          "display_name": "Shop Inventory"
+        },
+        "shop_multiplier": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 10,
+          "default": 1,
+          "display_name": "Shop Price Multiplier"
+        },
+        "shop_warp_shards": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Always Sell Warp Shards"
+        },
+        "show_bestiary": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Show Bestiary Entries"
+        },
+        "show_drops": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Show Bestiary Item Drops"
+        },
+        "specific_keycards": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Specific Keycards"
+        },
+        "start_with_jewelry_box": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Start with Jewelry Box"
+        },
+        "start_with_meyef": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Start with Meyef"
+        },
+        "trap_chance": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 10,
+          "display_name": "Trap Chance"
+        },
+        "unchained_keys": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Unchained Keys"
+        }
       },
       "flag_specific_keycards": false,
       "flag_eye_spy": false,
@@ -8451,8 +9054,17 @@
         "type": "or",
         "conditions": [
           {
-            "type": "helper",
-            "name": "has_upwarddash"
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Celestial Sash"
+              },
+              {
+                "type": "item_check",
+                "item": "Lightwall"
+              }
+            ]
           },
           {
             "type": "and",
@@ -8462,8 +9074,21 @@
                 "item": "Timespinner Wheel"
               },
               {
-                "type": "helper",
-                "name": "has_doublejump"
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Celestial Sash"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Lightwall"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Succubus Hairpin"
+                  }
+                ]
               }
             ]
           }
@@ -8507,8 +9132,17 @@
         "type": "or",
         "conditions": [
           {
-            "type": "helper",
-            "name": "has_upwarddash"
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Celestial Sash"
+              },
+              {
+                "type": "item_check",
+                "item": "Lightwall"
+              }
+            ]
           },
           {
             "type": "and",
@@ -8518,8 +9152,21 @@
                 "item": "Talaria Attachment"
               },
               {
-                "type": "helper",
-                "name": "has_doublejump"
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Celestial Sash"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Lightwall"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Succubus Hairpin"
+                  }
+                ]
               }
             ]
           }

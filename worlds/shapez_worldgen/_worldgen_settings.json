@@ -36,5 +36,170 @@
     "toolbar_shuffling": "true",
     "traps_percentage": 0
   },
+  "option_definitions": {
+    "accessibility": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "full",
+        "2": "minimal"
+      },
+      "default": 0,
+      "display_name": "Accessibility"
+    },
+    "allow_floating_layers": {
+      "type": "toggle",
+      "default": false,
+      "display_name": "Allow floating layers"
+    },
+    "early_balancer_tunnel_and_trash": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "none",
+        "1": "5_buildings",
+        "2": "3_buildings",
+        "3": "sphere_1"
+      },
+      "default": 2,
+      "display_name": "Early balancer, tunnel, and trash"
+    },
+    "exclude_long_playtime_achievements": {
+      "type": "toggle",
+      "default": true,
+      "display_name": "Exclude long playtime achievements"
+    },
+    "exclude_progression_unreasonable": {
+      "type": "toggle",
+      "default": true,
+      "display_name": "Exclude progression items in softlock and long playtime achievements"
+    },
+    "exclude_softlock_achievements": {
+      "type": "toggle",
+      "default": true,
+      "display_name": "Exclude softlock achievements"
+    },
+    "goal": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "mam",
+        "2": "even_fasterer",
+        "3": "efficiency_iii"
+      },
+      "default": 0,
+      "display_name": "Goal"
+    },
+    "goal_amount": {
+      "type": "range",
+      "range_start": 9,
+      "range_end": 500,
+      "default": 27,
+      "display_name": "Goal amount"
+    },
+    "include_achievements": {
+      "type": "toggle",
+      "default": true,
+      "display_name": "Include Achievements"
+    },
+    "include_whacky_upgrades": {
+      "type": "toggle",
+      "default": false,
+      "display_name": "Include Whacky Upgrades"
+    },
+    "lock_belt_and_extractor": {
+      "type": "toggle",
+      "default": false,
+      "display_name": "Lock Belt and Extractor"
+    },
+    "progression_balancing": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 99,
+      "default": 50,
+      "display_name": "Progression Balancing"
+    },
+    "randomize_level_logic": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "vanilla_shuffled",
+        "2": "stretched",
+        "3": "stretched_shuffled",
+        "4": "quick",
+        "5": "quick_shuffled",
+        "6": "random_steps",
+        "7": "random_steps_shuffled",
+        "8": "hardcore",
+        "9": "dopamine",
+        "10": "dopamine_overflow"
+      },
+      "default": 2,
+      "display_name": "Randomize level logic"
+    },
+    "randomize_level_requirements": {
+      "type": "toggle",
+      "default": true,
+      "display_name": "Randomize level requirements"
+    },
+    "randomize_upgrade_logic": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla_like",
+        "1": "linear",
+        "2": "category",
+        "3": "category_random",
+        "4": "hardcore"
+      },
+      "default": 1,
+      "display_name": "Randomize upgrade logic"
+    },
+    "randomize_upgrade_requirements": {
+      "type": "toggle",
+      "default": true,
+      "display_name": "Randomize upgrade requirements"
+    },
+    "required_shapes_multiplier": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 100,
+      "default": 10,
+      "display_name": "Required shapes multiplier"
+    },
+    "same_late_upgrade_requirements": {
+      "type": "toggle",
+      "default": true,
+      "display_name": "Same late upgrade requirements"
+    },
+    "shapesanity_amount": {
+      "type": "range",
+      "range_start": 4,
+      "range_end": 1000,
+      "default": 50,
+      "display_name": "Shapesanity amount"
+    },
+    "split_inventory_draining_trap": {
+      "type": "toggle",
+      "default": false,
+      "display_name": "Split Inventory Draining Trap"
+    },
+    "throughput_levels_ratio": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 100,
+      "default": 0,
+      "display_name": "Throughput levels ratio"
+    },
+    "toolbar_shuffling": {
+      "type": "toggle",
+      "default": true,
+      "display_name": "Toolbar Shuffling"
+    },
+    "traps_percentage": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 100,
+      "default": 0,
+      "display_name": "Traps Percentage"
+    }
+  },
   "world_directory": "shapez"
 }

@@ -17,6 +17,16 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Traps:                           Yes
+Bosses as Location Checks:       No Bosses
+Death Link:                      No
+Extra Orbs:                      0
+Hidden Chests per Biome:         3
+Orbs as Location Checks:         No Orbs
+Path Option:                     Main Path
+Pedestal Checks per Biome:       6
+Shop Price Reduction:            Full Price
+Victory Condition:               Greed Ending
 
 
 Locations:
