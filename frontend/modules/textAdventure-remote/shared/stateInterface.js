@@ -652,21 +652,32 @@ export function createStateSnapshotInterface(
       // Settings may be in snapshot OR staticData, keyed by player ID (multiworld) or directly
       // Try snapshot first, then staticData
       let settingsToUse = snapshot?.settings || staticData?.settings;
+      const rawPlayerId = snapshot?.player?.id || snapshot?.player?.slot ||
+                       staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
+      const playerIdKey = String(rawPlayerId);
       if (settingsToUse) {
-        const rawPlayerId = snapshot?.player?.id || snapshot?.player?.slot ||
-                         staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
-        const playerIdKey = String(rawPlayerId);
         // Check if settings is keyed by player ID
         if (settingsToUse[playerIdKey] && typeof settingsToUse[playerIdKey] === 'object') {
           settingsToUse = settingsToUse[playerIdKey];
         }
       }
-      // First check direct lookup at top level
+      // First check direct lookup at top level of settings
       let rawValue = settingsToUse?.[settingName];
       // If not found at top level, check inside 'options' object
       // Many settings like LuckyEmblemsRequired are nested in options
       if (rawValue === undefined && settingsToUse?.options) {
         rawValue = settingsToUse.options[settingName];
+      }
+      // If still not found, check world_attributes (for computed runtime values like difficulty_requirements)
+      if (rawValue === undefined) {
+        let worldAttrsToUse = snapshot?.world_attributes || staticData?.world_attributes;
+        if (worldAttrsToUse) {
+          // Check if world_attributes is keyed by player ID
+          if (worldAttrsToUse[playerIdKey] && typeof worldAttrsToUse[playerIdKey] === 'object') {
+            worldAttrsToUse = worldAttrsToUse[playerIdKey];
+          }
+          rawValue = worldAttrsToUse?.[settingName];
+        }
       }
       // Normalize "off"/"none" type strings to falsy values
       // Choice options in Python use 0 for "off"/"none" which get exported as strings

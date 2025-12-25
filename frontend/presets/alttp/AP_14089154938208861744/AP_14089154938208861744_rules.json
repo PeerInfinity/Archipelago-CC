@@ -21534,6 +21534,11 @@
           "display_name": "Underworld Palette"
         }
       },
+      "world_directory": "alttp"
+    }
+  },
+  "world_attributes": {
+    "1": {
       "treasure_hunt_required": 0,
       "can_take_damage": true,
       "logical_heart_pieces": 24,
@@ -21676,8 +21681,7 @@
             "Capacity Upgrade"
           ]
         }
-      },
-      "world_directory": "alttp"
+      }
     }
   },
   "game_info": {

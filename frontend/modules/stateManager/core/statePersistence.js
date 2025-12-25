@@ -350,23 +350,36 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
           typeof sm.state.hasFlag === 'function' &&
           sm.state.hasFlag(flagName))),
     getSetting: (settingName) => {
-      if (!sm.settings) {
-        return undefined;
-      }
-      // Check if settings is keyed by player ID (multiworld case)
-      // JSON keys are always strings, so convert playerId to string for lookup
-      let settingsToUse = sm.settings;
       const playerIdKey = String(sm.playerId);
-      if (sm.settings[playerIdKey] && typeof sm.settings[playerIdKey] === 'object') {
-        settingsToUse = sm.settings[playerIdKey];
+      let rawValue;
+
+      // Check settings if available
+      if (sm.settings) {
+        // Check if settings is keyed by player ID (multiworld case)
+        // JSON keys are always strings, so convert playerId to string for lookup
+        let settingsToUse = sm.settings;
+        if (sm.settings[playerIdKey] && typeof sm.settings[playerIdKey] === 'object') {
+          settingsToUse = sm.settings[playerIdKey];
+        }
+        // First check direct lookup at top level
+        rawValue = settingsToUse[settingName];
+        // If not found at top level, check inside 'options' object
+        // Many settings like dk_coins_for_gyrocopter are nested in options
+        if (rawValue === undefined && settingsToUse?.options) {
+          rawValue = settingsToUse.options[settingName];
+        }
       }
-      // First check direct lookup at top level
-      let rawValue = settingsToUse[settingName];
-      // If not found at top level, check inside 'options' object
-      // Many settings like dk_coins_for_gyrocopter are nested in options
-      if (rawValue === undefined && settingsToUse?.options) {
-        rawValue = settingsToUse.options[settingName];
+
+      // If still not found, check world_attributes (for computed runtime values like difficulty_requirements, required_medallions)
+      if (rawValue === undefined && sm.rules?.world_attributes) {
+        let worldAttrsToUse = sm.rules.world_attributes;
+        // Check if world_attributes is keyed by player ID
+        if (worldAttrsToUse[playerIdKey] && typeof worldAttrsToUse[playerIdKey] === 'object') {
+          worldAttrsToUse = worldAttrsToUse[playerIdKey];
+        }
+        rawValue = worldAttrsToUse?.[settingName];
       }
+
       // Normalize "off"/"none" type strings to falsy values
       // Choice options in Python use 0 for "off"/"none" which get exported as strings
       if (typeof rawValue === 'string') {
@@ -861,6 +874,7 @@ export function getStaticGameData(sm) {
     // Game-specific information
     game_info: sm.gameInfo,
     settings: sm.rules?.settings,  // Full settings object (keyed by player ID for multiworld)
+    world_attributes: sm.rules?.world_attributes,  // Computed runtime values like difficulty_requirements (keyed by player ID for multiworld)
     helpers: sm.rules?.helpers,  // Helper function definitions (keyed by player ID for multiworld)
     // Starting items (precollected items)
     starting_items: sm.rules?.starting_items,

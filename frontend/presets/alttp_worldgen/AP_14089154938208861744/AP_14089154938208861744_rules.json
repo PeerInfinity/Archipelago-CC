@@ -16352,23 +16352,7 @@
           "display_name": "Underworld Palette"
         }
       },
-      "treasure_hunt_required": 0,
-      "can_take_damage": true,
-      "logical_heart_pieces": 24,
-      "logical_heart_containers": 10,
-      "difficulty_requirements": {
-        "progressive_bottle_limit": 4,
-        "boss_heart_container_limit": 10,
-        "heart_piece_limit": 24
-      },
-      "required_medallions": [
-        "Quake",
-        "Ether"
-      ],
-      "misery_mire_medallion": "Quake",
-      "turtle_rock_medallion": "Ether",
-      "shop_items": {},
-      "world_directory": "alttp"
+      "world_directory": "alttp_worldgen"
     }
   },
   "game_info": {
@@ -17899,6 +17883,26 @@
           }
         }
       }
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "treasure_hunt_required": 0,
+      "can_take_damage": true,
+      "logical_heart_pieces": 24,
+      "logical_heart_containers": 10,
+      "difficulty_requirements": {
+        "progressive_bottle_limit": 4,
+        "boss_heart_container_limit": 10,
+        "heart_piece_limit": 24
+      },
+      "required_medallions": [
+        "Quake",
+        "Ether"
+      ],
+      "misery_mire_medallion": "Quake",
+      "turtle_rock_medallion": "Ether",
+      "shop_items": {}
     }
   }
 }
