@@ -710,8 +710,40 @@ def _generate_option_class_from_definition(setting_name: str, option_def: Dict[s
         # Generate Choice option with option_<name> = <value> for each choice
         name_lookup = option_def.get('name_lookup', {})
         option_lines = []
-        for value_str, name in sorted(name_lookup.items(), key=lambda x: int(x[0])):
-            option_lines.append(f'    option_{name} = {value_str}')
+
+        # Check if all keys can be converted to integers
+        def try_int(s):
+            try:
+                return int(s)
+            except (ValueError, TypeError):
+                return None
+
+        all_int_keys = all(try_int(k) is not None for k in name_lookup.keys())
+
+        if all_int_keys:
+            # Standard case: keys are integer values, sort by integer
+            sorted_items = sorted(name_lookup.items(), key=lambda x: int(x[0]))
+            for value_str, name in sorted_items:
+                # Sanitize name for valid Python identifier
+                safe_name = name.replace('-', '_').replace(' ', '_')
+                option_lines.append(f'    option_{safe_name} = {value_str}')
+            actual_default = default
+        else:
+            # Non-integer keys: assign sequential integers starting from 0
+            # Sort alphabetically for consistent ordering
+            sorted_items = sorted(name_lookup.items(), key=lambda x: x[0])
+            key_to_int = {}
+            for idx, (key, name) in enumerate(sorted_items):
+                key_to_int[key] = idx
+                # Sanitize name for valid Python identifier
+                safe_name = name.replace('-', '_').replace(' ', '_')
+                option_lines.append(f'    option_{safe_name} = {idx}')
+            # Convert the default value from the original key to the assigned integer
+            if isinstance(default, str) and default in key_to_int:
+                actual_default = key_to_int[default]
+            else:
+                actual_default = default if isinstance(default, int) else 0
+
         options_code = '\n'.join(option_lines)
 
         class_code = f'''
@@ -719,7 +751,7 @@ class {class_name}(Choice):
     """Option for {display_name}."""
     display_name = "{display_name}"
 {options_code}
-    default = {default}
+    default = {actual_default}
 '''
         return class_code, f'    {setting_name}: {class_name}', 'Choice'
 
