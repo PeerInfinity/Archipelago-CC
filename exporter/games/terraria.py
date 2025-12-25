@@ -243,10 +243,11 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
     def _create_setting_check(self, setting_name: str) -> Dict[str, Any]:
         """Create a rule to check a game setting.
 
-        Uses 'name' type rule which resolves from COMPUTED_SETTINGS export.
-        The setting value is exported at top level via COMPUTED_SETTINGS.
+        Uses 'setting_value' type rule which retrieves the setting from the
+        exported options. The setting must be exported via the standard options
+        system or COMPUTED_SETTINGS.
         """
-        return {'type': 'name', 'name': setting_name}
+        return {'type': 'setting_value', 'setting': setting_name}
 
     def _create_pickaxe_check(self, required_power: int) -> Dict[str, Any]:
         """Create a rule to check if player has a pickaxe with at least N power."""
