@@ -27,10 +27,15 @@ class BaseGameExportHandler:
     # List of module paths containing helper functions (e.g., ['worlds.shapez.regions'])
     HELPER_MODULES: List[str] = []
 
-    # Dict mapping setting names to callables that compute them
+    # Dict mapping world attribute names to callables that compute them
     # Callable signature: (world, multiworld, player) -> value
-    # Example: {'floating': lambda w, m, p: w.options.allow_floating_layers.value}
-    # These settings are automatically added to the exported settings by get_settings_data
+    # Example: {'difficulty_requirements': lambda w, m, p: {...}}
+    # These are exported to the 'world_attributes' section (separate from settings)
+    # World attributes are runtime-computed values on the world instance (e.g., world.difficulty_requirements)
+    WORLD_ATTRIBUTES: Dict[str, Callable] = {}
+
+    # Legacy alias for WORLD_ATTRIBUTES - deprecated, use WORLD_ATTRIBUTES instead
+    # TODO: Remove after migrating game-specific handlers
     COMPUTED_SETTINGS: Dict[str, Callable] = {}
 
     # List of option names to export at the top level of settings_dict
@@ -715,7 +720,12 @@ class BaseGameExportHandler:
                     elif isinstance(option, Choice):
                         option_def['type'] = 'choice'
                         # Export name_lookup which maps value -> name
-                        option_def['name_lookup'] = {str(k): v for k, v in option_class.name_lookup.items()}
+                        # Handle buggy option definitions where values are tuples like (1,) instead of 1
+                        def normalize_key(k):
+                            if isinstance(k, tuple) and len(k) == 1:
+                                return str(k[0])
+                            return str(k)
+                        option_def['name_lookup'] = {normalize_key(k): v for k, v in option_class.name_lookup.items()}
                         option_def['default'] = option_class.default
                     else:
                         # Unknown option type, skip
@@ -732,15 +742,6 @@ class BaseGameExportHandler:
             if option_definitions:
                 settings_dict['option_definitions'] = option_definitions
 
-        # Process computed settings from COMPUTED_SETTINGS class attribute
-        if self.COMPUTED_SETTINGS:
-            for setting_name, compute_func in self.COMPUTED_SETTINGS.items():
-                try:
-                    value = compute_func(world, multiworld, player)
-                    settings_dict[setting_name] = value
-                except Exception as e:
-                    logger.warning(f"Failed to compute setting '{setting_name}': {e}")
-
         # Process EXPORTED_OPTIONS - simple option value extractions
         if self.EXPORTED_OPTIONS:
             for option_name in self.EXPORTED_OPTIONS:
@@ -752,9 +753,41 @@ class BaseGameExportHandler:
                 except Exception as e:
                     logger.warning(f"Failed to export option '{option_name}': {e}")
 
-        # For worldgen worlds, load additional settings from _worldgen_settings.json
-        # This is needed because worldgen worlds don't have the original world's computed
-        # settings (like qp_items for OSRS) available at runtime
+        return settings_dict
+
+    def get_world_attributes(self, world, multiworld, player) -> Dict[str, Any]:
+        """Extract world attributes (computed runtime values) for export.
+
+        World attributes are values computed at runtime and stored as instance
+        attributes on the world object (e.g., world.difficulty_requirements).
+        These are separate from settings/options which are user-configurable.
+
+        Returns:
+            Dict of attribute_name -> value
+        """
+        world_attributes = {}
+
+        # Process WORLD_ATTRIBUTES class attribute
+        if self.WORLD_ATTRIBUTES:
+            for attr_name, compute_func in self.WORLD_ATTRIBUTES.items():
+                try:
+                    value = compute_func(world, multiworld, player)
+                    world_attributes[attr_name] = value
+                except Exception as e:
+                    logger.warning(f"Failed to compute world attribute '{attr_name}': {e}")
+
+        # Also process COMPUTED_SETTINGS for backwards compatibility
+        # TODO: Remove after migrating game-specific handlers to WORLD_ATTRIBUTES
+        if self.COMPUTED_SETTINGS:
+            for attr_name, compute_func in self.COMPUTED_SETTINGS.items():
+                try:
+                    value = compute_func(world, multiworld, player)
+                    world_attributes[attr_name] = value
+                except Exception as e:
+                    logger.warning(f"Failed to compute world attribute '{attr_name}': {e}")
+
+        # For worldgen worlds, load world_attributes from _worldgen_settings.json
+        # This is needed because worldgen worlds store computed attributes there
         module_path = type(world).__module__
         if module_path.endswith('_worldgen') or '_worldgen.' in module_path:
             try:
@@ -767,16 +800,27 @@ class BaseGameExportHandler:
                     if settings_path.exists():
                         with open(settings_path, 'r') as f:
                             worldgen_settings = json.load(f)
-                        # Merge worldgen settings into settings_dict
-                        # Don't overwrite settings that are already set
-                        for key, value in worldgen_settings.items():
-                            if key not in settings_dict:
-                                settings_dict[key] = value
-                        logger.debug(f"Loaded {len(worldgen_settings)} settings from {settings_path}")
+                        # Load world_attributes section if present (new format)
+                        if 'world_attributes' in worldgen_settings:
+                            for key, value in worldgen_settings['world_attributes'].items():
+                                if key not in world_attributes:
+                                    world_attributes[key] = value
+                        else:
+                            # Legacy format: world attributes are mixed with settings
+                            # Skip known settings keys
+                            skip_keys = {
+                                'game', 'options', 'option_definitions', 'world_directory',
+                                'assume_bidirectional_exits', 'use_resolved_items',
+                                'use_auto_indirect_conditions', 'add_sphere_items_upfront',
+                            }
+                            for key, value in worldgen_settings.items():
+                                if key not in skip_keys and key not in world_attributes:
+                                    world_attributes[key] = value
+                        logger.debug(f"Loaded world attributes from {settings_path}")
             except Exception as e:
-                logger.warning(f"Failed to load worldgen settings: {e}")
+                logger.warning(f"Failed to load worldgen world attributes: {e}")
 
-        return settings_dict
+        return world_attributes
         
     def get_game_info(self, world) -> Dict[str, Any]:
         """

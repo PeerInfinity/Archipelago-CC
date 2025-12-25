@@ -238,6 +238,12 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
         if k not in INTERNAL_SETTINGS:
             resolved_settings[k] = v
 
+    # Also include world_attributes (new format) for resolving setting_value nodes
+    # that reference world attributes like shop_items, difficulty_requirements, etc.
+    world_attrs = json_data.get('world_attributes', {}).get('1', {})
+    for k, v in world_attrs.items():
+        resolved_settings[k] = v
+
     # Extract option definitions (type, range, choices, etc.)
     option_definitions = settings.get('option_definitions', {})
 
@@ -852,6 +858,9 @@ def extract_world_attributes(json_data: Dict[str, Any]) -> Dict[str, Any]:
     as instance attributes. For example, A Hat in Time has hat_info containing
     hat_yarn_costs and hat_craft_order.
 
+    World attributes are stored in the 'world_attributes' section of the JSON
+    (new format), or extracted from 'settings' for legacy compatibility.
+
     Returns:
         Dict of attribute_name -> attribute_value
     """
@@ -871,6 +880,45 @@ def extract_world_attributes(json_data: Dict[str, Any]) -> Dict[str, Any]:
         # hat_craft_order is already a list of integers
         hat_craft_order = hat_info.get('hat_craft_order', [])
         world_attributes['hat_craft_order'] = hat_craft_order
+
+    # New format: world_attributes is a separate section
+    new_world_attrs = json_data.get('world_attributes', {}).get('1', {})
+    if new_world_attrs:
+        world_attributes.update(new_world_attrs)
+    else:
+        # Legacy format: world attributes are mixed with settings
+        # Extract game-specific computed settings that need to be world attributes
+        # These are settings that are accessed by helpers as world.X
+        # (e.g., world.difficulty_requirements, world.shop_items)
+        settings = json_data.get('settings', {}).get('1', {})
+
+        # Settings to skip (internal/structural settings, not world attributes)
+        skip_settings = {
+            'game',
+            'options',
+            'option_definitions',
+            'world_directory',
+            'assume_bidirectional_exits',
+            'use_resolved_items',
+            'use_auto_indirect_conditions',
+        }
+
+        for key, value in settings.items():
+            if key in skip_settings:
+                continue
+            # Only include complex types (dicts, lists) or specific primitives
+            # that are likely game-specific computed attributes
+            if isinstance(value, (dict, list)):
+                world_attributes[key] = value
+            elif isinstance(value, bool) and key not in {'death_link'}:
+                # Include booleans that aren't common options
+                world_attributes[key] = value
+            elif isinstance(value, (int, float)) and not isinstance(value, bool):
+                # Include numeric values (these are often computed limits/requirements)
+                world_attributes[key] = value
+            elif isinstance(value, str) and key not in {'game'}:
+                # Include string values (like medallion names)
+                world_attributes[key] = value
 
     return world_attributes
 

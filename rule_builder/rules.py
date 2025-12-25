@@ -3046,6 +3046,124 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             return result
 
 
+@dataclasses.dataclass()
+class WeightedSum(Rule[TWorld], game="Archipelago"):
+    """
+    Check if the weighted sum of collected items meets or exceeds a threshold.
+
+    Each item contributes its weight multiplied by the count of that item collected.
+    For example, if threshold is 1.0 and items is [("Sword", 0.4), ("Shield", 0.6)],
+    then having 1 Sword (0.4) and 1 Shield (0.6) would give 1.0 >= 1.0 = True.
+    Having 3 Swords would give 1.2 >= 1.0 = True.
+
+    This is commonly used for star-based progression where multiple powerups
+    contribute fractionally toward meeting a score threshold.
+
+    Usage:
+        rule = WeightedSum(
+            threshold=1.0,
+            items=[("Progressive Dash", 0.35), ("Sharp Knife", 0.3), ...]
+        )
+    """
+    threshold: float = 1.0
+    items: list[tuple[str, float]] = dataclasses.field(default_factory=list)
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        return self.Resolved(
+            self.threshold,
+            tuple(self.items),
+            player=world.player,
+            caching_enabled=False,
+        )
+
+    @override
+    def __str__(self) -> str:
+        item_strs = [f"{name}:{weight}" for name, weight in self.items]
+        return f"WeightedSum({self.threshold}, [{', '.join(item_strs)}])"
+
+    class Resolved(Rule.Resolved):
+        threshold: float
+        items: tuple[tuple[str, float], ...]
+        skip_cache: ClassVar[bool] = True
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            total = 0.0
+            for item_name, weight in self.items:
+                count = state.count(item_name, self.player)
+                total += count * weight
+                # Early exit optimization
+                if total >= self.threshold - 0.001:
+                    return True
+            return total >= self.threshold - 0.001
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            return {item_name: {id(self)} for item_name, _ in self.items}
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            messages: list[JSONMessagePart] = []
+            if state is not None:
+                total = 0.0
+                for item_name, weight in self.items:
+                    count = state.count(item_name, self.player)
+                    total += count * weight
+                messages.append({
+                    "type": "text",
+                    "text": f"Weighted sum: {total:.2f}/{self.threshold:.2f}"
+                })
+            else:
+                messages.append({
+                    "type": "text",
+                    "text": f"Weighted sum >= {self.threshold}"
+                })
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is not None:
+                total = 0.0
+                for item_name, weight in self.items:
+                    count = state.count(item_name, self.player)
+                    total += count * weight
+                return f"Weighted sum: {total:.2f}/{self.threshold:.2f}"
+            return f"Weighted sum >= {self.threshold}"
+
+        @override
+        def __str__(self) -> str:
+            return f"WeightedSum({self.threshold})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"threshold": self.threshold, "items": list(self.items)}
+
+        @override
+        def to_dict(self) -> dict[str, Any]:
+            """Returns a JSON compatible dict that matches the weighted_sum helper format.
+
+            This outputs the format expected by the frontend JavaScript evaluator.
+            """
+            return {
+                "rule": "weighted_sum",
+                "_original_ast_type": "helper",
+                "_converted_from_ast": True,
+                "args": [
+                    {
+                        "rule": "Constant",
+                        "args": {"value": self.threshold},
+                        "_converted_from_ast": True,
+                    },
+                    {
+                        "rule": "Constant",
+                        "args": {"value": list(self.items)},
+                        "_converted_from_ast": True,
+                    }
+                ]
+            }
+
+
 DEFAULT_RULES = {
     rule_name: cast(type[Rule[RuleWorldMixin]], rule_class)
     for rule_name, rule_class in locals().items()

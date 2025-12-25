@@ -28,7 +28,7 @@ export class JSONToPython {
 
   /**
    * Convert a JSON rule to Python code
-   * @param {Object} rule - Rule dictionary in Archipelago-CC format
+   * @param {Object} rule - Rule dictionary in AST format
    * @returns {{code: string, warnings: string[], errors: string[], success: boolean}}
    */
   convert(rule) {

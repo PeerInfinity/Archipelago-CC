@@ -1190,8 +1190,8 @@ Subcon Well - On Pipe
 TIHS Access
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 1
-   =>   Your Contract has Expired -> Subcon Forest - Finale: Connection 1
+   =>   Subcon Forest -> Subcon Forest - Act 2
+   =>   Murder on the Owl Express -> Subcon Forest - Finale: Connection 2
    =>   The Illness has Spread
 TOD Access
         Menu -> Save File -> Spaceship

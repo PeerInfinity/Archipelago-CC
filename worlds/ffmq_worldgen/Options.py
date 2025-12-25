@@ -268,7 +268,7 @@ class StartingWeapon(Choice):
     option_axe = 1
     option_cat_claw = 2
     option_bomb = 3
-    default = random
+    default = "random"
 
 class TweakFrustratingDungeons(Toggle):
     """Option for Tweak Frustrating Dungeons."""
