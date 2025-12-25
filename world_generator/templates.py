@@ -714,12 +714,18 @@ def _generate_option_class_from_definition(setting_name: str, option_def: Dict[s
             option_lines.append(f'    option_{name} = {value_str}')
         options_code = '\n'.join(option_lines)
 
+        # Properly quote string default values
+        if isinstance(default, str):
+            default_repr = f'"{default}"'
+        else:
+            default_repr = default
+
         class_code = f'''
 class {class_name}(Choice):
     """Option for {display_name}."""
     display_name = "{display_name}"
 {options_code}
-    default = {default}
+    default = {default_repr}
 '''
         return class_code, f'    {setting_name}: {class_name}', 'Choice'
 
@@ -727,13 +733,19 @@ class {class_name}(Choice):
         range_start = option_def.get('range_start', 0)
         range_end = option_def.get('range_end', 100)
 
+        # Properly quote string default values
+        if isinstance(default, str):
+            default_repr = f'"{default}"'
+        else:
+            default_repr = default
+
         class_code = f'''
 class {class_name}(Range):
     """Option for {display_name}."""
     display_name = "{display_name}"
     range_start = {range_start}
     range_end = {range_end}
-    default = {default}
+    default = {default_repr}
 '''
         return class_code, f'    {setting_name}: {class_name}', 'Range'
 
