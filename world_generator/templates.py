@@ -1124,8 +1124,11 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
                 has_string_keys = all(isinstance(k, str) for k in attr_value.keys())
                 has_nested_values = not any(isinstance(v, dict) for v in attr_value.values())
 
-                if has_string_keys and has_nested_values and attr_value:
-                    # Use SimpleNamespace for dicts with string keys (attribute access pattern)
+                # Check if all keys are valid Python identifiers for SimpleNamespace
+                all_valid_identifiers = all(k.isidentifier() for k in attr_value.keys())
+
+                if has_string_keys and has_nested_values and attr_value and all_valid_identifiers:
+                    # Use SimpleNamespace for dicts with valid identifier keys (attribute access pattern)
                     needs_types_import = True
                     dict_items = ', '.join(f'{k}={v!r}' for k, v in attr_value.items())
                     init_attrs.append(f'        self.{attr_name} = types.SimpleNamespace({dict_items})')
